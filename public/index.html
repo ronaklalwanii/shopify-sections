@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Section Library</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-mark">SL</div>
+      <div>
+        <div class="logo-title">Section Library</div>
+        <div class="logo-sub">shopify sections, organized</div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="addBtn">+ Add section</button>
+
+    <div class="side-search">
+      <input type="search" id="search" placeholder="Search sections…" autocomplete="off">
+    </div>
+
+    <nav class="side-group" id="storeGroup">
+      <div class="side-label">Store</div>
+      <div class="side-items" id="storeList"></div>
+    </nav>
+
+    <nav class="side-group">
+      <div class="side-label">Category</div>
+      <div class="side-items" id="categoryList"></div>
+    </nav>
+
+    <label class="toggle">
+      <input type="checkbox" id="functionalToggle">
+      <span class="toggle-track"></span>
+      <span>Show functional sections</span>
+    </label>
+
+    <div class="side-footer" id="sideFooter"></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1 id="resultsTitle">All sections</h1>
+        <div class="results-sub" id="resultsSub"></div>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" hidden>
+      <div class="empty-title">No sections match</div>
+      <div class="empty-sub">Try clearing the search or picking another store.</div>
+    </div>
+  </main>
+</div>
+
+<!-- detail modal -->
+<div class="overlay" id="detailOverlay" hidden>
+  <div class="modal modal-detail">
+    <header class="modal-head">
+      <div class="modal-head-info">
+        <div class="modal-kicker" id="detailKicker"></div>
+        <h2 id="detailTitle"></h2>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="detailOpenTab">Open in tab</button>
+        <button class="btn btn-ghost" id="detailCopy">Copy Liquid</button>
+        <button class="btn btn-ghost" id="detailDownload">Download .liquid</button>
+        <button class="btn btn-ghost danger" id="detailEdit" hidden>Edit</button>
+        <button class="btn btn-ghost danger" id="detailDelete" hidden>Delete</button>
+        <button class="btn btn-ghost" id="detailClose">✕</button>
+      </div>
+    </header>
+    <div class="detail-body">
+      <section class="detail-preview">
+        <div class="preview-toolbar">
+          <div class="device-switch" id="deviceSwitch">
+            <button data-device="desktop" class="active">Desktop</button>
+            <button data-device="tablet">Tablet</button>
+            <button data-device="mobile">Mobile</button>
+          </div>
+          <span class="device-hint" id="deviceHint">100%</span>
+          <button class="btn btn-ghost small" id="previewReload">↻ Reload</button>
+        </div>
+        <div class="preview-stage" id="previewStage">
+          <iframe id="detailFrame" title="Section preview" sandbox="allow-scripts"></iframe>
+        </div>
+      </section>
+      <section class="detail-code">
+        <div class="code-tabs">
+          <button class="code-tab active" data-tab="liquid">Liquid</button>
+          <button class="code-tab" data-tab="css">CSS</button>
+          <button class="code-tab" data-tab="js">JS</button>
+        </div>
+        <div class="code-toolbar">
+          <span class="code-hint" id="codeHint"></span>
+          <button class="btn btn-ghost small" id="codeCopy">Copy</button>
+        </div>
+        <pre class="code-view" id="codeView"></pre>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- editor modal -->
+<div class="overlay" id="editorOverlay" hidden>
+  <div class="modal modal-editor">
+    <header class="modal-head">
+      <div class="modal-head-info">
+        <div class="modal-kicker" id="editorKicker">New section</div>
+        <h2 id="editorTitle">Add a section</h2>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="editorCancel">Cancel</button>
+        <button class="btn btn-primary" id="editorSave">Save to library</button>
+      </div>
+    </header>
+    <div class="editor-body">
+      <section class="editor-form">
+        <label class="field">
+          <span>Section name</span>
+          <input type="text" id="fName" placeholder="e.g. Hero — Summer Campaign">
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>Category</span>
+            <select id="fCategory"></select>
+          </label>
+          <label class="field">
+            <span>Preview context</span>
+            <select id="fContext"></select>
+          </label>
+        </div>
+        <label class="field">
+          <span>Tags <em>(comma separated — helps future you)</em></span>
+          <input type="text" id="fTags" placeholder="summer, sale, countdown">
+        </label>
+        <label class="field grow">
+          <span>Liquid <em>(the {% schema %} is optional but recommended)</em></span>
+          <textarea id="fLiquid" spellcheck="false"></textarea>
+        </label>
+        <div class="field-row">
+          <label class="field half">
+            <span>CSS <em>(optional)</em></span>
+            <textarea id="fCss" spellcheck="false" placeholder="/* scoped styles */"></textarea>
+          </label>
+          <label class="field half">
+            <span>JS <em>(optional)</em></span>
+            <textarea id="fJs" spellcheck="false" placeholder="// section script"></textarea>
+          </label>
+        </div>
+      </section>
+      <section class="editor-preview">
+        <div class="preview-toolbar">
+          <span class="code-hint">Live preview — updates as you type</span>
+          <span class="render-status" id="renderStatus"></span>
+        </div>
+        <div class="preview-stage">
+          <iframe id="editorFrame" title="Live preview" sandbox="allow-scripts"></iframe>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+<script src="/app.js"></script>
+</body>
+</html>
