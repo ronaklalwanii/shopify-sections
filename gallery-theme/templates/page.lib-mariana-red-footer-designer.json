@@ -1,0 +1,23 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--footer-designer",
+      "settings": {
+        "eyebrow": "Let's connect",
+        "heading": "Ready to elevate your brand?",
+        "text": "Let's create something beautiful, strategic, and unforgettable.",
+        "button_label": "Let's work together",
+        "email": "hello@marianastudio.com",
+        "handle": "@mariana.studio",
+        "location": "Warsaw, Poland",
+        "badge_text": "LET'S CONNECT • MARIANA STUDIO • ",
+        "brand_name": "Mariana",
+        "legal_1_label": "Privacy Policy",
+        "legal_2_label": "Terms & Conditions"
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

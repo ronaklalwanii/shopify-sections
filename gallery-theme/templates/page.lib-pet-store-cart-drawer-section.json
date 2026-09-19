@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--cart-drawer-section",
+      "settings": {}
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

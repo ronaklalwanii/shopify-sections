@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "library": {
+      "type": "horizon--cart-drawer-section",
+      "settings": {}
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

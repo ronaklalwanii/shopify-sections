@@ -1,0 +1,84 @@
+{
+  "sections": {
+    "library": {
+      "type": "terra-services",
+      "settings": {
+        "bg_color": "#0F0F0F",
+        "max_width": 1400,
+        "space_top": 20,
+        "space_bottom": 20,
+        "gutter": 16,
+        "gap": 16,
+        "radius_outer": 28,
+        "radius_card": 16,
+        "card_min_height": 280,
+        "light_bg": "#EDE8E0",
+        "light_text": "#1A1A1A",
+        "light_muted": "#6B5B4F",
+        "dark_bg": "#1A1A1A",
+        "dark_text": "#F2EFE8",
+        "dark_muted": "#B8B0A6",
+        "title_size": 18,
+        "desc_size": 12,
+        "arrow_size": 36
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "service",
+          "settings": {
+            "number": "01",
+            "title": "Design",
+            "description": "We develop concepts and detailed plans tailored to your home's architecture and lifestyle.",
+            "card_style": "light"
+          }
+        },
+        "bl-2": {
+          "type": "service",
+          "settings": {
+            "number": "02",
+            "title": "Planting",
+            "description": "We select plants that look beautiful year-round and suit your site perfectly.",
+            "card_style": "dark"
+          }
+        },
+        "bl-3": {
+          "type": "service",
+          "settings": {
+            "number": "03",
+            "title": "Paving",
+            "description": "We lay durable stone, clinker, and concrete surfaces with flawless geometry.",
+            "card_style": "light"
+          }
+        },
+        "bl-4": {
+          "type": "service",
+          "settings": {
+            "number": "04",
+            "title": "Lighting",
+            "description": "We design lighting scenarios for safety, atmosphere, and architectural accents.",
+            "card_style": "dark"
+          }
+        },
+        "bl-5": {
+          "type": "service",
+          "settings": {
+            "number": "05",
+            "title": "Irrigation",
+            "description": "We install automated irrigation systems for plant health and your comfort.",
+            "card_style": "dark"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,644 @@
+{%- comment -%} Section Library: injected global assets for store "nocturne-store" {%- endcomment -%}
+{{ 'nocturne-store--theme.css' | asset_url | stylesheet_tag }}
+{{ 'nocturne-store--product.css' | asset_url | stylesheet_tag }}
+{% render 'nocturne-store--css-variables' %}
+{%- liquid
+  assign s = section.settings
+-%}
+{%- comment -%}
+  Participates in Change's section padding-collapsing chain, same as the hero.
+{%- endcomment -%}
+{%- render 'nocturne-store--section-spacing-collapsing' -%}
+
+{{ 'nocturne-store--the-problem.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'nocturne-store--the-problem.js' | asset_url }}" defer></script>
+
+{%- if s.enable_custom_font -%}
+  <style>{{ s.font_family | font_face: font_display: 'swap' }}</style>
+{%- endif -%}
+
+<style>
+  /* Per-instance design tokens, driven by the section schema. */
+  .tp--{{ section.id }} {
+    --tp-bg: {{ s.background }};
+    --tp-pad-top: {{ s.padding_top }}px;
+    --tp-pad-bottom: {{ s.padding_bottom }}px;
+    --tp-max-w: {{ s.max_width }}px;
+    --tp-side-pad: {{ s.side_padding }}px;
+    --tp-left-w: {{ s.left_width }}%;
+    --tp-col-gap: {{ s.column_gap }}px;
+
+    --tp-eyebrow-size: {{ s.eyebrow_size }}px;
+    --tp-eyebrow-weight: {{ s.eyebrow_weight }};
+    --tp-eyebrow-tracking: {{ s.eyebrow_tracking | divided_by: 100.0 }}em;
+    --tp-eyebrow-color: {{ s.eyebrow_color }};
+    --tp-eyebrow-gap: {{ s.eyebrow_gap }}px;
+
+    --tp-title-size: {{ s.title_size }}px;
+    --tp-title-lh: {{ s.title_line_height | divided_by: 100.0 }};
+    --tp-title-tracking: {{ s.title_letter_spacing | divided_by: 100.0 }}em;
+    --tp-title-weight: {{ s.title_weight }};
+    --tp-title-color: {{ s.title_color }};
+    --tp-stanza-gap: {{ s.stanza_gap }}px;
+
+    --tp-desc-size: {{ s.description_size }}px;
+    --tp-desc-lh: {{ s.description_line_height | divided_by: 100.0 }};
+    --tp-desc-color: {{ s.description_color }};
+    --tp-desc-max-w: {{ s.description_max_width }}px;
+    --tp-desc-gap: {{ s.description_gap }}px;
+
+    --tp-card-gap: {{ s.card_gap }}px;
+    --tp-cards-cols: {{ section.blocks.size }};
+    --tp-card-radius: {{ s.card_radius }}px;
+    --tp-card-aspect: {{ s.card_aspect_ratio }};
+    --tp-overlay: {{ s.overlay_opacity }};
+    --tp-card-pad: {{ s.card_padding }}px;
+    --tp-card-label-size: {{ s.card_label_size }}px;
+    --tp-card-label-tracking: {{ s.card_label_tracking | divided_by: 100.0 }}em;
+    --tp-card-text-size: {{ s.card_text_size }}px;
+    --tp-card-text-weight: {{ s.card_text_weight }};
+    --tp-card-text-color: {{ s.card_text_color }};
+
+    --tp-zoom: {{ s.hover_zoom_scale | divided_by: 100.0 }};
+    --tp-lift: {{ s.hover_lift_distance }};
+    --tp-speed: {{ s.hover_speed }}ms;
+    {% if s.enable_custom_font -%}
+    --tp-font: {{ s.font_family.family }}, {{ s.font_family.fallback_families }};
+    {%- endif %}
+  }
+</style>
+
+<section
+  class="tp tp--{{ section.id }}"
+  data-tp-section
+  data-reveal="{{ s.enable_reveal }}"
+  data-hover-animation="{{ s.hover_animation }}"
+>
+  <div class="tp__inner">
+    <div class="tp__grid">
+      <div class="tp__text">
+        {%- if s.eyebrow != blank -%}
+          <p class="tp__eyebrow" data-tp-reveal>{{ s.eyebrow }}</p>
+        {%- endif -%}
+
+        <h2 class="tp__title">
+          {%- if s.title_line_1 != blank -%}
+            <span class="tp__stanza" data-tp-reveal>{{ s.title_line_1 }}</span>
+          {%- endif -%}
+          {%- if s.title_line_2 != blank -%}
+            <span class="tp__stanza" data-tp-reveal>{{ s.title_line_2 }}</span>
+          {%- endif -%}
+        </h2>
+
+        {%- if s.description != blank -%}
+          <div class="tp__desc" data-tp-reveal>{{ s.description }}</div>
+        {%- endif -%}
+      </div>
+
+      <div class="tp__cards">
+        {%- for block in section.blocks -%}
+          {%- assign b = block.settings -%}
+          {%- assign card_alt = b.image.alt | default: b.label | escape -%}
+          <div class="tp-card-cell" data-tp-reveal {{ block.shopify_attributes }}>
+            <article class="tp-card" data-tp-card data-tilt-max="{{ s.tilt_max }}">
+              <div class="tp-card__media">
+                {%- if b.image != blank -%}
+                  {{
+                    b.image
+                    | image_url: width: 1600
+                    | image_tag:
+                      loading: 'lazy',
+                      class: 'tp-card__img',
+                      widths: '400,600,800,1000,1200,1600',
+                      sizes: '(max-width: 767px) 74vw, 26vw',
+                      alt: card_alt
+                  }}
+                {%- else -%}
+                  {{ 'lifestyle-1' | placeholder_svg_tag: 'tp-card__img tp-card__placeholder' }}
+                {%- endif -%}
+              </div>
+              <div class="tp-card__scrim"></div>
+              <div class="tp-card__content">
+                {%- if b.label != blank -%}
+                  <span class="tp-card__label">{{ b.label }}</span>
+                {%- endif -%}
+                {%- if b.text != blank -%}
+                  <p class="tp-card__text">{{ b.text }}</p>
+                {%- endif -%}
+              </div>
+            </article>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "The problem",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout & spacing"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#F2EEE7"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top spacing",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom spacing",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Content max width",
+      "min": 1000,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1680
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Side padding",
+      "min": 16,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "left_width",
+      "label": "Text column width",
+      "min": 20,
+      "max": 45,
+      "step": 1,
+      "unit": "%",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Gap between text and cards",
+      "min": 24,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "header",
+      "content": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Text",
+      "default": "The problem"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_tracking",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "%",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_weight",
+      "label": "Weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Color",
+      "default": "#161513"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_gap",
+      "label": "Space below",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "title_line_1",
+      "label": "Heading · line 1",
+      "default": "Your body keeps the score."
+    },
+    {
+      "type": "text",
+      "id": "title_line_2",
+      "label": "Heading · line 2",
+      "default": "Your schedule doesn't make room for it."
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Size",
+      "min": 32,
+      "max": 84,
+      "step": 2,
+      "unit": "px",
+      "default": 54
+    },
+    {
+      "type": "range",
+      "id": "title_line_height",
+      "label": "Line height",
+      "min": 90,
+      "max": 150,
+      "step": 2,
+      "unit": "%",
+      "default": 106
+    },
+    {
+      "type": "range",
+      "id": "title_letter_spacing",
+      "label": "Letter spacing",
+      "min": -6,
+      "max": 0,
+      "step": 1,
+      "unit": "%",
+      "default": -2
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color",
+      "default": "#161513"
+    },
+    {
+      "type": "range",
+      "id": "stanza_gap",
+      "label": "Gap between the two lines",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "header",
+      "content": "Description"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Text",
+      "default": "<p>Work. Training. Family. Life doesn't slow down. Recovery shouldn't have to wait for the weekend.</p>"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Size",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "description_line_height",
+      "label": "Line height",
+      "min": 130,
+      "max": 200,
+      "step": 2,
+      "unit": "%",
+      "default": 168
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Color",
+      "default": "#4A463F"
+    },
+    {
+      "type": "range",
+      "id": "description_max_width",
+      "label": "Max width",
+      "min": 240,
+      "max": 560,
+      "step": 10,
+      "unit": "px",
+      "default": 340
+    },
+    {
+      "type": "range",
+      "id": "description_gap",
+      "label": "Space below heading",
+      "min": 12,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Cards"
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Gap between cards",
+      "min": 8,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "card_aspect_ratio",
+      "label": "Aspect ratio",
+      "options": [
+        { "value": "3 / 4", "label": "Portrait (3:4)" },
+        { "value": "4 / 5", "label": "Tall (4:5)" },
+        { "value": "2 / 3", "label": "Very tall (2:3)" },
+        { "value": "1 / 1", "label": "Square (1:1)" },
+        { "value": "9 / 16", "label": "Story (9:16)" }
+      ],
+      "default": "4 / 5"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Image darkening",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "%",
+      "default": 38,
+      "info": "Darkens photos so the white text stays readable."
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "label": "Inner padding",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "range",
+      "id": "card_label_size",
+      "label": "Label size",
+      "min": 11,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "card_label_tracking",
+      "label": "Label letter spacing",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "%",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "card_text_size",
+      "label": "Caption size",
+      "min": 13,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "card_text_weight",
+      "label": "Caption weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Hover animation"
+    },
+    {
+      "type": "select",
+      "id": "hover_animation",
+      "label": "Animation on hover",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "zoom", "label": "Image zoom" },
+        { "value": "lift", "label": "Card lift" },
+        { "value": "zoom-lift", "label": "Zoom + lift" },
+        { "value": "fade", "label": "Brighten + zoom" },
+        { "value": "tilt", "label": "3D tilt (follows cursor)" }
+      ],
+      "default": "zoom-lift"
+    },
+    {
+      "type": "range",
+      "id": "hover_zoom_scale",
+      "label": "Zoom scale",
+      "min": 100,
+      "max": 130,
+      "step": 1,
+      "unit": "%",
+      "default": 108
+    },
+    {
+      "type": "range",
+      "id": "hover_lift_distance",
+      "label": "Lift distance",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "hover_speed",
+      "label": "Animation speed",
+      "min": 200,
+      "max": 900,
+      "step": 50,
+      "unit": "ms",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "tilt_max",
+      "label": "Tilt intensity",
+      "min": 2,
+      "max": 14,
+      "step": 1,
+      "unit": "°",
+      "default": 6,
+      "info": "Only used by the 3D tilt animation."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_reveal",
+      "label": "Reveal on scroll",
+      "info": "Fades the text and cards in, staggered, as the section enters the viewport.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Font"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_font",
+      "label": "Override font",
+      "info": "Uses this font instead of the theme's fonts, for this section only.",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "font_family",
+      "label": "Font family",
+      "default": "helvetica_n4"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Portrait images work best."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Work"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Caption",
+          "default": "Long hours. High demands."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 5,
+  "presets": [
+    {
+      "name": "The problem",
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "label": "Work",
+            "text": "Long hours. High demands."
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "label": "Training",
+            "text": "You push hard. Your body pays."
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "label": "Life",
+            "text": "Responsibilities never stop."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

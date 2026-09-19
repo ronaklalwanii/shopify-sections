@@ -1,0 +1,33 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--announcement-bar",
+      "settings": {
+        "show_dismiss": false
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "message",
+          "settings": {
+            "text": "Free shipping on orders over $50",
+            "emoji": "🚚"
+          }
+        },
+        "bl-2": {
+          "type": "message",
+          "settings": {
+            "text": "Premium quality, made with love",
+            "emoji": "🍫"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

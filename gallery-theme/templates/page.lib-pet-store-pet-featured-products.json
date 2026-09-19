@@ -1,0 +1,114 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--pet-featured-products",
+      "settings": {
+        "badge_text": "Find The Perfect Products",
+        "heading": "Our Latest Arrivals",
+        "columns_desktop": 4,
+        "columns_tablet": 3,
+        "columns_mobile": "2",
+        "grid_gap": 18,
+        "image_ratio": "1 / 1",
+        "card_corner_radius": 14,
+        "button_radius": 100,
+        "view_all_label": "Explore All Products",
+        "background_color": "#FFFFFF",
+        "text_color": "#211D1A",
+        "muted_text_color": "#6F6963",
+        "accent_color": "#6E1622",
+        "accent_text_color": "#FFFFFF",
+        "card_background_color": "#FFFFFF",
+        "card_border_color": "#E9E5E0",
+        "image_background_color": "#FFFFFF",
+        "badge_background_color": "#FBF7EF",
+        "price_color": "#792011",
+        "cart_button_background": "#F3F1EF",
+        "star_color": "#E8A33B",
+        "star_empty_color": "#EDEBE8",
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "container_max_width": 980
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "product",
+          "settings": {
+            "show_rating": true,
+            "rating": 4.8,
+            "reviews_count": 0
+          }
+        },
+        "bl-2": {
+          "type": "product",
+          "settings": {
+            "show_rating": true,
+            "rating": 4.8,
+            "reviews_count": 0
+          }
+        },
+        "bl-3": {
+          "type": "product",
+          "settings": {
+            "show_rating": true,
+            "rating": 4.8,
+            "reviews_count": 0
+          }
+        },
+        "bl-4": {
+          "type": "product",
+          "settings": {
+            "show_rating": true,
+            "rating": 4.8,
+            "reviews_count": 0
+          }
+        },
+        "bl-5": {
+          "type": "product",
+          "settings": {
+            "show_rating": true,
+            "rating": 4.8,
+            "reviews_count": 0
+          }
+        },
+        "bl-6": {
+          "type": "product",
+          "settings": {
+            "show_rating": true,
+            "rating": 4.8,
+            "reviews_count": 0
+          }
+        },
+        "bl-7": {
+          "type": "product",
+          "settings": {
+            "show_rating": true,
+            "rating": 4.8,
+            "reviews_count": 0
+          }
+        },
+        "bl-8": {
+          "type": "product",
+          "settings": {
+            "show_rating": true,
+            "rating": 4.8,
+            "reviews_count": 0
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6",
+        "bl-7",
+        "bl-8"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

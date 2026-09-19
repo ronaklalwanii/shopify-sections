@@ -1,0 +1,61 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--pet-blog",
+      "settings": {
+        "badge_text": "Explore Our Blog",
+        "badge_background_color": "#FBF7EF",
+        "heading": "Our Latest News",
+        "columns_desktop": 3,
+        "grid_gap": 24,
+        "image_ratio": "16 / 9",
+        "card_corner_radius": 14,
+        "read_more_label": "Read More",
+        "view_all_label": "Read All News",
+        "button_radius": 100,
+        "background_color": "#FFFFFF",
+        "text_color": "#211D1A",
+        "muted_text_color": "#6F6963",
+        "accent_color": "#6E1622",
+        "accent_text_color": "#FFFFFF",
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "container_max_width": 980
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "article",
+          "settings": {
+            "title": "Healthy Treats Your Pets Will Love",
+            "tag": "Nutrition",
+            "date": "November 27, 2024"
+          }
+        },
+        "bl-2": {
+          "type": "article",
+          "settings": {
+            "title": "Understanding Your Cat's Daily Habits",
+            "tag": "Nutrition",
+            "date": "November 27, 2024"
+          }
+        },
+        "bl-3": {
+          "type": "article",
+          "settings": {
+            "title": "The Best Nutrition Tips for Active Dogs",
+            "tag": "Nutrition",
+            "date": "November 30, 2024"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

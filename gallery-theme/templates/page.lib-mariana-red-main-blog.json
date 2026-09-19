@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--main-blog",
+      "settings": {
+        "show_excerpt": true
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

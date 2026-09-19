@@ -1,0 +1,45 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--style-cards",
+      "settings": {
+        "eyebrow": "How to style it",
+        "padding": 72
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "style",
+          "settings": {
+            "title": "Effortless Day Out",
+            "items": "Linen Skirt, Wide Leg Pants, Leather Sandals",
+            "link_label": "Shop the look"
+          }
+        },
+        "bl-2": {
+          "type": "style",
+          "settings": {
+            "title": "City Chic",
+            "items": "Blazer, Silk Cami, Tailored Trousers",
+            "link_label": "Shop the look"
+          }
+        },
+        "bl-3": {
+          "type": "style",
+          "settings": {
+            "title": "Evening Elegance",
+            "items": "Silk Dress, Heeled Sandals, Clutch Bag",
+            "link_label": "Shop the look"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

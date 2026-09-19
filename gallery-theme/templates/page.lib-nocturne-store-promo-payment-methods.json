@@ -1,0 +1,50 @@
+{
+  "sections": {
+    "library": {
+      "type": "nocturne-store--promo-payment-methods",
+      "settings": {
+        "full_width": true,
+        "content_width": "small",
+        "text_position": "center",
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "texticon",
+          "settings": {
+            "text": "Promo Payment Block",
+            "subtext": "Subheading",
+            "heading_tag": "h1",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>",
+            "icon": "picto-coupon",
+            "icon_width": 32,
+            "icon_width_mobile": 24,
+            "icon_background_type": "circle"
+          }
+        },
+        "bl-2": {
+          "type": "texticon",
+          "settings": {
+            "text": "Heading",
+            "subtext": "Subheading",
+            "heading_tag": "h1",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>",
+            "icon": "picto-coupon",
+            "icon_width": 32,
+            "icon_width_mobile": 24,
+            "icon_background_type": "circle"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

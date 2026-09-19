@@ -1,0 +1,66 @@
+{
+  "sections": {
+    "library": {
+      "type": "nocturne-store--custom-testimonial-showcase",
+      "settings": {
+        "eyebrow_text": "REAL RESULTS. REAL PEOPLE.",
+        "heading": "Loved by thousands of Snatched girls.",
+        "show_controls": true,
+        "autoplay": false,
+        "autoplay_delay": 5,
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "padding_left": 40,
+        "padding_right": 40,
+        "bg_color": "#f2f1ed",
+        "text_color": "#000000",
+        "eyebrow_color": "#8c7b70",
+        "eyebrow_font_size": 12,
+        "heading_color": "#000000",
+        "heading_font_size": 46,
+        "heading_font_weight": "400",
+        "star_color": "#8c7b70",
+        "quote_color": "#333333",
+        "quote_font_size": 16,
+        "arrow_color": "#1a1a1a",
+        "arrow_border_color": "#1a1a1a",
+        "dot_active_color": "#1a1a1a",
+        "dot_inactive_color": "#c9c4bc"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "I use this every night! My skin looks more lifted and glowy and it literally takes 10 minutes.",
+            "author": "Chloe R.",
+            "rating": 5
+          }
+        },
+        "bl-2": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "I use this every night! My skin looks more lifted and glowy and it literally takes 10 minutes.",
+            "author": "Chloe R.",
+            "rating": 5
+          }
+        },
+        "bl-3": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "I use this every night! My skin looks more lifted and glowy and it literally takes 10 minutes.",
+            "author": "Chloe R.",
+            "rating": 5
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "sections": {
+    "library": {
+      "type": "word-scroll-reveal",
+      "settings": {
+        "eyebrow": "Scroll to reveal",
+        "text": "Animation should never make you wait. It should reveal the next idea at exactly the moment you are ready to read it.",
+        "heading_tag": "h2",
+        "show_rule": true,
+        "alignment": "left",
+        "max_width": 1000,
+        "text_size": 64,
+        "text_size_mobile": 30,
+        "padding_y": 40,
+        "scroll_length": 250,
+        "background": "#0d1117",
+        "color_on": "#f5f5f5",
+        "color_off": "#2a2f36",
+        "eyebrow_color": "#8b949e"
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

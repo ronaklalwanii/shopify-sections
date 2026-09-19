@@ -1,0 +1,70 @@
+{
+  "sections": {
+    "library": {
+      "type": "nocturne-store--arena-process",
+      "settings": {
+        "bg_color": "#FDF6E8",
+        "max_width": 1400,
+        "gutter": 16,
+        "space_top": 12,
+        "space_bottom": 12,
+        "radius": 16,
+        "card_pad": 22,
+        "gap": 16,
+        "card_bg": "#F5EBDC",
+        "border_color": "#EDE3D3",
+        "heading": "How we create\ncomfortable urban environment",
+        "heading_size": 28,
+        "open_first": false,
+        "open_last": true
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "step",
+          "settings": {
+            "title": "Design",
+            "text": "<p>Concept, drawings, and approvals.</p>"
+          }
+        },
+        "bl-2": {
+          "type": "step",
+          "settings": {
+            "title": "Construction",
+            "text": "<p>Foundations to handing over keys.</p>"
+          }
+        },
+        "bl-3": {
+          "type": "step",
+          "settings": {
+            "title": "Landscaping",
+            "text": "<p>Courtyards, greenery, and playgrounds.</p>"
+          }
+        },
+        "bl-4": {
+          "type": "step",
+          "settings": {
+            "title": "Lobby finishing",
+            "text": "<p>Entrance groups with designer finish.</p>"
+          }
+        },
+        "bl-5": {
+          "type": "step",
+          "settings": {
+            "title": "Handover and support",
+            "text": "<p>Handover and key transfer. After commissioning, we escort you to handover of keys and apartment — support with paperwork, questions, and aftercare.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

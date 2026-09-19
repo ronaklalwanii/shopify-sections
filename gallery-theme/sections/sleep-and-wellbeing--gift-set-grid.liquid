@@ -1,0 +1,846 @@
+{%- comment -%} Section Library: injected global assets for store "sleep-and-wellbeing" {%- endcomment -%}
+{{ 'sleep-and-wellbeing--theme.css' | asset_url | stylesheet_tag }}
+{{ 'sleep-and-wellbeing--product.css' | asset_url | stylesheet_tag }}
+{% render 'sleep-and-wellbeing--css-variables' %}
+{% comment %}
+  Section: Gift Sets Grid
+  Desktop: 4-up wrapping grid (native page scroll when > 4 cards)
+  Mobile: native horizontal snap-scroll carousel
+{% endcomment %}
+
+{%- assign grid_cols = section.blocks.size | at_most: 4 | at_least: 1 -%}
+
+<section id="GiftSets-{{ section.id }}" class="gs">
+  {%- style -%}
+    /* Override theme's default section spacing */
+    #shopify-section-{{ section.id }} {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    #GiftSets-{{ section.id }} {
+      --gs-bg: {{ section.settings.section_background_color }};
+      --gs-text: {{ section.settings.section_text_color }};
+      --gs-heading: {{ section.settings.heading_color }};
+      --gs-accent: {{ section.settings.accent_color }};
+      --gs-card-bg: {{ section.settings.card_background_color }};
+      --gs-card-text: {{ section.settings.card_text_color }};
+      --gs-card-muted: {{ section.settings.card_muted_color }};
+      --gs-badge-bg: {{ section.settings.badge_background_color }};
+      --gs-badge-text: {{ section.settings.badge_text_color }};
+      --gs-best-bg: {{ section.settings.bestseller_badge_background }};
+      --gs-best-text: {{ section.settings.bestseller_badge_text_color }};
+      --gs-best-border: {{ section.settings.bestseller_border_color }};
+      --gs-best-border-w: {{ section.settings.bestseller_border_width }}px;
+      --gs-price: {{ section.settings.price_color }};
+      --gs-compare: {{ section.settings.compare_price_color }};
+      --gs-btn-bg: {{ section.settings.button_background_color }};
+      --gs-btn-text: {{ section.settings.button_text_color }};
+      --gs-gap: {{ section.settings.card_gap }}px;
+      --gs-pad: {{ section.settings.section_padding }}px;
+      --gs-radius: {{ section.settings.card_border_radius }}px;
+      --gs-speed: {{ section.settings.animation_speed }}ms;
+      --gs-feat-bg: {{ section.settings.featured_background }};
+      --gs-feat-text: {{ section.settings.featured_text }};
+      --gs-feat-muted: {{ section.settings.featured_muted }};
+      --gs-feat-border: {{ section.settings.featured_border }};
+      --gs-feat-border-w: {{ section.settings.featured_border_width }}px;
+      --gs-feat-btn-bg: {{ section.settings.featured_button_bg }};
+      --gs-feat-btn-text: {{ section.settings.featured_button_text }};
+      --gs-ribbon-size: {{ section.settings.ribbon_size }}px;
+      --gs-ease: cubic-bezier(.22, 1, .36, 1);
+    }
+
+    #GiftSets-{{ section.id }} {
+      background: var(--gs-bg);
+      color: var(--gs-text);
+      padding: var(--gs-pad) {{ section.settings.mobile_gutter | default: 20 }}px;
+      position: relative;
+      overflow-x: clip;
+    }
+
+    {% if section.settings.edge_image_left != blank %}
+      #GiftSets-{{ section.id }}::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: {{ section.settings.edge_image_width }}px;
+        max-height: 90%;
+        height: 100%;
+        background: url('{{ section.settings.edge_image_left | image_url: width: 400 }}') center / contain no-repeat;
+        opacity: {{ section.settings.edge_image_opacity | divided_by: 100.0 }};
+        pointer-events: none;
+        z-index: 1;
+      }
+    {% endif %}
+    {% if section.settings.edge_image_right != blank %}
+      #GiftSets-{{ section.id }}::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: {{ section.settings.edge_image_width }}px;
+        max-height: 90%;
+        height: 100%;
+        background: url('{{ section.settings.edge_image_right | image_url: width: 400 }}') center / contain no-repeat;
+        opacity: {{ section.settings.edge_image_opacity | divided_by: 100.0 }};
+        pointer-events: none;
+        z-index: 1;
+      }
+    {% endif %}
+
+    #GiftSets-{{ section.id }} .gs__shell {
+      max-width: {{ section.settings.section_max_width }}px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+      min-width: 0;
+    }
+
+    /* Header */
+    #GiftSets-{{ section.id }} .gs__header {
+      position: relative;
+      text-align: center;
+      margin-bottom: calc(var(--gs-pad) * 0.7);
+    }
+    #GiftSets-{{ section.id }} .gs__subtitle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 {{ section.settings.title_margin_bottom }}px;
+      color: var(--gs-accent);
+      font-size: {{ section.settings.subtitle_font_size }}px;
+      font-weight: {{ section.settings.subtitle_font_weight }};
+      letter-spacing: {{ section.settings.subtitle_letter_spacing }}px;
+      text-transform: uppercase;
+    }
+    #GiftSets-{{ section.id }} .gs__subtitle svg {
+      width: 12px;
+      height: 12px;
+    }
+    #GiftSets-{{ section.id }} .gs__title {
+      margin: 0;
+      color: var(--gs-heading);
+      font-size: {{ section.settings.title_font_size }}px;
+      font-weight: {{ section.settings.title_font_weight }};
+      line-height: {{ section.settings.title_line_height }};
+      font-family: Georgia, 'Times New Roman', serif;
+    }
+    #GiftSets-{{ section.id }} .gs__view-all {
+      position: absolute;
+      right: 0;
+      top: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gs-accent);
+      font-size: {{ section.settings.view_all_font_size }}px;
+      font-weight: {{ section.settings.view_all_font_weight }};
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: transform 200ms ease, opacity 200ms ease;
+    }
+    #GiftSets-{{ section.id }} .gs__view-all:hover {
+      transform: translateX(4px);
+    }
+    #GiftSets-{{ section.id }} .gs__view-all svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Track / Grid */
+    #GiftSets-{{ section.id }} .gs__track {
+      display: grid;
+      grid-template-columns: repeat({{ grid_cols }}, minmax(0, 1fr));
+      gap: var(--gs-gap);
+      padding: 16px 0;
+      min-width: 0;
+    }
+
+    /* Cards */
+    #GiftSets-{{ section.id }} .gs__card {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background: var(--gs-card-bg);
+      color: var(--gs-card-text);
+      border-radius: var(--gs-radius);
+      overflow: visible;
+      box-shadow: {{ section.settings.card_shadow }};
+      transition: transform 350ms var(--gs-ease), box-shadow 350ms var(--gs-ease), opacity var(--gs-speed) ease;
+      min-width: 0;
+    }
+    #GiftSets-{{ section.id }} .gs__card:hover {
+      transform: translateY(-{{ section.settings.card_hover_lift }}px);
+      box-shadow: {{ section.settings.card_hover_shadow }};
+    }
+
+    /* Bestseller highlight: selectable border + pop */
+    #GiftSets-{{ section.id }} .gs__card--best {
+      border: var(--gs-best-border-w) solid var(--gs-best-border);
+      transform: scale(1.03);
+      z-index: 2;
+    }
+    #GiftSets-{{ section.id }} .gs__card--best:hover {
+      transform: scale(1.03) translateY(-{{ section.settings.card_hover_lift }}px);
+      box-shadow: {{ section.settings.card_hover_shadow }};
+    }
+
+    /* Featured highlight: dark takeover + gold border + pop */
+    #GiftSets-{{ section.id }} .gs__card--featured {
+      background: var(--gs-feat-bg);
+      color: var(--gs-feat-text);
+      border: var(--gs-feat-border-w) solid var(--gs-feat-border);
+      transform: scale(1.03);
+      z-index: 2;
+    }
+    #GiftSets-{{ section.id }} .gs__card--featured:hover {
+      transform: scale(1.03) translateY(-{{ section.settings.card_hover_lift }}px);
+      box-shadow: {{ section.settings.card_hover_shadow }};
+    }
+
+    #GiftSets-{{ section.id }} .gs__ribbon {
+      position: absolute;
+      top: -14px;
+      right: 6px;
+      width: var(--gs-ribbon-size);
+      z-index: 4;
+      pointer-events: none;
+    }
+    #GiftSets-{{ section.id }} .gs__ribbon img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    #GiftSets-{{ section.id }} .gs__badge {
+      position: absolute;
+      top: {{ section.settings.badge_top_position }}px;
+      left: {{ section.settings.badge_left_position }}px;
+      z-index: 3;
+      background: var(--gs-badge-bg);
+      color: var(--gs-badge-text);
+      padding: {{ section.settings.badge_padding }}px;
+      font-size: {{ section.settings.badge_font_size }}px;
+      font-weight: {{ section.settings.badge_font_weight }};
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      border-radius: {{ section.settings.badge_border_radius }}px;
+    }
+    #GiftSets-{{ section.id }} .gs__badge--best {
+      background: var(--gs-best-bg);
+      color: var(--gs-best-text);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    #GiftSets-{{ section.id }} .gs__media {
+      position: relative;
+      padding-top: {{ section.settings.image_aspect_ratio }}%;
+      overflow: hidden;
+      border-radius: var(--gs-radius) var(--gs-radius) 0 0;
+      background: {{ section.settings.image_background_color }};
+    }
+    #GiftSets-{{ section.id }} .gs__media img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: {{ section.settings.image_object_fit }};
+      transition: transform calc(var(--gs-speed) * 1.5) ease;
+    }
+    #GiftSets-{{ section.id }} .gs__card:hover .gs__media img {
+      transform: scale({{ section.settings.image_zoom_scale }});
+    }
+    #GiftSets-{{ section.id }} .gs__placeholder {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      padding: 24px;
+    }
+
+    #GiftSets-{{ section.id }} .gs__content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: {{ section.settings.card_content_padding }}px;
+      min-width: 0;
+    }
+
+    #GiftSets-{{ section.id }} .gs__product-title {
+      margin: 0 0 {{ section.settings.product_title_margin }}px;
+      font-size: {{ section.settings.product_title_font_size }}px;
+      font-weight: {{ section.settings.product_title_font_weight }};
+      line-height: {{ section.settings.product_title_line_height }};
+    }
+
+    #GiftSets-{{ section.id }} .gs__desc {
+      margin: 0 0 {{ section.settings.description_margin }}px;
+      font-size: {{ section.settings.description_font_size }}px;
+      line-height: {{ section.settings.description_line_height }};
+      color: var(--gs-card-muted);
+      opacity: {{ section.settings.description_opacity | divided_by: 100.0 }};
+    }
+    #GiftSets-{{ section.id }} .gs__card--featured .gs__desc {
+      color: var(--gs-feat-muted);
+    }
+
+    #GiftSets-{{ section.id }} .gs__features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: {{ section.settings.feature_gap }}px;
+      margin-bottom: {{ section.settings.features_margin }}px;
+    }
+    #GiftSets-{{ section.id }} .gs__feature {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: {{ section.settings.feature_font_size }}px;
+      opacity: {{ section.settings.feature_opacity | divided_by: 100.0 }};
+    }
+    #GiftSets-{{ section.id }} .gs__feature svg {
+      width: {{ section.settings.feature_icon_size }}px;
+      height: {{ section.settings.feature_icon_size }}px;
+      color: var(--gs-accent);
+      flex-shrink: 0;
+    }
+
+    #GiftSets-{{ section.id }} .gs__footer {
+      margin-top: auto;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    #GiftSets-{{ section.id }} .gs__prices {
+      display: flex;
+      align-items: baseline;
+      gap: {{ section.settings.price_gap }}px;
+      flex-wrap: wrap;
+    }
+    #GiftSets-{{ section.id }} .gs__price {
+      font-size: {{ section.settings.price_font_size }}px;
+      font-weight: {{ section.settings.price_font_weight }};
+      color: var(--gs-price);
+    }
+    #GiftSets-{{ section.id }} .gs__card--featured .gs__price {
+      color: var(--gs-feat-text);
+    }
+    #GiftSets-{{ section.id }} .gs__compare {
+      font-size: {{ section.settings.compare_price_font_size }}px;
+      color: var(--gs-compare);
+      text-decoration: line-through;
+      opacity: {{ section.settings.compare_price_opacity | divided_by: 100.0 }};
+    }
+    #GiftSets-{{ section.id }} .gs__card--featured .gs__compare {
+      color: var(--gs-feat-muted);
+    }
+    #GiftSets-{{ section.id }} .gs__savings {
+      font-size: {{ section.settings.savings_font_size }}px;
+      font-weight: {{ section.settings.savings_font_weight }};
+      color: {{ section.settings.savings_color }};
+    }
+
+    /* Buttons (view button) */
+    #GiftSets-{{ section.id }} .gs__btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: {{ section.settings.button_padding }}px calc({{ section.settings.button_padding }}px * 1.4);
+      border-radius: {{ section.settings.button_border_radius }}px;
+      font-size: {{ section.settings.button_font_size }}px;
+      font-weight: {{ section.settings.button_font_weight }};
+      letter-spacing: {{ section.settings.button_letter_spacing }}px;
+      text-transform: {{ section.settings.button_text_transform }};
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 200ms ease, opacity 200ms ease, background-color 200ms ease;
+      white-space: nowrap;
+      {% if section.settings.button_style == 'outline' %}
+        background: transparent;
+        border: 1px solid currentColor;
+        color: inherit;
+      {% else %}
+        background: var(--gs-btn-bg);
+        border: 1px solid var(--gs-btn-bg);
+        color: var(--gs-btn-text);
+      {% endif %}
+    }
+    #GiftSets-{{ section.id }} .gs__btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.88;
+    }
+    #GiftSets-{{ section.id }} .gs__card--featured .gs__btn {
+      background: var(--gs-feat-btn-bg);
+      border: 1px solid var(--gs-feat-btn-bg);
+      color: var(--gs-feat-btn-text);
+    }
+
+    /* Entrance animation */
+    #GiftSets-{{ section.id }}.gs-animated:not(.is-in-view) .gs__card,
+    #GiftSets-{{ section.id }}.gs-animated:not(.is-in-view) .gs__header {
+      opacity: 0;
+      transform: translateY(26px);
+    }
+    #GiftSets-{{ section.id }}.gs-animated:not(.is-in-view) .gs__card--best {
+      opacity: 0;
+      transform: scale(1.03) translateY(26px);
+    }
+    #GiftSets-{{ section.id }}.gs-animated:not(.is-in-view) .gs__card--featured {
+      opacity: 0;
+      transform: scale(1.03) translateY(26px);
+    }
+    #GiftSets-{{ section.id }} .gs__header {
+      transition: opacity var(--gs-speed) ease, transform var(--gs-speed) var(--gs-ease);
+    }
+    #GiftSets-{{ section.id }} .gs__card {
+      transition-delay: calc(var(--i, 0) * 90ms);
+    }
+
+    /* Tablet */
+    @media screen and (max-width: 1100px) {
+      #GiftSets-{{ section.id }} .gs__track {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    /* Mobile ≤900px: horizontal snap-scroll */
+    @media screen and (max-width: 900px) {
+      #GiftSets-{{ section.id }} .gs__track {
+        grid-auto-flow: column;
+        grid-auto-columns: min(320px, 70%);
+        grid-template-columns: none;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+        scrollbar-width: none;
+        padding: 16px 4px;
+      }
+      #GiftSets-{{ section.id }} .gs__track::-webkit-scrollbar {
+        display: none;
+      }
+      #GiftSets-{{ section.id }} .gs__card {
+        scroll-snap-align: start;
+      }
+      #GiftSets-{{ section.id }} .gs__card--best,
+      #GiftSets-{{ section.id }} .gs__card--featured {
+        transform: none;
+      }
+      #GiftSets-{{ section.id }} .gs__card--best:hover,
+      #GiftSets-{{ section.id }} .gs__card--featured:hover {
+        transform: translateY(-{{ section.settings.card_hover_lift }}px);
+      }
+      #GiftSets-{{ section.id }}::before,
+      #GiftSets-{{ section.id }}::after {
+        display: none;
+      }
+    }
+
+    @media screen and (max-width: 640px) {
+      #GiftSets-{{ section.id }} {
+        padding: {{ section.settings.section_padding_mobile }}px {{ section.settings.mobile_gutter | default: 20 }}px;
+      }
+      #GiftSets-{{ section.id }} .gs__track {
+        grid-auto-columns: 85%;
+      }
+      #GiftSets-{{ section.id }} .gs__title {
+        font-size: {{ section.settings.title_font_size_mobile }}px;
+      }
+      #GiftSets-{{ section.id }} .gs__view-all {
+        position: static;
+        margin-top: 14px;
+        justify-content: center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #GiftSets-{{ section.id }} .gs__card,
+      #GiftSets-{{ section.id }} .gs__header,
+      #GiftSets-{{ section.id }} .gs__media img,
+      #GiftSets-{{ section.id }} .gs__btn,
+      #GiftSets-{{ section.id }} .gs__view-all {
+        transition: none;
+      }
+      #GiftSets-{{ section.id }}.gs-animated:not(.is-in-view) .gs__card,
+      #GiftSets-{{ section.id }}.gs-animated:not(.is-in-view) .gs__header {
+        opacity: 1;
+        transform: none;
+      }
+      #GiftSets-{{ section.id }}.gs-animated:not(.is-in-view) .gs__card--best {
+        opacity: 1;
+        transform: scale(1.03);
+      }
+      #GiftSets-{{ section.id }}.gs-animated:not(.is-in-view) .gs__card--featured {
+        opacity: 1;
+        transform: scale(1.03);
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="gs__shell">
+    <div class="gs__header">
+      {%- if section.settings.subtitle != blank -%}
+        <p class="gs__subtitle">
+          {%- if section.settings.show_subtitle_icon -%}
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.1 6.6L21 11l-6.9 2.4L12 20l-2.1-6.6L3 11l6.9-2.4z"/></svg>
+          {%- endif -%}
+          {{ section.settings.subtitle }}
+        </p>
+      {%- endif -%}
+
+      {%- if section.settings.title != blank -%}
+        <h2 class="gs__title">{{ section.settings.title }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.view_all_link != blank and section.settings.view_all_text != blank -%}
+        <a href="{{ section.settings.view_all_link }}" class="gs__view-all">
+          {{ section.settings.view_all_text }}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="gs__carousel">
+      <div class="gs__track">
+        {%- for block in section.blocks -%}
+          {%- assign product = block.settings.product -%}
+
+          {%- assign highlight = block.settings.highlight -%}
+          {%- if highlight == blank or highlight == 'none' -%}
+            {%- if block.settings.is_featured -%}
+              {%- assign highlight = 'featured' -%}
+            {%- elsif block.settings.is_bestseller -%}
+              {%- assign highlight = 'best' -%}
+            {%- endif -%}
+          {%- endif -%}
+
+          {%- if product != blank -%}
+            {%- assign price_c = product.price -%}
+            {%- assign compare_c = product.compare_at_price -%}
+          {%- else -%}
+            {%- assign price_c = block.settings.price | times: 100 -%}
+            {%- assign compare_c = block.settings.compare_at_price | times: 100 -%}
+          {%- endif -%}
+
+          <div class="gs__card{% if highlight == 'featured' %} gs__card--featured{% elsif highlight == 'best' %} gs__card--best{% endif %}" style="--i: {{ forloop.index0 }}" {{ block.shopify_attributes }}>
+            {%- if highlight == 'featured' and section.settings.show_ribbon and section.settings.ribbon_image != blank -%}
+              <span class="gs__ribbon" aria-hidden="true">
+                <img src="{{ section.settings.ribbon_image | image_url: width: 240 }}" alt="" loading="lazy" width="240" height="240">
+              </span>
+            {%- endif -%}
+
+            {%- if highlight != 'none' -%}
+              <span class="gs__badge gs__badge--best">{{ section.settings.bestseller_badge_label | default: 'BESTSELLER' }}</span>
+            {%- elsif block.settings.badge_text != blank -%}
+              <span class="gs__badge">{{ block.settings.badge_text }}</span>
+            {%- endif -%}
+
+            <div class="gs__media">
+              {%- if block.settings.custom_image != blank -%}
+                <img src="{{ block.settings.custom_image | image_url: width: 800 }}" alt="{{ block.settings.title | default: product.title | escape }}" loading="lazy" width="800" height="800">
+              {%- elsif product != blank and product.featured_image != blank -%}
+                <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}" loading="lazy" width="800" height="800">
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'gs__placeholder' }}
+              {%- endif -%}
+            </div>
+
+            <div class="gs__content">
+              <h3 class="gs__product-title">{{ block.settings.title | default: product.title }}</h3>
+
+              {%- if block.settings.description != blank -%}
+                <p class="gs__desc">{{ block.settings.description }}</p>
+              {%- endif -%}
+
+              {%- if block.settings.show_features and block.settings.features != blank -%}
+                <div class="gs__features">
+                  {%- assign features = block.settings.features | split: ',' -%}
+                  {%- for feature in features -%}
+                    {%- assign clean = feature | strip -%}
+                    {%- if clean != blank -%}
+                      <span class="gs__feature">
+                        {%- case block.settings.feature_icon -%}
+                          {%- when 'gem' -%}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 12L2 9z"></path><path d="M2 9h20"></path></svg>
+                          {%- when 'drop' -%}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"></path></svg>
+                          {%- when 'check' -%}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                          {%- when 'leaf' -%}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path></svg>
+                          {%- when 'star' -%}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                          {%- else -%}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                        {%- endcase -%}
+                        {{ clean }}
+                      </span>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+
+              <div class="gs__footer">
+                <div class="gs__prices">
+                  <span class="gs__price">{{ price_c | money }}</span>
+                  {%- if compare_c > price_c and compare_c > 0 -%}
+                    <span class="gs__compare">{{ compare_c | money }}</span>
+                    {%- assign savings_c = compare_c | minus: price_c -%}
+                    {%- if savings_c > 0 -%}
+                      {%- assign savings_pct = savings_c | times: 100.0 | divided_by: compare_c | round -%}
+                      <span class="gs__savings">SAVE {{ savings_pct }}%</span>
+                    {%- endif -%}
+                  {%- endif -%}
+                </div>
+
+                {%- if block.settings.show_view_button -%}
+                  {%- assign view_url = block.settings.button_link | default: product.url -%}
+                  {%- if view_url != blank -%}
+                    <a class="gs__btn" href="{{ view_url }}">
+                      {{ block.settings.button_text | default: 'View' }}
+                    </a>
+                  {%- endif -%}
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.getElementById('GiftSets-{{ section.id }}');
+      if (!root) return;
+
+      /* Entrance animation */
+      {%- if section.settings.enable_animation -%}
+        root.classList.add('gs-animated');
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduced || !('IntersectionObserver' in window)) {
+          root.classList.add('is-in-view');
+        } else {
+          const obs = new IntersectionObserver((entries, o) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                root.classList.add('is-in-view');
+                o.unobserve(e.target);
+              }
+            });
+          }, { threshold: 0.1 });
+          obs.observe(root);
+        }
+      {%- else -%}
+        root.classList.add('is-in-view');
+      {%- endif -%}
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Gift Sets Grid",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Beautifully Bundled" },
+    { "type": "checkbox", "id": "show_subtitle_icon", "label": "Subtitle sparkle icon", "default": true },
+    { "type": "text", "id": "title", "label": "Heading", "default": "Our most-loved gift sets" },
+    { "type": "url", "id": "view_all_link", "label": "View all link" },
+    { "type": "text", "id": "view_all_text", "label": "View all text", "default": "View all bundles" },
+
+    { "type": "header", "content": "Edge decorations" },
+    { "type": "image_picker", "id": "edge_image_left", "label": "Left edge image" },
+    { "type": "image_picker", "id": "edge_image_right", "label": "Right edge image" },
+    { "type": "range", "id": "edge_image_width", "label": "Edge image width", "min": 100, "max": 400, "step": 10, "default": 200, "unit": "px" },
+    { "type": "range", "id": "edge_image_opacity", "label": "Edge image opacity", "min": 10, "max": 100, "step": 5, "default": 60, "unit": "%" },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_background_color", "label": "Section background", "default": "#12291F" },
+    { "type": "color", "id": "section_text_color", "label": "Section text", "default": "#F3ECDD" },
+    { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#F3ECDD" },
+    { "type": "color", "id": "accent_color", "label": "Accent (gold)", "default": "#C9A25E" },
+    { "type": "color", "id": "card_background_color", "label": "Card background", "default": "#F6F1E8" },
+    { "type": "color", "id": "card_text_color", "label": "Card text", "default": "#2A2118" },
+    { "type": "color", "id": "card_muted_color", "label": "Card muted text", "default": "#6E6156" },
+    { "type": "color", "id": "badge_background_color", "label": "Badge background", "default": "#7A2E2E" },
+    { "type": "color", "id": "badge_text_color", "label": "Badge text", "default": "#F6F1E8" },
+    { "type": "color", "id": "bestseller_badge_background", "label": "Bestseller badge background", "default": "#7A2E2E" },
+    { "type": "color", "id": "bestseller_badge_text_color", "label": "Bestseller badge text", "default": "#F6F1E8" },
+    { "type": "text", "id": "bestseller_badge_label", "label": "Bestseller badge label", "default": "BESTSELLER" },
+    { "type": "color", "id": "price_color", "label": "Price color", "default": "#2A2118" },
+    { "type": "color", "id": "compare_price_color", "label": "Compare price color", "default": "#9A8F83" },
+    { "type": "color", "id": "savings_color", "label": "Savings color", "default": "#7A2E2E" },
+    { "type": "color", "id": "image_background_color", "label": "Image background", "default": "#EFE8DC" },
+
+    { "type": "header", "content": "Bestseller card" },
+    { "type": "color", "id": "bestseller_border_color", "label": "Bestseller card border", "default": "#C9A25E" },
+    { "type": "range", "id": "bestseller_border_width", "label": "Bestseller border width", "min": 0, "max": 4, "step": 1, "default": 2, "unit": "px" },
+
+    { "type": "header", "content": "Featured card" },
+    { "type": "color", "id": "featured_background", "label": "Featured background", "default": "#12291F" },
+    { "type": "color", "id": "featured_text", "label": "Featured text", "default": "#F3ECDD" },
+    { "type": "color", "id": "featured_muted", "label": "Featured muted text", "default": "#C9C1AE" },
+    { "type": "color", "id": "featured_border", "label": "Featured border", "default": "#C9A25E" },
+    { "type": "range", "id": "featured_border_width", "label": "Featured border width", "min": 0, "max": 4, "step": 1, "default": 1, "unit": "px" },
+    { "type": "color", "id": "featured_button_bg", "label": "Featured button background", "default": "#C9A25E" },
+    { "type": "color", "id": "featured_button_text", "label": "Featured button text", "default": "#12291F" },
+    { "type": "checkbox", "id": "show_ribbon", "label": "Show ribbon on featured", "default": true },
+    { "type": "image_picker", "id": "ribbon_image", "label": "Ribbon image (PNG)" },
+    { "type": "range", "id": "ribbon_size", "label": "Ribbon size", "min": 60, "max": 180, "step": 10, "default": 110, "unit": "px" },
+
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "section_max_width", "label": "Section max width", "min": 800, "max": 1600, "step": 50, "default": 1400, "unit": "px" },
+    { "type": "range", "id": "section_padding", "label": "Section padding", "min": 0, "max": 120, "step": 10, "default": 40, "unit": "px" },
+    { "type": "range", "id": "section_padding_mobile", "label": "Section padding mobile", "min": 0, "max": 60, "step": 5, "default": 20, "unit": "px" },
+    { "type": "range", "id": "mobile_gutter", "label": "Side gutters", "min": 0, "max": 60, "step": 2, "default": 20, "unit": "px" },
+    { "type": "range", "id": "card_gap", "label": "Card gap", "min": 10, "max": 40, "step": 2, "default": 24, "unit": "px" },
+    { "type": "range", "id": "card_border_radius", "label": "Card radius", "min": 0, "max": 30, "step": 2, "default": 12, "unit": "px" },
+    { "type": "range", "id": "card_content_padding", "label": "Card content padding", "min": 10, "max": 40, "step": 2, "default": 24, "unit": "px" },
+    { "type": "range", "id": "card_hover_lift", "label": "Card hover lift", "min": 0, "max": 20, "step": 2, "default": 8, "unit": "px" },
+    { "type": "select", "id": "card_shadow", "label": "Card shadow", "default": "0 4px 12px rgba(0,0,0,0.08)", "options": [
+      { "value": "none", "label": "None" },
+      { "value": "0 2px 8px rgba(0,0,0,0.05)", "label": "Small" },
+      { "value": "0 4px 12px rgba(0,0,0,0.08)", "label": "Medium" },
+      { "value": "0 8px 24px rgba(0,0,0,0.12)", "label": "Large" },
+      { "value": "0 12px 40px rgba(0,0,0,0.15)", "label": "Extra large" }
+    ] },
+    { "type": "select", "id": "card_hover_shadow", "label": "Card hover shadow", "default": "0 12px 40px rgba(0,0,0,0.15)", "options": [
+      { "value": "none", "label": "None" },
+      { "value": "0 4px 12px rgba(0,0,0,0.08)", "label": "Small" },
+      { "value": "0 8px 24px rgba(0,0,0,0.12)", "label": "Medium" },
+      { "value": "0 12px 40px rgba(0,0,0,0.15)", "label": "Large" }
+    ] },
+
+    { "type": "header", "content": "Typography - Header" },
+    { "type": "range", "id": "subtitle_font_size", "label": "Subtitle size", "min": 10, "max": 24, "step": 1, "default": 12, "unit": "px" },
+    { "type": "range", "id": "subtitle_font_weight", "label": "Subtitle weight", "min": 300, "max": 700, "step": 100, "default": 500 },
+    { "type": "range", "id": "subtitle_letter_spacing", "label": "Subtitle spacing", "min": 0, "max": 5, "step": 0.5, "default": 2, "unit": "px" },
+    { "type": "range", "id": "title_margin_bottom", "label": "Subtitle bottom spacing", "min": 0, "max": 40, "step": 2, "default": 12, "unit": "px" },
+    { "type": "range", "id": "title_font_size", "label": "Title size", "min": 20, "max": 64, "step": 2, "default": 36, "unit": "px" },
+    { "type": "range", "id": "title_font_size_mobile", "label": "Title size mobile", "min": 16, "max": 40, "step": 2, "default": 28, "unit": "px" },
+    { "type": "range", "id": "title_font_weight", "label": "Title weight", "min": 300, "max": 900, "step": 100, "default": 500 },
+    { "type": "range", "id": "title_line_height", "label": "Title line height", "min": 1, "max": 2, "step": 0.1, "default": 1.2 },
+    { "type": "range", "id": "view_all_font_size", "label": "View all size", "min": 12, "max": 24, "step": 1, "default": 14, "unit": "px" },
+    { "type": "range", "id": "view_all_font_weight", "label": "View all weight", "min": 300, "max": 700, "step": 100, "default": 500 },
+
+    { "type": "header", "content": "Typography - Product" },
+    { "type": "range", "id": "product_title_font_size", "label": "Product title size", "min": 14, "max": 28, "step": 1, "default": 18, "unit": "px" },
+    { "type": "range", "id": "product_title_font_weight", "label": "Product title weight", "min": 300, "max": 700, "step": 100, "default": 600 },
+    { "type": "range", "id": "product_title_margin", "label": "Product title margin", "min": 0, "max": 24, "step": 2, "default": 12, "unit": "px" },
+    { "type": "range", "id": "product_title_line_height", "label": "Product title line height", "min": 1, "max": 2, "step": 0.1, "default": 1.3 },
+    { "type": "range", "id": "description_font_size", "label": "Description size", "min": 11, "max": 20, "step": 1, "default": 14, "unit": "px" },
+    { "type": "range", "id": "description_line_height", "label": "Description line height", "min": 1, "max": 2.5, "step": 0.1, "default": 1.5 },
+    { "type": "range", "id": "description_margin", "label": "Description margin", "min": 0, "max": 24, "step": 2, "default": 12, "unit": "px" },
+    { "type": "range", "id": "description_opacity", "label": "Description opacity", "min": 40, "max": 100, "step": 5, "default": 90, "unit": "%" },
+
+    { "type": "header", "content": "Badge" },
+    { "type": "range", "id": "badge_top_position", "label": "Badge top", "min": 8, "max": 40, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "badge_left_position", "label": "Badge left", "min": 8, "max": 40, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "badge_padding", "label": "Badge padding", "min": 4, "max": 16, "step": 2, "default": 8, "unit": "px" },
+    { "type": "range", "id": "badge_font_size", "label": "Badge size", "min": 9, "max": 16, "step": 1, "default": 11, "unit": "px" },
+    { "type": "range", "id": "badge_font_weight", "label": "Badge weight", "min": 400, "max": 900, "step": 100, "default": 700 },
+    { "type": "range", "id": "badge_border_radius", "label": "Badge radius", "min": 0, "max": 12, "step": 1, "default": 4, "unit": "px" },
+
+    { "type": "header", "content": "Image" },
+    { "type": "range", "id": "image_aspect_ratio", "label": "Image aspect ratio (%)", "min": 50, "max": 150, "step": 5, "default": 100, "unit": "%" },
+    { "type": "select", "id": "image_object_fit", "label": "Image fit", "default": "fill", "options": [
+      { "value": "contain", "label": "Contain" },
+      { "value": "cover", "label": "Cover" },
+      { "value": "fill", "label": "Fill" }
+    ] },
+    { "type": "number", "id": "image_zoom_scale", "label": "Hover zoom (e.g. 1.08)", "default": 1.2, "info": "1 = no zoom. Recommended 1.05–1.12." },
+
+    { "type": "header", "content": "Features" },
+    { "type": "range", "id": "feature_gap", "label": "Feature gap", "min": 8, "max": 24, "step": 2, "default": 12, "unit": "px" },
+    { "type": "range", "id": "features_margin", "label": "Features margin", "min": 0, "max": 24, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "feature_font_size", "label": "Feature size", "min": 10, "max": 16, "step": 1, "default": 12, "unit": "px" },
+    { "type": "range", "id": "feature_icon_size", "label": "Feature icon size", "min": 12, "max": 24, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "feature_opacity", "label": "Feature opacity", "min": 40, "max": 100, "step": 5, "default": 90, "unit": "%" },
+
+    { "type": "header", "content": "Pricing" },
+    { "type": "range", "id": "price_gap", "label": "Price gap", "min": 4, "max": 20, "step": 2, "default": 10, "unit": "px" },
+    { "type": "range", "id": "price_font_size", "label": "Price size", "min": 14, "max": 32, "step": 2, "default": 20, "unit": "px" },
+    { "type": "range", "id": "price_font_weight", "label": "Price weight", "min": 400, "max": 900, "step": 100, "default": 700 },
+    { "type": "range", "id": "compare_price_font_size", "label": "Compare size", "min": 12, "max": 24, "step": 1, "default": 16, "unit": "px" },
+    { "type": "range", "id": "compare_price_opacity", "label": "Compare opacity", "min": 30, "max": 100, "step": 5, "default": 70, "unit": "%" },
+    { "type": "range", "id": "savings_font_size", "label": "Savings size", "min": 10, "max": 18, "step": 1, "default": 13, "unit": "px" },
+    { "type": "range", "id": "savings_font_weight", "label": "Savings weight", "min": 400, "max": 900, "step": 100, "default": 600 },
+
+    { "type": "header", "content": "Button" },
+    { "type": "select", "id": "button_style", "label": "Button style", "default": "outline", "options": [
+      { "value": "outline", "label": "Outline" },
+      { "value": "solid", "label": "Solid" }
+    ] },
+    { "type": "range", "id": "button_padding", "label": "Button padding", "min": 8, "max": 24, "step": 2, "default": 12, "unit": "px" },
+    { "type": "range", "id": "button_border_radius", "label": "Button radius", "min": 0, "max": 30, "step": 2, "default": 6, "unit": "px" },
+    { "type": "range", "id": "button_font_size", "label": "Button size", "min": 11, "max": 20, "step": 1, "default": 12, "unit": "px" },
+    { "type": "range", "id": "button_font_weight", "label": "Button weight", "min": 400, "max": 900, "step": 100, "default": 600 },
+    { "type": "select", "id": "button_text_transform", "label": "Button transform", "default": "uppercase", "options": [
+      { "value": "none", "label": "None" },
+      { "value": "uppercase", "label": "Uppercase" },
+      { "value": "capitalize", "label": "Capitalize" }
+    ] },
+    { "type": "range", "id": "button_letter_spacing", "label": "Button spacing", "min": 0, "max": 3, "step": 0.5, "default": 1, "unit": "px" },
+    { "type": "color", "id": "button_background_color", "label": "Solid button background", "default": "#12291F" },
+    { "type": "color", "id": "button_text_color", "label": "Solid button text", "default": "#F3ECDD" },
+
+    { "type": "header", "content": "Animation" },
+    { "type": "checkbox", "id": "enable_animation", "label": "Enable entrance animation", "default": true },
+    { "type": "range", "id": "animation_speed", "label": "Animation speed", "min": 200, "max": 1000, "step": 100, "default": 500, "unit": "ms" }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "image_picker", "id": "custom_image", "label": "Custom image", "info": "Overrides product image" },
+        { "type": "text", "id": "title", "label": "Custom title", "info": "Overrides product title" },
+        { "type": "textarea", "id": "description", "label": "Description" },
+        { "type": "select", "id": "highlight", "label": "Card highlight", "default": "none", "options": [
+          { "value": "none", "label": "None" },
+          { "value": "best", "label": "Bestseller — badge + border pop" },
+          { "value": "featured", "label": "Featured — dark + gold + ribbon" }
+        ] },
+        { "type": "text", "id": "badge_text", "label": "Custom badge text", "info": "e.g. SAVE 15% (only when highlight is None)" },
+        { "type": "checkbox", "id": "show_features", "label": "Show features", "default": false },
+        { "type": "text", "id": "features", "label": "Features (comma separated)", "info": "e.g. Better Support, Breathable Materials, Forever Comfort" },
+        { "type": "select", "id": "feature_icon", "label": "Feature icon", "default": "smile", "options": [
+          { "value": "smile", "label": "Smile" },
+          { "value": "gem", "label": "Gem" },
+          { "value": "drop", "label": "Droplet" },
+          { "value": "check", "label": "Check" },
+          { "value": "leaf", "label": "Leaf" },
+          { "value": "star", "label": "Star" }
+        ] },
+        { "type": "number", "id": "price", "label": "Manual price ($)", "default": 0, "info": "Used when no product selected" },
+        { "type": "number", "id": "compare_at_price", "label": "Manual compare price ($)", "default": 0 },
+        { "type": "checkbox", "id": "show_view_button", "label": "Show view button", "default": true },
+        { "type": "text", "id": "button_text", "label": "Button text", "default": "View" },
+        { "type": "url", "id": "button_link", "label": "Button link override", "info": "Leave empty to link to the product page." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gift Sets Grid",
+      "blocks": [
+        { "type": "product", "settings": { "highlight": "best", "title": "The Sleep Ritual", "description": "Everything needed for a calmer bedtime.", "price": 89, "compare_at_price": 105 } },
+        { "type": "product", "settings": { "badge_text": "SAVE 15%", "title": "The Wind Down Set", "description": "Small rituals. Better evenings.", "price": 59, "compare_at_price": 70 } },
+        { "type": "product", "settings": { "highlight": "featured", "show_features": true, "features": "Better Support, Breathable Materials, Forever Comfort", "feature_icon": "smile", "title": "The Perfect Pillow Pairing", "description": "A thoughtful upgrade to their everyday sleep.", "price": 129, "compare_at_price": 149 } },
+        { "type": "product", "settings": { "badge_text": "SAVE 20%", "title": "The Ultimate Sleep Gift", "description": "The complete nighttime experience.", "price": 159, "compare_at_price": 199 } }
+      ]
+    }
+  ]
+}
+{% endschema %}

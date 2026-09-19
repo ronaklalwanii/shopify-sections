@@ -1,0 +1,55 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--pet-header",
+      "settings": {
+        "logo_height": 40,
+        "show_logo_icon": true,
+        "logo_icon_radius": 10,
+        "logo_text": "Happy\nTails",
+        "pill_radius": 100,
+        "show_cta": true,
+        "cta_label": "Get in Touch",
+        "show_search": true,
+        "show_account": false,
+        "background_color": "#D9D9D9",
+        "bar_background_color": "#FFFFFF",
+        "bar_radius": 20,
+        "bar_height": 78,
+        "text_color": "#141414",
+        "accent_color": "#792011",
+        "accent_text_color": "#FFFFFF",
+        "active_pill_background": "#F2EDE3",
+        "topbar_text_color": "#141414",
+        "show_topbar": true,
+        "count_background": "#F2EDE3",
+        "count_text_color": "#141414",
+        "enable_sticky": true,
+        "container_max_width": 1320
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "topbar_item",
+          "settings": {
+            "icon": "phone",
+            "text": "+1 800 123 56 89"
+          }
+        },
+        "bl-2": {
+          "type": "topbar_item",
+          "settings": {
+            "icon": "phone",
+            "text": "+1 800 123 56 89"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

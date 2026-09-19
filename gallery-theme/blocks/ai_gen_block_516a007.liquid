@@ -1,0 +1,685 @@
+{% doc %}
+  @prompt
+    Create a header section with 3-5 customizable images displayed in a stacked card layout at slightly different angles. When images change or transition, animate them by swiping the top card to the bottom of the stack. Include settings to control the number of images, rotation angles, transition speed, and autoplay options., Can the transition be similar to a card swiping to the bottom of the deck, give me the option to add a background image instead of just a colour
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-stacked-cards-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: {{ block.settings.container_height }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: {{ block.settings.background_color }};
+    {% if block.settings.background_image %}
+      background-image: url('{{ block.settings.background_image | image_url: width: 2000 }}');
+      background-size: {{ block.settings.background_size }};
+      background-position: {{ block.settings.background_position }};
+      background-repeat: no-repeat;
+    {% endif %}
+    border-radius: {{ settings.block_border_radius }}px;
+  }
+
+  {% if block.settings.background_overlay_opacity > 0 %}
+    .ai-stacked-cards-{{ ai_gen_id }}::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: {{ block.settings.background_overlay_color }};
+      opacity: {{ block.settings.background_overlay_opacity | divided_by: 100.0 }};
+      z-index: 1;
+    }
+  {% endif %}
+
+  .ai-stacked-cards__container-{{ ai_gen_id }} {
+    position: relative;
+    width: {{ block.settings.card_width }}px;
+    height: {{ block.settings.card_height }}px;
+    max-width: 90vw;
+    max-height: 70vh;
+    z-index: 2;
+  }
+
+  .ai-stacked-cards__card-{{ ai_gen_id }} {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform {{ block.settings.transition_speed }}s ease-in-out, 
+                box-shadow {{ block.settings.transition_speed }}s ease-in-out,
+                z-index 0s {{ block.settings.transition_speed }}s;
+    box-shadow: 0 {{ settings.block_shadow_vertical_offset }}px {{ settings.block_shadow_blur }}px rgba(0, 0, 0, {{ settings.block_shadow_opacity | divided_by: 100.0 }});
+  }
+
+  .ai-stacked-cards__card-{{ ai_gen_id }}:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 {{ settings.block_shadow_vertical_offset | plus: 10 }}px {{ settings.block_shadow_blur | plus: 20 }}px rgba(0, 0, 0, {{ settings.block_shadow_opacity | divided_by: 80.0 }});
+  }
+
+  .ai-stacked-cards__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform {{ block.settings.transition_speed }}s ease-in-out;
+  }
+
+  .ai-stacked-cards__placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+    gap: 10px;
+  }
+
+  .ai-stacked-cards__placeholder-{{ ai_gen_id }} svg {
+    width: 60px;
+    height: 60px;
+    opacity: 0.5;
+  }
+
+  .ai-stacked-cards__controls-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+  }
+
+  .ai-stacked-cards__control-btn-{{ ai_gen_id }} {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    color: {{ settings.text_color }};
+  }
+
+  .ai-stacked-cards__control-btn-{{ ai_gen_id }}:hover {
+    background-color: rgba(255, 255, 255, 1);
+    transform: scale(1.1);
+  }
+
+  .ai-stacked-cards__indicators-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+  }
+
+  .ai-stacked-cards__indicator-{{ ai_gen_id }} {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ai-stacked-cards__indicator-{{ ai_gen_id }}.active {
+    background-color: rgba(255, 255, 255, 1);
+    transform: scale(1.2);
+  }
+
+  .ai-stacked-cards__card-{{ ai_gen_id }}.swiping-down {
+    transform: translateY(150%) rotate(5deg) scale(0.9);
+    opacity: 0;
+    transition: transform {{ block.settings.transition_speed }}s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                opacity {{ block.settings.transition_speed }}s ease-out,
+                z-index 0s 0s;
+    z-index: -1;
+  }
+
+  .ai-stacked-cards__card-{{ ai_gen_id }}.moving-up {
+    transition: transform {{ block.settings.transition_speed }}s ease-out {{ block.settings.transition_speed | times: 0.3 }}s,
+                z-index 0s {{ block.settings.transition_speed | times: 0.3 }}s;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-stacked-cards__container-{{ ai_gen_id }} {
+      width: {{ block.settings.card_width | times: 0.8 }}px;
+      height: {{ block.settings.card_height | times: 0.8 }}px;
+    }
+
+    .ai-stacked-cards-{{ ai_gen_id }} {
+      height: {{ block.settings.container_height | times: 0.8 }}px;
+    }
+
+    .ai-stacked-cards__controls-{{ ai_gen_id }} {
+      bottom: 10px;
+    }
+
+    .ai-stacked-cards__indicators-{{ ai_gen_id }} {
+      bottom: 10px;
+      right: 10px;
+    }
+
+    .ai-stacked-cards__card-{{ ai_gen_id }}.swiping-down {
+      transform: translateY(120%) rotate(3deg) scale(0.95);
+    }
+  }
+{% endstyle %}
+
+<stacked-cards-{{ ai_gen_id }}
+  class="ai-stacked-cards-{{ ai_gen_id }}"
+  data-autoplay="{{ block.settings.autoplay }}"
+  data-autoplay-speed="{{ block.settings.autoplay_speed }}"
+  data-transition-speed="{{ block.settings.transition_speed }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-stacked-cards__container-{{ ai_gen_id }}">
+    {% assign image_count = 0 %}
+    {% for i in (1..5) %}
+      {% liquid
+        assign image_key = 'image_' | append: i
+        assign rotation_key = 'rotation_' | append: i
+        assign image = block.settings[image_key]
+        assign rotation = block.settings[rotation_key]
+      %}
+      
+      {% if i <= block.settings.number_of_images %}
+        {% assign image_count = image_count | plus: 1 %}
+        <div
+          class="ai-stacked-cards__card-{{ ai_gen_id }}"
+          data-card-index="{{ forloop.index0 }}"
+          data-rotation="{{ rotation }}"
+          style="
+            z-index: {{ 6 | minus: forloop.index }};
+            transform: rotate({{ rotation }}deg) translateY({{ forloop.index0 | times: -3 }}px) translateX({{ forloop.index0 | times: 1 }}px);
+          "
+        >
+          {% if image %}
+            <img
+              src="{{ image | image_url: width: 800 }}"
+              alt="{{ image.alt | escape }}"
+              class="ai-stacked-cards__image-{{ ai_gen_id }}"
+              loading="lazy"
+              width="{{ image.width }}"
+              height="{{ image.height }}"
+            >
+          {% else %}
+            <div class="ai-stacked-cards__placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}
+              <div>Add image {{ forloop.index }}</div>
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    {% if block.settings.show_controls %}
+      <div class="ai-stacked-cards__controls-{{ ai_gen_id }}">
+        <button class="ai-stacked-cards__control-btn-{{ ai_gen_id }}" data-action="prev" aria-label="Previous image">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+        </button>
+        <button class="ai-stacked-cards__control-btn-{{ ai_gen_id }}" data-action="next" aria-label="Next image">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9,18 15,12 9,6"></polyline>
+          </svg>
+        </button>
+      </div>
+    {% endif %}
+
+    {% if block.settings.show_indicators %}
+      <div class="ai-stacked-cards__indicators-{{ ai_gen_id }}">
+        {% for i in (1..block.settings.number_of_images) %}
+          <div
+            class="ai-stacked-cards__indicator-{{ ai_gen_id }} {% if forloop.first %}active{% endif %}"
+            data-index="{{ forloop.index0 }}"
+            aria-label="Go to image {{ forloop.index }}"
+          ></div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</stacked-cards-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class StackedCards{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentIndex = 0;
+        this.isTransitioning = false;
+        this.autoplayInterval = null;
+        this.cardOrder = [];
+      }
+
+      connectedCallback() {
+        this.cards = this.querySelectorAll('.ai-stacked-cards__card-{{ ai_gen_id }}');
+        this.indicators = this.querySelectorAll('.ai-stacked-cards__indicator-{{ ai_gen_id }}');
+        this.prevBtn = this.querySelector('[data-action="prev"]');
+        this.nextBtn = this.querySelector('[data-action="next"]');
+        
+        this.autoplay = this.dataset.autoplay === 'true';
+        this.autoplaySpeed = parseInt(this.dataset.autoplaySpeed) * 1000;
+        this.transitionSpeed = parseFloat(this.dataset.transitionSpeed) * 1000;
+
+        this.initializeCardOrder();
+        this.setupEventListeners();
+        this.setupAutoplay();
+        this.updateCardPositions();
+      }
+
+      initializeCardOrder() {
+        this.cardOrder = Array.from(this.cards).map((card, index) => ({
+          element: card,
+          originalIndex: index,
+          rotation: parseFloat(card.dataset.rotation) || 0
+        }));
+      }
+
+      setupEventListeners() {
+        if (this.prevBtn) {
+          this.prevBtn.addEventListener('click', () => this.previousCard());
+        }
+        
+        if (this.nextBtn) {
+          this.nextBtn.addEventListener('click', () => this.nextCard());
+        }
+
+        this.indicators.forEach((indicator, index) => {
+          indicator.addEventListener('click', () => this.goToCard(index));
+        });
+
+        this.cards.forEach(card => {
+          card.addEventListener('click', () => this.nextCard());
+        });
+
+        this.addEventListener('mouseenter', () => this.pauseAutoplay());
+        this.addEventListener('mouseleave', () => this.resumeAutoplay());
+      }
+
+      setupAutoplay() {
+        if (this.autoplay && this.cards.length > 1) {
+          this.startAutoplay();
+        }
+      }
+
+      startAutoplay() {
+        this.autoplayInterval = setInterval(() => {
+          this.nextCard();
+        }, this.autoplaySpeed);
+      }
+
+      pauseAutoplay() {
+        if (this.autoplayInterval) {
+          clearInterval(this.autoplayInterval);
+        }
+      }
+
+      resumeAutoplay() {
+        if (this.autoplay && this.cards.length > 1) {
+          this.startAutoplay();
+        }
+      }
+
+      nextCard() {
+        if (this.isTransitioning || this.cards.length <= 1) return;
+        
+        this.isTransitioning = true;
+        const topCard = this.cardOrder[0];
+        
+        topCard.element.classList.add('swiping-down');
+        
+        this.cardOrder.slice(1).forEach(cardData => {
+          cardData.element.classList.add('moving-up');
+        });
+        
+        setTimeout(() => {
+          this.cardOrder.push(this.cardOrder.shift());
+          this.currentIndex = (this.currentIndex + 1) % this.cards.length;
+          this.updateCardPositions();
+          
+          this.cards.forEach(card => {
+            card.classList.remove('swiping-down', 'moving-up');
+          });
+          
+          this.isTransitioning = false;
+        }, this.transitionSpeed);
+      }
+
+      previousCard() {
+        if (this.isTransitioning || this.cards.length <= 1) return;
+        
+        this.cardOrder.unshift(this.cardOrder.pop());
+        this.currentIndex = (this.currentIndex - 1 + this.cards.length) % this.cards.length;
+        this.updateCardPositions();
+      }
+
+      goToCard(targetIndex) {
+        if (this.isTransitioning || targetIndex === this.currentIndex) return;
+        
+        const steps = (targetIndex - this.currentIndex + this.cards.length) % this.cards.length;
+        
+        for (let i = 0; i < steps; i++) {
+          this.cardOrder.push(this.cardOrder.shift());
+        }
+        
+        this.currentIndex = targetIndex;
+        this.updateCardPositions();
+      }
+
+      updateCardPositions() {
+        this.cardOrder.forEach((cardData, stackIndex) => {
+          const zIndex = this.cards.length - stackIndex;
+          const translateY = stackIndex * -3;
+          const translateX = stackIndex * 1;
+          const rotation = cardData.rotation;
+          
+          cardData.element.style.zIndex = zIndex;
+          cardData.element.style.transform = `rotate(${rotation}deg) translateY(${translateY}px) translateX(${translateX}px)`;
+        });
+
+        this.indicators.forEach((indicator, index) => {
+          indicator.classList.toggle('active', index === this.currentIndex);
+        });
+      }
+
+      disconnectedCallback() {
+        this.pauseAutoplay();
+      }
+    }
+
+    customElements.define('stacked-cards-{{ ai_gen_id }}', StackedCards{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Stacked cards header",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "number_of_images",
+      "min": 3,
+      "max": 5,
+      "step": 1,
+      "label": "Number of images",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "container_height",
+      "min": 300,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "label": "Container height",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "card_width",
+      "min": 200,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "label": "Card width",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "card_height",
+      "min": 200,
+      "max": 500,
+      "step": 20,
+      "unit": "px",
+      "label": "Card height",
+      "default": 300
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "select",
+      "id": "background_size",
+      "label": "Background size",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover"
+        },
+        {
+          "value": "contain",
+          "label": "Contain"
+        },
+        {
+          "value": "auto",
+          "label": "Original"
+        }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "select",
+      "id": "background_position",
+      "label": "Background position",
+      "options": [
+        {
+          "value": "center center",
+          "label": "Center"
+        },
+        {
+          "value": "top center",
+          "label": "Top"
+        },
+        {
+          "value": "bottom center",
+          "label": "Bottom"
+        },
+        {
+          "value": "center left",
+          "label": "Left"
+        },
+        {
+          "value": "center right",
+          "label": "Right"
+        }
+      ],
+      "default": "center center"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "range",
+      "id": "background_overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Background overlay opacity",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "background_overlay_color",
+      "label": "Background overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "range",
+      "id": "transition_speed",
+      "min": 0.3,
+      "max": 2.0,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Transition speed",
+      "default": 0.8
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Autoplay speed",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Controls"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_controls",
+      "label": "Show navigation controls",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_indicators",
+      "label": "Show indicators",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Card rotations"
+    },
+    {
+      "type": "range",
+      "id": "rotation_1",
+      "min": -15,
+      "max": 15,
+      "step": 1,
+      "unit": "°",
+      "label": "Card 1 rotation",
+      "default": -3
+    },
+    {
+      "type": "range",
+      "id": "rotation_2",
+      "min": -15,
+      "max": 15,
+      "step": 1,
+      "unit": "°",
+      "label": "Card 2 rotation",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "rotation_3",
+      "min": -15,
+      "max": 15,
+      "step": 1,
+      "unit": "°",
+      "label": "Card 3 rotation",
+      "default": -1
+    },
+    {
+      "type": "range",
+      "id": "rotation_4",
+      "min": -15,
+      "max": 15,
+      "step": 1,
+      "unit": "°",
+      "label": "Card 4 rotation",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "rotation_5",
+      "min": -15,
+      "max": 15,
+      "step": 1,
+      "unit": "°",
+      "label": "Card 5 rotation",
+      "default": -2
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Image 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_4",
+      "label": "Image 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_5",
+      "label": "Image 5"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stacked cards header"
+    }
+  ]
+}
+{% endschema %}

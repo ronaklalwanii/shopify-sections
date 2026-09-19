@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--rich-text",
+      "settings": {
+        "heading_size": "h1",
+        "text": "<p>Share information about your brand with your customers.</p>",
+        "align": "center",
+        "max_width": 46,
+        "button_style": "dark",
+        "padding": 72
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

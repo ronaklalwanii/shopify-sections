@@ -1,0 +1,201 @@
+{
+  "sections": {
+    "library": {
+      "type": "why-us-pillars",
+      "settings": {
+        "section_bg": "#faf8f5",
+        "section_padding_top": 80,
+        "section_padding_bottom": 80,
+        "section_max_width": 1400,
+        "section_gap": 40,
+        "card_row_gap": 24,
+        "card_stack_gap": 24
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "heading",
+          "settings": {
+            "eyebrow_text": "WHY BURBOX?",
+            "headline_text": "Better Every Day.",
+            "highlight_text": "Built on Science.",
+            "subheading": "<p>You don't need to do more. You need the right balance.</p><p>Science shows the best results come when you <strong>move</strong>, <strong>recover</strong> and <strong>sleep</strong> well—consistently.</p>",
+            "text_alignment": "center",
+            "eyebrow_font_size": 12,
+            "headline_font_size_desktop": 56,
+            "headline_font_size_mobile": 36,
+            "subheading_font_size_desktop": 18,
+            "subheading_font_size_mobile": 16,
+            "eyebrow_color": "#2563eb",
+            "headline_color": "#1a1a1a",
+            "highlight_color": "#2563eb",
+            "subheading_color": "#666666"
+          }
+        },
+        "bl-2": {
+          "type": "pillar_card",
+          "settings": {
+            "icon_shape": "circle",
+            "icon_bg_color": "#2563eb",
+            "label_text": "MOVE",
+            "sublabel_text": "Build the foundation",
+            "stat_number": "300+",
+            "stat_unit": "minutes per week",
+            "stat_color": "#2563eb",
+            "stat_font_size": 56,
+            "body_text": "<p>Adults who achieve 300+ minutes of moderate activity weekly have a 20–30% lower risk of premature death.¹</p>",
+            "show_button": true,
+            "button_text": "SHOP FITNESS",
+            "button_text_color": "#2563eb",
+            "button_bg_color": "transparent",
+            "button_border_color": "#2563eb",
+            "image_text_ratio": "40",
+            "border_radius": 16,
+            "border_width": 1,
+            "border_color": "#e5e5e5",
+            "bg_color": "#ffffff",
+            "shadow_enabled": true,
+            "padding": 32,
+            "text_alignment": "left"
+          }
+        },
+        "bl-3": {
+          "type": "pillar_card",
+          "settings": {
+            "icon_shape": "circle",
+            "icon_bg_color": "#2563eb",
+            "label_text": "RECOVER",
+            "sublabel_text": "Come back stronger",
+            "stat_number": "48%",
+            "stat_unit": "less muscle soreness",
+            "stat_color": "#2563eb",
+            "stat_font_size": 56,
+            "body_text": "<p>Cold-water immersion can significantly reduce delayed onset muscle soreness by up to 48%.²</p>",
+            "show_button": true,
+            "button_text": "SHOP RECOVERY",
+            "button_text_color": "#2563eb",
+            "button_bg_color": "transparent",
+            "button_border_color": "#2563eb",
+            "image_text_ratio": "40",
+            "border_radius": 16,
+            "border_width": 1,
+            "border_color": "#e5e5e5",
+            "bg_color": "#ffffff",
+            "shadow_enabled": true,
+            "padding": 32,
+            "text_alignment": "left"
+          }
+        },
+        "bl-4": {
+          "type": "pillar_card",
+          "settings": {
+            "icon_shape": "circle",
+            "icon_bg_color": "#2563eb",
+            "label_text": "SLEEP",
+            "sublabel_text": "Recharge your body",
+            "stat_number": "5x",
+            "stat_unit": "better memory retention",
+            "stat_color": "#2563eb",
+            "stat_font_size": 56,
+            "body_text": "<p>Sleeping 7–8 hours improves memory performance up to 5x compared to sleep deprivation.³</p>",
+            "show_button": true,
+            "button_text": "SHOP SLEEP",
+            "button_text_color": "#2563eb",
+            "button_bg_color": "transparent",
+            "button_border_color": "#2563eb",
+            "image_text_ratio": "40",
+            "border_radius": 16,
+            "border_width": 1,
+            "border_color": "#e5e5e5",
+            "bg_color": "#ffffff",
+            "shadow_enabled": true,
+            "padding": 32,
+            "text_alignment": "left"
+          }
+        },
+        "bl-5": {
+          "type": "stats_banner",
+          "settings": {
+            "banner_title": "THE IMPACT OF AN INACTIVE LIFESTYLE",
+            "banner_bg_color": "#0f172a",
+            "banner_text_color": "#ffffff",
+            "desktop_columns": 4,
+            "divider_enabled": true,
+            "divider_color": "#334155"
+          }
+        },
+        "bl-6": {
+          "type": "stats_banner_item",
+          "settings": {
+            "stat_number": "1 IN 4",
+            "stat_description": "adults are insufficiently active in the UK.⁴",
+            "stat_color": "#ffffff"
+          }
+        },
+        "bl-7": {
+          "type": "stats_banner_item",
+          "settings": {
+            "stat_number": "35%",
+            "stat_description": "higher risk of depression with physical inactivity.",
+            "stat_color": "#ffffff"
+          }
+        },
+        "bl-8": {
+          "type": "stats_banner_item",
+          "settings": {
+            "stat_number": "6.7 KG",
+            "stat_description": "average weight gain over 12 months of inactivity.",
+            "stat_color": "#ffffff"
+          }
+        },
+        "bl-9": {
+          "type": "stats_banner_item",
+          "settings": {
+            "stat_number": "£9.9B",
+            "stat_description": "annual cost of physical inactivity to the NHS.⁷",
+            "stat_color": "#ffffff"
+          }
+        },
+        "bl-10": {
+          "type": "cta_strip",
+          "settings": {
+            "heading_text": "Small choices. Big results.",
+            "description": "<p>The right tools make it easier to <strong>move</strong> more, <strong>recover</strong> better and <strong>sleep</strong> deeper—every day.</p>",
+            "button_text": "BUILD YOUR ROUTINE",
+            "button_bg_color": "#2563eb",
+            "button_text_color": "#ffffff",
+            "button_radius": 8,
+            "button_hover_bg": "#1d4ed8",
+            "button_hover_text": "#ffffff",
+            "button_full_width": false,
+            "text_alignment": "left"
+          }
+        },
+        "bl-11": {
+          "type": "footnotes",
+          "settings": {
+            "footnote_text": "<p>1. WHO Global Action Plan on Physical Activity 2018 | 2. Poppendieck et al., PLoS One (2013) | 3. Diekelmann &amp; Born, Nature Reviews Neuroscience (2010)</p><p>4. Sport England – Active Lives Adult Survey (Nov 2023–Nov 2024) | 5. Schuch et al., British Journal of Sports Medicine (2018)</p><p>6. King et al., Science (2016) | 7. UK Government – Physical Activity: Applying All Our Health (2024)</p>",
+            "footnote_font_size": 11,
+            "footnote_color": "#999999",
+            "text_alignment": "center"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6",
+        "bl-7",
+        "bl-8",
+        "bl-9",
+        "bl-10",
+        "bl-11"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

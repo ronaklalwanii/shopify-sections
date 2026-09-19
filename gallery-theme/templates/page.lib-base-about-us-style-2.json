@@ -1,0 +1,106 @@
+{
+  "sections": {
+    "library": {
+      "type": "about-us-style-2",
+      "settings": {
+        "row_min_height": 600,
+        "split": 50,
+        "content_padding": 72,
+        "content_max_width": 44,
+        "overlay_scrim": 34,
+        "mobile_image_first": true,
+        "index_size": 12,
+        "eyebrow_size": 10,
+        "rule_width": 48,
+        "heading_size": 44,
+        "body_size": 16,
+        "caption_size": 10,
+        "feature_icon_size": 32,
+        "feature_title_size": 12,
+        "feature_text_size": 12,
+        "dark_bg": "#141311",
+        "dark_text": "#F4F2EE",
+        "dark_muted": "#B9B5AE",
+        "light_bg": "#F0EFEC",
+        "light_text": "#171512",
+        "light_muted": "#57534C",
+        "enable_animation": true,
+        "animation_speed": 700
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "chapter",
+          "settings": {
+            "layout": "overlay",
+            "image_side": "left",
+            "tone": "dark",
+            "eyebrow": "About ScentedDrive",
+            "heading": "Better-smelling journeys,\nmade simple.",
+            "body": "<p>We created ScentedDrive to make everyday driving feel fresher, without complicating the experience.</p>",
+            "button_arrow": true,
+            "caption_position": "right",
+            "button_label": "Shop ScentedDrive",
+            "caption": "Fresher\ndrives\nbrighter\ndays"
+          }
+        },
+        "bl-2": {
+          "type": "chapter",
+          "settings": {
+            "layout": "split",
+            "image_side": "left",
+            "tone": "light",
+            "eyebrow": "Why we started",
+            "heading": "Your car is part\nof everyday life.",
+            "body": "<p>School runs. Commutes. Gym bags. Dogs. Coffee. Weekend trips.</p><p>Cars pick up the smells of everything we do in them. We wanted a simple way to keep the cabin feeling fresh through all of it.</p>",
+            "button_arrow": true,
+            "caption_position": "left",
+            "caption": "Same roads\na fresher\nfeeling"
+          }
+        },
+        "bl-3": {
+          "type": "chapter",
+          "settings": {
+            "layout": "split",
+            "image_side": "right",
+            "tone": "light",
+            "eyebrow": "Our approach",
+            "heading": "Keep it simple.\nMake it useful.\nMake it feel good.",
+            "body": "<p>We created ScentedDrive to make everyday driving feel fresher, without complicating the experience.</p>",
+            "button_arrow": true,
+            "caption_position": "right",
+            "feature_1_title": "Automatic",
+            "feature_1_text": "Activates while you drive.",
+            "feature_2_title": "Adjustable",
+            "feature_2_text": "Three fragrance intensities.",
+            "feature_3_title": "Refillable",
+            "feature_3_text": "Change the scent, keep the diffuser."
+          }
+        },
+        "bl-4": {
+          "type": "chapter",
+          "settings": {
+            "layout": "overlay",
+            "image_side": "left",
+            "tone": "dark",
+            "eyebrow": "The ScentedDrive system",
+            "heading": "One diffuser.\nDifferent journeys.",
+            "body": "<p>Choose your fragrance. Set your intensity. Let ScentedDrive take care of the rest.</p>",
+            "button_arrow": true,
+            "caption_position": "right",
+            "button_label": "Shop ScentedDrive",
+            "caption": "A fresher car\nevery journey."
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

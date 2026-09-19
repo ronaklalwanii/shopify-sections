@@ -1,0 +1,22 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--recently-viewed-products",
+      "settings": {
+        "full_width": true,
+        "products_count": 6,
+        "stack_products": true,
+        "show_progress_bar": false,
+        "products_per_row_mobile": "1",
+        "products_per_row_desktop": 3,
+        "title": "Recently viewed products",
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--advantages",
+      "settings": {
+        "heading": "Our advantages",
+        "padding": 72
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "card",
+          "settings": {
+            "title": "Independent designers",
+            "text": "Our platform celebrates the ingenuity of independent designers, offering a diverse range of fashion-forward garments.",
+            "link_label": "Explore"
+          }
+        },
+        "bl-2": {
+          "type": "card",
+          "settings": {
+            "title": "Exclusive & uniquity",
+            "text": "Indulge in curated collections showcasing exclusive, one-of-a-kind pieces, each with its own story and charm.",
+            "link_label": "Explore"
+          }
+        },
+        "bl-3": {
+          "type": "card",
+          "settings": {
+            "title": "High quality",
+            "text": "Embrace superior craftsmanship with meticulously curated, undeniably high-quality garments.",
+            "link_label": "Explore"
+          }
+        },
+        "bl-4": {
+          "type": "card",
+          "settings": {
+            "title": "Eco-friendly",
+            "text": "Join our commitment to sustainability with eco-friendly fashion options, stylish yet mindful of our planet.",
+            "link_label": "Explore"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

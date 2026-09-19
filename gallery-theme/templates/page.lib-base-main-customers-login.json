@@ -1,0 +1,34 @@
+{
+  "sections": {
+    "library": {
+      "type": "main-customers-login",
+      "settings": {
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "fields",
+          "settings": {}
+        },
+        "bl-2": {
+          "type": "liquid",
+          "settings": {}
+        },
+        "bl-3": {
+          "type": "liquid",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

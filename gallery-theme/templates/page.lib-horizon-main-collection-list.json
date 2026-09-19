@@ -1,0 +1,100 @@
+{
+  "sections": {
+    "library": {
+      "type": "horizon--main-collection-list",
+      "settings": {
+        "layout_type": "grid",
+        "carousel_on_mobile": false,
+        "columns": 4,
+        "mobile_columns": "2",
+        "columns_gap": 8,
+        "bento_gap": 8,
+        "rows_gap": 8,
+        "max_collections": 4,
+        "icons_style": "arrow",
+        "icons_shape": "none",
+        "section_width": "page-width",
+        "gap": 12,
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "@theme",
+          "settings": {}
+        },
+        "bl-2": {
+          "type": "@theme",
+          "settings": {}
+        },
+        "bl-3": {
+          "type": "text",
+          "settings": {}
+        },
+        "bl-4": {
+          "type": "text",
+          "settings": {}
+        },
+        "bl-5": {
+          "type": "icon",
+          "settings": {}
+        },
+        "bl-6": {
+          "type": "icon",
+          "settings": {}
+        },
+        "bl-7": {
+          "type": "image",
+          "settings": {}
+        },
+        "bl-8": {
+          "type": "image",
+          "settings": {}
+        },
+        "bl-9": {
+          "type": "button",
+          "settings": {}
+        },
+        "bl-10": {
+          "type": "button",
+          "settings": {}
+        },
+        "bl-11": {
+          "type": "video",
+          "settings": {}
+        },
+        "bl-12": {
+          "type": "video",
+          "settings": {}
+        },
+        "bl-13": {
+          "type": "group",
+          "settings": {}
+        },
+        "bl-14": {
+          "type": "group",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6",
+        "bl-7",
+        "bl-8",
+        "bl-9",
+        "bl-10",
+        "bl-11",
+        "bl-12",
+        "bl-13",
+        "bl-14"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

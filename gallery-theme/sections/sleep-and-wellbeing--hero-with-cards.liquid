@@ -1,0 +1,714 @@
+{%- comment -%} Section Library: injected global assets for store "sleep-and-wellbeing" {%- endcomment -%}
+{{ 'sleep-and-wellbeing--theme.css' | asset_url | stylesheet_tag }}
+{{ 'sleep-and-wellbeing--product.css' | asset_url | stylesheet_tag }}
+{% render 'sleep-and-wellbeing--css-variables' %}
+{%- comment -%}
+  Section: Hero Product Showcase (v7 — overflow-proof responsive)
+{%- endcomment -%}
+
+<section class="hero-showcase" id="Section{{ section.id }}">
+  {%- style -%}
+    #Section{{ section.id }} {
+      --hs-space-top: {{ section.settings.space_top }}px;
+      --hs-space-bottom: {{ section.settings.space_bottom }}px;
+      --hs-gutter: {{ section.settings.mobile_gutter | default: 20 }}px;
+      --hs-section-radius: {{ section.settings.section_radius }}px;
+      --hs-max-width: {{ section.settings.max_width }}px;
+      --hs-pad-top: {{ section.settings.pad_top }}px;
+      --hs-pad-right: {{ section.settings.pad_right }}px;
+      --hs-pad-bottom: {{ section.settings.pad_bottom }}px;
+      --hs-pad-left: {{ section.settings.pad_left }}px;
+      --hs-bg-color: {{ section.settings.bg_color }};
+      --hs-t1-size: {{ section.settings.title1_size }}px;
+      --hs-t1-color: {{ section.settings.title1_color }};
+      --hs-t1-weight: {{ section.settings.title1_weight }};
+      --hs-t2-size: {{ section.settings.title2_size }}px;
+      --hs-t2-color: {{ section.settings.title2_color }};
+      --hs-t2-weight: {{ section.settings.title2_weight }};
+      --hs-card-blur: {{ section.settings.card_blur }}px;
+      --hs-card-radius: {{ section.settings.card_radius }}px;
+      --hs-card-bg: {{ section.settings.card_bg_color }};
+      --hs-card-border: {{ section.settings.card_border_color }};
+      --hs-card-ox: {{ section.settings.card_offset_x }}px;
+      --hs-card-oy: {{ section.settings.card_offset_y }}px;
+      --hs-badge-radius: {{ section.settings.badge_radius }}px;
+      --hs-badge-bg: {{ section.settings.badge_bg_color }};
+      --hs-badge-color: {{ section.settings.badge_color }};
+      --hs-badge-border: {{ section.settings.badge_border_color }};
+      --hs-badge-size: {{ section.settings.badge_font_size }}px;
+      --hs-eyebrow-size: {{ section.settings.eyebrow_size }}px;
+      --hs-eyebrow-color: {{ section.settings.eyebrow_color }};
+      --hs-eyebrow-weight: {{ section.settings.eyebrow_weight }};
+      --hs-pt-size: {{ section.settings.product_title_size }}px;
+      --hs-pt-color: {{ section.settings.product_title_color }};
+      --hs-pt-weight: {{ section.settings.product_title_weight }};
+      --hs-img-radius: {{ section.settings.product_img_radius }}px;
+      --hs-panel-bg: {{ section.settings.panel_bg_color }};
+      --hs-panel-radius: {{ section.settings.panel_radius }}px;
+      --hs-arrow-size: {{ section.settings.arrow_size }}px;
+      --hs-arrow-bg: {{ section.settings.arrow_bg_color }};
+      --hs-arrow-color: {{ section.settings.arrow_color }};
+      --hs-arrow-border: {{ section.settings.arrow_border_color }};
+      --hs-info-blur: {{ section.settings.info_card_blur }}px;
+      --hs-info-radius: {{ section.settings.info_card_radius }}px;
+      --hs-info-bg: {{ section.settings.info_card_bg_color }};
+      --hs-info-text-color: {{ section.settings.info_text_color }};
+      --hs-info-text-size: {{ section.settings.info_text_size }}px;
+      --hs-info-text-weight: {{ section.settings.info_text_weight }};
+      --hs-info-img-radius: {{ section.settings.info_img_radius }}px;
+    }
+
+    /* ---- Shell ---- */
+    .hero-showcase {
+      position: relative;
+      margin-top: var(--hs-space-top);
+      margin-bottom: var(--hs-space-bottom);
+      overflow-x: clip;
+      padding-left:20px;
+      padding-right:20px;
+    }
+    {%- unless section.settings.full_width %}
+      .hero-showcase {
+        max-width: var(--hs-max-width);
+        margin-left: auto;
+        margin-right: auto;
+      }
+    {%- endunless %}
+
+    /* ---- Hero ---- */
+    .hero-showcase__hero {
+      position: relative;
+      overflow: hidden;
+      background: var(--hs-bg-color);
+      border-radius: var(--hs-section-radius);
+      min-height: 640px;
+    }
+
+    .hero-showcase__bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .hero-showcase__content {
+      position: relative;
+      z-index: 1;
+      min-height: inherit;
+      padding: var(--hs-pad-top) var(--hs-pad-right) var(--hs-pad-bottom) var(--hs-pad-left);
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* ---- Heading ---- */
+    .hero-showcase__heading {
+      max-width: 480px;
+      margin: 0;
+      line-height: 1.25;
+      min-width: 0;
+    }
+    .hero-showcase__t1,
+    .hero-showcase__t2 { display: inline; }
+    .hero-showcase__t1 {
+      font-size: var(--hs-t1-size);
+      color: var(--hs-t1-color);
+      font-weight: var(--hs-t1-weight);
+    }
+    .hero-showcase__t2 {
+      font-size: var(--hs-t2-size);
+      color: var(--hs-t2-color);
+      font-weight: var(--hs-t2-weight);
+    }
+
+    /* ---- Product card ---- */
+    .hero-showcase__product-card {
+      position: relative;
+      width: 340px;
+      max-width: 100%;
+      padding: 28px 24px 24px;
+      display: flex;
+      flex-direction: column;
+           background: var(--hs-card-bg);
+      border: 1px solid var(--hs-card-border);
+      backdrop-filter: blur(var(--hs-card-blur)) saturate(1.15);
+      -webkit-backdrop-filter: blur(var(--hs-card-blur)) saturate(1.15);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      border-radius: var(--hs-card-radius);
+      margin-top: 40px;
+      transform: translate(var(--hs-card-ox), var(--hs-card-oy));
+      min-width: 0;
+    }
+    .hero-showcase__pc-body { order: 1; min-width: 0; }
+    .hero-showcase__pc-media { order: 2; min-width: 0; }
+
+    @media (min-width: 901px) {
+      .hero-showcase__product-card {
+        position: absolute;
+        right: var(--hs-pad-right);
+        top: 50%;
+        margin-top: 0;
+        transform: translate(var(--hs-card-ox), calc(-50% + var(--hs-card-oy)));
+      }
+    }
+
+    {%- if section.settings.card_gradient %}
+      .hero-showcase__product-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+                background: linear-gradient(105deg, rgba(255,255,255,0.12) 0%, rgba(62,47,38,{{ section.settings.card_gradient_opacity | divided_by: 100.0 }}) 90%);
+        pointer-events: none;
+      }
+      .hero-showcase__product-card > * { position: relative; z-index: 1; }
+    {%- endif %}
+
+    /* Badges */
+    .hero-showcase__badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+      min-width: 0;
+    }
+    .hero-showcase__badge {
+      padding: 6px 14px;
+      background: var(--hs-badge-bg);
+      border: 1px solid var(--hs-badge-border);
+      border-radius: var(--hs-badge-radius);
+      color: var(--hs-badge-color);
+      font-size: var(--hs-badge-size);
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .hero-showcase__row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .hero-showcase__eyebrow {
+      margin: 0 0 8px;
+      color: var(--hs-eyebrow-color);
+      font-size: var(--hs-eyebrow-size);
+      font-weight: var(--hs-eyebrow-weight);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+    .hero-showcase__product-title {
+      margin: 0;
+      color: var(--hs-pt-color);
+      font-size: var(--hs-pt-size);
+      font-weight: var(--hs-pt-weight);
+      line-height: 1.25;
+      overflow-wrap: break-word;
+    }
+
+    /* Arrow */
+    .hero-showcase__arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--hs-arrow-size);
+      height: var(--hs-arrow-size);
+      flex-shrink: 0;
+      background: var(--hs-arrow-bg);
+      border: 1px solid var(--hs-arrow-border);
+      border-radius: 50%;
+      color: var(--hs-arrow-color);
+      text-decoration: none;
+      transition: transform 0.2s ease;
+    }
+    .hero-showcase__arrow:hover { transform: scale(1.08); }
+    .hero-showcase__arrow svg { width: 45%; height: 45%; }
+    .hero-showcase__arrow img { width: 45%; height: 45%; object-fit: contain; }
+
+    /* Media panel (desktop) */
+    .hero-showcase__pc-media {
+      margin-top: 20px;
+      padding: 12px;
+      display: flex;
+      gap: 12px;
+      background: var(--hs-panel-bg);
+      border-radius: var(--hs-panel-radius);
+    }
+    .hero-showcase__product-img {
+      width: 50%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: var(--hs-img-radius);
+    }
+    .hero-showcase__product-img:only-child { width: 100%; }
+
+    /* ---- Info card ---- */
+    .hero-showcase__bottom {
+      position: absolute;
+      z-index: 2;
+      left: var(--hs-pad-left);
+      bottom: var(--hs-pad-bottom);
+      display: flex;
+      max-width: calc(100% - var(--hs-pad-left) - var(--hs-pad-right));
+    }
+    {%- if section.settings.info_align_right %}
+      .hero-showcase__bottom {
+        left: auto;
+        right: var(--hs-pad-right);
+      }
+    {%- endif %}
+
+    .hero-showcase__info-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      max-width: 400px;
+      padding: 16px 20px;
+      background: var(--hs-info-bg);
+      backdrop-filter: blur(var(--hs-info-blur));
+      -webkit-backdrop-filter: blur(var(--hs-info-blur));
+      border-radius: var(--hs-info-radius);
+      min-width: 0;
+    }
+    .hero-showcase__info-img {
+      width: 72px;
+      height: 72px;
+      flex-shrink: 0;
+      object-fit: cover;
+      border-radius: var(--hs-info-img-radius);
+    }
+    .hero-showcase__info-text {
+      margin: 0;
+      color: var(--hs-info-text-color);
+      font-size: var(--hs-info-text-size);
+      font-weight: var(--hs-info-text-weight);
+      line-height: 1.5;
+    }
+
+    /* Mobile info is hidden by default and enabled inside the mobile breakpoint. */
+    .hero-showcase__mobile-info {
+      display: none;
+    }
+
+    /* ================= MOBILE / TABLET ================= */
+    @media (max-width: 900px) {
+      .hero-showcase {
+        padding-left: var(--hs-gutter, 20px);
+        padding-right: var(--hs-gutter, 20px);
+      }
+
+      /* Mobile becomes a vertical editorial composition. */
+      .hero-showcase__hero {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: auto;
+        height: clamp(620px, 170vw, 760px);
+        min-height: 0;
+        border-radius: var(--hs-section-radius);
+      }
+
+      .hero-showcase__bg {
+        object-position: 50% 32%;
+      }
+
+      /* The hero itself is the positioning context for the overlays. */
+      .hero-showcase__content {
+        position: static;
+        min-height: 0;
+        height: 100%;
+        padding: 0;
+      }
+
+      /* Headline stays clear at the top-left. */
+      .hero-showcase__heading {
+        position: absolute;
+        z-index: 2;
+        top: 30px;
+        left: 22px;
+        right: 22px;
+        max-width: 340px;
+        margin: 0;
+        line-height: 1.08;
+      }
+
+      .hero-showcase__t1,
+      .hero-showcase__t2 {
+        display: inline;
+        font-size: clamp(32px, 9vw, 42px);
+      }
+
+      /* Product recommendation sits at the bottom of the image. */
+      .hero-showcase__product-card {
+        position: absolute;
+        z-index: 3;
+        left: 14px;
+        right: 14px;
+        bottom: 14px;
+        width: auto;
+        max-width: none;
+        min-width: 0;
+        margin: 0;
+        padding: 10px;
+        display: grid;
+        grid-template-columns: minmax(100px, 37%) minmax(0, 1fr);
+        align-items: stretch;
+        gap: 12px;
+        transform: none;
+        border-radius: var(--hs-card-radius);
+      }
+
+      .hero-showcase__pc-media {
+        order: 1;
+        min-width: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        display: block;
+        background: transparent;
+      }
+
+      .hero-showcase__pc-media img + img {
+        display: none;
+      }
+
+      .hero-showcase__product-img,
+      .hero-showcase__product-img:only-child {
+        display: block;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        border-radius: max(10px, calc(var(--hs-img-radius) * 0.8));
+      }
+
+      .hero-showcase__pc-body {
+        order: 2;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 4px 46px 4px 2px;
+      }
+
+      .hero-showcase__badges {
+        gap: 6px;
+        margin-bottom: 10px;
+      }
+
+      .hero-showcase__badge {
+        padding: 5px 9px;
+        font-size: clamp(8px, 2.25vw, 11px);
+        letter-spacing: .6px;
+      }
+
+      .hero-showcase__eyebrow {
+        margin-bottom: 6px;
+        font-size: clamp(9px, 2.55vw, 11px);
+        letter-spacing: 1px;
+      }
+
+      .hero-showcase__row {
+        display: block;
+        padding: 0;
+      }
+
+      .hero-showcase__product-title {
+        max-width: 100%;
+        padding-right: 0;
+        font-size: clamp(20px, 6vw, 27px);
+        line-height: 1.08;
+        overflow-wrap: normal;
+        word-break: normal;
+        hyphens: none;
+      }
+
+      .hero-showcase__arrow {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: clamp(42px, 11vw, 54px);
+        height: clamp(42px, 11vw, 54px);
+      }
+
+      .hero-showcase__arrow:hover {
+        transform: translateY(-50%) scale(1.05);
+      }
+
+      /* Desktop info overlay is hidden on mobile. A dedicated mobile copy sits below the hero. */
+      .hero-showcase__bottom {
+        display: none;
+      }
+
+      .hero-showcase__mobile-info {
+        display: block;
+        margin-top: 14px;
+      }
+
+      .hero-showcase__mobile-info .hero-showcase__info-card {
+        width: 100%;
+        max-width: none;
+        gap: 14px;
+        padding: 14px;
+        border-radius: 18px;
+      }
+
+      .hero-showcase__mobile-info .hero-showcase__info-img {
+        width: 72px;
+        height: 72px;
+      }
+
+      .hero-showcase__mobile-info .hero-showcase__info-text {
+        font-size: clamp(14px, 3.8vw, 17px);
+        line-height: 1.4;
+      }
+    }
+
+    /* Tablet: keep the vertical hierarchy while giving the card more room. */
+    @media (min-width: 641px) and (max-width: 900px) {
+      .hero-showcase__hero {
+        height: 680px;
+      }
+
+      .hero-showcase__heading {
+        max-width: 420px;
+      }
+
+      .hero-showcase__t1,
+      .hero-showcase__t2 {
+        font-size: clamp(38px, 6vw, 54px);
+      }
+
+      .hero-showcase__product-card {
+        left: 20px;
+        right: 20px;
+        bottom: 20px;
+        grid-template-columns: 150px minmax(0, 1fr);
+      }
+
+      .hero-showcase__product-title {
+        font-size: clamp(24px, 4.2vw, 32px);
+      }
+
+      .hero-showcase__mobile-info .hero-showcase__info-card {
+        padding: 18px;
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="hero-showcase__hero">
+    {%- if section.settings.bg_image != blank -%}
+      <img
+        class="hero-showcase__bg"
+        src="{{ section.settings.bg_image | image_url: width: 2000 }}"
+        alt="{{ section.settings.bg_image.alt | default: 'Hero background' }}"
+        loading="eager"
+        width="2000"
+        height="1200"
+      >
+    {%- endif -%}
+
+    <div class="hero-showcase__content">
+      <h2 class="hero-showcase__heading">
+        <span class="hero-showcase__t1">{{ section.settings.title1 }}</span>
+        <span class="hero-showcase__t2">{{ section.settings.title2 }}</span>
+      </h2>
+
+      {%- assign product = section.settings.product -%}
+
+      <div class="hero-showcase__product-card">
+        <div class="hero-showcase__pc-body">
+          {%- if section.settings.badges != blank -%}
+            <div class="hero-showcase__badges">
+              {%- assign badge_list = section.settings.badges | split: ',' -%}
+              {%- for badge in badge_list -%}
+                <span class="hero-showcase__badge">{{ badge | strip }}</span>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+
+          <div class="hero-showcase__row">
+            <div>
+              {%- if section.settings.eyebrow_text != blank -%}
+                <p class="hero-showcase__eyebrow">{{ section.settings.eyebrow_text }}</p>
+              {%- endif -%}
+              {%- if product != blank -%}
+                <h3 class="hero-showcase__product-title">{{ product.title }}</h3>
+              {%- else -%}
+                <h3 class="hero-showcase__product-title">{{ section.settings.product_title }}</h3>
+              {%- endif -%}
+            </div>
+
+            {%- if product != blank -%}
+              <a class="hero-showcase__arrow" href="{{ product.url }}" aria-label="View {{ product.title | escape }}">
+            {%- else -%}
+              <a class="hero-showcase__arrow" href="{{ section.settings.arrow_link }}" aria-label="View product">
+            {%- endif -%}
+              {%- if section.settings.arrow_icon != blank -%}
+                <img src="{{ section.settings.arrow_icon | image_url: width: 48 }}" alt="Arrow icon">
+              {%- else -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              {%- endif -%}
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-showcase__pc-media">
+          {%- if product != blank -%}
+            {%- for image in product.images limit: 2 -%}
+              <img
+                class="hero-showcase__product-img"
+                src="{{ image | image_url: width: 600 }}"
+                alt="{{ image.alt | default: product.title }}"
+                loading="lazy"
+                width="300"
+                height="300"
+              >
+            {%- endfor -%}
+          {%- elsif section.settings.product_image != blank -%}
+            <img
+              class="hero-showcase__product-img"
+              src="{{ section.settings.product_image | image_url: width: 600 }}"
+              alt="{{ section.settings.product_image.alt | default: 'Product' }}"
+              loading="lazy"
+              width="300"
+              height="300"
+            >
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-showcase__bottom">
+      <div class="hero-showcase__info-card">
+        {%- if section.settings.info_image != blank -%}
+          <img
+            class="hero-showcase__info-img"
+            src="{{ section.settings.info_image | image_url: width: 300 }}"
+            alt="{{ section.settings.info_image.alt | default: 'Portrait' }}"
+            loading="lazy"
+            width="120"
+            height="120"
+          >
+        {%- endif -%}
+        <p class="hero-showcase__info-text">{{ section.settings.info_text }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-showcase__mobile-info">
+    <div class="hero-showcase__info-card">
+      {%- if section.settings.info_image != blank -%}
+        <img
+          class="hero-showcase__info-img"
+          src="{{ section.settings.info_image | image_url: width: 300 }}"
+          alt="{{ section.settings.info_image.alt | default: 'Portrait' }}"
+          loading="lazy"
+          width="120"
+          height="120"
+        >
+      {%- endif -%}
+      <p class="hero-showcase__info-text">{{ section.settings.info_text }}</p>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Product Showcase",
+  "settings": [
+    { "type": "header", "content": "Layout & Background" },
+    { "type": "checkbox", "id": "full_width", "label": "Full-width section (desktop)", "default": true },
+    { "type": "range", "id": "max_width", "label": "Max width (when not full-width)", "min": 1000, "max": 2400, "step": 50, "default": 1400, "unit": "px" },
+    { "type": "range", "id": "space_top", "label": "Space above section", "min": 0, "max": 200, "step": 4, "default": 20, "unit": "px" },
+    { "type": "range", "id": "space_bottom", "label": "Space below section", "min": 0, "max": 200, "step": 4, "default": 20, "unit": "px" },
+    { "type": "range", "id": "mobile_gutter", "label": "Mobile side gutters", "min": 0, "max": 60, "step": 2, "default": 20, "unit": "px" },
+    { "type": "range", "id": "section_radius", "label": "Section corner radius", "min": 0, "max": 60, "step": 2, "default": 24, "unit": "px" },
+    { "type": "range", "id": "mobile_min_height", "label": "Mobile hero min height", "min": 480, "max": 1200, "step": 20, "default": 720, "unit": "px" },
+    { "type": "range", "id": "pad_top", "label": "Desktop padding top", "min": 0, "max": 160, "step": 4, "default": 56, "unit": "px" },
+    { "type": "range", "id": "pad_bottom", "label": "Desktop padding bottom", "min": 0, "max": 160, "step": 4, "default": 56, "unit": "px" },
+    { "type": "range", "id": "pad_left", "label": "Desktop padding left", "min": 0, "max": 160, "step": 4, "default": 48, "unit": "px" },
+    { "type": "range", "id": "pad_right", "label": "Desktop padding right", "min": 0, "max": 160, "step": 4, "default": 48, "unit": "px" },
+    { "type": "image_picker", "id": "bg_image", "label": "Background image" },
+    { "type": "color", "id": "bg_color", "label": "Background color", "default": "#efe9e3" },
+
+    { "type": "header", "content": "Title 1 (normal)" },
+    { "type": "text", "id": "title1", "label": "Title 1", "default": "Cosmetics for the whole body." },
+    { "type": "range", "id": "title1_size", "label": "Size (desktop)", "min": 16, "max": 72, "step": 2, "default": 34, "unit": "px" },
+    { "type": "color", "id": "title1_color", "label": "Color", "default": "#1f1f1f" },
+    { "type": "range", "id": "title1_weight", "label": "Weight", "min": 100, "max": 900, "step": 100, "default": 400 },
+
+    { "type": "header", "content": "Title 2 (weighted)" },
+    { "type": "text", "id": "title2", "label": "Title 2", "default": "For every body." },
+    { "type": "range", "id": "title2_size", "label": "Size (desktop)", "min": 16, "max": 72, "step": 2, "default": 34, "unit": "px" },
+    { "type": "color", "id": "title2_color", "label": "Color", "default": "#1f1f1f" },
+    { "type": "range", "id": "title2_weight", "label": "Weight", "min": 100, "max": 900, "step": 100, "default": 700 },
+
+    { "type": "header", "content": "Product card" },
+    { "type": "product", "id": "product", "label": "Product (auto title, images, link)" },
+    { "type": "text", "id": "product_title", "label": "Fallback title", "default": "Nourish Conditioner" },
+    { "type": "image_picker", "id": "product_image", "label": "Fallback image" },
+    { "type": "range", "id": "card_blur", "label": "Blur", "min": 0, "max": 40, "step": 1, "default": 14, "unit": "px" },
+    { "type": "range", "id": "card_radius", "label": "Radius", "min": 0, "max": 60, "step": 2, "default": 24, "unit": "px" },
+    { "type": "color", "id": "card_bg_color", "label": "Glass tint", "default": "rgba(233,222,210,0.35)" },
+    { "type": "checkbox", "id": "card_gradient", "label": "Dark gradient overlay", "default": true },
+        { "type": "range", "id": "card_gradient_opacity", "label": "Gradient strength", "min": 0, "max": 80, "step": 5, "default": 45, "unit": "%" },
+    { "type": "color", "id": "card_border_color", "label": "Glass edge border", "default": "rgba(255,255,255,0.25)" },
+    { "type": "range", "id": "card_offset_x", "label": "Desktop offset horizontal (– left / + right)", "min": -250, "max": 250, "step": 5, "default": 0, "unit": "px" },
+    { "type": "range", "id": "card_offset_y", "label": "Desktop offset vertical (– up / + down)", "min": -250, "max": 250, "step": 5, "default": 0, "unit": "px" },
+
+    { "type": "header", "content": "Badges" },
+    { "type": "text", "id": "badges", "label": "Badges (comma separated)", "default": "NOURISH, HYDRATE, SMOOTH" },
+    { "type": "range", "id": "badge_radius", "label": "Badge radius", "min": 0, "max": 100, "step": 1, "default": 100, "unit": "px" },
+    { "type": "color", "id": "badge_bg_color", "label": "Badge background", "default": "rgba(255,255,255,0.08)" },
+    { "type": "color", "id": "badge_color", "label": "Badge text", "default": "#ffffff" },
+    { "type": "color", "id": "badge_border_color", "label": "Badge border", "default": "rgba(255,255,255,0.7)" },
+    { "type": "range", "id": "badge_font_size", "label": "Badge font size (desktop)", "min": 8, "max": 20, "step": 1, "default": 11, "unit": "px" },
+
+    { "type": "header", "content": "Eyebrow & title" },
+    { "type": "text", "id": "eyebrow_text", "label": "Eyebrow", "default": "( Best Seller )" },
+    { "type": "range", "id": "eyebrow_size", "label": "Eyebrow size (desktop)", "min": 8, "max": 24, "step": 1, "default": 11, "unit": "px" },
+    { "type": "color", "id": "eyebrow_color", "label": "Eyebrow color", "default": "#ffffff" },
+    { "type": "range", "id": "eyebrow_weight", "label": "Eyebrow weight", "min": 100, "max": 900, "step": 100, "default": 500 },
+    { "type": "range", "id": "product_title_size", "label": "Title size (desktop)", "min": 14, "max": 48, "step": 1, "default": 26, "unit": "px" },
+    { "type": "color", "id": "product_title_color", "label": "Title color", "default": "#ffffff" },
+    { "type": "range", "id": "product_title_weight", "label": "Title weight", "min": 100, "max": 900, "step": 100, "default": 500 },
+
+    { "type": "header", "content": "Product images panel" },
+    { "type": "color", "id": "panel_bg_color", "label": "Panel background (desktop)", "default": "#ece4dc" },
+    { "type": "range", "id": "panel_radius", "label": "Panel radius (desktop)", "min": 0, "max": 40, "step": 1, "default": 16, "unit": "px" },
+    { "type": "range", "id": "product_img_radius", "label": "Image radius", "min": 0, "max": 30, "step": 1, "default": 16, "unit": "px" },
+
+    { "type": "header", "content": "Arrow button" },
+    { "type": "url", "id": "arrow_link", "label": "Fallback link" },
+    { "type": "image_picker", "id": "arrow_icon", "label": "Custom icon" },
+    { "type": "range", "id": "arrow_size", "label": "Size (desktop)", "min": 24, "max": 72, "step": 2, "default": 48, "unit": "px" },
+    { "type": "color", "id": "arrow_bg_color", "label": "Background", "default": "rgba(255,255,255,0)" },
+    { "type": "color", "id": "arrow_color", "label": "Icon color", "default": "#1a1a1a" },
+    { "type": "color", "id": "arrow_border_color", "label": "Border", "default": "#1a1a1a" },
+
+    { "type": "header", "content": "Info card" },
+    { "type": "checkbox", "id": "info_align_right", "label": "Desktop: align info card right", "default": false },
+    { "type": "image_picker", "id": "info_image", "label": "Image" },
+    { "type": "textarea", "id": "info_text", "label": "Text", "default": "We were inspired by you and created haircare for every hair and every ritual." },
+    { "type": "range", "id": "info_text_size", "label": "Text size (desktop)", "min": 10, "max": 24, "step": 1, "default": 14, "unit": "px" },
+    { "type": "color", "id": "info_text_color", "label": "Text color", "default": "#1f1f1f" },
+    { "type": "range", "id": "info_text_weight", "label": "Text weight", "min": 100, "max": 900, "step": 100, "default": 400 },
+    { "type": "range", "id": "info_img_radius", "label": "Image radius", "min": 0, "max": 50, "step": 1, "default": 12, "unit": "px" },
+    { "type": "range", "id": "info_card_blur", "label": "Blur", "min": 0, "max": 40, "step": 1, "default": 10, "unit": "px" },
+    { "type": "range", "id": "info_card_radius", "label": "Radius (desktop)", "min": 0, "max": 40, "step": 1, "default": 16, "unit": "px" },
+    { "type": "color", "id": "info_card_bg_color", "label": "Background", "default": "rgba(247,245,243,0.95)" }
+  ],
+  "presets": [{ "name": "Hero Product Showcase" }]
+}
+{% endschema %}

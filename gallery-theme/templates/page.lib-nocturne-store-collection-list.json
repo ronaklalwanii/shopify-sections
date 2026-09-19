@@ -1,0 +1,63 @@
+{
+  "sections": {
+    "library": {
+      "type": "nocturne-store--collection-list",
+      "settings": {
+        "full_width": true,
+        "stack_collections": true,
+        "collections_per_row": 3,
+        "collections_mobile_column": "2",
+        "show_progress_bar": false,
+        "title": "Collection list",
+        "text_alignment": "start",
+        "link_text": "View all",
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "collection",
+          "settings": {
+            "image_aspect_ratio": false,
+            "heading_tag": "h2",
+            "text_position": "place-self-center text-center",
+            "text_color": "#ffffff",
+            "overlay_color": "#000000",
+            "overlay_opacity": 30
+          }
+        },
+        "bl-2": {
+          "type": "collection",
+          "settings": {
+            "image_aspect_ratio": false,
+            "heading_tag": "h2",
+            "text_position": "place-self-center text-center",
+            "text_color": "#ffffff",
+            "overlay_color": "#000000",
+            "overlay_opacity": 30
+          }
+        },
+        "bl-3": {
+          "type": "collection",
+          "settings": {
+            "image_aspect_ratio": false,
+            "heading_tag": "h2",
+            "text_position": "place-self-center text-center",
+            "text_color": "#ffffff",
+            "overlay_color": "#000000",
+            "overlay_opacity": 30
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

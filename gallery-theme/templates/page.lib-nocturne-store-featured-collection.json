@@ -1,0 +1,25 @@
+{
+  "sections": {
+    "library": {
+      "type": "nocturne-store--featured-collection",
+      "settings": {
+        "full_width": true,
+        "stack_products": true,
+        "show_progress_bar": false,
+        "products_count": 6,
+        "products_per_row_mobile": "2",
+        "products_per_row_desktop": 3,
+        "title": "Featured collection",
+        "text_alignment": "start",
+        "link_text": "View all",
+        "show_coming_soon_offer": false,
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

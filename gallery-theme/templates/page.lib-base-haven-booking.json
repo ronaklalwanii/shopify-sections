@@ -1,0 +1,37 @@
+{
+  "sections": {
+    "library": {
+      "type": "haven-booking",
+      "settings": {
+        "bg_color": "#23231F",
+        "overlay_opacity": 55,
+        "radius": 28,
+        "min_height": 560,
+        "widget_bg": "#FFFFFF",
+        "widget_text": "#1F1D1A",
+        "widget_title": "Your booking is confirmed!",
+        "widget_chip": "View details",
+        "w_checkin_label": "Check In",
+        "w_checkin_value": "13 May 2024",
+        "w_checkout_label": "Check Out",
+        "w_checkout_value": "18 May 2024",
+        "w_guests_label": "Guests",
+        "w_guests_value": "2 Adults",
+        "w_location_label": "Your retreat, Wanaka, South Island, New Zealand",
+        "w_btn_label": "Manage Booking",
+        "title": "Reserve your\nperfect getaway",
+        "title_color": "#FFFFFF",
+        "text": "Special stays for special souls.",
+        "note_text": "Tailored to your story and values, exclusive offers await.",
+        "text_color": "#FFFFFF",
+        "accent_color": "#D8C9A3",
+        "community_text": "Join the Community",
+        "pagination_text": "01 — 03",
+        "cta_label": "Explore Our Retreats"
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

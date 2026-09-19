@@ -1,0 +1,173 @@
+{%- comment -%}
+  Aura Newsletter Band — press logos ("As seen in") on the left,
+  newsletter signup ("Let's glow together") on the right.
+  Self-contained. Scoped styles. Responsive (stacks below 900px).
+{%- endcomment -%}
+
+<section id="AuraNewsBand-{{ section.id }}" class="anb">
+  {%- style -%}
+    #AuraNewsBand-{{ section.id }} {
+      --anb-bg: {{ section.settings.bg_color }};
+      --anb-border: {{ section.settings.border_color }};
+      --anb-press-c: {{ section.settings.press_label_color }};
+      --anb-h-c: {{ section.settings.nl_heading_color }};
+      --anb-sub-c: {{ section.settings.nl_sub_color }};
+      --anb-input-bg: {{ section.settings.input_bg }};
+      --anb-input-border: {{ section.settings.input_border }};
+      --anb-input-c: {{ section.settings.input_text }};
+      --anb-btn-bg: {{ section.settings.btn_bg }};
+      --anb-btn-c: {{ section.settings.btn_text }};
+      background: var(--anb-bg);
+      border-top: {% if section.settings.show_border %}1px solid var(--anb-border){% else %}none{% endif %};
+      border-bottom: {% if section.settings.show_border %}1px solid var(--anb-border){% else %}none{% endif %};
+    }
+    #AuraNewsBand-{{ section.id }} .anb__wrap {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 56px;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: {{ section.settings.padding_top }}px 40px {{ section.settings.padding_bottom }}px;
+    }
+    #AuraNewsBand-{{ section.id }} .anb__press-label {
+      margin: 0 0 16px;
+      font-size: 10.5px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--anb-press-c);
+    }
+    #AuraNewsBand-{{ section.id }} .anb__logos {
+      display: flex; align-items: center; gap: 30px; flex-wrap: wrap;
+    }
+    #AuraNewsBand-{{ section.id }} .anb__logo-text {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: {{ section.settings.logo_text_size }}px;
+      letter-spacing: .08em;
+      color: #26231F;
+    }
+    #AuraNewsBand-{{ section.id }} .anb__logo-img { max-height: 26px; width: auto; }
+    #AuraNewsBand-{{ section.id }} .anb__heading {
+      margin: 0 0 6px;
+      font-family: var(--ul-heading-font-family, Georgia, serif);
+      font-weight: 500;
+      font-size: {{ section.settings.nl_heading_size }}px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--anb-h-c);
+    }
+    #AuraNewsBand-{{ section.id }} .anb__sub {
+      margin: 0 0 18px; font-size: 13px; color: var(--anb-sub-c);
+    }
+    #AuraNewsBand-{{ section.id }} .anb__form { display: flex; gap: 10px; max-width: 440px; }
+    #AuraNewsBand-{{ section.id }} .anb__form input[type="email"] {
+      flex: 1; padding: 13px 16px; font: 400 13.5px 'Inter', sans-serif;
+      background: var(--anb-input-bg); color: var(--anb-input-c);
+      border: 1px solid var(--anb-input-border); border-radius: 3px; outline: none;
+    }
+    #AuraNewsBand-{{ section.id }} .anb__form input[type="email"]:focus { border-color: var(--anb-h-c); }
+    #AuraNewsBand-{{ section.id }} .anb__form button {
+      padding: 13px 24px; border: none; border-radius: 3px; cursor: pointer;
+      background: var(--anb-btn-bg); color: var(--anb-btn-c);
+      font: 600 11px 'Inter', sans-serif; letter-spacing: .16em; text-transform: uppercase;
+      transition: opacity 200ms ease;
+    }
+    #AuraNewsBand-{{ section.id }} .anb__form button:hover { opacity: .85; }
+    #AuraNewsBand-{{ section.id }} .anb__success { font-size: 12.5px; color: #4A6B4A; margin-top: 10px; }
+    @media (max-width: 900px) {
+      #AuraNewsBand-{{ section.id }} .anb__wrap {
+        grid-template-columns: 1fr; gap: 32px; padding-left: 20px; padding-right: 20px;
+      }
+      #AuraNewsBand-{{ section.id }} .anb__form { flex-direction: column; }
+    }
+  {%- endstyle -%}
+
+  <div class="anb__wrap">
+    <div class="anb__press">
+      {%- if section.settings.press_label != blank -%}
+        <p class="anb__press-label">{{ section.settings.press_label }}</p>
+      {%- endif -%}
+      {%- if section.blocks.size > 0 -%}
+        <div class="anb__logos">
+          {%- for block in section.blocks -%}
+            {%- if block.settings.image != blank -%}
+              <img class="anb__logo-img" src="{{ block.settings.image | image_url: width: 200 }}" alt="{{ block.settings.text | escape }}" loading="lazy" {{ block.shopify_attributes }}>
+            {%- elsif block.settings.text != blank -%}
+              <span class="anb__logo-text" {{ block.shopify_attributes }}>{{ block.settings.text }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="anb__signup">
+      {%- if section.settings.nl_heading != blank -%}
+        <h2 class="anb__heading">{{ section.settings.nl_heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.nl_sub != blank -%}
+        <p class="anb__sub">{{ section.settings.nl_sub }}</p>
+      {%- endif -%}
+      {%- form 'customer', class: 'anb__form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <input type="email" name="contact[email]" required placeholder="{{ section.settings.input_placeholder | default: 'Enter your email' }}" aria-label="Email address">
+        <button type="submit" name="commit">{{ section.settings.btn_label }}</button>
+        {%- if form.posted_successfully? -%}
+          <p class="anb__success">{{ 'newsletter.success' | t }}</p>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Aura Newsletter Band",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Band" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#FFFFFF" },
+    { "type": "checkbox", "id": "show_border", "label": "Show top & bottom hairlines", "default": true },
+    { "type": "color", "id": "border_color", "label": "Hairline color", "default": "#E8E2D8" },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 120, "step": 4, "default": 40, "unit": "px" },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 120, "step": 4, "default": 40, "unit": "px" },
+    { "type": "header", "content": "Press (left)" },
+    { "type": "text", "id": "press_label", "label": "Label", "default": "As seen in" },
+    { "type": "color", "id": "press_label_color", "label": "Label color", "default": "#8A8378" },
+    { "type": "range", "id": "logo_text_size", "label": "Text logo size", "min": 12, "max": 28, "step": 1, "default": 20, "unit": "px" },
+    { "type": "header", "content": "Newsletter (right)" },
+    { "type": "text", "id": "nl_heading", "label": "Heading", "default": "Let's glow together" },
+    { "type": "color", "id": "nl_heading_color", "label": "Heading color", "default": "#1F1D1A" },
+    { "type": "range", "id": "nl_heading_size", "label": "Heading size", "min": 14, "max": 28, "step": 1, "default": 18, "unit": "px" },
+    { "type": "text", "id": "nl_sub", "label": "Subtext", "default": "Subscribe to get 15% off your first order" },
+    { "type": "color", "id": "nl_sub_color", "label": "Subtext color", "default": "#6B675F" },
+    { "type": "color", "id": "input_bg", "label": "Input background", "default": "#FFFFFF" },
+    { "type": "color", "id": "input_border", "label": "Input border", "default": "#D8D2C6" },
+    { "type": "color", "id": "input_text", "label": "Input text", "default": "#1F1D1A" },
+    { "type": "text", "id": "input_placeholder", "label": "Input placeholder", "default": "Enter your email" },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Subscribe" },
+    { "type": "color", "id": "btn_bg", "label": "Button background", "default": "#1F1D1A" },
+    { "type": "color", "id": "btn_text", "label": "Button text", "default": "#FFFFFF" }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Press logo",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Wordmark text", "default": "VOGUE" },
+        { "type": "image_picker", "id": "image", "label": "Logo image (overrides text)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Aura Newsletter Band",
+      "blocks": [
+        { "type": "logo", "settings": { "text": "VOGUE" } },
+        { "type": "logo", "settings": { "text": "BAZAAR" } },
+        { "type": "logo", "settings": { "text": "allure" } },
+        { "type": "logo", "settings": { "text": "ELLE" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

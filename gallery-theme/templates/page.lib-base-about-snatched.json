@@ -1,0 +1,169 @@
+{
+  "sections": {
+    "library": {
+      "type": "about-snatched",
+      "settings": {
+        "bg_color": "#faf8f5",
+        "heading_color": "#1a1a1a",
+        "text_color": "#4a4a4a",
+        "accent_color": "#8c7b70",
+        "divider_color": "#e0dbd5",
+        "container_max_width": 1400,
+        "container_padding_x": 40,
+        "eyebrow_size": 13,
+        "eyebrow_letter_spacing": 1.5,
+        "body_text_size": 15,
+        "hero_eyebrow": "ABOUT SNATCHED",
+        "hero_heading": "Technology that empowers you.",
+        "hero_description": "Snatched was created to make advanced beauty technology effortless, accessible, and effective—so you can feel confident in your skin, every day.",
+        "hero_link_text": "OUR STORY",
+        "hero_image_radius": 0,
+        "hero_heading_size": 52,
+        "hero_padding_top": 80,
+        "hero_padding_bottom": 80,
+        "show_badge": true,
+        "badge_top_text": "REAL TECHNOLOGY",
+        "badge_main_text": "Made for real routines.",
+        "badge_bottom_text": "REAL RESULTS",
+        "badge_size": 130,
+        "badge_text_size": 11,
+        "badge_bg_color": "#faf8f5",
+        "badge_border_color": "#8c7b70",
+        "badge_text_color": "#1a1a1a",
+        "philosophy_bg_color": "#ffffff",
+        "philosophy_eyebrow": "OUR PHILOSOPHY",
+        "philosophy_heading": "Effective, not complicated.",
+        "philosophy_description": "We believe skincare should be easy to understand and easy to do. That's why we combine proven technologies into one beautiful device.",
+        "philosophy_heading_size": 38,
+        "philosophy_padding_top": 80,
+        "philosophy_padding_bottom": 80,
+        "feature_icon_size": 40,
+        "feature_icon_color": "#8c7b70",
+        "feature_title_size": 15,
+        "feature_desc_size": 13,
+        "story_bg_color": "#faf8f5",
+        "story_eyebrow": "OUR STORY",
+        "story_heading": "Born from a simple belief.",
+        "story_description": "We believe everyone deserves access to the kind of technology that helps them look and feel their best. Snatched is our answer—bringing professional innovation into your daily self-care routine.",
+        "story_image_radius": 0,
+        "story_heading_size": 38,
+        "story_padding_top": 80,
+        "story_padding_bottom": 80,
+        "stat_number_size": 32,
+        "stat_desc_size": 13,
+        "promise_bg_color": "#f0ebe5",
+        "promise_card_bg": "#faf8f5",
+        "promise_card_radius": 40,
+        "promise_eyebrow": "OUR PROMISE",
+        "promise_heading": "Real care. Real results. Always you.",
+        "promise_description": "We're here to support your journey with honest solutions, thoughtful design, and a commitment to your skin—today and every day.",
+        "promise_link_text": "LEARN MORE",
+        "promise_heading_size": 38,
+        "promise_padding_top": 80,
+        "promise_padding_bottom": 80,
+        "promise_icon_size": 36,
+        "promise_icon_color": "#1a1a1a",
+        "promise_card_title_size": 15,
+        "promise_card_desc_size": 13
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "feature",
+          "settings": {
+            "feature_title": "Advanced Technology",
+            "feature_description": "7 in 1 multi-technology system designed to work in synergy for visible results."
+          }
+        },
+        "bl-2": {
+          "type": "feature",
+          "settings": {
+            "feature_title": "Safe & Skin-Friendly",
+            "feature_description": "Thoughtfully engineered with your skin's safety and comfort in mind."
+          }
+        },
+        "bl-3": {
+          "type": "feature",
+          "settings": {
+            "feature_title": "Time Efficient",
+            "feature_description": "Powerful treatments that fit into just 10 minutes a day."
+          }
+        },
+        "bl-4": {
+          "type": "feature",
+          "settings": {
+            "feature_title": "At-Home Confidence",
+            "feature_description": "Professional-level care from the comfort of your own home."
+          }
+        },
+        "bl-5": {
+          "type": "feature",
+          "settings": {
+            "feature_title": "Wireless Freedom",
+            "feature_description": "Rechargeable and portable so you can care for your skin anywhere."
+          }
+        },
+        "bl-6": {
+          "type": "stat",
+          "settings": {
+            "stat_number": "1",
+            "stat_label": "VISION",
+            "stat_description": "To redefine at-home beauty with innovation that delivers."
+          }
+        },
+        "bl-7": {
+          "type": "stat",
+          "settings": {
+            "stat_number": "1",
+            "stat_label": "MISSION",
+            "stat_description": "To empower you with tools that make real results possible."
+          }
+        },
+        "bl-8": {
+          "type": "stat",
+          "settings": {
+            "stat_number": "∞",
+            "stat_label": "POSSIBILITIES",
+            "stat_description": "Because confidence is personal. And it's yours to own."
+          }
+        },
+        "bl-9": {
+          "type": "promise_card",
+          "settings": {
+            "card_title": "Real Results",
+            "card_description": "Backed by proven technologies and real user experiences."
+          }
+        },
+        "bl-10": {
+          "type": "promise_card",
+          "settings": {
+            "card_title": "Real Care",
+            "card_description": "Formulated and designed with your skin's best interests at heart."
+          }
+        },
+        "bl-11": {
+          "type": "promise_card",
+          "settings": {
+            "card_title": "Real You",
+            "card_description": "Because beauty is personal—and your journey matters."
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6",
+        "bl-7",
+        "bl-8",
+        "bl-9",
+        "bl-10",
+        "bl-11"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

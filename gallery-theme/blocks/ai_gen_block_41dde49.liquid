@@ -1,0 +1,1113 @@
+{% doc %}
+  @prompt
+    Generate me a Image with Text overlay section.
+    Have the section an option to adapt to the size of image or select manual height seperately in mobile and computer.
+    
+    Give me an option to add separate images for mobile and computer.
+    
+    Make it so that the Heading, subheading and button are all having an option of alignment seperately in mobile and computer.
+    
+    Give me option to change colour of text and button.
+    Give me access to control the dimensions of button along with radius.
+    
+    Give me an option to have different button style like filled, outlined, link style, and add so e other styles
+    
+    Give me option to change the font for everything
+    
+    , For aligment in mobile and computer, give me options like top middle center along with right left and centered, Make the text in heading and subheading adaptable of the text style entered in box. enter line should also show in the section, For the link style button, Give it an effect that the underline appears when hovered on the button. 
+    
+    Also add more styles of button, 
+    
+    Add some options of animation when hovered on the button, In computer mode, keep the text and button left aligned by default, 
+    
+    Change the default background for section to something else, Give me option to select the hover colour for button, button text and also the button outline, Give me option to have seperate alignment for button and text plus subtext, Give me option to adjust vertical alignment for button seperately for mobile and computer, Give me options to have vertical alignment for heading and subheading, Add another option in button style that says box formation. The button should have underline and should form a box when hovered over. 
+    
+    Another button style should be backglow. Just the text with a little glow in the back and should cgane glow colour and enlarge a little when hovered over
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-image-text-overlay-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    display: block;
+    overflow: hidden;
+  }
+
+  .ai-image-text-overlay-container-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    {% if block.settings.height_mode == 'adapt' %}
+      height: auto;
+    {% else %}
+      height: {{ block.settings.mobile_height }}px;
+    {% endif %}
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-image-text-overlay-container-{{ ai_gen_id }} {
+      {% if block.settings.height_mode == 'adapt' %}
+        height: auto;
+      {% else %}
+        height: {{ block.settings.desktop_height }}px;
+      {% endif %}
+    }
+  }
+
+  .ai-image-text-overlay-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    {% if block.settings.height_mode == 'adapt' %}
+      display: block;
+    {% else %}
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+    {% endif %}
+  }
+
+  .ai-image-text-overlay-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    {% if block.settings.height_mode == 'adapt' %}
+      min-height: 400px;
+    {% endif %}
+  }
+
+  .ai-image-text-overlay-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    max-height: 500px;
+    opacity: 0.3;
+  }
+
+  .ai-image-text-overlay-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #ffffff;
+    text-align: center;
+    pointer-events: none;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+  }
+
+  .ai-image-text-overlay-content-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 20px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-image-text-overlay-content-{{ ai_gen_id }} {
+      padding: 60px 40px;
+    }
+  }
+
+  .ai-image-text-overlay-heading-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    justify-content: {% if block.settings.mobile_heading_vertical_alignment == 'top' %}flex-start{% elsif block.settings.mobile_heading_vertical_alignment == 'bottom' %}flex-end{% else %}center{% endif %};
+    flex-grow: 1;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-image-text-overlay-heading-wrapper-{{ ai_gen_id }} {
+      justify-content: {% if block.settings.desktop_heading_vertical_alignment == 'top' %}flex-start{% elsif block.settings.desktop_heading_vertical_alignment == 'bottom' %}flex-end{% else %}center{% endif %};
+    }
+  }
+
+  .ai-image-text-overlay-heading-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-style: {{ block.settings.heading_font.style }};
+    color: {{ block.settings.heading_color }};
+    font-size: {{ block.settings.mobile_heading_size }}px;
+    margin: 0 0 16px 0;
+    max-width: 100%;
+    text-align: {{ block.settings.mobile_heading_alignment }};
+  }
+
+  .ai-image-text-overlay-heading-{{ ai_gen_id }} p,
+  .ai-image-text-overlay-heading-{{ ai_gen_id }} h1,
+  .ai-image-text-overlay-heading-{{ ai_gen_id }} h2,
+  .ai-image-text-overlay-heading-{{ ai_gen_id }} h3,
+  .ai-image-text-overlay-heading-{{ ai_gen_id }} h4,
+  .ai-image-text-overlay-heading-{{ ai_gen_id }} h5,
+  .ai-image-text-overlay-heading-{{ ai_gen_id }} h6 {
+    margin: 0;
+    padding: 0;
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    color: inherit;
+    line-height: 1.2;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-image-text-overlay-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.desktop_heading_size }}px;
+      text-align: {{ block.settings.desktop_heading_alignment }};
+    }
+  }
+
+  .ai-image-text-overlay-subheading-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    justify-content: {% if block.settings.mobile_subheading_vertical_alignment == 'top' %}flex-start{% elsif block.settings.mobile_subheading_vertical_alignment == 'bottom' %}flex-end{% else %}center{% endif %};
+    flex-grow: 1;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-image-text-overlay-subheading-wrapper-{{ ai_gen_id }} {
+      justify-content: {% if block.settings.desktop_subheading_vertical_alignment == 'top' %}flex-start{% elsif block.settings.desktop_subheading_vertical_alignment == 'bottom' %}flex-end{% else %}center{% endif %};
+    }
+  }
+
+  .ai-image-text-overlay-subheading-{{ ai_gen_id }} {
+    font-family: {{ block.settings.subheading_font.family }}, {{ block.settings.subheading_font.fallback_families }};
+    font-weight: {{ block.settings.subheading_font.weight }};
+    font-style: {{ block.settings.subheading_font.style }};
+    color: {{ block.settings.subheading_color }};
+    font-size: {{ block.settings.mobile_subheading_size }}px;
+    margin: 0 0 24px 0;
+    max-width: 100%;
+    text-align: {{ block.settings.mobile_subheading_alignment }};
+  }
+
+  .ai-image-text-overlay-subheading-{{ ai_gen_id }} p,
+  .ai-image-text-overlay-subheading-{{ ai_gen_id }} h1,
+  .ai-image-text-overlay-subheading-{{ ai_gen_id }} h2,
+  .ai-image-text-overlay-subheading-{{ ai_gen_id }} h3,
+  .ai-image-text-overlay-subheading-{{ ai_gen_id }} h4,
+  .ai-image-text-overlay-subheading-{{ ai_gen_id }} h5,
+  .ai-image-text-overlay-subheading-{{ ai_gen_id }} h6 {
+    margin: 0 0 8px 0;
+    padding: 0;
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    color: inherit;
+    line-height: 1.5;
+  }
+
+  .ai-image-text-overlay-subheading-{{ ai_gen_id }} p:last-child {
+    margin-bottom: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-image-text-overlay-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.desktop_subheading_size }}px;
+      text-align: {{ block.settings.desktop_subheading_alignment }};
+    }
+  }
+
+  .ai-image-text-overlay-button-container-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: {{ block.settings.mobile_button_alignment }};
+    justify-content: {% if block.settings.mobile_button_vertical_alignment == 'top' %}flex-start{% elsif block.settings.mobile_button_vertical_alignment == 'bottom' %}flex-end{% else %}center{% endif %};
+    flex-grow: 1;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-image-text-overlay-button-container-{{ ai_gen_id }} {
+      align-items: {{ block.settings.desktop_button_alignment }};
+      justify-content: {% if block.settings.desktop_button_vertical_alignment == 'top' %}flex-start{% elsif block.settings.desktop_button_vertical_alignment == 'bottom' %}flex-end{% else %}center{% endif %};
+    }
+  }
+
+  .ai-image-text-overlay-button-{{ ai_gen_id }} {
+    font-family: {{ block.settings.button_font.family }}, {{ block.settings.button_font.fallback_families }};
+    font-weight: {{ block.settings.button_font.weight }};
+    font-style: {{ block.settings.button_font.style }};
+    font-size: {{ block.settings.button_font_size }}px;
+    padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid {{ block.settings.button_border_color }};
+    position: relative;
+    overflow: hidden;
+
+    {% if block.settings.button_style == 'filled' %}
+      background-color: {{ block.settings.button_background_color }};
+      color: {{ block.settings.button_text_color }};
+    {% elsif block.settings.button_style == 'outlined' %}
+      background-color: transparent;
+      color: {{ block.settings.button_text_color }};
+    {% elsif block.settings.button_style == 'link' %}
+      background-color: transparent;
+      color: {{ block.settings.button_text_color }};
+      border: none;
+      padding: 0;
+      text-decoration: none;
+    {% elsif block.settings.button_style == 'ghost' %}
+      background-color: rgba(255, 255, 255, 0.1);
+      color: {{ block.settings.button_text_color }};
+      border-color: {{ block.settings.button_text_color }};
+      backdrop-filter: blur(10px);
+    {% elsif block.settings.button_style == 'shadow' %}
+      background-color: {{ block.settings.button_background_color }};
+      color: {{ block.settings.button_text_color }};
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      border: none;
+    {% elsif block.settings.button_style == 'gradient' %}
+      background: linear-gradient(135deg, {{ block.settings.button_background_color }}, {{ block.settings.button_hover_background_color }});
+      color: {{ block.settings.button_text_color }};
+      border: none;
+    {% elsif block.settings.button_style == 'rounded_pill' %}
+      background-color: {{ block.settings.button_background_color }};
+      color: {{ block.settings.button_text_color }};
+      border-radius: 50px;
+    {% elsif block.settings.button_style == 'underline' %}
+      background-color: transparent;
+      color: {{ block.settings.button_text_color }};
+      border: none;
+      border-bottom: 2px solid {{ block.settings.button_text_color }};
+      border-radius: 0;
+      padding-bottom: 8px;
+    {% elsif block.settings.button_style == 'box_formation' %}
+      background-color: transparent;
+      color: {{ block.settings.button_text_color }};
+      border: none;
+      border-bottom: 2px solid {{ block.settings.button_text_color }};
+      border-radius: 0;
+      padding: 8px 0;
+    {% elsif block.settings.button_style == 'backglow' %}
+      background-color: transparent;
+      color: {{ block.settings.button_text_color }};
+      border: none;
+      padding: 8px 16px;
+      text-shadow: 0 0 20px {{ block.settings.button_background_color }};
+    {% endif %}
+  }
+
+  .ai-image-text-overlay-button-{{ ai_gen_id }}::before,
+  .ai-image-text-overlay-button-{{ ai_gen_id }}::after {
+    content: '';
+    position: absolute;
+    transition: all 0.3s ease;
+  }
+
+  {% if block.settings.button_style == 'link' %}
+    .ai-image-text-overlay-button-{{ ai_gen_id }}::after {
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: {{ block.settings.button_hover_text_color }};
+    }
+
+    .ai-image-text-overlay-button-{{ ai_gen_id }}:hover::after {
+      width: 100%;
+    }
+  {% endif %}
+
+  {% if block.settings.button_style == 'box_formation' %}
+    .ai-image-text-overlay-button-{{ ai_gen_id }}::before {
+      left: 0;
+      top: 0;
+      width: 0;
+      height: 2px;
+      background-color: {{ block.settings.button_text_color }};
+    }
+
+    .ai-image-text-overlay-button-{{ ai_gen_id }}::after {
+      right: 0;
+      bottom: 0;
+      width: 2px;
+      height: 0;
+      background-color: {{ block.settings.button_text_color }};
+    }
+
+    .ai-image-text-overlay-button-{{ ai_gen_id }}:hover::before {
+      width: 100%;
+    }
+
+    .ai-image-text-overlay-button-{{ ai_gen_id }}:hover::after {
+      height: 100%;
+    }
+
+    .ai-image-text-overlay-button-{{ ai_gen_id }}:hover {
+      border-left: 2px solid {{ block.settings.button_text_color }};
+      border-right: 2px solid {{ block.settings.button_text_color }};
+    }
+  {% endif %}
+
+  .ai-image-text-overlay-button-{{ ai_gen_id }}:hover {
+    {% if block.settings.button_style == 'filled' %}
+      background-color: {{ block.settings.button_hover_background_color }};
+      color: {{ block.settings.button_hover_text_color }};
+      border-color: {{ block.settings.button_hover_border_color }};
+    {% elsif block.settings.button_style == 'outlined' %}
+      background-color: {{ block.settings.button_hover_background_color }};
+      color: {{ block.settings.button_hover_text_color }};
+      border-color: {{ block.settings.button_hover_border_color }};
+    {% elsif block.settings.button_style == 'link' %}
+      color: {{ block.settings.button_hover_text_color }};
+    {% elsif block.settings.button_style == 'ghost' %}
+      background-color: {{ block.settings.button_hover_background_color }};
+      color: {{ block.settings.button_hover_text_color }};
+      border-color: {{ block.settings.button_hover_border_color }};
+    {% elsif block.settings.button_style == 'shadow' %}
+      background-color: {{ block.settings.button_hover_background_color }};
+      color: {{ block.settings.button_hover_text_color }};
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    {% elsif block.settings.button_style == 'gradient' %}
+      opacity: 0.9;
+    {% elsif block.settings.button_style == 'rounded_pill' %}
+      background-color: {{ block.settings.button_hover_background_color }};
+      color: {{ block.settings.button_hover_text_color }};
+      border-color: {{ block.settings.button_hover_border_color }};
+    {% elsif block.settings.button_style == 'underline' %}
+      color: {{ block.settings.button_hover_text_color }};
+      border-bottom-color: {{ block.settings.button_hover_text_color }};
+      border-bottom-width: 3px;
+    {% elsif block.settings.button_style == 'box_formation' %}
+      color: {{ block.settings.button_hover_text_color }};
+    {% elsif block.settings.button_style == 'backglow' %}
+      color: {{ block.settings.button_hover_text_color }};
+      text-shadow: 0 0 30px {{ block.settings.button_hover_background_color }};
+      transform: scale(1.1);
+    {% endif %}
+
+    {% if block.settings.button_hover_effect == 'lift' %}
+      transform: translateY(-4px);
+    {% elsif block.settings.button_hover_effect == 'grow' %}
+      transform: scale(1.05);
+    {% elsif block.settings.button_hover_effect == 'shrink' %}
+      transform: scale(0.95);
+    {% elsif block.settings.button_hover_effect == 'rotate' %}
+      transform: rotate(2deg);
+    {% elsif block.settings.button_hover_effect == 'shake' %}
+      animation: ai-shake-{{ ai_gen_id }} 0.5s ease;
+    {% elsif block.settings.button_hover_effect == 'pulse' %}
+      animation: ai-pulse-{{ ai_gen_id }} 0.6s ease;
+    {% endif %}
+  }
+
+  @keyframes ai-shake-{{ ai_gen_id }} {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  @keyframes ai-pulse-{{ ai_gen_id }} {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+{% endstyle %}
+
+<image-text-overlay-{{ ai_gen_id }} class="ai-image-text-overlay-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-image-text-overlay-container-{{ ai_gen_id }}">
+    {% if block.settings.desktop_image != blank or block.settings.mobile_image != blank %}
+      {% if block.settings.mobile_image != blank %}
+        <img
+          src="{{ block.settings.mobile_image | image_url: width: 1500 }}"
+          alt="{{ block.settings.mobile_image.alt | escape }}"
+          loading="lazy"
+          width="{{ block.settings.mobile_image.width }}"
+          height="{{ block.settings.mobile_image.height }}"
+          class="ai-image-text-overlay-image-{{ ai_gen_id }}"
+          style="display: block;"
+        >
+      {% endif %}
+      
+      {% if block.settings.desktop_image != blank %}
+        <img
+          src="{{ block.settings.desktop_image | image_url: width: 2000 }}"
+          alt="{{ block.settings.desktop_image.alt | escape }}"
+          loading="lazy"
+          width="{{ block.settings.desktop_image.width }}"
+          height="{{ block.settings.desktop_image.height }}"
+          class="ai-image-text-overlay-image-{{ ai_gen_id }}"
+          style="display: none;"
+        >
+      {% endif %}
+    {% else %}
+      <div class="ai-image-text-overlay-placeholder-{{ ai_gen_id }}">
+        {{ 'hero-apparel-1' | placeholder_svg_tag }}
+        <div class="ai-image-text-overlay-empty-state-{{ ai_gen_id }}">
+          Add an image to get started
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="ai-image-text-overlay-content-{{ ai_gen_id }}">
+      {% if block.settings.heading != blank %}
+        <div class="ai-image-text-overlay-heading-wrapper-{{ ai_gen_id }}">
+          <div class="ai-image-text-overlay-heading-{{ ai_gen_id }}">
+            {{ block.settings.heading }}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if block.settings.subheading != blank %}
+        <div class="ai-image-text-overlay-subheading-wrapper-{{ ai_gen_id }}">
+          <div class="ai-image-text-overlay-subheading-{{ ai_gen_id }}">
+            {{ block.settings.subheading }}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if block.settings.button_text != blank %}
+        <div class="ai-image-text-overlay-button-container-{{ ai_gen_id }}">
+          <a
+            href="{{ block.settings.button_link }}"
+            class="ai-image-text-overlay-button-{{ ai_gen_id }}"
+          >
+            {{ block.settings.button_text }}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</image-text-overlay-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ImageTextOverlay{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.handleResponsiveImages();
+        window.addEventListener('resize', () => this.handleResponsiveImages());
+      }
+
+      handleResponsiveImages() {
+        const images = this.querySelectorAll('.ai-image-text-overlay-image-{{ ai_gen_id }}');
+        if (images.length === 2) {
+          const mobileImage = images[0];
+          const desktopImage = images[1];
+          
+          if (window.innerWidth >= 750) {
+            mobileImage.style.display = 'none';
+            desktopImage.style.display = 'block';
+          } else {
+            mobileImage.style.display = 'block';
+            desktopImage.style.display = 'none';
+          }
+        }
+      }
+    }
+
+    customElements.define('image-text-overlay-{{ ai_gen_id }}', ImageTextOverlay{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Image with text overlay",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "header",
+      "content": "Height"
+    },
+    {
+      "type": "select",
+      "id": "height_mode",
+      "label": "Height mode",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "Adapt to image"
+        },
+        {
+          "value": "manual",
+          "label": "Manual height"
+        }
+      ],
+      "default": "adapt"
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "Mobile height",
+      "min": 200,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Desktop height",
+      "min": 300,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 600
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Image with text overlay</p>"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "helvetica_n7"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "mobile_heading_size",
+      "label": "Mobile heading size",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "desktop_heading_size",
+      "label": "Desktop heading size",
+      "min": 20,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "header",
+      "content": "Heading alignment"
+    },
+    {
+      "type": "select",
+      "id": "mobile_heading_alignment",
+      "label": "Mobile horizontal",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "desktop_heading_alignment",
+      "label": "Desktop horizontal",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "mobile_heading_vertical_alignment",
+      "label": "Mobile vertical",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "middle",
+          "label": "Middle"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "select",
+      "id": "desktop_heading_vertical_alignment",
+      "label": "Desktop vertical",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "middle",
+          "label": "Middle"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "header",
+      "content": "Subheading"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "<p>Tell your brand's story through images and text</p>"
+    },
+    {
+      "type": "font_picker",
+      "id": "subheading_font",
+      "label": "Subheading font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "mobile_subheading_size",
+      "label": "Mobile subheading size",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "desktop_subheading_size",
+      "label": "Desktop subheading size",
+      "min": 14,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Subheading alignment"
+    },
+    {
+      "type": "select",
+      "id": "mobile_subheading_alignment",
+      "label": "Mobile horizontal",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "desktop_subheading_alignment",
+      "label": "Desktop horizontal",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "mobile_subheading_vertical_alignment",
+      "label": "Mobile vertical",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "middle",
+          "label": "Middle"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "select",
+      "id": "desktop_subheading_vertical_alignment",
+      "label": "Desktop vertical",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "middle",
+          "label": "Middle"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "font_picker",
+      "id": "button_font",
+      "label": "Button font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "header",
+      "content": "Button alignment"
+    },
+    {
+      "type": "select",
+      "id": "mobile_button_alignment",
+      "label": "Mobile horizontal",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "desktop_button_alignment",
+      "label": "Desktop horizontal",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "select",
+      "id": "mobile_button_vertical_alignment",
+      "label": "Mobile vertical",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "middle",
+          "label": "Middle"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "select",
+      "id": "desktop_button_vertical_alignment",
+      "label": "Desktop vertical",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "middle",
+          "label": "Middle"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        {
+          "value": "filled",
+          "label": "Filled"
+        },
+        {
+          "value": "outlined",
+          "label": "Outlined"
+        },
+        {
+          "value": "link",
+          "label": "Link"
+        },
+        {
+          "value": "ghost",
+          "label": "Ghost"
+        },
+        {
+          "value": "shadow",
+          "label": "Shadow"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        },
+        {
+          "value": "rounded_pill",
+          "label": "Rounded pill"
+        },
+        {
+          "value": "underline",
+          "label": "Underline"
+        },
+        {
+          "value": "box_formation",
+          "label": "Box formation"
+        },
+        {
+          "value": "backglow",
+          "label": "Backglow"
+        }
+      ],
+      "default": "filled"
+    },
+    {
+      "type": "select",
+      "id": "button_hover_effect",
+      "label": "Hover effect",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "lift",
+          "label": "Lift"
+        },
+        {
+          "value": "grow",
+          "label": "Grow"
+        },
+        {
+          "value": "shrink",
+          "label": "Shrink"
+        },
+        {
+          "value": "rotate",
+          "label": "Rotate"
+        },
+        {
+          "value": "shake",
+          "label": "Shake"
+        },
+        {
+          "value": "pulse",
+          "label": "Pulse"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Font size",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "label": "Vertical padding",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Button colors"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Border",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Button hover colors"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background_color",
+      "label": "Hover background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_border_color",
+      "label": "Hover border",
+      "default": "#333333"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with text overlay"
+    }
+  ]
+}
+{% endschema %}

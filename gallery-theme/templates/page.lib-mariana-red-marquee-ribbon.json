@@ -1,0 +1,44 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--marquee-ribbon",
+      "settings": {
+        "speed": 30,
+        "rotation": 0,
+        "text_size": 14,
+        "uppercase": true,
+        "star_badge": true,
+        "background_color": "#111111",
+        "text_color": "#ffffff"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "item",
+          "settings": {
+            "text": "20% off limited time sale"
+          }
+        },
+        "bl-2": {
+          "type": "item",
+          "settings": {
+            "text": "Latest trends drop now"
+          }
+        },
+        "bl-3": {
+          "type": "item",
+          "settings": {
+            "text": "Winter sale"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

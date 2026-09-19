@@ -1,0 +1,248 @@
+{%- comment -%}
+  Haven Booking — dark rounded reserve card: visual booking widget on the
+  left, serif copy with community avatars and CTA on the right, night
+  interior backdrop with overlay. Self-contained. Responsive.
+{%- endcomment -%}
+
+<section id="HavenBooking-{{ section.id }}" class="hb">
+  {%- style -%}
+    #HavenBooking-{{ section.id }} {
+      --hb-bg: {{ section.settings.bg_color }};
+      --hb-radius: {{ section.settings.radius }}px;
+      --hb-min-h: {{ section.settings.min_height }}px;
+      --hb-title-c: {{ section.settings.title_color }};
+      --hb-text-c: {{ section.settings.text_color }};
+      --hb-accent: {{ section.settings.accent_color }};
+      --hb-widget-bg: {{ section.settings.widget_bg }};
+      --hb-widget-text: {{ section.settings.widget_text }};
+      padding: 56px 40px;
+      background: var(--hb-bg);
+    }
+    #HavenBooking-{{ section.id }} .hb__card {
+      position: relative;
+      max-width: 1400px; margin: 0 auto;
+      border-radius: var(--hb-radius);
+      overflow: hidden;
+      min-height: var(--hb-min-h);
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
+      align-items: center;
+      isolation: isolate;
+    }
+    #HavenBooking-{{ section.id }} .hb__bg {
+      position: absolute; inset: 0; z-index: -1;
+    }
+    #HavenBooking-{{ section.id }} .hb__bg img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    #HavenBooking-{{ section.id }} .hb__scrim {
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(18,20,16,.82) 0%, rgba(18,20,16,.55) 55%, rgba(18,20,16,.25) 100%);
+    }
+    #HavenBooking-{{ section.id }} .hb__widget {
+      background: var(--hb-widget-bg);
+      color: var(--hb-widget-text);
+      border-radius: 16px;
+      padding: 26px 26px 22px;
+      max-width: 380px;
+      margin: 40px 0 40px 48px;
+      box-shadow: 0 30px 60px rgba(0,0,0,.35);
+    }
+    #HavenBooking-{{ section.id }} .hb__widget-head {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      margin-bottom: 16px;
+    }
+    #HavenBooking-{{ section.id }} .hb__widget-title {
+      margin: 0; font-size: 17px; font-weight: 600; line-height: 1.25;
+      font-family: var(--ul-heading-font-family, Georgia, serif);
+    }
+    #HavenBooking-{{ section.id }} .hb__chip {
+      font-size: 10px; font-weight: 600; letter-spacing: .04em;
+      border: 1px solid #D8D2C6; border-radius: 999px; padding: 5px 10px;
+      white-space: nowrap;
+    }
+    #HavenBooking-{{ section.id }} .hb__row {
+      display: flex; justify-content: space-between; gap: 16px;
+      padding: 9px 0; border-top: 1px solid #ECE7DC;
+      font-size: 12.5px;
+    }
+    #HavenBooking-{{ section.id }} .hb__row span { color: #8A8577; }
+    #HavenBooking-{{ section.id }} .hb__row b { font-weight: 600; }
+    #HavenBooking-{{ section.id }} .hb__cal {
+      display: flex; gap: 10px; margin: 12px 0 4px;
+    }
+    #HavenBooking-{{ section.id }} .hb__cal i {
+      width: 30px; height: 30px; border: 1px solid #E0DAD0; border-radius: 7px;
+      display: grid; place-items: center; font-style: normal; font-size: 12px;
+    }
+    #HavenBooking-{{ section.id }} .hb__loc {
+      display: flex; align-items: center; gap: 9px;
+      margin: 12px 0 16px; font-size: 12.5px; color: #6B675F;
+    }
+    #HavenBooking-{{ section.id }} .hb__loc svg {
+      width: 15px; height: 15px; stroke: #1F1D1A; fill: none; stroke-width: 1.5; flex-shrink: 0;
+    }
+    #HavenBooking-{{ section.id }} .hb__widget-btn {
+      display: block; width: 100%; text-align: center;
+      background: #1F1D1A; color: #FFFFFF;
+      padding: 13px 16px; border-radius: 9px;
+      font: 600 12.5px 'Inter', sans-serif; text-decoration: none;
+    }
+    #HavenBooking-{{ section.id }} .hb__copy { padding: 40px 52px 40px 24px; }
+    #HavenBooking-{{ section.id }} .hb__title {
+      margin: 0 0 18px;
+      font-family: var(--ul-heading-font-family, Georgia, serif);
+      font-weight: 400; font-size: 46px; line-height: 1.08;
+      letter-spacing: -.01em; color: var(--hb-title-c);
+      white-space: pre-line;
+    }
+    #HavenBooking-{{ section.id }} .hb__text {
+      margin: 0 0 10px; font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,.88);
+      white-space: pre-line;
+    }
+    #HavenBooking-{{ section.id }} .hb__note {
+      margin: 0 0 26px; font-size: 13px; line-height: 1.6; color: var(--hb-accent);
+      white-space: pre-line;
+    }
+    #HavenBooking-{{ section.id }} .hb__community {
+      display: inline-flex; align-items: center; gap: 10px;
+      border: 1px solid rgba(255,255,255,.4); border-radius: 999px;
+      padding: 7px 16px 7px 7px; margin-bottom: 30px;
+      color: #FFFFFF; font-size: 12px; font-weight: 500; text-decoration: none;
+    }
+    #HavenBooking-{{ section.id }} .hb__community:hover { border-color: #FFFFFF; }
+    #HavenBooking-{{ section.id }} .hb__avatars { display: flex; }
+    #HavenBooking-{{ section.id }} .hb__avatars span {
+      width: 26px; height: 26px; border-radius: 50%; background: #C9BFA8;
+      border: 2px solid #23231F; margin-left: -8px; display: inline-block;
+    }
+    #HavenBooking-{{ section.id }} .hb__avatars span:first-child { margin-left: 0; }
+    #HavenBooking-{{ section.id }} .hb__pag {
+      display: inline-flex; align-items: center; gap: 12px;
+      margin: 34px 0 30px; font-size: 12px; letter-spacing: .1em; color: rgba(255,255,255,.75);
+    }
+    #HavenBooking-{{ section.id }} .hb__pag b { color: #FFFFFF; font-weight: 600; }
+    #HavenBooking-{{ section.id }} .hb__pag i { display: inline-block; width: 44px; height: 1px; background: rgba(255,255,255,.5); font-style: normal; }
+    #HavenBooking-{{ section.id }} .hb__cta {
+      display: inline-flex; align-items: center; gap: 12px;
+      border: 1.5px solid rgba(255,255,255,.85); border-radius: 999px;
+      padding: 15px 28px; color: #FFFFFF; font-size: 12.5px; font-weight: 600;
+      letter-spacing: .04em; text-decoration: none; transition: background 200ms ease, color 200ms ease;
+    }
+    #HavenBooking-{{ section.id }} .hb__cta:hover { background: #FFFFFF; color: #1F1D1A; }
+    #HavenBooking-{{ section.id }} .hb__cta::after { content: "→"; }
+    @media (max-width: 980px) {
+      #HavenBooking-{{ section.id }} .hb__card { grid-template-columns: 1fr; }
+      #HavenBooking-{{ section.id }} .hb__widget { margin: 28px 20px; max-width: none; }
+      #HavenBooking-{{ section.id }} .hb__copy { padding: 8px 28px 40px; }
+      #HavenBooking-{{ section.id }} .hb__title { font-size: 36px; }
+    }
+  {%- endstyle -%}
+
+  <div class="hb__card">
+    <div class="hb__bg">
+      {%- if section.settings.bg_image != blank -%}
+        <img src="{{ section.settings.bg_image | image_url: width: 1800 }}" alt="{{ section.settings.bg_image.alt | escape }}" loading="lazy" width="1800" height="1000">
+      {%- else -%}
+        {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' -}}
+      {%- endif -%}
+    </div>
+    <div class="hb__scrim"></div>
+
+    <div class="hb__widget">
+      {%- if section.settings.widget_title != blank -%}
+        <div class="hb__widget-head">
+          <p class="hb__widget-title">{{ section.settings.widget_title }}</p>
+          {%- if section.settings.widget_chip != blank -%}
+            <span class="hb__chip">{{ section.settings.widget_chip }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+      {%- if section.settings.w_checkin_label != blank -%}
+        <div class="hb__row"><span>{{ section.settings.w_checkin_label }}</span><b>{{ section.settings.w_checkin_value }}</b></div>
+      {%- endif -%}
+      {%- if section.settings.w_checkout_label != blank -%}
+        <div class="hb__row"><span>{{ section.settings.w_checkout_label }}</span><b>{{ section.settings.w_checkout_value }}</b></div>
+      {%- endif -%}
+      {%- if section.settings.w_guests_label != blank -%}
+        <div class="hb__row"><span>{{ section.settings.w_guests_label }}</span><b>{{ section.settings.w_guests_value }}</b></div>
+      {%- endif -%}
+      {%- if section.settings.w_location_label != blank -%}
+        <div class="hb__loc">
+          <svg viewBox="0 0 24 24"><path d="M12 21c-4-3.5-6.5-6.8-6.5-10A6.5 6.5 0 0 1 12 4.5 6.5 6.5 0 0 1 18.5 11c0 3.2-2.5 6.5-6.5 10z"/><circle cx="12" cy="11" r="2.5"/></svg>
+          {{ section.settings.w_location_label }}
+        </div>
+      {%- endif -%}
+      {%- if section.settings.w_btn_label != blank -%}
+        <a class="hb__widget-btn" href="{{ section.settings.w_btn_link | default: '#' }}">{{ section.settings.w_btn_label }}</a>
+      {%- endif -%}
+    </div>
+
+    <div class="hb__copy">
+      {%- if section.settings.title != blank -%}
+        <h2 class="hb__title">{{ section.settings.title | newline_to_br }}</h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <p class="hb__text">{{ section.settings.text | newline_to_br }}</p>
+      {%- endif -%}
+      {%- if section.settings.note_text != blank -%}
+        <p class="hb__note">{{ section.settings.note_text | newline_to_br }}</p>
+      {%- endif -%}
+      {%- if section.settings.community_text != blank -%}
+        <a class="hb__community" href="{{ section.settings.community_link | default: '#' }}">
+          <span class="hb__avatars"><span></span><span></span><span></span></span>
+          {{ section.settings.community_text }} →
+        </a>
+      {%- endif -%}
+      {%- if section.settings.pagination_text != blank -%}
+        <span class="hb__pag">{{ section.settings.pagination_text }}</span>
+      {%- endif -%}
+      {%- if section.settings.cta_label != blank -%}
+        <a class="hb__cta" href="{{ section.settings.cta_link | default: routes.root_url }}">{{ section.settings.cta_label }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Haven Booking",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Card" },
+    { "type": "color", "id": "bg_color", "label": "Card background", "default": "#23231F" },
+    { "type": "image_picker", "id": "bg_image", "label": "Card background image" },
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay strength", "min": 0, "max": 90, "step": 5, "default": 55, "unit": "%" },
+    { "type": "range", "id": "radius", "label": "Card radius", "min": 0, "max": 48, "step": 2, "default": 28, "unit": "px" },
+    { "type": "range", "id": "min_height", "label": "Card min height", "min": 420, "max": 800, "step": 20, "default": 560, "unit": "px" },
+    { "type": "header", "content": "Booking widget" },
+    { "type": "color", "id": "widget_bg", "label": "Widget background", "default": "#FFFFFF" },
+    { "type": "color", "id": "widget_text", "label": "Widget text", "default": "#1F1D1A" },
+    { "type": "text", "id": "widget_title", "label": "Widget title", "default": "Your booking is confirmed!" },
+    { "type": "text", "id": "widget_chip", "label": "Chip", "default": "View details" },
+    { "type": "text", "id": "w_checkin_label", "label": "Row 1 label", "default": "Check In" },
+    { "type": "text", "id": "w_checkin_value", "label": "Row 1 value", "default": "13 May 2024" },
+    { "type": "text", "id": "w_checkout_label", "label": "Row 2 label", "default": "Check Out" },
+    { "type": "text", "id": "w_checkout_value", "label": "Row 2 value", "default": "18 May 2024" },
+    { "type": "text", "id": "w_guests_label", "label": "Row 3 label", "default": "Guests" },
+    { "type": "text", "id": "w_guests_value", "label": "Row 3 value", "default": "2 Adults" },
+    { "type": "text", "id": "w_location_label", "label": "Location line", "default": "Your retreat, Wanaka, South Island, New Zealand" },
+    { "type": "text", "id": "w_btn_label", "label": "Widget button label", "default": "Manage Booking" },
+    { "type": "header", "content": "Copy" },
+    { "type": "textarea", "id": "title", "label": "Title", "default": "Reserve your\nperfect getaway" },
+    { "type": "color", "id": "title_color", "label": "Title color", "default": "#FFFFFF" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Special stays for special souls." },
+    { "type": "textarea", "id": "note_text", "label": "Note", "default": "Tailored to your story and values, exclusive offers await." },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#FFFFFF" },
+    { "type": "color", "id": "accent_color", "label": "Accent color", "default": "#D8C9A3" },
+    { "type": "text", "id": "community_text", "label": "Community pill text", "default": "Join the Community" },
+    { "type": "url", "id": "community_link", "label": "Community link" },
+    { "type": "text", "id": "pagination_text", "label": "Pagination text", "default": "01 — 03" },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Explore Our Retreats" },
+    { "type": "url", "id": "cta_link", "label": "Button link" }
+  ],
+  "presets": [
+    { "name": "Haven Booking" }
+  ]
+}
+{% endschema %}

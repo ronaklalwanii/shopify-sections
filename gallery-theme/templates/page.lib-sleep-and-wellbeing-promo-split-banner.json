@@ -1,0 +1,47 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--promo-split-banner",
+      "settings": {
+        "side_width": 25,
+        "banner_height": 320,
+        "mobile_media_height": 220,
+        "show_images_mobile": true,
+        "image_position": "center",
+        "panel_bg": "#E4573D",
+        "show_frame": true,
+        "frame_color": "#FFFFFF",
+        "frame_width": 1,
+        "frame_inset": 28,
+        "panel_padding": 40,
+        "element_gap": 18,
+        "line1_text": "Buy online now\nand get 10% off",
+        "line2_text": "Use promo code\nHOHOHO",
+        "text_color": "#FFFFFF",
+        "line1_size": 22,
+        "line2_size": 22,
+        "text_italic": true,
+        "text_uppercase": true,
+        "text_spacing": 1,
+        "line_height": 1.2,
+        "show_divider": true,
+        "divider_color": "#FFFFFF",
+        "divider_width": 40,
+        "btn_text": "Shop Now",
+        "btn_style": "outline",
+        "btn_color": "#FFFFFF",
+        "btn_bg": "#FFFFFF",
+        "btn_solid_text": "#E4573D",
+        "btn_radius": 30,
+        "btn_size": 11,
+        "btn_pad_x": 24,
+        "btn_pad_y": 10,
+        "enable_animation": true,
+        "animation_speed": 700
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

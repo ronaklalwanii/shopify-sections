@@ -1,0 +1,78 @@
+{
+  "sections": {
+    "library": {
+      "type": "fashion-coverflow",
+      "settings": {
+        "autoplay_seconds": 0,
+        "card_width": 26,
+        "card_width_max": 380,
+        "card_ratio": "2 / 3",
+        "stage_height": 42,
+        "stage_height_max": 640,
+        "side_offset": 170,
+        "scale_step": 12,
+        "peek_cards": 2,
+        "card_radius": 8,
+        "view_label": "View Product",
+        "background_color": "#f4f4f0",
+        "text_color": "#1c1e22",
+        "font_stack": "system-ui, sans-serif"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "product",
+          "settings": {
+            "title": "Vibrant Summer Shirt",
+            "eyebrow": "Minimale Attire"
+          }
+        },
+        "bl-2": {
+          "type": "product",
+          "settings": {
+            "title": "Mirkat Leather Bag",
+            "eyebrow": "Minimale Attire"
+          }
+        },
+        "bl-3": {
+          "type": "product",
+          "settings": {
+            "title": "Relaxed Linen Shirt",
+            "eyebrow": "Minimale Attire"
+          }
+        },
+        "bl-4": {
+          "type": "product",
+          "settings": {
+            "title": "Over Sized Wool Coat",
+            "eyebrow": "Minimale Attire"
+          }
+        },
+        "bl-5": {
+          "type": "product",
+          "settings": {
+            "title": "Wide Leg Trouser",
+            "eyebrow": "Minimale Attire"
+          }
+        },
+        "bl-6": {
+          "type": "product",
+          "settings": {
+            "title": "Midnight Summer Pant",
+            "eyebrow": "Minimale Attire"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

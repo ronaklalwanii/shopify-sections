@@ -1,0 +1,39 @@
+{
+  "sections": {
+    "library": {
+      "type": "video",
+      "settings": {
+        "full_width": true,
+        "allow_transparent_header": false,
+        "autoplay": false,
+        "video_size": "auto",
+        "text_color": "#ffffff",
+        "overlay_color": "#000000",
+        "overlay_opacity": 30,
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "play",
+          "settings": {}
+        },
+        "bl-2": {
+          "type": "heading",
+          "settings": {
+            "text": "Video",
+            "heading_tag": "h1"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

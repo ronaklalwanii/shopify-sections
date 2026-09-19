@@ -1,0 +1,283 @@
+{%- comment -%} Section Library: injected global assets for store "nocturne-store" {%- endcomment -%}
+{{ 'nocturne-store--theme.css' | asset_url | stylesheet_tag }}
+{{ 'nocturne-store--product.css' | asset_url | stylesheet_tag }}
+{% render 'nocturne-store--css-variables' %}
+{%- liquid
+  assign uid = 'WordReveal-' | append: section.id
+-%}
+
+<div
+  id="{{ uid }}"
+  class="word-reveal"
+  data-word-reveal
+  style="
+    --wr-track: {{ section.settings.scroll_length }}vh;
+    --wr-size: {{ section.settings.text_size }}px;
+    --wr-size-mobile: {{ section.settings.text_size_mobile }}px;
+    --wr-max-width: {{ section.settings.max_width }}px;
+    --wr-bg: {{ section.settings.background }};
+    --wr-on: {{ section.settings.color_on }};
+    --wr-off: {{ section.settings.color_off }};
+    --wr-eyebrow: {{ section.settings.eyebrow_color }};
+    --wr-pad-y: {{ section.settings.padding_y }}px;
+    --wr-align: {{ section.settings.alignment }};
+  "
+>
+  <div class="word-reveal__track">
+    <div class="word-reveal__sticky">
+      <div class="word-reveal__inner">
+        {%- if section.settings.show_rule -%}
+          <span class="word-reveal__rule" aria-hidden="true"></span>
+        {%- endif -%}
+
+        <div class="word-reveal__content">
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="word-reveal__eyebrow">{{ section.settings.eyebrow }}</p>
+          {%- endif -%}
+
+          <{{ section.settings.heading_tag }} class="word-reveal__text" data-word-reveal-text>
+            {{- section.settings.text -}}
+          </{{ section.settings.heading_tag }}>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #{{ uid }} {
+    background: var(--wr-bg);
+  }
+  #{{ uid }} .word-reveal__track {
+    position: relative;
+    height: var(--wr-track);
+    min-height: 100svh;
+  }
+  #{{ uid }} .word-reveal__sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  #{{ uid }} .word-reveal__inner {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+    max-width: calc(var(--wr-max-width) + 48px);
+    margin-inline: auto;
+    padding: var(--wr-pad-y) 20px;
+    box-sizing: border-box;
+  }
+  #{{ uid }} .word-reveal__rule {
+    flex: 0 0 1px;
+    align-self: stretch;
+    background: linear-gradient(
+      to bottom,
+      var(--wr-on) 0%,
+      var(--wr-on) calc(var(--wr-progress, 0) * 100%),
+      color-mix(in srgb, var(--wr-off) 60%, transparent) calc(var(--wr-progress, 0) * 100%),
+      color-mix(in srgb, var(--wr-off) 60%, transparent) 100%
+    );
+  }
+  #{{ uid }} .word-reveal__content {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: var(--wr-align);
+  }
+  #{{ uid }} .word-reveal__eyebrow {
+    margin: 0 0 24px;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--wr-eyebrow);
+  }
+  #{{ uid }} .word-reveal__text {
+    margin: 0;
+    font-size: var(--wr-size-mobile);
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--wr-off);
+    text-wrap: balance;
+  }
+  #{{ uid }} .word-reveal__word {
+    color: var(--wr-off);
+    transition: color 180ms linear;
+    will-change: color;
+  }
+  #{{ uid }} .word-reveal__word[data-lit] {
+    color: var(--wr-on);
+  }
+
+  @media (min-width: 750px) {
+    #{{ uid }} .word-reveal__inner { gap: 48px; padding-inline: 40px; }
+    #{{ uid }} .word-reveal__text { font-size: var(--wr-size); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #{{ uid }} .word-reveal__track { height: auto; min-height: 0; }
+    #{{ uid }} .word-reveal__sticky { position: static; height: auto; }
+    #{{ uid }} .word-reveal__word { color: var(--wr-on); transition: none; }
+  }
+</style>
+
+<script>
+  (function () {
+    var root = document.getElementById('{{ uid }}');
+    if (!root) return;
+
+    var textEl = root.querySelector('[data-word-reveal-text]');
+    var track = root.querySelector('.word-reveal__track');
+    if (!textEl || !track) return;
+
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Split into words once, preserving inline markup at the top level only.
+    function splitWords(el) {
+      if (el.dataset.split === 'true') return;
+      var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+      var nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+
+      nodes.forEach(function (node) {
+        var parts = node.nodeValue.split(/(\s+)/);
+        if (parts.length === 1 && !parts[0].trim()) return;
+        var frag = document.createDocumentFragment();
+        parts.forEach(function (part) {
+          if (!part) return;
+          if (/^\s+$/.test(part)) {
+            frag.appendChild(document.createTextNode(part));
+          } else {
+            var span = document.createElement('span');
+            span.className = 'word-reveal__word';
+            span.textContent = part;
+            frag.appendChild(span);
+          }
+        });
+        node.parentNode.replaceChild(frag, node);
+      });
+      el.dataset.split = 'true';
+    }
+
+    splitWords(textEl);
+    var words = Array.prototype.slice.call(root.querySelectorAll('.word-reveal__word'));
+    if (!words.length) return;
+
+    if (reduced) {
+      words.forEach(function (w) { w.setAttribute('data-lit', ''); });
+      return;
+    }
+
+    var ticking = false;
+    var lastLit = -1;
+
+    function update() {
+      ticking = false;
+      var rect = track.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+
+      // Progress through the scroll track: 0 when the sticky panel locks,
+      // 1 when the track has finished passing the viewport.
+      var scrollable = rect.height - vh;
+      if (scrollable <= 0) scrollable = 1;
+      var progress = (0 - rect.top) / scrollable;
+      progress = Math.max(0, Math.min(1, progress));
+
+      root.style.setProperty('--wr-progress', progress.toFixed(4));
+
+      // Ease so the last words don't all land at once.
+      var target = Math.round(progress * words.length);
+      if (target === lastLit) return;
+
+      if (target > lastLit) {
+        for (var i = Math.max(lastLit, 0); i < target; i++) {
+          if (words[i]) words[i].setAttribute('data-lit', '');
+        }
+      } else {
+        for (var j = lastLit - 1; j >= target; j--) {
+          if (words[j]) words[j].removeAttribute('data-lit');
+        }
+      }
+      lastLit = target;
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+
+    // Theme editor
+    document.addEventListener('shopify:section:load', function (e) {
+      if (e.target && e.target.contains(root)) update();
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Scroll word reveal",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Scroll to reveal" },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Animation should never make you wait. It should reveal the next idea at exactly the moment you are ready to read it."
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h2",
+      "options": [
+        { "value": "h1", "label": "h1" },
+        { "value": "h2", "label": "h2" },
+        { "value": "h3", "label": "h3" },
+        { "value": "p", "label": "p" }
+      ]
+    },
+    { "type": "checkbox", "id": "show_rule", "label": "Show progress rule", "default": true },
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Text alignment",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ]
+    },
+    { "type": "range", "id": "max_width", "label": "Max text width", "min": 600, "max": 1400, "step": 20, "unit": "px", "default": 1000 },
+    { "type": "range", "id": "text_size", "label": "Text size (desktop)", "min": 24, "max": 120, "step": 2, "unit": "px", "default": 64 },
+    { "type": "range", "id": "text_size_mobile", "label": "Text size (mobile)", "min": 18, "max": 60, "step": 1, "unit": "px", "default": 30 },
+    { "type": "range", "id": "padding_y", "label": "Vertical padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 40 },
+    {
+      "type": "range",
+      "id": "scroll_length",
+      "label": "Scroll distance",
+      "info": "How far you scroll to reveal all the words. 100 = one screen.",
+      "min": 100,
+      "max": 400,
+      "step": 25,
+      "unit": "vh",
+      "default": 250
+    },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background", "label": "Background", "default": "#0d1117" },
+    { "type": "color", "id": "color_on", "label": "Revealed text", "default": "#f5f5f5" },
+    { "type": "color", "id": "color_off", "label": "Dimmed text", "default": "#2a2f36" },
+    { "type": "color", "id": "eyebrow_color", "label": "Eyebrow", "default": "#8b949e" }
+  ],
+  "presets": [{ "name": "Scroll word reveal" }]
+}
+{% endschema %}

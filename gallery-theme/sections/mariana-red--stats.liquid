@@ -1,0 +1,144 @@
+{%- comment -%} Section Library: injected global assets for store "mariana-red" {%- endcomment -%}
+{{ 'mariana-red--base.css' | asset_url | stylesheet_tag }}
+{{ 'mariana-red--components.css' | asset_url | stylesheet_tag }}
+{% render 'mariana-red--layout-tokens' %}
+{%- comment -%}
+  Stats row — label over big value (noir "150+ designers", chocolatier stats).
+{%- endcomment -%}
+{%- capture section_colors_style -%}
+  {%- if section.settings.colors_background != blank or section.settings.colors_text != blank -%}
+    {%- assign override_bg = section.settings.colors_background | default: settings.colors_background -%}
+    {%- assign override_fg = section.settings.colors_text | default: settings.colors_text -%}
+    style="--color-background: {{ override_bg }}; --color-surface: {{ override_bg | color_lighten: 3 }}; --color-border: {{ override_bg | color_darken: 9 | color_modify: 'alpha', 0.85 }}; --color-foreground: {{ override_fg }}; --color-heading: {{ override_fg }}; --color-text-muted: {{ override_fg | color_modify: 'alpha', 0.62 }};"
+  {%- endif -%}
+{%- endcapture -%}
+<section {{ section_colors_style }} class="section" style="--section-space: {{ section.settings.padding | default: 64 }}px;">
+  <div class="page-width">
+    <div
+      class="stats{% if section.settings.align == 'left' %} stat-row--left{% endif %}"
+      style="--stats-count: {{ section.blocks.size }}; {% if section.settings.align == 'left' %}text-align: left;{% endif %}"
+    >
+      {%- for block in section.blocks -%}
+        <div class="stat{% if section.settings.align == 'left' %} stat--left{% endif %}" {{ block.shopify_attributes }}>
+          {%- if block.settings.label != blank -%}
+            <p class="stat__label">{{ block.settings.label | escape }}</p>
+          {%- endif -%}
+          <p class="stat__value">{{ block.settings.value | escape }}</p>
+          {%- if block.settings.note != blank -%}
+            <p class="stat__note">{{ block.settings.note | escape }}</p>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Stats",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 16,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_background",
+      "label": "Background override",
+      "info": "Leave empty to use the theme colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_text",
+      "label": "Text color override"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Designers"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "150+"
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Note"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stats",
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": {
+            "label": "Designers",
+            "value": "150+"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "label": "Clients",
+            "value": "500+"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "label": "Masterpieces",
+            "value": "20K+"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "label": "Events",
+            "value": "50+"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

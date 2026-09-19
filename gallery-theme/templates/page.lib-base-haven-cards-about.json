@@ -1,0 +1,56 @@
+{
+  "sections": {
+    "library": {
+      "type": "haven-cards-about",
+      "settings": {
+        "bg_color": "#FFFFFF",
+        "cards_share": 58,
+        "gap": 16,
+        "padding_top": 56,
+        "padding_bottom": 56,
+        "card_radius": 8,
+        "card_min_height": 300,
+        "number_color": "#FFFFFF",
+        "card_title_color": "#FFFFFF",
+        "card_title_size": 12,
+        "about_eyebrow": "about haven",
+        "about_text": "Haven Retreats offer a unique blend of natural beauty, and thoughtful design. Every detail is created to help you slow down and reconnect with what truly matters.",
+        "about_text_color": "#5B6152",
+        "trusted_text": "Trusted by 2K+ guests",
+        "rating_text": "4.9",
+        "reviews_text": "380+ reviews"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "card",
+          "settings": {
+            "number": "01",
+            "title": "Seamless with Nature"
+          }
+        },
+        "bl-2": {
+          "type": "card",
+          "settings": {
+            "number": "02",
+            "title": "Timeless Design"
+          }
+        },
+        "bl-3": {
+          "type": "card",
+          "settings": {
+            "number": "03",
+            "title": "Peaceful Interiors"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

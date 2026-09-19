@@ -1,0 +1,111 @@
+{
+  "sections": {
+    "library": {
+      "type": "nocturne-store--brand-value-showcase",
+      "settings": {
+        "bg_color": "#EFEEE8",
+        "max_width": 1400,
+        "space_top": 56,
+        "space_bottom": 56,
+        "mobile_gutter": 20,
+        "column_split": 55,
+        "column_gap": 24,
+        "card_gap": 24,
+        "card_radius": 16,
+        "card_padding": 28,
+        "card_icon_size": 24,
+        "heading_text": "Why Your Skin\nDeserves the Best",
+        "heading_font": "serif",
+        "heading_size": 40,
+        "heading_weight": 500,
+        "heading_color": "#26332B",
+        "heading_max_width": 480,
+        "show_rating": true,
+        "star_count": 5,
+        "star_size": 16,
+        "star_color": "#5F6F4E",
+        "rating_text": "4.7 (1,109 reviews)",
+        "rating_text_size": 13,
+        "rating_text_color": "#3A3A3A",
+        "show_avatars": true,
+        "avatar_size": 36,
+        "avatar_overlap": 10,
+        "avatar_border_color": "#EFEEE8",
+        "media_radius": 16,
+        "media_aspect": "4 / 5",
+        "media_focal": "top",
+        "show_badge": true,
+        "badge_icon": "shield",
+        "badge_icon_size": 20,
+        "badge_icon_color": "#26332B",
+        "badge_title": "Proven",
+        "badge_title_accent": "Effectiveness",
+        "badge_title_size": 16,
+        "badge_title_color": "#1F1F1F",
+        "badge_text": "Every product is carefully crafted to meet the highest quality standards.",
+        "badge_text_size": 11,
+        "badge_text_color": "#8A8A8A",
+        "badge_bg": "#FFFFFF",
+        "badge_radius": 12,
+        "badge_shadow": true,
+        "badge_padding": 16,
+        "badge_x": 24,
+        "badge_y": 24,
+        "badge_max_width": 320,
+        "card_title_size": 26,
+        "card_accent_size": 26,
+        "card_desc_size": 12,
+        "card_list_size": 12,
+        "list_icon_size": 14
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "feature_card",
+          "settings": {
+            "layout": "img-right",
+            "background_color": "#ECEAE2",
+            "text_color": "#26332B",
+            "accent_color": "#26332B",
+            "icon": "recycle",
+            "icon_color": "#26332B",
+            "title": "Eco-Friendly",
+            "title_accent": "Packaging",
+            "accent_italic": true,
+            "description": "Eco-friendly materials designed to care for the planet as much as your skin.",
+            "image_width": 30,
+            "image_x": 8,
+            "image_bottom": 0,
+            "list_icon": "drop"
+          }
+        },
+        "bl-2": {
+          "type": "feature_card",
+          "settings": {
+            "layout": "img-left",
+            "background_color": "#3E4A38",
+            "text_color": "#FFFFFF",
+            "accent_color": "#C9D1BE",
+            "icon": "none",
+            "icon_color": "#26332B",
+            "title": "100% Natural",
+            "title_accent": "100% You",
+            "accent_italic": true,
+            "description": "Eco-friendly materials designed to care for the planet as much as your skin.",
+            "image_width": 40,
+            "image_x": 0,
+            "image_bottom": 0,
+            "list_icon": "drop",
+            "checklist": "No Harsh Chemicals, Plant-Based Goodness, Ethically Sourced"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

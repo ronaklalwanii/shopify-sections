@@ -1,0 +1,739 @@
+{%- comment -%} Section Library: injected global assets for store "pet store" {%- endcomment -%}
+{{ 'pet-store--overflow-list.css' | asset_url | stylesheet_tag }}
+{{ 'pet-store--base.css' | asset_url | stylesheet_tag }}
+{% render 'pet-store--theme-styles-variables' %}
+{%- comment -%}
+  Pet Store — Hero
+  Full-bleed tinted banner with white watermark text, intro, heading
+  (last line muted), white pill buttons, a centered pet image and
+  floating white product mini-cards with star ratings.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+{% capture newline %}
+{% endcapture %}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .pet-hero-{{ section.id }} {
+    --pet-hero-bg: {{ s.background_color }};
+    --pet-hero-fg: {{ s.text_color }};
+    --pet-hero-muted: {{ s.muted_text_color }};
+    --pet-hero-heading-muted: {{ s.heading_muted_color }};
+    --pet-hero-accent: {{ s.accent_color }};
+    --pet-hero-card-bg: {{ s.card_background_color }};
+    --pet-hero-card-fg: {{ s.card_text_color }};
+    --pet-hero-card-price: {{ s.card_price_color }};
+    --pet-hero-star: {{ s.star_color }};
+    --pet-hero-watermark: {{ s.watermark_color }};
+    --pet-hero-radius: {{ s.card_corner_radius }}px;
+    --pet-hero-min-height: {{ s.min_height }}px;
+
+    position: relative;
+    background-color: var(--pet-hero-bg);
+    color: var(--pet-hero-fg);
+    overflow: hidden;
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+  }
+
+  .pet-hero-{{ section.id }} *,
+  .pet-hero-{{ section.id }} *::before,
+  .pet-hero-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__watermark {
+    position: absolute;
+    top: {{ s.watermark_position }}%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-size: clamp(120px, 26vw, 380px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--pet-hero-watermark);
+    white-space: nowrap;
+    text-align: center;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__inner {
+    position: relative;
+    z-index: 1;
+    max-width: {{ s.container_max_width }}px;
+    margin-inline: auto;
+    padding-inline: clamp(16px, 4vw, 48px);
+    display: grid;
+    grid-template-columns: minmax(230px, 32fr) minmax(280px, 36fr) minmax(230px, 32fr);
+    align-items: stretch;
+    gap: clamp(16px, 3vw, 40px);
+    min-height: var(--pet-hero-min-height);
+  }
+
+  /* Left column */
+  .pet-hero-{{ section.id }} .pet-hero__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 18px;
+    padding-block: 48px 44px;
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__intro {
+    margin: 0 0 2px;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--pet-hero-muted);
+    max-width: 300px;
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__heading {
+    margin: 0;
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-size: clamp(32px, 3.2vw, 45px);
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+    color: var(--pet-hero-fg);
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__heading .pet-hero__line {
+    display: block;
+    white-space: nowrap;
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__heading .pet-hero__line--muted {
+    color: var(--pet-hero-heading-muted);
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    border-radius: {{ s.button_radius }}px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: filter var(--animation-speed, 0.125s) ease, transform var(--animation-speed, 0.125s) ease;
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__btn:hover {
+    filter: brightness(0.97);
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__btn:active {
+    transform: scale(0.98);
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__btn--white {
+    background-color: var(--pet-hero-card-bg);
+    color: var(--pet-hero-accent);
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.07);
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__btn--solid {
+    background-color: var(--pet-hero-accent);
+    color: var(--pet-hero-card-bg);
+  }
+
+  /* Center image */
+  .pet-hero-{{ section.id }} .pet-hero__media {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__media img,
+  .pet-hero-{{ section.id }} .pet-hero__media svg {
+    display: block;
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+    max-height: var(--pet-hero-min-height);
+    object-fit: contain;
+    object-position: bottom center;
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__media--has-mobile .pet-hero__media-desktop {
+    display: none;
+  }
+
+  /* Right product cards */
+  .pet-hero-{{ section.id }} .pet-hero__cards {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 16px;
+    padding-block: 48px 56px;
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__card {
+    display: block;
+    width: min(164px, 100%);
+    background-color: var(--pet-hero-card-bg);
+    color: var(--pet-hero-card-fg);
+    border-radius: var(--pet-hero-radius);
+    padding: 10px 10px 12px;
+    text-decoration: none;
+    box-shadow: 0 12px 28px rgb(0 0 0 / 0.08);
+    transition: transform var(--animation-speed, 0.125s) ease, box-shadow var(--animation-speed, 0.125s) ease;
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 34px rgb(0 0 0 / 0.11);
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__card-media {
+    border-radius: calc(var(--pet-hero-radius) - 4px);
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__card-media svg {
+    width: 46%;
+    height: auto;
+    opacity: 0.4;
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__card-stars {
+    display: inline-flex;
+    gap: 2px;
+    margin-top: 8px;
+    color: var(--pet-hero-star);
+    line-height: 0;
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__card-stars svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__card-title {
+    margin: 6px 0 3px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: inherit;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .pet-hero-{{ section.id }} .pet-hero__card-price {
+    margin: 0;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--pet-hero-card-price);
+  }
+
+  /* Tablet */
+  @media (max-width: 1189px) {
+    .pet-hero-{{ section.id }} .pet-hero__inner {
+      grid-template-columns: minmax(220px, 1fr) minmax(260px, 1.2fr);
+    }
+
+    .pet-hero-{{ section.id }} .pet-hero__cards {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: flex-end;
+      grid-column: 1 / -1;
+      padding-block: 0 40px;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 749px) {
+    .pet-hero-{{ section.id }} .pet-hero__inner {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+
+    .pet-hero-{{ section.id }} .pet-hero__content {
+      order: 1;
+      padding-block: 40px 8px;
+      text-align: center;
+      align-items: center;
+    }
+
+    .pet-hero-{{ section.id }} .pet-hero__heading {
+      max-width: 20ch;
+    }
+
+    .pet-hero-{{ section.id }} .pet-hero__intro {
+      max-width: 420px;
+    }
+
+    .pet-hero-{{ section.id }} .pet-hero__buttons {
+      justify-content: center;
+    }
+
+    .pet-hero-{{ section.id }} .pet-hero__media {
+      order: 2;
+      padding-top: 12px;
+    }
+
+    .pet-hero-{{ section.id }} .pet-hero__media img,
+    .pet-hero-{{ section.id }} .pet-hero__media svg {
+      max-height: 400px;
+    }
+
+    .pet-hero-{{ section.id }} .pet-hero__cards {
+      order: 3;
+      justify-content: flex-start;
+      align-items: stretch;
+      overflow-x: auto;
+      padding-block: 24px 32px;
+      gap: 12px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .pet-hero-{{ section.id }} .pet-hero__card {
+      flex: 0 0 160px;
+      width: 160px;
+      scroll-snap-align: start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pet-hero-{{ section.id }} .pet-hero__card,
+    .pet-hero-{{ section.id }} .pet-hero__btn {
+      transition: none;
+    }
+  }
+{% endstyle %}
+
+{%- liquid
+  assign heading_lines = s.heading | split: newline
+-%}
+
+<section class="pet-hero pet-hero-{{ section.id }}" aria-label="{{ s.heading | default: 'Hero' | escape }}">
+  {%- if s.watermark_text != blank -%}
+    <p class="pet-hero__watermark" aria-hidden="true">{{ s.watermark_text }}</p>
+  {%- endif -%}
+
+  <div class="pet-hero__inner">
+    <div class="pet-hero__content">
+      {%- if s.intro_text != blank -%}
+        <p class="pet-hero__intro">{{ s.intro_text }}</p>
+      {%- endif -%}
+
+      {%- if s.heading != blank -%}
+        <h1 class="pet-hero__heading">
+          {%- assign muted_from = heading_lines.size | minus: s.muted_lines -%}
+          {%- for line in heading_lines -%}
+            {%- if forloop.index > muted_from -%}
+              <span class="pet-hero__line pet-hero__line--muted">{{ line }}</span>
+            {%- else -%}
+              <span class="pet-hero__line">{{ line }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+        </h1>
+      {%- endif -%}
+
+      <div class="pet-hero__buttons">
+        {%- if s.button_1_label != blank -%}
+          <a class="pet-hero__btn pet-hero__btn--white" href="{{ s.button_1_link | default: '#' }}">{{ s.button_1_label }}</a>
+        {%- endif -%}
+        {%- if s.button_2_label != blank -%}
+          <a class="pet-hero__btn {% if s.button_2_style == 'solid' %}pet-hero__btn--solid{% else %}pet-hero__btn--white{% endif %}" href="{{ s.button_2_link | default: '#' }}">{{ s.button_2_label }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- liquid
+      assign has_mobile_image = false
+      if s.image_mobile != blank
+        assign has_mobile_image = true
+      endif
+    -%}
+    <div class="pet-hero__media{% if has_mobile_image %} pet-hero__media--has-mobile{% endif %}">
+      {%- if s.image != blank -%}
+        {{ s.image | image_url: width: 1000 | image_tag:
+          class: 'pet-hero__media-desktop',
+          widths: '400,600,800,1000',
+          sizes: '(min-width: 1190px) 36vw, 50vw',
+          loading: 'eager',
+          fetchpriority: 'high',
+          alt: s.image.alt | default: s.heading | escape
+        }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'pet-hero__media-desktop' }}
+      {%- endif -%}
+
+      {%- if s.image_mobile != blank -%}
+        {{ s.image_mobile | image_url: width: 800 | image_tag:
+          class: 'pet-hero__media-mobile',
+          widths: '400,600,800',
+          sizes: '100vw',
+          loading: 'eager',
+          alt: s.image_mobile.alt | default: s.heading | escape
+        }}
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="pet-hero__cards">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'product_card' -%}
+            {%- liquid
+              assign card_product = block.settings.product
+              assign card_image = block.settings.card_image
+              assign card_title = block.settings.title
+              assign card_price = block.settings.price
+              assign has_card_link = false
+              if card_product != blank
+                assign has_card_link = true
+              endif
+            -%}
+            {%- if has_card_link -%}
+              <a class="pet-hero__card" href="{{ card_product.url }}" {{ block.shopify_attributes }}>
+            {%- else -%}
+              <div class="pet-hero__card" {{ block.shopify_attributes }}>
+            {%- endif -%}
+              <div class="pet-hero__card-media">
+                {%- if card_image != blank -%}
+                  {{ card_image | image_url: width: 400 | image_tag:
+                    widths: '190,280,400',
+                    sizes: '190px',
+                    loading: 'lazy',
+                    alt: card_image.alt | default: card_title | escape
+                  }}
+                {%- elsif card_product != blank and card_product.featured_image != blank -%}
+                  {{ card_product.featured_image | image_url: width: 400 | image_tag:
+                    widths: '190,280,400',
+                    sizes: '190px',
+                    loading: 'lazy',
+                    alt: card_product.title | escape
+                  }}
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag }}
+                {%- endif -%}
+              </div>
+
+              {%- if block.settings.show_stars -%}
+                <span class="pet-hero__card-stars" aria-hidden="true">
+                  {%- for i in (1..5) -%}
+                    <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.5 15 9l7 .7-5.3 4.6 1.6 6.9L12 17.5l-6.3 3.7 1.6-6.9L2 9.7 9 9l3-6.5Z"/></svg>
+                  {%- endfor -%}
+                </span>
+              {%- endif -%}
+
+              {%- if card_product != blank -%}
+                <p class="pet-hero__card-title">{{ card_product.title }}</p>
+                <p class="pet-hero__card-price">{{ card_product.price | money }}</p>
+              {%- else -%}
+                <p class="pet-hero__card-title">{{ card_title | default: 'Product title' }}</p>
+                <p class="pet-hero__card-price">{{ card_price | default: '$29.00' }}</p>
+              {%- endif -%}
+            {%- if has_card_link -%}
+              </a>
+            {%- else -%}
+              </div>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Pet Hero",
+  "tag": "section",
+  "class": "pet-hero-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "textarea",
+      "id": "intro_text",
+      "label": "Intro text",
+      "default": "Our mission is simple: to help pets live healthier, happier lives while making pet care easier and more enjoyable for their families."
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Ultimate Pet\nShopping Destination",
+      "info": "One line per row. The last line(s) render in the muted color"
+    },
+    {
+      "type": "range",
+      "id": "muted_lines",
+      "label": "Muted trailing lines",
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "text",
+      "id": "watermark_text",
+      "label": "Watermark text",
+      "default": "pet store",
+      "info": "Large decorative text behind the hero. Leave empty to hide"
+    },
+    {
+      "type": "range",
+      "id": "watermark_position",
+      "label": "Watermark position",
+      "min": 10,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "button_1_label",
+      "label": "Primary button label",
+      "default": "New Arrivals"
+    },
+    {
+      "type": "url",
+      "id": "button_1_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "button_2_label",
+      "label": "Secondary button label",
+      "default": "All Products"
+    },
+    {
+      "type": "url",
+      "id": "button_2_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "select",
+      "id": "button_2_style",
+      "label": "Secondary button style",
+      "options": [
+        { "value": "white", "label": "White" },
+        { "value": "solid", "label": "Solid accent" }
+      ],
+      "default": "white"
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "label": "Button corner radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Main image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "info": "Optional. Shown on small screens instead of the main image"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Minimum height",
+      "min": 360,
+      "max": 820,
+      "step": 20,
+      "unit": "px",
+      "default": 560
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#D9D9D9"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Heading text",
+      "default": "#0F0F0F"
+    },
+    {
+      "type": "color",
+      "id": "heading_muted_color",
+      "label": "Heading muted line",
+      "default": "#9E9E9E"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Intro text",
+      "default": "#4E4E4E"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#792011"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card text",
+      "default": "#141414"
+    },
+    {
+      "type": "color",
+      "id": "card_price_color",
+      "label": "Card price",
+      "default": "#792011"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#E8A33B"
+    },
+    {
+      "type": "color",
+      "id": "watermark_color",
+      "label": "Watermark color",
+      "default": "#E6E6E6"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "label": "Container max width",
+      "min": 1000,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1320
+    },
+    {
+      "type": "range",
+      "id": "card_corner_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Product card",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Title, price and link are pulled from the product"
+        },
+        {
+          "type": "image_picker",
+          "id": "card_image",
+          "label": "Custom image",
+          "info": "Overrides the product image"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_stars",
+          "label": "Show stars",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Fallback title",
+          "info": "Used when no product is selected"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Fallback price",
+          "info": "Used when no product is selected"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pet Hero",
+      "blocks": [
+        { "type": "product_card" },
+        { "type": "product_card" }
+      ]
+    }
+  ]
+}
+{% endschema %}

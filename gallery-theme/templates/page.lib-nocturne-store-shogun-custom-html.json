@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "library": {
+      "type": "nocturne-store--shogun-custom-html",
+      "settings": {}
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--main-search",
+      "settings": {}
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--product-list",
+      "settings": {
+        "layout_type": "grid",
+        "carousel_on_mobile": false,
+        "max_products": 8,
+        "columns": 4,
+        "mobile_columns": "2",
+        "mobile_card_size": "60cqw",
+        "columns_gap": 8,
+        "rows_gap": 24,
+        "icons_style": "arrow",
+        "icons_shape": "none",
+        "section_width": "page-width",
+        "horizontal_alignment": "flex-start",
+        "gap": 28,
+        "padding-block-start": 48,
+        "padding-block-end": 48,
+        "collection": ""
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "@theme",
+          "settings": {}
+        },
+        "bl-2": {
+          "type": "@theme",
+          "settings": {}
+        },
+        "bl-3": {
+          "type": "_divider",
+          "settings": {}
+        },
+        "bl-4": {
+          "type": "_divider",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

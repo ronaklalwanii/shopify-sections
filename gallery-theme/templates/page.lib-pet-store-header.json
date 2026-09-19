@@ -1,0 +1,40 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--header",
+      "settings": {
+        "logo_position": "center",
+        "menu_position": "left",
+        "menu_row": "top",
+        "show_search": true,
+        "search_position": "right",
+        "search_row": "top",
+        "show_country": true,
+        "country_selector_style": true,
+        "show_language": true,
+        "localization_font": "heading",
+        "localization_font_size": "1rem",
+        "localization_position": "right",
+        "localization_row": "top",
+        "section_height": "standard",
+        "enable_sticky_header": "always",
+        "divider_width": 0,
+        "border_width": 0,
+        "actions_display_style": "icon",
+        "actions_font_size": "0.875rem",
+        "actions_font": "body",
+        "actions_text_case": "none",
+        "bubble_style": "default",
+        "enable_transparent_header_home": false,
+        "home_inverse_logo": false,
+        "enable_transparent_header_product": false,
+        "product_inverse_logo": false,
+        "enable_transparent_header_collection": false,
+        "collection_inverse_logo": false
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

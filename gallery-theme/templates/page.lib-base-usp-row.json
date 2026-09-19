@@ -1,0 +1,52 @@
+{
+  "sections": {
+    "library": {
+      "type": "usp-row",
+      "settings": {
+        "bg_color": "#FAF7F2",
+        "number_color": "#3E3730",
+        "label_color": "#6E6257",
+        "divider_color": "#E4DCD2",
+        "max_width": 1280,
+        "columns": 3,
+        "gap": 40,
+        "pad_top": 48,
+        "pad_bottom": 48,
+        "show_dividers": false,
+        "number_size": 44,
+        "number_weight": 400,
+        "label_size": 12,
+        "enable_animation": true,
+        "animation_speed": 700
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "usp",
+          "settings": {
+            "label": "label 1"
+          }
+        },
+        "bl-2": {
+          "type": "usp",
+          "settings": {
+            "label": "label 2"
+          }
+        },
+        "bl-3": {
+          "type": "usp",
+          "settings": {
+            "label": "label 3"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

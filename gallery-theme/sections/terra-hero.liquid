@@ -1,0 +1,768 @@
+{%- comment -%}
+  Terra Hero — dedicated 1:1 recreation of design.jpg hero
+  No slideshow, no motion-element, no Shopify header hacks.
+  Full customization via settings, isolated file for backwards compat.
+{%- endcomment -%}
+
+<section id="TerraHero-{{ section.id }}" class="th">
+  {%- style -%}
+    #TerraHero-{{ section.id }} {
+      --th-bg: {{ section.settings.bg_color }};
+      --th-max-w: {{ section.settings.max_width }}px;
+      --th-space-top: {{ section.settings.space_top }}px;
+      --th-space-bottom: {{ section.settings.space_bottom }}px;
+      --th-gutter: {{ section.settings.gutter }}px;
+      --th-radius: {{ section.settings.radius }}px;
+      --th-min-h: {{ section.settings.min_height }}px;
+      --th-min-h-m: {{ section.settings.min_height_mobile }}px;
+      --th-pad-x: {{ section.settings.content_pad_x }}px;
+      --th-pad-y: {{ section.settings.content_pad_y }}px;
+      --th-pad-x-m: {{ section.settings.content_pad_x_mobile }}px;
+      --th-pad-y-m: {{ section.settings.content_pad_y_mobile }}px;
+      --th-content-max: {{ section.settings.content_max_width }}px;
+      --th-title-size: {{ section.settings.title_size }}px;
+      --th-title-size-m: {{ section.settings.title_size_mobile }}px;
+      --th-title-tracking: {{ section.settings.title_tracking | divided_by: 100.0 }}em;
+      --th-title-color: {{ section.settings.title_color }};
+      --th-title-weight: {{ section.settings.title_weight }};
+      --th-subtitle-size: {{ section.settings.subtitle_size }}px;
+      --th-subtitle-size-m: {{ section.settings.subtitle_size_mobile }}px;
+      --th-subtitle-color: {{ section.settings.subtitle_color }};
+      --th-subtitle-weight: {{ section.settings.subtitle_weight }};
+      --th-subtitle-max: {{ section.settings.subtitle_max_width }}px;
+      --th-desc-size: {{ section.settings.desc_size }}px;
+      --th-desc-color: {{ section.settings.desc_color }};
+      --th-desc-max: {{ section.settings.desc_max_width }}px;
+      --th-btn-h: {{ section.settings.btn_height }}px;
+      --th-btn-radius: {{ section.settings.btn_radius }}px;
+      --th-btn-bg: {{ section.settings.btn_bg }};
+      --th-btn-text: {{ section.settings.btn_text }};
+      --th-circle-size: {{ section.settings.circle_size }}px;
+      --th-circle-border: {{ section.settings.circle_border }};
+      --th-circle-color: {{ section.settings.circle_color }};
+      --th-circle-bg: {{ section.settings.circle_bg }};
+      --th-overlay: {{ section.settings.overlay_color.red }},{{ section.settings.overlay_color.green }},{{ section.settings.overlay_color.blue }};
+      --th-overlay-a: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    }
+
+    #TerraHero-{{ section.id }} {
+      background: var(--th-bg);
+      padding: var(--th-space-top) var(--th-gutter) var(--th-space-bottom);
+      overflow-x: clip;
+    }
+    #TerraHero-{{ section.id }} .th__outer {
+      position: relative;
+      width: min(100%, var(--th-max-w));
+      margin: 0 auto;
+      min-height: var(--th-min-h);
+      border-radius: var(--th-radius);
+      overflow: hidden;
+      isolation: isolate;
+      background: #0a0a0a;
+      display: flex;
+      align-items: stretch;
+    }
+    #TerraHero-{{ section.id }} .th__media {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    #TerraHero-{{ section.id }} .th__media img,
+    #TerraHero-{{ section.id }} .th__media .th__placeholder {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+    #TerraHero-{{ section.id }} .th__placeholder {
+      background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #555;
+      font-size: 14px;
+    }
+    #TerraHero-{{ section.id }} .th__overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(180deg, rgba(var(--th-overlay), .28) 0%, rgba(var(--th-overlay), .06) 38%, rgba(var(--th-overlay), .42) 100%),
+        linear-gradient(90deg, rgba(var(--th-overlay), .38) 0%, rgba(var(--th-overlay), 0) 62%);
+      opacity: var(--th-overlay-a);
+      pointer-events: none;
+    }
+    /* allow overlay opacity control separate from gradient strength */
+    #TerraHero-{{ section.id }} .th__overlay--solid {
+      opacity: 1;
+    }
+
+    #TerraHero-{{ section.id }} .th__content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      min-height: var(--th-min-h);
+      padding: var(--th-pad-y) var(--th-pad-x);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0;
+      max-width: var(--th-content-max);
+      min-width: 0;
+    }
+    #TerraHero-{{ section.id }} .th__top {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      min-width: 0;
+      width: 100%;
+    }
+    #TerraHero-{{ section.id }} .th__title {
+      margin: 0;
+      color: var(--th-title-color);
+      font-family: var(--font-heading-family, Georgia, serif);
+      font-size: clamp(calc(var(--th-title-size) * 0.55), 11vw, var(--th-title-size));
+      font-weight: var(--th-title-weight);
+      line-height: .84;
+      letter-spacing: var(--th-title-tracking);
+      text-transform: uppercase;
+      max-width: 100%;
+      overflow-wrap: normal;
+      white-space: nowrap;
+    }
+    #TerraHero-{{ section.id }} .th__subtitle {
+      margin: {{ section.settings.subtitle_margin_top }}px 0 0;
+      color: var(--th-subtitle-color);
+      font-size: var(--th-subtitle-size);
+      font-weight: var(--th-subtitle-weight);
+      line-height: 1.06;
+      letter-spacing: -.02em;
+      max-width: var(--th-subtitle-max);
+    }
+    #TerraHero-{{ section.id }} .th__desc {
+      margin: {{ section.settings.desc_margin_top }}px 0 0;
+      color: var(--th-desc-color);
+      font-size: var(--th-desc-size);
+      line-height: 1.6;
+      max-width: var(--th-desc-max);
+      opacity: {{ section.settings.desc_opacity | divided_by: 100.0 }};
+    }
+    #TerraHero-{{ section.id }} .th__desc p { margin: 0; }
+    #TerraHero-{{ section.id }} .th__desc p + p { margin-top: 8px; }
+
+    #TerraHero-{{ section.id }} .th__buttons {
+      display: flex;
+      align-items: center;
+      gap: {{ section.settings.btn_gap }}px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+    #TerraHero-{{ section.id }} .th__btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: var(--th-btn-h);
+      padding: 0 {{ section.settings.btn_pad_x }}px;
+      border-radius: var(--th-btn-radius);
+      background: var(--th-btn-bg);
+      color: var(--th-btn-text);
+      font-size: {{ section.settings.btn_font_size }}px;
+      font-weight: {{ section.settings.btn_font_weight }};
+      letter-spacing: .02em;
+      text-decoration: none;
+      border: 1px solid var(--th-btn-bg);
+      white-space: nowrap;
+      transition: transform 200ms ease, opacity 200ms ease;
+    }
+    #TerraHero-{{ section.id }} .th__btn:hover { transform: translateY(-1px); opacity: .92; }
+    #TerraHero-{{ section.id }} .th__circle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--th-circle-size);
+      height: var(--th-circle-size);
+      border-radius: 50%;
+      border: 1px solid var(--th-circle-border);
+      background: var(--th-circle-bg);
+      color: var(--th-circle-color);
+      font-size: {{ section.settings.circle_icon_size }}px;
+      line-height: 1;
+      text-decoration: none;
+      flex-shrink: 0;
+      transition: transform 200ms ease, background 200ms ease;
+    }
+    #TerraHero-{{ section.id }} .th__circle:hover { transform: translateY(-1px) rotate(4deg); }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      #TerraHero-{{ section.id }} .th__outer {
+        min-height: var(--th-min-h-m);
+      }
+      #TerraHero-{{ section.id }} .th__content {
+        min-height: var(--th-min-h-m);
+        padding: var(--th-pad-y-m) var(--th-pad-x-m);
+        gap: 24px;
+      }
+      #TerraHero-{{ section.id }} .th__title {
+        font-size: var(--th-title-size-m);
+        line-height: .88;
+      }
+      #TerraHero-{{ section.id }} .th__subtitle {
+        font-size: var(--th-subtitle-size-m);
+        margin-top: 14px;
+      }
+      #TerraHero-{{ section.id }} .th__desc {
+        margin-top: 12px;
+      }
+      #TerraHero-{{ section.id }} .th__buttons {
+        margin-top: 22px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #TerraHero-{{ section.id }} .th__btn, #TerraHero-{{ section.id }} .th__circle { transition: none; }
+    }
+  {%- endstyle -%}
+
+  <div class="th__outer">
+    <div class="th__media">
+      {%- if section.settings.bg_image != blank -%}
+        {%- liquid
+          assign img = section.settings.bg_image
+          assign img_m = section.settings.bg_image_mobile | default: img
+        -%}
+        <picture>
+          {%- if section.settings.bg_image_mobile != blank -%}
+            <source media="(max-width: 768px)" srcset="{{ img_m | image_url: width: 800 }} 800w, {{ img_m | image_url: width: 1200 }} 1200w" sizes="100vw">
+          {%- endif -%}
+          {{ img | image_url: width: 2000 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '800,1200,1600,2000', sizes: '100vw', alt: img.alt | default: section.settings.title | escape }}
+        </picture>
+      {%- else -%}
+        <div class="th__placeholder">Upload hero image (1920×1080)</div>
+      {%- endif -%}
+      <div class="th__overlay" style="--th-overlay-a: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+    </div>
+
+    <div class="th__content">
+      <div class="th__top">
+        {%- if section.settings.title != blank -%}
+          <h1 class="th__title">{{ section.settings.title }}</h1>
+        {%- endif -%}
+
+        {%- if section.settings.subtitle != blank -%}
+          <p class="th__subtitle">{{ section.settings.subtitle }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.description != blank -%}
+          <div class="th__desc rte">{{ section.settings.description }}</div>
+        {%- endif -%}
+
+        {%- if section.settings.btn_label != blank or section.settings.circle_label != blank -%}
+          <div class="th__buttons">
+            {%- if section.settings.btn_label != blank -%}
+              <a class="th__btn" {% if section.settings.btn_link != blank %}href="{{ section.settings.btn_link }}"{% else %}role="link" aria-disabled="true"{% endif %}>
+                {{ section.settings.btn_label }}
+              </a>
+            {%- endif -%}
+            {%- if section.settings.circle_label != blank -%}
+              <a class="th__circle" {% if section.settings.circle_link != blank %}href="{{ section.settings.circle_link }}"{% else %}{% if section.settings.btn_link != blank %}href="{{ section.settings.btn_link }}"{% endif %}{% endif %} aria-label="{{ section.settings.circle_label | escape }}">
+                {{ section.settings.circle_label }}
+              </a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}{
+  "name": "Terra Hero",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Page background",
+      "default": "#0F0F0F"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 900,
+      "max": 1800,
+      "step": 20,
+      "default": 1400,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "space_top",
+      "label": "Space above",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "space_bottom",
+      "label": "Space below",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "gutter",
+      "label": "Side gutters",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Hero radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Min height (desktop)",
+      "min": 480,
+      "max": 1000,
+      "step": 20,
+      "default": 760,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "label": "Min height (mobile)",
+      "min": 480,
+      "max": 900,
+      "step": 20,
+      "default": 640,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content max width",
+      "min": 400,
+      "max": 900,
+      "step": 20,
+      "default": 680,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "content_pad_x",
+      "label": "Content padding X (desktop)",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "default": 48,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "content_pad_y",
+      "label": "Content padding Y (desktop)",
+      "min": 20,
+      "max": 100,
+      "step": 4,
+      "default": 48,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "content_pad_x_mobile",
+      "label": "Content padding X (mobile)",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "content_pad_y_mobile",
+      "label": "Content padding Y (mobile)",
+      "min": 16,
+      "max": 60,
+      "step": 4,
+      "default": 28,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background image (desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image_mobile",
+      "label": "Background image (mobile)"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 55,
+      "unit": "%"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "YOUR BRAND"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Designing landscapes that live with your home"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>We create thoughtful, elegant gardens where every detail works for beauty, comfort, and harmony.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Title typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size (desktop)",
+      "min": 48,
+      "max": 200,
+      "step": 4,
+      "default": 148,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Title size (mobile)",
+      "min": 40,
+      "max": 120,
+      "step": 4,
+      "default": 72,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "title_weight",
+      "label": "Title weight",
+      "min": 300,
+      "max": 800,
+      "step": 100,
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "title_tracking",
+      "label": "Title letter spacing",
+      "min": -10,
+      "max": 0,
+      "step": 1,
+      "default": -6,
+      "unit": "em"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#EDE8E1"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Subtitle size (desktop)",
+      "min": 16,
+      "max": 40,
+      "step": 1,
+      "default": 30,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_mobile",
+      "label": "Subtitle size (mobile)",
+      "min": 16,
+      "max": 32,
+      "step": 1,
+      "default": 22,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_weight",
+      "label": "Subtitle weight",
+      "min": 300,
+      "max": 700,
+      "step": 100,
+      "default": 500
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#EDE8E1"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_max_width",
+      "label": "Subtitle max width",
+      "min": 300,
+      "max": 700,
+      "step": 20,
+      "default": 520,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_margin_top",
+      "label": "Subtitle top margin",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Description typography"
+    },
+    {
+      "type": "range",
+      "id": "desc_size",
+      "label": "Description size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "default": 13,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "desc_color",
+      "label": "Description color",
+      "default": "#EDE8E1"
+    },
+    {
+      "type": "range",
+      "id": "desc_opacity",
+      "label": "Description opacity",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "default": 70,
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "desc_max_width",
+      "label": "Description max width",
+      "min": 300,
+      "max": 600,
+      "step": 20,
+      "default": 420,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "desc_margin_top",
+      "label": "Description top margin",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Pill button label",
+      "default": "View projects"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Pill button link"
+    },
+    {
+      "type": "range",
+      "id": "btn_height",
+      "label": "Button height",
+      "min": 36,
+      "max": 60,
+      "step": 2,
+      "default": 46,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "btn_pad_x",
+      "label": "Button padding X",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "default": 26,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "btn_radius",
+      "label": "Button radius",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "btn_font_size",
+      "label": "Button font size",
+      "min": 11,
+      "max": 16,
+      "step": 1,
+      "default": 13,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "btn_font_weight",
+      "label": "Button weight",
+      "min": 400,
+      "max": 700,
+      "step": 100,
+      "default": 500
+    },
+    {
+      "type": "color",
+      "id": "btn_bg",
+      "label": "Button background",
+      "default": "#EDE8E1"
+    },
+    {
+      "type": "color",
+      "id": "btn_text",
+      "label": "Button text",
+      "default": "#0C0C0C"
+    },
+    {
+      "type": "range",
+      "id": "btn_gap",
+      "label": "Gap between buttons",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "circle_label",
+      "label": "Circle button label (arrow)",
+      "default": "↗"
+    },
+    {
+      "type": "url",
+      "id": "circle_link",
+      "label": "Circle button link"
+    },
+    {
+      "type": "range",
+      "id": "circle_size",
+      "label": "Circle size",
+      "min": 36,
+      "max": 64,
+      "step": 2,
+      "default": 46,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "circle_border",
+      "label": "Circle border",
+      "default": "#EDE8E1"
+    },
+    {
+      "type": "color",
+      "id": "circle_color",
+      "label": "Circle icon color",
+      "default": "#EDE8E1"
+    },
+    {
+      "type": "color",
+      "id": "circle_bg",
+      "label": "Circle background",
+      "default": "#00000000"
+    },
+    {
+      "type": "range",
+      "id": "circle_icon_size",
+      "label": "Circle icon size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Terra Hero",
+      "settings": {
+        "title": "YOUR BRAND",
+        "subtitle": "Designing landscapes that live with your home",
+        "description": "<p>We create thoughtful, elegant gardens where every detail works for beauty, comfort, and harmony.</p>",
+        "btn_label": "View projects",
+        "circle_label": "↗"
+      }
+    }
+  ]
+}{% endschema %}

@@ -1,0 +1,136 @@
+{%- comment -%} Section Library: injected global assets for store "nocturne-store" {%- endcomment -%}
+{{ 'nocturne-store--theme.css' | asset_url | stylesheet_tag }}
+{{ 'nocturne-store--product.css' | asset_url | stylesheet_tag }}
+{% render 'nocturne-store--css-variables' %}
+{%- comment -%} Arena Why Us — 4 cards + landscaped courtyards image {%- endcomment -%}
+<section id="ArenaWhy-{{ section.id }}" class="aw">
+  {%- style -%}
+    #ArenaWhy-{{ section.id }} {
+      --aw-bg: {{ section.settings.bg_color }};
+      --aw-max-w: {{ section.settings.max_width }}px;
+      --aw-gutter: {{ section.settings.gutter }}px;
+      --aw-space-top: {{ section.settings.space_top }}px;
+      --aw-space-bottom: {{ section.settings.space_bottom }}px;
+      --aw-radius: {{ section.settings.radius }}px;
+      --aw-gap: {{ section.settings.gap }}px;
+      --aw-card-bg: {{ section.settings.card_bg }};
+      --aw-border: {{ section.settings.border_color }};
+      --aw-pad: {{ section.settings.card_pad }}px;
+    }
+    #ArenaWhy-{{ section.id }} { background: var(--aw-bg); padding: var(--aw-space-top) var(--aw-gutter) var(--aw-space-bottom); overflow-x: clip; }
+    #ArenaWhy-{{ section.id }} .aw__shell { width: min(100%, var(--aw-max-w)); margin: 0 auto; }
+    #ArenaWhy-{{ section.id }} .aw__heading { margin: 0 0 18px; font-family: Georgia, serif; font-size: {{ section.settings.heading_size }}px; color: #2B2117; line-height: 1.2; font-weight: 400; }
+    #ArenaWhy-{{ section.id }} .aw__grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: var(--aw-gap); min-width: 0; }
+    #ArenaWhy-{{ section.id }} .aw__cards { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--aw-gap); min-width: 0; grid-column: span 2; }
+    #ArenaWhy-{{ section.id }} .aw__card {
+      background: var(--aw-card-bg); border: 1px solid var(--aw-border); border-radius: var(--aw-radius); padding: var(--aw-pad); min-width: 0;
+    }
+    #ArenaWhy-{{ section.id }} .aw__icon { width: 28px; height: 28px; color: #C2A78A; margin-bottom: 10px; }
+    #ArenaWhy-{{ section.id }} .aw__icon svg { width: 100%; height: 100%; }
+    #ArenaWhy-{{ section.id }} .aw__card-title { margin: 0; font-size: 14px; font-weight: 600; color: #2B2117; line-height: 1.35; }
+    #ArenaWhy-{{ section.id }} .aw__card-text { margin: 8px 0 0; font-size: 12px; line-height: 1.6; color: #6B5E4F; }
+    #ArenaWhy-{{ section.id }} .aw__image-card {
+      position: relative; border-radius: var(--aw-radius); overflow: hidden; min-height: 320px; background: #1a1a1a; grid-column: auto;
+      display: flex; align-items: flex-end;
+    }
+    #ArenaWhy-{{ section.id }} .aw__image-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    #ArenaWhy-{{ section.id }} .aw__image-card .aw__placeholder-svg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: .5; background: rgba(0,0,0,.15); }
+    #ArenaWhy-{{ section.id }} .aw__image-card::after { content:""; position:absolute; inset:0; background: linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,.62) 100%); }
+    #ArenaWhy-{{ section.id }} .aw__image-text { position: relative; z-index: 1; padding: 20px; color: #fff; }
+    #ArenaWhy-{{ section.id }} .aw__image-title { margin: 0; font-size: 15px; font-weight: 600; color: #fff; }
+    #ArenaWhy-{{ section.id }} .aw__image-desc { margin: 6px 0 0; font-size: 12px; line-height: 1.5; color: rgba(255,255,255,.78); max-width: 280px; }
+    @media (max-width: 900px) {
+      #ArenaWhy-{{ section.id }} .aw__grid { grid-template-columns: 1fr; }
+      #ArenaWhy-{{ section.id }} .aw__cards { grid-column: auto; }
+      #ArenaWhy-{{ section.id }} .aw__image-card { min-height: 280px; }
+    }
+  {%- endstyle -%}
+  <div class="aw__shell">
+    <h2 class="aw__heading">{{ section.settings.heading }}</h2>
+    <div class="aw__grid">
+      <div class="aw__cards">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'item' -%}
+            <div class="aw__card" {{ block.shopify_attributes }}>
+              <div class="aw__icon">
+                {%- case block.settings.icon -%}
+                  {%- when 'cycle' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s5-3 5-8V7l-5-3-5 3v7c0 5 5 8 5 8Z"/></svg>
+                  {%- when 'clock' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                  {%- when 'shop' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 8h16l-2 8H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+                  {%- when 'layout' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="1"/><path d="M4 9h16M9 9v11"/></svg>
+                  {%- else -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/></svg>
+                {%- endcase -%}
+              </div>
+              <p class="aw__card-title">{{ block.settings.title }}</p>
+              <p class="aw__card-text">{{ block.settings.text }}</p>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+      <div class="aw__image-card">
+        {%- if section.settings.image != blank -%}
+          <img src="{{ section.settings.image | image_url: width: 800 }}" alt="{{ section.settings.image.alt | escape }}" loading="lazy" width="800" height="600">
+        {%- else -%}
+          {{- 'lifestyle-1' | placeholder_svg_tag: 'aw__placeholder-svg' -}}
+        {%- endif -%}
+        <div class="aw__image-text">
+          <p class="aw__image-title">{{ section.settings.image_title }}</p>
+          <p class="aw__image-desc">{{ section.settings.image_text }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Arena Why Us",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "color", "id": "bg_color", "label": "Page bg", "default": "#FDF6E8" },
+    { "type": "range", "id": "max_width", "label": "Max width", "min": 900, "max": 1800, "step": 20, "default": 1400, "unit": "px" },
+    { "type": "range", "id": "gutter", "label": "Gutter", "min": 0, "max": 40, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "space_top", "label": "Space above", "min": 0, "max": 80, "step": 4, "default": 12, "unit": "px" },
+    { "type": "range", "id": "space_bottom", "label": "Space below", "min": 0, "max": 80, "step": 4, "default": 12, "unit": "px" },
+    { "type": "range", "id": "radius", "label": "Radius", "min": 0, "max": 32, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "gap", "label": "Gap", "min": 12, "max": 32, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "card_pad", "label": "Card padding", "min": 16, "max": 32, "step": 2, "default": 18, "unit": "px" },
+    { "type": "color", "id": "card_bg", "label": "Card bg", "default": "#F5EBDC" },
+    { "type": "color", "id": "border_color", "label": "Border", "default": "#EDE3D3" },
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Why choose us" },
+    { "type": "range", "id": "heading_size", "label": "Heading size", "min": 20, "max": 40, "step": 2, "default": 26, "unit": "px" },
+    { "type": "header", "content": "Image card" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "image_title", "label": "Image title", "default": "Landscaped courtyards" },
+    { "type": "textarea", "id": "image_text", "label": "Image text", "default": "Thoughtful children's, sports, green and recreation areas." }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Card",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "default": "cycle", "options": [
+          { "value": "cycle", "label": "Cycle" },
+          { "value": "clock", "label": "Clock" },
+          { "value": "shop", "label": "Shop" },
+          { "value": "layout", "label": "Layout" }
+        ]},
+        { "type": "text", "id": "title", "label": "Title", "default": "Full development cycle" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Faithful at all stages: from concept to management." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Arena Why Us",
+      "blocks": [
+        { "type": "item", "settings": { "icon": "cycle", "title": "Full development cycle", "text": "Faithful at all stages: from concept to operation and management." } },
+        { "type": "item", "settings": { "icon": "clock", "title": "Reliable deadlines", "text": "Building on schedule, strict quality control at every stage." } },
+        { "type": "item", "settings": { "icon": "shop", "title": "Commercial premises", "text": "Spaces for shops, cafes, and everything needed for comfortable life." } },
+        { "type": "item", "settings": { "icon": "layout", "title": "Modern layouts", "text": "Functional solutions for different lifestyles — from studios to family apartments." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

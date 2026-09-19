@@ -1,0 +1,53 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--feature-cards",
+      "settings": {
+        "padding": 64
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "card",
+          "settings": {
+            "title": "Independence",
+            "text": "Explore the creativity of independent designers from around the globe.",
+            "link_label": "Learn more"
+          }
+        },
+        "bl-2": {
+          "type": "card",
+          "settings": {
+            "title": "Uniquity",
+            "text": "Discover the charm of unique pieces that stand out effortlessly.",
+            "link_label": "Learn more"
+          }
+        },
+        "bl-3": {
+          "type": "card",
+          "settings": {
+            "title": "Quality",
+            "text": "Experience unparalleled craftsmanship and attention to detail.",
+            "link_label": "Learn more"
+          }
+        },
+        "bl-4": {
+          "type": "card",
+          "settings": {
+            "title": "Sustainability",
+            "text": "Embrace eco-conscious fashion choices without compromising on style.",
+            "link_label": "Learn more"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

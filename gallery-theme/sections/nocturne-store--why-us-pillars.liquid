@@ -1,0 +1,416 @@
+{%- comment -%} Section Library: injected global assets for store "nocturne-store" {%- endcomment -%}
+{{ 'nocturne-store--theme.css' | asset_url | stylesheet_tag }}
+{{ 'nocturne-store--product.css' | asset_url | stylesheet_tag }}
+{% render 'nocturne-store--css-variables' %}
+{{ 'nocturne-store--why-us-pillars.css' | asset_url | stylesheet_tag }}
+{{ 'nocturne-store--why-us-pillars.js' | asset_url | script_tag | defer }}
+
+{% assign card_count = 0 %}
+{% assign item_count = 0 %}
+{% for block in section.blocks %}
+  {% if block.type == 'pillar_card' %}{% assign card_count = card_count | plus: 1 %}{% endif %}
+  {% if block.type == 'stats_banner_item' %}{% assign item_count = item_count | plus: 1 %}{% endif %}
+{% endfor %}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    {% if section.settings.section_bg != blank %}--wb-section-bg: {{ section.settings.section_bg }};{% endif %}
+    --wb-section-padding-top: {{ section.settings.section_padding_top }}px;
+    --wb-section-padding-bottom: {{ section.settings.section_padding_bottom }}px;
+    --wb-section-max-width: {{ section.settings.section_max_width }}px;
+    --wb-section-gap: {{ section.settings.section_gap }}px;
+    --wb-card-row-gap: {{ section.settings.card_row_gap }}px;
+    --wb-card-stack-gap: {{ section.settings.card_stack_gap }}px;
+    --wb-card-count: {{ card_count | default: 3 }};
+  }
+</style>
+
+<section class="wb-section" id="why-us-pillars-{{ section.id }}" data-section-id="{{ section.id }}">
+  {% assign in_pillar_container = false %}
+  
+  {% for block in section.blocks %}
+    {% case block.type %}
+
+      {% when 'heading' %}
+        {% if in_pillar_container %}</div>{% assign in_pillar_container = false %}{% endif %}
+        <div class="wb-heading" {{ block.shopify_attributes }}
+          style="
+            text-align: {{ block.settings.text_alignment }};
+            {% if block.settings.eyebrow_color != blank %}--wb-eyebrow-color: {{ block.settings.eyebrow_color }};{% endif %}
+            --wb-eyebrow-size: {{ block.settings.eyebrow_font_size }}px;
+            {% if block.settings.headline_color != blank %}--wb-headline-color: {{ block.settings.headline_color }};{% endif %}
+            --wb-headline-size-mobile: {{ block.settings.headline_font_size_mobile }}px;
+            --wb-headline-size-desktop: {{ block.settings.headline_font_size_desktop }}px;
+            {% if block.settings.highlight_color != blank %}--wb-highlight-color: {{ block.settings.highlight_color }};{% endif %}
+            {% if block.settings.subheading_color != blank %}--wb-subheading-color: {{ block.settings.subheading_color }};{% endif %}
+            --wb-subheading-size-mobile: {{ block.settings.subheading_font_size_mobile }}px;
+            --wb-subheading-size-desktop: {{ block.settings.subheading_font_size_desktop }}px;
+          ">
+          {% if block.settings.eyebrow_text != blank %}
+            <p class="wb-heading__eyebrow">{{ block.settings.eyebrow_text }}</p>
+          {% endif %}
+          {% if block.settings.headline_text != blank or block.settings.highlight_text != blank %}
+            <h2 class="wb-heading__headline">
+              {% if block.settings.headline_text != blank %}<span>{{ block.settings.headline_text }}</span>{% endif %}
+              {% if block.settings.highlight_text != blank %} <em class="wb-heading__highlight">{{ block.settings.highlight_text }}</em>{% endif %}
+            </h2>
+          {% endif %}
+          {% if block.settings.subheading != blank %}
+            <div class="wb-heading__subheading">{{ block.settings.subheading }}</div>
+          {% endif %}
+        </div>
+
+      {% when 'pillar_card' %}
+        {% unless in_pillar_container %}
+          <div class="wb-pillar-cards-container">
+          {% assign in_pillar_container = true %}
+        {% endunless %}
+        <div class="wb-pillar-card" {{ block.shopify_attributes }}
+          style="
+            {% if block.settings.bg_color != blank %}--wb-card-bg: {{ block.settings.bg_color }};{% endif %}
+            {% if block.settings.border_color != blank %}--wb-card-border-color: {{ block.settings.border_color }};{% endif %}
+            --wb-card-border-width: {{ block.settings.border_width }}px;
+            --wb-card-border-radius: {{ block.settings.border_radius }}px;
+            {% if block.settings.shadow_enabled %}--wb-card-shadow: 0 4px 20px rgba(0,0,0,0.08);{% else %}--wb-card-shadow: none;{% endif %}
+            --wb-card-content-padding: {{ block.settings.padding }}px;
+            text-align: {{ block.settings.text_alignment }};
+            {% if block.settings.icon_bg_color != blank %}--wb-icon-bg: {{ block.settings.icon_bg_color }};{% endif %}
+            {% if block.settings.label_color != blank %}--wb-label-color: {{ block.settings.label_color }};{% endif %}
+            {% if block.settings.stat_color != blank %}--wb-stat-color: {{ block.settings.stat_color }};{% endif %}
+            --wb-stat-size: {{ block.settings.stat_font_size }}px;
+            {% if block.settings.button_text_color != blank %}--wb-btn-text: {{ block.settings.button_text_color }};{% endif %}
+            {% if block.settings.button_bg_color != blank %}--wb-btn-bg: {{ block.settings.button_bg_color }};{% endif %}
+            {% if block.settings.button_border_color != blank %}--wb-btn-border: {{ block.settings.button_border_color }};{% endif %}
+          ">
+          <div class="wb-pillar-card__content">
+            {% if block.settings.icon_image != blank %}
+              <div class="wb-pillar-card__icon-wrap wb-pillar-card__icon-wrap--{{ block.settings.icon_shape }}">
+                {{ block.settings.icon_image | image_url: width: 120 | image_tag: class: 'wb-pillar-card__icon', loading: 'lazy', widths: '60,120' }}
+              </div>
+            {% endif %}
+            {% if block.settings.label_text != blank %}
+              <p class="wb-pillar-card__label">{{ block.settings.label_text }}</p>
+            {% endif %}
+            {% if block.settings.sublabel_text != blank %}
+              <p class="wb-pillar-card__sublabel">{{ block.settings.sublabel_text }}</p>
+            {% endif %}
+            {% if block.settings.stat_number != blank %}
+              <div class="wb-pillar-card__stat">
+                <span class="wb-pillar-card__stat-number">{{ block.settings.stat_number }}</span>
+                {% if block.settings.stat_unit != blank %}
+                  <span class="wb-pillar-card__stat-unit">{{ block.settings.stat_unit }}</span>
+                {% endif %}
+              </div>
+            {% endif %}
+            {% if block.settings.body_text != blank %}
+              <div class="wb-pillar-card__body">{{ block.settings.body_text }}</div>
+            {% endif %}
+            {% if block.settings.citation_text != blank %}
+              <p class="wb-pillar-card__citation">{{ block.settings.citation_text }}</p>
+            {% endif %}
+            {% if block.settings.show_button and block.settings.button_text != blank %}
+              <a href="{{ block.settings.button_link }}" class="wb-pillar-card__link">
+                {{ block.settings.button_text }}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+
+      {% when 'stats_banner' %}
+        {% if in_pillar_container %}</div>{% assign in_pillar_container = false %}{% endif %}
+        <div class="wb-stats-banner" {{ block.shopify_attributes }}
+          style="
+            {% if block.settings.banner_bg_color != blank %}--wb-banner-bg: {{ block.settings.banner_bg_color }};{% endif %}
+            {% if block.settings.banner_text_color != blank %}--wb-banner-text: {{ block.settings.banner_text_color }};{% endif %}
+            {% if block.settings.divider_color != blank %}--wb-divider-color: {{ block.settings.divider_color }};{% endif %}
+          ">
+          {% if block.settings.banner_title != blank %}
+            <h3 class="wb-stats-banner__title">{{ block.settings.banner_title }}</h3>
+          {% endif %}
+          <div class="wb-stats-banner__grid">
+            {% for b in section.blocks %}
+              {% if b.type == 'stats_banner_item' %}
+                <div class="wb-stats-banner__item" {{ b.shopify_attributes }}
+                  style="{% if b.settings.stat_color != blank %}--wb-item-stat-color: {{ b.settings.stat_color }};{% endif %}">
+                  {% if b.settings.stat_icon != blank %}
+                    <div class="wb-stats-banner__icon">
+                      {{ b.settings.stat_icon | image_url: width: 80 | image_tag: class: 'wb-stats-banner__icon-img', loading: 'lazy', widths: '40,80' }}
+                    </div>
+                  {% endif %}
+                  {% if b.settings.stat_number != blank %}
+                    <div class="wb-stats-banner__number">{{ b.settings.stat_number }}</div>
+                  {% endif %}
+                  {% if b.settings.stat_description != blank %}
+                    <p class="wb-stats-banner__desc">{{ b.settings.stat_description }}</p>
+                  {% endif %}
+                  {% if b.settings.stat_footnote != blank %}
+                    <span class="wb-stats-banner__footnote">{{ b.settings.stat_footnote }}</span>
+                  {% endif %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+
+      {% when 'stats_banner_item' %}
+        {% comment %}Rendered inside stats_banner block{% endcomment %}
+
+      {% when 'cta_strip' %}
+        {% if in_pillar_container %}</div>{% assign in_pillar_container = false %}{% endif %}
+        <div class="wb-cta-strip" {{ block.shopify_attributes }}
+          style="
+            text-align: {{ block.settings.text_alignment }};
+            {% if block.settings.button_bg_color != blank %}--wb-cta-btn-bg: {{ block.settings.button_bg_color }};{% endif %}
+            {% if block.settings.button_text_color != blank %}--wb-cta-btn-text: {{ block.settings.button_text_color }};{% endif %}
+            {% if block.settings.button_hover_bg != blank %}--wb-cta-btn-hover-bg: {{ block.settings.button_hover_bg }};{% endif %}
+            {% if block.settings.button_hover_text != blank %}--wb-cta-btn-hover-text: {{ block.settings.button_hover_text }};{% endif %}
+            --wb-cta-btn-radius: {{ block.settings.button_radius }}px;
+          ">
+          {% if block.settings.logo_image != blank %}
+            <div class="wb-cta-strip__logo">
+              {{ block.settings.logo_image | image_url: width: 200 | image_tag: class: 'wb-cta-strip__logo-img', loading: 'lazy', widths: '100,200' }}
+            </div>
+          {% endif %}
+          <div class="wb-cta-strip__text">
+            {% if block.settings.heading_text != blank %}
+              <h3 class="wb-cta-strip__heading">{{ block.settings.heading_text }}</h3>
+            {% endif %}
+            {% if block.settings.description != blank %}
+              <div class="wb-cta-strip__desc">{{ block.settings.description }}</div>
+            {% endif %}
+          </div>
+          {% if block.settings.button_text != blank %}
+            <a href="{{ block.settings.button_link }}" class="wb-cta-strip__btn">
+              {{ block.settings.button_text }}
+            </a>
+          {% endif %}
+        </div>
+
+      {% when 'footnotes' %}
+        {% if in_pillar_container %}</div>{% assign in_pillar_container = false %}{% endif %}
+        <div class="wb-footnotes" {{ block.shopify_attributes }}
+          style="
+            text-align: {{ block.settings.text_alignment }};
+            --wb-footnote-size: {{ block.settings.footnote_font_size }}px;
+            {% if block.settings.footnote_color != blank %}--wb-footnote-color: {{ block.settings.footnote_color }};{% endif %}
+          ">
+          {% if block.settings.footnote_text != blank %}
+            <div class="wb-footnotes__text">{{ block.settings.footnote_text }}</div>
+          {% endif %}
+        </div>
+
+    {% endcase %}
+  {% endfor %}
+  
+  {% if in_pillar_container %}</div>{% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Why Brand",
+  "tag": "section",
+  "class": "wb-section-wrapper",
+  "settings": [
+    { "type": "header", "content": "Section Layout" },
+    { "type": "color", "id": "section_bg", "label": "Background color", "default": "#faf8f5" },
+    { "type": "range", "id": "section_padding_top", "label": "Top padding", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "section_padding_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "section_max_width", "label": "Max content width", "min": 800, "max": 1400, "step": 40, "unit": "px", "default": 1400 },
+    { "type": "range", "id": "section_gap", "label": "Gap between blocks", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 40 },
+    { "type": "range", "id": "card_row_gap", "label": "Card row gap (desktop)", "min": 0, "max": 60, "step": 4, "unit": "px", "default": 24 },
+    { "type": "range", "id": "card_stack_gap", "label": "Card stack gap (mobile)", "min": 0, "max": 60, "step": 4, "unit": "px", "default": 24 }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Heading",
+      "limit": 1,
+      "settings": [
+        { "type": "header", "content": "Content" },
+        { "type": "text", "id": "eyebrow_text", "label": "Eyebrow text", "default": "WHY BURBOX?" },
+        { "type": "text", "id": "headline_text", "label": "Main headline", "default": "Better Every Day." },
+        { "type": "text", "id": "highlight_text", "label": "Highlighted text portion", "default": "Built on Science." },
+        { "type": "richtext", "id": "subheading", "label": "Subheading / description", "default": "<p>You don't need to do more. You need the right balance.</p><p>Science shows the best results come when you <strong>move</strong>, <strong>recover</strong> and <strong>sleep</strong> well—consistently.</p>" },
+        { "type": "header", "content": "Typography & Color" },
+        { "type": "select", "id": "text_alignment", "label": "Text alignment", "options": [{ "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" }], "default": "center" },
+        { "type": "range", "id": "eyebrow_font_size", "label": "Eyebrow font size", "min": 10, "max": 24, "step": 1, "unit": "px", "default": 12 },
+        { "type": "range", "id": "headline_font_size_desktop", "label": "Headline size (desktop)", "min": 24, "max": 72, "step": 2, "unit": "px", "default": 56 },
+        { "type": "range", "id": "headline_font_size_mobile", "label": "Headline size (mobile)", "min": 20, "max": 48, "step": 2, "unit": "px", "default": 36 },
+        { "type": "range", "id": "subheading_font_size_desktop", "label": "Subheading size (desktop)", "min": 12, "max": 28, "step": 1, "unit": "px", "default": 18 },
+        { "type": "range", "id": "subheading_font_size_mobile", "label": "Subheading size (mobile)", "min": 12, "max": 22, "step": 1, "unit": "px", "default": 16 },
+        { "type": "color", "id": "eyebrow_color", "label": "Eyebrow color", "default": "#2563eb" },
+        { "type": "color", "id": "headline_color", "label": "Headline color", "default": "#1a1a1a" },
+        { "type": "color", "id": "highlight_color", "label": "Highlight color", "default": "#2563eb" },
+        { "type": "color", "id": "subheading_color", "label": "Subheading color", "default": "#666666" }
+      ]
+    },
+    {
+      "type": "pillar_card",
+      "name": "Pillar Card",
+      "limit": 10,
+      "settings": [
+        { "type": "header", "content": "Content" },
+        { "type": "image_picker", "id": "icon_image", "label": "Icon image" },
+        { "type": "select", "id": "icon_shape", "label": "Icon background shape", "options": [{ "value": "circle", "label": "Circle" }, { "value": "square", "label": "Square" }, { "value": "none", "label": "None" }], "default": "circle" },
+        { "type": "color", "id": "icon_bg_color", "label": "Icon background color", "default": "#2563eb" },
+        { "type": "text", "id": "label_text", "label": "Label / eyebrow", "default": "MOVE" },
+        { "type": "color", "id": "label_color", "label": "Label color", "default": "#2563eb" },
+        { "type": "text", "id": "sublabel_text", "label": "Sub-label", "default": "Build the foundation" },
+        { "type": "text", "id": "stat_number", "label": "Stat number", "default": "300+" },
+        { "type": "text", "id": "stat_unit", "label": "Stat unit / suffix", "default": "minutes per week" },
+        { "type": "color", "id": "stat_color", "label": "Stat color", "default": "#2563eb" },
+        { "type": "range", "id": "stat_font_size", "label": "Stat font size", "min": 28, "max": 80, "step": 2, "unit": "px", "default": 56 },
+        { "type": "richtext", "id": "body_text", "label": "Body description", "default": "<p>Adults who achieve 300+ minutes of moderate activity weekly have a 20–30% lower risk of premature death.¹</p>" },
+        { "type": "text", "id": "citation_text", "label": "Citation / footnote ref" },
+        { "type": "checkbox", "id": "show_button", "label": "Show link button", "default": true },
+        { "type": "text", "id": "button_text", "label": "Button text", "default": "SHOP FITNESS" },
+        { "type": "url", "id": "button_link", "label": "Button link" },
+        { "type": "color", "id": "button_text_color", "label": "Button text color", "default": "#2563eb" },
+        { "type": "color", "id": "button_bg_color", "label": "Button background color", "default": "transparent" },
+        { "type": "color", "id": "button_border_color", "label": "Button border color", "default": "#2563eb" },
+        { "type": "header", "content": "Layout & Style" },
+        { "type": "select", "id": "image_text_ratio", "label": "Image : Content ratio", "options": [{ "value": "30", "label": "30 / 70" }, { "value": "40", "label": "40 / 60" }, { "value": "50", "label": "50 / 50" }, { "value": "60", "label": "60 / 40" }, { "value": "70", "label": "70 / 30" }], "default": "40" },
+        { "type": "range", "id": "border_radius", "label": "Border radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 16 },
+        { "type": "range", "id": "border_width", "label": "Border width", "min": 0, "max": 8, "step": 1, "unit": "px", "default": 1 },
+        { "type": "color", "id": "border_color", "label": "Border color", "default": "#e5e5e5" },
+        { "type": "color", "id": "bg_color", "label": "Card background color", "default": "#ffffff" },
+        { "type": "checkbox", "id": "shadow_enabled", "label": "Enable box shadow", "default": true },
+        { "type": "range", "id": "padding", "label": "Inner padding", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 32 },
+        { "type": "select", "id": "text_alignment", "label": "Text alignment", "options": [{ "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" }], "default": "left" }
+      ]
+    },
+    {
+      "type": "stats_banner",
+      "name": "Stats Banner",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "banner_title", "label": "Banner heading", "default": "THE IMPACT OF AN INACTIVE LIFESTYLE" },
+        { "type": "color", "id": "banner_bg_color", "label": "Banner background color", "default": "#0f172a" },
+        { "type": "color", "id": "banner_text_color", "label": "Banner text color", "default": "#ffffff" },
+        { "type": "range", "id": "desktop_columns", "label": "Columns (desktop)", "min": 1, "max": 4, "step": 1, "default": 4 },
+        { "type": "checkbox", "id": "divider_enabled", "label": "Show dividers between items", "default": true },
+        { "type": "color", "id": "divider_color", "label": "Divider color", "default": "#334155" }
+      ]
+    },
+    {
+      "type": "stats_banner_item",
+      "name": "Stats Banner Item",
+      "limit": 8,
+      "settings": [
+        { "type": "image_picker", "id": "stat_icon", "label": "Icon image" },
+        { "type": "text", "id": "stat_number", "label": "Stat number", "default": "1 IN 4" },
+        { "type": "text", "id": "stat_description", "label": "Stat description", "default": "adults are insufficiently active in the UK.⁴" },
+        { "type": "text", "id": "stat_footnote", "label": "Footnote reference" },
+        { "type": "color", "id": "stat_color", "label": "Number color override", "default": "#ffffff" }
+      ]
+    },
+    {
+      "type": "cta_strip",
+      "name": "CTA Strip",
+      "limit": 1,
+      "settings": [
+        { "type": "header", "content": "Content" },
+        { "type": "image_picker", "id": "logo_image", "label": "Logo / badge image" },
+        { "type": "text", "id": "heading_text", "label": "Heading text", "default": "Small choices. Big results." },
+        { "type": "richtext", "id": "description", "label": "Description", "default": "<p>The right tools make it easier to <strong>move</strong> more, <strong>recover</strong> better and <strong>sleep</strong> deeper—every day.</p>" },
+        { "type": "text", "id": "button_text", "label": "Button text", "default": "BUILD YOUR ROUTINE" },
+        { "type": "url", "id": "button_link", "label": "Button link" },
+        { "type": "header", "content": "Button Style" },
+        { "type": "color", "id": "button_bg_color", "label": "Button background", "default": "#2563eb" },
+        { "type": "color", "id": "button_text_color", "label": "Button text color", "default": "#ffffff" },
+        { "type": "range", "id": "button_radius", "label": "Button border radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 8 },
+        { "type": "color", "id": "button_hover_bg", "label": "Button hover background", "default": "#1d4ed8" },
+        { "type": "color", "id": "button_hover_text", "label": "Button hover text color", "default": "#ffffff" },
+        { "type": "checkbox", "id": "button_full_width", "label": "Full-width button on mobile", "default": false },
+        { "type": "select", "id": "text_alignment", "label": "Text alignment", "options": [{ "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" }], "default": "left" }
+      ]
+    },
+    {
+      "type": "footnotes",
+      "name": "Footnotes / Sources",
+      "limit": 1,
+      "settings": [
+        { "type": "richtext", "id": "footnote_text", "label": "Footnote text", "default": "<p>1. WHO Global Action Plan on Physical Activity 2018 | 2. Poppendieck et al., PLoS One (2013) | 3. Diekelmann &amp; Born, Nature Reviews Neuroscience (2010)</p><p>4. Sport England – Active Lives Adult Survey (Nov 2023–Nov 2024) | 5. Schuch et al., British Journal of Sports Medicine (2018)</p><p>6. King et al., Science (2016) | 7. UK Government – Physical Activity: Applying All Our Health (2024)</p>" },
+        { "type": "range", "id": "footnote_font_size", "label": "Font size", "min": 10, "max": 16, "step": 1, "unit": "px", "default": 11 },
+        { "type": "color", "id": "footnote_color", "label": "Text color", "default": "#999999" },
+        { "type": "select", "id": "text_alignment", "label": "Alignment", "options": [{ "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" }], "default": "center" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why Brand",
+      "blocks": [
+        { "type": "heading" },
+        {
+          "type": "pillar_card",
+          "settings": {
+            "label_text": "MOVE",
+            "sublabel_text": "Build the foundation",
+            "stat_number": "300+",
+            "stat_unit": "minutes per week",
+            "body_text": "<p>Adults who achieve 300+ minutes of moderate activity weekly have a 20–30% lower risk of premature death.¹</p>",
+            "show_button": true,
+            "button_text": "SHOP FITNESS"
+          }
+        },
+        {
+          "type": "pillar_card",
+          "settings": {
+            "label_text": "RECOVER",
+            "sublabel_text": "Come back stronger",
+            "stat_number": "48%",
+            "stat_unit": "less muscle soreness",
+            "body_text": "<p>Cold-water immersion can significantly reduce delayed onset muscle soreness by up to 48%.²</p>",
+            "show_button": true,
+            "button_text": "SHOP RECOVERY"
+          }
+        },
+        {
+          "type": "pillar_card",
+          "settings": {
+            "label_text": "SLEEP",
+            "sublabel_text": "Recharge your body",
+            "stat_number": "5x",
+            "stat_unit": "better memory retention",
+            "body_text": "<p>Sleeping 7–8 hours improves memory performance up to 5x compared to sleep deprivation.³</p>",
+            "show_button": true,
+            "button_text": "SHOP SLEEP"
+          }
+        },
+        { "type": "stats_banner" },
+        {
+          "type": "stats_banner_item",
+          "settings": {
+            "stat_number": "1 IN 4",
+            "stat_description": "adults are insufficiently active in the UK.⁴"
+          }
+        },
+        {
+          "type": "stats_banner_item",
+          "settings": {
+            "stat_number": "35%",
+            "stat_description": "higher risk of depression with physical inactivity."
+          }
+        },
+        {
+          "type": "stats_banner_item",
+          "settings": {
+            "stat_number": "6.7 KG",
+            "stat_description": "average weight gain over 12 months of inactivity."
+          }
+        },
+        {
+          "type": "stats_banner_item",
+          "settings": {
+            "stat_number": "£9.9B",
+            "stat_description": "annual cost of physical inactivity to the NHS.⁷"
+          }
+        },
+        { "type": "cta_strip" },
+        { "type": "footnotes" }
+      ]
+    }
+  ]
+}
+{% endschema %}

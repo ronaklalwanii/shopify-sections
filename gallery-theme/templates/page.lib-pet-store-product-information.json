@@ -1,0 +1,34 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--product-information",
+      "settings": {
+        "content_width": "content-center-aligned",
+        "desktop_media_position": "left",
+        "equal_columns": false,
+        "limit_details_width": false,
+        "gap": 16,
+        "enable_sticky_add_to_cart": true,
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "@theme",
+          "settings": {}
+        },
+        "bl-2": {
+          "type": "@theme",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

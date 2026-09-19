@@ -1,0 +1,55 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--steps",
+      "settings": {
+        "eyebrow": "Style delivered in 4 simple steps",
+        "filled_icons": false,
+        "padding": 72
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "step",
+          "settings": {
+            "icon": "search",
+            "title": "Browse",
+            "text": "Explore our latest collections"
+          }
+        },
+        "bl-2": {
+          "type": "step",
+          "settings": {
+            "icon": "ruler",
+            "title": "Select size",
+            "text": "Find your perfect fit"
+          }
+        },
+        "bl-3": {
+          "type": "step",
+          "settings": {
+            "icon": "bag",
+            "title": "Checkout",
+            "text": "Secure & easy payment"
+          }
+        },
+        "bl-4": {
+          "type": "step",
+          "settings": {
+            "icon": "heart",
+            "title": "Wear with confidence",
+            "text": "Feel beautiful every day"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,55 @@
+{%- comment -%} Section Library: injected global assets for store "mariana-red" {%- endcomment -%}
+{{ 'mariana-red--base.css' | asset_url | stylesheet_tag }}
+{{ 'mariana-red--components.css' | asset_url | stylesheet_tag }}
+{% render 'mariana-red--layout-tokens' %}
+{%- comment -%}
+  Blog listing — article card grid.
+{%- endcomment -%}
+<section class="section" style="--section-space: 3rem;">
+  <div class="page-width">
+    <header class="page-header" style="padding-block: 0 2rem;">
+      <h1 class="h1">{{ blog.title | escape }}</h1>
+    </header>
+    {%- paginate blog.articles by 9 -%}
+      {%- if blog.articles.size > 0 -%}
+        <div class="article-grid">
+          {%- for article in blog.articles -%}
+            <article class="article-card">
+              {%- if article.image -%}
+                <a href="{{ article.url }}" class="article-card__media">
+                  {{ article.image | image_url: width: 720 | image_tag: loading: 'lazy', widths: '360, 540, 720', alt: article.title }}
+                </a>
+              {%- endif -%}
+              <div class="article-card__content">
+                <p class="article-card__date">{{ article.published_at | date: format: 'abbreviated_date' }}</p>
+                <h2 class="article-card__title"><a href="{{ article.url }}">{{ article.title | escape }}</a></h2>
+                {%- if section.settings.show_excerpt -%}
+                  <p class="article-card__excerpt">{{ article.excerpt_or_content | strip_html | truncate: 110 }}</p>
+                {%- endif -%}
+                <a href="{{ article.url }}" class="text-link">{{ 'blogs.article.read_more' | t }}</a>
+              </div>
+            </article>
+          {%- endfor -%}
+        </div>
+        {% render 'mariana-red--pagination', paginate: paginate %}
+      {%- else -%}
+        <p class="text-muted text-center">{{ 'blogs.general.no_articles' | t }}</p>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Blog posts",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "Show article excerpt",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

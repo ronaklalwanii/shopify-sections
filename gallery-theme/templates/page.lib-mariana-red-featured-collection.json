@@ -1,0 +1,33 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--featured-collection",
+      "settings": {
+        "products_count": 3,
+        "layout": "carousel",
+        "columns": 3,
+        "image_ratio": "portrait",
+        "show_subtitle": true,
+        "subtitle_source": "vendor",
+        "show_price": true,
+        "price_align": "center",
+        "show_rating": false,
+        "show_swatches": false,
+        "show_wishlist": false,
+        "show_button": true,
+        "button_label": "Add to bag",
+        "card_button_style": "primary",
+        "eyebrow": "New arrivals",
+        "heading": "New This Season",
+        "ornate": false,
+        "heading_align": "center",
+        "section_button_label": "View all products",
+        "button_style": "dark",
+        "padding": 72
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

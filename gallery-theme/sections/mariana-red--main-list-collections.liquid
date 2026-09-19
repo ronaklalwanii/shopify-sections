@@ -1,0 +1,40 @@
+{%- comment -%} Section Library: injected global assets for store "mariana-red" {%- endcomment -%}
+{{ 'mariana-red--base.css' | asset_url | stylesheet_tag }}
+{{ 'mariana-red--components.css' | asset_url | stylesheet_tag }}
+{% render 'mariana-red--layout-tokens' %}
+{%- comment -%}
+  /collections landing — grid of all collections.
+{%- endcomment -%}
+<section class="section" style="--section-space: 3rem;">
+  <div class="page-width">
+    <header class="page-header" style="padding-block: 0 2rem;">
+      <h1 class="h1">{{ 'collections.general.all_collections' | t }}</h1>
+    </header>
+    {%- paginate collections by 12 -%}
+      <div class="collection-grid collection-grid--cols-4">
+        {%- for collection in collections -%}
+          <a href="{{ collection.url }}" class="collection-card">
+            {%- if collection.featured_image -%}
+              {{ collection.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '360, 540, 720, 900', alt: collection.title }}
+            {%- else -%}
+              {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+            <span class="collection-card__scrim" aria-hidden="true"></span>
+            <span class="collection-card__label">
+              <span class="collection-card__title" style="display: block;">{{ collection.title | escape }}</span>
+            </span>
+          </a>
+        {%- endfor -%}
+      </div>
+      {% render 'mariana-red--pagination', paginate: paginate %}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collections list",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

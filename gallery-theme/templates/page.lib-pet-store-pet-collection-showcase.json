@@ -1,0 +1,62 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--pet-collection-showcase",
+      "settings": {
+        "badge_text": "Pet Care In Action",
+        "heading": "Trusted by Pet Owners Who\nWant the Very Best",
+        "columns_desktop": 3,
+        "grid_gap": 18,
+        "image_ratio": "7 / 6",
+        "card_corner_radius": 16,
+        "carousel_controls": "dots",
+        "background_color": "#EAE2D9",
+        "text_color": "#211D1A",
+        "muted_text_color": "#6F6963",
+        "accent_color": "#6E1622",
+        "accent_text_color": "#FFFFFF",
+        "badge_background_color": "#FBF7EF",
+        "tag_background_color": "#FBF7EF",
+        "chip_background_color": "#FFFFFF",
+        "chip_text_color": "#211D1A",
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "container_max_width": 1320
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "collection",
+          "settings": {
+            "tags": "Nutrition, Dog Food",
+            "title": "Pet Nutrition",
+            "chip_text": "4.8"
+          }
+        },
+        "bl-2": {
+          "type": "collection",
+          "settings": {
+            "tags": "Care, Wellness",
+            "title": "Cat Essentials",
+            "chip_text": "4.9"
+          }
+        },
+        "bl-3": {
+          "type": "collection",
+          "settings": {
+            "tags": "Care, Vitamins",
+            "title": "Pet Wellness",
+            "chip_text": "4.8"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

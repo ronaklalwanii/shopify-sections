@@ -1,0 +1,22 @@
+{
+  "sections": {
+    "library": {
+      "type": "related-products",
+      "settings": {
+        "recommendations_count": 6,
+        "full_width": true,
+        "stack_products": true,
+        "show_progress_bar": false,
+        "products_per_row_mobile": "1",
+        "products_per_row_desktop": 3,
+        "title": "You may also like",
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

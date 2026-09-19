@@ -1,0 +1,50 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--stats",
+      "settings": {
+        "align": "center",
+        "padding": 64
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "stat",
+          "settings": {
+            "label": "Designers",
+            "value": "150+"
+          }
+        },
+        "bl-2": {
+          "type": "stat",
+          "settings": {
+            "label": "Clients",
+            "value": "500+"
+          }
+        },
+        "bl-3": {
+          "type": "stat",
+          "settings": {
+            "label": "Masterpieces",
+            "value": "20K+"
+          }
+        },
+        "bl-4": {
+          "type": "stat",
+          "settings": {
+            "label": "Events",
+            "value": "50+"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

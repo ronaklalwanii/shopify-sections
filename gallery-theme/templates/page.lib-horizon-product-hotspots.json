@@ -1,0 +1,38 @@
+{
+  "sections": {
+    "library": {
+      "type": "horizon--product-hotspots",
+      "settings": {
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "section_width": "page-width",
+        "section_height": "auto",
+        "hotspot_color": "#FFFFFF57",
+        "bullseye_color": "#ffffff",
+        "product_title_gap": 8,
+        "product_title_preset": "",
+        "product_price_preset": "",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "_hotspot-product",
+          "settings": {}
+        },
+        "bl-2": {
+          "type": "_hotspot-product",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

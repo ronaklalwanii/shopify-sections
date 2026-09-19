@@ -1,0 +1,41 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--case-studies",
+      "settings": {
+        "eyebrow": "Selected case studies",
+        "button_label": "New case studies",
+        "padding": 72
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "case",
+          "settings": {
+            "title": "Noiré Cosmetics",
+            "text": "A bold beauty brand with timeless elegance and edge.",
+            "link_label": "View project",
+            "tone": "dark",
+            "image_side": "right"
+          }
+        },
+        "bl-2": {
+          "type": "case",
+          "settings": {
+            "title": "Aurea Wellness",
+            "text": "A wellness brand that promotes balance, beauty, and self-care.",
+            "link_label": "View project",
+            "tone": "blush",
+            "image_side": "right"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

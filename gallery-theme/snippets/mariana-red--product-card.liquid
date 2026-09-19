@@ -1,0 +1,135 @@
+{%- comment -%}
+  Renders a product card.
+  Accepts:
+  - product: {Object} product (required)
+  - show_subtitle: {Boolean} show vendor/type line
+  - subtitle_source: {String} vendor | type
+  - show_price: {Boolean}
+  - show_rating: {Boolean}
+  - rating_count: {String} e.g. "4.7 (1504)" suffix shown after stars
+  - show_button: {Boolean} add-to-cart button
+  - button_label: {String}
+  - button_style: {String} primary | dark | outline | light
+  - image_ratio: {String} portrait | tall | square | landscape
+  - badge_text: {String} custom badge e.g. NEW — overrides auto sale/soldout
+  - show_swatches: {Boolean} color dots row
+  - swatches: {String} comma-separated hex/labels e.g. "#111,#c2a187,#5c6b4f"
+  - show_wishlist: {Boolean} heart button top-right
+  - price_align: {String} center | split (title left / price right)
+  - tile_bg: {String} hex color — pastel tile behind the image (borderless card)
+  - show_quick_plus: {Boolean} circular + quick-add beside title/price row
+  - borderless: {Boolean} card without border/shadow chrome
+  Usage: {% render 'mariana-red--product-card', product: product %}
+{%- endcomment -%}
+{%- liquid
+  assign ratio = image_ratio | default: settings.card_image_ratio | default: 'portrait'
+  assign quick_id = 'QuickAdd-' | append: product.id
+  assign btn_style = button_style | default: 'primary'
+  assign card_classes = 'card product-card'
+  if price_align == 'split'
+    assign card_classes = card_classes | append: ' product-card--split'
+  endif
+  if tile_bg != blank
+    assign card_classes = card_classes | append: ' product-card--tile'
+  endif
+  if borderless
+    assign card_classes = card_classes | append: ' product-card--borderless'
+  endif
+-%}
+<div class="{{ card_classes }}" id="{{ quick_id }}"{% if tile_bg != blank %} style="--tile-bg: {{ tile_bg }};"{% endif %}>
+  <div class="card__media ratio-{{ ratio }}">
+    <a href="{{ product.url }}" aria-label="{{ product.title | escape }}" tabindex="-1">
+      {%- if product.featured_media -%}
+        {{ product.featured_media | image_url: width: 720 | image_tag: loading: 'lazy', widths: '320, 480, 640, 720', alt: product.featured_media.alt}}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+    </a>
+    {%- if badge_text != blank -%}
+      <span class="badge card__badge">{{ badge_text | escape }}</span>
+    {%- elsif product.available == false -%}
+      <span class="badge card__badge">{{ 'products.product.sold_out' | t }}</span>
+    {%- elsif product.compare_at_price > product.price -%}
+      <span class="badge card__badge">{{ 'products.product.on_sale' | t }}</span>
+    {%- endif -%}
+    {%- if show_wishlist -%}
+      <button type="button" class="card__wishlist" aria-label="Add to wishlist" data-wishlist>{{- '♡' -}}</button>
+    {%- endif -%}
+  </div>
+  <div class="card__content{% if price_align == 'split' %} card__content--split{% endif %}{% if show_quick_plus %} card__content--quick{% endif %}">
+    {%- if show_quick_plus -%}
+      <div class="card__quick">
+        <span class="card__quick-info">
+          <h3 class="card__title">
+            <a href="{{ product.url }}">{{ product.title | escape }}</a>
+          </h3>
+          {%- if show_price -%}
+            {% render 'mariana-red--price', product: product %}
+          {%- endif -%}
+        </span>
+        {%- if product.available -%}
+          {%- if product.variants.size == 1 -%}
+            {%- form 'product', product, id: nil, class: 'card-form' -%}
+              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              <button type="submit" class="card__quick-plus" aria-label="{{ 'products.product.add_to_cart' | t }}">
+                {% render 'mariana-red--icon', name: 'plus', size: 14 %}
+              </button>
+            {%- endform -%}
+          {%- else -%}
+            <a href="{{ product.url }}" class="card__quick-plus" aria-label="{{ 'products.product.add_to_cart' | t }}">
+              {% render 'mariana-red--icon', name: 'plus', size: 14 %}
+            </a>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+    {%- else -%}
+      {%- if show_subtitle -%}
+        {%- if subtitle_source == 'vendor' and product.vendor != blank -%}
+          <p class="card__subtitle">{{ product.vendor }}</p>
+        {%- elsif product.type != blank -%}
+          <p class="card__subtitle">{{ product.type }}</p>
+        {%- elsif subtitle_source == 'custom' and subtitle_text != blank -%}
+          <p class="card__subtitle">{{ subtitle_text | escape }}</p>
+        {%- endif -%}
+      {%- endif -%}
+      <h3 class="card__title">
+        <a href="{{ product.url }}">{{ product.title | escape }}</a>
+      </h3>
+      {%- if show_swatches and swatches != blank -%}
+        {%- assign dots = swatches | split: ',' -%}
+        <span class="card__swatches" aria-hidden="true">
+          {%- for dot in dots -%}
+            <i style="background: {{ dot | strip }};"></i>
+          {%- endfor -%}
+        </span>
+      {%- endif -%}
+      {%- if show_rating and show_price -%}
+        <div class="card__meta-row">
+          <span class="card__rating">{% render 'mariana-red--rating', rating: 5 %}{% if rating_count != blank %}<em>{{ rating_count | escape }}</em>{% endif %}</span>
+          {% render 'mariana-red--price', product: product %}
+        </div>
+      {%- else -%}
+        {%- if show_rating -%}
+          <span class="card__rating">{% render 'mariana-red--rating', rating: 5 %}{% if rating_count != blank %}<em>{{ rating_count | escape }}</em>{% endif %}</span>
+        {%- endif -%}
+        {%- if show_price -%}
+          {% render 'mariana-red--price', product: product %}
+        {%- endif -%}
+      {%- endif -%}
+      {%- if show_button -%}
+        {%- if product.available -%}
+          <div class="card__button">
+            {%- if product.variants.size == 1 -%}
+              {%- form 'product', product, id: nil, class: 'card-form' -%}
+                <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                {% render 'mariana-red--button', label_key: 'products.product.add_to_cart', label: button_label, style: btn_style, size: 'small', type: 'submit', full: true %}
+              {%- endform -%}
+            {%- else -%}
+              {% render 'mariana-red--button', label: 'Choose options', link: product.url, style: btn_style, size: 'small', full: true %}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>

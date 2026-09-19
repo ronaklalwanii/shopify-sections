@@ -1,0 +1,972 @@
+{%- comment -%}
+  KOVARI — Styling Atelier / KOVARI Edit / Insider Updates
+  Responsive, block-based editorial commerce section.
+  Newsletter capture uses Shopify's native customer form.
+{%- endcomment -%}
+
+<section id="KovariEditorial-{{ section.id }}" class="kovari-editorial">
+  {%- style -%}
+    #KovariEditorial-{{ section.id }} {
+      --ke-max-width: {{ section.settings.max_width }}px;
+      --ke-gap: {{ section.settings.layout_gap }}px;
+      --ke-mobile-gap: {{ section.settings.mobile_gap }}px;
+      --ke-margin-top: {{ section.settings.margin_top }}px;
+      --ke-margin-bottom: {{ section.settings.margin_bottom }}px;
+      --ke-radius: {{ section.settings.panel_radius }}px;
+      --ke-mobile-radius: {{ section.settings.mobile_panel_radius }}px;
+      --ke-border-width: {{ section.settings.panel_border_width }}px;
+      --ke-border-color: {{ section.settings.panel_border_color }};
+
+      --ke-style-bg: {{ section.settings.styling_background }};
+      --ke-style-text: {{ section.settings.styling_text_color }};
+      --ke-style-height: {{ section.settings.styling_height }}px;
+      --ke-style-title-size: {{ section.settings.styling_title_size }}px;
+      --ke-style-title-weight: {{ section.settings.styling_title_weight }};
+      --ke-style-copy-size: {{ section.settings.styling_copy_size }}px;
+      --ke-style-copy-weight: {{ section.settings.styling_copy_weight }};
+      --ke-tool-title-size: {{ section.settings.tool_title_size }}px;
+      --ke-tool-title-weight: {{ section.settings.tool_title_weight }};
+      --ke-tool-subtitle-size: {{ section.settings.tool_subtitle_size }}px;
+      --ke-tool-image-w: {{ section.settings.tool_image_width }}px;
+      --ke-tool-image-h: {{ section.settings.tool_image_height }}px;
+
+      --ke-edit-bg: {{ section.settings.edit_background }};
+      --ke-edit-text: {{ section.settings.edit_text_color }};
+      --ke-edit-height: {{ section.settings.edit_height }}px;
+      --ke-edit-title-size: {{ section.settings.edit_title_size }}px;
+      --ke-edit-title-weight: {{ section.settings.edit_title_weight }};
+      --ke-edit-copy-size: {{ section.settings.edit_copy_size }}px;
+      --ke-edit-copy-weight: {{ section.settings.edit_copy_weight }};
+      --ke-edit-copy-line-height: {{ section.settings.edit_copy_line_height }};
+      --ke-edit-card-gap: {{ section.settings.edit_card_gap }}px;
+      --ke-edit-card-image-h: {{ section.settings.edit_card_image_height }}px;
+      --ke-edit-card-radius: {{ section.settings.edit_card_radius }}px;
+      --ke-edit-card-title-size: {{ section.settings.edit_card_title_size }}px;
+
+      --ke-insider-bg: {{ section.settings.insider_background }};
+      --ke-insider-text: {{ section.settings.insider_text_color }};
+      --ke-insider-min-h: {{ section.settings.insider_height }}px;
+      --ke-insider-title-size: {{ section.settings.insider_title_size }}px;
+      --ke-insider-title-weight: {{ section.settings.insider_title_weight }};
+      --ke-insider-copy-size: {{ section.settings.insider_copy_size }}px;
+
+      --ke-cta-size: {{ section.settings.cta_font_size }}px;
+      --ke-cta-weight: {{ section.settings.cta_font_weight }};
+      --ke-cta-gap: {{ section.settings.cta_gap }}px;
+      --ke-cta-arrow-size: {{ section.settings.cta_arrow_size }}px;
+      --ke-cta-bg: {{ section.settings.styling_cta_background }};
+      --ke-cta-color: {{ section.settings.styling_cta_text_color }};
+      --ke-cta-radius: {{ section.settings.styling_cta_radius }}px;
+      --ke-cta-padding-x: {{ section.settings.styling_cta_padding_x }}px;
+      --ke-cta-padding-y: {{ section.settings.styling_cta_padding_y }}px;
+      --ke-hover-duration: {{ section.settings.hover_duration }}ms;
+      --ke-hover-lift: {{ section.settings.hover_lift }}px;
+
+      --ke-input-bg: {{ section.settings.insider_input_background }};
+      --ke-input-border: {{ section.settings.insider_input_border }};
+      --ke-input-border-width: {{ section.settings.insider_input_border_width }}px;
+      --ke-input-text: {{ section.settings.insider_input_text_color }};
+      --ke-input-placeholder: {{ section.settings.insider_input_placeholder_color }};
+      --ke-input-radius: {{ section.settings.insider_input_radius }}px;
+      --ke-input-height: {{ section.settings.insider_input_height }}px;
+      --ke-input-button-w: {{ section.settings.insider_button_width }}px;
+      --ke-input-button-bg: {{ section.settings.insider_button_background }};
+      --ke-input-button-color: {{ section.settings.insider_button_text_color }};
+
+      --ke-mobile-style-h: {{ section.settings.mobile_styling_height }}px;
+      --ke-mobile-edit-h: {{ section.settings.mobile_edit_height }}px;
+      --ke-mobile-insider-h: {{ section.settings.mobile_insider_height }}px;
+    }
+
+    #KovariEditorial-{{ section.id }} {
+    margin-top: var(--ke-margin-top);
+      margin-bottom: var(--ke-margin-bottom);
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__shell {
+      /* width: min(100%, var(--ke-max-width)); */
+      margin-inline: auto;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__layout {
+      display: grid;
+      grid-template-columns: minmax(0, {{ section.settings.left_column_ratio }}%) minmax(0, 1fr);
+      gap: var(--ke-gap);
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__left {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: minmax(0, {{ section.settings.styling_row_ratio }}fr) minmax(0, {{ section.settings.edit_row_ratio }}fr);
+      gap: var(--ke-gap);
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__panel {
+      position: relative;
+      min-width: 0;
+      overflow: hidden;
+      border: var(--ke-border-width) solid var(--ke-border-color);
+      border-radius: var(--ke-radius);
+      box-sizing: border-box;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__styling {
+      min-height: var(--ke-style-height);
+      background: var(--ke-style-bg);
+      color: var(--ke-style-text);
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__styling-inner {
+      height: 100%;
+      display: grid;
+      grid-template-columns: {{ section.settings.styling_intro_width }}px minmax(0, 1fr);
+      gap: {{ section.settings.styling_intro_gap }}px;
+      padding: {{ section.settings.styling_padding_y }}px {{ section.settings.styling_padding_x }}px;
+      box-sizing: border-box;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__intro {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__title {
+      margin: 0;
+      color: inherit;
+      font-family: {{ section.settings.styling_heading_font }};
+      font-size: var(--ke-style-title-size);
+      font-weight: var(--ke-style-title-weight);
+      line-height: 1.05;
+      letter-spacing: {{ section.settings.styling_title_letter_spacing }}px;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__copy {
+      max-width: {{ section.settings.styling_copy_max_width }}px;
+      margin: {{ section.settings.copy_top_margin }}px 0 0;
+      color: inherit;
+      font-size: var(--ke-style-copy-size);
+      font-weight: var(--ke-style-copy-weight);
+      line-height: {{ section.settings.copy_line_height }};
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__cta {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--ke-cta-gap);
+      margin-top: {{ section.settings.cta_top_margin }}px;
+      padding: var(--ke-cta-padding-y) var(--ke-cta-padding-x);
+      background: var(--ke-cta-bg);
+      color: var(--ke-cta-color);
+      border-radius: var(--ke-cta-radius);
+      font-size: var(--ke-cta-size);
+      font-weight: var(--ke-cta-weight);
+      line-height: 1.2;
+      letter-spacing: {{ section.settings.cta_letter_spacing }}px;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: opacity var(--ke-hover-duration) ease, transform var(--ke-hover-duration) ease;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__cta:hover {
+      opacity: .72;
+      transform: translateX(2px);
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__cta-arrow {
+      display: inline-flex;
+      width: var(--ke-cta-arrow-size);
+      height: var(--ke-cta-arrow-size);
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__cta-arrow svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__tools {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: repeat({{ section.settings.tools_desktop_columns }}, minmax(0, 1fr));
+      gap: {{ section.settings.tool_gap }}px;
+      align-items: center;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-tool {
+      min-width: 0;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: inherit;
+      text-align: center;
+      text-decoration: none;
+      transition: transform var(--ke-hover-duration) ease, opacity var(--ke-hover-duration) ease;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-tool:hover {
+      transform: translateY(calc(var(--ke-hover-lift) * -1));
+      opacity: .92;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-tool__media {
+      width: var(--ke-tool-image-w);
+      height: var(--ke-tool-image-h);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: {{ section.settings.tool_image_radius }}px;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-tool__image {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: {{ section.settings.tool_image_fit }};
+      object-position: {{ section.settings.tool_image_position }};
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-tool__title {
+      margin: {{ section.settings.tool_title_margin }}px 0 0;
+      max-width: {{ section.settings.tool_title_max_width }}px;
+      font-size: var(--ke-tool-title-size);
+      font-weight: var(--ke-tool-title-weight);
+      line-height: 1.15;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-tool__subtitle {
+      margin: {{ section.settings.tool_subtitle_margin }}px 0 0;
+      font-size: var(--ke-tool-subtitle-size);
+      line-height: 1.2;
+      opacity: {{ section.settings.tool_subtitle_opacity | divided_by: 100.0 }};
+    }
+
+    /* KOVARI Edit */
+    #KovariEditorial-{{ section.id }} .kovari-editorial__edit {
+      min-height: var(--ke-edit-height);
+      background: var(--ke-edit-bg);
+      color: var(--ke-edit-text);
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__edit-inner {
+      height: 100%;
+      display: grid;
+      grid-template-columns: {{ section.settings.edit_intro_width }}px minmax(0, 1fr);
+      gap: {{ section.settings.edit_intro_gap }}px;
+      padding: {{ section.settings.edit_padding_y }}px {{ section.settings.edit_padding_x }}px;
+      box-sizing: border-box;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__edit-title {
+      margin: 0;
+      color: inherit;
+      font-family: {{ section.settings.edit_heading_font }};
+      font-size: var(--ke-edit-title-size);
+      font-weight: var(--ke-edit-title-weight);
+      line-height: 1.05;
+      letter-spacing: {{ section.settings.edit_title_letter_spacing }}px;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__edit-cards {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: repeat({{ section.settings.edit_desktop_columns }}, minmax(0, 1fr));
+      gap: var(--ke-edit-card-gap);
+      align-items: center;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-edit-card {
+      min-width: 0;
+      color: inherit;
+      text-decoration: none;
+      transition: transform var(--ke-hover-duration) ease, opacity var(--ke-hover-duration) ease;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-edit-card:hover {
+      transform: translateY(calc(var(--ke-hover-lift) * -1));
+      opacity: .92;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-edit-card__media {
+      width: 100%;
+      height: var(--ke-edit-card-image-h);
+      overflow: hidden;
+      border-radius: var(--ke-edit-card-radius);
+      background: #D8D0C8;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-edit-card__image {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: {{ section.settings.edit_image_position }};
+      transition: transform var(--ke-hover-duration) ease;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-edit-card:hover .kovari-edit-card__image {
+      transform: scale({{ section.settings.edit_image_hover_scale | divided_by: 100.0 }});
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-edit-card__title {
+      margin: {{ section.settings.edit_card_title_margin }}px 0 0;
+      color: inherit;
+      font-size: var(--ke-edit-card-title-size);
+      font-weight: {{ section.settings.edit_card_title_weight }};
+      line-height: {{ section.settings.edit_card_title_line_height }};
+    }
+
+    /* Insider Updates */
+    #KovariEditorial-{{ section.id }} .kovari-editorial__insider {
+      min-height: var(--ke-insider-min-h);
+      background: var(--ke-insider-bg);
+      color: var(--ke-insider-text);
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__insider-inner {
+      min-height: var(--ke-insider-min-h);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: {{ section.settings.insider_padding_y }}px {{ section.settings.insider_padding_x }}px;
+      box-sizing: border-box;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__insider-title {
+      margin: 0;
+      color: inherit;
+      font-family: {{ section.settings.insider_heading_font }};
+      font-size: var(--ke-insider-title-size);
+      font-weight: var(--ke-insider-title-weight);
+      line-height: 1.05;
+      letter-spacing: {{ section.settings.insider_title_letter_spacing }}px;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-editorial__insider-copy {
+      max-width: {{ section.settings.insider_copy_max_width }}px;
+      margin: {{ section.settings.insider_copy_margin }}px 0 0;
+      color: inherit;
+      font-size: var(--ke-insider-copy-size);
+      font-weight: {{ section.settings.insider_copy_weight }};
+      line-height: {{ section.settings.insider_copy_line_height }};
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-newsletter {
+      width: 100%;
+      max-width: {{ section.settings.insider_form_max_width }}px;
+      margin-top: {{ section.settings.insider_form_margin }}px;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-newsletter__row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) var(--ke-input-button-w);
+      width: 100%;
+      min-height: var(--ke-input-height);
+      border: var(--ke-input-border-width) solid var(--ke-input-border);
+      border-radius: var(--ke-input-radius);
+      overflow: hidden;
+      background: var(--ke-input-bg);
+      box-sizing: border-box;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-newsletter__input {
+      width: 100%;
+      min-width: 0;
+      height: 100%;
+      border: 0;
+      outline: 0;
+      padding: 0 {{ section.settings.insider_input_padding_x }}px;
+      background: transparent;
+      color: var(--ke-input-text);
+      font-size: {{ section.settings.insider_input_font_size }}px;
+      font-weight: {{ section.settings.insider_input_font_weight }};
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-newsletter__input::placeholder {
+      color: var(--ke-input-placeholder);
+      opacity: 1;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-newsletter__button {
+      border: 0;
+      cursor: pointer;
+      background: var(--ke-input-button-bg);
+      color: var(--ke-input-button-color);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity var(--ke-hover-duration) ease;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-newsletter__button:hover {
+      opacity: .78;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-newsletter__button svg {
+      width: {{ section.settings.insider_button_icon_size }}px;
+      height: {{ section.settings.insider_button_icon_size }}px;
+    }
+
+    #KovariEditorial-{{ section.id }} .kovari-newsletter__message {
+      margin: 10px 0 0;
+      color: inherit;
+      font-size: {{ section.settings.insider_message_size }}px;
+      line-height: 1.35;
+    }
+
+    #KovariEditorial-{{ section.id }} .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0,0,0,0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    #KovariEditorial-{{ section.id }} a:focus-visible,
+    #KovariEditorial-{{ section.id }} button:focus-visible,
+    #KovariEditorial-{{ section.id }} input:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 990px) {
+      #KovariEditorial-{{ section.id }} .kovari-editorial__layout {
+        grid-template-columns: 1fr;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-editorial__left {
+        grid-template-rows: auto auto;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-editorial__styling,
+      #KovariEditorial-{{ section.id }} .kovari-editorial__edit,
+      #KovariEditorial-{{ section.id }} .kovari-editorial__insider {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 640px) {
+
+        
+
+      #KovariEditorial-{{ section.id }} {
+        padding-right: 20px;
+        padding-left:20px;
+        margin-top: min(var(--ke-margin-top), 24px);
+        margin-bottom: min(var(--ke-margin-bottom), 24px);
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-editorial__layout,
+      #KovariEditorial-{{ section.id }} .kovari-editorial__left {
+        gap: var(--ke-mobile-gap);
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-editorial__panel {
+        border-radius: var(--ke-mobile-radius);
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-editorial__styling {
+        min-height: var(--ke-mobile-style-h);
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-editorial__styling-inner,
+      #KovariEditorial-{{ section.id }} .kovari-editorial__edit-inner,
+      #KovariEditorial-{{ section.id }} .kovari-editorial__insider-inner {
+        display: block;
+        height: auto;
+        padding-left: {{ section.settings.mobile_padding_x }}px;
+        padding-right: {{ section.settings.mobile_padding_x }}px;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-editorial__styling-inner {
+        padding-top: {{ section.settings.mobile_styling_padding_y }}px;
+        padding-bottom: {{ section.settings.mobile_styling_padding_y }}px;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-editorial__styling-intro {
+        display: block;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-editorial__title,
+      #KovariEditorial-{{ section.id }} .kovari-editorial__edit-title,
+      #KovariEditorial-{{ section.id }} .kovari-editorial__insider-title {
+        font-size: {{ section.settings.mobile_heading_size }}px;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-editorial__copy,
+      #KovariEditorial-{{ section.id }} .kovari-editorial__edit-copy,
+      #KovariEditorial-{{ section.id }} .kovari-editorial__insider-copy {
+        max-width: 100%;
+        font-size: {{ section.settings.mobile_copy_size }}px;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-editorial__tools {
+        margin-top: {{ section.settings.mobile_tools_top_margin }}px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: {{ section.settings.mobile_tool_gap }}px;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-tool__media {
+        width: {{ section.settings.mobile_tool_image_width }}px;
+        height: {{ section.settings.mobile_tool_image_height }}px;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-tool__title {
+        max-width: {{ section.settings.mobile_tool_title_max_width }}px;
+        font-size: {{ section.settings.mobile_tool_title_size }}px;
+        margin-top: {{ section.settings.mobile_tool_title_margin }}px;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-tool__subtitle {
+        font-size: {{ section.settings.mobile_tool_subtitle_size }}px;
+        margin-top: {{ section.settings.mobile_tool_subtitle_margin }}px;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-editorial__edit {
+        min-height: var(--ke-mobile-edit-h);
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-editorial__edit-inner {
+        padding-top: {{ section.settings.mobile_edit_padding_y }}px;
+        padding-bottom: {{ section.settings.mobile_edit_padding_y }}px;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-editorial__edit-cards {
+        margin-top: {{ section.settings.mobile_edit_cards_margin }}px;
+        grid-template-columns: 1fr;
+        gap: {{ section.settings.mobile_edit_card_gap }}px;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-edit-card {
+        display: grid;
+        grid-template-columns: {{ section.settings.mobile_edit_image_width }}% minmax(0, 1fr);
+        align-items: center;
+        gap: {{ section.settings.mobile_edit_card_inner_gap }}px;
+        padding: {{ section.settings.mobile_edit_card_padding }}px;
+        border-radius: {{ section.settings.mobile_edit_card_radius }}px;
+        background: {{ section.settings.mobile_edit_card_background }};
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-edit-card__media {
+        height: {{ section.settings.mobile_edit_image_height }}px;
+        border-radius: {{ section.settings.mobile_edit_image_radius }}px;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-edit-card__title {
+        margin: 0;
+        padding-right: {{ section.settings.mobile_edit_title_right_padding }}px;
+        font-size: {{ section.settings.mobile_edit_card_title_size }}px;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-editorial__insider {
+        min-height: var(--ke-mobile-insider-h);
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-editorial__insider-inner {
+        min-height: var(--ke-mobile-insider-h);
+        padding-top: {{ section.settings.mobile_insider_padding_y }}px;
+        padding-bottom: {{ section.settings.mobile_insider_padding_y }}px;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-newsletter {
+        max-width: 100%;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-newsletter__row {
+        min-height: {{ section.settings.mobile_insider_input_height }}px;
+        grid-template-columns: minmax(0, 1fr) {{ section.settings.mobile_insider_button_width }}px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      #KovariEditorial-{{ section.id }} .kovari-tool__media {
+        width: {{ section.settings.small_mobile_tool_image_width }}px;
+        height: {{ section.settings.small_mobile_tool_image_height }}px;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-tool__title {
+        font-size: {{ section.settings.small_mobile_tool_title_size }}px;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-tool__subtitle {
+        font-size: {{ section.settings.small_mobile_tool_subtitle_size }}px;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-edit-card {
+        grid-template-columns: {{ section.settings.small_mobile_edit_image_width }}% minmax(0, 1fr);
+        gap: {{ section.settings.small_mobile_edit_card_inner_gap }}px;
+        padding: {{ section.settings.small_mobile_edit_card_padding }}px;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-edit-card__media {
+        height: {{ section.settings.small_mobile_edit_image_height }}px;
+      }
+
+      #KovariEditorial-{{ section.id }} .kovari-edit-card__title {
+        font-size: {{ section.settings.small_mobile_edit_card_title_size }}px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #KovariEditorial-{{ section.id }} * {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="kovari-editorial__shell">
+    <div class="kovari-editorial__layout">
+      <div class="kovari-editorial__left">
+
+        <section class="kovari-editorial__panel kovari-editorial__styling">
+          <div class="kovari-editorial__styling-inner">
+            <div class="kovari-editorial__intro">
+              <h2 class="kovari-editorial__title">{{ section.settings.styling_title }}</h2>
+              <p class="kovari-editorial__copy">{{ section.settings.styling_copy }}</p>
+              {%- if section.settings.styling_cta_link != blank -%}
+                <a class="kovari-editorial__cta" href="{{ section.settings.styling_cta_link }}">
+                  {{ section.settings.styling_cta_text }}
+                  <span class="kovari-editorial__cta-arrow" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="18" y2="12"></line>
+                      <polyline points="13 7 18 12 13 17"></polyline>
+                    </svg>
+                  </span>
+                </a>
+              {%- endif -%}
+            </div>
+
+            <div class="kovari-editorial__tools">
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'styling_tool' -%}
+                  {%- assign tool_product = block.settings.product -%}
+                  {%- assign tool_title = block.settings.title -%}
+                  {%- assign tool_image = block.settings.image -%}
+                  {%- assign tool_link = block.settings.link -%}
+                  {%- if tool_product != blank -%}
+                    {%- assign tool_title = tool_product.title -%}
+                    {%- assign tool_image = tool_product.featured_image -%}
+                    {%- assign tool_link = tool_product.url -%}
+                  {%- endif -%}
+                  {%- if tool_link != blank -%}<a class="kovari-tool" href="{{ tool_link }}" {{ block.shopify_attributes }}>{%- else -%}<div class="kovari-tool" {{ block.shopify_attributes }}>{%- endif -%}
+                    <span class="kovari-tool__media">
+                      {%- if tool_image != blank -%}
+                        <img class="kovari-tool__image" src="{{ tool_image | image_url: width: 500 }}" alt="{{ tool_title | escape }}" loading="{{ section.settings.image_loading }}" width="500" height="500">
+                      {%- endif -%}
+                    </span>
+                    {%- if tool_title != blank -%}<span class="kovari-tool__title">{{ tool_title }}</span>{%- endif -%}
+                    {%- if block.settings.subtitle != blank -%}<span class="kovari-tool__subtitle">{{ block.settings.subtitle }}</span>{%- endif -%}
+                  {%- if tool_link != blank -%}</a>{%- else -%}</div>{%- endif -%}
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        </section>
+
+        <section class="kovari-editorial__panel kovari-editorial__edit">
+          <div class="kovari-editorial__edit-inner">
+            <div class="kovari-editorial__intro">
+              <h2 class="kovari-editorial__edit-title">{{ section.settings.edit_title }}</h2>
+              <p class="kovari-editorial__copy">{{ section.settings.edit_copy }}</p>
+              {%- if section.settings.edit_cta_link != blank -%}
+                <a class="kovari-editorial__cta" href="{{ section.settings.edit_cta_link }}">
+                  {{ section.settings.edit_cta_text }}
+                  <span class="kovari-editorial__cta-arrow" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="18" y2="12"></line>
+                      <polyline points="13 7 18 12 13 17"></polyline>
+                    </svg>
+                  </span>
+                </a>
+              {%- endif -%}
+            </div>
+
+            <div class="kovari-editorial__edit-cards">
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'edit_article' -%}
+                  {%- if block.settings.link != blank -%}<a class="kovari-edit-card" href="{{ block.settings.link }}" {{ block.shopify_attributes }}>{%- else -%}<div class="kovari-edit-card" {{ block.shopify_attributes }}>{%- endif -%}
+                    <div class="kovari-edit-card__media">
+                      {%- if block.settings.image != blank -%}
+                        <img class="kovari-edit-card__image" src="{{ block.settings.image | image_url: width: 1000 }}" alt="{{ block.settings.title | escape }}" loading="{{ section.settings.image_loading }}" width="1000" height="600">
+                      {%- endif -%}
+                    </div>
+                    {%- if block.settings.title != blank -%}<div class="kovari-edit-card__title">{{ block.settings.title }}</div>{%- endif -%}
+                  {%- if block.settings.link != blank -%}</a>{%- else -%}</div>{%- endif -%}
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="kovari-editorial__panel kovari-editorial__insider">
+        <div class="kovari-editorial__insider-inner">
+          <h2 class="kovari-editorial__insider-title">{{ section.settings.insider_title }}</h2>
+          <p class="kovari-editorial__insider-copy">{{ section.settings.insider_copy }}</p>
+
+          {%- form 'customer', class: 'kovari-newsletter' -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <label class="visually-hidden" for="KovariNewsletterEmail-{{ section.id }}">{{ section.settings.insider_email_label }}</label>
+            <div class="kovari-newsletter__row">
+              <input
+                id="KovariNewsletterEmail-{{ section.id }}"
+                class="kovari-newsletter__input"
+                type="email"
+                name="contact[email]"
+                value="{{ form.email | escape }}"
+                autocomplete="email"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+                placeholder="{{ section.settings.insider_placeholder }}"
+                required
+                aria-required="true"
+              >
+              <button class="kovari-newsletter__button" type="submit" aria-label="{{ section.settings.insider_submit_label }}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="18" y2="12"></line>
+                  <polyline points="13 7 18 12 13 17"></polyline>
+                </svg>
+              </button>
+            </div>
+            {%- if form.posted_successfully? -%}<p class="kovari-newsletter__message" role="status">{{ section.settings.insider_success_message }}</p>{%- endif -%}
+            {%- if form.errors -%}<div class="kovari-newsletter__message" role="alert">{{ form.errors | default_errors }}</div>{%- endif -%}
+          {%- endform -%}
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "KOVARI Editorial Commerce",
+  "max_blocks": 50,
+  "settings": [
+    {"type":"header","content":"Global layout"},
+    {"type":"range","id":"max_width","label":"Maximum width","min":800,"max":2200,"step":20,"default":1500,"unit":"px"},
+    {"type":"range","id":"left_column_ratio","label":"Left column width","min":0,"max":80,"step":2,"default":72,"unit":"%"},
+    {"type":"range","id":"styling_row_ratio","label":"Styling row ratio","min":1,"max":5,"step":1,"default":3},
+    {"type":"range","id":"edit_row_ratio","label":"Edit row ratio","min":1,"max":5,"step":1,"default":2},
+    {"type":"range","id":"layout_gap","label":"Desktop gap","min":0,"max":40,"step":2,"default":6,"unit":"px"},
+    {"type":"range","id":"mobile_gap","label":"Mobile gap","min":0,"max":30,"step":2,"default":10,"unit":"px"},
+    {"type":"range","id":"margin_top","label":"Space above","min":0,"max":120,"step":4,"default":24,"unit":"px"},
+    {"type":"range","id":"margin_bottom","label":"Space below","min":0,"max":120,"step":4,"default":24,"unit":"px"},
+    {"type":"select","id":"image_loading","label":"Image loading","default":"lazy","options":[{"value":"lazy","label":"Lazy"},{"value":"eager","label":"Eager"}]},
+    {"type":"range","id":"panel_radius","label":"Desktop panel radius","min":0,"max":40,"step":2,"default":12,"unit":"px"},
+    {"type":"range","id":"mobile_panel_radius","label":"Mobile panel radius","min":0,"max":30,"step":2,"default":14,"unit":"px"},
+    {"type":"range","id":"panel_border_width","label":"Panel border width","min":0,"max":3,"step":1,"default":0,"unit":"px"},
+    {"type":"color","id":"panel_border_color","label":"Panel border color","default":"#E8E0D8"},
+
+    {"type":"header","content":"Styling Atelier"},
+    {"type":"text","id":"styling_title","label":"Title","default":"Styling Atelier"},
+    {"type":"textarea","id":"styling_copy","label":"Description","default":"Professional tools.\nEffortless results."},
+    {"type":"url","id":"styling_cta_link","label":"CTA link"},
+    {"type":"text","id":"styling_cta_text","label":"CTA text","default":"EXPLORE STYLING TOOLS"},
+    {"type":"color","id":"styling_cta_background","label":"CTA background","default":"#FFFFFF"},
+    {"type":"color","id":"styling_cta_text_color","label":"CTA text color","default":"#171717"},
+    {"type":"range","id":"styling_cta_radius","label":"CTA border radius","min":0,"max":24,"step":2,"default":0,"unit":"px"},
+    {"type":"range","id":"styling_cta_padding_x","label":"CTA horizontal padding","min":8,"max":40,"step":2,"default":16,"unit":"px"},
+    {"type":"range","id":"styling_cta_padding_y","label":"CTA vertical padding","min":4,"max":24,"step":2,"default":10,"unit":"px"},
+    {"type":"color","id":"styling_background","label":"Background","default":"#171717"},
+    {"type":"color","id":"styling_text_color","label":"Text color","default":"#FFFFFF"},
+    {"type":"range","id":"styling_height","label":"Desktop minimum height","min":180,"max":600,"step":10,"default":260,"unit":"px"},
+    {"type":"range","id":"styling_intro_width","label":"Intro width","min":160,"max":380,"step":10,"default":230,"unit":"px"},
+    {"type":"range","id":"styling_intro_gap","label":"Intro/content gap","min":8,"max":60,"step":4,"default":20,"unit":"px"},
+    {"type":"range","id":"styling_padding_y","label":"Vertical padding","min":12,"max":60,"step":4,"default":24,"unit":"px"},
+    {"type":"range","id":"styling_padding_x","label":"Horizontal padding","min":12,"max":60,"step":4,"default":28,"unit":"px"},
+    {"type":"range","id":"styling_title_size","label":"Title size","min":20,"max":50,"step":1,"default":32,"unit":"px"},
+    {"type":"range","id":"styling_title_weight","label":"Title weight","min":100,"max":900,"step":100,"default":500},
+    {"type":"range","id":"styling_title_letter_spacing","label":"Title letter spacing","min":-2,"max":6,"step":1,"default":0,"unit":"px"},
+    {"type":"text","id":"styling_heading_font","label":"Title font-family override","default":"inherit"},
+    {"type":"range","id":"styling_copy_size","label":"Description size","min":10,"max":20,"step":1,"default":14,"unit":"px"},
+    {"type":"range","id":"styling_copy_weight","label":"Description weight","min":100,"max":900,"step":100,"default":400},
+    {"type":"range","id":"styling_copy_max_width","label":"Description max width","min":100,"max":320,"step":10,"default":200,"unit":"px"},
+    {"type":"range","id":"copy_line_height","label":"Copy line height","min":1,"max":2,"step":0.1,"default":1.3},
+    {"type":"range","id":"copy_top_margin","label":"Copy top spacing","min":0,"max":24,"step":2,"default":10,"unit":"px"},
+    {"type":"range","id":"tools_desktop_columns","label":"Tool columns","min":1,"max":4,"step":1,"default":3},
+    {"type":"range","id":"tool_gap","label":"Tool gap","min":0,"max":30,"step":2,"default":12,"unit":"px"},
+    {"type":"range","id":"tool_image_width","label":"Tool image width","min":0,"max":150,"step":2,"default":78,"unit":"px"},
+    {"type":"range","id":"tool_image_height","label":"Tool image height","min":0,"max":140,"step":2,"default":78,"unit":"px"},
+    {"type":"select","id":"tool_image_fit","label":"Tool image fit","default":"contain","options":[{"value":"contain","label":"Contain"},{"value":"cover","label":"Cover"}]},
+    {"type":"select","id":"tool_image_position","label":"Tool image position","default":"center","options":[{"value":"left","label":"Left"},{"value":"center","label":"Center"},{"value":"right","label":"Right"},{"value":"top","label":"Top"},{"value":"bottom","label":"Bottom"}]},
+    {"type":"range","id":"tool_image_radius","label":"Tool image radius","min":0,"max":24,"step":2,"default":0,"unit":"px"},
+    {"type":"range","id":"tool_title_margin","label":"Tool title spacing","min":2,"max":20,"step":2,"default":6,"unit":"px"},
+    {"type":"range","id":"tool_title_max_width","label":"Tool title max width","min":80,"max":200,"step":10,"default":150,"unit":"px"},
+    {"type":"range","id":"tool_title_size","label":"Tool title size","min":10,"max":24,"step":1,"default":14,"unit":"px"},
+    {"type":"range","id":"tool_title_weight","label":"Tool title weight","min":100,"max":900,"step":100,"default":500},
+    {"type":"range","id":"tool_subtitle_size","label":"Tool subtitle size","min":9,"max":18,"step":1,"default":12,"unit":"px"},
+    {"type":"range","id":"tool_subtitle_margin","label":"Tool subtitle spacing","min":0,"max":14,"step":2,"default":2,"unit":"px"},
+    {"type":"range","id":"tool_subtitle_opacity","label":"Tool subtitle opacity","min":20,"max":100,"step":2,"default":80,"unit":"%"},
+
+    {"type":"header","content":"KOVARI Edit"},
+    {"type":"text","id":"edit_title","label":"Title","default":"The KOVARI Edit"},
+    {"type":"textarea","id":"edit_copy","label":"Description","default":"Expert advice, rituals\nand everything hair."},
+    {"type":"url","id":"edit_cta_link","label":"CTA link"},
+    {"type":"text","id":"edit_cta_text","label":"CTA text","default":"EXPLORE THE EDIT"},
+    {"type":"color","id":"edit_background","label":"Background","default":"#E9E0D7"},
+    {"type":"color","id":"edit_text_color","label":"Text color","default":"#24211F"},
+    {"type":"range","id":"edit_height","label":"Desktop minimum height","min":180,"max":500,"step":10,"default":220,"unit":"px"},
+    {"type":"range","id":"edit_intro_width","label":"Intro width","min":160,"max":360,"step":10,"default":220,"unit":"px"},
+    {"type":"range","id":"edit_intro_gap","label":"Intro/content gap","min":8,"max":60,"step":4,"default":16,"unit":"px"},
+    {"type":"range","id":"edit_padding_y","label":"Vertical padding","min":2,"max":60,"step":2,"default":22,"unit":"px"},
+    {"type":"range","id":"edit_padding_x","label":"Horizontal padding","min":2,"max":60,"step":2,"default":22,"unit":"px"},
+    {"type":"range","id":"edit_title_size","label":"Title size","min":20,"max":50,"step":1,"default":30,"unit":"px"},
+    {"type":"range","id":"edit_title_weight","label":"Title weight","min":100,"max":900,"step":100,"default":500},
+    {"type":"range","id":"edit_title_letter_spacing","label":"Title letter spacing","min":-2,"max":6,"step":1,"default":0,"unit":"px"},
+    {"type":"text","id":"edit_heading_font","label":"Title font-family override","default":"inherit"},
+    {"type":"range","id":"edit_copy_size","label":"Description size","min":10,"max":20,"step":1,"default":14,"unit":"px"},
+    {"type":"range","id":"edit_copy_weight","label":"Description weight","min":100,"max":900,"step":100,"default":400},
+    {"type":"range","id":"edit_copy_line_height","label":"Description line height","min":1,"max":2,"step":0.1,"default":1.3},
+    {"type":"range","id":"edit_copy_max_width","label":"Description max width","min":100,"max":320,"step":10,"default":190,"unit":"px"},
+    {"type":"range","id":"edit_desktop_columns","label":"Article columns","min":1,"max":4,"step":1,"default":3},
+    {"type":"range","id":"edit_card_gap","label":"Article gap","min":0,"max":24,"step":2,"default":10,"unit":"px"},
+    {"type":"range","id":"edit_card_radius","label":"Article radius","min":0,"max":24,"step":2,"default":10,"unit":"px"},
+    {"type":"range","id":"edit_card_image_height","label":"Article image height","min":60,"max":220,"step":10,"default":120,"unit":"px"},
+    {"type":"range","id":"edit_card_title_margin","label":"Article title spacing","min":2,"max":20,"step":2,"default":8,"unit":"px"},
+    {"type":"range","id":"edit_card_title_size","label":"Article title size","min":10,"max":20,"step":1,"default":13,"unit":"px"},
+    {"type":"range","id":"edit_card_title_weight","label":"Article title weight","min":100,"max":900,"step":100,"default":500},
+    {"type":"select","id":"edit_image_position","label":"Article image position","default":"center","options":[{"value":"left","label":"Left"},{"value":"center","label":"Center"},{"value":"right","label":"Right"},{"value":"top","label":"Top"},{"value":"bottom","label":"Bottom"}]},
+    {"type":"range","id":"edit_image_hover_scale","label":"Article hover scale","min":100,"max":105,"step":1,"default":102,"unit":"%"},
+
+    {"type":"header","content":"Insider Updates"},
+    {"type":"text","id":"insider_title","label":"Title","default":"Insider Updates"},
+    {"type":"textarea","id":"insider_copy","label":"Description","default":"Be the first to know about\nnew launches, expert tips\nand exclusive rewards."},
+    {"type":"color","id":"insider_background","label":"Background","default":"#151515"},
+    {"type":"color","id":"insider_text_color","label":"Text color","default":"#FFFFFF"},
+    {"type":"range","id":"insider_height","label":"Desktop minimum height","min":320,"max":700,"step":10,"default":480,"unit":"px"},
+    {"type":"range","id":"insider_padding_y","label":"Vertical padding","min":20,"max":80,"step":2,"default":36,"unit":"px"},
+    {"type":"range","id":"insider_padding_x","label":"Horizontal padding","min":20,"max":80,"step":2,"default":30,"unit":"px"},
+    {"type":"range","id":"insider_title_size","label":"Title size","min":20,"max":50,"step":1,"default":32,"unit":"px"},
+    {"type":"range","id":"insider_title_weight","label":"Title weight","min":100,"max":900,"step":100,"default":500},
+    {"type":"range","id":"insider_title_letter_spacing","label":"Title letter spacing","min":-2,"max":6,"step":1,"default":0,"unit":"px"},
+    {"type":"text","id":"insider_heading_font","label":"Title font-family override","default":"inherit"},
+    {"type":"range","id":"insider_copy_size","label":"Description size","min":10,"max":20,"step":1,"default":14,"unit":"px"},
+    {"type":"range","id":"insider_copy_weight","label":"Description weight","min":100,"max":900,"step":100,"default":400},
+    {"type":"range","id":"insider_copy_line_height","label":"Description line height","min":1,"max":2,"step":0.1,"default":1.4},
+    {"type":"range","id":"insider_copy_max_width","label":"Description max width","min":120,"max":360,"step":10,"default":270,"unit":"px"},
+    {"type":"range","id":"insider_copy_margin","label":"Description top spacing","min":4,"max":30,"step":2,"default":12,"unit":"px"},
+    {"type":"range","id":"insider_form_margin","label":"Form top spacing","min":8,"max":50,"step":2,"default":26,"unit":"px"},
+    {"type":"range","id":"insider_form_max_width","label":"Form max width","min":220,"max":520,"step":10,"default":360,"unit":"px"},
+    {"type":"text","id":"insider_email_label","label":"Accessible email label","default":"Email address"},
+    {"type":"text","id":"insider_placeholder","label":"Placeholder","default":"Your email address"},
+    {"type":"text","id":"insider_submit_label","label":"Submit label","default":"Subscribe"},
+    {"type":"text","id":"insider_success_message","label":"Success message","default":"You're on the list."},
+    {"type":"color","id":"insider_input_background","label":"Input background","default":"#FFFFFF"},
+    {"type":"color","id":"insider_input_border","label":"Input border","default":"#FFFFFF"},
+    {"type":"range","id":"insider_input_border_width","label":"Input border width","min":0,"max":3,"step":1,"default":1,"unit":"px"},
+    {"type":"color","id":"insider_input_text_color","label":"Input text","default":"#171717"},
+    {"type":"color","id":"insider_input_placeholder_color","label":"Placeholder color","default":"#777777"},
+    {"type":"range","id":"insider_input_radius","label":"Input radius","min":0,"max":24,"step":2,"default":8,"unit":"px"},
+    {"type":"range","id":"insider_input_height","label":"Input height","min":44,"max":76,"step":2,"default":56,"unit":"px"},
+    {"type":"range","id":"insider_input_padding_x","label":"Input horizontal padding","min":10,"max":36,"step":2,"default":16,"unit":"px"},
+    {"type":"range","id":"insider_input_font_size","label":"Input font size","min":10,"max":20,"step":1,"default":14,"unit":"px"},
+    {"type":"range","id":"insider_input_font_weight","label":"Input font weight","min":100,"max":900,"step":100,"default":400},
+    {"type":"range","id":"insider_button_width","label":"Button width","min":44,"max":90,"step":2,"default":62,"unit":"px"},
+    {"type":"color","id":"insider_button_background","label":"Button background","default":"#151515"},
+    {"type":"color","id":"insider_button_text_color","label":"Button icon color","default":"#FFFFFF"},
+    {"type":"range","id":"insider_button_icon_size","label":"Button icon size","min":12,"max":28,"step":2,"default":20,"unit":"px"},
+    {"type":"range","id":"insider_message_size","label":"Form message size","min":10,"max":18,"step":1,"default":12,"unit":"px"},
+
+    {"type":"header","content":"Buttons & hover"},
+    {"type":"range","id":"cta_font_size","label":"CTA font size","min":9,"max":16,"step":1,"default":11,"unit":"px"},
+    {"type":"range","id":"cta_font_weight","label":"CTA weight","min":100,"max":900,"step":100,"default":600},
+    {"type":"range","id":"cta_letter_spacing","label":"CTA letter spacing","min":0,"max":4,"step":1,"default":1,"unit":"px"},
+    {"type":"range","id":"cta_gap","label":"CTA arrow gap","min":2,"max":14,"step":2,"default":6,"unit":"px"},
+    {"type":"range","id":"cta_arrow_size","label":"CTA arrow size","min":12,"max":26,"step":2,"default":18,"unit":"px"},
+    {"type":"range","id":"cta_top_margin","label":"CTA top spacing","min":4,"max":30,"step":2,"default":16,"unit":"px"},
+    {"type":"range","id":"hover_lift","label":"Hover lift","min":0,"max":8,"step":1,"default":2,"unit":"px"},
+    {"type":"range","id":"hover_duration","label":"Hover transition","min":100,"max":600,"step":50,"default":250,"unit":"ms"},
+
+    {"type":"header","content":"Mobile"},
+    {"type":"range","id":"mobile_padding_x","label":"Mobile side padding","min":10,"max":32,"step":2,"default":16,"unit":"px"},
+    {"type":"range","id":"mobile_heading_size","label":"Mobile heading size","min":20,"max":36,"step":1,"default":27,"unit":"px"},
+    {"type":"range","id":"mobile_copy_size","label":"Mobile copy size","min":11,"max":18,"step":1,"default":14,"unit":"px"},
+    {"type":"range","id":"mobile_styling_height","label":"Mobile Styling Atelier height","min":300,"max":620,"step":10,"default":400,"unit":"px"},
+    {"type":"range","id":"mobile_styling_padding_y","label":"Mobile Styling Atelier padding","min":18,"max":60,"step":2,"default":28,"unit":"px"},
+    {"type":"range","id":"mobile_tools_top_margin","label":"Mobile tools top spacing","min":14,"max":40,"step":2,"default":24,"unit":"px"},
+    {"type":"range","id":"mobile_tool_gap","label":"Mobile tool gap","min":4,"max":20,"step":2,"default":8,"unit":"px"},
+    {"type":"range","id":"mobile_tool_image_width","label":"Mobile tool image width","min":40,"max":100,"step":2,"default":68,"unit":"px"},
+    {"type":"range","id":"mobile_tool_image_height","label":"Mobile tool image height","min":40,"max":100,"step":2,"default":68,"unit":"px"},
+    {"type":"range","id":"mobile_tool_title_max_width","label":"Mobile tool title max width","min":70,"max":160,"step":10,"default":110,"unit":"px"},
+    {"type":"range","id":"mobile_tool_title_margin","label":"Mobile tool title spacing","min":2,"max":14,"step":2,"default":6,"unit":"px"},
+    {"type":"range","id":"mobile_tool_title_size","label":"Mobile tool title size","min":10,"max":18,"step":1,"default":12,"unit":"px"},
+    {"type":"range","id":"mobile_tool_subtitle_margin","label":"Mobile tool subtitle spacing","min":0,"max":10,"step":2,"default":2,"unit":"px"},
+    {"type":"range","id":"mobile_tool_subtitle_size","label":"Mobile tool subtitle size","min":8,"max":14,"step":1,"default":10,"unit":"px"},
+    {"type":"range","id":"mobile_edit_height","label":"Mobile Edit min height","min":420,"max":800,"step":10,"default":570,"unit":"px"},
+    {"type":"range","id":"mobile_edit_padding_y","label":"Mobile Edit padding","min":18,"max":60,"step":2,"default":26,"unit":"px"},
+    {"type":"range","id":"mobile_edit_cards_margin","label":"Mobile article top spacing","min":14,"max":40,"step":2,"default":22,"unit":"px"},
+    {"type":"range","id":"mobile_edit_card_gap","label":"Mobile article gap","min":6,"max":20,"step":2,"default":10,"unit":"px"},
+    {"type":"range","id":"mobile_edit_card_inner_gap","label":"Mobile article inner gap","min":6,"max":20,"step":2,"default":12,"unit":"px"},
+    {"type":"range","id":"mobile_edit_card_padding","label":"Mobile article padding","min":4,"max":16,"step":2,"default":8,"unit":"px"},
+    {"type":"color","id":"mobile_edit_card_background","label":"Mobile article background","default":"#F5EFE8"},
+    {"type":"range","id":"mobile_edit_card_radius","label":"Mobile article radius","min":0,"max":20,"step":2,"default":10,"unit":"px"},
+    {"type":"range","id":"mobile_edit_image_width","label":"Mobile article image width","min":30,"max":60,"step":2,"default":40,"unit":"%"},
+    {"type":"range","id":"mobile_edit_image_height","label":"Mobile article image height","min":60,"max":160,"step":10,"default":80,"unit":"px"},
+    {"type":"range","id":"mobile_edit_image_radius","label":"Mobile article image radius","min":0,"max":20,"step":2,"default":8,"unit":"px"},
+    {"type":"range","id":"mobile_edit_card_title_size","label":"Mobile article title size","min":10,"max":18,"step":1,"default":13,"unit":"px"},
+    {"type":"range","id":"mobile_edit_title_right_padding","label":"Mobile article title right padding","min":0,"max":24,"step":2,"default":8,"unit":"px"},
+    {"type":"range","id":"mobile_insider_height","label":"Mobile Insider minimum height","min":280,"max":620,"step":10,"default":370,"unit":"px"},
+    {"type":"range","id":"mobile_insider_padding_y","label":"Mobile Insider padding","min":22,"max":70,"step":2,"default":30,"unit":"px"},
+    {"type":"range","id":"mobile_insider_button_width","label":"Mobile subscribe button width","min":44,"max":84,"step":2,"default":58,"unit":"px"},
+    {"type":"range","id":"mobile_insider_input_height","label":"Mobile input height","min":44,"max":70,"step":2,"default":54,"unit":"px"},
+    {"type":"range","id":"small_mobile_tool_image_width","label":"Small mobile tool image width","min":40,"max":80,"step":4,"default":60,"unit":"px"},
+    {"type":"range","id":"small_mobile_tool_image_height","label":"Small mobile tool image height","min":40,"max":80,"step":4,"default":60,"unit":"px"},
+    {"type":"range","id":"small_mobile_tool_title_size","label":"Small mobile tool title size","min":9,"max":15,"step":1,"default":11,"unit":"px"},
+    {"type":"range","id":"small_mobile_tool_subtitle_size","label":"Small mobile tool subtitle size","min":8,"max":12,"step":1,"default":8,"unit":"px"},
+    {"type":"range","id":"small_mobile_edit_image_width","label":"Small mobile article image width","min":40,"max":60,"step":2,"default":44,"unit":"%"},
+    {"type":"range","id":"small_mobile_edit_card_inner_gap","label":"Small mobile article inner gap","min":4,"max":16,"step":2,"default":10,"unit":"px"},
+    {"type":"range","id":"small_mobile_edit_card_padding","label":"Small mobile article padding","min":4,"max":14,"step":2,"default":6,"unit":"px"},
+    {"type":"range","id":"small_mobile_edit_image_height","label":"Small mobile article image height","min":60,"max":120,"step":10,"default":80,"unit":"px"},
+    {"type":"range","id":"small_mobile_edit_card_title_size","label":"Small mobile article title size","min":9,"max":16,"step":1,"default":12,"unit":"px"}
+  ],
+  "blocks": [
+    {
+      "type": "styling_tool",
+      "name": "Styling tool",
+      "limit": 25,
+      "settings": [
+        {"type":"product","id":"product","label":"Product"},
+        {"type":"text","id":"title","label":"Tool name","default":"AirLuxe Pro"},
+        {"type":"text","id":"subtitle","label":"Tool subtitle","default":"Hair Dryer"},
+        {"type":"image_picker","id":"image","label":"Fallback image"},
+        {"type":"url","id":"link","label":"Fallback link"}
+      ]
+    },
+    {
+      "type": "edit_article",
+      "name": "KOVARI Edit article",
+      "limit": 25,
+      "settings": [
+        {"type":"text","id":"title","label":"Article title","default":"The science of healthy hair"},
+        {"type":"image_picker","id":"image","label":"Article image"},
+        {"type":"url","id":"link","label":"Article link"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Styling Layout",
+      "blocks": [
+        {"type":"styling_tool","settings":{"title":"AirLuxe Pro","subtitle":"Hair Dryer"}},
+        {"type":"styling_tool","settings":{"title":"AirForm Pro","subtitle":"Multi-Styler"}},
+        {"type":"styling_tool","settings":{"title":"Wave Pro","subtitle":"Waver"}},
+        {"type":"edit_article","settings":{"title":"The science of healthy hair"}},
+        {"type":"edit_article","settings":{"title":"Ingredient spotlight: Argan Oil"}},
+        {"type":"edit_article","settings":{"title":"Heat styling: how to protect your hair"}}
+      ]
+    }
+  ]
+}
+{% endschema %}

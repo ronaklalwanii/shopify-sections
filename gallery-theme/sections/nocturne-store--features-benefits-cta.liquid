@@ -1,0 +1,450 @@
+{%- comment -%} Section Library: injected global assets for store "nocturne-store" {%- endcomment -%}
+{{ 'nocturne-store--theme.css' | asset_url | stylesheet_tag }}
+{{ 'nocturne-store--product.css' | asset_url | stylesheet_tag }}
+{% render 'nocturne-store--css-variables' %}
+{%- comment -%}
+  ============================================================
+  Features / Benefits + CTA
+  ------------------------------------------------------------
+  A self-contained, drop-in product page section.
+  Works on any Shopify theme (Online Store 2.0 or vintage).
+  No external dependencies. Styles are scoped to this section
+  instance so they will never clash with your theme.
+
+  Built by LazyCodeLab.
+  ============================================================
+{%- endcomment -%}
+
+{%- liquid
+  assign uid = section.id | replace: '_', '' | replace: '-', ''
+  assign wrap = 'fbc-' | append: uid
+  assign align = section.settings.content_alignment
+
+  assign bg = section.settings.section_background
+  if section.settings.transparent_bg
+    assign bg = 'transparent'
+  endif
+-%}
+
+<style>
+  #shopify-section-{{ section.id }} .{{ wrap }}{
+    --fbc-bg: {{ bg }};
+    --fbc-heading: {{ section.settings.heading_color }};
+    --fbc-text: {{ section.settings.text_color }};
+    --fbc-eyebrow: {{ section.settings.eyebrow_color }};
+    --fbc-icon: {{ section.settings.icon_color }};
+    --fbc-card-bg: {{ section.settings.card_background }};
+    --fbc-card-border: {{ section.settings.card_border_color }};
+    --fbc-btn-bg: {{ section.settings.button_bg }};
+    --fbc-btn-text: {{ section.settings.button_text }};
+    --fbc-cols: {{ section.settings.columns_desktop }};
+    --fbc-cols-mobile: {{ section.settings.columns_mobile }};
+    --fbc-maxw: {{ section.settings.max_width }}px;
+    --fbc-pt: {{ section.settings.padding_top }}px;
+    --fbc-pb: {{ section.settings.padding_bottom }}px;
+
+    background: var(--fbc-bg);
+    color: var(--fbc-text);
+    padding-top: var(--fbc-pt);
+    padding-bottom: var(--fbc-pb);
+  }
+  #shopify-section-{{ section.id }} .{{ wrap }}__inner{
+    max-width: var(--fbc-maxw);
+    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align: {{ align }};
+  }
+  #shopify-section-{{ section.id }} .{{ wrap }}__eyebrow{
+    color: var(--fbc-eyebrow);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+  }
+  #shopify-section-{{ section.id }} .{{ wrap }}__heading{
+    color: var(--fbc-heading);
+    margin: 0 0 0.6rem;
+    line-height: 1.15;
+    font-size: {% case section.settings.heading_size %}{% when 'small' %}1.6rem{% when 'medium' %}2.1rem{% when 'large' %}2.7rem{% when 'xlarge' %}3.3rem{% endcase %};
+  }
+  #shopify-section-{{ section.id }} .{{ wrap }}__sub{
+    margin: 0 auto 2.2rem;
+    max-width: 640px;
+    line-height: 1.6;
+    opacity: 0.92;
+  }
+  #shopify-section-{{ section.id }} .{{ wrap }}--left .{{ wrap }}__sub{ margin-left: 0; }
+
+  #shopify-section-{{ section.id }} .{{ wrap }}__grid{
+    display: grid;
+    grid-template-columns: repeat(var(--fbc-cols), minmax(0, 1fr));
+    gap: 1.5rem;
+    text-align: {{ align }};
+  }
+  #shopify-section-{{ section.id }} .{{ wrap }}__item{
+    display: flex;
+    flex-direction: column;
+    align-items: {% if align == 'center' %}center{% else %}flex-start{% endif %};
+    gap: 0.6rem;
+  }
+  /* Card styles */
+  #shopify-section-{{ section.id }} .{{ wrap }}--card .{{ wrap }}__item,
+  #shopify-section-{{ section.id }} .{{ wrap }}--bordered .{{ wrap }}__item{
+    padding: 1.6rem;
+    border-radius: 14px;
+  }
+  #shopify-section-{{ section.id }} .{{ wrap }}--card .{{ wrap }}__item{
+    background: var(--fbc-card-bg);
+  }
+  #shopify-section-{{ section.id }} .{{ wrap }}--bordered .{{ wrap }}__item{
+    border: 1px solid var(--fbc-card-border);
+  }
+  #shopify-section-{{ section.id }} .{{ wrap }}__icon{
+    color: var(--fbc-icon);
+    display: inline-flex;
+    line-height: 0;
+  }
+  #shopify-section-{{ section.id }} .{{ wrap }}__icon img{ display:block; height:auto; }
+  #shopify-section-{{ section.id }} .{{ wrap }}__item-title{
+    color: var(--fbc-heading);
+    font-size: 1.12rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.3;
+  }
+  #shopify-section-{{ section.id }} .{{ wrap }}__item-text{
+    margin: 0;
+    line-height: 1.55;
+    font-size: 0.96rem;
+    opacity: 0.92;
+  }
+  #shopify-section-{{ section.id }} .{{ wrap }}__item-text p{ margin: 0 0 0.4rem; }
+
+  /* CTA */
+  #shopify-section-{{ section.id }} .{{ wrap }}__cta{
+    margin-top: 2.4rem;
+    text-align: {{ align }};
+  }
+  #shopify-section-{{ section.id }} .{{ wrap }}__cta-heading{
+    color: var(--fbc-heading);
+    font-size: 1.3rem;
+    margin: 0 0 1rem;
+  }
+  #shopify-section-{{ section.id }} .{{ wrap }}__btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.8rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    border: 2px solid var(--fbc-btn-bg);
+    transition: opacity 0.15s ease, transform 0.05s ease;
+  }
+  #shopify-section-{{ section.id }} .{{ wrap }}__btn:hover{ opacity: 0.88; }
+  #shopify-section-{{ section.id }} .{{ wrap }}__btn:active{ transform: translateY(1px); }
+  #shopify-section-{{ section.id }} .{{ wrap }}__btn--primary{ background: var(--fbc-btn-bg); color: var(--fbc-btn-text); }
+  #shopify-section-{{ section.id }} .{{ wrap }}__btn--secondary{ background: var(--fbc-btn-text); color: var(--fbc-btn-bg); }
+  #shopify-section-{{ section.id }} .{{ wrap }}__btn--outline{ background: transparent; color: var(--fbc-btn-bg); }
+  #shopify-section-{{ section.id }} .{{ wrap }}__btn[disabled]{ opacity: 0.6; cursor: default; }
+
+  /* Scroll animation */
+  #shopify-section-{{ section.id }} .{{ wrap }}--animate .{{ wrap }}__item,
+  #shopify-section-{{ section.id }} .{{ wrap }}--animate .{{ wrap }}__cta{
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  #shopify-section-{{ section.id }} .{{ wrap }}--animate .is-visible{
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  @media (prefers-reduced-motion: reduce){
+    #shopify-section-{{ section.id }} .{{ wrap }}--animate .{{ wrap }}__item,
+    #shopify-section-{{ section.id }} .{{ wrap }}--animate .{{ wrap }}__cta{
+      opacity: 1; transform: none; transition: none;
+    }
+  }
+
+  @media (max-width: 749px){
+    #shopify-section-{{ section.id }} .{{ wrap }}__grid{
+      grid-template-columns: repeat(var(--fbc-cols-mobile), minmax(0, 1fr));
+      gap: 1rem;
+    }
+    #shopify-section-{{ section.id }} .{{ wrap }}__heading{ font-size: 1.7rem; }
+  }
+</style>
+
+<div class="{{ wrap }} {{ wrap }}--{{ section.settings.card_style }} {{ wrap }}--{{ align }}{% if section.settings.enable_animation %} {{ wrap }}--animate{% endif %}">
+  <div class="{{ wrap }}__inner">
+
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="{{ wrap }}__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <h2 class="{{ wrap }}__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- if section.settings.subheading != blank -%}
+      <div class="{{ wrap }}__sub">{{ section.settings.subheading }}</div>
+    {%- endif -%}
+
+    <div class="{{ wrap }}__grid">
+      {%- for block in section.blocks -%}
+        <div class="{{ wrap }}__item" {{ block.shopify_attributes }}>
+
+          {%- if block.settings.icon_source == 'image' and block.settings.icon_image != blank -%}
+            <span class="{{ wrap }}__icon">
+              {{ block.settings.icon_image | image_url: width: 120 | image_tag: width: block.settings.icon_size, alt: block.settings.title }}
+            </span>
+          {%- elsif block.settings.icon_source == 'preset' -%}
+            <span class="{{ wrap }}__icon" aria-hidden="true">
+              {%- assign s = block.settings.icon_size -%}
+              {%- case block.settings.preset_icon -%}
+                {%- when 'check' -%}<svg width="{{ s }}" height="{{ s }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                {%- when 'star' -%}<svg width="{{ s }}" height="{{ s }}" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17.8 5.8 20.7l1.6-6.7L2.2 8.9l6.9-.6L12 2z"/></svg>
+                {%- when 'shield' -%}<svg width="{{ s }}" height="{{ s }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                {%- when 'truck' -%}<svg width="{{ s }}" height="{{ s }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                {%- when 'leaf' -%}<svg width="{{ s }}" height="{{ s }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></svg>
+                {%- when 'heart' -%}<svg width="{{ s }}" height="{{ s }}" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+                {%- when 'bolt' -%}<svg width="{{ s }}" height="{{ s }}" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>
+                {%- when 'lock' -%}<svg width="{{ s }}" height="{{ s }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                {%- when 'gift' -%}<svg width="{{ s }}" height="{{ s }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4"/><path d="M12 8v13M5 12v9h14v-9M12 8C12 8 10 2 7 4s5 4 5 4zM12 8c0 0 2-6 5-4s-5 4-5 4z"/></svg>
+                {%- when 'clock' -%}<svg width="{{ s }}" height="{{ s }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                {%- when 'refresh' -%}<svg width="{{ s }}" height="{{ s }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+                {%- when 'headset' -%}<svg width="{{ s }}" height="{{ s }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2" y="14" width="5" height="7" rx="1.5"/><rect x="17" y="14" width="5" height="7" rx="1.5"/><path d="M20 21a4 4 0 0 1-4 3h-2"/></svg>
+                {%- else -%}<svg width="{{ s }}" height="{{ s }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              {%- endcase -%}
+            </span>
+          {%- endif -%}
+
+          {%- if block.settings.title != blank -%}
+            <h3 class="{{ wrap }}__item-title">{{ block.settings.title }}</h3>
+          {%- endif -%}
+          {%- if block.settings.description != blank -%}
+            <div class="{{ wrap }}__item-text">{{ block.settings.description }}</div>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.show_cta -%}
+      <div class="{{ wrap }}__cta">
+        {%- if section.settings.cta_heading != blank -%}
+          <p class="{{ wrap }}__cta-heading">{{ section.settings.cta_heading }}</p>
+        {%- endif -%}
+
+        {%- assign btn_class = wrap | append: '__btn ' | append: wrap | append: '__btn--' | append: section.settings.button_style -%}
+
+        {%- if section.settings.button_action == 'add_to_cart' and product != blank -%}
+          {%- assign v = product.selected_or_first_available_variant -%}
+          <button
+            type="button"
+            class="{{ btn_class }}"
+            data-fbc-add="{{ v.id }}"
+            data-fbc-redirect="{{ section.settings.redirect_to_cart }}"
+            {% unless v.available %}disabled{% endunless %}>
+            <span class="{{ wrap }}__btn-label">{% if v.available %}{{ section.settings.button_label }}{% else %}{{ 'products.product.sold_out' | t | default: 'Sold out' }}{% endif %}</span>
+          </button>
+        {%- elsif section.settings.button_action == 'scroll_to_form' -%}
+          <a href="#" class="{{ btn_class }}" data-fbc-scroll="true">{{ section.settings.button_label }}</a>
+        {%- else -%}
+          <a href="{{ section.settings.button_link | default: '#' }}" class="{{ btn_class }}">{{ section.settings.button_label }}</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+<script>
+  (function(){
+    var root = document.querySelector('#shopify-section-{{ section.id }} .{{ wrap }}');
+    if(!root) return;
+
+    /* AJAX add to cart (theme-agnostic, uses Shopify Cart API) */
+    var addBtn = root.querySelector('[data-fbc-add]');
+    if(addBtn){
+      addBtn.addEventListener('click', function(){
+        var id = addBtn.getAttribute('data-fbc-add');
+        var redirect = addBtn.getAttribute('data-fbc-redirect') === 'true';
+        var labelEl = addBtn.querySelector('.{{ wrap }}__btn-label');
+        var original = labelEl ? labelEl.textContent : '';
+        addBtn.setAttribute('disabled','');
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json','Accept':'application/json'},
+          body: JSON.stringify({ items: [{ id: id, quantity: 1 }] })
+        })
+        .then(function(r){ return r.json(); })
+        .then(function(){
+          if(redirect){ window.location.href = '/cart'; return; }
+          if(labelEl){ labelEl.textContent = 'Added \u2713'; }
+          addBtn.removeAttribute('disabled');
+          document.dispatchEvent(new CustomEvent('cart:refresh'));
+          setTimeout(function(){ if(labelEl) labelEl.textContent = original; }, 1800);
+        })
+        .catch(function(){ addBtn.removeAttribute('disabled'); if(labelEl) labelEl.textContent = original; });
+      });
+    }
+
+    /* Smooth scroll to the theme's product buy button */
+    var scrollBtn = root.querySelector('[data-fbc-scroll]');
+    if(scrollBtn){
+      scrollBtn.addEventListener('click', function(e){
+        e.preventDefault();
+        var target = document.querySelector('form[action*="/cart/add"]')
+          || document.querySelector('[name="add"]')
+          || document.querySelector('.product-form');
+        if(target){ target.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+      });
+    }
+
+    /* Scroll-in animation */
+    if(root.classList.contains('{{ wrap }}--animate') && 'IntersectionObserver' in window){
+      var items = root.querySelectorAll('.{{ wrap }}__item, .{{ wrap }}__cta');
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+          if(en.isIntersecting){ en.target.classList.add('is-visible'); io.unobserve(en.target); }
+        });
+      }, { threshold: 0.15 });
+      items.forEach(function(el, i){ el.style.transitionDelay = (i * 80) + 'ms'; io.observe(el); });
+    }
+  })();
+</script>
+
+{%- comment -%} ====================== SCHEMA ====================== {%- endcomment -%}
+{% schema %}
+{
+  "name": "Features / Benefits + CTA",
+  "tag": "section",
+  "class": "section-features-benefits-cta",
+  "settings": [
+    { "type": "header", "content": "Heading & layout" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow text", "default": "Why you'll love it" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Built for people who expect more" },
+    {
+      "type": "select", "id": "heading_size", "label": "Heading size", "default": "large",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" },
+        { "value": "xlarge", "label": "Extra large" }
+      ]
+    },
+    { "type": "richtext", "id": "subheading", "label": "Subheading", "default": "<p>Add a short line that sets up the benefits below.</p>" },
+    {
+      "type": "select", "id": "content_alignment", "label": "Content alignment", "default": "center",
+      "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" } ]
+    },
+    { "type": "range", "id": "columns_desktop", "label": "Columns (desktop)", "min": 1, "max": 4, "step": 1, "default": 3 },
+    {
+      "type": "select", "id": "columns_mobile", "label": "Columns (mobile)", "default": "1",
+      "options": [ { "value": "1", "label": "1 column" }, { "value": "2", "label": "2 columns" } ]
+    },
+    {
+      "type": "select", "id": "card_style", "label": "Card style", "default": "plain",
+      "options": [
+        { "value": "plain", "label": "Plain (no background)" },
+        { "value": "card", "label": "Filled card" },
+        { "value": "bordered", "label": "Bordered card" }
+      ]
+    },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "checkbox", "id": "transparent_bg", "label": "Use transparent background", "info": "Blends the section into your theme background.", "default": false },
+    { "type": "color", "id": "section_background", "label": "Section background", "default": "#ffffff" },
+    { "type": "color", "id": "heading_color", "label": "Headings", "default": "#121212" },
+    { "type": "color", "id": "text_color", "label": "Body text", "default": "#555555" },
+    { "type": "color", "id": "eyebrow_color", "label": "Eyebrow", "default": "#9a6a3c" },
+    { "type": "color", "id": "icon_color", "label": "Icons", "default": "#121212" },
+    { "type": "color", "id": "card_background", "label": "Card background", "default": "#f6f5f3", "info": "Used with the filled card style." },
+    { "type": "color", "id": "card_border_color", "label": "Card border", "default": "#e6e3df", "info": "Used with the bordered card style." },
+
+    { "type": "header", "content": "Call to action" },
+    { "type": "checkbox", "id": "show_cta", "label": "Show CTA button", "default": true },
+    { "type": "text", "id": "cta_heading", "label": "CTA heading", "default": "Ready when you are." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Add to cart" },
+    {
+      "type": "select", "id": "button_action", "label": "Button action", "default": "add_to_cart",
+      "info": "Add to cart and Scroll to buy button only work on product pages.",
+      "options": [
+        { "value": "link", "label": "Link to a URL" },
+        { "value": "add_to_cart", "label": "Add this product to cart" },
+        { "value": "scroll_to_form", "label": "Scroll to buy button" }
+      ]
+    },
+    { "type": "url", "id": "button_link", "label": "Button link", "info": "Used when the action is set to Link to a URL." },
+    { "type": "checkbox", "id": "redirect_to_cart", "label": "Go to cart after adding", "default": false },
+    {
+      "type": "select", "id": "button_style", "label": "Button style", "default": "primary",
+      "options": [
+        { "value": "primary", "label": "Solid" },
+        { "value": "secondary", "label": "Inverted" },
+        { "value": "outline", "label": "Outline" }
+      ]
+    },
+    { "type": "color", "id": "button_bg", "label": "Button color", "default": "#121212" },
+    { "type": "color", "id": "button_text", "label": "Button text", "default": "#ffffff" },
+
+    { "type": "header", "content": "Animation & spacing" },
+    { "type": "checkbox", "id": "enable_animation", "label": "Animate on scroll", "default": true },
+    { "type": "range", "id": "max_width", "label": "Max content width", "min": 700, "max": 1500, "step": 20, "unit": "px", "default": 1100 },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 56 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 56 }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "select", "id": "icon_source", "label": "Icon type", "default": "preset",
+          "options": [
+            { "value": "preset", "label": "Built-in icon" },
+            { "value": "image", "label": "Custom image" },
+            { "value": "none", "label": "No icon" }
+          ]
+        },
+        {
+          "type": "select", "id": "preset_icon", "label": "Built-in icon", "default": "check",
+          "options": [
+            { "value": "check", "label": "Check" },
+            { "value": "star", "label": "Star" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "bolt", "label": "Bolt" },
+            { "value": "lock", "label": "Lock" },
+            { "value": "gift", "label": "Gift" },
+            { "value": "clock", "label": "Clock" },
+            { "value": "refresh", "label": "Refresh" },
+            { "value": "headset", "label": "Support" }
+          ]
+        },
+        { "type": "image_picker", "id": "icon_image", "label": "Custom icon image" },
+        { "type": "range", "id": "icon_size", "label": "Icon size", "min": 20, "max": 72, "step": 2, "unit": "px", "default": 36 },
+        { "type": "text", "id": "title", "label": "Title", "default": "Benefit title" },
+        { "type": "richtext", "id": "description", "label": "Description", "default": "<p>One clear sentence on why this matters to the buyer.</p>" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Features / Benefits + CTA",
+      "blocks": [
+        { "type": "benefit", "settings": { "preset_icon": "truck", "title": "Free, fast shipping", "description": "<p>Dispatched within 24 hours with tracking on every order.</p>" } },
+        { "type": "benefit", "settings": { "preset_icon": "shield", "title": "2-year guarantee", "description": "<p>If anything goes wrong, we replace it. No fine print.</p>" } },
+        { "type": "benefit", "settings": { "preset_icon": "refresh", "title": "30-day returns", "description": "<p>Not the right fit? Send it back for a full refund.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

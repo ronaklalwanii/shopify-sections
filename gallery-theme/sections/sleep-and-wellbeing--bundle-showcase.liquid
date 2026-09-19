@@ -1,0 +1,509 @@
+{%- comment -%} Section Library: injected global assets for store "sleep-and-wellbeing" {%- endcomment -%}
+{{ 'sleep-and-wellbeing--theme.css' | asset_url | stylesheet_tag }}
+{{ 'sleep-and-wellbeing--product.css' | asset_url | stylesheet_tag }}
+{% render 'sleep-and-wellbeing--css-variables' %}
+{%- comment -%}
+  Section: Bundle Showcase
+  Left: heading, copy, bundle price + savings, perks, CTA.
+  Right: product tiles with "+" badges between them.
+{%- endcomment -%}
+
+<section id="BundleShowcase-{{ section.id }}" class="bw">
+  {%- style -%}
+    #BundleShowcase-{{ section.id }} {
+      --bw-bg: {{ section.settings.bg_color }};
+      --bw-radius: {{ section.settings.radius }}px;
+      --bw-max-width: {{ section.settings.max_width }}px;
+      --bw-space-top: {{ section.settings.space_top }}px;
+      --bw-space-bottom: {{ section.settings.space_bottom }}px;
+      --bw-gutter: {{ section.settings.mobile_gutter }}px;
+      --bw-pad-x: {{ section.settings.padding_x }}px;
+      --bw-pad-y: {{ section.settings.padding_y }}px;
+      --bw-left-width: {{ section.settings.left_width }}%;
+      --bw-col-gap: {{ section.settings.column_gap }}px;
+      --bw-item-gap: {{ section.settings.item_gap }}px;
+      --bw-head-size: {{ section.settings.heading_size }}px;
+      --bw-head-weight: {{ section.settings.heading_weight }};
+      --bw-head-spacing: {{ section.settings.heading_spacing }}px;
+      --bw-head-color: {{ section.settings.heading_color }};
+      --bw-desc-size: {{ section.settings.desc_size }}px;
+      --bw-desc-color: {{ section.settings.desc_color }};
+      --bw-desc-maxw: {{ section.settings.desc_max_width }}px;
+      --bw-price-size: {{ section.settings.price_size }}px;
+      --bw-price-color: {{ section.settings.heading_color }};
+      --bw-meta-size: {{ section.settings.meta_size }}px;
+      --bw-meta-color: {{ section.settings.meta_color }};
+      --bw-divider: {{ section.settings.divider_color }};
+      --bw-perk-size: {{ section.settings.perk_size }}px;
+      --bw-perk-color: {{ section.settings.perk_color }};
+      --bw-perk-icon-color: {{ section.settings.perk_icon_color }};
+      --bw-cta-bg: {{ section.settings.cta_bg }};
+      --bw-cta-text: {{ section.settings.cta_text_color }};
+      --bw-cta-radius: {{ section.settings.cta_radius }}px;
+      --bw-cta-size: {{ section.settings.cta_size }}px;
+      --bw-cta-weight: {{ section.settings.cta_weight }};
+      --bw-cta-spacing: {{ section.settings.cta_spacing }}px;
+      --bw-plus-size: {{ section.settings.plus_size }}px;
+      --bw-plus-bg: {{ section.settings.plus_bg }};
+      --bw-plus-color: {{ section.settings.plus_color }};
+      --bw-img-radius: {{ section.settings.image_radius }}px;
+      --bw-name-size: {{ section.settings.name_size }}px;
+      --bw-name-spacing: {{ section.settings.name_spacing }}px;
+      --bw-name-color: {{ section.settings.heading_color }};
+      --bw-item-price-size: {{ section.settings.item_price_size }}px;
+      --bw-item-price-color: {{ section.settings.meta_color }};
+      --bw-mobile-item: {{ section.settings.mobile_item_width }}px;
+    }
+
+    #BundleShowcase-{{ section.id }} {
+      padding-top: var(--bw-space-top);
+      padding-bottom: var(--bw-space-bottom);
+      padding-left: var(--bw-gutter);
+      padding-right: var(--bw-gutter);
+      overflow-x: clip;
+    }
+
+    #BundleShowcase-{{ section.id }} .bw__shell {
+      width: min(100%, var(--bw-max-width));
+      margin: 0 auto;
+      background: var(--bw-bg);
+      border-radius: var(--bw-radius);
+      padding: var(--bw-pad-y) var(--bw-pad-x);
+      box-sizing: border-box;
+      min-width: 0;
+    }
+
+    #BundleShowcase-{{ section.id }} .bw__grid {
+      display: grid;
+      grid-template-columns: minmax(0, var(--bw-left-width)) minmax(0, 1fr);
+      gap: var(--bw-col-gap);
+      align-items: center;
+      min-width: 0;
+    }
+
+    /* ---------- Left column ---------- */
+    #BundleShowcase-{{ section.id }} .bw__heading {
+      margin: 0;
+      color: var(--bw-head-color);
+      font-size: var(--bw-head-size);
+      font-weight: var(--bw-head-weight);
+      letter-spacing: var(--bw-head-spacing);
+      line-height: 1.15;
+      font-family: Georgia, 'Times New Roman', serif;
+      {% if section.settings.heading_uppercase %}text-transform: uppercase;{% endif %}
+    }
+
+    #BundleShowcase-{{ section.id }} .bw__desc {
+      margin: 12px 0 0;
+      max-width: var(--bw-desc-maxw);
+      color: var(--bw-desc-color);
+      font-size: var(--bw-desc-size);
+      line-height: 1.5;
+    }
+
+    #BundleShowcase-{{ section.id }} .bw__price-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 24px;
+    }
+    #BundleShowcase-{{ section.id }} .bw__price {
+      color: var(--bw-price-color);
+      font-size: var(--bw-price-size);
+      font-weight: 400;
+      line-height: 1;
+      font-family: Georgia, 'Times New Roman', serif;
+    }
+    #BundleShowcase-{{ section.id }} .bw__price-meta {
+      border-left: 1px solid var(--bw-divider);
+      padding-left: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    #BundleShowcase-{{ section.id }} .bw__price-meta span {
+      color: var(--bw-meta-color);
+      font-size: var(--bw-meta-size);
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      line-height: 1.2;
+    }
+
+    #BundleShowcase-{{ section.id }} .bw__perks {
+      margin: 24px 0 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    #BundleShowcase-{{ section.id }} .bw__perk {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--bw-perk-color);
+      font-size: var(--bw-perk-size);
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      line-height: 1.3;
+    }
+    #BundleShowcase-{{ section.id }} .bw__perk-icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      color: var(--bw-perk-icon-color);
+    }
+    #BundleShowcase-{{ section.id }} .bw__perk-icon svg,
+    #BundleShowcase-{{ section.id }} .bw__perk-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    #BundleShowcase-{{ section.id }} .bw__cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 28px;
+      padding: 14px 28px;
+      background: var(--bw-cta-bg);
+      color: var(--bw-cta-text);
+      border-radius: var(--bw-cta-radius);
+      font-size: var(--bw-cta-size);
+      font-weight: var(--bw-cta-weight);
+      letter-spacing: var(--bw-cta-spacing);
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: opacity 200ms ease, transform 200ms ease;
+    }
+    #BundleShowcase-{{ section.id }} .bw__cta:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* ---------- Right column: items ---------- */
+    #BundleShowcase-{{ section.id }} .bw__items {
+      display: grid;
+      grid-template-columns: repeat({{ section.blocks | where: 'type', 'item' | size | at_least: 1 }}, minmax(0, 1fr));
+      gap: var(--bw-item-gap);
+      min-width: 0;
+    }
+
+    #BundleShowcase-{{ section.id }} .bw-item { min-width: 0; }
+
+    #BundleShowcase-{{ section.id }} .bw-item__media {
+      position: relative;
+    }
+    #BundleShowcase-{{ section.id }} .bw-item__img-wrap {
+      overflow: hidden;
+      border-radius: var(--bw-img-radius);
+      aspect-ratio: 1 / 1;
+      background: rgba(255, 255, 255, 0.4);
+    }
+    #BundleShowcase-{{ section.id }} .bw-item__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 600ms cubic-bezier(.22, 1, .36, 1);
+    }
+    #BundleShowcase-{{ section.id }} .bw-item:hover .bw-item__img {
+      transform: scale(1.04);
+    }
+
+    #BundleShowcase-{{ section.id }} .bw-item__plus {
+      position: absolute;
+      top: 50%;
+      right: calc((var(--bw-item-gap) / 2 + var(--bw-plus-size) / 2) * -1);
+      transform: translateY(-50%);
+      z-index: 2;
+      width: var(--bw-plus-size);
+      height: var(--bw-plus-size);
+      border-radius: 50%;
+      background: var(--bw-plus-bg);
+      color: var(--bw-plus-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: calc(var(--bw-plus-size) * 0.5);
+      font-weight: 400;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    #BundleShowcase-{{ section.id }} .bw-item__name {
+      margin: 14px 0 0;
+      text-align: center;
+      color: var(--bw-name-color);
+      font-size: var(--bw-name-size);
+      font-weight: 600;
+      letter-spacing: var(--bw-name-spacing);
+      text-transform: uppercase;
+      line-height: 1.3;
+    }
+    #BundleShowcase-{{ section.id }} .bw-item__price {
+      margin: 4px 0 0;
+      text-align: center;
+      color: var(--bw-item-price-color);
+      font-size: var(--bw-item-price-size);
+      font-weight: 500;
+    }
+
+    /* ---------- Tablet ---------- */
+    @media (max-width: 1000px) {
+      #BundleShowcase-{{ section.id }} .bw__grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 640px) {
+      #BundleShowcase-{{ section.id }} .bw__shell {
+        padding: 28px 20px;
+      }
+      #BundleShowcase-{{ section.id }} .bw__items {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: var(--bw-mobile-item);
+        grid-template-columns: none;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+        scrollbar-width: none;
+        padding-bottom: 4px;
+      }
+      #BundleShowcase-{{ section.id }} .bw__items::-webkit-scrollbar {
+        display: none;
+      }
+      #BundleShowcase-{{ section.id }} .bw-item {
+        scroll-snap-align: start;
+      }
+      #BundleShowcase-{{ section.id }} .bw__price-row {
+        margin-top: 20px;
+      }
+      #BundleShowcase-{{ section.id }} .bw__cta {
+        width: 100%;
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="bw__shell">
+    <div class="bw__grid">
+
+      <div class="bw__left">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="bw__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.description != blank -%}
+          <p class="bw__desc">{{ section.settings.description }}</p>
+        {%- endif -%}
+
+        <div class="bw__price-row">
+          {%- if section.settings.bundle_price != blank -%}
+            <span class="bw__price">{{ section.settings.bundle_price }}</span>
+          {%- endif -%}
+          {%- if section.settings.compare_text != blank or section.settings.save_text != blank -%}
+            <span class="bw__price-meta">
+              {%- if section.settings.compare_text != blank -%}<span>{{ section.settings.compare_text }}</span>{%- endif -%}
+              {%- if section.settings.save_text != blank -%}<span>{{ section.settings.save_text }}</span>{%- endif -%}
+            </span>
+          {%- endif -%}
+        </div>
+
+        {%- assign perk_blocks = section.blocks | where: 'type', 'perk' -%}
+        {%- if perk_blocks.size > 0 -%}
+          <ul class="bw__perks">
+            {%- for block in perk_blocks -%}
+              <li class="bw__perk" {{ block.shopify_attributes }}>
+                <span class="bw__perk-icon">
+                  {%- if block.settings.icon_custom != blank -%}
+                    <img src="{{ block.settings.icon_custom | image_url: width: 64 }}" alt="" width="64" height="64">
+                  {%- else -%}
+                    {%- case block.settings.icon -%}
+                      {%- when 'van' -%}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>
+                      {%- when 'check' -%}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      {%- when 'box' -%}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"></path><path d="M12 22V12"></path><polyline points="3.29 7 12 12 20.71 7"></polyline></svg>
+                      {%- else -%}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"></path><path d="M15 18H9"></path><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"></path><circle cx="17" cy="18" r="2"></circle><circle cx="7" cy="18" r="2"></circle></svg>
+                    {%- endcase -%}
+                  {%- endif -%}
+                </span>
+                {{ block.settings.text }}
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        {%- if section.settings.cta_text != blank -%}
+          <a class="bw__cta" href="{{ section.settings.cta_link }}">{{ section.settings.cta_text }}</a>
+        {%- endif -%}
+      </div>
+
+      <div class="bw__items">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'item' -%}
+            {%- assign product = block.settings.product -%}
+
+            {%- if product != blank -%}
+              {%- assign item_title = product.title -%}
+              {%- assign item_price = product.price | money -%}
+              {%- assign item_img = product.featured_image -%}
+              {%- assign item_url = product.url -%}
+            {%- else -%}
+              {%- assign item_title = block.settings.title -%}
+              {%- assign item_price = block.settings.price -%}
+              {%- assign item_img = blank -%}
+              {%- assign item_url = block.settings.link -%}
+            {%- endif -%}
+
+            {%- if block.settings.title != blank -%}{%- assign item_title = block.settings.title -%}{%- endif -%}
+            {%- if block.settings.price != blank -%}{%- assign item_price = block.settings.price -%}{%- endif -%}
+            {%- if block.settings.image != blank -%}{%- assign item_img = block.settings.image -%}{%- endif -%}
+            {%- if block.settings.link != blank -%}{%- assign item_url = block.settings.link -%}{%- endif -%}
+
+            <div class="bw-item" {{ block.shopify_attributes }}>
+              <div class="bw-item__media">
+                <div class="bw-item__img-wrap">
+                  {%- if item_img != blank -%}
+                    <img
+                      class="bw-item__img"
+                      src="{{ item_img | image_url: width: 600 }}"
+                      alt="{{ item_title | escape }}"
+                      loading="lazy"
+                      width="600"
+                      height="600"
+                    >
+                  {%- endif -%}
+                </div>
+                {%- if section.settings.show_plus and forloop.last == false -%}
+                  <span class="bw-item__plus" aria-hidden="true">+</span>
+                {%- endif -%}
+              </div>
+              {%- if item_title != blank -%}
+                <p class="bw-item__name">{{ item_title }}</p>
+              {%- endif -%}
+              {%- if item_price != blank -%}
+                <p class="bw-item__price">{{ item_price }}</p>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Bundle Showcase",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#EFEAE4" },
+    { "type": "range", "id": "radius", "label": "Corner radius", "min": 0, "max": 48, "step": 2, "default": 24, "unit": "px" },
+    { "type": "range", "id": "max_width", "label": "Maximum width", "min": 800, "max": 2000, "step": 20, "default": 1500, "unit": "px" },
+    { "type": "range", "id": "space_top", "label": "Space above", "min": 0, "max": 160, "step": 4, "default": 24, "unit": "px" },
+    { "type": "range", "id": "space_bottom", "label": "Space below", "min": 0, "max": 160, "step": 4, "default": 24, "unit": "px" },
+    { "type": "range", "id": "mobile_gutter", "label": "Side gutters", "min": 0, "max": 60, "step": 2, "default": 20, "unit": "px" },
+    { "type": "range", "id": "padding_x", "label": "Inner horizontal padding", "min": 16, "max": 96, "step": 2, "default": 48, "unit": "px" },
+    { "type": "range", "id": "padding_y", "label": "Inner vertical padding", "min": 16, "max": 96, "step": 2, "default": 48, "unit": "px" },
+    { "type": "range", "id": "left_width", "label": "Left column width", "min": 25, "max": 45, "step": 1, "default": 33, "unit": "%" },
+    { "type": "range", "id": "column_gap", "label": "Column gap", "min": 24, "max": 96, "step": 2, "default": 48, "unit": "px" },
+    { "type": "range", "id": "item_gap", "label": "Gap between products", "min": 8, "max": 48, "step": 2, "default": 24, "unit": "px" },
+
+    { "type": "header", "content": "Heading & copy" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The Complete Walk" },
+    { "type": "checkbox", "id": "heading_uppercase", "label": "Uppercase heading", "default": true },
+    { "type": "range", "id": "heading_size", "label": "Heading size", "min": 22, "max": 56, "step": 2, "default": 34, "unit": "px" },
+    { "type": "range", "id": "heading_weight", "label": "Heading weight", "min": 300, "max": 700, "step": 100, "default": 500 },
+    { "type": "range", "id": "heading_spacing", "label": "Heading letter spacing", "min": 0, "max": 6, "step": 0.5, "default": 1, "unit": "px" },
+    { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#3B2E26" },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Everything you need for the walk, designed to go together." },
+    { "type": "range", "id": "desc_size", "label": "Description size", "min": 11, "max": 20, "step": 1, "default": 14, "unit": "px" },
+    { "type": "color", "id": "desc_color", "label": "Description color", "default": "#6B5D52" },
+    { "type": "range", "id": "desc_max_width", "label": "Description max width", "min": 160, "max": 480, "step": 10, "default": 260, "unit": "px" },
+
+    { "type": "header", "content": "Price" },
+    { "type": "text", "id": "bundle_price", "label": "Bundle price", "default": "$85" },
+    { "type": "range", "id": "price_size", "label": "Bundle price size", "min": 28, "max": 64, "step": 2, "default": 44, "unit": "px" },
+    { "type": "text", "id": "compare_text", "label": "Compare line", "default": "$95 individually" },
+    { "type": "text", "id": "save_text", "label": "Save line", "default": "Save $10" },
+    { "type": "range", "id": "meta_size", "label": "Compare/save size", "min": 9, "max": 16, "step": 1, "default": 12, "unit": "px" },
+    { "type": "color", "id": "meta_color", "label": "Compare/save color", "default": "#6B5D52" },
+    { "type": "color", "id": "divider_color", "label": "Divider color", "default": "#C9BEB4" },
+
+    { "type": "header", "content": "Perks" },
+    { "type": "range", "id": "perk_size", "label": "Perk text size", "min": 10, "max": 16, "step": 1, "default": 12, "unit": "px" },
+    { "type": "color", "id": "perk_color", "label": "Perk text color", "default": "#3B2E26" },
+    { "type": "color", "id": "perk_icon_color", "label": "Perk icon color", "default": "#3B2E26" },
+
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "cta_text", "label": "Button text", "default": "Shop The Full Set" },
+    { "type": "url", "id": "cta_link", "label": "Button link" },
+    { "type": "color", "id": "cta_bg", "label": "Button background", "default": "#3B2E26" },
+    { "type": "color", "id": "cta_text_color", "label": "Button text color", "default": "#F5EFE7" },
+    { "type": "range", "id": "cta_radius", "label": "Button radius", "min": 0, "max": 40, "step": 2, "default": 6, "unit": "px" },
+    { "type": "range", "id": "cta_size", "label": "Button font size", "min": 10, "max": 18, "step": 1, "default": 12, "unit": "px" },
+    { "type": "range", "id": "cta_weight", "label": "Button weight", "min": 400, "max": 800, "step": 100, "default": 600 },
+    { "type": "range", "id": "cta_spacing", "label": "Button letter spacing", "min": 0, "max": 4, "step": 0.5, "default": 1.5, "unit": "px" },
+
+    { "type": "header", "content": "Products" },
+    { "type": "checkbox", "id": "show_plus", "label": "Show + badges between products", "default": true },
+    { "type": "range", "id": "plus_size", "label": "+ badge size", "min": 20, "max": 48, "step": 2, "default": 34, "unit": "px" },
+    { "type": "color", "id": "plus_bg", "label": "+ badge background", "default": "#3B2E26" },
+    { "type": "color", "id": "plus_color", "label": "+ badge color", "default": "#FFFFFF" },
+    { "type": "range", "id": "image_radius", "label": "Product image radius", "min": 0, "max": 40, "step": 2, "default": 12, "unit": "px" },
+    { "type": "range", "id": "name_size", "label": "Product name size", "min": 10, "max": 18, "step": 1, "default": 12, "unit": "px" },
+    { "type": "range", "id": "name_spacing", "label": "Product name spacing", "min": 0, "max": 4, "step": 0.5, "default": 1, "unit": "px" },
+    { "type": "range", "id": "item_price_size", "label": "Product price size", "min": 10, "max": 18, "step": 1, "default": 13, "unit": "px" },
+    { "type": "range", "id": "mobile_item_width", "label": "Mobile product width", "min": 140, "max": 240, "step": 10, "default": 180, "unit": "px" }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Bundle product",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product (auto title, price, image)" },
+        { "type": "text", "id": "title", "label": "Custom title (overrides)" },
+        { "type": "text", "id": "price", "label": "Custom price (overrides)" },
+        { "type": "image_picker", "id": "image", "label": "Custom image (overrides)" },
+        { "type": "url", "id": "link", "label": "Link (optional)" }
+      ]
+    },
+    {
+      "type": "perk",
+      "name": "Perk",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "default": "truck", "options": [
+          { "value": "truck", "label": "Truck" },
+          { "value": "van", "label": "Van" },
+          { "value": "check", "label": "Check" },
+          { "value": "box", "label": "Box" }
+        ] },
+        { "type": "image_picker", "id": "icon_custom", "label": "Custom icon (overrides)" },
+        { "type": "text", "id": "text", "label": "Perk text", "default": "Free shipping on orders $70+" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bundle Showcase",
+      "blocks": [
+        { "type": "perk", "settings": { "icon": "truck", "text": "Free shipping on orders $70+" } },
+        { "type": "perk", "settings": { "icon": "van", "text": "$6 ground shipping on orders under $70" } },
+        { "type": "item", "settings": { "title": "Harness", "price": "$55" } },
+        { "type": "item", "settings": { "title": "Leash", "price": "$25" } },
+        { "type": "item", "settings": { "title": "Poop Bag Holder", "price": "$15" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

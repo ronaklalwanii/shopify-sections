@@ -1,0 +1,674 @@
+{%- comment -%} Section Library: injected global assets for store "horizon" {%- endcomment -%}
+{{ 'horizon--overflow-list.css' | asset_url | stylesheet_tag }}
+{{ 'horizon--base.css' | asset_url | stylesheet_tag }}
+{% render 'horizon--theme-styles-variables' %}
+{% liquid
+  assign has_mobile_image = false
+  if section.settings.custom_mobile_image and section.settings.image_mobile != blank
+    assign has_mobile_image = true
+  endif
+
+  assign fetch_priority = 'auto'
+  if section.index == 1
+    assign fetch_priority = 'high'
+  endif
+
+  case section.settings.image_position
+  when 'top'
+    assign media_position = 'center top'
+  when 'bottom'
+    assign media_position = 'center bottom'
+  else
+    assign media_position = 'center center'
+  endcase
+
+  # Text color wins when both are set (explicit choice beats the smart fallback).
+  if section.settings.text_color != blank
+    render 'contrast-override', background_color: section.settings.background_color, text_color: section.settings.text_color, section_id: section.id
+  elsif section.settings.background_color != blank
+    render 'contrast-override', background_color: section.settings.background_color, section_id: section.id, skip_contrast: true
+  endif
+-%}
+
+{% capture hpc_media %}
+  {%- if section.settings.image != blank -%}
+    {%- if has_mobile_image -%}
+      <picture class="hpc__media">
+        <source
+          media="(max-width: 749px)"
+          srcset="
+            {{ section.settings.image_mobile | image_url: width: 800 }} 800w,
+            {{ section.settings.image_mobile | image_url: width: 1200 }} 1200w,
+            {{ section.settings.image_mobile | image_url: width: 1600 }} 1600w
+          "
+          sizes="100vw"
+          width="{{ section.settings.image_mobile.width }}"
+          height="{{ section.settings.image_mobile.height }}"
+        >
+        {{
+          section.settings.image
+          | image_url: width: 3840
+          | image_tag:
+            width: section.settings.image.width,
+            height: section.settings.image.height,
+            widths: '832, 1200, 1600, 1920, 2560, 3840',
+            alt: section.settings.image.alt,
+            class: 'hpc__media',
+            sizes: '100vw',
+            fetchpriority: fetch_priority
+        }}
+      </picture>
+    {%- else -%}
+      {{
+        section.settings.image
+        | image_url: width: 3840
+        | image_tag:
+          width: section.settings.image.width,
+          height: section.settings.image.height,
+          widths: '832, 1200, 1600, 1920, 2560, 3840',
+          alt: section.settings.image.alt,
+          class: 'hpc__media',
+          sizes: '100vw',
+          fetchpriority: fetch_priority
+      }}
+    {%- endif -%}
+  {%- else -%}
+    {{ 'lifestyle-1' | placeholder_svg_tag: 'hpc__media' }}
+  {%- endif -%}
+{% endcapture %}
+
+{% # A first-section hero consumes `--header-group-height` at first paint so the image sits behind the header without content hiding under it. %}
+{% render 'horizon--measure-header-heights', only_when_first_section: true %}
+
+<div
+  id="HeroProductCards-{{ section.id }}"
+  class="hero-product-cards-wrapper{% if section.settings.background_color != blank or section.settings.text_color != blank %} color-custom-{{ section.id }}{% endif %}"
+  style="
+    --hpc-min-height: {% if section.settings.section_height == 'custom' %}{{ section.settings.section_height_custom }}svh{% elsif section.settings.section_height == 'full-screen' %}100svh{% elsif section.settings.section_height == 'auto' %}auto{% else %}var(--section-height-{{ section.settings.section_height }}){% endif %};
+    --hpc-media-position: {{ media_position }};
+  "
+>
+  <div
+    class="hpc__container spacing-style section section--full-width"
+    style="{% render 'horizon--spacing-style', settings: section.settings %}"
+  >
+    <div class="hpc__media-grid">
+      {% liquid
+        if section.settings.toggle_overlay
+          render 'overlay', settings: section.settings
+        endif
+      %}
+      {{ hpc_media }}
+    </div>
+    <div
+      class="
+        hpc__content-wrapper
+        layout-panel-flex
+        layout-panel-flex--{{ section.settings.content_direction }}
+        {% if section.settings.content_direction == 'row' and section.settings.vertical_on_mobile %}mobile-column{% endif %}
+        section-content-wrapper
+        {{ section.settings.section_width }}
+      "
+      style="{% render 'horizon--layout-panel-style', settings: section.settings %}"
+    >
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .hero-product-cards-wrapper {
+    --hpc-header-offset: 0px;
+  }
+
+  /* Same first-section offset behavior as the hero: the image fills the viewport
+     behind the header, while the copy stays clear of it. */
+  body:has(#header-group > .header-section > #header-component) .hero-product-cards-wrapper:first-child {
+    --hpc-header-offset: var(--header-group-height, 0px);
+  }
+
+  .hero-product-cards-wrapper {
+    min-height: calc(var(--hpc-min-height, auto) - var(--hpc-header-offset, 0px));
+  }
+
+  .hpc__container {
+    position: relative;
+    overflow: hidden;
+    min-height: inherit;
+    align-items: var(--vertical-alignment-mobile);
+    justify-content: var(--horizontal-alignment);
+    z-index: var(--layer-base);
+
+    @media screen and (min-width: 750px) {
+      align-items: var(--vertical-alignment);
+    }
+  }
+
+  .hpc__media-grid {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    /* Neutralize `.section--full-width > *` (grid-column: 1/-1): an abs-positioned
+       child of a grid container that has any grid-placement property set uses the
+       placed grid area as its containing block, which insets the media into the
+       central column. Auto keeps it anchored to the padding box, edge-to-edge. */
+    grid-column: auto;
+  }
+
+  .hpc__media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--hpc-media-position, center center);
+    z-index: var(--layer-base);
+  }
+
+  .hpc__content-wrapper {
+    position: relative;
+    inset: 0;
+    z-index: var(--layer-flat);
+    /* The container's min-height includes its own padding (border-box), so the
+       content area subtracts it — otherwise pinned cards are pushed below the fold. */
+    min-height: calc(
+      var(--hpc-min-height, auto) - var(--hpc-header-offset, 0px) -
+      var(--padding-block-start, 0px) - var(--padding-block-end, 0px)
+    );
+  }
+
+  /* Constrain page-width content to the central grid column (same as the hero). */
+  .hpc__content-wrapper.page-width {
+    grid-column: 2 / 3;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Hero product cards",
+  "tag": "section",
+  "class": "hero-product-cards-wrapper section-wrapper",
+  "blocks": [
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "_hero-product-cards"
+    }
+  ],
+  "max_blocks": 16,
+  "disabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_mobile_image",
+      "label": "Use a different image on mobile",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "visible_if": "{{ section.settings.custom_mobile_image }}"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image focal point",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "toggle_overlay",
+      "label": "Enable image overlay",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "alpha": true,
+      "default": "#00000026",
+      "visible_if": "{{ section.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select",
+      "id": "overlay_style",
+      "label": "Overlay style",
+      "options": [
+        {
+          "value": "solid",
+          "label": "Solid"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        }
+      ],
+      "default": "solid",
+      "visible_if": "{{ section.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select",
+      "id": "gradient_direction",
+      "label": "Gradient direction",
+      "options": [
+        {
+          "value": "to top",
+          "label": "Up"
+        },
+        {
+          "value": "to bottom",
+          "label": "Down"
+        }
+      ],
+      "default": "to top",
+      "visible_if": "{{ section.settings.toggle_overlay and section.settings.overlay_style == 'gradient' }}"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "content_direction",
+      "label": "Direction",
+      "options": [
+        {
+          "value": "column",
+          "label": "Vertical"
+        },
+        {
+          "value": "row",
+          "label": "Horizontal"
+        }
+      ],
+      "default": "column"
+    },
+    {
+      "type": "checkbox",
+      "id": "vertical_on_mobile",
+      "label": "Stack vertically on mobile",
+      "default": true,
+      "visible_if": "{{ section.settings.content_direction == 'row' }}"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        },
+        {
+          "value": "space-between",
+          "label": "Space between"
+        }
+      ],
+      "default": "flex-start",
+      "visible_if": "{{ section.settings.content_direction == 'row' }}"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "Position",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom"
+        }
+      ],
+      "default": "center",
+      "visible_if": "{{ section.settings.content_direction == 'row' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "align_baseline",
+      "label": "Align baseline",
+      "default": false,
+      "visible_if": "{{ section.settings.vertical_alignment == 'flex-end' }}"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment_flex_direction_column",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "flex-start",
+      "visible_if": "{{ section.settings.content_direction != 'row' }}"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment_flex_direction_column",
+      "label": "Position",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom"
+        },
+        {
+          "value": "space-between",
+          "label": "Space between"
+        }
+      ],
+      "default": "flex-start",
+      "visible_if": "{{ section.settings.content_direction == 'column' }}"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "Page"
+        },
+        {
+          "value": "full-width",
+          "label": "Full"
+        }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "select",
+      "id": "section_height",
+      "label": "Height",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Auto"
+        },
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "full-screen",
+          "label": "Full screen"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "full-screen"
+    },
+    {
+      "type": "range",
+      "id": "section_height_custom",
+      "label": "Custom height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 100,
+      "unit": "%",
+      "visible_if": "{{ section.settings.section_height == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "placeholder": "Default",
+      "info": "Shows behind the image while it loads, or as the section background when no image is set."
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "placeholder": "Default",
+      "info": "Sets the text color for blocks that don't define their own."
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 280,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 280,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Left",
+      "min": 0,
+      "max": 280,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Right",
+      "min": 0,
+      "max": 280,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero product cards",
+      "category": "Banners",
+      "blocks": {
+        "heading_1": {
+          "type": "text",
+          "settings": {
+            "text": "<h1>A calm ritual</h1>",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_size": "4.5rem",
+            "line_height": "tight",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "width": "fit-content",
+            "max_width": "normal",
+            "text_color": "#FCF5E8"
+          }
+        },
+        "heading_2": {
+          "type": "text",
+          "settings": {
+            "text": "<h2>for your skin</h2>",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_size": "4.5rem",
+            "line_height": "tight",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "width": "fit-content",
+            "max_width": "normal",
+            "text_color": "#FCF5E8"
+          }
+        },
+        "subheading": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Science-led skincare inspired by the ocean. Made for you.</p>",
+            "type_preset": "custom",
+            "font": "var(--font-body--family)",
+            "font_size": "1.25rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "width": "fit-content",
+            "max_width": "narrow",
+            "text_color": "#F3E8D9",
+            "padding-block-end": 8
+          }
+        },
+        "button": {
+          "type": "button",
+          "settings": {
+            "label": "DISCOVER COLLECTION",
+            "link": "shopify://collections/all",
+            "style_class": "button-custom",
+            "custom_button_background": "#F2E8D9",
+            "custom_button_text": "#43301F",
+            "custom_button_border": "#F2E8D9"
+          }
+        },
+        "cards": {
+          "type": "_hero-product-cards",
+          "blocks": {
+            "card_1": {
+              "type": "_hero-product-card",
+              "settings": {
+                "title": "Shop",
+                "text": "Curated essentials",
+                "link": "shopify://collections/all"
+              }
+            },
+            "card_2": {
+              "type": "_hero-product-card",
+              "settings": {
+                "title": "Routine",
+                "text": "Your daily ritual",
+                "link": "shopify://collections/all"
+              }
+            },
+            "card_3": {
+              "type": "_hero-product-card",
+              "settings": {
+                "title": "Journal",
+                "text": "Mind, skin & mood",
+                "link": "shopify://collections/all"
+              }
+            },
+            "card_4": {
+              "type": "_hero-product-card",
+              "settings": {
+                "title": "Profile",
+                "text": "Your space",
+                "link": "shopify://collections/all"
+              }
+            }
+          },
+          "block_order": ["card_1", "card_2", "card_3", "card_4"]
+        }
+      },
+      "block_order": ["heading_1", "heading_2", "subheading", "button", "cards"],
+      "settings": {
+        "image_position": "center",
+        "toggle_overlay": true,
+        "overlay_color": "#2A1D104D",
+        "overlay_style": "gradient",
+        "gradient_direction": "to top",
+        "content_direction": "column",
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "flex-start",
+        "gap": 16,
+        "section_width": "page-width",
+        "section_height": "full-screen",
+        "padding-block-start": 224,
+        "padding-block-end": 24,
+        "padding-inline-start": 24,
+        "padding-inline-end": 24
+      }
+    }
+  ]
+}
+{% endschema %}

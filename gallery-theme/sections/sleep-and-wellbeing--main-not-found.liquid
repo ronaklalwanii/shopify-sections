@@ -1,0 +1,55 @@
+{%- comment -%} Section Library: injected global assets for store "sleep-and-wellbeing" {%- endcomment -%}
+{{ 'sleep-and-wellbeing--theme.css' | asset_url | stylesheet_tag }}
+{{ 'sleep-and-wellbeing--product.css' | asset_url | stylesheet_tag }}
+{% render 'sleep-and-wellbeing--css-variables' %}
+<style>
+	#shopify-section-{{ section.id }} {
+		{% if section.settings.custom_padding %}
+		padding-top: {{ section.settings.padding_top }}px;
+		padding-bottom: {{ section.settings.padding_bottom }}px;
+			{% endif %}
+	}
+</style>
+<div class="not-found">
+	<div class="prose text-center">
+		<h2 class="h4">{{ '404.general.title' | t }}</h2>
+		{%- capture button_content -%}{{ '404.general.continue_shopping' | t }}{%- endcapture -%}
+		{%- render 'sleep-and-wellbeing--button', content: button_content, href: routes.all_products_collection_url, size: 'xl' -%}
+	</div>
+</div>
+
+{% schema %}
+{
+	"name": "404",
+	"class": "shopify-section--404",
+	"tag": "section",
+	"settings": [
+		{
+			"type": "checkbox",
+			"id": "custom_padding",
+			"label": "Custom padding",
+			"default": false
+		},
+		{
+			"type": "range",
+			"id": "padding_top",
+			"label": "Top padding",
+			"min": 0,
+			"max": 200,
+			"step": 4,
+			"default": 40,
+			"unit": "px"
+		},
+		{
+			"type": "range",
+			"id": "padding_bottom",
+			"label": "Bottom padding",
+			"min": 0,
+			"max": 200,
+			"step": 4,
+			"default": 40,
+			"unit": "px"
+		}
+	]
+}
+{% endschema %}

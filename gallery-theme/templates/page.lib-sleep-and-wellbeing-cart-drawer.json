@@ -1,0 +1,20 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--cart-drawer",
+      "settings": {
+        "show_cart_note": true,
+        "show_shipping_text": true,
+        "show_view_cart_button": true,
+        "show_checkout_button": true,
+        "recommendations_title": "Trending this month",
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

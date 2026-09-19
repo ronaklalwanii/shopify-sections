@@ -1,0 +1,91 @@
+{
+  "sections": {
+    "library": {
+      "type": "arena-stats-intro",
+      "settings": {
+        "bg_color": "#FDF6E8",
+        "max_width": 1400,
+        "gutter": 16,
+        "space_top": 12,
+        "space_bottom": 12,
+        "radius": 16,
+        "gap": 16,
+        "card_pad": 22,
+        "stat_gap": 22,
+        "card_bg": "#F5EBDC",
+        "border_color": "#EDE3D3",
+        "stats_width": 340,
+        "image_width": 340,
+        "eyebrow_color": "#9A8A78",
+        "heading_color": "#2B2117",
+        "body_color": "#6B5E4F",
+        "muted_color": "#7A6E5D",
+        "accent_color": "#C2A78A",
+        "image_fallback_bg": "#EDE3D3",
+        "eyebrow_size": 10,
+        "eyebrow_spacing": 2,
+        "eyebrow_weight": 500,
+        "icon_size": 28,
+        "num_size": 32,
+        "num_weight": 400,
+        "label_size": 11,
+        "center_title_size": 15,
+        "center_title_weight": 600,
+        "center_body_size": 13,
+        "center_sub_size": 12,
+        "stats_eyebrow": "Arena Development — in numbers"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "stat",
+          "settings": {
+            "icon": "circle",
+            "number": "12",
+            "label": "years on the market"
+          }
+        },
+        "bl-2": {
+          "type": "stat",
+          "settings": {
+            "icon": "building",
+            "number": "18",
+            "label": "residential complexes"
+          }
+        },
+        "bl-3": {
+          "type": "stat",
+          "settings": {
+            "icon": "ruler",
+            "number": "320 000 m²",
+            "label": "built"
+          }
+        },
+        "bl-4": {
+          "type": "center_content",
+          "settings": {
+            "kicker": "Who we are",
+            "title": "We are a team of professionals creating modern residential quarters for comfortable life.",
+            "text": "We are a team of professionals creating modern residential quarters for comfortable life.",
+            "sub": "A full-cycle developer — We take on everything from concept and design to construction. Our homes are about comfort, aesthetics, and care for future residents."
+          }
+        },
+        "bl-5": {
+          "type": "side_image",
+          "settings": {
+            "circle": true
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

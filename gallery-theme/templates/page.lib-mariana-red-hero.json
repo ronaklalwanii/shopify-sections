@@ -1,0 +1,47 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--hero",
+      "settings": {
+        "layout": "split",
+        "image_position": "right",
+        "image_height": 620,
+        "height": "md",
+        "overlay_opacity": 40,
+        "heading": "Wear the Story.\nLive the Style.",
+        "fluid_heading": false,
+        "heading_size": "h0",
+        "subheading": "<p><em>Timeless designs. Thoughtfully crafted. Made for your every moment.</em></p>",
+        "content_align": "center",
+        "text_align": "left",
+        "show_button_arrow": false,
+        "script_color": "#e4b54a",
+        "avatars_count": 0,
+        "scroll_label": "Learn more"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "button",
+          "settings": {
+            "label": "Shop new arrivals",
+            "style": "primary"
+          }
+        },
+        "bl-2": {
+          "type": "button",
+          "settings": {
+            "label": "Explore collections",
+            "style": "outline"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

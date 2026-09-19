@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "library": {
+      "type": "shogun-helper",
+      "settings": {}
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--scrolling-text",
+      "settings": {
+        "full_width": true,
+        "text_alignment": "start",
+        "heading_font_size": 18,
+        "mobile_heading_font_size": 16,
+        "font_weight": "400",
+        "text": "Promotion text",
+        "text_size": "large",
+        "text_style": "fill",
+        "scrolling_mode": "auto",
+        "scrolling_speed": 10,
+        "enable_block_scrolling": false,
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "scrolling-block",
+          "settings": {
+            "logo_width": 120,
+            "logo_width_mobile": 120
+          }
+        },
+        "bl-2": {
+          "type": "scrolling-block",
+          "settings": {
+            "logo_width": 120,
+            "logo_width_mobile": 120
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--button-grid",
+      "settings": {
+        "buttons_per_row": 3,
+        "text_alignment": "center",
+        "enable_custom_padding": false,
+        "custom_padding": false,
+        "padding_top": 0,
+        "padding_bottom": 0
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "button",
+          "settings": {
+            "text": "Button",
+            "size": "lg",
+            "style": "fill",
+            "stretch": true
+          }
+        },
+        "bl-2": {
+          "type": "button",
+          "settings": {
+            "text": "Button",
+            "size": "lg",
+            "style": "fill",
+            "stretch": true
+          }
+        },
+        "bl-3": {
+          "type": "button",
+          "settings": {
+            "text": "Button",
+            "size": "lg",
+            "style": "fill",
+            "stretch": true
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

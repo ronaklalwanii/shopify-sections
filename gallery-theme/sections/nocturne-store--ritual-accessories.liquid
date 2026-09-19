@@ -1,0 +1,689 @@
+{%- comment -%} Section Library: injected global assets for store "nocturne-store" {%- endcomment -%}
+{{ 'nocturne-store--theme.css' | asset_url | stylesheet_tag }}
+{{ 'nocturne-store--product.css' | asset_url | stylesheet_tag }}
+{% render 'nocturne-store--css-variables' %}
+{%- liquid
+  assign s = section.settings
+-%}
+{%- comment -%}
+  Participates in Change's section padding-collapsing chain, same as the hero.
+{%- endcomment -%}
+{%- render 'nocturne-store--section-spacing-collapsing' -%}
+
+{{ 'nocturne-store--ritual-accessories.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'nocturne-store--ritual-accessories.js' | asset_url }}" defer></script>
+
+{%- if s.enable_custom_font -%}
+  <style>{{ s.font_family | font_face: font_display: 'swap' }}</style>
+{%- endif -%}
+
+<style>
+  /* Per-instance design tokens, driven by the section schema. */
+  .ra--{{ section.id }} {
+    --ra-bg: {{ s.background }};
+    --ra-pad-top: {{ s.padding_top }}px;
+    --ra-pad-bottom: {{ s.padding_bottom }}px;
+    --ra-max-w: {{ s.max_width }}px;
+    --ra-side-pad: {{ s.side_padding }}px;
+
+    --ra-banner-h: {{ s.banner_height }}px;
+    --ra-banner-text-w: {{ s.banner_text_width }}%;
+    --ra-banner-pad: {{ s.banner_text_padding }}px;
+
+    --ra-eyebrow-size: {{ s.eyebrow_size }}px;
+    --ra-eyebrow-tracking: {{ s.eyebrow_tracking | divided_by: 100.0 }}em;
+    --ra-eyebrow-color: {{ s.eyebrow_color }};
+    --ra-eyebrow-gap: {{ s.eyebrow_gap }}px;
+
+    --ra-title-size: {{ s.heading_size }}px;
+    --ra-title-lh: {{ s.heading_line_height | divided_by: 100.0 }};
+    --ra-title-tracking: {{ s.heading_letter_spacing | divided_by: 100.0 }}em;
+    --ra-title-color: {{ s.heading_color }};
+    --ra-desc-size: {{ s.description_size }}px;
+    --ra-desc-color: {{ s.description_color }};
+    --ra-link-color: {{ s.link_color }};
+
+    --ra-cols: {{ s.columns }};
+    --ra-card-gap: {{ s.card_gap }}px;
+    --ra-card-bg: {{ s.card_bg }};
+    --ra-card-pad: {{ s.card_padding }}px;
+    --ra-card-aspect: {{ s.card_image_ratio }};
+    --ra-card-title-size: {{ s.card_title_size }}px;
+    --ra-card-title-tracking: {{ s.card_title_tracking | divided_by: 100.0 }}em;
+    --ra-card-desc-size: {{ s.card_desc_size }}px;
+    --ra-card-desc-color: {{ s.card_desc_color }};
+    --ra-card-price-size: {{ s.price_size }}px;
+    --ra-card-text-color: {{ s.card_text_color }};
+    --ra-add-color: {{ s.add_color }};
+    {% if s.enable_custom_font -%}
+    --ra-font-serif: {{ s.font_family.family }}, {{ s.font_family.fallback_families }};
+    {%- endif %}
+  }
+</style>
+
+<section
+  class="ra ra--{{ section.id }}"
+  data-ra-section
+  data-reveal="{{ s.enable_reveal }}"
+>
+  {%- comment -%} ---------- Banner ---------- {%- endcomment -%}
+  <div class="ra__banner ra__banner--{{ s.image_side }}{% if s.mobile_order == 'image' %} ra__banner--image-first{% endif %}">
+    <div class="ra__banner-text">
+      {%- if s.eyebrow != blank -%}
+        <p class="ra__eyebrow" data-ra-reveal>{{ s.eyebrow }}</p>
+      {%- endif -%}
+      <h2 class="ra__heading">
+        {%- if s.heading_line_1 != blank -%}
+          <span class="ra__heading-line" data-ra-reveal>{{ s.heading_line_1 }}</span>
+        {%- endif -%}
+        {%- if s.heading_line_2 != blank -%}
+          <span class="ra__heading-line" data-ra-reveal>{{ s.heading_line_2 }}</span>
+        {%- endif -%}
+      </h2>
+      {%- if s.description != blank -%}
+        <p class="ra__desc" data-ra-reveal>{{ s.description }}</p>
+      {%- endif -%}
+      {%- if s.link_label != blank -%}
+        <a
+          class="ra__link"
+          data-ra-reveal
+          {% if s.link_url != blank %}href="{{ s.link_url }}"{% else %}aria-disabled="true"{% endif %}
+        >
+          <span class="ra__link-label">{{ s.link_label }}</span>
+          <svg class="ra__arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 12h15" /><path d="M13 6l6 6-6 6" /></svg>
+        </a>
+      {%- endif -%}
+    </div>
+    {%- if s.banner_image != blank -%}
+      {%- assign banner_alt = s.banner_image.alt | default: s.heading_line_1 | escape -%}
+      <div class="ra__banner-media" aria-hidden="true">
+        {{
+          s.banner_image
+          | image_url: width: 2200
+          | image_tag:
+            loading: 'lazy',
+            class: 'ra__banner-img',
+            widths: '600,900,1200,1600,2000,2200',
+            sizes: '(max-width: 767px) 100vw, 60vw',
+            alt: banner_alt
+        }}
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} ---------- Product cards ---------- {%- endcomment -%}
+  <div class="ra__grid-wrap">
+    <div class="ra__grid">
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        {%- assign p = b.product -%}
+        {%- liquid
+          assign card_img = b.image
+          if card_img == blank and p != blank
+            assign card_img = p.featured_image
+          endif
+          assign card_title = b.title_override
+          if card_title == blank and p != blank
+            assign card_title = p.title
+          endif
+          assign card_href = p.url
+        -%}
+        <article class="ra-card" data-ra-reveal {{ block.shopify_attributes }}>
+          <div class="ra-card__media{% if s.enable_hover_zoom %} ra-card__media--zoom{% endif %}">
+            {%- if card_href != blank %}<a class="ra-card__media-link" href="{{ card_href }}" tabindex="-1" aria-hidden="true">{% endif -%}
+              {%- if card_img != blank -%}
+                {{
+                  card_img
+                  | image_url: width: 900
+                  | image_tag:
+                    loading: 'lazy',
+                    class: 'ra-card__img',
+                    widths: '300,450,600,750,900',
+                    sizes: '(max-width: 767px) 78vw, (max-width: 1279px) 32vw, 18vw',
+                    alt: card_img.alt | default: card_title | escape
+                }}
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'ra-card__img ra-card__img--placeholder' }}
+              {%- endif -%}
+            {%- if card_href != blank %}</a>{% endif -%}
+          </div>
+
+          <div class="ra-card__info">
+            {%- if card_title != blank -%}
+              <h3 class="ra-card__title">
+                {%- if card_href != blank %}<a href="{{ card_href }}">{{ card_title }}</a>{% else %}{{ card_title }}{% endif -%}
+              </h3>
+            {%- endif -%}
+            {%- if b.description != blank -%}
+              <p class="ra-card__desc">{{ b.description }}</p>
+            {%- endif -%}
+            {%- if p != blank or b.price_fallback != blank -%}
+              <p class="ra-card__price">
+                {%- if p != blank -%}
+                  {{- p.price | money -}}
+                {%- else -%}
+                  {{- b.price_fallback -}}
+                {%- endif -%}
+              </p>
+            {%- endif -%}
+
+            {%- if p != blank and p.available and p.variants.size == 1 -%}
+              {%- comment -%} Single variant: real quick-add to cart {%- endcomment -%}
+              <form method="post" action="{{ routes.cart_add_url }}" class="ra-card__add-form" data-ra-add>
+                <input type="hidden" name="id" value="{{ p.selected_or_first_available_variant.id }}">
+                <button type="submit" class="ra-card__add">
+                  <span class="ra-card__add-label">{{ s.add_label }}</span>
+                  <svg class="ra__arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 12h15" /><path d="M13 6l6 6-6 6" /></svg>
+                </button>
+              </form>
+            {%- elsif p != blank -%}
+              {%- comment -%} Multi variant or unavailable: product page {%- endcomment -%}
+              <a class="ra-card__add" href="{{ p.url }}">
+                <span class="ra-card__add-label">{{ s.add_label }}</span>
+                <svg class="ra__arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 12h15" /><path d="M13 6l6 6-6 6" /></svg>
+              </a>
+            {%- elsif b.price_fallback != blank -%}
+              <span class="ra-card__add ra-card__add--static">
+                <span class="ra-card__add-label">{{ s.add_label }}</span>
+                <svg class="ra__arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 12h15" /><path d="M13 6l6 6-6 6" /></svg>
+              </span>
+            {%- endif -%}
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Ritual accessories",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout & spacing"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#ECE6DC"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top spacing",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom spacing",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Cards max width",
+      "min": 900,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1800
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Side padding",
+      "min": 12,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "header",
+      "content": "Banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Banner image"
+    },
+    {
+      "type": "select",
+      "id": "image_side",
+      "label": "Image side (desktop)",
+      "options": [
+        { "value": "right", "label": "Right" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "range",
+      "id": "banner_height",
+      "label": "Banner height",
+      "min": 320,
+      "max": 760,
+      "step": 10,
+      "unit": "px",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "banner_text_width",
+      "label": "Text column width",
+      "min": 25,
+      "max": 60,
+      "step": 1,
+      "unit": "%",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "banner_text_padding",
+      "label": "Text inset from edge",
+      "min": 24,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 84
+    },
+    {
+      "type": "select",
+      "id": "mobile_order",
+      "label": "Mobile order",
+      "options": [
+        { "value": "text", "label": "Text first" },
+        { "value": "image", "label": "Image first" }
+      ],
+      "default": "text"
+    },
+    {
+      "type": "header",
+      "content": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Text",
+      "default": "Complete the ritual"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_tracking",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "%",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Color",
+      "default": "#A38B69"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_gap",
+      "label": "Space below",
+      "min": 8,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_1",
+      "label": "Heading · line 1",
+      "default": "Everything you need"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_2",
+      "label": "Heading · line 2",
+      "default": "to make it yours."
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Size",
+      "min": 28,
+      "max": 84,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "heading_line_height",
+      "label": "Line height",
+      "min": 90,
+      "max": 150,
+      "step": 2,
+      "unit": "%",
+      "default": 116
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "label": "Letter spacing",
+      "min": -4,
+      "max": 0,
+      "step": 1,
+      "unit": "%",
+      "default": -1
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#1C1A17"
+    },
+    {
+      "type": "header",
+      "content": "Description & link"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description",
+      "default": "Curated pieces designed to complement your sauna and elevate every session."
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description color",
+      "default": "#6B675F"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "All accessories"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link color",
+      "default": "#1C1A17"
+    },
+    {
+      "type": "header",
+      "content": "Product cards"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Cards per row (desktop)",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Gap between cards",
+      "min": 4,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card background",
+      "default": "#E5DED3"
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "label": "Card inner padding",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "card_image_ratio",
+      "label": "Card image ratio",
+      "options": [
+        { "value": "1 / 1", "label": "Square (1:1)" },
+        { "value": "4 / 5", "label": "Portrait (4:5)" },
+        { "value": "3 / 4", "label": "Tall (3:4)" }
+      ],
+      "default": "1 / 1"
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "label": "Card title size",
+      "min": 10,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "card_title_tracking",
+      "label": "Card title letter spacing",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "%",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "card_desc_size",
+      "label": "Card description size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "card_desc_color",
+      "label": "Card description color",
+      "default": "#6B675F"
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "label": "Price size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card title / price color",
+      "default": "#1C1A17"
+    },
+    {
+      "type": "text",
+      "id": "add_label",
+      "label": "Add button label",
+      "default": "Add"
+    },
+    {
+      "type": "color",
+      "id": "add_color",
+      "label": "Add button color",
+      "default": "#1C1A17"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_hover_zoom",
+      "label": "Zoom card image on hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_reveal",
+      "label": "Reveal on scroll",
+      "info": "Fades the banner and cards in, staggered, as the section enters the viewport.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Serif font"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_font",
+      "label": "Override serif font",
+      "info": "Applies to the banner heading only.",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "font_family",
+      "label": "Serif font family",
+      "default": "playfair_display_n4"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Product card",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Title, price and image come from the product when set."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom image",
+          "info": "Optional. Overrides the product image."
+        },
+        {
+          "type": "text",
+          "id": "title_override",
+          "label": "Custom title",
+          "info": "Optional. Overrides the product title."
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "Handcrafted from natural timber."
+        },
+        {
+          "type": "text",
+          "id": "price_fallback",
+          "label": "Fallback price",
+          "info": "Only used when no product is selected.",
+          "default": "£149"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Ritual accessories",
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "title_override": "Sauna Bucket + Ladle",
+            "description": "Handcrafted from natural timber.",
+            "price_fallback": "£149"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title_override": "Essential Oil Collection",
+            "description": "Pure essential oils for mind and body.",
+            "price_fallback": "£65"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title_override": "Sauna Headrest",
+            "description": "Ergonomic support for total comfort.",
+            "price_fallback": "£95"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title_override": "Premium Sauna Towel Set",
+            "description": "Ultra-soft. Highly absorbent.",
+            "price_fallback": "£120"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title_override": "Ambient Sauna Light",
+            "description": "Create the perfect atmosphere.",
+            "price_fallback": "£195"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

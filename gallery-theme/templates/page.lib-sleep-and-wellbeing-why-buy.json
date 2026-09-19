@@ -1,0 +1,117 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--why-buy",
+      "settings": {
+        "heading": "Haircare by the numbers.",
+        "description": "Backed by research. Proven by science.",
+        "show_arrow": true,
+        "show_research_bar": true,
+        "research_label_text": "Sources:",
+        "show_research_icon": false,
+        "research_icon_color": "#8c7b70",
+        "research_link_color": "#8c7b70",
+        "research_link_underline_color": "#8c7b70",
+        "show_ordinal_number": false,
+        "show_stat_number": true,
+        "border_radius": 16,
+        "full_width": false,
+        "section_padding_top": 28,
+        "section_padding_bottom": 28,
+        "section_padding_horizontal": 40,
+        "eyebrow_font_size": 12,
+        "eyebrow_font_weight": "600",
+        "eyebrow_color": "#8c7b70",
+        "heading_font_size": 32,
+        "heading_font_weight": "400",
+        "heading_color": "#ffffff",
+        "desc_font_size": 14,
+        "desc_font_weight": "400",
+        "desc_color": "#b5b5b5",
+        "btn_font_size": 12,
+        "btn_font_weight": "700",
+        "btn_text_color": "#ffffff",
+        "btn_bg_color": "#8c7b70",
+        "stat_font_size": 44,
+        "stat_color": "#ffffff",
+        "feature_title_font_size": 13,
+        "feature_title_font_weight": "700",
+        "feature_title_color": "#1a1a1a",
+        "feature_desc_font_size": 13,
+        "feature_desc_font_weight": "400",
+        "feature_desc_color": "#b5b5b5",
+        "bg_color": "#1a1a1a",
+        "divider_color": "#3a3a3a",
+        "icon_size": 24,
+        "btn_text": ""
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "feature",
+          "settings": {
+            "stat_number": "89%",
+            "description": "of women say healthy hair boosts confidence.*"
+          }
+        },
+        "bl-2": {
+          "type": "feature",
+          "settings": {
+            "stat_number": "77%",
+            "description": "of hair damage is caused by heat styling.**"
+          }
+        },
+        "bl-3": {
+          "type": "feature",
+          "settings": {
+            "stat_number": "3x",
+            "description": "more hydration reduces breakage by up to 70%.***"
+          }
+        },
+        "bl-4": {
+          "type": "feature",
+          "settings": {
+            "stat_number": "96%",
+            "description": "of users saw improved hair texture & shine.****"
+          }
+        },
+        "bl-5": {
+          "type": "citation",
+          "settings": {
+            "citation_text": "*YouGov 2024"
+          }
+        },
+        "bl-6": {
+          "type": "citation",
+          "settings": {
+            "citation_text": "**Journal of Cosmetic Science 2023"
+          }
+        },
+        "bl-7": {
+          "type": "citation",
+          "settings": {
+            "citation_text": "***International Journal of Trichology 2022"
+          }
+        },
+        "bl-8": {
+          "type": "citation",
+          "settings": {
+            "citation_text": "****Independent consumer study 2023"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6",
+        "bl-7",
+        "bl-8"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

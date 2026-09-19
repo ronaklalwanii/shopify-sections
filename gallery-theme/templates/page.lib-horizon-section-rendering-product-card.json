@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "library": {
+      "type": "horizon--section-rendering-product-card",
+      "settings": {}
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

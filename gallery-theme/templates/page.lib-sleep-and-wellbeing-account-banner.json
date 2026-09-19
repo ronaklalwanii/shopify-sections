@@ -1,0 +1,19 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--account-banner",
+      "settings": {
+        "image_size": "md",
+        "text_color": "#ffffff",
+        "overlay_color": "#000000",
+        "overlay_opacity": 30,
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--works-grid",
+      "settings": {
+        "eyebrow": "Featured works",
+        "button_label": "View all projects",
+        "padding": 88
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "work",
+          "settings": {
+            "title": "Noiré Cosmetics",
+            "subtitle": "Branding, Packaging"
+          }
+        },
+        "bl-2": {
+          "type": "work",
+          "settings": {
+            "title": "Enchante Studio",
+            "subtitle": "Branding, Web Design"
+          }
+        },
+        "bl-3": {
+          "type": "work",
+          "settings": {
+            "title": "Velora Jewelry",
+            "subtitle": "Brand Strategy"
+          }
+        },
+        "bl-4": {
+          "type": "work",
+          "settings": {
+            "title": "Aurea Wellness",
+            "subtitle": "Branding, Web Design"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

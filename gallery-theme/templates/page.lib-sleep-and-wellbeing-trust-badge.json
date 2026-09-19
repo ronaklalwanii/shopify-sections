@@ -1,0 +1,149 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--trust-badge",
+      "settings": {
+        "show_eyebrow": false,
+        "eyebrow": "THE STANDARD",
+        "desktop_layout": "equal",
+        "item_alignment": "left",
+        "mobile_columns": "2",
+        "max_width": 1680,
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "item_padding_y": 28,
+        "item_padding_x": 20,
+        "icon_text_gap": 16,
+        "number_icon_gap": 0,
+        "radius": 0,
+        "border_width": 0,
+        "enable_floating": false,
+        "negative_margin_top": 0,
+        "negative_margin_bottom": 0,
+        "floating_z_index": 10,
+        "floating_shadow_color": "#000000",
+        "floating_shadow_opacity": 15,
+        "floating_shadow_blur": 24,
+        "floating_shadow_offset_y": 8,
+        "number_size": 34,
+        "title_size": 15,
+        "description_size": 13,
+        "title_spacing": 4,
+        "icon_size": 34,
+        "enable_hover": true,
+        "background_color": "#F2EFE9",
+        "text_color": "#1D1B16",
+        "muted_color": "#6E6A61",
+        "accent_color": "#1D1B16",
+        "border_color": "#D9D4C9"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "standard",
+          "settings": {
+            "icon": "star",
+            "title": "",
+            "description": "From 12,000+ happy sleepers",
+            "icon_color": "#1D1B16",
+            "icon_size": 34,
+            "hide_icon": true,
+            "hide_number": true,
+            "show_rating": true,
+            "rating_position": "top",
+            "rating_value": 4.9,
+            "rating_text": "4.9/5",
+            "rating_star_color": "#1D1B16",
+            "rating_track_color": "#D9D4C9",
+            "rating_star_size": 14
+          }
+        },
+        "bl-2": {
+          "type": "standard",
+          "settings": {
+            "icon": "materials",
+            "title": "30-NIGHT",
+            "description": "Risk-Free Trial",
+            "icon_color": "#1D1B16",
+            "icon_size": 34,
+            "hide_icon": false,
+            "hide_number": true,
+            "show_rating": false,
+            "rating_position": "top",
+            "rating_value": 4.9,
+            "rating_text": "4.9/5",
+            "rating_star_color": "#1D1B16",
+            "rating_track_color": "#D9D4C9",
+            "rating_star_size": 14
+          }
+        },
+        "bl-3": {
+          "type": "standard",
+          "settings": {
+            "icon": "delivery",
+            "title": "FREE SHIPPING",
+            "description": "On all orders over $75",
+            "icon_color": "#1D1B16",
+            "icon_size": 34,
+            "hide_icon": false,
+            "hide_number": true,
+            "show_rating": false,
+            "rating_position": "top",
+            "rating_value": 4.9,
+            "rating_text": "4.9/5",
+            "rating_star_color": "#1D1B16",
+            "rating_track_color": "#D9D4C9",
+            "rating_star_size": 14
+          }
+        },
+        "bl-4": {
+          "type": "standard",
+          "settings": {
+            "icon": "check",
+            "title": "1-YEAR",
+            "description": "Worry-Free Warranty",
+            "icon_color": "#1D1B16",
+            "icon_size": 34,
+            "hide_icon": false,
+            "hide_number": true,
+            "show_rating": false,
+            "rating_position": "top",
+            "rating_value": 4.9,
+            "rating_text": "4.9/5",
+            "rating_star_color": "#1D1B16",
+            "rating_track_color": "#D9D4C9",
+            "rating_star_size": 14
+          }
+        },
+        "bl-5": {
+          "type": "standard",
+          "settings": {
+            "icon": "shield",
+            "title": "SECURE",
+            "description": "Checkout",
+            "icon_color": "#1D1B16",
+            "icon_size": 34,
+            "hide_icon": false,
+            "hide_number": true,
+            "show_rating": false,
+            "rating_position": "top",
+            "rating_value": 4.9,
+            "rating_text": "4.9/5",
+            "rating_star_color": "#1D1B16",
+            "rating_track_color": "#D9D4C9",
+            "rating_star_size": 14
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

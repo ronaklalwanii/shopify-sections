@@ -1,0 +1,52 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--pet-hero",
+      "settings": {
+        "intro_text": "Our mission is simple: to help pets live healthier, happier lives while making pet care easier and more enjoyable for their families.",
+        "heading": "The Ultimate Pet\nShopping Destination",
+        "muted_lines": 1,
+        "watermark_text": "pet store",
+        "watermark_position": 40,
+        "button_1_label": "New Arrivals",
+        "button_2_label": "All Products",
+        "button_2_style": "white",
+        "button_radius": 100,
+        "min_height": 560,
+        "background_color": "#D9D9D9",
+        "text_color": "#0F0F0F",
+        "heading_muted_color": "#9E9E9E",
+        "muted_text_color": "#4E4E4E",
+        "accent_color": "#792011",
+        "card_background_color": "#FFFFFF",
+        "card_text_color": "#141414",
+        "card_price_color": "#792011",
+        "star_color": "#E8A33B",
+        "watermark_color": "#E6E6E6",
+        "container_max_width": 1320,
+        "card_corner_radius": 16
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "product_card",
+          "settings": {
+            "show_stars": true
+          }
+        },
+        "bl-2": {
+          "type": "product_card",
+          "settings": {
+            "show_stars": true
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

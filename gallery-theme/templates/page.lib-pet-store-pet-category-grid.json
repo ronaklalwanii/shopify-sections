@@ -1,0 +1,63 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--pet-category-grid",
+      "settings": {
+        "badge_text": "Find The Perfect Products",
+        "badge_radius": 100,
+        "badge_background_color": "#FBF7EF",
+        "heading": "Shop by Category",
+        "columns_desktop": 4,
+        "grid_gap": 20,
+        "card_min_height": 200,
+        "card_corner_radius": 16,
+        "image_size": 50,
+        "show_arrow": true,
+        "background_color": "#FFFFFF",
+        "text_color": "#211D1A",
+        "muted_text_color": "#6F6963",
+        "accent_color": "#6E1622",
+        "card_background_color": "#FFFFFF",
+        "border_color": "#E9E5E0",
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "container_max_width": 980
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "category",
+          "settings": {
+            "title": "dry & wet\nfood"
+          }
+        },
+        "bl-2": {
+          "type": "category",
+          "settings": {
+            "title": "toys for\npets"
+          }
+        },
+        "bl-3": {
+          "type": "category",
+          "settings": {
+            "title": "walking\naccessories"
+          }
+        },
+        "bl-4": {
+          "type": "category",
+          "settings": {
+            "title": "pet\nsupplies"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "sections": {
+    "library": {
+      "type": "hero-split-minimal",
+      "settings": {
+        "bg_color": "#FAF7F2",
+        "ink_color": "#221A12",
+        "muted_color": "#6E6257",
+        "media_split": 46,
+        "hero_height": 620,
+        "hero_height_mobile": 420,
+        "content_align": "center",
+        "hero_focal": "center top",
+        "title": "Title",
+        "title_size": 68,
+        "title_spacing": 8,
+        "subtitle": "professional cosmetics for a flawless result",
+        "subtitle_size": 13,
+        "btn1_text": "Button 1",
+        "btn2_text": "Button 2",
+        "dark_btn_bg": "#2A2118",
+        "dark_btn_text": "#F5EBDC",
+        "enable_animation": true,
+        "animation_speed": 700
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,191 @@
+{%- comment -%}
+  Haven Gallery — soft sage rounded panel with centered serif heading,
+  social row, image collage, caption and an outline button.
+  Self-contained. Scoped styles. Responsive (collage reflows on mobile).
+{%- endcomment -%}
+
+<section id="HavenGallery-{{ section.id }}" class="hg">
+  {%- style -%}
+    #HavenGallery-{{ section.id }} {
+      --hg-panel: {{ section.settings.panel_bg }};
+      --hg-radius: {{ section.settings.radius }}px;
+      --hg-heading-c: {{ section.settings.heading_color }};
+      --hg-caption-c: {{ section.settings.caption_color }};
+      --hg-btn-border: {{ section.settings.btn_border_color }};
+      padding: {{ section.settings.padding_y }}px 40px;
+      background: transparent;
+    }
+    #HavenGallery-{{ section.id }} .hg__panel {
+      background: var(--hg-panel);
+      border-radius: var(--hg-radius);
+      padding: 56px 48px 48px;
+      max-width: 1400px; margin: 0 auto;
+    }
+    #HavenGallery-{{ section.id }} .hg__head {
+      display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+      gap: 20px; margin-bottom: 36px;
+    }
+    #HavenGallery-{{ section.id }} .hg__follow {
+      display: inline-flex; align-items: center; gap: 12px;
+      font-size: 12px; color: #4A5142; justify-self: start;
+    }
+    #HavenGallery-{{ section.id }} .hg__follow svg {
+      width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.4;
+    }
+    #HavenGallery-{{ section.id }} .hg__title {
+      grid-column: 2;
+      display: inline-flex; align-items: center; gap: 10px;
+      margin: 0;
+      font-family: var(--ul-heading-font-family, Georgia, serif);
+      font-weight: 500; font-size: 34px; color: var(--hg-heading-c);
+    }
+    #HavenGallery-{{ section.id }} .hg__title svg {
+      width: 19px; height: 19px; stroke: currentColor; fill: none; stroke-width: 1.4;
+    }
+    #HavenGallery-{{ section.id }} .hg__socials {
+      grid-column: 3; justify-self: end;
+      display: inline-flex; gap: 10px;
+    }
+    #HavenGallery-{{ section.id }} .hg__socials a {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1px solid rgba(46,51,43,.28);
+      display: grid; place-items: center; color: #2E332B;
+      transition: background 200ms ease, color 200ms ease;
+    }
+    #HavenGallery-{{ section.id }} .hg__socials a:hover { background: #2E332B; color: #F0EDE4; }
+    #HavenGallery-{{ section.id }} .hg__socials svg { width: 15px; height: 15px; fill: currentColor; }
+    #HavenGallery-{{ section.id }} .hg__grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 14px;
+      align-items: stretch;
+    }
+    #HavenGallery-{{ section.id }} .hg__img {
+      grid-column: span 2;
+      aspect-ratio: 4 / 3.2; border-radius: 10px; overflow: hidden;
+    }
+    #HavenGallery-{{ section.id }} .hg__img img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 400ms ease;
+    }
+    #HavenGallery-{{ section.id }} .hg__img:hover img { transform: scale(1.04); }
+    #HavenGallery-{{ section.id }} .hg__img--ph {
+      display: grid; place-items: center; background: #CBD3B8;
+    }
+    #HavenGallery-{{ section.id }} .hg__caption {
+      grid-column: span 2; display: flex; align-items: center;
+      font-family: var(--ul-heading-font-family, Georgia, serif);
+      font-size: 17px; line-height: 1.5; color: #3E4438; padding: 0 8px;
+    }
+    #HavenGallery-{{ section.id }} .hg__foot {
+      display: flex; justify-content: center; margin-top: 34px;
+    }
+    #HavenGallery-{{ section.id }} .hg__btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      border: 1px solid var(--hg-btn-border); border-radius: 999px;
+      padding: 13px 26px; font-size: 12px; font-weight: 600;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: #2E332B; text-decoration: none; transition: all 200ms ease;
+    }
+    #HavenGallery-{{ section.id }} .hg__btn:hover { background: #2E332B; color: #F0EDE4; border-color: #2E332B; }
+    @media (max-width: 900px) {
+      #HavenGallery-{{ section.id }} .hg__panel { padding: 36px 24px; }
+      #HavenGallery-{{ section.id }} .hg__head { grid-template-columns: 1fr; justify-items: center; row-gap: 14px; }
+      #HavenGallery-{{ section.id }} .hg__title { grid-column: auto; }
+      #HavenGallery-{{ section.id }} .hg__socials { grid-column: auto; justify-self: center; }
+      #HavenGallery-{{ section.id }} .hg__grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      #HavenGallery-{{ section.id }} .hg__img { grid-column: span 1; }
+      #HavenGallery-{{ section.id }} .hg__caption { grid-column: span 2; }
+    }
+  {%- endstyle -%}
+
+  <div class="hg__panel">
+    <div class="hg__head">
+      <div class="hg__follow">
+        {%- if section.settings.follow_text != blank -%}
+          {{ section.settings.follow_text }}
+        {%- endif -%}
+      </div>
+      {%- if section.settings.heading != blank -%}
+        <h2 class="hg__title">
+          <svg viewBox="0 0 24 24"><path d="M12 21c-5-3-7.5-6.5-7.5-10.5C4.5 6 8 3.5 12 3c4 .5 7.5 3 7.5 7.5 0 4-2.5 7.5-7.5 10.5z"/></svg>
+          {{ section.settings.heading }}
+        </h2>
+      {%- endif -%}
+      <div class="hg__socials">
+        {%- if section.settings.social_1 != blank -%}<a href="{{ section.settings.social_1 }}" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5.4a4.6 4.6 0 1 0 0 9.2 4.6 4.6 0 0 0 0-9.2zm0 2a2.6 2.6 0 1 1 0 5.2 2.6 2.6 0 0 1 0-5.2zM17.6 5.2a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z" fill-rule="evenodd"/></svg></a>{%- endif -%}
+        {%- if section.settings.social_2 != blank -%}<a href="{{ section.settings.social_2 }}" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.7c0-.9.3-1.6 1.6-1.6h1.7V4.2c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H7.4V14h2.7v8h3.4z"/></svg></a>{%- endif -%}
+        {%- if section.settings.social_3 != blank -%}<a href="{{ section.settings.social_3 }}" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M22 8.2s-.2-1.5-.8-2.1c-.8-.9-1.7-.9-2.1-.9C16.1 5 12 5 12 5s-4.1 0-7.1.2c-.4.1-1.3.1-2.1.9-.6.7-.8 2.1-.8 2.1S2 9.9 2 11.5v1c0 1.7.2 3.3.2 3.3s.2 1.5.8 2.1c.8.9 1.8.8 2.3.9 1.7.2 6.7.2 6.7.2s4.1 0 7.1-.2c.4-.1 1.3-.1 2.1-.9.6-.7.8-2.1.8-2.1s.2-1.7.2-3.3v-1c0-1.7-.2-3.3-.2-3.3zM10 14.6V9.4l5 2.6-5 2.6z"/></svg></a>{%- endif -%}
+      </div>
+    </div>
+    <div class="hg__grid">
+      {%- for block in section.blocks -%}
+        <div class="hg__img" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            <img src="{{ block.settings.image | image_url: width: 700 }}" alt="{{ block.settings.image.alt | escape }}" loading="lazy" width="700" height="550">
+          {%- else -%}
+            <div class="hg__img--ph"></div>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+      {%- if section.settings.caption != blank -%}
+        <div class="hg__caption">{{ section.settings.caption }}</div>
+      {%- endif -%}
+    </div>
+    {%- if section.settings.btn_label != blank -%}
+      <div class="hg__foot">
+        <a class="hg__btn" href="{{ section.settings.btn_link | default: routes.root_url }}">{{ section.settings.btn_label }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Haven Gallery",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Panel" },
+    { "type": "color", "id": "panel_bg", "label": "Panel background", "default": "#DEE4CE" },
+    { "type": "range", "id": "radius", "label": "Panel radius", "min": 0, "max": 40, "step": 2, "default": 24, "unit": "px" },
+    { "type": "range", "id": "padding_y", "label": "Panel padding", "min": 24, "max": 120, "step": 4, "default": 56, "unit": "px" },
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Gallery" },
+    { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#2E332B" },
+    { "type": "checkbox", "id": "show_leaf", "label": "Show leaf before heading", "default": true },
+    { "type": "header", "content": "Social" },
+    { "type": "text", "id": "follow_text", "label": "Follow text", "default": "Follow us" },
+    { "type": "url", "id": "social_1", "label": "Social link 1 (Instagram)" },
+    { "type": "url", "id": "social_2", "label": "Social link 2 (Facebook)" },
+    { "type": "url", "id": "social_3", "label": "Social link 3 (YouTube)" },
+    { "type": "header", "content": "Caption + button" },
+    { "type": "text", "id": "caption", "label": "Caption", "default": "Moments of calm, captured in nature." },
+    { "type": "color", "id": "caption_color", "label": "Caption color", "default": "#3E4438" },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "See More Photos" },
+    { "type": "url", "id": "btn_link", "label": "Button link" },
+    { "type": "color", "id": "btn_border_color", "label": "Button border", "default": "#2E332B" }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Photo",
+      "limit": 6,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Haven Gallery",
+      "blocks": [
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

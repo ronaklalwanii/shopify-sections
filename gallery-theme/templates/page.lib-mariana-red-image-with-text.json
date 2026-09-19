@@ -1,0 +1,31 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--image-with-text",
+      "settings": {
+        "image_position": "right",
+        "image_ratio": "4 / 3",
+        "eyebrow": "Sustainable by choice",
+        "heading": "Fashion with Purpose.\nBetter for You. Better for Earth.",
+        "text": "<p>We believe in slow fashion: crafted with care using sustainable fabrics and ethical practices. Look good while doing good.</p>",
+        "text_align": "left",
+        "padding": 72
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "button",
+          "settings": {
+            "label": "Learn our journey",
+            "style": "primary"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

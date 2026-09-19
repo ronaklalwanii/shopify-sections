@@ -1,0 +1,60 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--marquee",
+      "settings": {
+        "movement_direction": "normal",
+        "padding-block-start": 24,
+        "padding-block-end": 24,
+        "gap_between_elements": 24
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "text",
+          "settings": {}
+        },
+        "bl-2": {
+          "type": "text",
+          "settings": {}
+        },
+        "bl-3": {
+          "type": "icon",
+          "settings": {}
+        },
+        "bl-4": {
+          "type": "icon",
+          "settings": {}
+        },
+        "bl-5": {
+          "type": "logo",
+          "settings": {}
+        },
+        "bl-6": {
+          "type": "logo",
+          "settings": {}
+        },
+        "bl-7": {
+          "type": "_divider",
+          "settings": {}
+        },
+        "bl-8": {
+          "type": "_divider",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6",
+        "bl-7",
+        "bl-8"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

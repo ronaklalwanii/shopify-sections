@@ -1,0 +1,415 @@
+{%- comment -%} Section Library: injected global assets for store "sleep-and-wellbeing" {%- endcomment -%}
+{{ 'sleep-and-wellbeing--theme.css' | asset_url | stylesheet_tag }}
+{{ 'sleep-and-wellbeing--product.css' | asset_url | stylesheet_tag }}
+{% render 'sleep-and-wellbeing--css-variables' %}
+{% comment %}
+  Section: Decorated Card
+  A seasonal card: script + display heading, body, optional CTA,
+  main illustration, and edge decor blocks (branches, garlands, baubles).
+  Swap decor PNGs per season — no code changes needed.
+{% endcomment %}
+
+<section id="DecoCard-{{ section.id }}" class="dc{% if section.settings.content_side == 'text_right' %} dc--text-right{% endif %}">
+  {%- style -%}
+    /* Full-bleed band: kill theme section spacing */
+    #shopify-section-{{ section.id }} {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    #DecoCard-{{ section.id }} {
+      --dc-card-bg: {{ section.settings.card_bg }};
+      --dc-radius: {{ section.settings.card_radius }}px;
+      --dc-max-w: {% if section.settings.card_full_width %}none{% else %}{{ section.settings.card_max_width }}px{% endif %};
+      --dc-pad: {{ section.settings.card_padding }}px;
+      --dc-pad-x: {{ section.settings.card_padding_x }}px;
+      --dc-min-h: {{ section.settings.card_min_height }}px;
+      --dc-gap: {{ section.settings.content_gap }}px;
+      --dc-script-size: {{ section.settings.script_size }}px;
+      --dc-script-color: {{ section.settings.script_color }};
+      --dc-script-font: {{ section.settings.script_font.family }}, {{ section.settings.script_font.fallback_families }};
+      --dc-display-size: {{ section.settings.display_size }}px;
+      --dc-display-weight: {{ section.settings.display_weight }};
+      --dc-display-color: {{ section.settings.display_color }};
+      --dc-display-spacing: {{ section.settings.display_spacing }}px;
+      --dc-display-font: {{ section.settings.display_font.family }}, {{ section.settings.display_font.fallback_families }};
+      --dc-body-size: {{ section.settings.body_size }}px;
+      --dc-body-color: {{ section.settings.body_color }};
+      --dc-body-max: {{ section.settings.body_max_width }}px;
+      --dc-cta-radius: {{ section.settings.cta_radius }}px;
+      --dc-cta-size: {{ section.settings.cta_size }}px;
+      --dc-art-size: {{ section.settings.art_size }}%;
+      --dc-speed: {{ section.settings.animation_speed }}ms;
+      --dc-ease: cubic-bezier(.22, 1, .36, 1);
+    }
+
+    #DecoCard-{{ section.id }} {
+      padding: {{ section.settings.space_top }}px {{ section.settings.side_gutter }}px {{ section.settings.space_bottom }}px;
+      overflow-x: clip;
+    }
+
+    #DecoCard-{{ section.id }} .dc__card {
+      position: relative;
+      max-width: var(--dc-max-w);
+      min-height: var(--dc-min-h);
+      margin: 0 auto;
+      background: var(--dc-card-bg);
+      border-radius: var(--dc-radius);
+      overflow: hidden;
+      {% if section.settings.card_shadow %}box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);{% endif %}
+    }
+
+    /* ---------- Decor layers ---------- */
+    #DecoCard-{{ section.id }} .dc__decor {
+      position: absolute;
+      z-index: 1;
+      display: block;
+      width: calc(var(--size) * 1%);
+      aspect-ratio: var(--ar, 1);
+      pointer-events: none;
+      transform: translate(calc(var(--bx, 0%) + var(--nx)), calc(var(--by, 0%) + var(--ny))) rotate(var(--rot));
+    }
+    #DecoCard-{{ section.id }} .dc__decor--above { z-index: 3; }
+    #DecoCard-{{ section.id }} .dc__decor--top-left { top: 0; left: 0; }
+    #DecoCard-{{ section.id }} .dc__decor--top-right { top: 0; right: 0; }
+    #DecoCard-{{ section.id }} .dc__decor--bottom-left { bottom: 0; left: 0; }
+    #DecoCard-{{ section.id }} .dc__decor--bottom-right { bottom: 0; right: 0; }
+    #DecoCard-{{ section.id }} .dc__decor--top-center { top: 0; left: 50%; --bx: -50%; }
+    #DecoCard-{{ section.id }} .dc__decor--bottom-center { bottom: 0; left: 50%; --bx: -50%; }
+    #DecoCard-{{ section.id }} .dc__decor--mid-left { top: 50%; left: 0; --by: -50%; }
+    #DecoCard-{{ section.id }} .dc__decor--mid-right { top: 50%; right: 0; --by: -50%; }
+
+    #DecoCard-{{ section.id }} .dc__decor img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    {%- if section.settings.enable_float %}
+      #DecoCard-{{ section.id }} .dc__decor img {
+        animation: dcFloat-{{ section.id }} 6s ease-in-out infinite;
+        animation-delay: var(--fd, 0s);
+      }
+      @keyframes dcFloat-{{ section.id }} {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+      }
+    {%- endif %}
+
+    /* ---------- Content grid ---------- */
+    #DecoCard-{{ section.id }} .dc__grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: center;
+      gap: var(--dc-gap);
+      padding: var(--dc-pad) var(--dc-pad-x);
+      min-height: var(--dc-min-h);
+    }
+
+    /* Text side switching (works with or without an illustration) */
+    #DecoCard-{{ section.id }}.dc--text-right .dc__text { grid-column: 2; }
+    #DecoCard-{{ section.id }}.dc--text-right .dc__art { grid-column: 1; }
+
+    #DecoCard-{{ section.id }} .dc__text {
+      text-align: {{ section.settings.text_align }};
+      min-width: 0;
+    }
+
+    #DecoCard-{{ section.id }} .dc__script {
+      margin: 0 0 {{ section.settings.script_margin }}px;
+      color: var(--dc-script-color);
+      font-family: var(--dc-script-font);
+      font-size: var(--dc-script-size);
+      line-height: 1.1;
+      font-weight: 400;
+    }
+
+    #DecoCard-{{ section.id }} .dc__display {
+      margin: 0;
+      color: var(--dc-display-color);
+      font-family: var(--dc-display-font);
+      font-size: var(--dc-display-size);
+      font-weight: var(--dc-display-weight);
+      letter-spacing: var(--dc-display-spacing);
+      line-height: 1.05;
+      {% if section.settings.display_uppercase %}text-transform: uppercase;{% endif %}
+    }
+
+    #DecoCard-{{ section.id }} .dc__body {
+      margin: 18px auto 0;
+      max-width: var(--dc-body-max);
+      color: var(--dc-body-color);
+      font-size: var(--dc-body-size);
+      line-height: 1.6;
+      {% if section.settings.text_align == 'left' %}margin-left: 0;{% endif %}
+      {% if section.settings.text_align == 'right' %}margin-right: 0;{% endif %}
+    }
+
+    #DecoCard-{{ section.id }} .dc__cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 24px;
+      padding: 12px 28px;
+      border-radius: var(--dc-cta-radius);
+      font-size: var(--dc-cta-size);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      background: {{ section.settings.cta_bg }};
+      color: {{ section.settings.cta_text_color }};
+      transition: transform 200ms ease, filter 200ms ease;
+    }
+    #DecoCard-{{ section.id }} .dc__cta:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.06);
+    }
+
+    #DecoCard-{{ section.id }} .dc__art {
+      display: flex;
+      justify-content: center;
+      min-width: 0;
+    }
+    #DecoCard-{{ section.id }} .dc__art img {
+      width: var(--dc-art-size);
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* ---------- Entrance ---------- */
+    #DecoCard-{{ section.id }} .dc__text > *,
+    #DecoCard-{{ section.id }} .dc__art {
+      transition: opacity var(--dc-speed) ease, transform var(--dc-speed) var(--dc-ease);
+    }
+    #DecoCard-{{ section.id }} .dc__text > *:nth-child(2) { transition-delay: 80ms; }
+    #DecoCard-{{ section.id }} .dc__text > *:nth-child(3) { transition-delay: 160ms; }
+    #DecoCard-{{ section.id }} .dc__text > *:nth-child(4) { transition-delay: 240ms; }
+    #DecoCard-{{ section.id }}.dc-animated:not(.is-in-view) .dc__text > *,
+    #DecoCard-{{ section.id }}.dc-animated:not(.is-in-view) .dc__art {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    /* ---------- Mobile ---------- */
+    @media screen and (max-width: 760px) {
+      #DecoCard-{{ section.id }} .dc__grid {
+        grid-template-columns: 1fr;
+        padding: calc(var(--dc-pad) * 0.6) calc(var(--dc-pad-x) * 0.6);
+        gap: calc(var(--dc-gap) * 0.6);
+      }
+      #DecoCard-{{ section.id }} .dc__text,
+      #DecoCard-{{ section.id }} .dc__art {
+        grid-column: auto;
+      }
+      #DecoCard-{{ section.id }} .dc__art { order: 1 !important; }
+      #DecoCard-{{ section.id }} .dc__text { order: 2 !important; text-align: center; }
+      #DecoCard-{{ section.id }} .dc__body { margin-left: auto; margin-right: auto; }
+      #DecoCard-{{ section.id }} .dc__decor {
+        width: min(calc(var(--size) * 1.35 * 1%), 70%);
+      }
+      #DecoCard-{{ section.id }} .dc__decor--hide-mobile { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #DecoCard-{{ section.id }} .dc__decor img,
+      #DecoCard-{{ section.id }} .dc__text > *,
+      #DecoCard-{{ section.id }} .dc__art,
+      #DecoCard-{{ section.id }} .dc__cta {
+        animation: none;
+        transition: none;
+      }
+      #DecoCard-{{ section.id }}.dc-animated:not(.is-in-view) .dc__text > *,
+      #DecoCard-{{ section.id }}.dc-animated:not(.is-in-view) .dc__art {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="dc__card">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'decor' and block.settings.image != blank -%}
+        <span
+          class="dc__decor dc__decor--{{ block.settings.position }}{% if block.settings.above_content %} dc__decor--above{% endif %}{% if block.settings.hide_mobile %} dc__decor--hide-mobile{% endif %}"
+          style="--size: {{ block.settings.size }}; --ar: {{ block.settings.image.aspect_ratio | default: 1 }}; --nx: {{ block.settings.nudge_x }}px; --ny: {{ block.settings.nudge_y }}px; --rot: {{ block.settings.rotation }}deg; --fd: {{ forloop.index0 | times: 0.7 }}s;"
+          aria-hidden="true"
+          {{ block.shopify_attributes }}
+        >
+          <img
+            src="{{ block.settings.image | image_url: width: 1200 }}"
+            alt=""
+            loading="lazy"
+            width="{{ block.settings.image.width | default: 800 }}"
+            height="{{ block.settings.image.height | default: 800 }}"
+          >
+        </span>
+      {%- endif -%}
+    {%- endfor -%}
+
+    <div class="dc__grid">
+      <div class="dc__text">
+        {%- if section.settings.script_text != blank -%}
+          <p class="dc__script">{{ section.settings.script_text }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.display_text != blank -%}
+          <h2 class="dc__display">{{ section.settings.display_text }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.body_text != blank -%}
+          <p class="dc__body">{{ section.settings.body_text }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.cta_text != blank and section.settings.cta_link != blank -%}
+          <a class="dc__cta" href="{{ section.settings.cta_link }}">{{ section.settings.cta_text }}</a>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.art_image != blank -%}
+        <div class="dc__art">
+          <img
+            src="{{ section.settings.art_image | image_url: width: 900 }}"
+            alt="{{ section.settings.art_image.alt | default: 'Illustration' | escape }}"
+            loading="lazy"
+            width="900"
+            height="900"
+          >
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.getElementById('DecoCard-{{ section.id }}');
+      if (!root) return;
+
+      {%- if section.settings.enable_animation -%}
+        root.classList.add('dc-animated');
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduced || !('IntersectionObserver' in window)) {
+          root.classList.add('is-in-view');
+        } else {
+          const obs = new IntersectionObserver((entries, o) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                root.classList.add('is-in-view');
+                o.unobserve(e.target);
+              }
+            });
+          }, { threshold: 0.1 });
+          obs.observe(root);
+        }
+      {%- else -%}
+        root.classList.add('is-in-view');
+      {%- endif -%}
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Decorated Card",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "header", "content": "Card" },
+    { "type": "color", "id": "card_bg", "label": "Card background", "default": "#2F4A3C" },
+    { "type": "checkbox", "id": "card_full_width", "label": "Full-bleed card (edge to edge)", "default": true },
+    { "type": "range", "id": "card_radius", "label": "Corner radius", "min": 0, "max": 40, "step": 2, "default": 0, "unit": "px" },
+    { "type": "checkbox", "id": "card_shadow", "label": "Drop shadow", "default": true },
+    { "type": "range", "id": "card_max_width", "label": "Card max width", "min": 600, "max": 1600, "step": 20, "default": 1200, "unit": "px", "visible_if": "{{ section.settings.card_full_width == false }}" },
+    { "type": "range", "id": "card_min_height", "label": "Card min height", "min": 200, "max": 700, "step": 10, "default": 420, "unit": "px" },
+    { "type": "range", "id": "card_padding", "label": "Card padding (top/bottom)", "min": 24, "max": 120, "step": 4, "default": 64, "unit": "px" },
+    { "type": "range", "id": "card_padding_x", "label": "Card padding (sides)", "min": 0, "max": 160, "step": 4, "default": 64, "unit": "px" },
+    { "type": "range", "id": "side_gutter", "label": "Side gutters (outside card)", "min": 0, "max": 100, "step": 4, "default": 0, "unit": "px" },
+    { "type": "range", "id": "space_top", "label": "Space above", "min": 0, "max": 160, "step": 4, "default": 48, "unit": "px" },
+    { "type": "range", "id": "space_bottom", "label": "Space below", "min": 0, "max": 160, "step": 4, "default": 48, "unit": "px" },
+    { "type": "select", "id": "content_side", "label": "Text side", "default": "text_left", "options": [
+      { "value": "text_left", "label": "Text left / art right" },
+      { "value": "text_right", "label": "Text right / art left" }
+    ] },
+    { "type": "range", "id": "content_gap", "label": "Text / art gap", "min": 20, "max": 120, "step": 4, "default": 48, "unit": "px" },
+
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "script_text", "label": "Script line", "default": "Merry" },
+    { "type": "font_picker", "id": "script_font", "label": "Script font", "default": "caveat_n4" },
+    { "type": "range", "id": "script_size", "label": "Script size", "min": 24, "max": 120, "step": 2, "default": 64, "unit": "px" },
+    { "type": "color", "id": "script_color", "label": "Script color", "default": "#F2E8DC" },
+    { "type": "range", "id": "script_margin", "label": "Script bottom spacing", "min": 0, "max": 40, "step": 2, "default": 4, "unit": "px" },
+    { "type": "text", "id": "display_text", "label": "Display line", "default": "Christmas" },
+    { "type": "font_picker", "id": "display_font", "label": "Display font", "default": "oswald_n5" },
+    { "type": "range", "id": "display_size", "label": "Display size", "min": 28, "max": 140, "step": 2, "default": 72, "unit": "px" },
+    { "type": "range", "id": "display_weight", "label": "Display weight", "min": 100, "max": 900, "step": 100, "default": 600 },
+    { "type": "checkbox", "id": "display_uppercase", "label": "Uppercase display", "default": true },
+    { "type": "color", "id": "display_color", "label": "Display color", "default": "#D9A441" },
+    { "type": "range", "id": "display_spacing", "label": "Display letter spacing", "min": 0, "max": 20, "step": 0.5, "default": 2, "unit": "px" },
+    { "type": "textarea", "id": "body_text", "label": "Body text", "default": "Warm up the season with our hand-picked gift edit — cozy textures, golden light and little surprises for everyone on your list." },
+    { "type": "range", "id": "body_size", "label": "Body size", "min": 11, "max": 22, "step": 1, "default": 13, "unit": "px" },
+    { "type": "color", "id": "body_color", "label": "Body color", "default": "#CBD3CB" },
+    { "type": "range", "id": "body_max_width", "label": "Body max width", "min": 200, "max": 700, "step": 20, "default": 380, "unit": "px" },
+    { "type": "select", "id": "text_align", "label": "Text alignment", "default": "left", "options": [
+      { "value": "left", "label": "Left" },
+      { "value": "center", "label": "Center" },
+      { "value": "right", "label": "Right" }
+    ] },
+
+    { "type": "header", "content": "Button (optional)" },
+    { "type": "text", "id": "cta_text", "label": "Button text", "info": "Leave blank to hide." },
+    { "type": "url", "id": "cta_link", "label": "Button link" },
+    { "type": "color", "id": "cta_bg", "label": "Button background", "default": "#D9A441" },
+    { "type": "color", "id": "cta_text_color", "label": "Button text", "default": "#2F4A3C" },
+    { "type": "range", "id": "cta_radius", "label": "Button radius", "min": 0, "max": 60, "step": 2, "default": 30, "unit": "px" },
+    { "type": "range", "id": "cta_size", "label": "Button size", "min": 10, "max": 20, "step": 1, "default": 12, "unit": "px" },
+
+    { "type": "header", "content": "Illustration" },
+    { "type": "image_picker", "id": "art_image", "label": "Main illustration (PNG)" },
+    { "type": "range", "id": "art_size", "label": "Illustration size", "min": 20, "max": 100, "step": 5, "default": 80, "unit": "%" },
+
+    { "type": "header", "content": "Motion" },
+    { "type": "checkbox", "id": "enable_float", "label": "Float decor gently", "default": true },
+    { "type": "checkbox", "id": "enable_animation", "label": "Enable entrance animation", "default": true },
+    { "type": "range", "id": "animation_speed", "label": "Animation speed", "min": 250, "max": 1200, "step": 50, "default": 700, "unit": "ms" }
+  ],
+  "blocks": [
+    {
+      "type": "decor",
+      "name": "Edge decor",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Decor image (PNG)" },
+        { "type": "select", "id": "position", "label": "Position", "default": "top-right", "options": [
+          { "value": "top-left", "label": "Top left" },
+          { "value": "top-center", "label": "Top center" },
+          { "value": "top-right", "label": "Top right" },
+          { "value": "mid-left", "label": "Middle left" },
+          { "value": "mid-right", "label": "Middle right" },
+          { "value": "bottom-left", "label": "Bottom left" },
+          { "value": "bottom-center", "label": "Bottom center" },
+          { "value": "bottom-right", "label": "Bottom right" }
+        ] },
+        { "type": "range", "id": "size", "label": "Size (% of card width)", "min": 5, "max": 100, "step": 1, "default": 30, "unit": "%" },
+        { "type": "range", "id": "nudge_x", "label": "Nudge left/right (+ pushes past edge)", "min": -400, "max": 400, "step": 10, "default": 0, "unit": "px" },
+        { "type": "range", "id": "nudge_y", "label": "Nudge up/down (+ pushes past edge)", "min": -400, "max": 400, "step": 10, "default": 0, "unit": "px" },
+        { "type": "range", "id": "rotation", "label": "Rotation", "min": -45, "max": 45, "step": 1, "default": 0, "unit": "deg" },
+        { "type": "checkbox", "id": "above_content", "label": "Layer above text", "default": false },
+        { "type": "checkbox", "id": "hide_mobile", "label": "Hide on mobile", "default": false }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Decorated Card",
+      "blocks": [
+        { "type": "decor", "settings": { "position": "top-right", "size": 34 } },
+        { "type": "decor", "settings": { "position": "bottom-left", "size": 26 } },
+        { "type": "decor", "settings": { "position": "top-left", "size": 22, "hide_mobile": true } }
+      ]
+    }
+  ]
+}
+{% endschema %}

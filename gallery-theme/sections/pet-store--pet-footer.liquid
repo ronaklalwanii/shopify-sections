@@ -1,0 +1,890 @@
+{%- comment -%} Section Library: injected global assets for store "pet store" {%- endcomment -%}
+{{ 'pet-store--overflow-list.css' | asset_url | stylesheet_tag }}
+{{ 'pet-store--base.css' | asset_url | stylesheet_tag }}
+{% render 'pet-store--theme-styles-variables' %}
+{%- comment -%}
+  Pet Store — Footer
+  Dark footer with logo + tagline, newsletter signup, contact details,
+  link menu, social icons and a bottom legal bar.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .pet-footer-{{ section.id }} {
+    --pet-ft-bg: {{ s.background_color }};
+    --pet-ft-fg: {{ s.text_color }};
+    --pet-ft-muted: {{ s.muted_text_color }};
+    --pet-ft-accent: {{ s.accent_color }};
+    --pet-ft-accent-text: {{ s.accent_text_color }};
+    --pet-ft-border: {{ s.border_color }};
+    --pet-ft-container: {{ s.container_max_width }}px;
+    --pet-ft-radius: {{ s.input_radius }}px;
+
+    background-color: var(--pet-ft-bg);
+    color: var(--pet-ft-fg);
+    padding-block: {{ s.padding_top }}px 0;
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+  }
+
+  .pet-footer-{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__container {
+    max-width: var(--pet-ft-container);
+    margin-inline: auto;
+    padding-inline: clamp(16px, 4vw, 48px);
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--pet-ft-border);
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+    flex-shrink: 0;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__logo-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: {{ s.logo_icon_radius }}px;
+    background-color: var(--pet-ft-accent);
+    color: var(--pet-ft-accent-text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__logo-badge svg,
+  .pet-footer-{{ section.id }} .pet-ft__logo-badge img {
+    width: 21px;
+    height: 21px;
+    object-fit: contain;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__logo-image {
+    height: {{ s.logo_height }}px;
+    width: auto;
+    display: block;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__logo-text {
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.1;
+    white-space: pre-line;
+    color: inherit;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__tagline {
+    margin: 0;
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-size: clamp(18px, 1.8vw, 24px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    text-align: right;
+    color: var(--pet-ft-fg);
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 0.8fr;
+    gap: clamp(28px, 4vw, 64px);
+    padding-block: 44px;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__heading {
+    margin: 0 0 18px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0;
+    color: var(--pet-ft-fg);
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__newsletter-title {
+    margin: 0 0 8px;
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--pet-ft-fg);
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__newsletter-note {
+    margin: 0 0 18px;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--pet-ft-muted);
+    max-width: 340px;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 400px;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__input {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 40px;
+    padding: 0 4px;
+    border: 0;
+    border-bottom: 1px solid var(--pet-ft-border);
+    border-radius: 0;
+    background-color: transparent;
+    color: var(--pet-ft-fg);
+    font-family: inherit;
+    font-size: 13.5px;
+    outline: none;
+    transition: border-color var(--animation-speed, 0.125s) ease;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__input::placeholder {
+    color: var(--pet-ft-muted);
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__input:focus {
+    border-color: var(--pet-ft-fg);
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__submit {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background-color: transparent;
+    color: var(--pet-ft-fg);
+    cursor: pointer;
+    transition: background-color var(--animation-speed, 0.125s) ease;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__submit:hover {
+    background-color: rgb(255 255 255 / 0.08);
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__submit svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__newsletter-title {
+    font-size: 15px;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__form-success {
+    margin: 0 0 12px;
+    font-size: 13.5px;
+    color: #7fc98d;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__form-error {
+    margin: 0 0 12px;
+    font-size: 13px;
+    color: #e08d8d;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__social {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 22px;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 15px;
+    border: 1px solid var(--pet-ft-border);
+    border-radius: 100px;
+    color: var(--pet-ft-fg);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.2;
+    text-decoration: none;
+    transition: background-color var(--animation-speed, 0.125s) ease, border-color var(--animation-speed, 0.125s) ease, color var(--animation-speed, 0.125s) ease;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__social a:hover {
+    background-color: var(--pet-ft-fg);
+    border-color: var(--pet-ft-fg);
+    color: var(--pet-ft-bg);
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__contacts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__contact {
+    display: flex;
+    gap: 8px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--pet-ft-muted);
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__contact strong {
+    color: var(--pet-ft-fg);
+    font-weight: 600;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__contact a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__contact a:hover {
+    color: var(--pet-ft-fg);
+    text-decoration: underline;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__contact--phone a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--pet-ft-fg);
+    margin-top: 6px;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__contact--phone svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__scrolltop {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 10px;
+    background-color: #ffffff;
+    color: #141414;
+    cursor: pointer;
+    box-shadow: 0 8px 22px rgb(0 0 0 / 0.18);
+    z-index: var(--layer-sticky, 8);
+    transition: transform var(--animation-speed, 0.125s) ease;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__scrolltop:hover {
+    transform: translateY(-2px);
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__scrolltop svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__links a {
+    font-size: 13.5px;
+    color: var(--pet-ft-muted);
+    text-decoration: none;
+    transition: color var(--animation-speed, 0.125s) ease;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__links a:hover {
+    color: var(--pet-ft-fg);
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-block: 22px;
+    border-top: 1px solid var(--pet-ft-border);
+    font-size: 12.5px;
+    color: var(--pet-ft-muted);
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__bottom-links {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__bottom-links a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .pet-footer-{{ section.id }} .pet-ft__bottom-links a:hover {
+    color: var(--pet-ft-fg);
+    text-decoration: underline;
+  }
+
+  @media (max-width: 989px) {
+    .pet-footer-{{ section.id }} .pet-ft__top {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .pet-footer-{{ section.id }} .pet-ft__tagline {
+      text-align: left;
+    }
+
+    .pet-footer-{{ section.id }} .pet-ft__grid {
+      grid-template-columns: 1fr 1fr;
+      padding-block: 32px;
+    }
+  }
+
+  @media (max-width: 649px) {
+    .pet-footer-{{ section.id }} .pet-ft__grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+  }
+{% endstyle %}
+
+<footer class="pet-footer pet-footer-{{ section.id }}" role="contentinfo">
+  <div class="pet-ft__container">
+    <div class="pet-ft__top">
+      <a class="pet-ft__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
+        {%- if s.logo != blank -%}
+          {{ s.logo | image_url: width: 300 | image_tag:
+            class: 'pet-ft__logo-image',
+            widths: '120,180,240,300',
+            loading: 'lazy',
+            alt: shop.name | escape
+          }}
+        {%- else -%}
+          <span class="pet-ft__logo-badge" aria-hidden="true">
+            {%- if s.logo_icon != blank -%}
+              {{ s.logo_icon | image_url: width: 88 | image_tag: widths: '44,66,88', alt: '' }}
+            {%- else -%}
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><ellipse cx="6" cy="9" rx="1.8" ry="2.4"/><ellipse cx="18" cy="9" rx="1.8" ry="2.4"/><ellipse cx="9.6" cy="5.6" rx="1.8" ry="2.4"/><ellipse cx="14.4" cy="5.6" rx="1.8" ry="2.4"/><path d="M12 10.5c2.8 0 5.5 2.3 5.5 4.9 0 1.6-1.2 2.6-2.7 2.6-1 0-1.8-.4-2.8-.4s-1.8.4-2.8.4c-1.5 0-2.7-1-2.7-2.6 0-2.6 2.7-4.9 5.5-4.9Z"/></svg>
+            {%- endif -%}
+          </span>
+          {%- if s.logo_text != blank -%}
+            <span class="pet-ft__logo-text">{{ s.logo_text }}</span>
+          {%- else -%}
+            <span class="pet-ft__logo-text">{{ shop.name }}</span>
+          {%- endif -%}
+        {%- endif -%}
+      </a>
+
+      {%- if s.tagline != blank -%}
+        <p class="pet-ft__tagline">{{ s.tagline }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="pet-ft__grid">
+      {%- comment -%} Newsletter {%- endcomment -%}
+      {%- if s.show_newsletter -%}
+        <div>
+          {%- if s.newsletter_title != blank -%}
+            <p class="pet-ft__newsletter-title">{{ s.newsletter_title }}</p>
+          {%- endif -%}
+
+          {%- if s.newsletter_note != blank -%}
+            <p class="pet-ft__newsletter-note">{{ s.newsletter_note }}</p>
+          {%- endif -%}
+
+          {%- form 'customer', class: 'pet-ft__form-wrap' -%}
+            {%- if form.posted_successfully? -%}
+              <p class="pet-ft__form-success" role="status">Thanks for subscribing!</p>
+            {%- else -%}
+              {%- if form.errors -%}
+                <p class="pet-ft__form-error" role="alert">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>
+              {%- endif -%}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <div class="pet-ft__form">
+                <label class="visually-hidden" for="pet-ft-email-{{ section.id }}">Email</label>
+                <input
+                  class="pet-ft__input"
+                  id="pet-ft-email-{{ section.id }}"
+                  type="email"
+                  name="contact[email]"
+                  value="{{ form.email }}"
+                  placeholder="{{ s.newsletter_placeholder | default: 'Get news & updates' }}"
+                  required
+                  autocomplete="email"
+                >
+                <button class="pet-ft__submit" type="submit" aria-label="{{ s.newsletter_button | default: 'Subscribe' }}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" focusable="false"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>
+                </button>
+              </div>
+            {%- endif -%}
+          {%- endform -%}
+
+          {%- if s.show_social -%}
+            <div class="pet-ft__social">
+              {%- if s.social_instagram != blank -%}
+                <a href="{{ s.social_instagram }}" rel="noopener" target="_blank">Instagram</a>
+              {%- endif -%}
+              {%- if s.social_twitter != blank -%}
+                <a href="{{ s.social_twitter }}" rel="noopener" target="_blank">Twitter</a>
+              {%- endif -%}
+              {%- if s.social_facebook != blank -%}
+                <a href="{{ s.social_facebook }}" rel="noopener" target="_blank">Facebook</a>
+              {%- endif -%}
+              {%- if s.social_linkedin != blank -%}
+                <a href="{{ s.social_linkedin }}" rel="noopener" target="_blank">LinkedIn</a>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Contacts {%- endcomment -%}
+      {%- if s.show_contacts -%}
+        <div>
+          {%- if s.contacts_heading != blank -%}
+            <h2 class="pet-ft__heading">{{ s.contacts_heading }}</h2>
+          {%- endif -%}
+          <ul class="pet-ft__contacts">
+            {%- if s.contact_address != blank -%}
+              <li class="pet-ft__contact">
+                <span><strong>{{ s.contact_address_label | default: 'Address' }}:</strong><br>{{ s.contact_address }}</span>
+              </li>
+            {%- endif -%}
+            {%- if s.contact_email != blank -%}
+              <li class="pet-ft__contact">
+                <span><strong>{{ s.contact_email_label | default: 'Email' }}:</strong> <a href="mailto:{{ s.contact_email }}">{{ s.contact_email }}</a></span>
+              </li>
+            {%- endif -%}
+            {%- if s.contact_phone != blank -%}
+              <li class="pet-ft__contact pet-ft__contact--phone">
+                <a href="tel:{{ s.contact_phone | remove: ' ' | remove: '(' | remove: ')' | remove: '-' }}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true" focusable="false"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.4 2.1L8.1 10a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.6 1.9Z"/></svg>
+                  {{ s.contact_phone }}
+                </a>
+              </li>
+            {%- endif -%}
+            {%- if s.contact_hours != blank -%}
+              <li class="pet-ft__contact">
+                <span><strong>{{ s.contact_hours_label | default: 'Support' }}:</strong> {{ s.contact_hours }}</span>
+              </li>
+            {%- endif -%}
+          </ul>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Links {%- endcomment -%}
+      {%- if s.links_menu != blank -%}
+        <div>
+          {%- if s.links_heading != blank -%}
+            <h2 class="pet-ft__heading">{{ s.links_heading }}</h2>
+          {%- endif -%}
+          <ul class="pet-ft__links">
+            {%- for link in s.links_menu.links -%}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="pet-ft__bottom">
+      {%- if s.copyright != blank -%}
+        {%- if s.copyright contains '[year]' -%}
+          {%- assign current_year = 'now' | date: '%Y' -%}
+          <p class="pet-ft__copyright" style="margin:0">{{ s.copyright | replace: '[year]', current_year }}</p>
+        {%- else -%}
+          <p class="pet-ft__copyright" style="margin:0">{{ s.copyright }}</p>
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- if s.bottom_menu != blank -%}
+        <ul class="pet-ft__bottom-links">
+          {%- for link in s.bottom_menu.links -%}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if s.show_scrolltop -%}
+    <button class="pet-ft__scrolltop" data-pet-scrolltop aria-label="Back to top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M12 20V4m-6 6 6-6 6 6"/></svg>
+    </button>
+  {%- endif -%}
+</footer>
+
+<script>
+  (function () {
+    function initScrollTop(root) {
+      if (root.dataset.petFtInit === 'true') return;
+      root.dataset.petFtInit = 'true';
+      var button = root.querySelector('[data-pet-scrolltop]');
+      if (!button) return;
+      button.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    function ready(fn) {
+      if (document.readyState !== 'loading') fn();
+      else document.addEventListener('DOMContentLoaded', fn);
+    }
+
+    ready(function () {
+      document.querySelectorAll('.pet-footer').forEach(initScrollTop);
+    });
+
+    document.addEventListener('shopify:section:load', function (event) {
+      var root = event.target.querySelector('.pet-footer');
+      if (root) initScrollTop(root);
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Pet Footer",
+  "tag": "footer",
+  "class": "pet-footer-section",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo & tagline"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image",
+      "info": "Replaces the icon + text logo when set"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Logo height",
+      "min": 24,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_icon",
+      "label": "Custom logo icon",
+      "info": "Optional. Falls back to a paw icon"
+    },
+    {
+      "type": "textarea",
+      "id": "logo_text",
+      "label": "Logo text",
+      "default": "Happy\nTails"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Where Healthy Pets Come First 🦴"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show newsletter",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_title",
+      "label": "Title",
+      "default": "Get Pet Care Updates"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_note",
+      "label": "Small print",
+      "default": "Subscribe for pet care tips, exclusive offers and early access to new arrivals."
+    },
+    {
+      "type": "text",
+      "id": "newsletter_placeholder",
+      "label": "Input placeholder",
+      "default": "Get news & updates"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_button",
+      "label": "Button label",
+      "default": "Subscribe",
+      "info": "Used as the icon button label for screen readers"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "label": "Show social icons",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "social_instagram",
+      "label": "Instagram"
+    },
+    {
+      "type": "url",
+      "id": "social_facebook",
+      "label": "Facebook"
+    },
+    {
+      "type": "url",
+      "id": "social_twitter",
+      "label": "X (Twitter)"
+    },
+    {
+      "type": "url",
+      "id": "social_youtube",
+      "label": "YouTube"
+    },
+    {
+      "type": "url",
+      "id": "social_linkedin",
+      "label": "LinkedIn"
+    },
+    {
+      "type": "header",
+      "content": "Contacts"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_contacts",
+      "label": "Show contacts",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "contacts_heading",
+      "label": "Heading",
+      "default": "Our Contacts"
+    },
+    {
+      "type": "text",
+      "id": "contact_address_label",
+      "label": "Address label",
+      "default": "We are Here"
+    },
+    {
+      "type": "text",
+      "id": "contact_address",
+      "label": "Address",
+      "default": "27 Division St, New York,\nNY 10002, USA"
+    },
+    {
+      "type": "text",
+      "id": "contact_email_label",
+      "label": "Email label",
+      "default": "Send Mail"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Email",
+      "default": "vireon@mail.com"
+    },
+    {
+      "type": "text",
+      "id": "contact_phone_label",
+      "label": "Phone label",
+      "default": "Phone"
+    },
+    {
+      "type": "text",
+      "id": "contact_phone",
+      "label": "Phone",
+      "default": "+1 800 123 46 57"
+    },
+    {
+      "type": "text",
+      "id": "contact_hours_label",
+      "label": "Support label",
+      "default": "Opening Hours"
+    },
+    {
+      "type": "text",
+      "id": "contact_hours",
+      "label": "Support hours",
+      "default": "Mon - Sat: 7.00am - 19.00pm"
+    },
+    {
+      "type": "header",
+      "content": "Helpful links"
+    },
+    {
+      "type": "link_list",
+      "id": "links_menu",
+      "label": "Menu",
+      "info": "Create a menu in Navigation settings, e.g. “Helpful Links”",
+      "default": "footer"
+    },
+    {
+      "type": "text",
+      "id": "links_heading",
+      "label": "Heading",
+      "default": "Useful Links"
+    },
+    {
+      "type": "header",
+      "content": "Bottom bar"
+    },
+    {
+      "type": "text",
+      "id": "copyright",
+      "label": "Copyright",
+      "default": "Copyright © [year] Happy Tails. All Rights Reserved.",
+      "info": "[year] is replaced with the current year"
+    },
+    {
+      "type": "link_list",
+      "id": "bottom_menu",
+      "label": "Legal menu",
+      "info": "Optional, e.g. policy pages"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#372322"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#F5F1EC"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text",
+      "default": "#B9AA9E"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#6E1622"
+    },
+    {
+      "type": "color",
+      "id": "accent_text_color",
+      "label": "Accent text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Borders",
+      "default": "#48352B"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scrolltop",
+      "label": "Show back-to-top button",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "logo_icon_radius",
+      "label": "Logo icon corner radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "input_radius",
+      "label": "Input & button corner radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "label": "Container max width",
+      "min": 700,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 980
+    }
+  ]
+}
+{% endschema %}

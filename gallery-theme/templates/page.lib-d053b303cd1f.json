@@ -1,0 +1,67 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--image-with-text-overlay",
+      "settings": {
+        "snatched_variant_mode": "default",
+        "full_width": true,
+        "allow_transparent_header": false,
+        "enable_parallax": false,
+        "image_size": "auto",
+        "mobile_text_position": "place-self-center text-center",
+        "desktop_text_position": "sm:place-self-center sm:text-center",
+        "text_color": "#ffffff",
+        "overlay_color": "#000000",
+        "overlay_opacity": 30,
+        "snatched_show_features": true,
+        "snatched_f1_text": "Multi-Technology",
+        "snatched_f2_text": "Easy To Use",
+        "snatched_f3_text": "Visible Results",
+        "snatched_show_rating": true,
+        "snatched_rating_score": "4.8/5",
+        "snatched_rating_count": "2,000+",
+        "snatched_rating_border_width": 1,
+        "snatched_rating_border_color": "#e8e8e8",
+        "snatched_rating_enable_shadow": true,
+        "snatched_subheading_color": "#8B7355",
+        "snatched_heading_color": "#1a1a1a",
+        "snatched_accent_color": "#8B7355",
+        "snatched_text_color": "#4a4a4a",
+        "snatched_heading_size": 64,
+        "snatched_heading_size_mobile": 36,
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "subheading",
+          "settings": {
+            "text": "Subheading"
+          }
+        },
+        "bl-2": {
+          "type": "heading",
+          "settings": {
+            "text": "Image with text overlay",
+            "heading_tag": "h1"
+          }
+        },
+        "bl-3": {
+          "type": "richtext",
+          "settings": {
+            "content": "<p>Advanced beauty technology designed to help you look lifted, sculpted and confidently Snatched.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

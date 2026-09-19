@@ -1,0 +1,219 @@
+{%- comment -%} Section Library: injected global assets for store "sleep-and-wellbeing" {%- endcomment -%}
+{{ 'sleep-and-wellbeing--theme.css' | asset_url | stylesheet_tag }}
+{{ 'sleep-and-wellbeing--product.css' | asset_url | stylesheet_tag }}
+{% render 'sleep-and-wellbeing--css-variables' %}
+<style>
+		#shopify-section-{{- section.id -}} {
+			--height: 350px;
+			{% if section.settings.custom_padding %}
+			padding-top: {{ section.settings.padding_top }}px;
+			padding-bottom: {{ section.settings.padding_bottom }}px;
+			{% endif %}
+
+	  .header {
+	    position: relative;
+	    overflow: hidden;
+		height: 0px;
+		padding-bottom: 56.6%;
+
+		@media (min-width: 768px) {
+			--height: {{ section.settings.header_height }}px;
+		}
+	  }
+	  .intro_video_container {
+	    width: 100%;
+	    height: 100%;
+		position: absolute;
+	    background-size: cover;
+	    background-position: center;
+	  }
+	  .videoContainer {
+	    position: absolute;
+	    top: 0;
+	    left: 0;
+	    width: 100%;
+	    height: 100%;
+	    overflow: hidden;
+	  }
+	  .video {
+	    width: 100%;
+	    height: 100%;
+	    object-fit: cover;
+	  }
+	  .logobrushed {
+	    position: absolute;
+	    top: 50%;
+	    left: 50%;
+	    transform: translate(-50%, -50%);
+	    z-index: 10;
+	  }
+	  .colorFillContainer {
+	    position: absolute;
+	    bottom: 0;
+	    right: 0;
+	    width: 100%;
+	    height: 75px;
+	  }
+	  .svg-diagonal {
+	    position: absolute;
+	    bottom: 0;
+	    right: 0;
+	    width: 100%;
+	  }
+	  #colorMask {
+	    position: absolute;
+	    bottom: 0;
+	    left: 0;
+	    width: 100%;
+	  }
+	}
+</style>
+
+<div class="header">
+	<div
+		class="intro_video_container"
+		{% if section.settings.fallback_image %}
+			style="background-image: url('{{ section.settings.fallback_image | image_url: '1280x' }}'); top: 0px; position: fixed;"
+		{% endif %}
+	>
+		<div class="videoContainer">
+			{% if section.settings.background_video != blank %}
+				<video-media autoplay>
+					{{-
+						section.settings.background_video
+						| video_tag: playsinline: true, muted: true, loop: true, preload: 'metadata'
+					-}}
+				</video-media>
+			{% endif %}
+		</div>
+	</div>
+	<div class="colorFillContainer">
+		<svg
+			version="1.1"
+			id="colorFill"
+			class="svg-diagonal bottom-right"
+			height="290"
+			xmlns="http://www.w3.org/2000/svg"
+			xmlns:xlink="http://www.w3.org/1999/xlink"
+			x="0px"
+			y="0px"
+			viewBox="0 0 150 290"
+			enable-background="new 0 0 150 290"
+			xml:space="preserve"
+			preserveAspectRatio="none"
+			style="height: 75px;"
+		>
+			<g id="polygon_bottom-right_290">
+			  <g><polygon fill-rule="evenodd" clip-rule="evenodd" fill="{{ section.settings.svg_fill_color }}" points="151,-1 -1,291 151,291"></polygon></g>
+			</g>
+		</svg>
+		<div class="colorFillBox"></div>
+	</div>
+	<svg
+		version="1.1"
+		id="colorMask"
+		class="svg-diagonal bottom-right"
+		height="50"
+		xmlns="http://www.w3.org/2000/svg"
+		xmlns:xlink="http://www.w3.org/1999/xlink"
+		x="0px"
+		y="0px"
+		viewBox="0 0 3750 50"
+		enable-background="new 0 0 3750 50"
+		xml:space="preserve"
+		preserveAspectRatio="none"
+	>
+		<g id="polygon_bottom-right_50">
+		  <g><polygon fill-rule="evenodd" clip-rule="evenodd" fill="#FFF" points="3751,-1 -1,51 3751,51"></polygon></g>
+		</g>
+	</svg>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const header = document.querySelector('.header');
+  const videoContainer = document.querySelector('.intro_video_container');
+  {% comment %}const logoBrushed = document.querySelector('.logobrushed');{% endcomment %}
+  let lastScrollTop = 0;
+
+  window.addEventListener('scroll', function() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollDiff = scrollTop - lastScrollTop;
+
+    // Parallax effect for video container
+    videoContainer.style.transform = `translateY(${scrollTop * 0.5}px)`;
+
+    // Parallax effect for logo
+    {% comment %}const logoTranslateY = Math.min(scrollTop * 0.3, header.offsetHeight * 0.3);{% endcomment %}
+    {% comment %}logoBrushed.style.transform = `translate(-50%, calc(-50% + ${logoTranslateY}px))`;{% endcomment %}
+
+    lastScrollTop = scrollTop;
+  });
+});
+</script>
+
+{% schema %}
+{
+	"name": "Scrolling Video Header",
+	"settings": [
+		{
+			"type": "image_picker",
+			"id": "fallback_image",
+			"label": "Fallback Image"
+		},
+		{
+			"type": "video",
+			"id": "background_video",
+			"label": "Background Video"
+		},
+		{
+			"type": "range",
+			"id": "header_height",
+			"min": 300,
+			"max": 800,
+			"step": 10,
+			"unit": "px",
+			"label": "Header Height",
+			"default": 550
+		},
+		{
+			"type": "color",
+			"id": "svg_fill_color",
+			"label": "SVG Fill Color",
+			"default": "#7acbe4"
+		},
+		{
+			"type": "checkbox",
+			"id": "custom_padding",
+			"label": "Custom padding",
+			"default": false
+		},
+		{
+			"type": "range",
+			"id": "padding_top",
+			"label": "Top padding",
+			"min": 0,
+			"max": 200,
+			"step": 4,
+			"default": 40,
+			"unit": "px"
+		},
+		{
+			"type": "range",
+			"id": "padding_bottom",
+			"label": "Bottom padding",
+			"min": 0,
+			"max": 200,
+			"step": 4,
+			"default": 40,
+			"unit": "px"
+		}
+	],
+	"presets": [
+		{
+			"name": "Scrolling Video Header",
+			"category": "Header"
+		}
+	]
+}
+{% endschema %}

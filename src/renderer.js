@@ -659,4 +659,17 @@ async function renderStoreSection(storeName, file, opts = {}) {
   return { ...res, js, legacyCss };
 }
 
-module.exports = { renderSectionSource, renderStoreSection, getEngine, imageMock, STORES_ROOT };
+// Render a theme snippet (e.g. css-variables) with the store's real settings —
+// used by previews to reproduce the layout's <head> (design tokens, @font-face).
+async function renderSnippet(storeName, snippetName) {
+  const storePath = path.join(STORES_ROOT, storeName);
+  const p = path.join(storePath, 'snippets', `${snippetName}.liquid`);
+  if (!fs.existsSync(p)) return '';
+  const engine = getEngine(storeName, storePath);
+  try {
+    const src = fs.readFileSync(p, 'utf8');
+    return await engine.liquid.parseAndRender(src, baseGlobals(engine, {}));
+  } catch { return ''; }
+}
+
+module.exports = { renderSectionSource, renderStoreSection, getEngine, imageMock, renderSnippet, STORES_ROOT };

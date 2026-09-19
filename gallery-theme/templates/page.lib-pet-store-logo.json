@@ -1,0 +1,25 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--logo",
+      "settings": {
+        "inverse": false,
+        "font": "heading",
+        "unit": "pixel",
+        "pixel_height": 48,
+        "percent_width": 100,
+        "custom_mobile_size": false,
+        "unit_mobile": "percent",
+        "percent_width_mobile": 100,
+        "pixel_height_mobile": 120,
+        "section_width": "page-width",
+        "alignment_horizontal": "center",
+        "padding-block-start": 32,
+        "padding-block-end": 32
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

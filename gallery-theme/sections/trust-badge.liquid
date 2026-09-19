@@ -1,0 +1,563 @@
+{% comment %}
+  Trust Badge / Trust Bar (Style 2) with Floating Layout Option
+  Light editorial layout: large serif index number with underline,
+  line icon, title and description. Dividers between items.
+  Optional per-item rating row (fractional star fill + score text)
+  that can be positioned above the title, between title and
+  description, or below the description.
+  Fully configurable from the Shopify theme editor.
+{% endcomment %}
+
+<section
+  id="premium-standard-{{ section.id }}"
+  class="premium-standard{% if section.settings.enable_floating %} premium-standard--floating{% endif %}"
+  style="
+    --ps-bg: {{ section.settings.background_color }};
+    --ps-text: {{ section.settings.text_color }};
+    --ps-muted: {{ section.settings.muted_color }};
+    --ps-accent: {{ section.settings.accent_color }};
+    --ps-border: {{ section.settings.border_color }};
+    --ps-max-width: {{ section.settings.max_width }}px;
+    --ps-padding-top: {{ section.settings.padding_top }}px;
+    --ps-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --ps-padding-x: 24px;
+    --ps-item-padding-y: {{ section.settings.item_padding_y }}px;
+    --ps-item-padding-x: {{ section.settings.item_padding_x }}px;
+    --ps-gap: {{ section.settings.icon_text_gap }}px;
+    --ps-number-gap: {{ section.settings.number_icon_gap }}px;
+    --ps-icon-size: {{ section.settings.icon_size }}px;
+    --ps-number-size: {{ section.settings.number_size }}px;
+    --ps-title-size: {{ section.settings.title_size }}px;
+    --ps-description-size: {{ section.settings.description_size }}px;
+    --ps-title-spacing: {{ section.settings.title_spacing }}px;
+    --ps-radius: {{ section.settings.radius }}px;
+    --ps-border-width: {{ section.settings.border_width }}px;
+    {% if section.settings.enable_floating %}
+      --ps-negative-margin-top: {{ section.settings.negative_margin_top }}px;
+      --ps-negative-margin-bottom: {{ section.settings.negative_margin_bottom }}px;
+      --ps-floating-z-index: {{ section.settings.floating_z_index }};
+      --ps-shadow-color: {{ section.settings.floating_shadow_color }};
+      --ps-shadow-opacity: {{ section.settings.floating_shadow_opacity | divided_by: 100.0 }};
+      --ps-shadow-blur: {{ section.settings.floating_shadow_blur }}px;
+      --ps-shadow-offset-y: {{ section.settings.floating_shadow_offset_y }}px;
+    {% endif %}
+  "
+>
+  <div class="premium-standard__inner">
+    {% if section.settings.show_eyebrow and section.settings.eyebrow != blank %}
+      <div class="premium-standard__eyebrow">
+        {{ section.settings.eyebrow | escape }}
+      </div>
+    {% endif %}
+
+    <div
+      class="premium-standard__bar premium-standard__bar--{{ section.settings.desktop_layout }}"
+      {% if section.settings.enable_hover %}data-hover="true"{% endif %}
+    >
+      {% for block in section.blocks %}
+        {% assign ps_number = forloop.index %}
+
+        {%- comment -%}
+          Per-block rating row. Built once, then emitted at the chosen
+          position inside the copy column. Star fill is a percentage of
+          rating_value / 5, clamped 0–100 so stale saved values can't break it.
+        {%- endcomment -%}
+        {%- assign rating_markup = blank -%}
+        {%- if block.settings.show_rating -%}
+          {%- assign rating_pct = block.settings.rating_value | divided_by: 5.0 | times: 100.0 | round: 1 | at_least: 0 | at_most: 100 -%}
+          {%- capture rating_star_row -%}
+            {%- for i in (1..5) -%}
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2.75l2.86 6.02 6.6.84-4.86 4.55 1.26 6.54L12 17.5l-5.86 3.2 1.26-6.54-4.86-4.55 6.6-.84L12 2.75z"/></svg>
+            {%- endfor -%}
+          {%- endcapture -%}
+          {%- capture rating_markup -%}
+            <span
+              class="premium-standard__rating"
+              role="img"
+              aria-label="Rated {{ block.settings.rating_value }} out of 5"
+              style="--rating-fill: {{ rating_pct }}%; --star-color: {{ block.settings.rating_star_color }}; --star-track: {{ block.settings.rating_track_color }}; --star-size: {{ block.settings.rating_star_size }}px;"
+            >
+              <span class="premium-standard__rating-stars" aria-hidden="true">
+                <span class="rating-stars__row rating-stars__row--track">{{ rating_star_row }}</span>
+                <span class="rating-stars__row rating-stars__row--fill">{{ rating_star_row }}</span>
+              </span>
+              {%- if block.settings.rating_text != blank -%}
+                <span class="premium-standard__rating-text">{{ block.settings.rating_text | escape }}</span>
+              {%- endif -%}
+            </span>
+          {%- endcapture -%}
+        {%- endif -%}
+
+        <article
+          class="premium-standard__item premium-standard__item--{{ section.settings.item_alignment }}"
+          {{ block.shopify_attributes }}
+        >
+          {% if block.settings.link != blank %}
+            <a class="premium-standard__link" href="{{ block.settings.link }}">
+          {% else %}
+            <div class="premium-standard__link">
+          {% endif %}
+
+          {% unless block.settings.hide_number %}
+            <span class="premium-standard__number" aria-hidden="true">
+              {% if ps_number < 10 %}0{% endif %}{{ ps_number }}
+            </span>
+          {% endunless %}
+
+          {% unless block.settings.hide_icon %}
+            <span
+              class="premium-standard__icon"
+              aria-hidden="true"
+              style="--item-accent: {{ block.settings.icon_color }}; --item-icon-size: {{ block.settings.icon_size }}px;"
+            >
+              {% if block.settings.custom_icon_image != blank %}
+                {{ block.settings.custom_icon_image | image_url: width: 100 | image_tag: class: 'premium-standard__custom-icon', loading: 'lazy', widths: '50, 100, 150' }}
+              {% else %}
+                {% case block.settings.icon %}
+                  {% when 'delivery' %}
+                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h26v22H3z"/><path d="M29 19h9l7 7v8H29z"/><circle cx="12" cy="37" r="4.5"/><circle cx="37" cy="37" r="4.5"/><path d="M16.5 37h16"/></svg>
+                  {% when 'warranty' %}
+                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 4 39 10v12c0 10-6.5 17.5-15 22-8.5-4.5-15-12-15-22V10l15-6Z"/></svg>
+                  {% when 'materials' %}
+                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M38 6C24 8 15 15 14 26c-.6 6.5 2 12 6 15 8-2 15-8 17-17 1.6-7 .8-13.5 1-18Z"/><path d="M10 42c4-10 10-18 20-25"/></svg>
+                  {% when 'returns' %}
+                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18a15 15 0 0 1 26-4"/><path d="M38 6v8h-8"/><path d="M36 30a15 15 0 0 1-26 4"/><path d="M10 42v-8h8"/></svg>
+                  {% when 'support' %}
+                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 27v-4a15 15 0 0 1 30 0v4"/><path d="M9 27h5v9H9zM34 27h5v9h-5z"/><path d="M39 36c0 4-3.5 6-9 6h-3"/></svg>
+                  {% when 'shield' %}
+                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 4 39 10v12c0 10-6.5 17.5-15 22-8.5-4.5-15-12-15-22V10l15-6Z"/><path d="m17 24 5 5 10-11"/></svg>
+                  {% when 'star' %}
+                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m24 5 5.9 12 13.1 1.9-9.5 9.3 2.2 13.1L24 35.1 12.3 41.3l2.2-13.1L5 18.9l13.1-1.9L24 5Z"/></svg>
+                  {% when 'person' %}
+                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="14" r="7"/><path d="M10 42c1-9 6-14 14-14s13 5 14 14"/></svg>
+                  {% when 'check' %}
+                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="18"/><path d="m15 24 6 6 12-13"/></svg>
+                  {% when 'spark' %}
+                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 4v12M24 32v12M4 24h12M32 24h12M10 10l8 8M30 30l8 8M38 10l-8 8M18 30l-8 8"/></svg>
+                  {% else %}
+                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="18"/><path d="M24 14v20M14 24h20"/></svg>
+                {% endcase %}
+              {% endif %}
+            </span>
+          {% endunless %}
+
+          <span class="premium-standard__copy">
+            {% if block.settings.show_rating and block.settings.rating_position == 'top' %}
+              {{ rating_markup }}
+            {% endif %}
+
+            {% if block.settings.title != blank %}
+              <span class="premium-standard__title">{{ block.settings.title | escape }}</span>
+            {% endif %}
+
+            {% if block.settings.show_rating and block.settings.rating_position == 'middle' %}
+              {{ rating_markup }}
+            {% endif %}
+
+            {% if block.settings.description != blank %}
+              <span class="premium-standard__description">{{ block.settings.description | escape }}</span>
+            {% endif %}
+
+            {% if block.settings.show_rating and block.settings.rating_position == 'bottom' %}
+              {{ rating_markup }}
+            {% endif %}
+          </span>
+
+          {% if block.settings.link != blank %}
+            </a>
+          {% else %}
+            </div>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  {{ section.settings.text_font | font_face: font_display: 'swap' }}
+
+  #premium-standard-{{ section.id }} {
+    --ps-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    --ps-text-font: {{ section.settings.text_font.family }}, {{ section.settings.text_font.fallback_families }};
+    width: 100%;
+    overflow: visible;
+    background: transparent;
+    color: var(--ps-text);
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__inner {
+    width: min(100%, var(--ps-max-width));
+    margin: 0 auto;
+    padding: var(--ps-padding-top) var(--ps-padding-x) var(--ps-padding-bottom);
+  }
+
+  /* Floating Layout Styles */
+  #premium-standard-{{ section.id }}.premium-standard--floating {
+    position: relative;
+    z-index: var(--ps-floating-z-index);
+    margin-top: calc(-1 * var(--ps-negative-margin-top));
+    margin-bottom: calc(-1 * var(--ps-negative-margin-bottom));
+  }
+
+  #premium-standard-{{ section.id }}.premium-standard--floating .premium-standard__inner {
+    background: var(--ps-bg);
+    border-radius: var(--ps-radius);
+    border: var(--ps-border-width) solid var(--ps-border);
+    box-shadow: 0 var(--ps-shadow-offset-y) var(--ps-shadow-blur) color-mix(in srgb, var(--ps-shadow-color) calc(var(--ps-shadow-opacity) * 100%), transparent);
+  }
+
+  @media (max-width: 749px) {
+    #premium-standard-{{ section.id }}.premium-standard--floating {
+      margin-left: 16px;
+      margin-right: 16px;
+    }
+
+    #premium-standard-{{ section.id }}.premium-standard--floating .premium-standard__inner {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__eyebrow {
+    margin: 0 0 18px;
+    color: var(--ps-muted);
+    font-size: 11px;
+    line-height: 1.2;
+    font-weight: 500;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(var(--ps-item-min, 240px), 100%), 1fr));
+    width: 100%;
+    border: var(--ps-border-width) solid transparent;
+    border-radius: var(--ps-radius);
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__item {
+    position: relative;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    padding: var(--ps-item-padding-y) var(--ps-item-padding-x);
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__item + .premium-standard__item {
+    border-left: 1px solid var(--ps-border);
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__item--center {
+    justify-content: center;
+    text-align: center;
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__item--left {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__item--right {
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__link {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: var(--ps-gap);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__item--center .premium-standard__link {
+    justify-content: center;
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__item--right .premium-standard__link {
+    justify-content: flex-end;
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__number {
+    flex: 0 0 auto;
+    display: inline-block;
+    min-width: 2.1ch;
+    padding-bottom: 9px;
+    border-bottom: 1px solid currentColor;
+    color: var(--ps-text);
+    font-family: var(--ps-serif);
+    font-size: var(--ps-number-size);
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: .02em;
+    font-feature-settings: 'lnum' 1;
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__icon {
+    flex: 0 0 auto;
+    width: var(--item-icon-size, var(--ps-icon-size));
+    height: var(--item-icon-size, var(--ps-icon-size));
+    display: grid;
+    place-items: center;
+    color: var(--item-accent, var(--ps-accent));
+    margin-left: var(--ps-number-gap, 0px);
+    margin-right: var(--ps-number-gap, 0px);
+    transition: transform .35s cubic-bezier(.2,.7,.2,1), opacity .35s ease, color .35s ease;
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__icon svg,
+  #premium-standard-{{ section.id }} .premium-standard__icon img {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__icon img {
+    object-fit: contain;
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__copy {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* uniform vertical rhythm between title / description / rating */
+  #premium-standard-{{ section.id }} .premium-standard__copy > * + * {
+    margin-top: var(--ps-title-spacing);
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__title {
+    display: block;
+    color: var(--ps-text);
+    font-family: var(--ps-text-font, var(--ps-serif));
+    font-size: var(--ps-title-size);
+    line-height: 1.3;
+    font-weight: 500;
+    letter-spacing: .01em;
+    text-wrap: balance;
+    transition: color .35s ease;
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__description {
+    display: block;
+    color: var(--ps-muted);
+    font-family: var(--ps-text-font, var(--ps-serif));
+    font-size: var(--ps-description-size);
+    line-height: 1.5;
+    font-weight: 400;
+  }
+
+  /* ---- Rating row (stars + score) ---- */
+  #premium-standard-{{ section.id }} .premium-standard__rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  /* follow the item's alignment inside the copy column */
+  #premium-standard-{{ section.id }} .premium-standard__item--center .premium-standard__rating {
+    align-self: center;
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__item--right .premium-standard__rating {
+    align-self: flex-end;
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__rating-stars {
+    position: relative;
+    display: inline-flex;
+    flex: 0 0 auto;
+  }
+
+  #premium-standard-{{ section.id }} .rating-stars__row {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    color: var(--star-track, #D9D4C9);
+  }
+
+  #premium-standard-{{ section.id }} .rating-stars__row svg {
+    width: var(--star-size, 14px);
+    height: var(--star-size, 14px);
+    flex: 0 0 auto;
+    display: block;
+  }
+
+  /* clipped overlay row produces the fractional fill (e.g. 4.9 / 5 = 98%) */
+  #premium-standard-{{ section.id }} .rating-stars__row--fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: var(--rating-fill, 100%);
+    overflow: hidden;
+    color: var(--star-color, #1D1B16);
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__rating-text {
+    color: var(--ps-text);
+    font-family: var(--ps-text-font, var(--ps-serif));
+    font-size: var(--ps-title-size);
+    line-height: 1.3;
+    font-weight: 500;
+    letter-spacing: .01em;
+    white-space: nowrap;
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__bar[data-hover="true"] .premium-standard__item:hover .premium-standard__icon {
+    transform: translateY(-3px);
+  }
+
+  #premium-standard-{{ section.id }} .premium-standard__bar[data-hover="true"] .premium-standard__item:hover .premium-standard__number {
+    opacity: .55;
+  }
+
+  @media (max-width: 749px) {
+    #premium-standard-{{ section.id }} .premium-standard__item + .premium-standard__item {
+      border-left: none;
+      border-top: 1px solid var(--ps-border);
+    }
+
+    #premium-standard-{{ section.id }} .premium-standard__item {
+      padding: var(--ps-item-padding-y) 0;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Trust Badge Style 2",
+  "tag": "section",
+  "class": "section-trust-badge",
+  "max_blocks": 10,
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "checkbox", "id": "show_eyebrow", "label": "Show eyebrow", "default": false },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "THE STANDARD" },
+    { "type": "header", "content": "Layout" },
+    { "type": "select", "id": "desktop_layout", "label": "Desktop layout", "options": [ { "value": "equal", "label": "Equal columns" } ], "default": "equal" },
+    { "type": "select", "id": "item_alignment", "label": "Item alignment", "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" } ], "default": "left" },
+    { "type": "select", "id": "mobile_columns", "label": "Mobile columns", "options": [ { "value": "1", "label": "1 column" }, { "value": "2", "label": "2 columns" } ], "default": "2" },
+    { "type": "range", "id": "max_width", "label": "Maximum width", "min": 900, "max": 1800, "step": 20, "unit": "px", "default": 1680 },
+    { "type": "range", "id": "padding_top", "label": "Top spacing", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom spacing", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 40 },
+    { "type": "range", "id": "item_padding_y", "label": "Item vertical padding", "min": 8, "max": 60, "step": 2, "unit": "px", "default": 28 },
+    { "type": "range", "id": "item_padding_x", "label": "Item horizontal padding", "min": 8, "max": 60, "step": 2, "unit": "px", "default": 20 },
+    { "type": "range", "id": "icon_text_gap", "label": "Element gap", "min": 4, "max": 36, "step": 2, "unit": "px", "default": 16 },
+    { "type": "range", "id": "number_icon_gap", "label": "Extra space between number and icon", "info": "Added on top of the element gap above, only between the number and the icon.", "min": 0, "max": 60, "step": 2, "unit": "px", "default": 0 },
+    { "type": "range", "id": "radius", "label": "Corner radius", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "border_width", "label": "Outer border width", "min": 0, "max": 2, "step": 1, "unit": "px", "default": 0 },
+    { "type": "header", "content": "Floating Layout" },
+    { "type": "checkbox", "id": "enable_floating", "label": "Enable floating layout", "default": false, "info": "Makes the bar float over content with negative margins and shadow." },
+    { "type": "range", "id": "negative_margin_top", "label": "Negative margin top", "min": 0, "max": 100, "step": 5, "unit": "px", "default": 0, "info": "Pulls the bar upward to overlap content above." },
+    { "type": "range", "id": "negative_margin_bottom", "label": "Negative margin bottom", "min": 0, "max": 100, "step": 5, "unit": "px", "default": 0, "info": "Pulls the bar downward to overlap content below." },
+    { "type": "range", "id": "floating_z_index", "label": "Z-index (stacking order)", "min": 1, "max": 100, "step": 1, "default": 10, "info": "Higher values appear on top of other content." },
+    { "type": "color", "id": "floating_shadow_color", "label": "Shadow color", "default": "#000000" },
+    { "type": "range", "id": "floating_shadow_opacity", "label": "Shadow opacity", "min": 0, "max": 50, "step": 5, "unit": "%", "default": 15 },
+    { "type": "range", "id": "floating_shadow_blur", "label": "Shadow blur", "min": 0, "max": 60, "step": 2, "unit": "px", "default": 24 },
+    { "type": "range", "id": "floating_shadow_offset_y", "label": "Shadow offset Y", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 8 },
+    { "type": "header", "content": "Typography" },
+    { "type": "font_picker", "id": "text_font", "label": "Text font", "default": "playfair_display_n4" },
+    { "type": "range", "id": "number_size", "label": "Number size", "min": 18, "max": 56, "step": 2, "unit": "px", "default": 34 },
+    { "type": "range", "id": "title_size", "label": "Title size", "min": 9, "max": 20, "step": 1, "unit": "px", "default": 15 },
+    { "type": "range", "id": "description_size", "label": "Description size", "min": 9, "max": 18, "step": 1, "unit": "px", "default": 13 },
+    { "type": "range", "id": "title_spacing", "label": "Title / description spacing", "min": 0, "max": 16, "step": 1, "unit": "px", "default": 4 },
+    { "type": "header", "content": "Icons" },
+    { "type": "range", "id": "icon_size", "label": "Default icon size", "min": 16, "max": 64, "step": 2, "unit": "px", "default": 34 },
+    { "type": "checkbox", "id": "enable_hover", "label": "Enable hover animation", "default": true },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#F2EFE9" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#1D1B16" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#6E6A61" },
+    { "type": "color", "id": "accent_color", "label": "Icon accent", "default": "#1D1B16" },
+    { "type": "color", "id": "border_color", "label": "Dividers", "default": "#D9D4C9" }
+  ],
+  "blocks": [
+    {
+      "type": "standard",
+      "name": "Standard item",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "options": [ { "value": "delivery", "label": "Delivery" }, { "value": "warranty", "label": "Warranty" }, { "value": "materials", "label": "Premium materials" }, { "value": "returns", "label": "Returns" }, { "value": "support", "label": "Support" }, { "value": "shield", "label": "Shield" }, { "value": "star", "label": "Star" }, { "value": "person", "label": "Person" }, { "value": "check", "label": "Check" }, { "value": "spark", "label": "Spark" } ], "default": "delivery" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Complimentary Delivery" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "White-glove delivery to your door." },
+        { "type": "url", "id": "link", "label": "Optional link" },
+        { "type": "color", "id": "icon_color", "label": "Icon color", "default": "#1D1B16" },
+        { "type": "range", "id": "icon_size", "label": "Icon size", "min": 16, "max": 64, "step": 2, "unit": "px", "default": 34 },
+        { "type": "checkbox", "id": "hide_icon", "label": "Hide icon", "default": false },
+        { "type": "checkbox", "id": "hide_number", "label": "Hide number", "default": false },
+        { "type": "image_picker", "id": "custom_icon_image", "label": "Custom icon image", "info": "Upload an image (SVG, PNG, etc.) to replace the default icon." },
+        { "type": "header", "content": "Rating" },
+        { "type": "checkbox", "id": "show_rating", "label": "Show rating", "default": false, "info": "Adds a star rating row with a score (e.g. 4.9/5) to this item." },
+        { "type": "select", "id": "rating_position", "label": "Rating position", "options": [ { "value": "top", "label": "Above title" }, { "value": "middle", "label": "Between title and description" }, { "value": "bottom", "label": "Below description" } ], "default": "top", "visible_if": "{{ block.settings.show_rating }}" },
+        { "type": "range", "id": "rating_value", "label": "Rating value", "info": "Controls the star fill (fractional values supported).", "min": 0, "max": 5, "step": 0.1, "default": 4.9, "visible_if": "{{ block.settings.show_rating }}" },
+        { "type": "text", "id": "rating_text", "label": "Rating text", "default": "4.9/5", "info": "Shown next to the stars. Leave blank to show stars only.", "visible_if": "{{ block.settings.show_rating }}" },
+        { "type": "color", "id": "rating_star_color", "label": "Star color", "default": "#1D1B16", "visible_if": "{{ block.settings.show_rating }}" },
+        { "type": "color", "id": "rating_track_color", "label": "Empty star color", "default": "#D9D4C9", "visible_if": "{{ block.settings.show_rating }}" },
+        { "type": "range", "id": "rating_star_size", "label": "Star size", "min": 10, "max": 28, "step": 1, "unit": "px", "default": 14, "visible_if": "{{ block.settings.show_rating }}" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust Badge",
+      "blocks": [
+        {
+          "type": "standard",
+          "settings": {
+            "icon": "star",
+            "hide_icon": true,
+            "hide_number": true,
+            "show_rating": true,
+            "rating_position": "top",
+            "rating_value": 4.9,
+            "rating_text": "4.9/5",
+            "title": "",
+            "description": "From 12,000+ happy sleepers"
+          }
+        },
+        {
+          "type": "standard",
+          "settings": {
+            "icon": "materials",
+            "hide_number": true,
+            "title": "30-NIGHT",
+            "description": "Risk-Free Trial"
+          }
+        },
+        {
+          "type": "standard",
+          "settings": {
+            "icon": "delivery",
+            "hide_number": true,
+            "title": "FREE SHIPPING",
+            "description": "On all orders over $75"
+          }
+        },
+        {
+          "type": "standard",
+          "settings": {
+            "icon": "check",
+            "hide_number": true,
+            "title": "1-YEAR",
+            "description": "Worry-Free Warranty"
+          }
+        },
+        {
+          "type": "standard",
+          "settings": {
+            "icon": "shield",
+            "hide_number": true,
+            "title": "SECURE",
+            "description": "Checkout"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

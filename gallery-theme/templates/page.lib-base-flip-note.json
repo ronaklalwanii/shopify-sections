@@ -1,0 +1,28 @@
+{
+  "sections": {
+    "library": {
+      "type": "flip-note",
+      "settings": {
+        "card_mark": "✳",
+        "card_label": "Confidential files",
+        "card_sub": "A note from the founders",
+        "card_color": "#2f52c4",
+        "card_text_color": "#ffffff",
+        "card_width": 340,
+        "card_ratio": "3 / 4",
+        "card_radius": 16,
+        "note_text": "<p>This document is intended and intended solely for the individual or entity specifically named as a recipient and for no other person or entity. If you are not the intended recipient, be aware that any disclosure, copying or distribution is strictly prohibited.</p>",
+        "note_note": "Yes, we make bad life decisions. So poor.",
+        "note_color": "#ffffff",
+        "note_text_color": "#1c1e22",
+        "hint": "Click the card",
+        "height": 85,
+        "background_color": "#f6e9dc",
+        "font_stack": "system-ui, sans-serif"
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

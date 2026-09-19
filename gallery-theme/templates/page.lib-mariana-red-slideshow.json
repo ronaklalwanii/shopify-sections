@@ -1,0 +1,52 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--slideshow",
+      "settings": {
+        "height": "lg",
+        "autoplay": 7,
+        "side_note": "Good Food Brings People Together"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "slide",
+          "settings": {
+            "overlay_opacity": 45,
+            "eyebrow": "Things worth keeping",
+            "heading": "Better meals, happier days",
+            "text": "Beautiful kitchenware made for the meals you'll remember.",
+            "button_label": "Explore the collection"
+          }
+        },
+        "bl-2": {
+          "type": "slide",
+          "settings": {
+            "overlay_opacity": 45,
+            "eyebrow": "Made to gather",
+            "heading": "Set a table to remember",
+            "text": "Serveware and linens for slow weekends.",
+            "button_label": "Explore the collection"
+          }
+        },
+        "bl-3": {
+          "type": "slide",
+          "settings": {
+            "overlay_opacity": 45,
+            "eyebrow": "Seasonal edit",
+            "heading": "Cook with the seasons",
+            "text": "Fresh tools for fresh produce.",
+            "button_label": "Explore the collection"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

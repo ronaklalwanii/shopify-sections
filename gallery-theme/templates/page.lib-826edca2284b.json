@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--section-rendering-product-card",
+      "settings": {}
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

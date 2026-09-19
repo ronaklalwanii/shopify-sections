@@ -1,0 +1,286 @@
+<section id="HxBento-{{ section.id }}" class="hhb">
+  {%- style -%}
+    #shopify-section-{{ section.id }} {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    #HxBento-{{ section.id }} {
+      --hhb-bg: {{ section.settings.bg_color }};
+      --hhb-tile-bg: {{ section.settings.tile_bg }};
+      --hhb-chip-bg: {{ section.settings.chip_bg }};
+      --hhb-chip-text: {{ section.settings.chip_text }};
+      --hhb-arrow-border: {{ section.settings.arrow_border }};
+      --hhb-arrow-text: {{ section.settings.arrow_text }};
+      --hhb-arrow-hover-bg: {{ section.settings.arrow_hover_bg }};
+      --hhb-arrow-hover-text: {{ section.settings.arrow_hover_text }};
+      --hhb-max-w: {{ section.settings.max_width }}px;
+      --hhb-row: {{ section.settings.row_height }}px;
+      --hhb-gap: {{ section.settings.gap }}px;
+      --hhb-radius: {{ section.settings.tile_radius }}px;
+      --hhb-chip-size: {{ section.settings.chip_size }}px;
+      --hhb-chip-radius: {{ section.settings.chip_radius }}px;
+      --hhb-arrow: {{ section.settings.arrow_size }}px;
+      --hhb-speed: {{ section.settings.animation_speed }}ms;
+      --hhb-ease: cubic-bezier(.22, 1, .36, 1);
+    }
+
+    #HxBento-{{ section.id }} {
+      background: var(--hhb-bg);
+      padding: {{ section.settings.pad_top }}px 20px {{ section.settings.pad_bottom }}px;
+      overflow-x: clip;
+    }
+
+    #HxBento-{{ section.id }} .hhb__shell {
+      width: min(100%, var(--hhb-max-w));
+      margin: 0 auto;
+    }
+
+    #HxBento-{{ section.id }} .hhb__grid {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      grid-auto-rows: var(--hhb-row);
+      gap: var(--hhb-gap);
+      min-width: 0;
+    }
+
+    /* ---------- Tile ---------- */
+    #HxBento-{{ section.id }} .hhb__tile {
+      position: relative;
+      display: block;
+      border-radius: var(--hhb-radius);
+      overflow: hidden;
+      background: var(--hhb-tile-bg);
+      text-decoration: none;
+      min-width: 0;
+      transition: opacity var(--hhb-speed) ease, transform var(--hhb-speed) var(--hhb-ease);
+      transition-delay: calc(var(--i, 0) * 70ms);
+    }
+    #HxBento-{{ section.id }} .hhb__tile--tall { grid-column: span 2; grid-row: span 2; }
+    #HxBento-{{ section.id }} .hhb__tile--wide { grid-column: span 4; }
+    #HxBento-{{ section.id }} .hhb__tile--mid { grid-column: span 3; }
+    #HxBento-{{ section.id }} .hhb__tile--small { grid-column: span 2; }
+
+    #HxBento-{{ section.id }} .hhb__tile img.hhb__img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 700ms var(--hhb-ease);
+    }
+    #HxBento-{{ section.id }} .hhb__tile:hover img.hhb__img {
+      transform: scale(1.05);
+    }
+
+    /* Label chip */
+    #HxBento-{{ section.id }} .hhb__chip {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 2;
+      background: var(--hhb-chip-bg);
+      color: var(--hhb-chip-text);
+      font-size: var(--hhb-chip-size);
+      line-height: 1;
+      padding: 7px 10px;
+      border-radius: var(--hhb-chip-radius);
+      letter-spacing: 0.3px;
+    }
+
+    /* Circular arrow */
+    #HxBento-{{ section.id }} .hhb__arrow {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      z-index: 2;
+      width: var(--hhb-arrow);
+      height: var(--hhb-arrow);
+      border-radius: 50%;
+      border: 1px solid var(--hhb-arrow-border);
+      background: var(--hhb-chip-bg);
+      color: var(--hhb-arrow-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
+    }
+    #HxBento-{{ section.id }} .hhb__tile:hover .hhb__arrow {
+      background: var(--hhb-arrow-hover-bg);
+      color: var(--hhb-arrow-hover-text);
+      border-color: var(--hhb-arrow-hover-bg);
+    }
+    #HxBento-{{ section.id }} .hhb__arrow svg {
+      width: calc(var(--hhb-arrow) * 0.45);
+      height: calc(var(--hhb-arrow) * 0.45);
+      display: block;
+    }
+
+    /* Entrance */
+    #HxBento-{{ section.id }}.hhb-animated:not(.is-in-view) .hhb__tile {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    /* ---------- Tablet ---------- */
+    @media screen and (max-width: 900px) {
+      #HxBento-{{ section.id }} .hhb__grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      #HxBento-{{ section.id }} .hhb__tile--tall { grid-column: span 2; }
+      #HxBento-{{ section.id }} .hhb__tile--wide { grid-column: span 4; }
+      #HxBento-{{ section.id }} .hhb__tile--mid { grid-column: span 2; }
+      #HxBento-{{ section.id }} .hhb__tile--small { grid-column: span 2; }
+    }
+
+    /* ---------- Mobile ---------- */
+    @media screen and (max-width: 760px) {
+      #HxBento-{{ section.id }} .hhb__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-auto-rows: calc(var(--hhb-row) * 0.85);
+      }
+      #HxBento-{{ section.id }} .hhb__tile--tall,
+      #HxBento-{{ section.id }} .hhb__tile--wide { grid-column: span 2; }
+      #HxBento-{{ section.id }} .hhb__tile--mid,
+      #HxBento-{{ section.id }} .hhb__tile--small { grid-column: span 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #HxBento-{{ section.id }} .hhb__tile,
+      #HxBento-{{ section.id }} .hhb__tile img.hhb__img,
+      #HxBento-{{ section.id }} .hhb__arrow {
+        transition: none;
+      }
+      #HxBento-{{ section.id }} .hhb__tile { transition-delay: 0ms; }
+      #HxBento-{{ section.id }}.hhb-animated:not(.is-in-view) .hhb__tile {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="hhb__shell">
+    <div class="hhb__grid">
+      {%- for block in section.blocks -%}
+        <a
+          class="hhb__tile hhb__tile--{{ block.settings.size }}"
+          style="--i: {{ forloop.index0 }}"
+          href="{{ block.settings.link | default: '#' }}"
+          {{ block.shopify_attributes }}
+        >
+          {%- if block.settings.image != blank -%}
+            <img
+              class="hhb__img"
+              src="{{ block.settings.image | image_url: width: 900 }}"
+              alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+              loading="lazy"
+              width="900"
+              height="900"
+            >
+          {%- endif -%}
+          {%- if block.settings.title != blank -%}
+            <span class="hhb__chip">{{ block.settings.title }}</span>
+          {%- endif -%}
+          <span class="hhb__arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </span>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.getElementById('HxBento-{{ section.id }}');
+      if (!root) return;
+
+      {%- if section.settings.enable_animation -%}
+        root.classList.add('hhb-animated');
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduced || !('IntersectionObserver' in window)) {
+          root.classList.add('is-in-view');
+        } else {
+          const obs = new IntersectionObserver((entries, o) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                root.classList.add('is-in-view');
+                o.unobserve(e.target);
+              }
+            });
+          }, { threshold: 0.1 });
+          obs.observe(root);
+        }
+      {%- else -%}
+        root.classList.add('is-in-view');
+      {%- endif -%}
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Bento Grid",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#FAF7F2" },
+    { "type": "color", "id": "tile_bg", "label": "Empty tile background", "default": "#FFFFFF" },
+    { "type": "color", "id": "chip_bg", "label": "Label chip background", "default": "#F3EDE4" },
+    { "type": "color", "id": "chip_text", "label": "Label chip text", "default": "#221A12" },
+    { "type": "color", "id": "arrow_border", "label": "Arrow border", "default": "#C2A78A" },
+    { "type": "color", "id": "arrow_text", "label": "Arrow color", "default": "#221A12" },
+    { "type": "color", "id": "arrow_hover_bg", "label": "Arrow hover background", "default": "#2A2118" },
+    { "type": "color", "id": "arrow_hover_text", "label": "Arrow hover color", "default": "#F5EBDC" },
+
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "max_width", "label": "Max width", "min": 900, "max": 1600, "step": 20, "default": 1280, "unit": "px" },
+    { "type": "range", "id": "row_height", "label": "Row height", "min": 100, "max": 240, "step": 10, "default": 150, "unit": "px" },
+    { "type": "range", "id": "gap", "label": "Gap", "min": 8, "max": 32, "step": 2, "default": 14, "unit": "px" },
+    { "type": "range", "id": "tile_radius", "label": "Tile radius", "min": 0, "max": 32, "step": 2, "default": 14, "unit": "px" },
+    { "type": "range", "id": "pad_top", "label": "Top padding", "min": 0, "max": 120, "step": 4, "default": 8, "unit": "px" },
+    { "type": "range", "id": "pad_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 4, "default": 64, "unit": "px" },
+
+    { "type": "header", "content": "Chip & arrow" },
+    { "type": "range", "id": "chip_size", "label": "Chip text size", "min": 9, "max": 16, "step": 1, "default": 11, "unit": "px" },
+    { "type": "range", "id": "chip_radius", "label": "Chip radius", "min": 0, "max": 16, "step": 1, "default": 6, "unit": "px" },
+    { "type": "range", "id": "arrow_size", "label": "Arrow circle size", "min": 20, "max": 44, "step": 2, "default": 28, "unit": "px" },
+
+    { "type": "header", "content": "Animation" },
+    { "type": "checkbox", "id": "enable_animation", "label": "Enable entrance animation", "default": true },
+    { "type": "range", "id": "animation_speed", "label": "Animation speed", "min": 250, "max": 1200, "step": 50, "default": 700, "unit": "ms" }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Category tile",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image", "info": "Leave blank for a plain tile." },
+        { "type": "text", "id": "title", "label": "Label", "default": "уход для волос" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "select", "id": "size", "label": "Tile size", "default": "mid", "options": [
+          { "value": "tall", "label": "Tall (2×2)" },
+          { "value": "wide", "label": "Wide (4×1)" },
+          { "value": "mid", "label": "Medium (3×1)" },
+          { "value": "small", "label": "Small (2×1)" }
+        ] }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bento Grid",
+      "blocks": [
+        { "type": "tile", "settings": { "title": "title", "size": "tall" } },
+        { "type": "tile", "settings": { "title": "title", "size": "tall" } },
+        { "type": "tile", "settings": { "title": "title", "size": "wide" } },
+        { "type": "tile", "settings": { "title": "title", "size": "wide" } },
+        { "type": "tile", "settings": { "title": "title", "size": "mid" } },
+        { "type": "tile", "settings": { "title": "title", "size": "mid" } },
+        { "type": "tile", "settings": { "title": "title", "size": "small" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

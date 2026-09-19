@@ -1,0 +1,55 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--quote-stats",
+      "settings": {
+        "quote": "The taste, the quality, the packaging — everything is just perfect. Cocobella is my go-to for every celebration!",
+        "author": "Amelia's Fine Gourmet Gifts",
+        "padding": 64
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "stat",
+          "settings": {
+            "icon": "globe",
+            "value": "10K+",
+            "label": "Happy customers"
+          }
+        },
+        "bl-2": {
+          "type": "stat",
+          "settings": {
+            "icon": "box",
+            "value": "25+",
+            "label": "Premium products"
+          }
+        },
+        "bl-3": {
+          "type": "stat",
+          "settings": {
+            "icon": "star",
+            "value": "4.9",
+            "label": "Average rating"
+          }
+        },
+        "bl-4": {
+          "type": "stat",
+          "settings": {
+            "icon": "globe",
+            "value": "Worldwide",
+            "label": "Shipping"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

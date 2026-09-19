@@ -1,0 +1,68 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--upsell-bundle",
+      "settings": {
+        "eyebrow": "Complete your order",
+        "heading": "Frequently bought together",
+        "heading_size": "large",
+        "subheading": "<p>Add these to get the most out of your purchase.</p>",
+        "content_alignment": "center",
+        "product_source": "selected",
+        "products_limit": 4,
+        "layout": "grid",
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "include_current_product": true,
+        "show_vendor": false,
+        "show_price": true,
+        "show_compare": true,
+        "title_links": true,
+        "image_ratio": "square",
+        "bundle_mode": true,
+        "preselect": true,
+        "bundle_button_label": "Add bundle to cart",
+        "after_add": "cart",
+        "add_button_label": "Add",
+        "transparent_bg": false,
+        "section_background": "#ffffff",
+        "heading_color": "#121212",
+        "text_color": "#555555",
+        "eyebrow_color": "#9a6a3c",
+        "price_color": "#121212",
+        "card_background": "#ffffff",
+        "card_border_color": "#e6e3df",
+        "button_bg": "#121212",
+        "button_text": "#ffffff",
+        "badge_bg": "#9a6a3c",
+        "badge_text": "#ffffff",
+        "enable_animation": true,
+        "max_width": 1100,
+        "padding_top": 56,
+        "padding_bottom": 56
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "product",
+          "settings": {}
+        },
+        "bl-2": {
+          "type": "product",
+          "settings": {}
+        },
+        "bl-3": {
+          "type": "product",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

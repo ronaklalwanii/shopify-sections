@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--newsletter",
+      "settings": {
+        "layout": "strip",
+        "overlay_opacity": 15,
+        "heading": "Join our kitchen community",
+        "text": "Be the first to know about new arrivals, recipes and exclusive offers.",
+        "placeholder": "Your email address",
+        "button_label": "Subscribe",
+        "button_icon": false,
+        "button_style": "primary",
+        "note": "By subscribing, you agree to our Privacy Policy."
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

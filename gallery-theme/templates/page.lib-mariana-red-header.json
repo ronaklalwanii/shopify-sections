@@ -1,0 +1,24 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--header",
+      "settings": {
+        "layout": "logo-left",
+        "wordmark_icon": "none",
+        "wordmark_badge": false,
+        "overlay": false,
+        "show_burger": false,
+        "logo_width": 150,
+        "pill_nav": false,
+        "sticky": true,
+        "show_search": true,
+        "show_account": true,
+        "cta_label": "Get in touch",
+        "cta_style": "primary"
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

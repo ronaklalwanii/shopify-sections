@@ -1,0 +1,674 @@
+{%- comment -%} Section Library: injected global assets for store "nocturne-store" {%- endcomment -%}
+{{ 'nocturne-store--theme.css' | asset_url | stylesheet_tag }}
+{{ 'nocturne-store--product.css' | asset_url | stylesheet_tag }}
+{% render 'nocturne-store--css-variables' %}
+<section id="KovariTestimonials-{{ section.id }}" class="kovari-testimonials">
+  {%- style -%}
+    #KovariTestimonials-{{ section.id }} {
+      --kt-max-width: {{ section.settings.max_width }}px;
+      --kt-bg: {{ section.settings.background_color }};
+      --kt-text: {{ section.settings.text_color }};
+      --kt-heading-size: {{ section.settings.heading_size }}px;
+      --kt-heading-weight: {{ section.settings.heading_weight }};
+      --kt-heading-line: {{ section.settings.heading_line_height }};
+      --kt-quote-size: {{ section.settings.quote_size }}px;
+      --kt-quote-weight: {{ section.settings.quote_weight }};
+      --kt-quote-line: {{ section.settings.quote_line_height }};
+      --kt-quote-max: {{ section.settings.quote_max_width | at_least: 280 }}px;
+      --kt-quote-mark-size: {{ section.settings.quote_mark_size }}px;
+      --kt-review-min-height: {{ section.settings.review_min_height }}px;
+      --kt-selector-margin: {{ section.settings.selector_top_margin }}px;
+      --kt-gap: {{ section.settings.selector_gap }}px;
+      --kt-avatar: {{ section.settings.avatar_size }}px;
+      --kt-pill-h: {{ section.settings.active_pill_height }}px;
+      --kt-pill-r: {{ section.settings.active_pill_radius }}px;
+      --kt-pill-bg: {{ section.settings.active_pill_background }};
+      --kt-pill-text: {{ section.settings.active_pill_text }};
+      --kt-pill-pad: {{ section.settings.active_pill_padding }}px;
+      --kt-pill-gap: {{ section.settings.active_pill_gap }}px;
+      --kt-pill-avatar: {{ section.settings.active_avatar_size }}px;
+      --kt-name-size: {{ section.settings.active_name_size }}px;
+      --kt-name-weight: {{ section.settings.active_name_weight }};
+      --kt-role-size: {{ section.settings.active_role_size }}px;
+      --kt-role-weight: {{ section.settings.active_role_weight }};
+      --kt-inactive-opacity: {{ section.settings.inactive_avatar_opacity | divided_by: 100.0 }};
+      --kt-inactive-scale: {{ section.settings.inactive_avatar_scale | divided_by: 100.0 }};
+      --kt-active-scale: {{ section.settings.active_avatar_scale | divided_by: 100.0 }};
+      --kt-transition: {{ section.settings.transition_duration }}ms;
+      --kt-ease: {{ section.settings.transition_easing }};
+      --kt-mobile-pad: {{ section.settings.mobile_padding_x }}px;
+      --kt-mobile-heading-size: {{ section.settings.mobile_heading_size }}px;
+      --kt-mobile-quote-size: {{ section.settings.mobile_quote_size }}px;
+      --kt-mobile-quote-min-height: {{ section.settings.mobile_quote_min_height }}px;
+      --kt-mobile-avatar: {{ section.settings.mobile_avatar_size }}px;
+      --kt-mobile-pill-h: {{ section.settings.mobile_pill_height }}px;
+      --kt-mobile-pill-avatar: {{ section.settings.mobile_pill_avatar_size }}px;
+      --kt-mobile-name: {{ section.settings.mobile_active_name_size }}px;
+      --kt-mobile-role: {{ section.settings.mobile_active_role_size }}px;
+    }
+
+    #KovariTestimonials-{{ section.id }} {
+      overflow: hidden;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    #KovariTestimonials-{{ section.id }} .kt__shell {
+      margin: 0 auto;
+      padding: {{ section.settings.padding_top }}px {{ section.settings.padding_right }}px {{ section.settings.padding_bottom }}px {{ section.settings.padding_left }}px;
+      box-sizing: border-box;
+      background: var(--kt-bg);
+      color: var(--kt-text);
+      border-radius: 16px;
+    }
+
+    #KovariTestimonials-{{ section.id }} .kt__heading {
+      max-width: {{ section.settings.heading_max_width }}px;
+      margin: 0 auto;
+      text-align: center;
+      font-size: var(--kt-heading-size);
+      font-weight: var(--kt-heading-weight);
+      line-height: var(--kt-heading-line);
+      overflow: hidden;
+    }
+    #KovariTestimonials-{{ section.id }} .kt__heading-inner {
+      display: inline-block;
+      transform: translateY(0);
+      transition: transform 900ms var(--kt-ease);
+    }
+    #KovariTestimonials-{{ section.id }}.kovari-testimonials--animated:not(.is-in-view) .kt__heading-inner {
+      transform: translateY(112%);
+    }
+
+    /* Stacked: mark → quote, centered under the heading */
+    #KovariTestimonials-{{ section.id }} .kt__review {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: min(100%, {{ section.settings.review_max_width }}px);
+      min-height: var(--kt-review-min-height);
+      margin: {{ section.settings.review_top_margin }}px auto 0;
+    }
+
+    #KovariTestimonials-{{ section.id }} .kt__mark {
+      margin: {{ section.settings.quote_mark_top }}px 0 {{ section.settings.quote_content_gap }}px;
+      font-size: var(--kt-quote-mark-size);
+      line-height: .8;
+      font-weight: {{ section.settings.quote_mark_weight }};
+      text-align: center;
+      transition: opacity 700ms ease 250ms, transform 700ms var(--kt-ease) 250ms;
+    }
+    #KovariTestimonials-{{ section.id }}.kovari-testimonials--animated:not(.is-in-view) .kt__mark {
+      opacity: 0;
+      transform: scale(.6) translateY(8px);
+    }
+
+    #KovariTestimonials-{{ section.id }} .kt__quote {
+      max-width: var(--kt-quote-max);
+      margin: 0 auto;
+      font-size: var(--kt-quote-size);
+      font-weight: var(--kt-quote-weight);
+      line-height: var(--kt-quote-line);
+      text-wrap: balance;
+      text-align: center;
+    }
+
+    #KovariTestimonials-{{ section.id }} .kt__quote-text {
+      margin: 0;
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity var(--kt-transition) var(--kt-ease), transform var(--kt-transition) var(--kt-ease);
+    }
+    #KovariTestimonials-{{ section.id }} .kt__quote-text.is-leaving {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    #KovariTestimonials-{{ section.id }} .kt__word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 450ms ease, transform 450ms var(--kt-ease);
+    }
+    #KovariTestimonials-{{ section.id }} .kt__quote-text.is-words-in .kt__word {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ---------- Selector: active avatar expands into the pill (in-flow, no overlap) ---------- */
+    #KovariTestimonials-{{ section.id }} .kt__selector {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: var(--kt-pill-h);
+      margin-top: var(--kt-selector-margin);
+    }
+
+    #KovariTestimonials-{{ section.id }} .kt__avatars {
+      display: flex;
+      align-items: center;
+      gap: var(--kt-gap);
+      max-width: 100%;
+    }
+
+    #KovariTestimonials-{{ section.id }} .kt__avatar-btn {
+      display: flex;
+      align-items: center;
+      gap: var(--kt-pill-gap);
+      flex: 0 0 auto;
+      height: var(--kt-avatar);
+      padding: 0;
+      border: 0;
+      background: transparent;
+      border-radius: 999px;
+      cursor: pointer;
+      opacity: var(--kt-inactive-opacity);
+      transform: scale(var(--kt-inactive-scale));
+      transition:
+        opacity var(--kt-transition) var(--kt-ease),
+        transform var(--kt-transition) var(--kt-ease),
+        box-shadow var(--kt-transition) var(--kt-ease),
+        background-color var(--kt-transition) var(--kt-ease),
+        height var(--kt-transition) var(--kt-ease),
+        padding var(--kt-transition) var(--kt-ease);
+    }
+
+    #KovariTestimonials-{{ section.id }} .kt__avatar-btn:hover {
+      opacity: 1;
+    }
+
+    #KovariTestimonials-{{ section.id }} .kt__avatar-btn.is-active {
+      opacity: 1;
+      transform: scale(var(--kt-active-scale));
+      height: var(--kt-pill-h);
+      padding: 0 var(--kt-pill-pad);
+      background: var(--kt-pill-bg);
+      color: var(--kt-pill-text);
+      border-radius: var(--kt-pill-r);
+      box-shadow: 0 0 0 {{ section.settings.active_ring_width }}px {{ section.settings.active_ring_color }};
+    }
+
+    #KovariTestimonials-{{ section.id }} .kt__btn-avatar {
+      width: var(--kt-avatar);
+      height: var(--kt-avatar);
+      flex: 0 0 auto;
+      overflow: hidden;
+      border-radius: 50%;
+      transition: width var(--kt-transition) var(--kt-ease), height var(--kt-transition) var(--kt-ease);
+    }
+    #KovariTestimonials-{{ section.id }} .kt__avatar-btn.is-active .kt__btn-avatar {
+      width: var(--kt-pill-avatar);
+      height: var(--kt-pill-avatar);
+    }
+
+    #KovariTestimonials-{{ section.id }} .kt__btn-avatar img,
+    #KovariTestimonials-{{ section.id }} .kt__avatar-placeholder {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      border-radius: 50%;
+      background: #D7D0C9;
+    }
+
+    /* Name/role copy: hidden slot that expands when active */
+    #KovariTestimonials-{{ section.id }} .kt__btn-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: left;
+      white-space: nowrap;
+      max-width: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-width var(--kt-transition) var(--kt-ease), opacity var(--kt-transition) var(--kt-ease);
+    }
+    #KovariTestimonials-{{ section.id }} .kt__avatar-btn.is-active .kt__btn-copy {
+      max-width: 320px;
+      opacity: 1;
+    }
+
+    #KovariTestimonials-{{ section.id }} .kt__pill-name {
+      font-size: var(--kt-name-size);
+      font-weight: var(--kt-name-weight);
+      line-height: 1.05;
+    }
+
+    #KovariTestimonials-{{ section.id }} .kt__pill-role {
+      margin-top: 4px;
+      font-size: var(--kt-role-size);
+      font-weight: var(--kt-role-weight);
+      line-height: 1.05;
+      opacity: .82;
+    }
+
+    /* Entrance: staggered pop-in */
+    #KovariTestimonials-{{ section.id }}.kovari-testimonials--animated:not(.is-in-view) .kt__avatar-btn {
+      opacity: 0;
+      transform: scale(.4);
+    }
+    #KovariTestimonials-{{ section.id }}.kovari-testimonials--animated.is-in-view:not(.is-settled) .kt__avatar-btn {
+      transition-delay: calc(350ms + var(--i, 0) * 70ms);
+    }
+
+    #KovariTestimonials-{{ section.id }} .kt__avatar-btn:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 4px;
+    }
+
+    #KovariTestimonials-{{ section.id }} .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    @media (max-width: 760px) {
+      #KovariTestimonials-{{ section.id }} .kt__shell {
+        padding-left: var(--kt-mobile-pad);
+        padding-right: var(--kt-mobile-pad);
+      }
+
+      #KovariTestimonials-{{ section.id }} .kt__heading {
+        font-size: var(--kt-mobile-heading-size);
+      }
+
+      #KovariTestimonials-{{ section.id }} .kt__review {
+        display: block;
+        width: 100%;
+        min-height: var(--kt-mobile-quote-min-height);
+        margin-top: {{ section.settings.mobile_review_top_margin }}px;
+      }
+/* 
+      #KovariTestimonials-{{ section.id }} .kt__mark {
+        display: none;
+      } */
+
+      #KovariTestimonials-{{ section.id }} .kt__quote {
+        max-width: {{ section.settings.mobile_quote_max_width | at_least: 220 }}px;
+        margin: 0 auto;
+        font-size: var(--kt-mobile-quote-size);
+        text-align: center;
+      }
+
+      #KovariTestimonials-{{ section.id }} .kt__selector {
+        min-height: var(--kt-mobile-pill-h);
+        margin-top: {{ section.settings.mobile_selector_top_margin }}px;
+      }
+
+      #KovariTestimonials-{{ section.id }} .kt__avatar-btn {
+        height: var(--kt-mobile-avatar);
+      }
+      #KovariTestimonials-{{ section.id }} .kt__btn-avatar {
+        width: var(--kt-mobile-avatar);
+        height: var(--kt-mobile-avatar);
+      }
+      #KovariTestimonials-{{ section.id }} .kt__avatar-btn.is-active {
+        height: var(--kt-mobile-pill-h);
+      }
+      #KovariTestimonials-{{ section.id }} .kt__avatar-btn.is-active .kt__btn-avatar {
+        width: var(--kt-mobile-pill-avatar);
+        height: var(--kt-mobile-pill-avatar);
+      }
+
+      #KovariTestimonials-{{ section.id }} .kt__pill-name {
+        font-size: var(--kt-mobile-name);
+      }
+      #KovariTestimonials-{{ section.id }} .kt__pill-role {
+        font-size: var(--kt-mobile-role);
+      }
+
+      #KovariTestimonials-{{ section.id }} .kt__avatars {
+        gap: {{ section.settings.mobile_avatar_gap }}px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        padding: 0 4px;
+      }
+      #KovariTestimonials-{{ section.id }} .kt__avatars::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    @media (max-width: 420px) {
+      #KovariTestimonials-{{ section.id }} .kt__avatar-btn.is-active {
+        max-width: calc(100vw - 44px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #KovariTestimonials-{{ section.id }} .kt__avatar-btn,
+      #KovariTestimonials-{{ section.id }} .kt__btn-avatar,
+      #KovariTestimonials-{{ section.id }} .kt__btn-copy,
+      #KovariTestimonials-{{ section.id }} .kt__quote-text,
+      #KovariTestimonials-{{ section.id }} .kt__word,
+      #KovariTestimonials-{{ section.id }} .kt__heading-inner,
+      #KovariTestimonials-{{ section.id }} .kt__mark {
+        transition: none;
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="kt__shell">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="kt__heading"><span class="kt__heading-inner">{{ section.settings.heading }}</span></h2>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="kt__review">
+        <div class="kt__mark" aria-hidden="true">{{ section.settings.quote_mark }}</div>
+        <div class="kt__quote">
+          <p class="kt__quote-text" data-quote>{{ section.blocks.first.settings.quote }}</p>
+        </div>
+      </div>
+
+      <div class="kt__selector" data-selector role="tablist" aria-label="Customer testimonials">
+        <div class="kt__avatars">
+          {%- for block in section.blocks -%}
+            <button
+              type="button"
+              class="kt__avatar-btn{% if forloop.first %} is-active{% endif %}"
+              data-trigger
+              data-index="{{ forloop.index0 }}"
+              data-quote="{{ block.settings.quote | escape }}"
+              role="tab"
+              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+              aria-controls="KovariTestimonialQuote-{{ section.id }}"
+              style="--i: {{ forloop.index0 }}"
+              {{ block.shopify_attributes }}
+            >
+              <span class="kt__btn-avatar">
+                {%- if block.settings.avatar != blank -%}
+                  <img
+                    src="{{ block.settings.avatar | image_url: width: 160 }}"
+                    alt="{{ block.settings.name | escape }}"
+                    width="160"
+                    height="160"
+                    loading="lazy"
+                  >
+                {%- else -%}
+                  <span class="kt__avatar-placeholder"></span>
+                {%- endif -%}
+              </span>
+              <span class="kt__btn-copy" aria-hidden="true">
+                <span class="kt__pill-name">{{ block.settings.name }}</span>
+                <span class="kt__pill-role">{{ block.settings.role }}</span>
+              </span>
+              <span class="visually-hidden">{{ block.settings.name }}</span>
+            </button>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- else -%}
+      <p>No testimonials added yet.</p>
+    {%- endif -%}
+  </div>
+
+  <script>
+    (() => {
+      const root = document.getElementById('KovariTestimonials-{{ section.id }}');
+      if (!root) return;
+
+      const selector = root.querySelector('[data-selector]');
+      const quote = root.querySelector('[data-quote]');
+      const triggers = Array.from(root.querySelectorAll('[data-trigger]'));
+      const duration = {{ section.settings.transition_duration | json }};
+      const animated = {{ section.settings.enable_entrance_animation | json }};
+      const autoplayEnabled = {{ section.settings.autoplay | json }};
+      const autoplayDelay = {{ section.settings.autoplay_delay | json }};
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      let activeIndex = 0;
+      let quoteTimer;
+      let autoTimer = null;
+
+      if (!selector || !quote || !triggers.length) return;
+
+      function renderWords(text) {
+        if (reduced) {
+          quote.textContent = text || '';
+          return;
+        }
+        quote.innerHTML = '';
+        const words = String(text || '').split(/\s+/).filter(Boolean);
+        words.forEach((word, i) => {
+          const span = document.createElement('span');
+          span.className = 'kt__word';
+          span.style.transitionDelay = (i * 26) + 'ms';
+          span.textContent = word;
+          quote.appendChild(span);
+          if (i < words.length - 1) quote.appendChild(document.createTextNode(' '));
+        });
+      }
+
+      function updateQuote(nextQuote) {
+        window.clearTimeout(quoteTimer);
+        quote.classList.add('is-leaving');
+
+        quoteTimer = window.setTimeout(() => {
+          quote.classList.remove('is-words-in');
+          renderWords(nextQuote);
+          quote.classList.remove('is-leaving');
+
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => quote.classList.add('is-words-in'));
+          });
+        }, Math.min(duration * 0.5, 220));
+      }
+
+      function startAuto() {
+        if (!autoplayEnabled || reduced || autoTimer) return;
+        autoTimer = window.setInterval(() => {
+          activate((activeIndex + 1) % triggers.length, false);
+        }, autoplayDelay * 1000);
+      }
+      function stopAuto() {
+        if (autoTimer) { window.clearInterval(autoTimer); autoTimer = null; }
+      }
+
+      function centerActive(trigger) {
+        if (!window.matchMedia('(max-width: 760px)').matches) return;
+        const wrap = trigger.closest('.kt__avatars');
+        if (!wrap || wrap.scrollWidth <= wrap.clientWidth) return;
+        const target = trigger.offsetLeft - (wrap.clientWidth - trigger.offsetWidth) / 2;
+        wrap.scrollTo({ left: Math.max(0, target), behavior: reduced ? 'auto' : 'smooth' });
+      }
+
+      function activate(index, focus) {
+        const trigger = triggers[index];
+        if (!trigger) return;
+
+        activeIndex = index;
+
+        triggers.forEach((item, i) => {
+          const active = i === index;
+          item.classList.toggle('is-active', active);
+          item.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+
+        updateQuote(trigger.dataset.quote || '');
+
+                centerActive(trigger);
+
+
+        if (focus) trigger.focus({ preventScroll: true });
+      }
+
+      triggers.forEach((trigger) => {
+        trigger.addEventListener('click', () => {
+          activate(Number(trigger.dataset.index), false);
+          stopAuto();
+          startAuto();
+        });
+
+        trigger.addEventListener('keydown', (event) => {
+          const current = Number(trigger.dataset.index);
+
+          if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+            event.preventDefault();
+            activate((current + 1) % triggers.length, true);
+          } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+            event.preventDefault();
+            activate((current - 1 + triggers.length) % triggers.length, true);
+          } else if (event.key === 'Home') {
+            event.preventDefault();
+            activate(0, true);
+          } else if (event.key === 'End') {
+            event.preventDefault();
+            activate(triggers.length - 1, true);
+          }
+        });
+      });
+
+      selector.addEventListener('pointerenter', stopAuto);
+      selector.addEventListener('pointerleave', startAuto);
+      selector.addEventListener('focusin', stopAuto);
+      selector.addEventListener('focusout', startAuto);
+
+      /* Init */
+      renderWords(quote.textContent.trim());
+
+      if (animated && !reduced) {
+        root.classList.add('kovari-testimonials--animated');
+
+        const reveal = () => {
+          root.classList.add('is-in-view');
+          window.setTimeout(() => quote.classList.add('is-words-in'), 250);
+          window.setTimeout(() => root.classList.add('is-settled'), 1800);
+          startAuto();
+        };
+
+        if ('IntersectionObserver' in window) {
+          const obs = new IntersectionObserver((entries, o) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                reveal();
+                o.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.1 });
+          obs.observe(root);
+        } else {
+          reveal();
+        }
+      } else {
+        root.classList.add('is-in-view', 'is-settled');
+        quote.classList.add('is-words-in');
+        startAuto();
+      }
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "KOVARI Testimonials",
+  "max_blocks": 20,
+  "settings": [
+    { "type": "header", "content": "General" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Loved By Thousands." },
+    { "type": "text", "id": "quote_mark", "label": "Quote mark", "default": "“" },
+    { "type": "color", "id": "background_color", "label": "Background color", "default": "#F7F7F7" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#111111" },
+    { "type": "range", "id": "max_width", "label": "Maximum width", "min": 700, "max": 2000, "step": 20, "default": 1500, "unit": "px" },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 20, "max": 100, "step": 2, "default": 70, "unit": "px" },
+    { "type": "range", "id": "padding_right", "label": "Right padding", "min": 10, "max": 100, "step": 2, "default": 30, "unit": "px" },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 20, "max": 100, "step": 2, "default": 70, "unit": "px" },
+    { "type": "range", "id": "padding_left", "label": "Left padding", "min": 10, "max": 100, "step": 2, "default": 30, "unit": "px" },
+    { "type": "range", "id": "heading_size", "label": "Heading size", "min": 24, "max": 100, "step": 2, "default": 58, "unit": "px" },
+    { "type": "range", "id": "heading_weight", "label": "Heading weight", "min": 100, "max": 900, "step": 100, "default": 400 },
+    { "type": "range", "id": "heading_max_width", "label": "Heading max width", "min": 300, "max": 1200, "step": 20, "default": 900, "unit": "px" },
+
+    { "type": "header", "content": "Review layout" },
+    { "type": "range", "id": "review_max_width", "label": "Review max width", "min": 500, "max": 1400, "step": 20, "default": 1100, "unit": "px" },
+    { "type": "range", "id": "review_min_height", "label": "Review minimum height", "min": 140, "max": 500, "step": 10, "default": 220, "unit": "px" },
+    { "type": "range", "id": "review_top_margin", "label": "Review top spacing", "min": 20, "max": 140, "step": 2, "default": 70, "unit": "px" },
+    { "type": "range", "id": "quote_mark_width", "label": "Quote mark width (legacy)", "min": 30, "max": 120, "step": 2, "default": 70, "unit": "px" },
+    { "type": "range", "id": "quote_content_gap", "label": "Mark → quote gap", "min": 10, "max": 60, "step": 2, "default": 24, "unit": "px" },
+    { "type": "range", "id": "quote_mark_top", "label": "Quote mark top", "min": 0, "max": 40, "step": 2, "default": 4, "unit": "px" },
+    { "type": "range", "id": "quote_mark_size", "label": "Quote mark size", "min": 40, "max": 120, "step": 2, "default": 78, "unit": "px" },
+    { "type": "range", "id": "quote_mark_weight", "label": "Quote mark weight", "min": 100, "max": 900, "step": 100, "default": 700 },
+    { "type": "range", "id": "quote_size", "label": "Quote size", "min": 18, "max": 60, "step": 2, "default": 30, "unit": "px" },
+    { "type": "range", "id": "quote_weight", "label": "Quote weight", "min": 100, "max": 900, "step": 100, "default": 400 },
+    { "type": "range", "id": "quote_max_width", "label": "Quote max width", "min": 400, "max": 1400, "step": 20, "default": 900, "unit": "px" },
+
+    { "type": "header", "content": "Customer selector" },
+    { "type": "range", "id": "selector_top_margin", "label": "Selector top spacing", "min": 10, "max": 100, "step": 2, "default": 50, "unit": "px" },
+    { "type": "range", "id": "selector_gap", "label": "Avatar gap", "min": 4, "max": 36, "step": 2, "default": 12, "unit": "px" },
+    { "type": "range", "id": "avatar_size", "label": "Avatar size", "min": 40, "max": 100, "step": 2, "default": 58, "unit": "px" },
+    { "type": "range", "id": "active_pill_height", "label": "Active pill height", "min": 54, "max": 110, "step": 2, "default": 72, "unit": "px" },
+    { "type": "range", "id": "active_pill_radius", "label": "Active pill radius", "min": 0, "max": 60, "step": 2, "default": 40, "unit": "px" },
+    { "type": "range", "id": "active_pill_padding", "label": "Active pill padding", "min": 8, "max": 36, "step": 2, "default": 14, "unit": "px" },
+    { "type": "range", "id": "active_pill_gap", "label": "Pill content gap", "min": 4, "max": 24, "step": 2, "default": 12, "unit": "px" },
+    { "type": "range", "id": "active_avatar_size", "label": "Active pill avatar size", "min": 38, "max": 72, "step": 2, "default": 48, "unit": "px" },
+    { "type": "range", "id": "active_name_size", "label": "Active name size", "min": 12, "max": 28, "step": 1, "default": 16, "unit": "px" },
+    { "type": "range", "id": "active_name_weight", "label": "Active name weight", "min": 100, "max": 900, "step": 100, "default": 600 },
+    { "type": "range", "id": "active_role_size", "label": "Active role size", "min": 9, "max": 20, "step": 1, "default": 12, "unit": "px" },
+    { "type": "range", "id": "active_role_weight", "label": "Active role weight", "min": 100, "max": 900, "step": 100, "default": 400 },
+    { "type": "color", "id": "active_pill_background", "label": "Active pill background", "default": "#000000" },
+    { "type": "color", "id": "active_pill_text", "label": "Active pill text", "default": "#FFFFFF" },
+    { "type": "range", "id": "inactive_avatar_opacity", "label": "Inactive avatar opacity", "min": 20, "max": 100, "step": 2, "default": 72, "unit": "%" },
+    { "type": "range", "id": "inactive_avatar_scale", "label": "Inactive avatar scale", "min": 85, "max": 100, "step": 1, "default": 96, "unit": "%" },
+    { "type": "range", "id": "active_avatar_scale", "label": "Active avatar scale", "min": 90, "max": 110, "step": 1, "default": 100, "unit": "%" },
+    { "type": "range", "id": "active_ring_width", "label": "Active ring width", "min": 0, "max": 4, "step": 1, "default": 0, "unit": "px" },
+    { "type": "color", "id": "active_ring_color", "label": "Active ring color", "default": "#111111" },
+
+    { "type": "header", "content": "Animation" },
+    { "type": "checkbox", "id": "enable_entrance_animation", "label": "Enable entrance animation", "default": true },
+    { "type": "checkbox", "id": "autoplay", "label": "Auto-rotate testimonials", "default": true },
+    { "type": "range", "id": "autoplay_delay", "label": "Auto-rotate every", "min": 3, "max": 12, "step": 1, "default": 6, "unit": "s" },
+    { "type": "range", "id": "transition_duration", "label": "Transition duration", "min": 150, "max": 800, "step": 50, "default": 400, "unit": "ms" },
+    { "type": "select", "id": "transition_easing", "label": "Transition easing", "default": "cubic-bezier(.22,.61,.36,1)", "options": [
+      { "value": "ease-out", "label": "Ease out" },
+      { "value": "ease-in-out", "label": "Ease in/out" },
+      { "value": "cubic-bezier(.22,.61,.36,1)", "label": "Premium ease out" },
+      { "value": "cubic-bezier(.16,1,.3,1)", "label": "Soft spring" }
+    ]},
+
+    { "type": "header", "content": "Mobile" },
+    { "type": "range", "id": "mobile_padding_x", "label": "Mobile side padding", "min": 10, "max": 40, "step": 2, "default": 18, "unit": "px" },
+    { "type": "range", "id": "mobile_heading_size", "label": "Mobile heading size", "min": 22, "max": 50, "step": 2, "default": 34, "unit": "px" },
+    { "type": "range", "id": "mobile_review_top_margin", "label": "Mobile review top spacing", "min": 20, "max": 90, "step": 2, "default": 38, "unit": "px" },
+    { "type": "range", "id": "mobile_quote_size", "label": "Mobile quote size", "min": 17, "max": 34, "step": 1, "default": 21, "unit": "px" },
+    { "type": "range", "id": "mobile_quote_max_width", "label": "Mobile quote max width", "min": 220, "max": 600, "step": 10, "default": 340, "unit": "px" },
+    { "type": "range", "id": "mobile_quote_min_height", "label": "Mobile quote minimum height", "min": 100, "max": 320, "step": 10, "default": 150, "unit": "px" },
+    { "type": "range", "id": "mobile_selector_top_margin", "label": "Mobile selector top spacing", "min": 16, "max": 80, "step": 4, "default": 24, "unit": "px" },
+    { "type": "range", "id": "mobile_avatar_gap", "label": "Mobile avatar gap", "min": 4, "max": 20, "step": 2, "default": 8, "unit": "px" },
+    { "type": "range", "id": "mobile_avatar_size", "label": "Mobile avatar size", "min": 40, "max": 72, "step": 2, "default": 48, "unit": "px" },
+    { "type": "range", "id": "mobile_pill_height", "label": "Mobile active pill height", "min": 52, "max": 84, "step": 2, "default": 62, "unit": "px" },
+    { "type": "range", "id": "mobile_pill_avatar_size", "label": "Mobile pill avatar size", "min": 34, "max": 58, "step": 2, "default": 42, "unit": "px" },
+    { "type": "range", "id": "mobile_active_name_size", "label": "Mobile active name size", "min": 11, "max": 21, "step": 1, "default": 13, "unit": "px" },
+    { "type": "range", "id": "mobile_active_role_size", "label": "Mobile active role size", "min": 8, "max": 15, "step": 1, "default": 10, "unit": "px" }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "limit": 20,
+      "settings": [
+        { "type": "text", "id": "name", "label": "Customer name", "default": "Charlotte Bennett" },
+        { "type": "text", "id": "role", "label": "Customer role", "default": "Senior Hair Stylist" },
+        { "type": "textarea", "id": "quote", "label": "Testimonial", "default": "AirStyler Elite has genuinely simplified my styling routine. The airflow is powerful, the attachments are intuitive to use, and the results are consistently smooth without excessive heat. It's become one of those tools I reach for every single day." },
+        { "type": "image_picker", "id": "avatar", "label": "Customer avatar" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials Animated",
+      "blocks": [
+        { "type": "testimonial", "settings": { "name": "Charlotte Bennett", "role": "Senior Hair Stylist", "quote": "AirStyler Elite has genuinely simplified my styling routine. The airflow is powerful, the attachments are intuitive to use, and the results are consistently smooth without excessive heat. It's become one of those tools I reach for every single day." } },
+        { "type": "testimonial", "settings": { "name": "Sophie Lane", "role": "Verified Buyer", "quote": "My hair has never felt so soft and healthy. The ritual actually works." } },
+        { "type": "testimonial", "settings": { "name": "James R.", "role": "Verified Buyer", "quote": "KOVARI has completely transformed my hair. Worth every penny!" } },
+        { "type": "testimonial", "settings": { "name": "Emily T.", "role": "Verified Buyer", "quote": "Beautiful products with amazing results. My new favourite haircare." } },
+        { "type": "testimonial", "settings": { "name": "Olivia M.", "role": "Verified Buyer", "quote": "Fast, easy, and beautiful results every time." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

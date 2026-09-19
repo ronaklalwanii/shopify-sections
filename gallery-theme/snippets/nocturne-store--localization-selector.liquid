@@ -1,0 +1,96 @@
+{%- capture localization_form_id -%}localization-form-{{ type }}-{{ popover_vertical_position }}-{{ section.id }}{%- endcapture -%}
+{%- capture localization_popover_id -%}popover-localization-form-{{ type }}-{{ popover_vertical_position }}-{{ section.id }}{%- endcapture -%}
+{%- assign popover_vertical_position = popover_vertical_position | default: 'start' -%}
+{%- assign popover_horizontal_position = popover_horizontal_position | default: 'end' -%}
+
+{%- case type -%}
+    {%- when 'country' -%}
+
+    <div class="relative">
+        <button
+            type="button"
+            class="text-with-icon gap-2.5 group"
+            aria-controls="{{ localization_popover_id }}"
+            aria-expanded="false">
+            <div class="h-stack gap-2">
+                <span class="bold text-sm">
+                    {%- if show_country_name -%}
+                        {{ localization.country.name }} ({{ localization.country.currency.iso_code }}
+                        {% if localization.country.currency.symbol %}
+                            {{ localization.country.currency.symbol }}){%- endif -%}
+                    {%- else -%}
+                        {{ localization.country.currency.iso_code }}
+                        {% if localization.country.currency.symbol %}
+                            {{ localization.country.currency.symbol }}{%- endif -%}
+                    {%- endif -%}
+                </span>
+            </div>
+
+            {%- render 'nocturne-store--icon' with 'chevron-bottom' -%}
+        </button>
+
+        <theme-popover
+            id="{{ localization_popover_id }}"
+            initial-focus="[aria-selected='true']"
+            anchor-horizontal="{{ popover_horizontal_position }}"
+            anchor-vertical="{{ popover_vertical_position }}"
+            class="popover">
+            <p class="h5" slot="title">{{ 'general.localization.country' | t }}</p>
+
+            {%- form 'localization', id: localization_form_id -%}
+                <x-listbox class="popover-listbox popover-listbox--sm" role="listbox">
+                    {%- for country in localization.available_countries -%}
+                        <button
+                            type="submit"
+                            class="popover-listbox__option"
+                            name="country_code"
+                            role="option"
+                            value="{{ country.iso_code }}"
+                            {% if country.iso_code == localization.country.iso_code %}aria-selected="true"{% endif %}>
+                            <span>{{- country.name }} ({{ country.currency.iso_code }}
+                                {% if country.currency.symbol %}
+                                    {{ country.currency.symbol }}{%- endif -%})</span>
+                        </button>
+                    {%- endfor -%}
+                </x-listbox>
+            {%- endform -%}
+        </theme-popover>
+    </div>
+
+    {%- when 'locale' -%}
+    <div class="relative">
+        <button
+            type="button"
+            class="text-with-icon gap-2.5 group"
+            aria-controls="{{ localization_popover_id }}"
+            aria-expanded="false">
+            <span class="bold text-sm">{{- localization.language.endonym_name | capitalize -}}</span>
+            {%- render 'nocturne-store--icon' with 'chevron-bottom' -%}
+        </button>
+
+        <theme-popover
+            id="{{ localization_popover_id }}"
+            initial-focus="[aria-selected='true']"
+            anchor-horizontal="{{ popover_horizontal_position }}"
+            anchor-vertical="{{ popover_vertical_position }}"
+            class="popover">
+            <p class="h5" slot="title">{{ 'general.localization.language' | t }}</p>
+
+            {%- form 'localization', id: localization_form_id -%}
+                <x-listbox class="popover-listbox popover-listbox--sm" role="listbox">
+                    {%- for language in localization.available_languages -%}
+                        <button
+                            type="submit"
+                            class="popover-listbox__option"
+                            name="locale_code"
+                            role="option"
+                            value="{{ language.iso_code }}"
+                            {% if language.iso_code == localization.language.iso_code %}aria-selected="true"{% endif %}>
+                            {{- language.endonym_name | capitalize -}}
+                        </button>
+                    {%- endfor -%}
+                </x-listbox>
+            {%- endform -%}
+        </theme-popover>
+    </div>
+{%- endcase -%}

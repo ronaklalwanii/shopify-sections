@@ -1,0 +1,338 @@
+{%- comment -%} Section Library: injected global assets for store "nocturne-store" {%- endcomment -%}
+{{ 'nocturne-store--theme.css' | asset_url | stylesheet_tag }}
+{{ 'nocturne-store--product.css' | asset_url | stylesheet_tag }}
+{% render 'nocturne-store--css-variables' %}
+{% comment %}
+  Section: Promo Split Banner
+  Left image | framed promo panel | right image.
+  Mobile: stacked (image / panel / image), images optional.
+{% endcomment %}
+
+<section id="PromoSplit-{{ section.id }}" class="ps">
+  {%- style -%}
+    /* Override theme's default section spacing (full-bleed banner) */
+    #shopify-section-{{ section.id }} {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    #PromoSplit-{{ section.id }} {
+      --ps-side: {{ section.settings.side_width }}%;
+      --ps-h: {{ section.settings.banner_height }}px;
+      --ps-mh: {{ section.settings.mobile_media_height }}px;
+      --ps-panel-bg: {{ section.settings.panel_bg }};
+      --ps-frame-color: {{ section.settings.frame_color }};
+      --ps-frame-w: {{ section.settings.frame_width }}px;
+      --ps-frame-inset: {{ section.settings.frame_inset }}px;
+      --ps-panel-pad: {{ section.settings.panel_padding }}px;
+      --ps-text: {{ section.settings.text_color }};
+      --ps-line1-size: {{ section.settings.line1_size }}px;
+      --ps-line2-size: {{ section.settings.line2_size }}px;
+      --ps-spacing: {{ section.settings.text_spacing }}px;
+      --ps-lh: {{ section.settings.line_height }};
+      --ps-gap: {{ section.settings.element_gap }}px;
+      --ps-divider: {{ section.settings.divider_color }};
+      --ps-divider-w: {{ section.settings.divider_width }}px;
+      --ps-btn-radius: {{ section.settings.btn_radius }}px;
+      --ps-btn-size: {{ section.settings.btn_size }}px;
+      --ps-btn-px: {{ section.settings.btn_pad_x }}px;
+      --ps-btn-py: {{ section.settings.btn_pad_y }}px;
+      --ps-speed: {{ section.settings.animation_speed }}ms;
+      --ps-ease: cubic-bezier(.22, 1, .36, 1);
+      --ps-img-pos: {{ section.settings.image_position }};
+    }
+
+    #PromoSplit-{{ section.id }} {
+      width: 100%;
+      overflow-x: clip;
+    }
+
+    #PromoSplit-{{ section.id }} .ps__grid {
+      display: grid;
+      grid-template-columns: var(--ps-side) minmax(0, 1fr) var(--ps-side);
+      min-height: var(--ps-h);
+    }
+
+    /* Side images */
+    #PromoSplit-{{ section.id }} .ps__media {
+      position: relative;
+      overflow: hidden;
+      min-width: 0;
+    }
+    #PromoSplit-{{ section.id }} .ps__media img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: var(--ps-img-pos);
+      display: block;
+    }
+
+    /* Center panel */
+    #PromoSplit-{{ section.id }} .ps__panel {
+      background: var(--ps-panel-bg);
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: var(--ps-frame-inset);
+      min-width: 0;
+    }
+    #PromoSplit-{{ section.id }} .ps__frame {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: var(--ps-gap);
+      padding: var(--ps-panel-pad);
+      {% if section.settings.show_frame %}
+        border: var(--ps-frame-w) solid var(--ps-frame-color);
+      {% endif %}
+    }
+
+    #PromoSplit-{{ section.id }} .ps__line1,
+    #PromoSplit-{{ section.id }} .ps__line2 {
+      margin: 0;
+      color: var(--ps-text);
+      font-family: Georgia, 'Times New Roman', serif;
+      {% if section.settings.text_italic %}font-style: italic;{% endif %}
+      {% if section.settings.text_uppercase %}text-transform: uppercase;{% endif %}
+      letter-spacing: var(--ps-spacing);
+      line-height: var(--ps-lh);
+    }
+    #PromoSplit-{{ section.id }} .ps__line1 { font-size: var(--ps-line1-size); font-weight: 500; }
+    #PromoSplit-{{ section.id }} .ps__line2 { font-size: var(--ps-line2-size); font-weight: 500; }
+
+    #PromoSplit-{{ section.id }} .ps__divider {
+      width: var(--ps-divider-w);
+      height: 8px;
+      color: var(--ps-divider);
+    }
+    #PromoSplit-{{ section.id }} .ps__divider svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    #PromoSplit-{{ section.id }} .ps__btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: calc(var(--ps-gap) * 0.5);
+      padding: var(--ps-btn-py) var(--ps-btn-px);
+      border-radius: var(--ps-btn-radius);
+      font-size: var(--ps-btn-size);
+      font-weight: 500;
+      letter-spacing: 0.4px;
+      text-decoration: none;
+      transition: transform 200ms ease, opacity 200ms ease, filter 200ms ease;
+      {% if section.settings.btn_style == 'solid' %}
+        background: {{ section.settings.btn_bg }};
+        border: 1px solid {{ section.settings.btn_bg }};
+        color: {{ section.settings.btn_solid_text }};
+      {% else %}
+        background: transparent;
+        border: 1px solid {{ section.settings.btn_color }};
+        color: {{ section.settings.btn_color }};
+      {% endif %}
+    }
+    #PromoSplit-{{ section.id }} .ps__btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
+
+    /* Entrance animation */
+    #PromoSplit-{{ section.id }} .ps__media,
+    #PromoSplit-{{ section.id }} .ps__frame > * {
+      transition: opacity var(--ps-speed) ease, transform var(--ps-speed) var(--ps-ease);
+    }
+    #PromoSplit-{{ section.id }} .ps__frame > *:nth-child(2) { transition-delay: 80ms; }
+    #PromoSplit-{{ section.id }} .ps__frame > *:nth-child(3) { transition-delay: 160ms; }
+    #PromoSplit-{{ section.id }} .ps__frame > *:nth-child(4) { transition-delay: 240ms; }
+    #PromoSplit-{{ section.id }}.ps-animated:not(.is-in-view) .ps__media { opacity: 0; }
+    #PromoSplit-{{ section.id }}.ps-animated:not(.is-in-view) .ps__media--left { transform: translateX(-20px); }
+    #PromoSplit-{{ section.id }}.ps-animated:not(.is-in-view) .ps__media--right { transform: translateX(20px); }
+    #PromoSplit-{{ section.id }}.ps-animated:not(.is-in-view) .ps__frame > * { opacity: 0; transform: translateY(16px); }
+
+    /* Mobile */
+    @media screen and (max-width: 760px) {
+      #PromoSplit-{{ section.id }} .ps__grid {
+        grid-template-columns: 1fr;
+        min-height: 0;
+      }
+      #PromoSplit-{{ section.id }} .ps__media {
+        min-height: var(--ps-mh);
+      }
+      {% unless section.settings.show_images_mobile %}
+        #PromoSplit-{{ section.id }} .ps__media { display: none; }
+      {% endunless %}
+      #PromoSplit-{{ section.id }} .ps__panel { order: 2; }
+      #PromoSplit-{{ section.id }} .ps__media--left { order: 1; }
+      #PromoSplit-{{ section.id }} .ps__media--right { order: 3; }
+      #PromoSplit-{{ section.id }} .ps__frame { padding: calc(var(--ps-panel-pad) * 0.75); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #PromoSplit-{{ section.id }} .ps__media,
+      #PromoSplit-{{ section.id }} .ps__frame > *,
+      #PromoSplit-{{ section.id }} .ps__btn {
+        transition: none;
+      }
+      #PromoSplit-{{ section.id }}.ps-animated:not(.is-in-view) .ps__media,
+      #PromoSplit-{{ section.id }}.ps-animated:not(.is-in-view) .ps__frame > * {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="ps__grid">
+    <div class="ps__media ps__media--left">
+      {%- if section.settings.image_left != blank -%}
+        <img
+          src="{{ section.settings.image_left | image_url: width: 900 }}"
+          alt="{{ section.settings.image_left.alt | default: 'Promo left' | escape }}"
+          loading="lazy"
+          width="900"
+          height="900"
+        >
+      {%- endif -%}
+    </div>
+
+    <div class="ps__panel">
+      <div class="ps__frame">
+        {%- if section.settings.line1_text != blank -%}
+          <h2 class="ps__line1">{{ section.settings.line1_text | newline_to_br }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.show_divider -%}
+          <span class="ps__divider" aria-hidden="true">
+            <svg viewBox="0 0 40 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M1 5 q4.5 -5 9 0 t9 0 t9 0 t9 0"></path>
+            </svg>
+          </span>
+        {%- endif -%}
+
+        {%- if section.settings.line2_text != blank -%}
+          <p class="ps__line2">{{ section.settings.line2_text | newline_to_br }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.btn_text != blank and section.settings.btn_link != blank -%}
+          <a class="ps__btn" href="{{ section.settings.btn_link }}">{{ section.settings.btn_text }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="ps__media ps__media--right">
+      {%- if section.settings.image_right != blank -%}
+        <img
+          src="{{ section.settings.image_right | image_url: width: 900 }}"
+          alt="{{ section.settings.image_right.alt | default: 'Promo right' | escape }}"
+          loading="lazy"
+          width="900"
+          height="900"
+        >
+      {%- endif -%}
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.getElementById('PromoSplit-{{ section.id }}');
+      if (!root) return;
+
+      {%- if section.settings.enable_animation -%}
+        root.classList.add('ps-animated');
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduced || !('IntersectionObserver' in window)) {
+          root.classList.add('is-in-view');
+        } else {
+          const obs = new IntersectionObserver((entries, o) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                root.classList.add('is-in-view');
+                o.unobserve(e.target);
+              }
+            });
+          }, { threshold: 0.1 });
+          obs.observe(root);
+        }
+      {%- else -%}
+        root.classList.add('is-in-view');
+      {%- endif -%}
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Promo Split Banner",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "side_width", "label": "Side image width", "min": 10, "max": 40, "step": 1, "default": 25, "unit": "%" },
+    { "type": "range", "id": "banner_height", "label": "Desktop banner height", "min": 200, "max": 600, "step": 10, "default": 320, "unit": "px" },
+    { "type": "range", "id": "mobile_media_height", "label": "Mobile image height", "min": 140, "max": 400, "step": 10, "default": 220, "unit": "px" },
+    { "type": "checkbox", "id": "show_images_mobile", "label": "Show side images on mobile", "default": true },
+    { "type": "select", "id": "image_position", "label": "Image focal point", "default": "center", "options": [
+      { "value": "left center", "label": "Left" },
+      { "value": "center", "label": "Center" },
+      { "value": "right center", "label": "Right" },
+      { "value": "center top", "label": "Top" },
+      { "value": "center bottom", "label": "Bottom" }
+    ] },
+    { "type": "image_picker", "id": "image_left", "label": "Left image" },
+    { "type": "image_picker", "id": "image_right", "label": "Right image" },
+
+    { "type": "header", "content": "Panel & frame" },
+    { "type": "color", "id": "panel_bg", "label": "Panel background", "default": "#E4573D" },
+    { "type": "checkbox", "id": "show_frame", "label": "Show inner frame", "default": true },
+    { "type": "color", "id": "frame_color", "label": "Frame color", "default": "#FFFFFF" },
+    { "type": "range", "id": "frame_width", "label": "Frame thickness", "min": 1, "max": 4, "step": 1, "default": 1, "unit": "px" },
+    { "type": "range", "id": "frame_inset", "label": "Frame inset from edges", "min": 12, "max": 60, "step": 2, "default": 28, "unit": "px" },
+    { "type": "range", "id": "panel_padding", "label": "Content padding", "min": 20, "max": 80, "step": 2, "default": 40, "unit": "px" },
+    { "type": "range", "id": "element_gap", "label": "Spacing between elements", "min": 8, "max": 40, "step": 2, "default": 18, "unit": "px" },
+
+    { "type": "header", "content": "Text" },
+    { "type": "textarea", "id": "line1_text", "label": "Top text (new line = line break)", "default": "Buy online now\nand get 10% off" },
+    { "type": "textarea", "id": "line2_text", "label": "Promo text (new line = line break)", "default": "Use promo code\nHOHOHO" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#FFFFFF" },
+    { "type": "range", "id": "line1_size", "label": "Top text size", "min": 14, "max": 40, "step": 1, "default": 22, "unit": "px" },
+    { "type": "range", "id": "line2_size", "label": "Promo text size", "min": 14, "max": 40, "step": 1, "default": 22, "unit": "px" },
+    { "type": "checkbox", "id": "text_italic", "label": "Italic", "default": true },
+    { "type": "checkbox", "id": "text_uppercase", "label": "Uppercase", "default": true },
+    { "type": "range", "id": "text_spacing", "label": "Letter spacing", "min": 0, "max": 6, "step": 0.5, "default": 1, "unit": "px" },
+    { "type": "range", "id": "line_height", "label": "Line height", "min": 1, "max": 2, "step": 0.2, "default": 1.2 },
+    { "type": "checkbox", "id": "show_divider", "label": "Show squiggle divider", "default": true },
+    { "type": "color", "id": "divider_color", "label": "Divider color", "default": "#FFFFFF" },
+    { "type": "range", "id": "divider_width", "label": "Divider width", "min": 20, "max": 120, "step": 5, "default": 40, "unit": "px" },
+
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "btn_text", "label": "Button text", "default": "Shop Now" },
+    { "type": "url", "id": "btn_link", "label": "Button link" },
+    { "type": "select", "id": "btn_style", "label": "Button style", "default": "outline", "options": [
+      { "value": "outline", "label": "Outline" },
+      { "value": "solid", "label": "Solid" }
+    ] },
+    { "type": "color", "id": "btn_color", "label": "Outline button color", "default": "#FFFFFF" },
+    { "type": "color", "id": "btn_bg", "label": "Solid button background", "default": "#FFFFFF" },
+    { "type": "color", "id": "btn_solid_text", "label": "Solid button text", "default": "#E4573D" },
+    { "type": "range", "id": "btn_radius", "label": "Button radius", "min": 0, "max": 60, "step": 2, "default": 30, "unit": "px" },
+    { "type": "range", "id": "btn_size", "label": "Button size", "min": 9, "max": 18, "step": 1, "default": 11, "unit": "px" },
+    { "type": "range", "id": "btn_pad_x", "label": "Button horizontal padding", "min": 12, "max": 48, "step": 2, "default": 24, "unit": "px" },
+    { "type": "range", "id": "btn_pad_y", "label": "Button vertical padding", "min": 6, "max": 24, "step": 2, "default": 10, "unit": "px" },
+
+    { "type": "header", "content": "Animation" },
+    { "type": "checkbox", "id": "enable_animation", "label": "Enable entrance animation", "default": true },
+    { "type": "range", "id": "animation_speed", "label": "Animation speed", "min": 250, "max": 1200, "step": 50, "default": 700, "unit": "ms" }
+  ],
+  "presets": [
+    {
+      "name": "Promo Split Banner"
+    }
+  ]
+}
+{% endschema %}

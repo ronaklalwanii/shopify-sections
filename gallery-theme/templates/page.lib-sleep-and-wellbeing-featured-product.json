@@ -1,0 +1,103 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--featured-product",
+      "settings": {
+        "full_width": true,
+        "desktop_media_width": 55,
+        "desktop_media_layout": "carousel_thumbnails_left",
+        "mobile_media_size": "expanded",
+        "mobile_carousel_control": "floating_dots",
+        "enable_video_autoplay": true,
+        "enable_video_looping": false,
+        "enable_image_zoom": true,
+        "max_image_zoom_level": 3,
+        "input_background": "rgba(0,0,0,0)",
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "vendor",
+          "settings": {}
+        },
+        "bl-2": {
+          "type": "title",
+          "settings": {
+            "heading_tag": "h2"
+          }
+        },
+        "bl-3": {
+          "type": "badges",
+          "settings": {}
+        },
+        "bl-4": {
+          "type": "price",
+          "settings": {
+            "show_taxes_notice": false
+          }
+        },
+        "bl-5": {
+          "type": "rating",
+          "settings": {
+            "show_empty": false
+          }
+        },
+        "bl-6": {
+          "type": "separator",
+          "settings": {}
+        },
+        "bl-7": {
+          "type": "description",
+          "settings": {
+            "collapse_content": false
+          }
+        },
+        "bl-8": {
+          "type": "variant_picker",
+          "settings": {
+            "hide_sold_out_variants": false,
+            "stack_blocks": true,
+            "selector_mode": "block",
+            "color_mode": "color"
+          }
+        },
+        "bl-9": {
+          "type": "quantity_selector",
+          "settings": {
+            "use_simple_qty_selector": false,
+            "qty_selector_range_val": 25
+          }
+        },
+        "bl-10": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_payment_button": true,
+            "show_gift_card_recipient": true
+          }
+        },
+        "bl-11": {
+          "type": "pickup_availability",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6",
+        "bl-7",
+        "bl-8",
+        "bl-9",
+        "bl-10",
+        "bl-11"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

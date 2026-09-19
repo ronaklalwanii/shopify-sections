@@ -1,0 +1,103 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--ritual-accessories",
+      "settings": {
+        "background": "#ECE6DC",
+        "padding_top": 0,
+        "padding_bottom": 56,
+        "max_width": 1800,
+        "side_padding": 28,
+        "image_side": "right",
+        "banner_height": 500,
+        "banner_text_width": 40,
+        "banner_text_padding": 84,
+        "mobile_order": "text",
+        "eyebrow": "Complete the ritual",
+        "eyebrow_size": 13,
+        "eyebrow_tracking": 16,
+        "eyebrow_color": "#A38B69",
+        "eyebrow_gap": 18,
+        "heading_line_1": "Everything you need",
+        "heading_line_2": "to make it yours.",
+        "heading_size": 48,
+        "heading_line_height": 116,
+        "heading_letter_spacing": -1,
+        "heading_color": "#1C1A17",
+        "description": "Curated pieces designed to complement your sauna and elevate every session.",
+        "description_size": 16,
+        "description_color": "#6B675F",
+        "link_label": "All accessories",
+        "link_color": "#1C1A17",
+        "columns": 5,
+        "card_gap": 10,
+        "card_bg": "#E5DED3",
+        "card_padding": 20,
+        "card_image_ratio": "1 / 1",
+        "card_title_size": 13,
+        "card_title_tracking": 8,
+        "card_desc_size": 14,
+        "card_desc_color": "#6B675F",
+        "price_size": 16,
+        "card_text_color": "#1C1A17",
+        "add_label": "Add",
+        "add_color": "#1C1A17",
+        "enable_hover_zoom": true,
+        "enable_reveal": true,
+        "enable_custom_font": false
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "card",
+          "settings": {
+            "description": "Handcrafted from natural timber.",
+            "price_fallback": "£149",
+            "title_override": "Sauna Bucket + Ladle"
+          }
+        },
+        "bl-2": {
+          "type": "card",
+          "settings": {
+            "description": "Pure essential oils for mind and body.",
+            "price_fallback": "£65",
+            "title_override": "Essential Oil Collection"
+          }
+        },
+        "bl-3": {
+          "type": "card",
+          "settings": {
+            "description": "Ergonomic support for total comfort.",
+            "price_fallback": "£95",
+            "title_override": "Sauna Headrest"
+          }
+        },
+        "bl-4": {
+          "type": "card",
+          "settings": {
+            "description": "Ultra-soft. Highly absorbent.",
+            "price_fallback": "£120",
+            "title_override": "Premium Sauna Towel Set"
+          }
+        },
+        "bl-5": {
+          "type": "card",
+          "settings": {
+            "description": "Create the perfect atmosphere.",
+            "price_fallback": "£195",
+            "title_override": "Ambient Sauna Light"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

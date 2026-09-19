@@ -1,0 +1,28 @@
+{
+  "sections": {
+    "library": {
+      "type": "before-after-image",
+      "settings": {
+        "full_width": true,
+        "title": "Before/after",
+        "content": "<p>Showcase your product benefit by using before/after image comparison.</p>",
+        "expand_image": false,
+        "text_position": "start",
+        "before_after_text_position": "top",
+        "before_text": "Before",
+        "after_text": "After",
+        "drag_initial_position": 50,
+        "before_text_color": "#ffffff",
+        "after_text_color": "#ffffff",
+        "drag_cursor_background": "#ffffff",
+        "drag_cursor_color": "#000000",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "custom_padding": false
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

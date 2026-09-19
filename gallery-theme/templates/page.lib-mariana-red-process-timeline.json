@@ -1,0 +1,58 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--process-timeline",
+      "settings": {
+        "eyebrow": "My process",
+        "padding": 88
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "step",
+          "settings": {
+            "title": "Discover",
+            "text": "We talk about your vision, brand goals, and audience."
+          }
+        },
+        "bl-2": {
+          "type": "step",
+          "settings": {
+            "title": "Strategy",
+            "text": "I define your brand style, moodboard, and concept."
+          }
+        },
+        "bl-3": {
+          "type": "step",
+          "settings": {
+            "title": "Design",
+            "text": "I bring your brand to life with typography and graphics."
+          }
+        },
+        "bl-4": {
+          "type": "step",
+          "settings": {
+            "title": "Refine",
+            "text": "We polish the details so everything feels perfect."
+          }
+        },
+        "bl-5": {
+          "type": "step",
+          "settings": {
+            "title": "Deliver",
+            "text": "You get a polished brand kit ready to launch and shine."
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "sections": {
+    "library": {
+      "type": "nocturne-store--stats-achievement",
+      "settings": {
+        "max_width": 1400,
+        "space_top": 80,
+        "space_bottom": 80,
+        "mobile_gutter": 20,
+        "grid_gap": 20,
+        "row_min_height": 250,
+        "border_radius": 14,
+        "image_radius": 14,
+        "image_position": "center",
+        "heading": "Why Choose Us",
+        "heading_size": 40,
+        "heading_weight": 700,
+        "heading_spacing": 0,
+        "heading_color": "#2C2420",
+        "subheading": "Discover what makes us different",
+        "subheading_size": 17,
+        "subheading_color": "#6B5B4F",
+        "header_margin_bottom": 60,
+        "background_color": "#FAF8F5",
+        "card_background": "#FFFFFF",
+        "card_border_width": 1,
+        "card_border_color": "#EEE9E4",
+        "accent_color": "#8B7355",
+        "description_color": "#6B5B4F",
+        "card_padding": 28,
+        "number_size": 40,
+        "number_weight": 700,
+        "title_size": 17,
+        "title_weight": 600,
+        "desc_size": 14,
+        "icon_size": 34,
+        "shadow_opacity": 8,
+        "enable_hover": true,
+        "hover_lift": 6,
+        "enable_animation": true,
+        "animation_duration": 700,
+        "mobile_edge_height": 260,
+        "mobile_heading_size": 30
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "edge_image_left",
+          "settings": {}
+        },
+        "bl-2": {
+          "type": "stat_card",
+          "settings": {
+            "icon": "user",
+            "icon_color": "#8B7355",
+            "stat_number": "15+",
+            "number_color": "#2C2420",
+            "stat_title": "Years of Experience",
+            "title_color": "#2C2420",
+            "stat_description": "Creating sleep and wellbeing products with unmatched care and expertise.",
+            "description_color": "#6B5B4F"
+          }
+        },
+        "bl-3": {
+          "type": "center_image",
+          "settings": {}
+        },
+        "bl-4": {
+          "type": "stat_card",
+          "settings": {
+            "icon": "star",
+            "icon_color": "#8B7355",
+            "stat_number": "12",
+            "number_color": "#2C2420",
+            "stat_title": "Design Awards",
+            "title_color": "#2C2420",
+            "stat_description": "Recognized for exceptional design, innovation and customer satisfaction.",
+            "description_color": "#6B5B4F"
+          }
+        },
+        "bl-5": {
+          "type": "edge_image_right",
+          "settings": {}
+        },
+        "bl-6": {
+          "type": "stat_card",
+          "settings": {
+            "icon": "briefcase",
+            "icon_color": "#8B7355",
+            "stat_number": "250+",
+            "number_color": "#2C2420",
+            "stat_title": "Projects Completed",
+            "title_color": "#2C2420",
+            "stat_description": "Delivering thoughtfully designed solutions loved worldwide.",
+            "description_color": "#6B5B4F"
+          }
+        },
+        "bl-7": {
+          "type": "center_image",
+          "settings": {}
+        },
+        "bl-8": {
+          "type": "stat_card",
+          "settings": {
+            "icon": "heart",
+            "icon_color": "#8B7355",
+            "stat_number": "98%",
+            "number_color": "#2C2420",
+            "stat_title": "Client Satisfaction",
+            "title_color": "#2C2420",
+            "stat_description": "Built on exceptional client trust and satisfaction.",
+            "description_color": "#6B5B4F"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6",
+        "bl-7",
+        "bl-8"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

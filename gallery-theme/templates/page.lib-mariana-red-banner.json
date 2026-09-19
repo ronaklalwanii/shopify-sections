@@ -1,0 +1,30 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--banner",
+      "settings": {
+        "overlay_opacity": 25,
+        "height": "md",
+        "min_height": 380,
+        "eyebrow": "End of season",
+        "heading": "Up to 40% Off",
+        "heading_size": "h1"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "button",
+          "settings": {
+            "label": "Shop the sale",
+            "style": "dark"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

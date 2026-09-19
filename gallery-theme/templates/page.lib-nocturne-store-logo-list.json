@@ -1,0 +1,59 @@
+{
+  "sections": {
+    "library": {
+      "type": "nocturne-store--logo-list",
+      "settings": {
+        "full_width": true,
+        "stack_mobile": true,
+        "title": "Logo list",
+        "text_alignment": "start",
+        "items_per_row": 5,
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "logo",
+          "settings": {
+            "logo_width": 120
+          }
+        },
+        "bl-2": {
+          "type": "logo",
+          "settings": {
+            "logo_width": 120
+          }
+        },
+        "bl-3": {
+          "type": "logo",
+          "settings": {
+            "logo_width": 120
+          }
+        },
+        "bl-4": {
+          "type": "logo",
+          "settings": {
+            "logo_width": 120
+          }
+        },
+        "bl-5": {
+          "type": "logo",
+          "settings": {
+            "logo_width": 120
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

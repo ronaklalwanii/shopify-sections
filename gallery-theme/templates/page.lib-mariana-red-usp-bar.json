@@ -1,0 +1,59 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--usp-bar",
+      "settings": {
+        "style": "bar",
+        "heading": "Why shop with us",
+        "dividers": true,
+        "card": false,
+        "center": false,
+        "width": "page",
+        "spacing": "compact"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "item",
+          "settings": {
+            "icon": "leaf",
+            "title": "Sustainable fabrics",
+            "text": "Kind to skin and planet"
+          }
+        },
+        "bl-2": {
+          "type": "item",
+          "settings": {
+            "icon": "hands",
+            "title": "Ethically made",
+            "text": "Fair craftsmanship"
+          }
+        },
+        "bl-3": {
+          "type": "item",
+          "settings": {
+            "icon": "refresh",
+            "title": "Free returns",
+            "text": "Within 30 days"
+          }
+        },
+        "bl-4": {
+          "type": "item",
+          "settings": {
+            "icon": "globe",
+            "title": "Worldwide shipping",
+            "text": "Delivered to your door"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--about-stats",
+      "settings": {
+        "eyebrow": "About me",
+        "heading": "Strategy meets creativity:",
+        "text": "I'm Mariana, a brand and digital designer with a passion for creating visual experiences and building meaningful brand identities that capture and connect.",
+        "button_label": "More about me",
+        "padding": 88
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "stat",
+          "settings": {
+            "icon": "sparkle",
+            "title": "5+ Years Experience",
+            "text": "Helping businesses stand out and find their people."
+          }
+        },
+        "bl-2": {
+          "type": "stat",
+          "settings": {
+            "icon": "flower",
+            "title": "100+ Projects Completed",
+            "text": "From small local brands to national names."
+          }
+        },
+        "bl-3": {
+          "type": "stat",
+          "settings": {
+            "icon": "heart",
+            "title": "Brand Strategist",
+            "text": "Turning ideas into visual stories that connect."
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

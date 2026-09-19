@@ -1,0 +1,86 @@
+{
+  "sections": {
+    "library": {
+      "type": "nocturne-store--split-featured-product",
+      "settings": {
+        "manual_title": "Weighted Blanket",
+        "manual_description": "<p>Our signature blanket uses gentle, even pressure to calm your body and quiet your mind.</p>",
+        "manual_price": 199,
+        "manual_compare_price": 0,
+        "eyebrow": "THE WINTER EDIT · 01",
+        "subtitle": "Deep pressure. Deeper rest.",
+        "heading_size": "3",
+        "benefit_1": "Promotes deeper, uninterrupted sleep",
+        "benefit_2": "Reduces stress and anxiety",
+        "benefit_3": "Ultra-soft, breathable & temperature regulating",
+        "price_prefix": "From",
+        "cta_label": "Shop Now",
+        "cta_new_tab": false,
+        "show_seasonal_note": true,
+        "seasonal_note": "Christmas delivery available",
+        "show_product_badge": true,
+        "product_badge_text": "Christmas Favourite",
+        "show_top_decoration": false,
+        "top_decoration_width": 48,
+        "top_decoration_opacity": 100,
+        "show_bottom_decoration": false,
+        "bottom_decoration_width": 42,
+        "bottom_decoration_opacity": 100,
+        "max_content_width": 1480,
+        "section_gap": 38,
+        "image_aspect_ratio": "4:5",
+        "padding_horizontal": 48,
+        "padding_vertical": 74,
+        "border_radius": 14,
+        "background_color": "#F3EDE2",
+        "text_color": "#111A16",
+        "accent_color": "#B59A62",
+        "button_background": "#2D3A30",
+        "button_text_color": "#F3EDE2",
+        "feature_card_background": "#F7F1E7",
+        "feature_card_border": "#D8C5AA",
+        "feature_card_hover_background": "#2D3A30",
+        "feature_card_hover_text": "#F3EDE2"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "feature",
+          "settings": {
+            "feature_title": "Premium Materials",
+            "feature_description": "OEKO-TEX® certified and skin-safe."
+          }
+        },
+        "bl-2": {
+          "type": "feature",
+          "settings": {
+            "feature_title": "Even Weight",
+            "feature_description": "Glass microbeads for balanced pressure."
+          }
+        },
+        "bl-3": {
+          "type": "feature",
+          "settings": {
+            "feature_title": "All-Season Comfort",
+            "feature_description": "Breathable fabric keeps you cozy, not sweaty."
+          }
+        },
+        "bl-4": {
+          "type": "feature",
+          "settings": {
+            "feature_title": "Beautifully Crafted",
+            "feature_description": "Made to last. Designed to be loved."
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

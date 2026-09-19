@@ -1,0 +1,181 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--ss-hero-16",
+      "settings": {
+        "hero_height": "auto",
+        "hero_fixed_height": 600,
+        "body_layout": "text_image",
+        "body_layout_mobile": "image_text",
+        "body_gap": 52,
+        "body_gap_mobile": 24,
+        "content_align": "left",
+        "content_align_mobile": "center",
+        "content_vertical_align": "center",
+        "image_width": 40,
+        "image_ratio_mobile": "landscape",
+        "image_radius": 16,
+        "background_overlay": 0,
+        "background_color": "#D3E7F9",
+        "background_overlay_color": "#000000",
+        "border_color": "#000000",
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "margin_horizontal": 0,
+        "margin_horizontal_mobile": 0,
+        "padding_top": 64,
+        "padding_bottom": 64,
+        "padding_horizontal": 5,
+        "padding_horizontal_mobile": 1.5,
+        "full_width": false,
+        "content_width": 1200,
+        "border_thickness": 0,
+        "section_radius": 0
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "review",
+          "settings": {
+            "review_padding_horizontal": 14,
+            "review_padding_horizontal_mobile": 14,
+            "review_padding_vertical": 14,
+            "review_padding_vertical_mobile": 14,
+            "review_radius": 10,
+            "review_bg_opacity": 0.4,
+            "review_mt": 16,
+            "review_mt_mobile": 10,
+            "stars_count": 4.5,
+            "stars_size": 18,
+            "stars_size_mobile": 14,
+            "review": "<p>Excellent <strong>4.6</strong> | 100,000+ Customers</p>",
+            "review_custom": false,
+            "review_size": 16,
+            "review_size_mobile": 12,
+            "review_height": 130,
+            "review_color": "#000000",
+            "stars_color": "#ffffff",
+            "stars_bg_color": "#00B67A",
+            "review_bg_color": "#FFFFFF"
+          }
+        },
+        "bl-2": {
+          "type": "heading",
+          "settings": {
+            "heading": "<h1>Heading</h1>",
+            "heading_custom": false,
+            "heading_size": 56,
+            "heading_size_mobile": 28,
+            "heading_height": 130,
+            "heading_mt": 24,
+            "heading_mt_mobile": 24,
+            "heading_color": "#005800"
+          }
+        },
+        "bl-3": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Add text content about your brand that makes a statement</p>",
+            "text_custom": false,
+            "text_size": 18,
+            "text_size_mobile": 16,
+            "text_height": 150,
+            "text_mt": 16,
+            "text_mt_mobile": 10,
+            "text_color": "#000000"
+          }
+        },
+        "bl-4": {
+          "type": "button",
+          "settings": {
+            "button": "SHOP OUR SALE",
+            "button_custom": false,
+            "button_size": 16,
+            "button_size_mobile": 14,
+            "button_height": 100,
+            "button_padding_horizontal": 62,
+            "button_padding_horizontal_mobile": 62,
+            "button_padding_vertical": 26,
+            "button_padding_vertical_mobile": 26,
+            "button_radius": 8,
+            "button_border_thickness": 1,
+            "button_mt": 36,
+            "button_mt_mobile": 24,
+            "button_style": "non_outline_arrow",
+            "button_color": "#000000",
+            "button_hover_color": "#000000",
+            "button_bg_color": "#ffe658",
+            "button_bg_hover_color": "#fff89c",
+            "button_border_color": "#000000",
+            "button_border_hover_color": "#000000"
+          }
+        },
+        "bl-5": {
+          "type": "feature",
+          "settings": {
+            "feature_gap": 12,
+            "feature_gap_mobile": 12,
+            "feature_mt": 30,
+            "feature_mt_mobile": 20,
+            "icon_size": 20,
+            "icon_size_mobile": 16,
+            "text": "Feature text",
+            "text_custom": false,
+            "text_size": 16,
+            "text_size_mobile": 14,
+            "text_height": 100,
+            "icon_color": "#000000",
+            "text_color": "#000000"
+          }
+        },
+        "bl-6": {
+          "type": "feature",
+          "settings": {
+            "feature_gap": 12,
+            "feature_gap_mobile": 12,
+            "feature_mt": 14,
+            "feature_mt_mobile": 14,
+            "icon_size": 20,
+            "icon_size_mobile": 16,
+            "text": "Feature text",
+            "text_custom": false,
+            "text_size": 16,
+            "text_size_mobile": 14,
+            "text_height": 100,
+            "icon_color": "#000000",
+            "text_color": "#000000"
+          }
+        },
+        "bl-7": {
+          "type": "feature",
+          "settings": {
+            "feature_gap": 12,
+            "feature_gap_mobile": 12,
+            "feature_mt": 14,
+            "feature_mt_mobile": 14,
+            "icon_size": 20,
+            "icon_size_mobile": 16,
+            "text": "Feature text",
+            "text_custom": false,
+            "text_size": 16,
+            "text_size_mobile": 14,
+            "text_height": 100,
+            "icon_color": "#000000",
+            "text_color": "#000000"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6",
+        "bl-7"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,100 @@
+{%- liquid
+  assign loading = loading | default: 'lazy'
+  assign fetchpriority = fetchpriority | default: 'auto'
+  assign sizes = sizes | default: 'min(100vw, var(--page-width))'
+  assign widths = '300,400,500,600,700,800,900,1000,1200,1400,1600,1800,2000,2200,2400,2600,2800,3000,3200'
+
+  # Allow override video url type and id
+  if video_url != blank
+    assign video_url_type = video_url_type | default: video_url.type
+    assign video_url_id = video_url_id | default: video_url.id
+  else
+    assign video_url_type = video.host
+    # Extract video ID from external video (YouTube/Vimeo)
+    if video.media_type == 'external_video'
+      assign video_url_id = video.external_id
+    endif
+  endif
+
+  assign video_id = video.id | default: video_url_id
+  assign video_alt = video.alt | default: description
+  comment
+    Sleek's 'accessibility.load_video' key has no equivalent in Change, and adding
+    one to en.default.json would fail MatchingTranslations against the other 27
+    locale files. Inlined instead, consistent with the rest of this port's strings.
+    ('play_video' below does map onto Change's existing general.accessibility key.)
+  endcomment
+  assign alt = video_alt | prepend: 'Load video: ' | escape
+  if cover_image != blank
+    assign preview_image = cover_image
+  elsif video != blank
+    assign preview_image = video.preview_image
+  endif
+
+  capture poster
+    if preview_image != blank
+      echo preview_image | image_url: width: preview_image.width | image_tag: loading: loading, fetchpriority: fetchpriority, sizes: sizes, widths: widths, is: 'image-lazy', alt: alt
+    else
+      echo 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg'
+    endif
+  endcapture
+-%}
+{{ video_url_type }}
+{%- if video != blank or video_url != blank -%}
+  <video-element
+    class="media-wrapper"
+    {%- if video_url_type == 'youtube' or video_url_type == 'vimeo' %}
+      source="{{ video_url_type }}"
+    {% endif -%}
+    {%- if autoplay %}
+      autoplay
+    {% endif -%}
+  >
+    {{- poster -}}
+    <template>
+      {%- if video_url_type == 'youtube' or video_url_type == 'vimeo' -%}
+        {%- if video_url_type == 'youtube' -%}
+          <iframe
+            src="https://www.youtube.com/embed/{{ video_url_id }}?playsinline=1{% if controls %}&controls=1{% else %}&controls=0{% endif %}{% if autoplay %}&autoplay=1{% endif %}{% if muted %}&mute=1{% endif %}{% if loop %}&loop=1{% endif %}&playlist={{ video_url_id }}&enablejsapi=1&rel=0&modestbranding=1&origin={{ 'https://' | append: request.host | url_encode }}"
+            allow="autoplay; encrypted-media"
+            allowfullscreen="allowfullscreen"
+          ></iframe>
+        {%- elsif video_url_type == 'vimeo' -%}
+          <iframe
+            src="https://player.vimeo.com/video/{{ video_url_id }}?autopause=1{% if controls %}&background=0{% else %}&background=1{% endif %}{% if autoplay %}&autoplay=1{% endif %}{% if muted %}&muted=1{% endif %}{% if loop %}&loop=1{% endif %}&transparent=0&responsive=1&portrait=0&title=0&byline=0"
+            allow="autoplay; encrypted-media;"
+            allowfullscreen="allowfullscreen"
+          ></iframe>
+        {%- endif -%}
+      {%- elsif video != blank -%}
+        {{-
+          video
+          | video_tag:
+            playsinline: true,
+            muted: muted,
+            autoplay: true,
+            loop: loop,
+            controls: controls,
+            preload: 'none',
+            image_size: '800x'
+        -}}
+      {%- endif -%}
+    </template>
+    {%- if show_play_button -%}
+      <button
+        type="button"
+        id="DeferredPoster-{{ video_id }}"
+        class="media__poster absolute top-0 left-0 w-full h-full"
+        aria-label="{{ 'general.accessibility.play_video' | t | escape }}"
+      >
+        <span class="media__play-button absolute flex items-center justify-center rounded-full pointer-events-auto z-10 motion-reduce">
+          {%- render 'sleep-and-wellbeing--sleek-hero-icon-play', size: '2xl' -%}
+        </span>
+      </button>
+    {%- endif -%}
+  </video-element>
+{%- else -%}
+  <div class="media-wrapper">
+    {{- poster -}}
+  </div>
+{%- endif -%}

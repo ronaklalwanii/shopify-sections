@@ -1,0 +1,63 @@
+{%- comment -%} Section Library: injected global assets for store "mariana-red" {%- endcomment -%}
+{{ 'mariana-red--base.css' | asset_url | stylesheet_tag }}
+{{ 'mariana-red--components.css' | asset_url | stylesheet_tag }}
+{% render 'mariana-red--layout-tokens' %}
+{%- comment -%} Marquee ribbon — infinite scrolling ticker of items. Optional diagonal rotation (Suncare style). Horizon-safe settings only. {%- endcomment -%}
+<section class="mrq mrq-{{ section.id }} mrq--r{{ section.settings.rotation }}" style="--mrq-speed: {{ section.settings.speed | default: 30 }}s; --mrq-angle: {{ section.settings.rotation }}deg;">
+  <div class="mrq__track">
+    {%- for i in (1..2) -%}
+      <div class="mrq__group" {% if forloop.first %}aria-hidden="false"{% else %}aria-hidden="true"{% endif %}>
+        {%- for block in section.blocks -%}
+          <span class="mrq__item" {{ block.shopify_attributes }}>
+            {%- if section.settings.star_badge -%}<span class="mrq__star">✳</span>{%- endif -%}
+            {{ block.settings.text | escape }}
+          </span>
+        {%- endfor -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+{% style %}
+  .mrq-{{ section.id }} { background: {{ section.settings.background_color }}; color: {{ section.settings.text_color }}; }
+  .mrq-{{ section.id }} { overflow: hidden; padding-block: 0.9rem; }
+  .mrq-{{ section.id }}.mrq--r12, .mrq-{{ section.id }}.mrq--r-12 { max-width: 120vw; margin-inline: -10vw; }
+  .mrq-{{ section.id }}.mrq--r12 { transform: rotate(2.5deg); }
+  .mrq-{{ section.id }}.mrq--r-12 { transform: rotate(-2.5deg); }
+  .mrq-{{ section.id }} .mrq__track { display: flex; width: max-content; animation: mrq-scroll-{{ section.id | replace: '_', '' }} var(--mrq-speed) linear infinite; }
+  .mrq-{{ section.id }} .mrq__group { display: flex; align-items: center; }
+  .mrq-{{ section.id }} .mrq__item {
+    display: inline-flex; align-items: center; gap: 0.8rem;
+    font-size: {{ section.settings.text_size }}px; font-weight: 700;
+    text-transform: {% if section.settings.uppercase %}uppercase{% else %}none{% endif %};
+    letter-spacing: 0.06em; white-space: nowrap; padding-inline: 1.6rem;
+  }
+  .mrq-{{ section.id }} .mrq__star { font-size: 0.9em; }
+  @keyframes mrq-scroll-{{ section.id | replace: '_', '' }} { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .mrq-{{ section.id }} .mrq__track { animation: none; } }
+{% endstyle %}
+{% schema %}
+{
+  "name": "Marquee ribbon",
+  "tag": "section",
+  "max_blocks": 10,
+  "settings": [
+    { "type": "range", "id": "speed", "label": "Scroll speed", "min": 10, "max": 80, "step": 5, "unit": "s", "default": 30 },
+    { "type": "range", "id": "rotation", "label": "Tilt", "min": -12, "max": 12, "step": 1, "unit": "°", "default": 0 },
+    { "type": "range", "id": "text_size", "label": "Text size", "min": 11, "max": 30, "step": 1, "unit": "px", "default": 14 },
+    { "type": "checkbox", "id": "uppercase", "label": "Uppercase", "default": true },
+    { "type": "checkbox", "id": "star_badge", "label": "Star marker between items", "default": true },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#111111" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#ffffff" }
+  ],
+  "blocks": [
+    { "type": "item", "name": "Item", "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Free shipping on all orders" } ] }
+  ],
+  "presets": [
+    { "name": "Marquee ribbon", "blocks": [
+      { "type": "item", "settings": { "text": "20% off limited time sale" } },
+      { "type": "item", "settings": { "text": "Latest trends drop now" } },
+      { "type": "item", "settings": { "text": "Winter sale" } }
+    ] }
+  ]
+}
+{% endschema %}

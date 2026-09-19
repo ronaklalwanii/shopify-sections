@@ -1,0 +1,17 @@
+{
+  "sections": {
+    "library": {
+      "type": "scrolling-video",
+      "settings": {
+        "header_height": 550,
+        "svg_fill_color": "#7acbe4",
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

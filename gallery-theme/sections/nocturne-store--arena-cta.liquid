@@ -1,0 +1,99 @@
+{%- comment -%} Section Library: injected global assets for store "nocturne-store" {%- endcomment -%}
+{{ 'nocturne-store--theme.css' | asset_url | stylesheet_tag }}
+{{ 'nocturne-store--product.css' | asset_url | stylesheet_tag }}
+{% render 'nocturne-store--css-variables' %}
+{%- comment -%} Arena CTA — Find apartment split beige banner {%- endcomment -%}
+<section id="ArenaCta-{{ section.id }}" class="ac">
+  {%- style -%}
+    #ArenaCta-{{ section.id }} {
+      --ac-bg: {{ section.settings.bg_color }};
+      --ac-max-w: {{ section.settings.max_width }}px;
+      --ac-gutter: {{ section.settings.gutter }}px;
+      --ac-space-top: {{ section.settings.space_top }}px;
+      --ac-space-bottom: {{ section.settings.space_bottom }}px;
+      --ac-radius: {{ section.settings.radius }}px;
+      --ac-pad: {{ section.settings.card_pad }}px;
+      --ac-gap: {{ section.settings.gap }}px;
+      --ac-card-bg: {{ section.settings.card_bg }};
+      --ac-border: {{ section.settings.border_color }};
+    }
+    #ArenaCta-{{ section.id }} { background: var(--ac-bg); padding: var(--ac-space-top) var(--ac-gutter) var(--ac-space-bottom); overflow-x: clip; }
+    #ArenaCta-{{ section.id }} .ac__shell { width: min(100%, var(--ac-max-w)); margin: 0 auto; }
+    #ArenaCta-{{ section.id }} .ac__card {
+      background: var(--ac-card-bg); border: 1px solid var(--ac-border); border-radius: var(--ac-radius); padding: var(--ac-pad);
+      display: grid; grid-template-columns: .9fr 1.1fr; gap: var(--ac-gap); align-items: center; min-width: 0;
+    }
+    #ArenaCta-{{ section.id }} .ac__eyebrow { margin: 0; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: {{ section.settings.eyebrow_color }}; }
+    #ArenaCta-{{ section.id }} .ac__title { margin: 12px 0 0; font-family: Georgia, serif; font-size: {{ section.settings.title_size }}px; color: {{ section.settings.title_color }}; line-height: 1.15; font-weight: 400; }
+    #ArenaCta-{{ section.id }} .ac__subtitle { margin: 10px 0 0; font-size: 13px; color: {{ section.settings.subtitle_color }}; line-height: 1.5; max-width: 420px; }
+    #ArenaCta-{{ section.id }} .ac__buttons { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+    #ArenaCta-{{ section.id }} .ac__btn {
+      display: inline-flex; align-items: center; justify-content: center; height: 44px; padding: 0 22px; border-radius: 8px;
+      font-size: 13px; font-weight: 500; text-decoration: none; white-space: nowrap; transition: opacity 200ms ease;
+    }
+    #ArenaCta-{{ section.id }} .ac__btn--primary { background: {{ section.settings.btn_bg }}; color: {{ section.settings.btn_text }}; border: 1px solid {{ section.settings.btn_bg }}; }
+    #ArenaCta-{{ section.id }} .ac__btn--secondary { background: transparent; color: #2B2117; border: 1px solid transparent; padding: 0 6px; }
+    #ArenaCta-{{ section.id }} .ac__btn:hover { opacity: .85; }
+    #ArenaCta-{{ section.id }} .ac__media { border-radius: var(--ac-radius); overflow: hidden; aspect-ratio: 16/9; background: #EDE3D3; min-height: 220px; position: relative; }
+    #ArenaCta-{{ section.id }} .ac__media img { width: 100%; height: 100%; object-fit: cover; display: block; position: absolute; inset: 0; }
+    @media (max-width: 900px) {
+      #ArenaCta-{{ section.id }} .ac__card { grid-template-columns: 1fr; }
+      #ArenaCta-{{ section.id }} .ac__media { aspect-ratio: 16/10; }
+    }
+  {%- endstyle -%}
+  <div class="ac__shell">
+    <div class="ac__card">
+      <div style="min-width:0">
+        <p class="ac__eyebrow">{{ section.settings.eyebrow }}</p>
+        <h2 class="ac__title">{{ section.settings.title | newline_to_br }}</h2>
+        <p class="ac__subtitle">{{ section.settings.subtitle }}</p>
+        <div class="ac__buttons">
+          {%- if section.settings.primary_label != blank -%}<a class="ac__btn ac__btn--primary" {% if section.settings.primary_link != blank %}href="{{ section.settings.primary_link }}"{% endif %}>{{ section.settings.primary_label }}</a>{%- endif -%}
+          {%- if section.settings.secondary_label != blank -%}<a class="ac__btn ac__btn--secondary" {% if section.settings.secondary_link != blank %}href="{{ section.settings.secondary_link }}"{% endif %}>{{ section.settings.secondary_label }} →</a>{%- endif -%}
+        </div>
+      </div>
+      <div class="ac__media">
+        {%- if section.settings.image != blank -%}
+          <img src="{{ section.settings.image | image_url: width: 1000 }}" alt="{{ section.settings.image.alt | escape }}" loading="lazy" width="1000" height="600">
+        {%- else -%}
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#9A8A78;font-size:13px;">Upload image</div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Arena CTA",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "color", "id": "bg_color", "label": "Page bg", "default": "#FDF6E8" },
+    { "type": "range", "id": "max_width", "label": "Max width", "min": 900, "max": 1800, "step": 20, "default": 1400, "unit": "px" },
+    { "type": "range", "id": "gutter", "label": "Gutter", "min": 0, "max": 40, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "space_top", "label": "Space above", "min": 0, "max": 80, "step": 4, "default": 12, "unit": "px" },
+    { "type": "range", "id": "space_bottom", "label": "Space below", "min": 0, "max": 80, "step": 4, "default": 40, "unit": "px" },
+    { "type": "range", "id": "radius", "label": "Radius", "min": 0, "max": 32, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "card_pad", "label": "Card pad", "min": 16, "max": 32, "step": 2, "default": 24, "unit": "px" },
+    { "type": "range", "id": "gap", "label": "Gap", "min": 12, "max": 32, "step": 2, "default": 20, "unit": "px" },
+    { "type": "color", "id": "card_bg", "label": "Card bg", "default": "#F5EBDC" },
+    { "type": "color", "id": "border_color", "label": "Border", "default": "#EDE3D3" },
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Find your new home" },
+    { "type": "textarea", "id": "title", "label": "Title", "default": "Find an apartment\nin your ideal home" },
+    { "type": "range", "id": "title_size", "label": "Title size", "min": 20, "max": 40, "step": 2, "default": 26, "unit": "px" },
+    { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "Current floor plans, favorable purchase terms and support at all stages." },
+    { "type": "image_picker", "id": "image", "label": "Right image" },
+    { "type": "text", "id": "primary_label", "label": "Primary label", "default": "View projects" },
+    { "type": "url", "id": "primary_link", "label": "Primary link" },
+    { "type": "text", "id": "secondary_label", "label": "Secondary label", "default": "Calculate mortgage" },
+    { "type": "url", "id": "secondary_link", "label": "Secondary link" },
+    { "type": "color", "id": "btn_bg", "label": "Primary button background", "default": "#C2A78A" },
+    { "type": "color", "id": "btn_text", "label": "Primary button text", "default": "#FFFFFF" },
+    { "type": "color", "id": "eyebrow_color", "label": "Eyebrow color", "default": "#9A8A78" },
+    { "type": "color", "id": "title_color", "label": "Title color", "default": "#2B2117" },
+    { "type": "color", "id": "subtitle_color", "label": "Subtitle color", "default": "#6B5E4F" }
+  ],
+  "presets": [{ "name": "Arena CTA" }]
+}
+{% endschema %}

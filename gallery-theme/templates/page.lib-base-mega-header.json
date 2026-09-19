@@ -1,0 +1,144 @@
+{
+  "sections": {
+    "library": {
+      "type": "mega-header",
+      "settings": {
+        "layout": "classic",
+        "menu_trigger": "hover",
+        "logo_width": 130,
+        "nav_alignment": "left",
+        "height": 72,
+        "max_width": 1400,
+        "radius": 8,
+        "sticky": true,
+        "show_search": true,
+        "show_account": true,
+        "bg": "#ffffff",
+        "fg": "#111111",
+        "border": "#e6e6e6",
+        "panel_bg": "#ffffff",
+        "panel_fg": "#111111",
+        "accent": "#d63a2f"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "promos",
+          "settings": {
+            "menu_columns": 3,
+            "promo_width": 40,
+            "promo_columns": 2
+          }
+        },
+        "bl-2": {
+          "type": "promos",
+          "settings": {
+            "menu_columns": 3,
+            "promo_width": 40,
+            "promo_columns": 2
+          }
+        },
+        "bl-3": {
+          "type": "cards",
+          "settings": {
+            "menu_columns": 3,
+            "promo_width": 40,
+            "promo_columns": 2
+          }
+        },
+        "bl-4": {
+          "type": "cards",
+          "settings": {
+            "menu_columns": 3,
+            "promo_width": 40,
+            "promo_columns": 2
+          }
+        },
+        "bl-5": {
+          "type": "products",
+          "settings": {
+            "menu_columns": 3,
+            "promo_width": 45,
+            "promo_columns": 3,
+            "heading": "Featured"
+          }
+        },
+        "bl-6": {
+          "type": "products",
+          "settings": {
+            "menu_columns": 3,
+            "promo_width": 45,
+            "promo_columns": 3,
+            "heading": "Featured"
+          }
+        },
+        "bl-7": {
+          "type": "image_cards",
+          "settings": {
+            "columns": 3,
+            "button_label_1": "Shop Now",
+            "content_position_1": "top-left",
+            "light_text_1": false,
+            "button_label_2": "Shop Now",
+            "content_position_2": "top-left",
+            "light_text_2": false,
+            "button_label_3": "Shop Now",
+            "content_position_3": "top-left",
+            "light_text_3": false
+          }
+        },
+        "bl-8": {
+          "type": "image_cards",
+          "settings": {
+            "columns": 3,
+            "button_label_1": "Shop Now",
+            "content_position_1": "top-left",
+            "light_text_1": false,
+            "button_label_2": "Shop Now",
+            "content_position_2": "top-left",
+            "light_text_2": false,
+            "button_label_3": "Shop Now",
+            "content_position_3": "top-left",
+            "light_text_3": false
+          }
+        },
+        "bl-9": {
+          "type": "products_carousel",
+          "settings": {
+            "menu_columns": 3,
+            "promo_width": 45,
+            "collections_font_size": 15,
+            "collections_font_weight": "600",
+            "heading": "Trending",
+            "product_columns": 3
+          }
+        },
+        "bl-10": {
+          "type": "products_carousel",
+          "settings": {
+            "menu_columns": 3,
+            "promo_width": 45,
+            "collections_font_size": 15,
+            "collections_font_weight": "600",
+            "heading": "Trending",
+            "product_columns": 3
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6",
+        "bl-7",
+        "bl-8",
+        "bl-9",
+        "bl-10"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

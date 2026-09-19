@@ -1,0 +1,74 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--the-reality",
+      "settings": {
+        "padding_top": 88,
+        "padding_bottom": 88,
+        "max_width": 1680,
+        "side_padding": 56,
+        "intro_width": 22,
+        "stat_width": 24,
+        "stat_gap": 56,
+        "background": "#0B0B0A",
+        "image_scrim": 90,
+        "eyebrow": "The reality",
+        "eyebrow_size": 12,
+        "eyebrow_tracking": 14,
+        "eyebrow_weight": "600",
+        "eyebrow_color": "#FFFFFF",
+        "eyebrow_gap": 22,
+        "heading": "Recovery is becoming a necessity.",
+        "heading_size": 40,
+        "heading_line_height": 118,
+        "heading_letter_spacing": -1,
+        "heading_weight": "500",
+        "heading_color": "#FFFFFF",
+        "heading_max_width": 300,
+        "number_size": 64,
+        "number_weight": "400",
+        "number_letter_spacing": -1,
+        "number_color": "#FFFFFF",
+        "number_gap": 28,
+        "stat_text_size": 16,
+        "stat_text_line_height": 154,
+        "stat_text_color": "#FFFFFF",
+        "stat_text_max_width": 240,
+        "source_size": 13,
+        "source_color": "#9C9A96",
+        "source_gap": 20,
+        "divider_color": "#FFFFFF",
+        "divider_opacity": 16,
+        "enable_countup": true,
+        "countup_duration": 1800,
+        "enable_reveal": true,
+        "enable_custom_font": false
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "stat",
+          "settings": {
+            "number": "964K",
+            "description": "UK workers affected by work-related stress, depression or anxiety.",
+            "source": "Source: HSE 2024/25"
+          }
+        },
+        "bl-2": {
+          "type": "stat",
+          "settings": {
+            "number": "22.1M",
+            "description": "working days lost to work-related stress, depression or anxiety.",
+            "source": "Source: HSE 2024/25"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

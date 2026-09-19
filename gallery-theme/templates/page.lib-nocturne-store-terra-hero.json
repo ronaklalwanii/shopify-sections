@@ -1,0 +1,61 @@
+{
+  "sections": {
+    "library": {
+      "type": "nocturne-store--terra-hero",
+      "settings": {
+        "bg_color": "#0F0F0F",
+        "max_width": 1400,
+        "space_top": 12,
+        "space_bottom": 12,
+        "gutter": 16,
+        "radius": 24,
+        "min_height": 760,
+        "min_height_mobile": 640,
+        "content_max_width": 680,
+        "content_pad_x": 48,
+        "content_pad_y": 48,
+        "content_pad_x_mobile": 20,
+        "content_pad_y_mobile": 28,
+        "overlay_color": "#000000",
+        "overlay_opacity": 55,
+        "title": "YOUR BRAND",
+        "subtitle": "Designing landscapes that live with your home",
+        "description": "<p>We create thoughtful, elegant gardens where every detail works for beauty, comfort, and harmony.</p>",
+        "title_size": 148,
+        "title_size_mobile": 72,
+        "title_weight": 500,
+        "title_tracking": -6,
+        "title_color": "#EDE8E1",
+        "subtitle_size": 30,
+        "subtitle_size_mobile": 22,
+        "subtitle_weight": 500,
+        "subtitle_color": "#EDE8E1",
+        "subtitle_max_width": 520,
+        "subtitle_margin_top": 18,
+        "desc_size": 13,
+        "desc_color": "#EDE8E1",
+        "desc_opacity": 70,
+        "desc_max_width": 420,
+        "desc_margin_top": 14,
+        "btn_label": "View projects",
+        "btn_height": 46,
+        "btn_pad_x": 26,
+        "btn_radius": 60,
+        "btn_font_size": 13,
+        "btn_font_weight": 500,
+        "btn_bg": "#EDE8E1",
+        "btn_text": "#0C0C0C",
+        "btn_gap": 14,
+        "circle_label": "↗",
+        "circle_size": 46,
+        "circle_border": "#EDE8E1",
+        "circle_color": "#EDE8E1",
+        "circle_bg": "rgba(0,0,0,0)",
+        "circle_icon_size": 16
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

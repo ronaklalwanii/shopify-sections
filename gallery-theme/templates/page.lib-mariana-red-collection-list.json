@@ -1,0 +1,57 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--collection-list",
+      "settings": {
+        "eyebrow": "Explore our collections",
+        "ornate": false,
+        "heading_align": "center",
+        "columns": 4,
+        "text_position": "overlay",
+        "scrim_style": "gradient",
+        "card_ratio": "4 / 5",
+        "link_label": "Shop collection",
+        "padding": 72
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "collection_item",
+          "settings": {
+            "show_arrow": false,
+            "price_note": false
+          }
+        },
+        "bl-2": {
+          "type": "collection_item",
+          "settings": {
+            "show_arrow": false,
+            "price_note": false
+          }
+        },
+        "bl-3": {
+          "type": "collection_item",
+          "settings": {
+            "show_arrow": false,
+            "price_note": false
+          }
+        },
+        "bl-4": {
+          "type": "collection_item",
+          "settings": {
+            "show_arrow": false,
+            "price_note": false
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

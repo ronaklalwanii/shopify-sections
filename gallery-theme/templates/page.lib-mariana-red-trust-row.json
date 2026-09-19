@@ -1,0 +1,56 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--trust-row",
+      "settings": {
+        "heading": "Loved by home cooks everywhere",
+        "quote": "The quality is exceptional. It feels like a pleasure to cook again.",
+        "author": "Sarah M.",
+        "social_title": "Real kitchens.\nReal stories.",
+        "social_handle": "Follow us @hearthandhome",
+        "faq_heading": "Common questions",
+        "faq_link_label": "View all FAQs",
+        "padding": 72
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "question",
+          "settings": {
+            "question": "What is your delivery time?",
+            "answer": "<p>Orders arrive within 3–5 working days.</p>"
+          }
+        },
+        "bl-2": {
+          "type": "question",
+          "settings": {
+            "question": "Do you offer a warranty?",
+            "answer": "<p>Every piece is covered by a 2-year warranty.</p>"
+          }
+        },
+        "bl-3": {
+          "type": "question",
+          "settings": {
+            "question": "Can I return an item?",
+            "answer": "<p>Returns are free within 30 days.</p>"
+          }
+        },
+        "bl-4": {
+          "type": "question",
+          "settings": {
+            "question": "Are your products sustainable?",
+            "answer": "<p>Responsibly sourced materials, plastic-free packaging.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

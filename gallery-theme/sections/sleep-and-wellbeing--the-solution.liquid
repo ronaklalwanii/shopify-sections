@@ -1,0 +1,859 @@
+{%- comment -%} Section Library: injected global assets for store "sleep-and-wellbeing" {%- endcomment -%}
+{{ 'sleep-and-wellbeing--theme.css' | asset_url | stylesheet_tag }}
+{{ 'sleep-and-wellbeing--product.css' | asset_url | stylesheet_tag }}
+{% render 'sleep-and-wellbeing--css-variables' %}
+{%- liquid
+  assign s = section.settings
+-%}
+{%- comment -%}
+  Participates in Change's section padding-collapsing chain, same as the hero.
+{%- endcomment -%}
+{%- render 'sleep-and-wellbeing--section-spacing-collapsing' -%}
+
+{{ 'sleep-and-wellbeing--the-solution.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sleep-and-wellbeing--the-solution.js' | asset_url }}" defer></script>
+
+{%- if s.enable_custom_font -%}
+  <style>{{ s.font_family | font_face: font_display: 'swap' }}</style>
+{%- endif -%}
+
+<style>
+  /* Per-instance design tokens, driven by the section schema. */
+  .ts--{{ section.id }} {
+    --ts-bg: {{ s.background }};
+    --ts-pad-top: {{ s.padding_top }}px;
+    --ts-pad-bottom: {{ s.padding_bottom }}px;
+    --ts-max-w: {{ s.max_width }}px;
+    --ts-side-pad: {{ s.side_padding }}px;
+    --ts-left-w: {{ s.left_width }}%;
+    --ts-col-gap: {{ s.column_gap }}px;
+    --ts-items-cols: {{ s.items_per_row }};
+    --ts-items-gap: {{ s.items_gap }}px;
+
+    --ts-eyebrow-size: {{ s.eyebrow_size }}px;
+    --ts-eyebrow-weight: {{ s.eyebrow_weight }};
+    --ts-eyebrow-tracking: {{ s.eyebrow_tracking | divided_by: 100.0 }}em;
+    --ts-eyebrow-color: {{ s.eyebrow_color }};
+    --ts-eyebrow-gap: {{ s.eyebrow_gap }}px;
+
+    --ts-title-size: {{ s.heading_size }}px;
+    --ts-title-lh: {{ s.heading_line_height | divided_by: 100.0 }};
+    --ts-title-tracking: {{ s.heading_letter_spacing | divided_by: 100.0 }}em;
+    --ts-title-weight: {{ s.heading_weight }};
+    --ts-title-color: {{ s.heading_color }};
+    --ts-title-max-w: {{ s.heading_max_width }}px;
+
+    --ts-desc-size: {{ s.description_size }}px;
+    --ts-desc-lh: {{ s.description_line_height | divided_by: 100.0 }};
+    --ts-desc-color: {{ s.description_color }};
+    --ts-desc-max-w: {{ s.description_max_width }}px;
+    --ts-desc-gap: {{ s.description_gap }}px;
+
+    --ts-btn-bg: {{ s.button_background }};
+    --ts-btn-fg: {{ s.button_text_color }};
+    --ts-btn-hover-bg: {{ s.button_background | color_darken: 12 }};
+    --ts-btn-radius: {{ s.button_radius }}px;
+    --ts-btn-pad-x: {{ s.button_padding_x }}px;
+    --ts-btn-pad-y: {{ s.button_padding_y }}px;
+    --ts-btn-size: {{ s.button_font_size }}px;
+    --ts-btn-tracking: {{ s.button_letter_spacing | divided_by: 100.0 }}em;
+    --ts-btn-gap: {{ s.button_gap }}px;
+
+    --ts-icon-size: {{ s.icon_size }}px;
+    --ts-icon-color: {{ s.icon_color }};
+    --ts-icon-gap: {{ s.icon_gap }}px;
+
+    --ts-label-size: {{ s.label_size }}px;
+    --ts-label-tracking: {{ s.label_tracking | divided_by: 100.0 }}em;
+    --ts-label-weight: {{ s.label_weight }};
+    --ts-label-color: {{ s.label_color }};
+    --ts-label-gap: {{ s.label_gap }}px;
+
+    --ts-text-size: {{ s.text_size }}px;
+    --ts-text-lh: {{ s.text_line_height | divided_by: 100.0 }};
+    --ts-text-color: {{ s.text_color }};
+    --ts-text-gap: {{ s.text_gap }}px;
+
+    --ts-img-radius: {{ s.image_radius }}px;
+    --ts-img-aspect: {{ s.image_aspect_ratio }};
+    --ts-img-zoom: {{ s.hover_zoom_scale | divided_by: 100.0 }};
+    --ts-img-speed: {{ s.hover_speed }}ms;
+    {% if s.enable_custom_font -%}
+    --ts-font: {{ s.font_family.family }}, {{ s.font_family.fallback_families }};
+    {%- endif %}
+  }
+</style>
+
+<section
+  class="ts ts--{{ section.id }}"
+  data-ts-section
+  data-reveal="{{ s.enable_reveal }}"
+  data-hover-zoom="{{ s.enable_hover_zoom }}"
+>
+  <div class="ts__inner">
+    <div class="ts__grid">
+      <div class="ts__text">
+        {%- if s.eyebrow != blank -%}
+          <p class="ts__eyebrow" data-ts-reveal>{{ s.eyebrow }}</p>
+        {%- endif -%}
+
+        {%- if s.heading != blank -%}
+          <h2 class="ts__title" data-ts-reveal>{{ s.heading }}</h2>
+        {%- endif -%}
+
+        {%- if s.description != blank -%}
+          <div class="ts__desc" data-ts-reveal>{{ s.description }}</div>
+        {%- endif -%}
+
+        {%- if s.enable_button and s.button_label != blank -%}
+          <a
+            href="{{ s.button_link | default: '#' }}"
+            class="ts__button"
+            data-ts-reveal
+            {% if s.button_link == blank %}aria-disabled="true"{% endif %}
+          >
+            <span>{{ s.button_label }}</span>
+            {%- if s.button_show_arrow -%}
+              <svg class="ts__button-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14"></path>
+                <path d="M13 6l6 6-6 6"></path>
+              </svg>
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+      </div>
+
+      <div class="ts__items">
+        {%- for block in section.blocks -%}
+          {%- assign b = block.settings -%}
+          {%- assign item_alt = b.image.alt | default: b.label | escape -%}
+          <div class="ts-item" data-ts-reveal {{ block.shopify_attributes }}>
+            {%- if b.custom_icon != blank -%}
+              <span class="ts-item__icon">
+                {{ b.custom_icon | image_url: width: 96 | image_tag: loading: 'lazy', alt: '' }}
+              </span>
+            {%- elsif b.icon != 'none' -%}
+              <span class="ts-item__icon">
+                {%- case b.icon -%}
+                  {%- when 'sun' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <circle cx="12" cy="12" r="4.5"></circle>
+                      <path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8L6 18M18 6l1.8-1.8"></path>
+                    </svg>
+                  {%- when 'sunrise' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M12 3v6"></path>
+                      <path d="M5.5 12a6.5 6.5 0 0 1 13 0"></path>
+                      <path d="M3 12h1.5M19.5 12H21M5.6 8.6l1.1 1.1M17.3 9.7l1.1-1.1"></path>
+                      <path d="M2.5 17h19"></path>
+                    </svg>
+                  {%- when 'moon' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.7 6.7 0 0 0 10.5 10.5z"></path>
+                    </svg>
+                  {%- when 'dumbbell' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M3.5 9v6M2 10.5v3"></path>
+                      <path d="M20.5 9v6M22 10.5v3"></path>
+                      <path d="M6.5 8v8M17.5 8v8"></path>
+                      <path d="M6.5 12h11"></path>
+                    </svg>
+                  {%- when 'clock' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <circle cx="12" cy="12" r="8.5"></circle>
+                      <path d="M12 7.5V12l3 2"></path>
+                    </svg>
+                {%- endcase -%}
+              </span>
+            {%- endif -%}
+
+            {%- if b.label != blank -%}
+              <p class="ts-item__label">{{ b.label }}</p>
+            {%- endif -%}
+
+            {%- if b.line_1 != blank or b.line_2 != blank -%}
+              <div class="ts-item__text">
+                {%- if b.line_1 != blank -%}<p>{{ b.line_1 }}</p>{%- endif -%}
+                {%- if b.line_2 != blank -%}<p>{{ b.line_2 }}</p>{%- endif -%}
+              </div>
+            {%- endif -%}
+
+            {%- if b.image != blank -%}
+              <div class="ts-item__media">
+                {{
+                  b.image
+                  | image_url: width: 1200
+                  | image_tag:
+                    loading: 'lazy',
+                    class: 'ts-item__img',
+                    widths: '400,600,800,1000,1200',
+                    sizes: '(max-width: 767px) 74vw, (max-width: 1180px) 30vw, 22vw',
+                    alt: item_alt
+                }}
+              </div>
+            {%- else -%}
+              <div class="ts-item__media">
+                {{ 'lifestyle-1' | placeholder_svg_tag: 'ts-item__img ts-item__placeholder' }}
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "The solution",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout & spacing"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#F2EEE7"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top spacing",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom spacing",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Content max width",
+      "min": 1000,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1680
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Side padding",
+      "min": 16,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "left_width",
+      "label": "Text column width",
+      "min": 20,
+      "max": 45,
+      "step": 1,
+      "unit": "%",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Gap between text and items",
+      "min": 24,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "select",
+      "id": "items_per_row",
+      "label": "Items per row (desktop)",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "range",
+      "id": "items_gap",
+      "label": "Gap between items",
+      "min": 12,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Text",
+      "default": "The solution"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_tracking",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "%",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_weight",
+      "label": "Weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Color",
+      "default": "#161513"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_gap",
+      "label": "Space below",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Text",
+      "default": "Recovery shouldn't require rearranging your life."
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Size",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "heading_line_height",
+      "label": "Line height",
+      "min": 90,
+      "max": 150,
+      "step": 2,
+      "unit": "%",
+      "default": 112
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "label": "Letter spacing",
+      "min": -6,
+      "max": 0,
+      "step": 1,
+      "unit": "%",
+      "default": -2
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#161513"
+    },
+    {
+      "type": "range",
+      "id": "heading_max_width",
+      "label": "Max width",
+      "min": 220,
+      "max": 560,
+      "step": 10,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Description"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Text",
+      "default": "<p>What if your recovery routine was already waiting for you at home?</p>"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Size",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Color",
+      "default": "#4A463F"
+    },
+    {
+      "type": "range",
+      "id": "description_max_width",
+      "label": "Max width",
+      "min": 200,
+      "max": 480,
+      "step": 10,
+      "unit": "px",
+      "default": 320
+    },
+    {
+      "type": "range",
+      "id": "description_gap",
+      "label": "Space above",
+      "min": 12,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_button",
+      "label": "Show button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Label",
+      "default": "The Eloorin Approach"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_show_arrow",
+      "label": "Show arrow",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Background",
+      "default": "#161513"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#F2EEE7"
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "button_padding_x",
+      "label": "Horizontal padding",
+      "min": 12,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "button_padding_y",
+      "label": "Vertical padding",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Text size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "button_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "%",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "button_gap",
+      "label": "Space above",
+      "min": 12,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Item icons"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Size",
+      "min": 16,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Color",
+      "default": "#161513"
+    },
+    {
+      "type": "range",
+      "id": "icon_gap",
+      "label": "Space below",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Item labels"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Size",
+      "min": 10,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "label_tracking",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "%",
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Color",
+      "default": "#161513"
+    },
+    {
+      "type": "range",
+      "id": "label_gap",
+      "label": "Space below",
+      "min": 4,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Item text"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Size",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "text_line_height",
+      "label": "Line height",
+      "min": 110,
+      "max": 180,
+      "step": 2,
+      "unit": "%",
+      "default": 150
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color",
+      "default": "#4A463F"
+    },
+    {
+      "type": "range",
+      "id": "text_gap",
+      "label": "Space below (above image)",
+      "min": 12,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Item image"
+    },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "Aspect ratio",
+      "options": [
+        { "value": "3 / 4", "label": "Portrait (3:4)" },
+        { "value": "4 / 5", "label": "Tall (4:5)" },
+        { "value": "1 / 1", "label": "Square (1:1)" },
+        { "value": "3 / 2", "label": "Landscape (3:2)" },
+        { "value": "4 / 3", "label": "Landscape (4:3)" },
+        { "value": "16 / 9", "label": "Wide (16:9)" }
+      ],
+      "default": "3 / 2"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_hover_zoom",
+      "label": "Zoom image on hover",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "hover_zoom_scale",
+      "label": "Zoom scale",
+      "min": 100,
+      "max": 130,
+      "step": 1,
+      "unit": "%",
+      "default": 106
+    },
+    {
+      "type": "range",
+      "id": "hover_speed",
+      "label": "Animation speed",
+      "min": 200,
+      "max": 900,
+      "step": 50,
+      "unit": "ms",
+      "default": 500
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_reveal",
+      "label": "Reveal on scroll",
+      "info": "Fades the text and items in, staggered, as the section enters the viewport.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Font"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_font",
+      "label": "Override font",
+      "info": "Uses this font instead of the theme's fonts, for this section only.",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "font_family",
+      "label": "Font family",
+      "default": "helvetica_n4"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "sun", "label": "Sun" },
+            { "value": "sunrise", "label": "Sunrise" },
+            { "value": "moon", "label": "Moon" },
+            { "value": "dumbbell", "label": "Dumbbell" },
+            { "value": "clock", "label": "Clock" }
+          ],
+          "default": "sun"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom icon",
+          "info": "Optional. Overrides the preset icon above."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "After work"
+        },
+        {
+          "type": "text",
+          "id": "line_1",
+          "label": "Text · line 1",
+          "default": "Unwind."
+        },
+        {
+          "type": "text",
+          "id": "line_2",
+          "label": "Text · line 2",
+          "default": "Let go of the day."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "The solution",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "icon": "sun",
+            "label": "After work",
+            "line_1": "Unwind.",
+            "line_2": "Let go of the day."
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "dumbbell",
+            "label": "After training",
+            "line_1": "Recover.",
+            "line_2": "Reduce soreness. Reset."
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "sunrise",
+            "label": "Before the day begins",
+            "line_1": "Reset.",
+            "line_2": "Start sharp. Stay focused."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

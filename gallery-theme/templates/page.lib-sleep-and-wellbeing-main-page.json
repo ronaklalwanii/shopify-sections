@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--main-page",
+      "settings": {
+        "content_width": "80ch",
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

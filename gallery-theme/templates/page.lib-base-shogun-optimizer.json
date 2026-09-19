@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "library": {
+      "type": "shogun-optimizer",
+      "settings": {}
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

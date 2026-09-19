@@ -1,0 +1,771 @@
+{%- comment -%} Section Library: injected global assets for store "nocturne-store" {%- endcomment -%}
+{{ 'nocturne-store--theme.css' | asset_url | stylesheet_tag }}
+{{ 'nocturne-store--product.css' | asset_url | stylesheet_tag }}
+{% render 'nocturne-store--css-variables' %}
+{%- comment -%}
+  Section: Brand Value Showcase
+  Header (serif heading + rating/avatars) over a 55/45 grid:
+  left media with floating badge card, right column of feature card blocks.
+{%- endcomment -%}
+
+<section id="BrandValueShowcase-{{ section.id }}" class="bvs">
+  {%- style -%}
+    #BrandValueShowcase-{{ section.id }} {
+      --bvs-bg: {{ section.settings.bg_color }};
+      --bvs-max-width: {{ section.settings.max_width }}px;
+      --bvs-space-top: {{ section.settings.space_top }}px;
+      --bvs-space-bottom: {{ section.settings.space_bottom }}px;
+      --bvs-gutter: {{ section.settings.mobile_gutter }}px;
+      --bvs-split: {{ section.settings.column_split }}%;
+      --bvs-col-gap: {{ section.settings.column_gap }}px;
+      --bvs-card-gap: {{ section.settings.card_gap }}px;
+      --bvs-radius: {{ section.settings.card_radius }}px;
+      --bvs-card-pad: {{ section.settings.card_padding }}px;
+      --bvs-card-icon-size: {{ section.settings.card_icon_size }}px;
+      --bvs-list-icon-size: {{ section.settings.list_icon_size }}px;
+      --bvs-head-size: {{ section.settings.heading_size }}px;
+      --bvs-head-weight: {{ section.settings.heading_weight }};
+      --bvs-head-lh: {{ section.settings.heading_line_height }};
+      --bvs-head-color: {{ section.settings.heading_color }};
+      --bvs-head-maxw: {{ section.settings.heading_max_width }}px;
+      --bvs-star-size: {{ section.settings.star_size }}px;
+      --bvs-star-color: {{ section.settings.star_color }};
+      --bvs-rating-size: {{ section.settings.rating_text_size }}px;
+      --bvs-rating-color: {{ section.settings.rating_text_color }};
+      --bvs-avatar-size: {{ section.settings.avatar_size }}px;
+      --bvs-avatar-overlap: {{ section.settings.avatar_overlap }}px;
+      --bvs-avatar-border: {{ section.settings.avatar_border_color }};
+      --bvs-media-radius: {{ section.settings.media_radius }}px;
+      --bvs-media-aspect: {{ section.settings.media_aspect }};
+      --bvs-badge-bg: {{ section.settings.badge_bg }};
+      --bvs-badge-radius: {{ section.settings.badge_radius }}px;
+      --bvs-badge-x: {{ section.settings.badge_x }}px;
+      --bvs-badge-y: {{ section.settings.badge_y }}px;
+      --bvs-badge-maxw: {{ section.settings.badge_max_width }}px;
+      --bvs-badge-pad: {{ section.settings.badge_padding }}px;
+      --bvs-badge-icon-size: {{ section.settings.badge_icon_size }}px;
+      --bvs-badge-icon-color: {{ section.settings.badge_icon_color }};
+      --bvs-badge-title-size: {{ section.settings.badge_title_size }}px;
+      --bvs-badge-title-color: {{ section.settings.badge_title_color }};
+      --bvs-badge-text-size: {{ section.settings.badge_text_size }}px;
+      --bvs-badge-text-color: {{ section.settings.badge_text_color }};
+      --bvs-card-title-size: {{ section.settings.card_title_size }}px;
+      --bvs-card-accent-size: {{ section.settings.card_accent_size }}px;
+      --bvs-card-desc-size: {{ section.settings.card_desc_size }}px;
+      --bvs-list-size: {{ section.settings.card_list_size }}px;
+    }
+
+    #BrandValueShowcase-{{ section.id }} {
+      background: var(--bvs-bg);
+      padding-top: var(--bvs-space-top);
+      padding-bottom: var(--bvs-space-bottom);
+      overflow-x: clip;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    #BrandValueShowcase-{{ section.id }} .bvs__shell {
+      /* width: min(100%, var(--bvs-max-width)); */
+      margin: 0 auto;
+      min-width: 0;
+    }
+
+    /* ---------- Header ---------- */
+    #BrandValueShowcase-{{ section.id }} .bvs__header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 32px;
+      min-width: 0;
+    }
+
+    #BrandValueShowcase-{{ section.id }} .bvs__heading {
+      margin: 0;
+      max-width: var(--bvs-head-maxw);
+      color: var(--bvs-head-color);
+      font-size: clamp(28px, 4vw, var(--bvs-head-size));
+      font-weight: var(--bvs-head-weight);
+      line-height: var(--bvs-head-lh);
+      min-width: 0;
+      padding-left: 20px;
+    }
+    {%- if section.settings.heading_font == 'serif' %}
+      #BrandValueShowcase-{{ section.id }} .bvs__heading,
+      #BrandValueShowcase-{{ section.id }} .bvs-card__title,
+      #BrandValueShowcase-{{ section.id }} .bvs-card__title em,
+      #BrandValueShowcase-{{ section.id }} .bvs-badge__title {
+        font-family: Georgia, 'Times New Roman', serif;
+      }
+    {%- endif %}
+
+    #BrandValueShowcase-{{ section.id }} .bvs__rating {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+      padding-right: 20px;
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs__rating-text-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs__stars {
+      display: flex;
+      gap: 3px;
+      color: var(--bvs-star-color);
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs__stars svg {
+      width: var(--bvs-star-size);
+      height: var(--bvs-star-size);
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs__rating-text {
+      margin: 0;
+      color: var(--bvs-rating-color);
+      font-size: var(--bvs-rating-size);
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs__avatars { display: flex; align-items: center; }
+    #BrandValueShowcase-{{ section.id }} .bvs__avatar {
+      width: var(--bvs-avatar-size);
+      height: var(--bvs-avatar-size);
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--bvs-avatar-border);
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs__avatar + .bvs__avatar {
+      margin-left: calc(var(--bvs-avatar-overlap) * -1);
+    }
+
+    /* ---------- Grid ---------- */
+    #BrandValueShowcase-{{ section.id }} .bvs__grid {
+      display: grid;
+      grid-template-columns: minmax(0, var(--bvs-split)) minmax(0, 1fr);
+      gap: var(--bvs-col-gap);
+      min-width: 0;
+    }
+
+    /* ---------- Left media + badge ---------- */
+    #BrandValueShowcase-{{ section.id }} .bvs__media {
+      position: relative;
+      min-height: 480px;
+      min-width: 0;
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs__media-img-wrap {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      border-radius: var(--bvs-media-radius);
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs__media-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center {{ section.settings.media_focal }};
+      display: block;
+    }
+
+    #BrandValueShowcase-{{ section.id }} .bvs__badge {
+      position: absolute;
+      left: var(--bvs-badge-x);
+      bottom: var(--bvs-badge-y);
+      z-index: 2;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      max-width: min(var(--bvs-badge-maxw), 85%);
+      padding: var(--bvs-badge-pad);
+      background: var(--bvs-badge-bg);
+      border-radius: var(--bvs-badge-radius);
+      {% if section.settings.badge_shadow %}
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+      {% endif %}
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs__badge-icon {
+      flex-shrink: 0;
+      width: var(--bvs-badge-icon-size);
+      height: var(--bvs-badge-icon-size);
+      color: var(--bvs-badge-icon-color);
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs__badge-icon svg,
+    #BrandValueShowcase-{{ section.id }} .bvs__badge-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs__badge-title {
+      margin: 0;
+      color: var(--bvs-badge-title-color);
+      font-size: var(--bvs-badge-title-size);
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs__badge-title em { font-style: italic; font-weight: 400; }
+    #BrandValueShowcase-{{ section.id }} .bvs__badge-text {
+      margin: 6px 0 0;
+      color: var(--bvs-badge-text-color);
+      font-size: var(--bvs-badge-text-size);
+      line-height: 1.5;
+    }
+
+    /* ---------- Right cards ---------- */
+    #BrandValueShowcase-{{ section.id }} .bvs__column {
+      display: flex;
+      flex-direction: column;
+      gap: var(--bvs-card-gap);
+      min-width: 0;
+    }
+
+    #BrandValueShowcase-{{ section.id }} .bvs-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--bvs-radius);
+      background: var(--card-bg);
+      color: var(--card-color);
+      padding: var(--bvs-card-pad);
+      min-width: 0;
+      isolation: isolate;
+      text-decoration: none;
+      display: block;
+    }
+
+    #BrandValueShowcase-{{ section.id }} .bvs-card__content {
+      position: relative;
+      z-index: 2;
+      min-width: 0;
+      max-width: calc(100% - var(--img-width));
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs-card--img-left .bvs-card__content {
+      margin-left: var(--img-width);
+    }
+
+    #BrandValueShowcase-{{ section.id }} .bvs-card__icon {
+      display: block;
+      width: var(--bvs-card-icon-size);
+      height: var(--bvs-card-icon-size);
+      color: var(--icon-color);
+      margin-bottom: 14px;
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs-card__icon svg,
+    #BrandValueShowcase-{{ section.id }} .bvs-card__icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    #BrandValueShowcase-{{ section.id }} .bvs-card__title {
+      margin: 0;
+      font-size: var(--bvs-card-title-size);
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--card-color);
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs-card__title em {
+      display: block;
+      color: var(--card-accent);
+      font-size: var(--bvs-card-accent-size);
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs-card__desc {
+      margin: 12px 0 0;
+      font-size: var(--bvs-card-desc-size);
+      line-height: 1.6;
+      opacity: 0.75;
+      max-width: 300px;
+    }
+
+    #BrandValueShowcase-{{ section.id }} .bvs-card__list {
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs-card__list li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--bvs-list-size);
+      color: var(--card-color);
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs-card__list svg {
+      width: var(--bvs-list-icon-size);
+      height: var(--bvs-list-icon-size);
+      flex-shrink: 0;
+      color: var(--card-accent);
+    }
+
+    #BrandValueShowcase-{{ section.id }} .bvs-card__image-wrap {
+      position: absolute;
+      z-index: 1;
+      bottom: var(--img-bottom);
+      width: var(--img-width);
+      pointer-events: none;
+    }
+    #BrandValueShowcase-{{ section.id }} .bvs-card--img-right .bvs-card__image-wrap { right: var(--img-x); }
+    #BrandValueShowcase-{{ section.id }} .bvs-card--img-left .bvs-card__image-wrap { left: 0; }
+    #BrandValueShowcase-{{ section.id }} .bvs-card__image {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    /* ---------- Tablet ---------- */
+    @media (max-width: 1000px) {
+      #BrandValueShowcase-{{ section.id }} .bvs__grid {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+      #BrandValueShowcase-{{ section.id }} .bvs__media { min-height: 420px; }
+    }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 700px) {
+      /* Escape any theme container → true full width */
+      #BrandValueShowcase-{{ section.id }} {
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+         padding-left: 20px;
+        padding-right: 20px;
+      }
+      #BrandValueShowcase-{{ section.id }} .bvs__shell {
+        padding-left: 0;
+        padding-right: 0;
+      }
+      /* Keep heading/rating readable, inset from edges */
+      #BrandValueShowcase-{{ section.id }} .bvs__header {
+        padding-left: var(--bvs-gutter);
+        padding-right: var(--bvs-gutter);
+      }
+      
+      #BrandValueShowcase-{{ section.id }} .bvs__header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      #BrandValueShowcase-{{ section.id }} .bvs__grid { grid-template-columns: 1fr; }
+      #BrandValueShowcase-{{ section.id }} .bvs__media { min-height: 0; }
+      #BrandValueShowcase-{{ section.id }} .bvs__media-img-wrap {
+        position: relative;
+        inset: auto;
+        aspect-ratio: var(--bvs-media-aspect);
+      }
+      #BrandValueShowcase-{{ section.id }} .bvs__badge { max-width: min(var(--bvs-badge-maxw), 80%); }
+
+      #BrandValueShowcase-{{ section.id }} .bvs-card {
+        display: flex;
+        flex-direction: column;
+      }
+      #BrandValueShowcase-{{ section.id }} .bvs-card__content {
+        max-width: 100%;
+        margin-left: 0;
+      }
+      #BrandValueShowcase-{{ section.id }} .bvs-card__image-wrap {
+        position: relative;
+        bottom: auto;
+        width: 70%;
+        margin-top: 16px;
+      }
+      #BrandValueShowcase-{{ section.id }} .bvs-card--img-right .bvs-card__image-wrap {
+        right: auto;
+        margin-left: auto;
+      }
+      #BrandValueShowcase-{{ section.id }} .bvs-card--img-left .bvs-card__image-wrap {
+        order: -1;
+        left: auto;
+        margin: 0 0 16px;
+      }
+
+            #BrandValueShowcase-{{ section.id }} .bvs-card__image-wrap {
+        position: relative;
+        bottom: auto;
+        width: 100%;
+        max-width: 220px;
+        margin: 20px auto 0;
+      }
+      #BrandValueShowcase-{{ section.id }} .bvs-card--img-right .bvs-card__image-wrap {
+        right: auto;
+        margin: 20px auto 0;
+      }
+      #BrandValueShowcase-{{ section.id }} .bvs-card--img-left .bvs-card__image-wrap {
+        order: -1;
+        left: auto;
+        margin: 0 auto 20px;
+      }
+
+            #BrandValueShowcase-{{ section.id }} .bvs-card--img-left .bvs-card__content,
+      #BrandValueShowcase-{{ section.id }} .bvs-card--img-right .bvs-card__content {
+        max-width: 100%;
+        margin-left: 0;
+      }
+
+          #BrandValueShowcase-{{ section.id }} .bvs__rating {
+      justify-content: center;
+    }
+     #BrandValueShowcase-{{ section.id }} .bvs__heading {
+      text-align: center;
+    }
+    }
+  {%- endstyle -%}
+
+  <div class="bvs__shell">
+    <div class="bvs__header">
+      <h2 class="bvs__heading">{{ section.settings.heading_text | newline_to_br }}</h2>
+
+      {%- if section.settings.show_rating -%}
+        <div class="bvs__rating">
+          <div class="bvs__rating-text-wrap">
+            <div class="bvs__stars" role="img" aria-label="Rated {{ section.settings.rating_text }}">
+              {%- for i in (1..section.settings.star_count) -%}
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+              {%- endfor -%}
+            </div>
+            <p class="bvs__rating-text">{{ section.settings.rating_text }}</p>
+          </div>
+
+          {%- if section.settings.show_avatars -%}
+            <div class="bvs__avatars">
+              {%- if section.settings.avatar_1 != blank -%}
+                <img class="bvs__avatar" src="{{ section.settings.avatar_1 | image_url: width: 96 }}" alt="" loading="lazy" width="96" height="96">
+              {%- endif -%}
+              {%- if section.settings.avatar_2 != blank -%}
+                <img class="bvs__avatar" src="{{ section.settings.avatar_2 | image_url: width: 96 }}" alt="" loading="lazy" width="96" height="96">
+              {%- endif -%}
+              {%- if section.settings.avatar_3 != blank -%}
+                <img class="bvs__avatar" src="{{ section.settings.avatar_3 | image_url: width: 96 }}" alt="" loading="lazy" width="96" height="96">
+              {%- endif -%}
+              {%- if section.settings.avatar_4 != blank -%}
+                <img class="bvs__avatar" src="{{ section.settings.avatar_4 | image_url: width: 96 }}" alt="" loading="lazy" width="96" height="96">
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="bvs__grid">
+      <div class="bvs__media">
+        {%- if section.settings.media_image != blank -%}
+          <div class="bvs__media-img-wrap">
+            <img
+              class="bvs__media-img"
+              src="{{ section.settings.media_image | image_url: width: 1200 }}"
+              alt="{{ section.settings.media_image.alt | default: 'Brand imagery' }}"
+              loading="lazy"
+              width="1200"
+              height="1500"
+            >
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.show_badge -%}
+          <div class="bvs__badge">
+            <span class="bvs__badge-icon">
+              {%- if section.settings.badge_icon_custom != blank -%}
+                <img src="{{ section.settings.badge_icon_custom | image_url: width: 64 }}" alt="" width="64" height="64">
+              {%- else -%}
+                {%- case section.settings.badge_icon -%}
+                  {%- when 'star' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                  {%- when 'leaf' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path></svg>
+                  {%- when 'sparkle' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z"></path></svg>
+                  {%- else -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+                {%- endcase -%}
+              {%- endif -%}
+            </span>
+            <div>
+              <p class="bvs__badge-title">
+                {{ section.settings.badge_title }}
+                {%- if section.settings.badge_title_accent != blank %} <em>{{ section.settings.badge_title_accent }}</em>{% endif -%}
+              </p>
+              {%- if section.settings.badge_text != blank -%}
+                <p class="bvs__badge-text">{{ section.settings.badge_text }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="bvs__column">
+        {%- for block in section.blocks -%}
+          {%- if block.settings.link != blank -%}
+            <a
+              class="bvs-card bvs-card--{{ block.settings.layout }}"
+              href="{{ block.settings.link }}"
+              style="--card-bg: {{ block.settings.background_color }}; --card-color: {{ block.settings.text_color }}; --card-accent: {{ block.settings.accent_color }}; --icon-color: {{ block.settings.icon_color }}; --img-width: {{ block.settings.image_width }}%; --img-x: {{ block.settings.image_x }}%; --img-bottom: {{ block.settings.image_bottom }}%;"
+              {{ block.shopify_attributes }}
+            >
+          {%- else -%}
+            <div
+              class="bvs-card bvs-card--{{ block.settings.layout }}"
+              style="--card-bg: {{ block.settings.background_color }}; --card-color: {{ block.settings.text_color }}; --card-accent: {{ block.settings.accent_color }}; --icon-color: {{ block.settings.icon_color }}; --img-width: {{ block.settings.image_width }}%; --img-x: {{ block.settings.image_x }}%; --img-bottom: {{ block.settings.image_bottom }}%;"
+              {{ block.shopify_attributes }}
+            >
+          {%- endif -%}
+
+            <div class="bvs-card__content">
+              {%- if block.settings.icon != 'none' or block.settings.icon_custom != blank -%}
+                <span class="bvs-card__icon">
+                  {%- if block.settings.icon_custom != blank -%}
+                    <img src="{{ block.settings.icon_custom | image_url: width: 64 }}" alt="" width="24" height="24">
+                  {%- else -%}
+                    {%- case block.settings.icon -%}
+                      {%- when 'recycle' -%}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"></path><path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"></path><path d="m14 16-3 3 3 3"></path><path d="M8.293 13.596 7.196 9.5 3.1 10.598"></path><path d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"></path><path d="m13.378 9.633 4.096 1.098 1.097-4.096"></path></svg>
+                      {%- when 'leaf' -%}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path></svg>
+                      {%- when 'drop' -%}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"></path></svg>
+                      {%- when 'heart' -%}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+                      {%- else -%}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+                    {%- endcase -%}
+                  {%- endif -%}
+                </span>
+              {%- endif -%}
+
+              <h3 class="bvs-card__title">
+                {{ block.settings.title }}
+                {%- if block.settings.title_accent != blank -%}
+                  {%- if block.settings.accent_italic -%}
+                    <em>{{ block.settings.title_accent }}</em>
+                  {%- else -%}
+                    <em style="font-style: normal;">{{ block.settings.title_accent }}</em>
+                  {%- endif -%}
+                {%- endif -%}
+              </h3>
+
+              {%- if block.settings.description != blank -%}
+                <p class="bvs-card__desc">{{ block.settings.description }}</p>
+              {%- endif -%}
+
+              {%- if block.settings.checklist != blank -%}
+                <ul class="bvs-card__list">
+                  {%- assign list_items = block.settings.checklist | split: ',' -%}
+                  {%- for item in list_items -%}
+                    <li>
+                      {%- case block.settings.list_icon -%}
+                        {%- when 'leaf' -%}
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path></svg>
+                        {%- when 'check' -%}
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        {%- when 'heart' -%}
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+                        {%- else -%}
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"></path></svg>
+                      {%- endcase -%}
+                      {{ item | strip }}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </div>
+
+            {%- if block.settings.image != blank -%}
+              <div class="bvs-card__image-wrap" aria-hidden="true">
+                <img
+                  class="bvs-card__image"
+                  src="{{ block.settings.image | image_url: width: 600 }}"
+                  alt=""
+                  loading="lazy"
+                  width="600"
+                  height="600"
+                >
+              </div>
+            {%- endif -%}
+
+          {%- if block.settings.link != blank -%}
+            </a>
+          {%- else -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Brand Value Showcase",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#EFEEE8" },
+    { "type": "range", "id": "max_width", "label": "Maximum width", "min": 800, "max": 2000, "step": 20, "default": 1400, "unit": "px" },
+    { "type": "range", "id": "space_top", "label": "Space above", "min": 0, "max": 160, "step": 4, "default": 56, "unit": "px" },
+    { "type": "range", "id": "space_bottom", "label": "Space below", "min": 0, "max": 160, "step": 4, "default": 56, "unit": "px" },
+    { "type": "range", "id": "mobile_gutter", "label": "Mobile side gutters", "min": 0, "max": 60, "step": 2, "default": 20, "unit": "px" },
+    { "type": "range", "id": "column_split", "label": "Left column width", "min": 40, "max": 70, "step": 1, "default": 55, "unit": "%" },
+    { "type": "range", "id": "column_gap", "label": "Column gap", "min": 0, "max": 80, "step": 2, "default": 24, "unit": "px" },
+    { "type": "range", "id": "card_gap", "label": "Gap between cards", "min": 0, "max": 80, "step": 2, "default": 24, "unit": "px" },
+    { "type": "range", "id": "card_radius", "label": "Card radius", "min": 0, "max": 48, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "card_padding", "label": "Card padding", "min": 12, "max": 64, "step": 2, "default": 28, "unit": "px" },
+    { "type": "range", "id": "card_icon_size", "label": "Card icon size", "min": 16, "max": 64, "step": 2, "default": 24, "unit": "px" },
+
+    { "type": "header", "content": "Heading" },
+    { "type": "textarea", "id": "heading_text", "label": "Heading (line break = new line)", "default": "Why Your Skin\nDeserves the Best" },
+    { "type": "select", "id": "heading_font", "label": "Heading font style", "default": "serif", "options": [
+      { "value": "serif", "label": "Serif" },
+      { "value": "sans", "label": "Sans (theme)" }
+    ] },
+    { "type": "range", "id": "heading_size", "label": "Heading size", "min": 24, "max": 64, "step": 2, "default": 40, "unit": "px" },
+    { "type": "range", "id": "heading_weight", "label": "Heading weight", "min": 300, "max": 700, "step": 100, "default": 500 },
+    { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#26332B" },
+    { "type": "range", "id": "heading_max_width", "label": "Heading max width", "min": 240, "max": 900, "step": 20, "default": 480, "unit": "px" },
+
+    { "type": "header", "content": "Rating & avatars" },
+    { "type": "checkbox", "id": "show_rating", "label": "Show rating", "default": true },
+    { "type": "range", "id": "star_count", "label": "Star count", "min": 1, "max": 5, "step": 1, "default": 5 },
+    { "type": "range", "id": "star_size", "label": "Star size", "min": 10, "max": 32, "step": 1, "default": 16, "unit": "px" },
+    { "type": "color", "id": "star_color", "label": "Star color", "default": "#5F6F4E" },
+    { "type": "text", "id": "rating_text", "label": "Rating text", "default": "4.7 (1,109 reviews)" },
+    { "type": "range", "id": "rating_text_size", "label": "Rating text size", "min": 10, "max": 20, "step": 1, "default": 13, "unit": "px" },
+    { "type": "color", "id": "rating_text_color", "label": "Rating text color", "default": "#3A3A3A" },
+    { "type": "checkbox", "id": "show_avatars", "label": "Show avatars", "default": true },
+    { "type": "image_picker", "id": "avatar_1", "label": "Avatar 1" },
+    { "type": "image_picker", "id": "avatar_2", "label": "Avatar 2" },
+    { "type": "image_picker", "id": "avatar_3", "label": "Avatar 3" },
+    { "type": "image_picker", "id": "avatar_4", "label": "Avatar 4" },
+    { "type": "range", "id": "avatar_size", "label": "Avatar size", "min": 24, "max": 64, "step": 2, "default": 36, "unit": "px" },
+    { "type": "range", "id": "avatar_overlap", "label": "Avatar overlap", "min": 0, "max": 30, "step": 1, "default": 10, "unit": "px" },
+    { "type": "color", "id": "avatar_border_color", "label": "Avatar border", "default": "#EFEEE8" },
+
+    { "type": "header", "content": "Left media" },
+    { "type": "image_picker", "id": "media_image", "label": "Image" },
+    { "type": "range", "id": "media_radius", "label": "Image radius", "min": 0, "max": 48, "step": 2, "default": 16, "unit": "px" },
+    { "type": "select", "id": "media_aspect", "label": "Mobile aspect ratio", "default": "4 / 5", "options": [
+      { "value": "3 / 4", "label": "3:4" },
+      { "value": "4 / 5", "label": "4:5" },
+      { "value": "1 / 1", "label": "1:1" },
+      { "value": "2 / 3", "label": "2:3" }
+    ] },
+    { "type": "select", "id": "media_focal", "label": "Focal point", "default": "top", "options": [
+      { "value": "top", "label": "Top" },
+      { "value": "center", "label": "Center" },
+      { "value": "bottom", "label": "Bottom" }
+    ] },
+
+    { "type": "header", "content": "Floating badge" },
+    { "type": "checkbox", "id": "show_badge", "label": "Show badge", "default": true },
+    { "type": "select", "id": "badge_icon", "label": "Icon", "default": "shield", "options": [
+      { "value": "shield", "label": "Shield check" },
+      { "value": "star", "label": "Star" },
+      { "value": "leaf", "label": "Leaf" },
+      { "value": "sparkle", "label": "Sparkle" }
+    ] },
+    { "type": "image_picker", "id": "badge_icon_custom", "label": "Custom icon (overrides)" },
+    { "type": "range", "id": "badge_icon_size", "label": "Icon size", "min": 14, "max": 48, "step": 2, "default": 20, "unit": "px" },
+    { "type": "color", "id": "badge_icon_color", "label": "Icon color", "default": "#26332B" },
+    { "type": "text", "id": "badge_title", "label": "Badge title", "default": "Proven" },
+    { "type": "text", "id": "badge_title_accent", "label": "Badge title accent (italic)", "default": "Effectiveness" },
+    { "type": "range", "id": "badge_title_size", "label": "Title size", "min": 12, "max": 28, "step": 1, "default": 16, "unit": "px" },
+    { "type": "color", "id": "badge_title_color", "label": "Title color", "default": "#1F1F1F" },
+    { "type": "textarea", "id": "badge_text", "label": "Badge text", "default": "Every product is carefully crafted to meet the highest quality standards." },
+    { "type": "range", "id": "badge_text_size", "label": "Text size", "min": 9, "max": 18, "step": 1, "default": 11, "unit": "px" },
+    { "type": "color", "id": "badge_text_color", "label": "Text color", "default": "#8A8A8A" },
+    { "type": "color", "id": "badge_bg", "label": "Background", "default": "#FFFFFF" },
+    { "type": "range", "id": "badge_radius", "label": "Radius", "min": 0, "max": 40, "step": 2, "default": 12, "unit": "px" },
+    { "type": "checkbox", "id": "badge_shadow", "label": "Shadow", "default": true },
+    { "type": "range", "id": "badge_padding", "label": "Padding", "min": 8, "max": 40, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "badge_x", "label": "Left offset", "min": 0, "max": 120, "step": 2, "default": 24, "unit": "px" },
+    { "type": "range", "id": "badge_y", "label": "Bottom offset", "min": 0, "max": 120, "step": 2, "default": 24, "unit": "px" },
+    { "type": "range", "id": "badge_max_width", "label": "Max width", "min": 180, "max": 500, "step": 10, "default": 320, "unit": "px" },
+
+    { "type": "header", "content": "Card typography" },
+    { "type": "range", "id": "card_title_size", "label": "Card title size", "min": 16, "max": 44, "step": 1, "default": 26, "unit": "px" },
+    { "type": "range", "id": "card_accent_size", "label": "Accent line size", "min": 16, "max": 44, "step": 1, "default": 26, "unit": "px" },
+    { "type": "range", "id": "card_desc_size", "label": "Description size", "min": 10, "max": 20, "step": 1, "default": 12, "unit": "px" },
+    { "type": "range", "id": "card_list_size", "label": "Checklist size", "min": 10, "max": 20, "step": 1, "default": 12, "unit": "px" },
+    { "type": "range", "id": "list_icon_size", "label": "Checklist icon size", "min": 10, "max": 32, "step": 1, "default": 14, "unit": "px" },
+  ],
+  "blocks": [
+    {
+      "type": "feature_card",
+      "name": "Feature card",
+      "settings": [
+        { "type": "select", "id": "layout", "label": "Image side", "default": "img-right", "options": [
+          { "value": "img-right", "label": "Image right" },
+          { "value": "img-left", "label": "Image left" }
+        ] },
+        { "type": "color", "id": "background_color", "label": "Background", "default": "#ECEAE2" },
+        { "type": "color", "id": "text_color", "label": "Text color", "default": "#26332B" },
+        { "type": "color", "id": "accent_color", "label": "Accent / italic color", "default": "#26332B" },
+        { "type": "select", "id": "icon", "label": "Icon", "default": "none", "options": [
+          { "value": "none", "label": "None" },
+          { "value": "recycle", "label": "Recycle" },
+          { "value": "leaf", "label": "Leaf" },
+          { "value": "drop", "label": "Droplet" },
+          { "value": "shield", "label": "Shield check" },
+          { "value": "heart", "label": "Heart" }
+        ] },
+        { "type": "image_picker", "id": "icon_custom", "label": "Custom icon (overrides)" },
+        { "type": "color", "id": "icon_color", "label": "Icon color", "default": "#26332B" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Eco-Friendly" },
+        { "type": "text", "id": "title_accent", "label": "Accent line (italic)", "default": "Packaging" },
+        { "type": "checkbox", "id": "accent_italic", "label": "Italic accent", "default": true },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "Eco-friendly materials designed to care for the planet as much as your skin." },
+        { "type": "image_picker", "id": "image", "label": "Card image (PNG cutout)" },
+        { "type": "range", "id": "image_width", "label": "Image width", "min": 15, "max": 60, "step": 1, "default": 30, "unit": "%" },
+        { "type": "range", "id": "image_x", "label": "Image right inset", "min": -10, "max": 40, "step": 1, "default": 8, "unit": "%" },
+        { "type": "range", "id": "image_bottom", "label": "Image bottom offset", "min": -20, "max": 40, "step": 2, "default": 0, "unit": "px" },
+        { "type": "textarea", "id": "checklist", "label": "Checklist (comma separated)", "info": "Leave empty to hide. Icons use the list icon setting." },
+        { "type": "select", "id": "list_icon", "label": "Checklist icon", "default": "drop", "options": [
+          { "value": "drop", "label": "Droplet" },
+          { "value": "leaf", "label": "Leaf" },
+          { "value": "check", "label": "Check" },
+          { "value": "heart", "label": "Heart" }
+        ] },
+        { "type": "url", "id": "link", "label": "Card link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Value Showcase",
+      "blocks": [
+        {
+          "type": "feature_card",
+          "settings": {
+            "layout": "img-right",
+            "background_color": "#ECEAE2",
+            "text_color": "#26332B",
+            "accent_color": "#26332B",
+            "icon": "recycle",
+            "icon_color": "#26332B",
+            "title": "Eco-Friendly",
+            "title_accent": "Packaging",
+            "description": "Eco-friendly materials designed to care for the planet as much as your skin.",
+            "image_width": 30,
+            "image_x": 8
+          }
+        },
+        {
+          "type": "feature_card",
+          "settings": {
+            "layout": "img-left",
+            "background_color": "#3E4A38",
+            "text_color": "#FFFFFF",
+            "accent_color": "#C9D1BE",
+            "icon": "none",
+            "title": "100% Natural",
+            "title_accent": "100% You",
+            "checklist": "No Harsh Chemicals, Plant-Based Goodness, Ethically Sourced",
+            "list_icon": "drop",
+            "image_width": 40,
+            "image_x": 0
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

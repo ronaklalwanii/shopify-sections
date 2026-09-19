@@ -1,0 +1,70 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--main-blog-post",
+      "settings": {
+        "content_direction": "column",
+        "gap": 12,
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "@theme",
+          "settings": {}
+        },
+        "bl-2": {
+          "type": "@theme",
+          "settings": {}
+        },
+        "bl-3": {
+          "type": "_blog-post-title",
+          "settings": {}
+        },
+        "bl-4": {
+          "type": "_blog-post-title",
+          "settings": {}
+        },
+        "bl-5": {
+          "type": "_blog-post-info-text",
+          "settings": {}
+        },
+        "bl-6": {
+          "type": "_blog-post-info-text",
+          "settings": {}
+        },
+        "bl-7": {
+          "type": "_blog-post-featured-image",
+          "settings": {}
+        },
+        "bl-8": {
+          "type": "_blog-post-featured-image",
+          "settings": {}
+        },
+        "bl-9": {
+          "type": "_blog-post-content",
+          "settings": {}
+        },
+        "bl-10": {
+          "type": "_blog-post-content",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6",
+        "bl-7",
+        "bl-8",
+        "bl-9",
+        "bl-10"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

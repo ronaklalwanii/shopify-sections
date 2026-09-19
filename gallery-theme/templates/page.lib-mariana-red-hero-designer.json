@@ -1,0 +1,19 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--hero-designer",
+      "settings": {
+        "greeting": "I design",
+        "word_accent": "Brands",
+        "line3_pre": "That",
+        "line3_italic": "stand out.",
+        "tags": "Branding + Web Design + Digital Experience",
+        "button_label": "View works",
+        "badge_text": "AVAILABLE FOR WORK • BRANDING & DESIGN • "
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,234 @@
+{%- comment -%}
+  Aura Duo — two editorial panels side by side:
+  Panel A: dark text panel (eyebrow, serif title, copy, text-link button)
+  Panel B: light promise panel (eyebrow, icon item blocks, optional image)
+  Self-contained. Scoped styles. Responsive (stacks below 900px).
+{%- endcomment -%}
+
+<section id="AuraDuo-{{ section.id }}" class="ad">
+  {%- style -%}
+    #AuraDuo-{{ section.id }} {
+      --ad-bg: {{ section.settings.bg_color }};
+      --ad-gap: {{ section.settings.gap }}px;
+      --ad-radius: {{ section.settings.radius }}px;
+      --ad-min-h: {{ section.settings.min_height }}px;
+      --ad-a-bg: {{ section.settings.a_bg }};
+      --ad-a-eyebrow: {{ section.settings.a_eyebrow_color }};
+      --ad-a-title-s: {{ section.settings.a_title_size }}px;
+      --ad-a-text: {{ section.settings.a_text_color }};
+      --ad-b-bg: {{ section.settings.b_bg }};
+      --ad-b-eyebrow: {{ section.settings.b_eyebrow_color }};
+      --ad-b-title-s: {{ section.settings.title_size }}px;
+      --ad-b-text: {{ section.settings.text_color }};
+      background: var(--ad-bg);
+    }
+    #AuraDuo-{{ section.id }} .ad__wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--ad-gap);
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    #AuraDuo-{{ section.id }} .ad__panel {
+      border-radius: var(--ad-radius);
+      overflow: hidden;
+      min-height: var(--ad-min-h);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    #AuraDuo-{{ section.id }} .ad__panel--a { background: var(--ad-a-bg); padding: 56px 52px; }
+    #AuraDuo-{{ section.id }} .ad__eyebrow {
+      margin: 0 0 16px;
+      font-size: 10.5px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--ad-a-eyebrow);
+    }
+    #AuraDuo-{{ section.id }} .ad__panel--b .ad__eyebrow { color: var(--ad-b-eyebrow); }
+    #AuraDuo-{{ section.id }} .ad__title {
+      margin: 0 0 14px;
+      font-family: var(--ul-heading-font-family, Georgia, serif);
+      font-weight: 500;
+      font-size: var(--ad-a-title-s);
+      line-height: 1.14;
+      letter-spacing: -.01em;
+    }
+    #AuraDuo-{{ section.id }} .ad__panel--a .ad__title { color: #F4F1EA; }
+    #AuraDuo-{{ section.id }} .ad__panel--b .ad__title { font-size: var(--ad-b-title-s); color: #26231F; }
+    #AuraDuo-{{ section.id }} .ad__text {
+      margin: 0 0 24px;
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--ad-a-text);
+    }
+    #AuraDuo-{{ section.id }} .ad__panel--b .ad__text { color: var(--ad-b-text); }
+    #AuraDuo-{{ section.id }} .ad__link {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: #F4F1EA;
+      border-bottom: 1px solid rgba(244,241,234,.4);
+      padding-bottom: 5px;
+      transition: border-color 200ms ease;
+    }
+    #AuraDuo-{{ section.id }} .ad__link:hover { border-color: #F4F1EA; }
+    #AuraDuo-{{ section.id }} .ad__link::after { content: "→"; }
+    #AuraDuo-{{ section.id }} .ad__panel--b { padding: 44px 46px; background: var(--ad-b-bg); }
+    #AuraDuo-{{ section.id }} .ad__panel--b.ad__panel--split { display: grid; grid-template-columns: 1.05fr .95fr; padding: 0; align-items: stretch; }
+    #AuraDuo-{{ section.id }} .ad__b-left { padding: 44px 40px; display: flex; flex-direction: column; justify-content: center; }
+    #AuraDuo-{{ section.id }} .ad__items { display: flex; flex-direction: column; gap: 18px; }
+    #AuraDuo-{{ section.id }} .ad__item { display: flex; gap: 14px; align-items: flex-start; }
+    #AuraDuo-{{ section.id }} .ad__item-icon {
+      width: 38px; height: 38px; border-radius: 50%;
+      border: 1px solid rgba(38,35,31,.16);
+      display: grid; place-items: center; flex-shrink: 0;
+      color: #26231F;
+    }
+    #AuraDuo-{{ section.id }} .ad__item-icon svg {
+      width: 17px; height: 17px; stroke: currentColor; fill: none;
+      stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+    }
+    #AuraDuo-{{ section.id }} .ad__item b {
+      display: block; font-size: 14px; font-weight: 600; color: #26231F; margin-bottom: 2px;
+    }
+    #AuraDuo-{{ section.id }} .ad__item p { margin: 0; font-size: 12.5px; line-height: 1.5; color: #6B675F; }
+    #AuraDuo-{{ section.id }} .ad__media {
+      border-radius: var(--ad-radius); overflow: hidden; min-height: 240px; margin-top: 22px;
+    }
+    #AuraDuo-{{ section.id }} .ad__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #AuraDuo-{{ section.id }} .ad__b-media {
+      position: relative; min-height: 300px; background: #EAE4D8;
+    }
+    #AuraDuo-{{ section.id }} .ad__b-media img {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    @media (max-width: 900px) {
+      #AuraDuo-{{ section.id }} .ad__wrap { grid-template-columns: 1fr; }
+      #AuraDuo-{{ section.id }} .ad__panel--a { padding: 44px 28px; }
+      #AuraDuo-{{ section.id }} .ad__panel--b { grid-template-columns: 1fr; }
+      #AuraDuo-{{ section.id }} .ad__b-left { padding: 36px 28px; }
+      #AuraDuo-{{ section.id }} .ad__b-media { min-height: 220px; }
+    }
+  {%- endstyle -%}
+
+  <div class="ad__wrap">
+    <div class="ad__panel ad__panel--a">
+      {%- if section.settings.a_eyebrow != blank -%}
+        <p class="ad__eyebrow">{{ section.settings.a_eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.a_title != blank -%}
+        <h2 class="ad__title">{{ section.settings.a_title | newline_to_br }}</h2>
+      {%- endif -%}
+      {%- if section.settings.a_text != blank -%}
+        <p class="ad__text">{{ section.settings.a_text | newline_to_br }}</p>
+      {%- endif -%}
+      {%- if section.settings.a_btn_label != blank -%}
+        <a class="ad__link" {% if section.settings.a_btn_link != blank %}href="{{ section.settings.a_btn_link }}"{% endif %}>
+          {{ section.settings.a_btn_label }}
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="ad__panel ad__panel--b ad__panel--split">
+      <div class="ad__b-left">
+      {%- if section.settings.b_eyebrow != blank -%}
+        <p class="ad__eyebrow">{{ section.settings.b_eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.blocks.size > 0 -%}
+        <div class="ad__items">
+          {%- for block in section.blocks -%}
+            <div class="ad__item" {{ block.shopify_attributes }}>
+              <span class="ad__item-icon">
+                {%- case block.settings.icon -%}
+                  {%- when 'leaf' -%}
+                    <svg viewBox="0 0 24 24"><path d="M5 21c0-9 4-16 14-16 0 10-5 14-11 14-1.5 0-3-.5-3-.5z"/><path d="M5 21c3-6 7-9 11-11"/></svg>
+                  {%- when 'drop' -%}
+                    <svg viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg>
+                  {%- when 'recycle' -%}
+                    <svg viewBox="0 0 24 24"><path d="M7 19h4l-2 2m-4-2 2-6-5 1 3-6h4M17 5l2 4h-6l3 5m-2 5h6l-2-4"/></svg>
+                  {%- else -%}
+                    <svg viewBox="0 0 24 24"><path d="M12 21c-5-3.5-8-7-8-11a5 5 0 0 1 8-4 5 5 0 0 1 8 4c0 4-3 7.5-8 11z"/></svg>
+                {%- endcase -%}
+              </span>
+              <div>
+                <b>{{ block.settings.title }}</b>
+                <p>{{ block.settings.text }}</p>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+            </div>
+{%- if section.settings.b_image != blank -%}
+        <div class="ad__b-media">
+          <img src="{{ section.settings.b_image | image_url: width: 900 }}" alt="{{ section.settings.b_image.alt | escape }}" loading="lazy" width="900" height="600">
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Aura Duo",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "color", "id": "bg_color", "label": "Page background", "default": "#F7F3EE" },
+    { "type": "range", "id": "gap", "label": "Gap between panels", "min": 8, "max": 40, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "radius", "label": "Panel radius", "min": 0, "max": 32, "step": 2, "default": 18, "unit": "px" },
+    { "type": "range", "id": "min_height", "label": "Panel min height", "min": 320, "max": 640, "step": 20, "default": 460, "unit": "px" },
+    { "type": "header", "content": "Panel A — Statement" },
+    { "type": "color", "id": "a_bg", "label": "Panel A background", "default": "#23231F" },
+    { "type": "text", "id": "a_eyebrow", "label": "Panel A eyebrow", "default": "The ritual" },
+    { "type": "color", "id": "a_eyebrow_color", "label": "Panel A eyebrow color", "default": "#A89F91" },
+    { "type": "textarea", "id": "a_title", "label": "Panel A title", "default": "Skincare that\nbecomes a ritual." },
+    { "type": "range", "id": "a_title_size", "label": "Panel A title size", "min": 24, "max": 56, "step": 2, "default": 36, "unit": "px" },
+    { "type": "textarea", "id": "a_text", "label": "Panel A text", "default": "Simple steps. Powerful results.\nMade to fit effortlessly into your everyday." },
+    { "type": "color", "id": "a_text_color", "label": "Panel A text color", "default": "#C7C2B8" },
+    { "type": "text", "id": "a_btn_label", "label": "Panel A link label", "default": "Explore collection" },
+    { "type": "url", "id": "a_btn_link", "label": "Panel A link" },
+    { "type": "header", "content": "Panel B — Promise" },
+    { "type": "color", "id": "b_bg", "label": "Panel B background", "default": "#FFFFFF" },
+    { "type": "text", "id": "b_eyebrow", "label": "Panel B eyebrow", "default": "Our promise" },
+    { "type": "color", "id": "b_eyebrow_color", "label": "Panel B eyebrow color", "default": "#8A8378" },
+    { "type": "image_picker", "id": "b_image", "label": "Panel B image" },
+    { "type": "range", "id": "title_size", "label": "Item title size", "min": 20, "max": 44, "step": 2, "default": 26, "unit": "px" },
+    { "type": "range", "id": "text_size", "label": "Item text size", "min": 11, "max": 18, "step": 1, "default": 13, "unit": "px" },
+    { "type": "color", "id": "text_color", "label": "Item text color", "default": "#6B675F" }
+  ],
+  "blocks": [
+    {
+      "type": "promise",
+      "name": "Promise item",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "options": [
+          { "value": "leaf", "label": "Leaf" },
+          { "value": "drop", "label": "Drop" },
+          { "value": "recycle", "label": "Recycle" },
+          { "value": "heart", "label": "Heart" }
+        ], "default": "leaf" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Clean & Safe" },
+        { "type": "text", "id": "text", "label": "Text", "default": "No harmful chemicals" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Aura Duo",
+      "blocks": [
+        { "type": "promise", "settings": { "icon": "leaf", "title": "Clean & Safe", "text": "No harmful chemicals" } },
+        { "type": "promise", "settings": { "icon": "recycle", "title": "Sustainable", "text": "Eco-friendly packaging" } },
+        { "type": "promise", "settings": { "icon": "heart", "title": "Cruelty Free", "text": "Never tested on animals" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,94 @@
+{
+  "sections": {
+    "library": {
+      "type": "dark-fan-carousel",
+      "settings": {
+        "eyebrow": "Daily Energy",
+        "heading": "Feel Better Every Day",
+        "autoplay_seconds": 4,
+        "fan_angle": 9,
+        "fan_cards": 2,
+        "spread_x": 150,
+        "fan_y": 10,
+        "scale_step": 8,
+        "card_width": 26,
+        "card_width_max": 360,
+        "card_ratio": "3 / 4",
+        "stage_height": 40,
+        "stage_height_max": 640,
+        "card_radius": 18,
+        "background_color": "#0c0c0c",
+        "text_color": "#ffffff",
+        "accent_color": "#e0a45e",
+        "font_stack": "system-ui, sans-serif"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "card",
+          "settings": {
+            "name": "Mind Reset",
+            "tag": "Calm",
+            "tag_color": "#eaf4ff",
+            "sub": "A moment for your senses"
+          }
+        },
+        "bl-2": {
+          "type": "card",
+          "settings": {
+            "name": "Heart Rhythm",
+            "tag": "Health",
+            "tag_color": "#ffe9ec",
+            "sub": "Move with intention"
+          }
+        },
+        "bl-3": {
+          "type": "card",
+          "settings": {
+            "name": "Morning Flow",
+            "tag": "Focus",
+            "tag_color": "#fff7e2",
+            "sub": "Start the day right"
+          }
+        },
+        "bl-4": {
+          "type": "card",
+          "settings": {
+            "name": "Active Day",
+            "tag": "Movement",
+            "tag_color": "#ffe4e1",
+            "sub": "Movement as meditation"
+          }
+        },
+        "bl-5": {
+          "type": "card",
+          "settings": {
+            "name": "Body Ready",
+            "tag": "Progress",
+            "tag_color": "#e8ffe4",
+            "sub": "Fuel your instincts"
+          }
+        },
+        "bl-6": {
+          "type": "card",
+          "settings": {
+            "name": "Sleep Sanity",
+            "tag": "Rest",
+            "tag_color": "#f0e8ff",
+            "sub": "Recover fully"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

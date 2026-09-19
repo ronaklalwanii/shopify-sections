@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "library": {
+      "type": "horizon--collection-links",
+      "settings": {
+        "layout": "spotlight",
+        "section_width": "page-width",
+        "alignment": "left",
+        "image_position": "right",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

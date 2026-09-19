@@ -1,0 +1,60 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--main-product",
+      "settings": {
+        "padding": 56
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "vendor",
+          "settings": {}
+        },
+        "bl-2": {
+          "type": "title",
+          "settings": {}
+        },
+        "bl-3": {
+          "type": "rating",
+          "settings": {}
+        },
+        "bl-4": {
+          "type": "price",
+          "settings": {}
+        },
+        "bl-5": {
+          "type": "variant_picker",
+          "settings": {}
+        },
+        "bl-6": {
+          "type": "quantity",
+          "settings": {}
+        },
+        "bl-7": {
+          "type": "buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "button_style": "dark"
+          }
+        },
+        "bl-8": {
+          "type": "description",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6",
+        "bl-7",
+        "bl-8"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

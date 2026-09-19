@@ -1,0 +1,12 @@
+{%- comment -%} Section Library: injected global assets for store "pet store" {%- endcomment -%}
+{{ 'pet-store--overflow-list.css' | asset_url | stylesheet_tag }}
+{{ 'pet-store--base.css' | asset_url | stylesheet_tag }}
+{% render 'pet-store--theme-styles-variables' %}
+{% # SRA target for /cart endpoints. The Section Rendering API provides the section wrapper. %}
+{% render 'pet-store--cart-drawer', render_wrapper: false %}
+
+{% schema %}
+{
+  "name": "t:names.cart_drawer"
+}
+{% endschema %}

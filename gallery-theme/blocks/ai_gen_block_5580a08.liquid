@@ -1,0 +1,1326 @@
+{% doc %}
+  @prompt
+    Generate me a classy blog section that connects to the available blogs.
+    
+    Make the section have stylish and gritty look.
+    
+    In mobile version, give me oiption to have blogs stacked or have an option to swipe through the blogs.
+    
+    The image height of each blog should be able to be controlled. 
+    
+    Give me different options of button style like link, filled, outlined for read more.
+    
+    The button should have: Read More.
+    , Give me option to change the font everywhere.
+    
+    Give me option to changethe alignment for heading and subheading to left, centered or right.
+    
+    Show blogs automatically connected to the store, By default show 3 articles and give me a button up top that reads read all. Make that button alsohave options for design like link style, filled, border style, etc.
+    
+    Give me an option to show or hide that button., By default keep the author name off. 
+    
+    For computer mode, give me 3-4 style options on how the blogs would look, By default, give it a plain background.
+    
+    In computer mode, re read all should be far right in line with latest stories by default. Give it an option to have read all below the heading and subheading.
+    
+    Add some more options for blog style , In mobile version, make the read all button venter aligned, Give it some padding on both the sides in mobile and computer mode, Give me control over padding in computer and mobile mode seperately.
+    
+    Give me seperate control over the text size of read all button and read more buttons for blogs
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% liquid
+  assign blog = blogs[block.settings.blog]
+  assign articles_to_show = block.settings.articles_count
+  assign heading_alignment = block.settings.heading_alignment
+  assign mobile_layout = block.settings.mobile_layout
+  assign card_style = block.settings.card_style
+  assign button_position = block.settings.view_all_position
+%}
+
+{% style %}
+  .ai-blog-section-{{ ai_gen_id }} {
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.section_padding_top }}px {{ block.settings.section_padding_horizontal }}px {{ block.settings.section_padding_bottom }}px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-blog-section-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, {{ block.settings.texture_opacity | divided_by: 100.0 }}) 2px,
+        rgba(0, 0, 0, {{ block.settings.texture_opacity | divided_by: 100.0 }}) 4px
+      );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .ai-blog-section__container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .ai-blog-section__header-{{ ai_gen_id }} {
+    margin-bottom: {{ block.settings.header_spacing }}px;
+    {% if button_position == 'inline' %}
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+    {% else %}
+      text-align: {{ heading_alignment }};
+    {% endif %}
+  }
+
+  .ai-blog-section__header-content-{{ ai_gen_id }} {
+    {% if button_position == 'inline' %}
+      flex: 1;
+      text-align: {{ heading_alignment }};
+    {% endif %}
+  }
+
+  .ai-blog-section__heading-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-style: {{ block.settings.heading_font.style }};
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 {{ block.settings.subheading_spacing }}px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .ai-blog-section__subheading-{{ ai_gen_id }} {
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-weight: {{ block.settings.body_font.weight }};
+    font-style: {{ block.settings.body_font.style }};
+    font-size: {{ block.settings.subheading_size }}px;
+    color: {{ block.settings.subheading_color }};
+    margin: 0 {% if button_position == 'below' %}0 {{ block.settings.button_spacing }}px{% endif %};
+    line-height: 1.6;
+  }
+
+  .ai-blog-section__view-all-wrapper-{{ ai_gen_id }} {
+    {% if button_position == 'inline' %}
+      flex-shrink: 0;
+      align-self: center;
+    {% endif %}
+  }
+
+  .ai-blog-section__view-all-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-weight: {{ block.settings.body_font.weight }};
+    font-size: {{ block.settings.view_all_font_size }}px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    cursor: pointer;
+    border: 2px solid transparent;
+  }
+
+  .ai-blog-section__view-all-{{ ai_gen_id }}--link {
+    background: transparent;
+    color: {{ block.settings.view_all_color }};
+    padding: 0;
+    text-decoration: underline;
+  }
+
+  .ai-blog-section__view-all-{{ ai_gen_id }}--link:hover {
+    color: {{ block.settings.view_all_hover_color }};
+    text-decoration: none;
+  }
+
+  .ai-blog-section__view-all-{{ ai_gen_id }}--filled {
+    background-color: {{ block.settings.view_all_bg_color }};
+    color: {{ block.settings.view_all_color }};
+    border-color: {{ block.settings.view_all_bg_color }};
+  }
+
+  .ai-blog-section__view-all-{{ ai_gen_id }}--filled:hover {
+    background-color: {{ block.settings.view_all_hover_color }};
+    border-color: {{ block.settings.view_all_hover_color }};
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .ai-blog-section__view-all-{{ ai_gen_id }}--outlined {
+    background-color: transparent;
+    color: {{ block.settings.view_all_color }};
+    border-color: {{ block.settings.view_all_color }};
+  }
+
+  .ai-blog-section__view-all-{{ ai_gen_id }}--outlined:hover {
+    background-color: {{ block.settings.view_all_color }};
+    color: {{ block.settings.background_color }};
+    transform: translateY(-2px);
+  }
+
+  .ai-blog-section__articles-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat({{ block.settings.columns_desktop }}, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+  }
+
+  .ai-blog-article-{{ ai_gen_id }} {
+    background-color: {{ block.settings.card_background }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid {{ block.settings.card_border_color }};
+    position: relative;
+    {% if card_style == 'classic' %}
+      display: flex;
+      flex-direction: column;
+    {% elsif card_style == 'overlay' %}
+      display: flex;
+      flex-direction: column;
+    {% elsif card_style == 'minimal' %}
+      border: none;
+      background: transparent;
+    {% elsif card_style == 'magazine' %}
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    {% elsif card_style == 'bordered' %}
+      border: 2px solid {{ block.settings.card_border_color }};
+      display: flex;
+      flex-direction: column;
+    {% elsif card_style == 'shadow' %}
+      box-shadow: 0 4px 12px rgba(0, 0, 0, {{ block.settings.card_shadow_opacity }});
+      display: flex;
+      flex-direction: column;
+    {% elsif card_style == 'gradient' %}
+      background: linear-gradient(135deg, {{ block.settings.card_background }} 0%, {{ block.settings.card_gradient_color }} 100%);
+      display: flex;
+      flex-direction: column;
+    {% endif %}
+  }
+
+  {% if card_style == 'classic' %}
+    .ai-blog-article-{{ ai_gen_id }}::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, transparent 0%, rgba(0, 0, 0, 0.05) 100%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+
+    .ai-blog-article-{{ ai_gen_id }}:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, {{ block.settings.card_shadow_opacity }});
+    }
+
+    .ai-blog-article-{{ ai_gen_id }}:hover::after {
+      opacity: 1;
+    }
+  {% elsif card_style == 'overlay' %}
+    .ai-blog-article-{{ ai_gen_id }} {
+      min-height: 400px;
+    }
+
+    .ai-blog-article__image-wrapper-{{ ai_gen_id }} {
+      position: absolute !important;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 100% !important;
+    }
+
+    .ai-blog-article__image-{{ ai_gen_id }}::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 60%);
+      z-index: 1;
+    }
+
+    .ai-blog-article__content-{{ ai_gen_id }} {
+      position: relative;
+      z-index: 2;
+      margin-top: auto;
+      color: #ffffff;
+    }
+
+    .ai-blog-article__title-{{ ai_gen_id }},
+    .ai-blog-article__title-link-{{ ai_gen_id }},
+    .ai-blog-article__excerpt-{{ ai_gen_id }},
+    .ai-blog-article__meta-{{ ai_gen_id }} {
+      color: #ffffff !important;
+    }
+
+    .ai-blog-article-{{ ai_gen_id }}:hover {
+      transform: scale(1.02);
+    }
+  {% elsif card_style == 'minimal' %}
+    .ai-blog-article-{{ ai_gen_id }}:hover .ai-blog-article__image-{{ ai_gen_id }} {
+      opacity: 0.85;
+    }
+
+    .ai-blog-article__image-wrapper-{{ ai_gen_id }} {
+      border-radius: {{ block.settings.card_border_radius }}px;
+      overflow: hidden;
+    }
+  {% elsif card_style == 'magazine' %}
+    .ai-blog-article-{{ ai_gen_id }}:hover {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, {{ block.settings.card_shadow_opacity }});
+    }
+
+    .ai-blog-article__image-wrapper-{{ ai_gen_id }} {
+      height: 100% !important;
+    }
+  {% elsif card_style == 'bordered' %}
+    .ai-blog-article-{{ ai_gen_id }}:hover {
+      border-color: {{ block.settings.heading_color }};
+      transform: translateY(-4px);
+    }
+  {% elsif card_style == 'shadow' %}
+    .ai-blog-article-{{ ai_gen_id }}:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, {{ block.settings.card_shadow_opacity | times: 1.5 }});
+      transform: translateY(-4px);
+    }
+  {% elsif card_style == 'gradient' %}
+    .ai-blog-article-{{ ai_gen_id }}:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+  {% endif %}
+
+  .ai-blog-article__image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: {{ block.settings.image_height }}px;
+    overflow: hidden;
+    background-color: #f4f4f4;
+  }
+
+  .ai-blog-article__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    {% if card_style == 'overlay' %}
+      position: relative;
+    {% endif %}
+  }
+
+  {% if card_style != 'overlay' %}
+    .ai-blog-article-{{ ai_gen_id }}:hover .ai-blog-article__image-{{ ai_gen_id }} {
+      transform: scale(1.08);
+    }
+  {% endif %}
+
+  .ai-blog-article__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #e0e0e0 0%, #f4f4f4 100%);
+  }
+
+  .ai-blog-article__image-placeholder-{{ ai_gen_id }} svg {
+    width: 60px;
+    height: 60px;
+    opacity: 0.3;
+  }
+
+  .ai-blog-article__content-{{ ai_gen_id }} {
+    padding: {{ block.settings.card_padding }}px;
+  }
+
+  .ai-blog-article__meta-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-size: {{ block.settings.meta_font_size }}px;
+    color: {{ block.settings.meta_color }};
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .ai-blog-article__meta-divider-{{ ai_gen_id }} {
+    width: 4px;
+    height: 4px;
+    background-color: {{ block.settings.meta_color }};
+    border-radius: 50%;
+    opacity: 0.5;
+  }
+
+  .ai-blog-article__title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-size: {{ block.settings.article_title_size }}px;
+    color: {{ block.settings.article_title_color }};
+    margin: 0 0 12px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  .ai-blog-article__title-link-{{ ai_gen_id }} {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .ai-blog-article__title-link-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.link_hover_color }};
+  }
+
+  .ai-blog-article__excerpt-{{ ai_gen_id }} {
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-size: {{ block.settings.excerpt_font_size }}px;
+    color: {{ block.settings.excerpt_color }};
+    line-height: 1.6;
+    margin: 0 0 20px;
+  }
+
+  .ai-blog-article__read-more-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-weight: 600;
+    font-size: {{ block.settings.read_more_font_size }}px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    border: 2px solid transparent;
+  }
+
+  .ai-blog-article__read-more-{{ ai_gen_id }}--link {
+    background: transparent;
+    color: {{ block.settings.read_more_color }};
+    padding: 0;
+    text-decoration: underline;
+  }
+
+  .ai-blog-article__read-more-{{ ai_gen_id }}--link:hover {
+    color: {{ block.settings.read_more_hover_color }};
+    text-decoration: none;
+    transform: translateX(4px);
+  }
+
+  .ai-blog-article__read-more-{{ ai_gen_id }}--filled {
+    background-color: {{ block.settings.read_more_bg_color }};
+    color: {{ block.settings.read_more_color }};
+    border-color: {{ block.settings.read_more_bg_color }};
+  }
+
+  .ai-blog-article__read-more-{{ ai_gen_id }}--filled:hover {
+    background-color: {{ block.settings.read_more_hover_color }};
+    border-color: {{ block.settings.read_more_hover_color }};
+    transform: translateX(4px);
+  }
+
+  .ai-blog-article__read-more-{{ ai_gen_id }}--outlined {
+    background-color: transparent;
+    color: {{ block.settings.read_more_color }};
+    border-color: {{ block.settings.read_more_color }};
+  }
+
+  .ai-blog-article__read-more-{{ ai_gen_id }}--outlined:hover {
+    background-color: {{ block.settings.read_more_color }};
+    color: {{ block.settings.card_background }};
+    transform: translateX(4px);
+  }
+
+  {% if card_style == 'overlay' %}
+    .ai-blog-article__read-more-{{ ai_gen_id }}--link {
+      color: #ffffff;
+    }
+
+    .ai-blog-article__read-more-{{ ai_gen_id }}--outlined {
+      color: #ffffff;
+      border-color: #ffffff;
+    }
+
+    .ai-blog-article__read-more-{{ ai_gen_id }}--outlined:hover {
+      background-color: #ffffff;
+      color: #000000;
+    }
+  {% endif %}
+
+  .ai-blog-article__read-more-arrow-{{ ai_gen_id }} {
+    transition: transform 0.3s ease;
+  }
+
+  .ai-blog-article__read-more-{{ ai_gen_id }}:hover .ai-blog-article__read-more-arrow-{{ ai_gen_id }} {
+    transform: translateX(4px);
+  }
+
+  .ai-blog-section__empty-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 60px 20px;
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    color: {{ block.settings.subheading_color }};
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-blog-section__heading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.8);
+    }
+
+    .ai-blog-section__subheading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.subheading_size }}px * 0.9);
+    }
+
+    .ai-blog-section__articles-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_tablet }}, 1fr);
+    }
+
+    .ai-blog-section__header-{{ ai_gen_id }} {
+      {% if button_position == 'inline' %}
+        flex-direction: column;
+        align-items: flex-start;
+      {% endif %}
+    }
+
+    .ai-blog-section__view-all-wrapper-{{ ai_gen_id }} {
+      {% if button_position == 'inline' %}
+        align-self: flex-start;
+        margin-top: 15px;
+      {% endif %}
+    }
+
+    {% if card_style == 'magazine' %}
+      .ai-blog-article-{{ ai_gen_id }} {
+        grid-template-columns: 1fr;
+      }
+    {% endif %}
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-blog-section-{{ ai_gen_id }} {
+      padding: {{ block.settings.mobile_padding_top }}px {{ block.settings.mobile_padding_horizontal }}px {{ block.settings.mobile_padding_bottom }}px;
+    }
+
+    .ai-blog-section__heading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.65);
+    }
+
+    .ai-blog-section__subheading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.subheading_size }}px * 0.85);
+    }
+
+    .ai-blog-article__title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.article_title_size }}px * 0.85);
+    }
+
+    .ai-blog-article__image-wrapper-{{ ai_gen_id }} {
+      height: {{ block.settings.image_height | times: 0.8 }}px;
+    }
+
+    {% if card_style == 'magazine' %}
+      .ai-blog-article-{{ ai_gen_id }} {
+        grid-template-columns: 1fr;
+      }
+    {% endif %}
+
+    .ai-blog-section__header-{{ ai_gen_id }} {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .ai-blog-section__header-content-{{ ai_gen_id }} {
+      text-align: center;
+    }
+
+    .ai-blog-section__view-all-wrapper-{{ ai_gen_id }} {
+      align-self: center;
+      margin-top: 15px;
+    }
+
+    .ai-blog-section__articles-{{ ai_gen_id }} {
+      {% if mobile_layout == 'stack' %}
+        grid-template-columns: 1fr;
+      {% else %}
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 16px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      {% endif %}
+    }
+
+    {% if mobile_layout == 'swipe' %}
+      .ai-blog-section__articles-{{ ai_gen_id }}::-webkit-scrollbar {
+        display: none;
+      }
+
+      .ai-blog-article-{{ ai_gen_id }} {
+        flex: 0 0 85%;
+        scroll-snap-align: start;
+      }
+    {% endif %}
+  }
+{% endstyle %}
+
+<div class="ai-blog-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-blog-section__container-{{ ai_gen_id }}">
+    <div class="ai-blog-section__header-{{ ai_gen_id }}">
+      <div class="ai-blog-section__header-content-{{ ai_gen_id }}">
+        {% if block.settings.heading != blank %}
+          <h2 class="ai-blog-section__heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+        {% endif %}
+
+        {% if block.settings.subheading != blank %}
+          <div class="ai-blog-section__subheading-{{ ai_gen_id }}">{{ block.settings.subheading }}</div>
+        {% endif %}
+
+        {% if block.settings.show_view_all and blog != blank and button_position == 'below' %}
+          <a 
+            href="{{ blog.url }}" 
+            class="ai-blog-section__view-all-{{ ai_gen_id }} ai-blog-section__view-all-{{ ai_gen_id }}--{{ block.settings.view_all_style }}"
+          >
+            {{ block.settings.view_all_text }}
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        {% endif %}
+      </div>
+
+      {% if block.settings.show_view_all and blog != blank and button_position == 'inline' %}
+        <div class="ai-blog-section__view-all-wrapper-{{ ai_gen_id }}">
+          <a 
+            href="{{ blog.url }}" 
+            class="ai-blog-section__view-all-{{ ai_gen_id }} ai-blog-section__view-all-{{ ai_gen_id }}--{{ block.settings.view_all_style }}"
+          >
+            {{ block.settings.view_all_text }}
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if blog != blank and blog.articles_count > 0 %}
+      <div class="ai-blog-section__articles-{{ ai_gen_id }}">
+        {% for article in blog.articles limit: articles_to_show %}
+          <article class="ai-blog-article-{{ ai_gen_id }}">
+            <div class="ai-blog-article__image-wrapper-{{ ai_gen_id }}">
+              {% if article.image %}
+                <img
+                  src="{{ article.image | image_url: width: 800 }}"
+                  alt="{{ article.image.alt | escape }}"
+                  class="ai-blog-article__image-{{ ai_gen_id }}"
+                  loading="lazy"
+                  width="800"
+                  height="{{ block.settings.image_height }}"
+                >
+              {% else %}
+                <div class="ai-blog-article__image-placeholder-{{ ai_gen_id }}">
+                  {{ 'image' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="ai-blog-article__content-{{ ai_gen_id }}">
+              <div class="ai-blog-article__meta-{{ ai_gen_id }}">
+                <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+                  {{ article.published_at | date: '%b %d, %Y' }}
+                </time>
+                {% if block.settings.show_author and article.author != blank %}
+                  <span class="ai-blog-article__meta-divider-{{ ai_gen_id }}"></span>
+                  <span>{{ article.author }}</span>
+                {% endif %}
+              </div>
+
+              <h3 class="ai-blog-article__title-{{ ai_gen_id }}">
+                <a href="{{ article.url }}" class="ai-blog-article__title-link-{{ ai_gen_id }}">
+                  {{ article.title }}
+                </a>
+              </h3>
+
+              {% if article.excerpt != blank %}
+                <div class="ai-blog-article__excerpt-{{ ai_gen_id }}">
+                  {{ article.excerpt | strip_html | truncate: 120 }}
+                </div>
+              {% endif %}
+
+              <a 
+                href="{{ article.url }}" 
+                class="ai-blog-article__read-more-{{ ai_gen_id }} ai-blog-article__read-more-{{ ai_gen_id }}--{{ block.settings.read_more_style }}"
+              >
+                {{ block.settings.read_more_text }}
+                <svg class="ai-blog-article__read-more-arrow-{{ ai_gen_id }}" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="ai-blog-section__empty-{{ ai_gen_id }}">
+        <p>No blog posts available. Please select a blog with published articles.</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Classy blog section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Blog selection"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog"
+    },
+    {
+      "type": "range",
+      "id": "articles_count",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "label": "Number of articles",
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "Section heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Latest Stories"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "<p>Discover insights, trends, and inspiration from our blog</p>"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "View all button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show view all button",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "view_all_position",
+      "label": "Button position",
+      "options": [
+        {
+          "value": "inline",
+          "label": "Inline with heading"
+        },
+        {
+          "value": "below",
+          "label": "Below heading"
+        }
+      ],
+      "default": "inline"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "Button text",
+      "default": "Read All"
+    },
+    {
+      "type": "select",
+      "id": "view_all_style",
+      "label": "Button style",
+      "options": [
+        {
+          "value": "link",
+          "label": "Link"
+        },
+        {
+          "value": "filled",
+          "label": "Filled"
+        },
+        {
+          "value": "outlined",
+          "label": "Outlined"
+        }
+      ],
+      "default": "outlined"
+    },
+    {
+      "type": "range",
+      "id": "view_all_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Button text size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "view_all_color",
+      "label": "Button color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "view_all_bg_color",
+      "label": "Button background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "view_all_hover_color",
+      "label": "Button hover color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Read more button"
+    },
+    {
+      "type": "text",
+      "id": "read_more_text",
+      "label": "Button text",
+      "default": "Read More"
+    },
+    {
+      "type": "select",
+      "id": "read_more_style",
+      "label": "Button style",
+      "options": [
+        {
+          "value": "link",
+          "label": "Link"
+        },
+        {
+          "value": "filled",
+          "label": "Filled"
+        },
+        {
+          "value": "outlined",
+          "label": "Outlined"
+        }
+      ],
+      "default": "link"
+    },
+    {
+      "type": "range",
+      "id": "read_more_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Button text size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "read_more_color",
+      "label": "Button color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "read_more_bg_color",
+      "label": "Button background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "read_more_hover_color",
+      "label": "Button hover color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "card_style",
+      "label": "Card style",
+      "options": [
+        {
+          "value": "classic",
+          "label": "Classic"
+        },
+        {
+          "value": "overlay",
+          "label": "Overlay"
+        },
+        {
+          "value": "minimal",
+          "label": "Minimal"
+        },
+        {
+          "value": "magazine",
+          "label": "Magazine"
+        },
+        {
+          "value": "bordered",
+          "label": "Bordered"
+        },
+        {
+          "value": "shadow",
+          "label": "Shadow"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        }
+      ],
+      "default": "classic",
+      "info": "Classic: Hover lift effect. Overlay: Text over image. Minimal: Borderless. Magazine: Side-by-side. Bordered: Bold border. Shadow: Elevated card. Gradient: Color fade background."
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "label": "Columns on desktop",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "Columns on tablet",
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile layout",
+      "options": [
+        {
+          "value": "stack",
+          "label": "Stacked"
+        },
+        {
+          "value": "swipe",
+          "label": "Swipe"
+        }
+      ],
+      "default": "swipe"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Grid gap",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Article card"
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "min": 150,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "label": "Image height",
+      "default": 280
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Card padding",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "card_gradient_color",
+      "label": "Card gradient end color",
+      "default": "#f0f0f0",
+      "info": "Used for gradient card style"
+    },
+    {
+      "type": "range",
+      "id": "card_shadow_opacity",
+      "min": 0,
+      "max": 0.5,
+      "step": 0.1,
+      "label": "Card shadow opacity",
+      "default": 0.2
+    },
+    {
+      "type": "header",
+      "content": "Article meta"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Show author name",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "helvetica_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Section heading size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "article_title_size",
+      "min": 14,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Article title size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "excerpt_font_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Excerpt size",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "meta_font_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Meta text size",
+      "default": 11
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "article_title_color",
+      "label": "Article title color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "excerpt_color",
+      "label": "Excerpt color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "meta_color",
+      "label": "Meta text color",
+      "default": "#999999"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_color",
+      "label": "Link hover color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Desktop spacing"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_horizontal",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Mobile spacing"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_horizontal",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Other spacing"
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Header bottom spacing",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "subheading_spacing",
+      "min": 5,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Subheading bottom spacing",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "button_spacing",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Button top spacing",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "min": 5,
+      "max": 25,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "min": 10,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Advanced"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1000,
+      "max": 1800,
+      "step": 50,
+      "unit": "px",
+      "label": "Container width",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "texture_opacity",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "label": "Gritty texture intensity",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Classy blog section"
+    }
+  ]
+}
+{% endschema %}

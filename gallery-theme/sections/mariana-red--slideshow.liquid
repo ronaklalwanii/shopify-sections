@@ -1,0 +1,199 @@
+{%- comment -%} Section Library: injected global assets for store "mariana-red" {%- endcomment -%}
+{{ 'mariana-red--base.css' | asset_url | stylesheet_tag }}
+{{ 'mariana-red--components.css' | asset_url | stylesheet_tag }}
+{% render 'mariana-red--layout-tokens' %}
+{%- comment -%}
+  Hero slideshow with counter and arrows (homeware look).
+{%- endcomment -%}
+{%- capture section_colors_style -%}
+  {%- if section.settings.colors_background != blank or section.settings.colors_text != blank -%}
+    {%- assign override_bg = section.settings.colors_background | default: settings.colors_background -%}
+    {%- assign override_fg = section.settings.colors_text | default: settings.colors_text -%}
+    style="--color-background: {{ override_bg }}; --color-surface: {{ override_bg | color_lighten: 3 }}; --color-border: {{ override_bg | color_darken: 9 | color_modify: 'alpha', 0.85 }}; --color-foreground: {{ override_fg }}; --color-heading: {{ override_fg }}; --color-text-muted: {{ override_fg | color_modify: 'alpha', 0.62 }};"
+  {%- endif -%}
+{%- endcapture -%}
+<section {{ section_colors_style }}
+  class="slideshow"
+  data-slideshow
+  {% if section.settings.autoplay > 0 %}data-slideshow-autoplay="{{ section.settings.autoplay | times: 1000 }}"{% endif %}
+>
+  <div class="slideshow__slides">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign overlay = block.settings.overlay_opacity | divided_by: 100.0
+      -%}
+      <div
+        class="slideshow__slide hero__height-{{ section.settings.height }}"
+        style="--overlay-color: linear-gradient(90deg, rgba(15,12,8,{{ overlay }}), rgba(15,12,8,{{ overlay | times: 0.25 }}));"
+        {{ block.shopify_attributes }}
+      >
+        {%- if block.settings.image != blank -%}
+          {{ block.settings.image | image_url: width: 2400 | image_tag: class: 'slideshow__bg', loading: 'eager', widths: '960, 1280, 1600, 2400', sizes: '100vw', alt: block.settings.image.alt }}
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'slideshow__bg placeholder-svg' }}
+        {%- endif -%}
+        <div class="page-width" style="width: 100%;">
+          <div class="slideshow__content">
+            {%- if block.settings.eyebrow != blank -%}
+              <span class="eyebrow">{{ block.settings.eyebrow | escape }}</span>
+            {%- endif -%}
+            {%- if block.settings.heading != blank -%}
+              <h2 class="h0 slideshow__heading">{{ block.settings.heading | escape | newline_to_br }}</h2>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <p class="hero__text">{{ block.settings.text | escape }}</p>
+            {%- endif -%}
+            {%- if block.settings.button_label != blank -%}
+              {% render 'mariana-red--button', label: block.settings.button_label, link: block.settings.button_link, style: 'light' %}
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+
+  {%- if section.blocks.size > 1 -%}
+    <div class="slideshow__controls">
+      <span class="slideshow__counter" data-slideshow-counter>01 / {{ section.blocks.size | prepend: '0' | slice: -2, 2 }}</span>
+      <div class="slideshow__arrows">
+        <button type="button" class="icon-button" data-slideshow-prev aria-label="{{ 'general.slider.previous' | t }}">
+          {% render 'mariana-red--icon', name: 'chevron-left', size: 14 %}
+        </button>
+        <button type="button" class="icon-button" data-slideshow-next aria-label="{{ 'general.slider.next' | t }}">
+          {% render 'mariana-red--icon', name: 'chevron-right', size: 14 %}
+        </button>
+      </div>
+    </div>
+    {%- if section.settings.side_note != blank -%}
+      <p class="slideshow__note" aria-hidden="true">{{ section.settings.side_note | escape }}</p>
+    {%- endif -%}
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Slideshow",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "options": [
+        {
+          "value": "sm",
+          "label": "Small"
+        },
+        {
+          "value": "md",
+          "label": "Medium"
+        },
+        {
+          "value": "lg",
+          "label": "Large"
+        },
+        {
+          "value": "xl",
+          "label": "Extra large"
+        }
+      ],
+      "default": "lg"
+    },
+    {
+      "type": "range",
+      "id": "autoplay",
+      "label": "Change slides every",
+      "min": 0,
+      "max": 12,
+      "step": 1,
+      "unit": "s",
+      "info": "Set to 0 to disable autoplay.",
+      "default": 7
+    },
+    {
+      "type": "text",
+      "id": "side_note",
+      "label": "Side note (rotated text)",
+      "default": "Good Food Brings People Together"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "label": "Overlay opacity",
+          "min": 0,
+          "max": 90,
+          "step": 5,
+          "unit": "%",
+          "default": 45
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "Things worth keeping"
+        },
+        {
+          "type": "textarea",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Better meals, happier days"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Beautiful kitchenware made for the meals you'll remember."
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Explore the collection"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Slideshow",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "eyebrow": "Made to gather",
+            "heading": "Set a table to remember",
+            "text": "Serveware and linens for slow weekends."
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "eyebrow": "Seasonal edit",
+            "heading": "Cook with the seasons",
+            "text": "Fresh tools for fresh produce."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

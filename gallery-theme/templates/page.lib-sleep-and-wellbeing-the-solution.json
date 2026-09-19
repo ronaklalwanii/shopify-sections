@@ -1,0 +1,103 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--the-solution",
+      "settings": {
+        "background": "#F2EEE7",
+        "padding_top": 96,
+        "padding_bottom": 96,
+        "max_width": 1680,
+        "side_padding": 56,
+        "left_width": 30,
+        "column_gap": 48,
+        "items_per_row": "3",
+        "items_gap": 32,
+        "eyebrow": "The solution",
+        "eyebrow_size": 12,
+        "eyebrow_tracking": 14,
+        "eyebrow_weight": "600",
+        "eyebrow_color": "#161513",
+        "eyebrow_gap": 24,
+        "heading": "Recovery shouldn't require rearranging your life.",
+        "heading_size": 42,
+        "heading_line_height": 112,
+        "heading_letter_spacing": -2,
+        "heading_weight": "500",
+        "heading_color": "#161513",
+        "heading_max_width": 400,
+        "description": "<p>What if your recovery routine was already waiting for you at home?</p>",
+        "description_size": 15,
+        "description_color": "#4A463F",
+        "description_max_width": 320,
+        "description_gap": 32,
+        "enable_button": true,
+        "button_label": "The Eloorin Approach",
+        "button_show_arrow": true,
+        "button_background": "#161513",
+        "button_text_color": "#F2EEE7",
+        "button_radius": 4,
+        "button_padding_x": 28,
+        "button_padding_y": 18,
+        "button_font_size": 13,
+        "button_letter_spacing": 8,
+        "button_gap": 40,
+        "icon_size": 26,
+        "icon_color": "#161513",
+        "icon_gap": 20,
+        "label_size": 14,
+        "label_tracking": 8,
+        "label_weight": "600",
+        "label_color": "#161513",
+        "label_gap": 8,
+        "text_size": 15,
+        "text_line_height": 150,
+        "text_color": "#4A463F",
+        "text_gap": 20,
+        "image_aspect_ratio": "3 / 2",
+        "image_radius": 6,
+        "enable_hover_zoom": true,
+        "hover_zoom_scale": 106,
+        "hover_speed": 500,
+        "enable_reveal": true,
+        "enable_custom_font": false
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "item",
+          "settings": {
+            "icon": "sun",
+            "label": "After work",
+            "line_1": "Unwind.",
+            "line_2": "Let go of the day."
+          }
+        },
+        "bl-2": {
+          "type": "item",
+          "settings": {
+            "icon": "dumbbell",
+            "label": "After training",
+            "line_1": "Recover.",
+            "line_2": "Reduce soreness. Reset."
+          }
+        },
+        "bl-3": {
+          "type": "item",
+          "settings": {
+            "icon": "sunrise",
+            "label": "Before the day begins",
+            "line_1": "Reset.",
+            "line_2": "Start sharp. Stay focused."
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

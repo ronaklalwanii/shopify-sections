@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "library": {
+      "type": "main-customers-activate-account",
+      "settings": {
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

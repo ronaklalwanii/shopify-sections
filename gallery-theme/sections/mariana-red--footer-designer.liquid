@@ -1,0 +1,160 @@
+{%- comment -%} Section Library: injected global assets for store "mariana-red" {%- endcomment -%}
+{{ 'mariana-red--base.css' | asset_url | stylesheet_tag }}
+{{ 'mariana-red--components.css' | asset_url | stylesheet_tag }}
+{% render 'mariana-red--layout-tokens' %}
+{%- comment -%}
+  Designer footer — "Let's connect" CTA with contact rows, rotating badge,
+  bloom decoration and a bottom bar (Mariana).
+{%- endcomment -%}
+<footer class="designer-footer" style="background: var(--color-background-secondary);" role="contentinfo">
+  <div class="page-width designer-footer__main">
+    <div class="designer-footer__cta">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="rose-eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="designer-footer__heading">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <p class="designer-footer__text">{{ section.settings.text | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.button_label != blank -%}
+        <a href="{{ section.settings.button_link | default: '#' }}" class="pill-link">
+          {{ section.settings.button_label | escape }}
+          <span class="pill-link__arrow">{% render 'mariana-red--icon', name: 'arrow-right', size: 12 %}</span>
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="designer-footer__contacts">
+      {%- if section.settings.email != blank -%}
+        <a href="mailto:{{ section.settings.email }}" class="designer-footer__contact">
+          {% render 'mariana-red--icon', name: 'mail', size: 15 %}
+          {{ section.settings.email | escape }}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.handle != blank -%}
+        <a href="{{ section.settings.social_link | default: '#' }}" class="designer-footer__contact">
+          {% render 'mariana-red--icon', name: 'instagram', size: 15 %}
+          {{ section.settings.handle | escape }}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.location != blank -%}
+        <span class="designer-footer__contact">
+          {% render 'mariana-red--icon', name: 'map-pin', size: 15 %}
+          {{ section.settings.location | escape }}
+        </span>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.badge_text != blank -%}
+      <span class="designer-footer__badge">
+        {% render 'mariana-red--rotating-badge', text: section.settings.badge_text %}
+      </span>
+    {%- endif -%}
+    {% render 'mariana-red--bloom', class: 'designer-footer__bloom' %}
+  </div>
+
+  <div class="page-width designer-footer__bottom">
+    <span class="designer-footer__brand">{{ section.settings.brand_name | default: shop.name }}</span>
+    <span class="designer-footer__copyright">&copy; {{ 'now' | date: '%Y' }} {{ section.settings.brand_name | default: shop.name }}. All rights reserved.</span>
+    <span class="designer-footer__legal">
+      {%- if section.settings.legal_1_label != blank -%}
+        <a href="{{ section.settings.legal_1_link | default: '#' }}">{{ section.settings.legal_1_label | escape }}</a>
+      {%- endif -%}
+      {%- if section.settings.legal_2_label != blank -%}
+        <a href="{{ section.settings.legal_2_link | default: '#' }}">{{ section.settings.legal_2_label | escape }}</a>
+      {%- endif -%}
+    </span>
+  </div>
+</footer>
+
+<style>
+  .designer-footer { position: relative; overflow: hidden; color: var(--color-foreground); }
+  .designer-footer__main {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr auto;
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+    padding-block: clamp(3rem, 7vh, 5rem);
+  }
+  .designer-footer__heading {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 3.6vw, 3.2rem);
+    line-height: 1.12;
+    color: var(--color-heading);
+    margin: 0.9rem 0 0.9rem;
+    max-width: 16ch;
+  }
+  .designer-footer__text { font-size: 0.9rem; line-height: 1.7; color: var(--color-text-muted); max-width: 28rem; margin: 0 0 1.6rem; }
+  .designer-footer__contacts { display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .designer-footer__contact {
+    display: inline-flex; align-items: center; gap: 0.7rem;
+    font-size: 0.85rem;
+    color: var(--color-foreground); text-decoration: none;
+  }
+  .designer-footer__contact svg { color: var(--color-accent); }
+  a.designer-footer__contact:hover { color: var(--color-accent); }
+  .designer-footer__badge { position: relative; z-index: 2; width: 7.4rem; height: 7.4rem; display: block; }
+  .designer-footer__bloom {
+    position: absolute; right: -3rem; bottom: -4rem;
+    width: 13rem; height: 13rem;
+    opacity: 0.55;
+    pointer-events: none;
+  }
+  .designer-footer__bottom {
+    position: relative;
+    display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;
+    border-top: 1px solid rgba(226, 178, 164, 0.16);
+    padding-block: 1.2rem;
+    font-size: 0.7rem;
+  }
+  .designer-footer__brand {
+    font-family: var(--font-heading);
+    font-size: 0.95rem; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--color-heading);
+  }
+  .designer-footer__copyright { color: var(--color-text-muted); }
+  .designer-footer__legal { margin-left: auto; display: inline-flex; gap: 1.4rem; }
+  .designer-footer__legal a {
+    color: var(--color-text-muted); text-decoration: none;
+    letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.62rem; font-weight: 600;
+  }
+  .designer-footer__legal a:hover { color: var(--color-accent); }
+  @media (max-width: 989px) {
+    .designer-footer__main { grid-template-columns: 1fr; }
+    .designer-footer__badge { position: absolute; top: 2rem; right: 1rem; width: 5.6rem; height: 5.6rem; }
+    .designer-footer__bottom { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+    .designer-footer__legal { margin-left: 0; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Designer footer",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Let's connect" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Ready to elevate your brand?" },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Let's create something beautiful, strategic, and unforgettable."
+    },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Let's work together" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "text", "id": "email", "label": "Email", "default": "hello@marianastudio.com" },
+    { "type": "text", "id": "handle", "label": "Instagram handle", "default": "@mariana.studio" },
+    { "type": "url", "id": "social_link", "label": "Instagram link" },
+    { "type": "text", "id": "location", "label": "Location", "default": "Warsaw, Poland" },
+    { "type": "text", "id": "badge_text", "label": "Rotating badge text", "default": "LET'S CONNECT • MARIANA STUDIO • " },
+    { "type": "text", "id": "brand_name", "label": "Brand name", "default": "Mariana" },
+    { "type": "text", "id": "legal_1_label", "label": "Legal link 1 label", "default": "Privacy Policy" },
+    { "type": "url", "id": "legal_1_link", "label": "Legal link 1" },
+    { "type": "text", "id": "legal_2_label", "label": "Legal link 2 label", "default": "Terms & Conditions" },
+    { "type": "url", "id": "legal_2_link", "label": "Legal link 2" }
+  ],
+  "presets": [{ "name": "Designer footer" }]
+}
+{% endschema %}

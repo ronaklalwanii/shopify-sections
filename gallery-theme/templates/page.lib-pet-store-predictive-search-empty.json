@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--predictive-search-empty",
+      "settings": {}
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,19 @@
+{%- comment -%} Section Library: injected global assets for store "pet store" {%- endcomment -%}
+{{ 'pet-store--overflow-list.css' | asset_url | stylesheet_tag }}
+{{ 'pet-store--base.css' | asset_url | stylesheet_tag }}
+{% render 'pet-store--theme-styles-variables' %}
+
+
+{% render 'pet-store--predictive-search-empty-state',
+  load_empty_state: true,
+  shadow_opacity: 0.1,
+  products_test_id: 'products-list-default--reset'
+%}
+
+{% schema %}
+{
+  "name": "t:names.predictive_search_empty",
+  "class": "predictive-search-empty-section",
+  "settings": []
+}
+{% endschema %}

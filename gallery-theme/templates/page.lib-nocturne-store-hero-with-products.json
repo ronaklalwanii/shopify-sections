@@ -1,0 +1,97 @@
+{
+  "sections": {
+    "library": {
+      "type": "nocturne-store--hero-with-products",
+      "settings": {
+        "image_position": "center",
+        "overlay_color": "#000000",
+        "overlay_opacity": 30,
+        "hero_height": 600,
+        "hero_height_mobile": 420,
+        "page_background": "#F6F4F1",
+        "show_badge_row": true,
+        "badge_left_text": "EST.",
+        "badge_right_text": "2023",
+        "badge_emblem_size": 56,
+        "badge_text_size": 11,
+        "badge_spacing": 2,
+        "badge_color": "#FFFFFF",
+        "heading": "Holiday Specials",
+        "heading_italic": true,
+        "heading_size": 56,
+        "heading_size_mobile": 36,
+        "heading_weight": 500,
+        "heading_color": "#FFFFFF",
+        "subtitle": "Your source for all things Christmas",
+        "subtitle_uppercase": true,
+        "subtitle_size": 12,
+        "subtitle_spacing": 3,
+        "subtitle_color": "#FFFFFF",
+        "content_nudge": 0,
+        "show_cta": true,
+        "cta_text": "Start Shopping",
+        "cta_bg": "#E4573D",
+        "cta_text_color": "#FFFFFF",
+        "cta_radius": 30,
+        "cta_size": 12,
+        "cta_pad_x": 24,
+        "cta_pad_y": 12,
+        "panel_align": "center",
+        "panel_width": 70,
+        "panel_overlap": 120,
+        "panel_bg": "#FFFFFF",
+        "panel_padding": 32,
+        "panel_radius": 0,
+        "panel_shadow": true,
+        "desktop_columns": "auto",
+        "panel_gap": 24,
+        "mobile_card_width": 75,
+        "bottom_space": 80,
+        "card_media_ratio": "3 / 4",
+        "card_title_size": 20,
+        "card_title_italic": true,
+        "card_title_color": "#3A3A3A",
+        "show_divider": true,
+        "divider_color": "#E4573D",
+        "divider_width": 40,
+        "button_label": "Shop Collection",
+        "card_btn_style": "outline",
+        "card_btn_bg": "#3A3A3A",
+        "card_btn_solid_text": "#FFFFFF",
+        "card_btn_text": "#3A3A3A",
+        "card_btn_radius": 30,
+        "card_btn_size": 11,
+        "enable_animation": true,
+        "animation_speed": 700
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "product",
+          "settings": {
+            "title": "Christmas Trees"
+          }
+        },
+        "bl-2": {
+          "type": "product",
+          "settings": {
+            "title": "Unique Ornaments"
+          }
+        },
+        "bl-3": {
+          "type": "product",
+          "settings": {
+            "title": "Holiday Lights"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

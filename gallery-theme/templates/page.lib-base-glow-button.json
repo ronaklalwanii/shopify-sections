@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "library": {
+      "type": "glow-button",
+      "settings": {
+        "label": "Click me",
+        "button_width": 160,
+        "text_size": 14,
+        "height": 90,
+        "background_color": "#0a0a0a",
+        "font_stack": "system-ui, sans-serif"
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

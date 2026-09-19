@@ -1,0 +1,64 @@
+{
+  "sections": {
+    "library": {
+      "type": "aura-newsletter-band",
+      "settings": {
+        "bg_color": "#FFFFFF",
+        "show_border": true,
+        "border_color": "#E8E2D8",
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "press_label": "As seen in",
+        "press_label_color": "#8A8378",
+        "logo_text_size": 20,
+        "nl_heading": "Let's glow together",
+        "nl_heading_color": "#1F1D1A",
+        "nl_heading_size": 18,
+        "nl_sub": "Subscribe to get 15% off your first order",
+        "nl_sub_color": "#6B675F",
+        "input_bg": "#FFFFFF",
+        "input_border": "#D8D2C6",
+        "input_text": "#1F1D1A",
+        "input_placeholder": "Enter your email",
+        "btn_label": "Subscribe",
+        "btn_bg": "#1F1D1A",
+        "btn_text": "#FFFFFF"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "logo",
+          "settings": {
+            "text": "VOGUE"
+          }
+        },
+        "bl-2": {
+          "type": "logo",
+          "settings": {
+            "text": "BAZAAR"
+          }
+        },
+        "bl-3": {
+          "type": "logo",
+          "settings": {
+            "text": "allure"
+          }
+        },
+        "bl-4": {
+          "type": "logo",
+          "settings": {
+            "text": "ELLE"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

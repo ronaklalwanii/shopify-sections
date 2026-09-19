@@ -1,0 +1,91 @@
+{
+  "sections": {
+    "library": {
+      "type": "bento-grid",
+      "settings": {
+        "bg_color": "#FAF7F2",
+        "tile_bg": "#FFFFFF",
+        "chip_bg": "#F3EDE4",
+        "chip_text": "#221A12",
+        "arrow_border": "#C2A78A",
+        "arrow_text": "#221A12",
+        "arrow_hover_bg": "#2A2118",
+        "arrow_hover_text": "#F5EBDC",
+        "max_width": 1280,
+        "row_height": 150,
+        "gap": 14,
+        "tile_radius": 14,
+        "pad_top": 8,
+        "pad_bottom": 64,
+        "chip_size": 11,
+        "chip_radius": 6,
+        "arrow_size": 28,
+        "enable_animation": true,
+        "animation_speed": 700
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "tile",
+          "settings": {
+            "title": "title",
+            "size": "tall"
+          }
+        },
+        "bl-2": {
+          "type": "tile",
+          "settings": {
+            "title": "title",
+            "size": "tall"
+          }
+        },
+        "bl-3": {
+          "type": "tile",
+          "settings": {
+            "title": "title",
+            "size": "wide"
+          }
+        },
+        "bl-4": {
+          "type": "tile",
+          "settings": {
+            "title": "title",
+            "size": "wide"
+          }
+        },
+        "bl-5": {
+          "type": "tile",
+          "settings": {
+            "title": "title",
+            "size": "mid"
+          }
+        },
+        "bl-6": {
+          "type": "tile",
+          "settings": {
+            "title": "title",
+            "size": "mid"
+          }
+        },
+        "bl-7": {
+          "type": "tile",
+          "settings": {
+            "title": "title",
+            "size": "small"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6",
+        "bl-7"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

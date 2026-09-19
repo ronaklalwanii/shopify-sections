@@ -1,0 +1,58 @@
+{
+  "sections": {
+    "library": {
+      "type": "aura-hero",
+      "settings": {
+        "bg_color": "#F7F3EE",
+        "layout_image_position": "image-right",
+        "min_height": 640,
+        "padding_top": 48,
+        "padding_bottom": 48,
+        "image_radius": 0,
+        "eyebrow": "Glow naturally",
+        "eyebrow_color": "#8A8378",
+        "title": "Pure Ingredients.\nVisible Results.",
+        "title_size": 58,
+        "title_color": "#211E1A",
+        "description": "<p>Thoughtfully formulated skincare that nourishes, protects and enhances your natural glow.</p>",
+        "desc_color": "#6B675F",
+        "content_max_width": 520,
+        "btn_label": "Shop now",
+        "btn_bg": "#211E1A",
+        "btn_text_color": "#FFFFFF",
+        "btn_radius": 0
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "trust",
+          "settings": {
+            "icon": "leaf",
+            "text": "Clean ingredients"
+          }
+        },
+        "bl-2": {
+          "type": "trust",
+          "settings": {
+            "icon": "drop",
+            "text": "Clinically tested"
+          }
+        },
+        "bl-3": {
+          "type": "trust",
+          "settings": {
+            "icon": "shield",
+            "text": "Suitable for sensitive skin"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

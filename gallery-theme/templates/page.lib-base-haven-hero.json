@@ -1,0 +1,33 @@
+{
+  "sections": {
+    "library": {
+      "type": "haven-hero",
+      "settings": {
+        "allow_transparent_header": true,
+        "bg_color": "#2A2D26",
+        "overlay_opacity": 45,
+        "min_height": 660,
+        "title": "Nature.\nComfort.\nYou.",
+        "title_size": 64,
+        "title_color": "#FFFFFF",
+        "text": "A serene retreat inspired by nature,\ndesigned for rest, renewal and\nunforgettable moments.",
+        "text_color": "#FFFFFF",
+        "btn_label": "Book Your Escape",
+        "btn_bg": "#44543F",
+        "btn_text_color": "#FFFFFF",
+        "show_ring": true,
+        "ring_label_1": "Inspired by Nature",
+        "ring_label_2": "Pure Comfort",
+        "ring_label_3": "Total Escape",
+        "ring_label_4": "Mindful Living",
+        "ring_text_color": "#FFFFFF",
+        "ring_border_color": "#FFFFFF66",
+        "center_bg": "#FFFFFF",
+        "center_icon_color": "#1F1D1A"
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

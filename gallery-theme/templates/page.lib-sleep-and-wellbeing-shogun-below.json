@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--shogun-below",
+      "settings": {}
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

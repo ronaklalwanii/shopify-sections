@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 const express = require('express');
-const { renderStoreSection, renderSectionSource, STORES_ROOT } = require('./renderer');
+const { renderStoreSection, renderSectionSource, renderSnippet, STORES_ROOT } = require('./renderer');
 
 const ROOT = path.resolve(__dirname, '..');
 const DATA_INDEX = path.join(ROOT, 'data/index.json');
@@ -177,7 +177,7 @@ table{border-collapse:collapse;width:100%}
 .preview-error{position:fixed;inset:auto 16px 16px 16px;z-index:9999;background:#7f1d1d;color:#fff;padding:14px 18px;border-radius:10px;font:14px/1.5 ui-monospace,monospace;white-space:pre-wrap;max-height:40vh;overflow:auto}
 `;
 
-function previewPage({ title, html, cssLinks = [], inlineCss = '', scripts = [], error = null }) {
+function previewPage({ title, html, cssLinks = [], inlineCss = '', scripts = [], error = null, headExtra = '', externalScripts = [] }) {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -185,15 +185,58 @@ function previewPage({ title, html, cssLinks = [], inlineCss = '', scripts = [],
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title}</title>
 <style>${RESET_CSS}</style>
+${headExtra}
 ${cssLinks.map((h) => `<link rel="stylesheet" href="${h}">`).join('\n')}
 ${inlineCss ? `<style>${inlineCss}</style>` : ''}
 </head>
 <body>
 ${html}
+${externalScripts.map((s) => `<script type="module" src="${s}"></script>`).join('\n')}
 ${scripts.map((s) => `<script>${s}</script>`).join('\n')}
 ${error ? `<div class="preview-error">Render error: ${String(error).replace(/</g, '&lt;')}</div>` : ''}
 </body>
 </html>`;
+}
+
+// Global CSS/JS the real storefront layout loads — sections rely on it for
+// utility classes (.section-stack, .collection-card, ...) and design tokens.
+const layoutDepsCache = new Map();
+function getLayoutDeps(store) {
+  if (layoutDepsCache.has(store)) return layoutDepsCache.get(store);
+  const storePath = path.join(STORES_ROOT, store);
+  const css = [], js = [];
+  const scan = (text) => {
+    let m;
+    const cssRe = /['"]([\w./-]+\.css)['"]\s*\|\s*asset_url/g;
+    while ((m = cssRe.exec(text))) if (!css.includes(m[1])) css.push(m[1]);
+    const jsRe = /['"]([\w./-]+\.js)['"]\s*\|\s*asset_url/g;
+    while ((m = jsRe.exec(text))) if (!js.includes(m[1])) js.push(m[1]);
+  };
+  let layoutSrc = '';
+  try { layoutSrc = fs.readFileSync(path.join(storePath, 'layout/theme.liquid'), 'utf8'); scan(layoutSrc); } catch {}
+  // Snippets rendered by the layout may carry the global assets (e.g. 'stylesheets').
+  const snippetRe = /{%[-\s]*render\s+'([\w-]+)'/g;
+  let m2;
+  while ((m2 = snippetRe.exec(layoutSrc))) {
+    try { scan(fs.readFileSync(path.join(storePath, 'snippets', `${m2[1]}.liquid`), 'utf8')); } catch {}
+  }
+  const deps = { css, js };
+  layoutDepsCache.set(store, deps);
+  return deps;
+}
+
+// Design tokens: the layout renders a css-variables snippet that defines the
+// :root custom properties + @font-face rules theme.css depends on.
+const headSnippetCache = new Map();
+async function getLayoutHeadExtra(store) {
+  if (headSnippetCache.has(store)) return headSnippetCache.get(store);
+  let extra = '';
+  for (const name of ['css-variables', 'css-vars', 'design-tokens']) {
+    const out = await renderSnippet(store, name);
+    if (out.trim()) { extra += out; break; }
+  }
+  headSnippetCache.set(store, extra);
+  return extra;
 }
 
 app.get('/preview/:store/:file', async (req, res) => {
@@ -212,11 +255,15 @@ app.get('/preview/:store/:file', async (req, res) => {
     const idx = loadIndex();
     const meta = idx.sections.find((s) => s.store === store && s.file === file);
     const r = await renderStoreSection(store, file);
-    const cssLinks = [...new Set([...(meta?.assets || []).filter((a) => a.endsWith('.css')), 'base.css'].filter((a) => fs.existsSync(path.join(STORES_ROOT, store, 'assets', a))))
-      ].map((a) => `/assets/${store}/${a}`);
-    const assetJs = (meta?.assets || []).filter((a) => a.endsWith('.js') && fs.existsSync(path.join(STORES_ROOT, store, 'assets', a)));
-    const scripts = [...r.js ? [r.js] : [], ...assetJs.map((a) => fs.readFileSync(path.join(STORES_ROOT, store, 'assets', a), 'utf8'))];
-    res.type('html').send(previewPage({ title: `${meta?.name || file} — ${store}`, html: r.html + (r.legacyCss ? `<style>${r.legacyCss}</style>` : ''), cssLinks, scripts, error: r.error }));
+    const deps = getLayoutDeps(store);
+    const exists = (a) => fs.existsSync(path.join(STORES_ROOT, store, 'assets', a));
+    const cssLinks = [...new Set([...deps.css, ...(meta?.assets || []).filter((a) => a.endsWith('.css'))].filter(exists))]
+      .map((a) => `/assets/${store}/${a}`);
+    const sectionAssetJs = (meta?.assets || []).filter((a) => a.endsWith('.js') && exists(a) && !deps.js.includes(a));
+    const scripts = [...r.js ? [r.js] : [], ...sectionAssetJs.map((a) => fs.readFileSync(path.join(STORES_ROOT, store, 'assets', a), 'utf8'))];
+    const externalScripts = deps.js.filter(exists).map((a) => `/assets/${store}/${a}`);
+    const headExtra = await getLayoutHeadExtra(store);
+    res.type('html').send(previewPage({ title: `${meta?.name || file} — ${store}`, html: r.html + (r.legacyCss ? `<style>${r.legacyCss}</style>` : ''), cssLinks, scripts, error: r.error, externalScripts, headExtra }));
   } catch (e) {
     res.status(500).type('html').send(previewPage({ title: 'error', html: '', error: e.message }));
   }

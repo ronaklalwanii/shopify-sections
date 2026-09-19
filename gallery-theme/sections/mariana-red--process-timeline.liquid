@@ -1,0 +1,121 @@
+{%- comment -%} Section Library: injected global assets for store "mariana-red" {%- endcomment -%}
+{{ 'mariana-red--base.css' | asset_url | stylesheet_tag }}
+{{ 'mariana-red--components.css' | asset_url | stylesheet_tag }}
+{% render 'mariana-red--layout-tokens' %}
+{%- comment -%}
+  Process timeline — numbered steps joined by a dashed line
+  (Mariana "My process").
+{%- endcomment -%}
+<section class="section process-timeline" style="--section-space: {{ section.settings.padding | default: 88 }}px; background: var(--color-background-secondary);">
+  <div class="page-width">
+    <div class="process-timeline__head">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="rose-eyebrow">{{ section.settings.eyebrow | escape }}</span>
+        <span class="process-timeline__head-line" aria-hidden="true"></span>
+      {%- endif -%}
+    </div>
+
+    <ol class="process-timeline__steps" style="--steps: {{ section.blocks.size | default: 5 }};">
+      {%- for block in section.blocks -%}
+        <li class="process-timeline__step" {{ block.shopify_attributes }}>
+          <span class="process-timeline__numwrap">
+            <span class="process-timeline__dot" aria-hidden="true"></span>
+            <span class="process-timeline__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+          </span>
+          {%- if block.settings.title != blank -%}
+            <h3 class="process-timeline__title">{{ block.settings.title | escape }}</h3>
+          {%- endif -%}
+          {%- if block.settings.text != blank -%}
+            <p class="process-timeline__text">{{ block.settings.text | escape }}</p>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .process-timeline__head { display: flex; align-items: center; gap: 1.2rem; margin-bottom: clamp(2rem, 4.5vw, 3.4rem); }
+  .process-timeline__head-line { flex: 1; max-width: 16rem; border-top: 1px dashed rgba(226, 178, 164, 0.4); }
+  .process-timeline__steps {
+    list-style: none; margin: 0; padding: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--steps, 5), 1fr);
+    gap: clamp(1.2rem, 2.5vw, 2.4rem);
+  }
+  .process-timeline__step { position: relative; padding-top: 0.4rem; }
+  .process-timeline__numwrap { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.9rem; }
+  .process-timeline__dot {
+    width: 0.55rem; height: 0.55rem; border-radius: 50%;
+    background: var(--color-accent); flex-shrink: 0;
+    box-shadow: 0 0 0 4px rgba(226, 178, 164, 0.15);
+  }
+  .process-timeline__step::after {
+    content: "";
+    position: absolute;
+    top: calc(0.4rem + 0.27rem);
+    left: calc(0.55rem + 1.2rem + 0.8rem);
+    right: -1.2rem;
+    border-top: 1px dashed rgba(226, 178, 164, 0.4);
+  }
+  .process-timeline__step:last-child::after { display: none; }
+  .process-timeline__num {
+    font-family: var(--font-heading);
+    font-size: clamp(1.8rem, 2.8vw, 2.5rem);
+    line-height: 1;
+    color: var(--color-heading);
+  }
+  .process-timeline__title {
+    font-size: 0.78rem; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--color-heading);
+    margin: 0 0 0.5rem;
+  }
+  .process-timeline__text { font-size: 0.78rem; line-height: 1.6; color: var(--color-text-muted); margin: 0; max-width: 13rem; }
+  @media (max-width: 989px) {
+    .process-timeline__steps { grid-template-columns: 1fr; gap: 1.6rem; }
+    .process-timeline__step::after {
+      left: calc(0.55rem + 1.2rem + 0.8rem);
+      right: auto;
+      top: auto;
+      bottom: -1.35rem;
+      height: 1rem;
+      border-top: 0;
+      border-left: 1px dashed rgba(226, 178, 164, 0.4);
+    }
+    .process-timeline__text { max-width: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Process timeline",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "My process" },
+    { "type": "range", "id": "padding", "label": "Vertical padding", "min": 32, "max": 160, "step": 8, "unit": "px", "default": 88 }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Discover" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "We talk about your vision, brand goals, and audience." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Process timeline",
+      "blocks": [
+        { "type": "step" },
+        { "type": "step", "settings": { "title": "Strategy", "text": "I define your brand style, moodboard, and concept." } },
+        { "type": "step", "settings": { "title": "Design", "text": "I bring your brand to life with typography and graphics." } },
+        { "type": "step", "settings": { "title": "Refine", "text": "We polish the details so everything feels perfect." } },
+        { "type": "step", "settings": { "title": "Deliver", "text": "You get a polished brand kit ready to launch and shine." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

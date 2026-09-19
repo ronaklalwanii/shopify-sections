@@ -1,0 +1,37 @@
+{
+  "sections": {
+    "library": {
+      "type": "nocturne-store--media-with-text",
+      "settings": {
+        "full_width": false,
+        "spacing": "small",
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "image",
+          "settings": {
+            "media_width": 50,
+            "media_position": "start",
+            "text_position": "place-self-center text-center",
+            "icon": "none",
+            "icon_width": 48,
+            "title": "Heading",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>",
+            "background": "#000000",
+            "text_color": "#ffffff",
+            "button_background": "#DCDCDC"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

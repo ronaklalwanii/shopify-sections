@@ -1,0 +1,52 @@
+{
+  "sections": {
+    "library": {
+      "type": "haven-gallery",
+      "settings": {
+        "panel_bg": "#DEE4CE",
+        "radius": 24,
+        "padding_y": 56,
+        "heading": "Gallery",
+        "heading_color": "#2E332B",
+        "show_leaf": true,
+        "follow_text": "Follow us",
+        "caption": "Moments of calm, captured in nature.",
+        "caption_color": "#3E4438",
+        "btn_label": "See More Photos",
+        "btn_border_color": "#2E332B"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "image",
+          "settings": {}
+        },
+        "bl-2": {
+          "type": "image",
+          "settings": {}
+        },
+        "bl-3": {
+          "type": "image",
+          "settings": {}
+        },
+        "bl-4": {
+          "type": "image",
+          "settings": {}
+        },
+        "bl-5": {
+          "type": "image",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

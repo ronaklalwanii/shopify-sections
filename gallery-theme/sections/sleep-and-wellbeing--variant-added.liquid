@@ -1,0 +1,114 @@
+{%- comment -%} Section Library: injected global assets for store "sleep-and-wellbeing" {%- endcomment -%}
+{{ 'sleep-and-wellbeing--theme.css' | asset_url | stylesheet_tag }}
+{{ 'sleep-and-wellbeing--product.css' | asset_url | stylesheet_tag }}
+{% render 'sleep-and-wellbeing--css-variables' %}
+{%- comment -%}
+	--ul---------------------------------------------------------------------------------------------------------------------
+	VARIANT ADDED
+	--ul---------------------------------------------------------------------------------------------------------------------
+
+	This section is used when a product is added to the cart, to show a notification. It is therefore only used internally
+	by the theme and is not meant to be included directly into a page.
+{%- endcomment -%}
+
+<style>
+	#shopify-section-{{ section.id }} {
+		{% if section.settings.custom_padding %}
+		padding-top: {{ section.settings.padding_top }}px;
+		padding-bottom: {{ section.settings.padding_bottom }}px;
+			{% endif %}
+	}
+</style>
+<div class='quick-buy-drawer__info'>
+	{%- assign added_to_cart = 'product.general.added_to_cart' | t -%}
+	{%- render 'sleep-and-wellbeing--banner', status: 'success', content: added_to_cart -%}
+
+	<div class='quick-buy-drawer__variant text-start h-stack gap-6'>
+		{%- assign image = product_variant.featured_media | default: product_variant.product.featured_media -%}
+
+		{%- if image != blank -%}
+			{{-
+				image
+				| image_url: width: image.width
+				| image_tag:
+					loading: 'lazy',
+					sizes: '80px',
+					widths: '80,160',
+					class: 'quick-buy-drawer__media rounded-xs'
+			-}}
+		{%- endif -%}
+
+		<div class='grid gap-1'>
+			<div class='grid gap-0.5'>
+				<a href='{{ product_variant.url }}' class='bold justify-self-start'>
+					{{- product_variant.product.title -}}
+				</a>
+				{%- assign matched_line_item = cart.items | where: 'product_id', product_variant.product.id | first -%}
+				{%- render 'sleep-and-wellbeing--price-list', product: product_variant.product, line_item: matched_line_item -%}
+			</div>
+
+			{%- if matched_line_item.line_level_discount_allocations != blank -%}
+				<ul class='contents' role='list'>
+					{%- for discount_allocation in matched_line_item.line_level_discount_allocations -%}
+						<li class='badge'>
+							{%- render 'sleep-and-wellbeing--icon' with 'discount' -%}
+							{{ discount_allocation.discount_application.title }} (-
+							{{- discount_allocation.amount | money -}}
+							)
+						</li>
+					{%- endfor -%}
+				</ul>
+			{%- endif -%}
+
+			{%- unless product_variant.product.has_only_default_variant -%}
+				<p class='text-sm text-subdued'>{{ product_variant.title }}</p>
+			{%- endunless -%}
+		</div>
+	</div>
+
+	<form
+		action='{{ routes.cart_url }}'
+		method='post'
+		class='buy-buttons buy-buttons--compact'
+	>
+		{%- assign view_cart_label = 'cart.general.view_cart' | t -%}
+		{%- assign checkout_label = 'cart.general.checkout' | t -%}
+
+		{%- render 'sleep-and-wellbeing--button', href: routes.cart_url, secondary: true, content: view_cart_label -%}
+		{%- render 'sleep-and-wellbeing--button', type: 'submit', name: 'checkout', content: checkout_label -%}
+	</form>
+</div>
+
+{% schema %}
+{
+  "name": "Variant added",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "custom_padding",
+      "label": "Custom padding",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    }
+  ]
+}
+{% endschema %}

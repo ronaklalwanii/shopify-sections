@@ -1,0 +1,1615 @@
+{% doc %}
+  @prompt
+    Create a premium, fully responsive and highly customizable editorial lifestyle section for the luxury wellness brand "Elqorin".
+    
+    IMPORTANT:
+    - This section is for ELQORIN, NOT Soluna.
+    - Do not modify or depend on the hero section.
+    - Do not make the entire section an image background.
+    - Only the three lifestyle cards should contain images.
+    - Build this as a reusable Shopify theme section with proper Theme Editor settings.
+    - Do not hard-code the layout or content.
+    
+    DESIGN REFERENCE / STRUCTURE:
+    
+    The section should closely follow this structure:
+    
+    DESKTOP:
+    - Warm off-white / cream section background.
+    - Two-column editorial layout.
+    - Left column approximately 27% width.
+    - Right column approximately 73% width.
+    - Left column contains:
+      - Small uppercase eyebrow
+      - Large editorial heading
+      - Supporting paragraph
+    - Right column contains 3 equal image cards in one horizontal row.
+    - Cards have small gaps between them.
+    - Cards use full-bleed lifestyle imagery.
+    - Images should have a subtle dark gradient/overlay for readability.
+    - Category label positioned near the top-left.
+    - Supporting copy positioned near the bottom-left.
+    - Clean luxury editorial aesthetic.
+    - Minimal borders.
+    - Very subtle or no shadows.
+    - Sharp or subtly rounded card corners.
+    - Generous whitespace.
+    - Typography should feel premium, modern and understated.
+    
+    DEFAULT CONTENT:
+    
+    Section eyebrow:
+    THE PROBLEM
+    
+    Heading:
+    Your body keeps the score.
+    Your schedule doesn't make room for it.
+    
+    Description:
+    Work. Training. Family. Life doesn't slow down. Recovery shouldn't have to wait for the weekend.
+    
+    CARD 1:
+    Label:
+    WORK
+    
+    Text:
+    Long hours.
+    High demands.
+    
+    CARD 2:
+    Label:
+    TRAINING
+    
+    Text:
+    You push hard.
+    Your body pays.
+    
+    CARD 3:
+    Label:
+    LIFE
+    
+    Text:
+    Responsibilities
+    never stop.
+    
+    The content above should only be the default content. Everything must remain editable.
+    
+    IMAGE DIRECTION:
+    
+    Use premium, realistic lifestyle photography appropriate for a high-ticket wellness/recovery brand.
+    
+    CARD 1 — WORK:
+    A sophisticated professional working long hours at home or in a premium office environment. The person should look mentally tired or physically drained, but the image should remain aspirational and premium.
+    
+    CARD 2 — TRAINING:
+    An athletic person after an intense workout, sitting/resting in a premium training environment. Show physical fatigue and recovery need without looking like a fitness advertisement.
+    
+    CARD 3 — LIFE:
+    A sophisticated parent or professional with family responsibilities. The image should communicate that life continues even when the body needs recovery.
+    
+    Avoid generic stock-photo aesthetics.
+    Avoid cheesy smiling wellness imagery.
+    Use cinematic lighting, realistic environments, premium photography and restrained composition.
+    
+    FULL CUSTOMIZATION IS MANDATORY:
+    
+    Every meaningful visual/content aspect must be configurable from Shopify Theme Editor without editing code.
+    
+    SECTION SETTINGS:
+    - Background color
+    - Text color
+    - Section top padding
+    - Section bottom padding
+    - Desktop padding
+    - Mobile padding
+    - Desktop content/card gap
+    - Mobile content/card gap
+    - Desktop text column width
+    - Card gap
+    - Card border radius
+    - Card image height
+    - Image overlay opacity
+    - Desktop text alignment
+    - Mobile text alignment
+    
+    TEXT SETTINGS:
+    - Eyebrow text
+    - Heading
+    - Heading size
+    - Heading tag (H1-H6)
+    - Description
+    - Text alignment
+    - Maximum text width
+    
+    CARD BLOCK SETTINGS:
+    
+    Do NOT hard-code exactly three cards.
+    
+    Create repeatable Shopify blocks so merchants can:
+    - Add cards
+    - Remove cards
+    - Duplicate cards
+    - Reorder cards
+    
+    Each card must independently support:
+    - Desktop image
+    - Mobile image
+    - Image focal position
+    - Label/category
+    - Card text
+    - Text alignment
+    - Overlay opacity
+    - Optional link
+    - Optional button label
+    - Button URL
+    - Button style
+    - Card background fallback color
+    - Card border radius if supported
+    
+    Make all card settings independent. Changing one card must not affect the others.
+    
+    RESPONSIVE DESIGN IS MANDATORY:
+    
+    Desktop:
+    - Two-column layout.
+    - Approximately 27% text / 73% cards.
+    - Cards displayed horizontally.
+    
+    Tablet:
+    - Reduce spacing and typography proportionally.
+    - Keep cards readable and visually balanced.
+    - Never allow cards to overlap or become clipped.
+    
+    Mobile:
+    - Switch to a single-column layout.
+    - Text content appears first.
+    - Cards appear below the text.
+    - Default mobile behavior should stack cards vertically.
+    - If implementing horizontal scrolling as an option, make it configurable through the Theme Editor.
+    - Cards must remain large enough for the imagery and text to be visually effective.
+    - Use separate mobile image settings where available.
+    - Use separate mobile typography and spacing settings.
+    
+    TECHNICAL REQUIREMENTS:
+    
+    - Use semantic HTML.
+    - Use CSS Grid/Flexbox for layout.
+    - Do not use absolute positioning for the primary layout.
+    - Do not use fixed pixel coordinates to position text or cards.
+    - Do not create a desktop-only design and simply shrink it on mobile.
+    - Use responsive CSS and clamp() where appropriate.
+    - Use Shopify's native section/block schema corre, Modify the CURRENT section you just created. Do not create a new section.
+    
+    The current structure is correct, but the visual execution needs to be substantially improved to match the provided reference.
+    
+    IMPORTANT: This is ELQORIN, a premium high-ticket wellness/recovery brand. Do NOT reference or use Soluna branding.
+    
+    VISUAL CORRECTIONS:
+    
+    1. CARD IMAGES
+    The three cards must use real image_picker settings and display the selected images as full-bleed photography.
+    
+    Do NOT use gradients, grey placeholders, illustrations, generated patterns, or the existing placeholder artwork as the primary card image.
+    
+    Each card must have:
+    - Desktop image picker
+    - Optional mobile image picker
+    - object-fit: cover
+    - image-position control
+    - subtle dark gradient overlay only for text readability
+    
+    If no image is selected, show a clean neutral placeholder, but never generate a fake grey gradient as the card image.
+    
+    2. CARD PROPORTIONS
+    
+    Change the cards from tall/narrow portrait cards to wider editorial landscape cards.
+    
+    Desktop:
+    - Three cards in one row
+    - Equal width
+    - Approximately 2:1 to 1.5:1 visual ratio depending on available space
+    - Cards should feel like premium editorial photography rather than tall product tiles
+    - Maintain equal heights
+    
+    The cards should visually resemble the reference:
+    wide rectangular lifestyle photography with text layered over the bottom portion.
+    
+    3. LEFT COLUMN
+    
+    Reduce the heading size substantially.
+    
+    The heading should read:
+    
+    Your body keeps the score.
+    Your schedule doesn't make room for it.
+    
+    Use a refined editorial font size around 48–64px on desktop rather than the extremely large current heading.
+    
+    Use:
+    font-weight: 400–500
+    line-height: approximately 1.05–1.15
+    
+    Do not make the heading excessively bold.
+    
+    The left column should have enough width for natural line breaks.
+    
+    Target desktop structure:
+    
+    THE PROBLEM
+    
+    Your body keeps
+    the score.
+    Your schedule
+    doesn't make
+    room for it.
+    
+    Do not force every individual word onto separate lines.
+    
+    4. DESCRIPTION
+    
+    Keep:
+    
+    Work. Training. Family. Life doesn't slow down.
+    Recovery shouldn't have to wait for the weekend.
+    
+    Use a smaller editorial body size around 16–18px with comfortable line height.
+    
+    5. CARD CONTENT
+    
+    Card 1:
+    WORK
+    
+    Long hours.
+    High demands.
+    
+    Card 2:
+    TRAINING
+    
+    You push hard.
+    Your body pays.
+    
+    Card 3:
+    LIFE
+    
+    Responsibilities
+    never stop.
+    
+    Position the label near the top-left.
+    
+    Position the supporting text near the bottom-left.
+    
+    Keep both inside the card with consistent padding.
+    
+    6. IMAGE OVERLAY
+    
+    The current grey/white gradient is far too strong.
+    
+    Use:
+    - transparent upper area
+    - subtle black gradient toward the bottom
+    - approximately 20–45% maximum opacity at the bottom
+    - no grey overlay
+    - photography must remain clearly visible
+    
+    The card image should remain the dominant visual element.
+    
+    7. SECTION SPACING
+    
+    Use a premium editorial amount of whitespace.
+    
+    Desktop:
+    - approximately 80–120px top/bottom padding
+    - approximately 60–80px gap between text column and cards
+    
+    Do not make the section unnecessarily tall.
+    
+    8. RESPONSIVE DESIGN
+    
+    Desktop:
+    - 27–30% text column
+    - 70–73% cards
+    - three cards in one row
+    
+    Tablet:
+    - reduce typography and spacing
+    - cards remain readable
+    
+    Mobile:
+    - stack the text above the cards
+    - cards become full-width
+    - use approximately 4:3 or 3:2 card proportions
+    - maintain readable card text
+    - no overlapping
+    - no horizontal page overflow
+    
+    Use CSS Grid/Flexbox.
+    Do not use absolute positioning for the overall layout.
+    
+    9. FULL THEME EDITOR CUSTOMIZATION
+    
+    Keep all existing customization functionality.
+    
+    The merchant must be able to configure:
+    
+    SECTION:
+    - background color
+    - text color
+    - desktop/mobile padding
+    - text column width
+    - column gap
+    
+    TEXT:
+    - eyebrow
+    - heading
+    - description
+    - heading size
+    - heading weight
+    - text alignment
+    - maximum text width
+    
+    EACH CARD:
+    - desktop image
+    - mobile image
+    - image position
+    - label
+    - text
+    - text alignment
+    - overlay opacity
+    - optional link
+    - optional button
+    - button label
+    - button URL
+    - card radius
+    
+    CARD LAYOUT:
+    - card gap
+    - card height/aspect ratio
+    - card radius
+    
+    Allow cards to be added, removed, duplicated and reordered.
+    
+    10. DO NOT BREAK THE THEME
+    
+    Scope all CSS to this section only.
+    
+    Do not modify:
+    - header
+    - hero
+    - navigation
+    - other sections
+    - global typography
+    - global buttons
+    - global spacing
+    
+    The final result should look like a premium editorial section from a luxury wellness brand, not a generic Shopify card grid.
+    
+    MOST IMPORTANT:
+    Use the selected Shopify images as actual background/full-bleed card imagery. The cards must look like real photography cards, not grey placeholders., Fix the existing section only. Do not create a new design and do not change the overall visual concept.
+    
+    The current section is supposed to match a premium luxury editorial layout:
+    
+    Desktop layout
+    
+    Full-width section with a warm off-white background.
+    Maximum content width around 1280–1400px, centered.
+    Two-column layout:
+    Left column: approximately 30–32% width.
+    Right column: approximately 68–70% width.
+    Left column contains:
+    Small uppercase eyebrow: THE PROBLEM
+    Large editorial heading:
+    Your body keeps the score. Your schedule doesn’t make room for it.
+    Supporting paragraph:
+    Work. Training. Family. Life doesn't slow down. Recovery shouldn't have to wait for the weekend.
+    Right column contains exactly 3 equal cards in one horizontal row.
+    Cards should be approximately 1:1.15–1:1.25 aspect ratio, not extremely tall.
+    Cards should have rounded corners around 3–6px.
+    Each card uses a real uploaded image as a full-card background image.
+    Image must fill the entire card using object-fit: cover.
+    Add a subtle dark gradient from transparent at the top to darker at the bottom so white text remains readable.
+    Card content sits over the image:
+    Eyebrow at the top-left: WORK, TRAINING, LIFE
+    Bottom-left text:
+    Long hours. High demands.
+    You push hard. Your body pays.
+    Responsibilities never stop.
+    Do NOT use placeholder gradients, grey backgrounds, illustrations, or generated placeholder artwork.
+    Do NOT put the image in a separate area inside the card. The image itself must be the card background.
+    
+    Critical sizing requirement
+    
+    Do NOT allow the left heading to become excessively narrow or wrap every few words.
+    The heading should have a comfortable readable width and use a refined editorial font size around 48–64px on desktop.
+    The three cards must remain visually dominant but should not become extremely tall.
+    The entire section should feel similar in proportion to a high-end luxury ecommerce homepage, not an oversized dashboard component.
+    
+    Tablet
+    
+    Keep the two-column structure when space allows.
+    Reduce heading size and gaps proportionally.
+    Cards remain equal width.
+    
+    Mobile
+    
+    Stack the content vertically.
+    Eyebrow + heading + paragraph first.
+    Then the 3 cards vertically.
+    Cards should have a reasonable mobile aspect ratio around 4:5 or 3:4.
+    Never allow horizontal overflow.
+    Do not squeeze the three cards into tiny columns.
+    
+    Theme editor requirements
+    Make the entire section fully customizable through Shopify's theme editor.
+    
+    Section settings:
+    
+    Background color
+    Content max width
+    Section top/bottom padding
+    Desktop column ratio
+    Desktop heading size
+    Mobile heading size
+    Card gap
+    Card border radius
+    Card overlay opacity
+    Card height/aspect ratio
+    
+    Text settings:
+    
+    Eyebrow
+    Heading
+    Description
+    
+    Each card must be an editable block with:
+    
+    Image picker
+    Eyebrow text
+    Main text
+    Optional link
+    Overlay opacity
+    Text alignment
+    
+    Important implementation rules
+    
+    Preserve Shopify Online Store 2.0 compatibility.
+    Use the theme's existing typography variables where possible.
+    Use Liquid section blocks/settings rather than hardcoded content.
+    Do not modify unrelated sections.
+    Do not modify the header, hero, navigation, footer, or global styles.
+    Scope all CSS to this section so it cannot affect other sections.
+    Use responsive CSS with proper breakpoints.
+    Do not use JavaScript unless absolutely necessary.
+    Do not add animations that change the layout.
+    Do not replace uploaded images with placeholders.
+    
+    Most important: The previous version incorrectly rendered the cards as tall grey gradient panels with the artwork floating inside them. That is wrong. Each card must display its assigned image edge-to-edge as the card background, with the text overlaid on top.
+    
+    Before finishing, verify:
+    
+    Desktop shows exactly 3 image cards beside the text.
+    Images fill the cards completely.
+    No grey placeholder gradients are visible when an image is assigned.
+    Heading does not wrap into an excessively narrow column.
+    Mobile stacks cleanly without overflow.
+    Every setting is editable from the Shopify theme editor., change max height to 500px and make sure content is responsive enough to fit in it
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-editorial-lifestyle-{{ ai_gen_id }} {
+    display: block;
+    background-color: {{ block.settings.section_background }};
+    color: {{ block.settings.section_text_color }};
+    padding-top: {{ block.settings.section_padding_top_mobile }}px;
+    padding-bottom: {{ block.settings.section_padding_bottom_mobile }}px;
+    width: 100%;
+  }
+
+  .ai-editorial-lifestyle-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    padding-left: {{ block.settings.horizontal_padding_mobile }}px;
+    padding-right: {{ block.settings.horizontal_padding_mobile }}px;
+  }
+
+  .ai-editorial-lifestyle-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: {{ block.settings.content_gap_mobile }}px;
+  }
+
+  .ai-editorial-lifestyle-text-column-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.text_content_gap }}px;
+    text-align: {{ block.settings.text_alignment_mobile }};
+  }
+
+  .ai-editorial-lifestyle-eyebrow-{{ ai_gen_id }} {
+    font-size: {{ block.settings.eyebrow_size_mobile }}px;
+    text-transform: uppercase;
+    letter-spacing: {{ block.settings.eyebrow_letter_spacing }}em;
+    font-weight: {{ block.settings.eyebrow_weight }};
+    color: {{ block.settings.eyebrow_color }};
+    margin: 0;
+  }
+
+  .ai-editorial-lifestyle-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size_mobile }}px;
+    line-height: {{ block.settings.heading_line_height }};
+    font-weight: {{ block.settings.heading_weight }};
+    color: {{ block.settings.heading_color }};
+    margin: 0;
+    max-width: 100%;
+    white-space: pre-line;
+    {% if block.settings.text_alignment_mobile == 'center' %}
+      margin-left: auto;
+      margin-right: auto;
+    {% endif %}
+  }
+
+  .ai-editorial-lifestyle-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_size_mobile }}px;
+    line-height: {{ block.settings.description_line_height }};
+    color: {{ block.settings.description_color }};
+    margin: 0;
+    max-width: 100%;
+    {% if block.settings.text_alignment_mobile == 'center' %}
+      margin-left: auto;
+      margin-right: auto;
+    {% endif %}
+  }
+
+  .ai-editorial-lifestyle-cards-column-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: {{ block.settings.card_gap_mobile }}px;
+  }
+
+  .ai-editorial-lifestyle-card-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    background-color: {{ block.settings.card_fallback_background }};
+    height: {{ block.settings.card_min_height_mobile }}px;
+    max-height: {{ block.settings.card_min_height_mobile }}px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+  }
+
+  .ai-editorial-lifestyle-card-{{ ai_gen_id }}:hover {
+    transform: translateY(-2px);
+  }
+
+  .ai-editorial-lifestyle-card-image-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  .ai-editorial-lifestyle-card-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.7) 100%);
+    opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};
+    z-index: 2;
+  }
+
+  .ai-editorial-lifestyle-card-content-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 3;
+    padding: {{ block.settings.card_padding }}px;
+    color: {{ block.settings.card_text_color }};
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .ai-editorial-lifestyle-card-label-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_label_size_mobile }}px;
+    text-transform: uppercase;
+    letter-spacing: {{ block.settings.card_label_letter_spacing }}em;
+    font-weight: {{ block.settings.card_label_weight }};
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .ai-editorial-lifestyle-card-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_text_size_mobile }}px;
+    line-height: {{ block.settings.card_text_line_height }};
+    font-weight: {{ block.settings.card_text_weight }};
+    margin: 0;
+    white-space: pre-line;
+    flex-shrink: 0;
+  }
+
+  .ai-editorial-lifestyle-card-placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background-color: #e5e5e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-editorial-lifestyle-card-placeholder-{{ ai_gen_id }} svg {
+    width: 50%;
+    height: 50%;
+    opacity: 0.15;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-editorial-lifestyle-{{ ai_gen_id }} {
+      padding-top: {{ block.settings.section_padding_top_desktop }}px;
+      padding-bottom: {{ block.settings.section_padding_bottom_desktop }}px;
+    }
+
+    .ai-editorial-lifestyle-container-{{ ai_gen_id }} {
+      padding-left: {{ block.settings.horizontal_padding_desktop }}px;
+      padding-right: {{ block.settings.horizontal_padding_desktop }}px;
+    }
+
+    .ai-editorial-lifestyle-grid-{{ ai_gen_id }} {
+      grid-template-columns: {{ block.settings.text_column_width }}% 1fr;
+      gap: {{ block.settings.content_gap_desktop }}px;
+    }
+
+    .ai-editorial-lifestyle-text-column-{{ ai_gen_id }} {
+      text-align: {{ block.settings.text_alignment_desktop }};
+    }
+
+    .ai-editorial-lifestyle-eyebrow-{{ ai_gen_id }} {
+      font-size: {{ block.settings.eyebrow_size_desktop }}px;
+    }
+
+    .ai-editorial-lifestyle-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size_desktop }}px;
+      max-width: {{ block.settings.heading_max_width }}px;
+      {% if block.settings.text_alignment_desktop == 'center' %}
+        margin-left: auto;
+        margin-right: auto;
+      {% elsif block.settings.text_alignment_desktop == 'left' %}
+        margin-left: 0;
+        margin-right: 0;
+      {% else %}
+        margin-left: auto;
+        margin-right: 0;
+      {% endif %}
+    }
+
+    .ai-editorial-lifestyle-description-{{ ai_gen_id }} {
+      font-size: {{ block.settings.description_size_desktop }}px;
+      max-width: {{ block.settings.description_max_width }}px;
+      {% if block.settings.text_alignment_desktop == 'center' %}
+        margin-left: auto;
+        margin-right: auto;
+      {% elsif block.settings.text_alignment_desktop == 'left' %}
+        margin-left: 0;
+        margin-right: 0;
+      {% else %}
+        margin-left: auto;
+        margin-right: 0;
+      {% endif %}
+    }
+
+    .ai-editorial-lifestyle-cards-column-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.cards_per_row_desktop }}, 1fr);
+      gap: {{ block.settings.card_gap_desktop }}px;
+    }
+
+    .ai-editorial-lifestyle-card-{{ ai_gen_id }} {
+      height: {{ block.settings.card_min_height_desktop }}px;
+      max-height: {{ block.settings.card_min_height_desktop }}px;
+    }
+
+    .ai-editorial-lifestyle-card-label-{{ ai_gen_id }} {
+      font-size: {{ block.settings.card_label_size_desktop }}px;
+    }
+
+    .ai-editorial-lifestyle-card-text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.card_text_size_desktop }}px;
+    }
+  }
+{% endstyle %}
+
+<editorial-lifestyle-{{ ai_gen_id }} class="ai-editorial-lifestyle-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-editorial-lifestyle-container-{{ ai_gen_id }}">
+    <div class="ai-editorial-lifestyle-grid-{{ ai_gen_id }}">
+      <div class="ai-editorial-lifestyle-text-column-{{ ai_gen_id }}">
+        {% if block.settings.eyebrow != blank %}
+          <p class="ai-editorial-lifestyle-eyebrow-{{ ai_gen_id }}">
+            {{ block.settings.eyebrow }}
+          </p>
+        {% endif %}
+
+        {% if block.settings.heading != blank %}
+          <{{ block.settings.heading_tag }} class="ai-editorial-lifestyle-heading-{{ ai_gen_id }}">
+            {{ block.settings.heading }}
+          </{{ block.settings.heading_tag }}>
+        {% endif %}
+
+        {% if block.settings.description != blank %}
+          <div class="ai-editorial-lifestyle-description-{{ ai_gen_id }}">
+            {{ block.settings.description }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="ai-editorial-lifestyle-cards-column-{{ ai_gen_id }}">
+        {% liquid
+          assign card_1_link = block.settings.card_1_link
+          assign card_2_link = block.settings.card_2_link
+          assign card_3_link = block.settings.card_3_link
+        %}
+
+        {% if card_1_link != blank %}
+          <a href="{{ card_1_link }}" class="ai-editorial-lifestyle-card-{{ ai_gen_id }}">
+        {% else %}
+          <div class="ai-editorial-lifestyle-card-{{ ai_gen_id }}">
+        {% endif %}
+          {% if block.settings.card_1_desktop_image != blank %}
+            <picture>
+              {% if block.settings.card_1_mobile_image != blank %}
+                <source
+                  media="(max-width: 749px)"
+                  srcset="{{ block.settings.card_1_mobile_image | image_url: width: 800 }}"
+                >
+              {% endif %}
+              <img
+                src="{{ block.settings.card_1_desktop_image | image_url: width: 1200 }}"
+                alt="{{ block.settings.card_1_desktop_image.alt | escape }}"
+                loading="lazy"
+                class="ai-editorial-lifestyle-card-image-{{ ai_gen_id }}"
+                style="object-position: {{ block.settings.card_1_focal_point }};"
+              >
+            </picture>
+          {% else %}
+            <div class="ai-editorial-lifestyle-card-placeholder-{{ ai_gen_id }}">
+              {{ 'lifestyle-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+          <div class="ai-editorial-lifestyle-card-overlay-{{ ai_gen_id }}"></div>
+          <div class="ai-editorial-lifestyle-card-content-{{ ai_gen_id }}">
+            {% if block.settings.card_1_label != blank %}
+              <p class="ai-editorial-lifestyle-card-label-{{ ai_gen_id }}">
+                {{ block.settings.card_1_label }}
+              </p>
+            {% else %}
+              <div></div>
+            {% endif %}
+            {% if block.settings.card_1_text != blank %}
+              <p class="ai-editorial-lifestyle-card-text-{{ ai_gen_id }}">
+                {{ block.settings.card_1_text }}
+              </p>
+            {% endif %}
+          </div>
+        {% if card_1_link != blank %}
+          </a>
+        {% else %}
+          </div>
+        {% endif %}
+
+        {% if card_2_link != blank %}
+          <a href="{{ card_2_link }}" class="ai-editorial-lifestyle-card-{{ ai_gen_id }}">
+        {% else %}
+          <div class="ai-editorial-lifestyle-card-{{ ai_gen_id }}">
+        {% endif %}
+          {% if block.settings.card_2_desktop_image != blank %}
+            <picture>
+              {% if block.settings.card_2_mobile_image != blank %}
+                <source
+                  media="(max-width: 749px)"
+                  srcset="{{ block.settings.card_2_mobile_image | image_url: width: 800 }}"
+                >
+              {% endif %}
+              <img
+                src="{{ block.settings.card_2_desktop_image | image_url: width: 1200 }}"
+                alt="{{ block.settings.card_2_desktop_image.alt | escape }}"
+                loading="lazy"
+                class="ai-editorial-lifestyle-card-image-{{ ai_gen_id }}"
+                style="object-position: {{ block.settings.card_2_focal_point }};"
+              >
+            </picture>
+          {% else %}
+            <div class="ai-editorial-lifestyle-card-placeholder-{{ ai_gen_id }}">
+              {{ 'lifestyle-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+          <div class="ai-editorial-lifestyle-card-overlay-{{ ai_gen_id }}"></div>
+          <div class="ai-editorial-lifestyle-card-content-{{ ai_gen_id }}">
+            {% if block.settings.card_2_label != blank %}
+              <p class="ai-editorial-lifestyle-card-label-{{ ai_gen_id }}">
+                {{ block.settings.card_2_label }}
+              </p>
+            {% else %}
+              <div></div>
+            {% endif %}
+            {% if block.settings.card_2_text != blank %}
+              <p class="ai-editorial-lifestyle-card-text-{{ ai_gen_id }}">
+                {{ block.settings.card_2_text }}
+              </p>
+            {% endif %}
+          </div>
+        {% if card_2_link != blank %}
+          </a>
+        {% else %}
+          </div>
+        {% endif %}
+
+        {% if card_3_link != blank %}
+          <a href="{{ card_3_link }}" class="ai-editorial-lifestyle-card-{{ ai_gen_id }}">
+        {% else %}
+          <div class="ai-editorial-lifestyle-card-{{ ai_gen_id }}">
+        {% endif %}
+          {% if block.settings.card_3_desktop_image != blank %}
+            <picture>
+              {% if block.settings.card_3_mobile_image != blank %}
+                <source
+                  media="(max-width: 749px)"
+                  srcset="{{ block.settings.card_3_mobile_image | image_url: width: 800 }}"
+                >
+              {% endif %}
+              <img
+                src="{{ block.settings.card_3_desktop_image | image_url: width: 1200 }}"
+                alt="{{ block.settings.card_3_desktop_image.alt | escape }}"
+                loading="lazy"
+                class="ai-editorial-lifestyle-card-image-{{ ai_gen_id }}"
+                style="object-position: {{ block.settings.card_3_focal_point }};"
+              >
+            </picture>
+          {% else %}
+            <div class="ai-editorial-lifestyle-card-placeholder-{{ ai_gen_id }}">
+              {{ 'lifestyle-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+          <div class="ai-editorial-lifestyle-card-overlay-{{ ai_gen_id }}"></div>
+          <div class="ai-editorial-lifestyle-card-content-{{ ai_gen_id }}">
+            {% if block.settings.card_3_label != blank %}
+              <p class="ai-editorial-lifestyle-card-label-{{ ai_gen_id }}">
+                {{ block.settings.card_3_label }}
+              </p>
+            {% else %}
+              <div></div>
+            {% endif %}
+            {% if block.settings.card_3_text != blank %}
+              <p class="ai-editorial-lifestyle-card-text-{{ ai_gen_id }}">
+                {{ block.settings.card_3_text }}
+              </p>
+            {% endif %}
+          </div>
+        {% if card_3_link != blank %}
+          </a>
+        {% else %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</editorial-lifestyle-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class EditorialLifestyle{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.initializeCards();
+      }
+
+      initializeCards() {
+        const cards = this.querySelectorAll('.ai-editorial-lifestyle-card-{{ ai_gen_id }}');
+        
+        cards.forEach(card => {
+          card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+          });
+          
+          card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+          });
+        });
+      }
+    }
+
+    customElements.define('editorial-lifestyle-{{ ai_gen_id }}', EditorialLifestyle{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Editorial lifestyle",
+  "tag": null,
+  "class": "editorial-lifestyle-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum content width",
+      "min": 1000,
+      "max": 1800,
+      "step": 100,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_mobile",
+      "label": "Top padding (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_mobile",
+      "label": "Bottom padding (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_desktop",
+      "label": "Top padding (desktop)",
+      "min": 40,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_desktop",
+      "label": "Bottom padding (desktop)",
+      "min": 40,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "horizontal_padding_mobile",
+      "label": "Horizontal padding (mobile)",
+      "min": 15,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "horizontal_padding_desktop",
+      "label": "Horizontal padding (desktop)",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "content_gap_mobile",
+      "label": "Content gap (mobile)",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "content_gap_desktop",
+      "label": "Content gap (desktop)",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "text_column_width",
+      "label": "Text column width (desktop)",
+      "min": 25,
+      "max": 40,
+      "step": 1,
+      "unit": "%",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Section colors"
+    },
+    {
+      "type": "color",
+      "id": "section_background",
+      "label": "Background",
+      "default": "#F9F6F2"
+    },
+    {
+      "type": "color",
+      "id": "section_text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "THE PROBLEM"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size_mobile",
+      "label": "Size (mobile)",
+      "min": 9,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size_desktop",
+      "label": "Size (desktop)",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 0.5,
+      "step": 0.1,
+      "default": 0.1
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_weight",
+      "label": "Font weight",
+      "min": 300,
+      "max": 700,
+      "step": 100,
+      "default": 500
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Your body keeps the score.\nYour schedule doesn't make room for it."
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "label": "Size (mobile)",
+      "min": 24,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "label": "Size (desktop)",
+      "min": 36,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "heading_line_height",
+      "label": "Line height",
+      "min": 1,
+      "max": 1.5,
+      "step": 0.1,
+      "default": 1.1
+    },
+    {
+      "type": "range",
+      "id": "heading_weight",
+      "label": "Font weight",
+      "min": 300,
+      "max": 700,
+      "step": 100,
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "heading_max_width",
+      "label": "Maximum width (desktop)",
+      "min": 300,
+      "max": 900,
+      "step": 50,
+      "unit": "px",
+      "default": 600
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Description"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Work. Training. Family. Life doesn't slow down. Recovery shouldn't have to wait for the weekend."
+    },
+    {
+      "type": "range",
+      "id": "description_size_mobile",
+      "label": "Size (mobile)",
+      "min": 13,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "description_size_desktop",
+      "label": "Size (desktop)",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 17
+    },
+    {
+      "type": "range",
+      "id": "description_line_height",
+      "label": "Line height",
+      "min": 1.3,
+      "max": 2,
+      "step": 0.1,
+      "default": 1.6
+    },
+    {
+      "type": "range",
+      "id": "description_max_width",
+      "label": "Maximum width (desktop)",
+      "min": 300,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "default": 500
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "text_content_gap",
+      "label": "Gap between text elements",
+      "min": 15,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Text alignment"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment_mobile",
+      "label": "Mobile",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment_desktop",
+      "label": "Desktop",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Cards layout"
+    },
+    {
+      "type": "range",
+      "id": "cards_per_row_desktop",
+      "label": "Cards per row (desktop)",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "card_gap_mobile",
+      "label": "Card gap (mobile)",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "card_gap_desktop",
+      "label": "Card gap (desktop)",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Card border radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "card_min_height_mobile",
+      "label": "Card height (mobile)",
+      "min": 280,
+      "max": 500,
+      "step": 20,
+      "unit": "px",
+      "default": 380
+    },
+    {
+      "type": "range",
+      "id": "card_min_height_desktop",
+      "label": "Card height (desktop)",
+      "min": 320,
+      "max": 500,
+      "step": 20,
+      "unit": "px",
+      "default": 440
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "label": "Card content padding",
+      "min": 15,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Image overlay opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 65
+    },
+    {
+      "type": "color",
+      "id": "card_fallback_background",
+      "label": "Card background (fallback)",
+      "default": "#E5E5E5"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Card label"
+    },
+    {
+      "type": "range",
+      "id": "card_label_size_mobile",
+      "label": "Size (mobile)",
+      "min": 9,
+      "max": 14,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "card_label_size_desktop",
+      "label": "Size (desktop)",
+      "min": 10,
+      "max": 14,
+      "step": 1,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "card_label_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 0.5,
+      "step": 0.1,
+      "default": 0.1
+    },
+    {
+      "type": "range",
+      "id": "card_label_weight",
+      "label": "Font weight",
+      "min": 400,
+      "max": 700,
+      "step": 100,
+      "default": 600
+    },
+    {
+      "type": "header",
+      "content": "Card text"
+    },
+    {
+      "type": "range",
+      "id": "card_text_size_mobile",
+      "label": "Size (mobile)",
+      "min": 14,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "card_text_size_desktop",
+      "label": "Size (desktop)",
+      "min": 16,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_text_line_height",
+      "label": "Line height",
+      "min": 1.1,
+      "max": 1.5,
+      "step": 0.1,
+      "default": 1.3
+    },
+    {
+      "type": "range",
+      "id": "card_text_weight",
+      "label": "Font weight",
+      "min": 400,
+      "max": 700,
+      "step": 100,
+      "default": 500
+    },
+    {
+      "type": "header",
+      "content": "Card 1 - Work"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_1_desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_1_mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "select",
+      "id": "card_1_focal_point",
+      "label": "Image focal point",
+      "options": [
+        { "value": "center center", "label": "Center" },
+        { "value": "top center", "label": "Top" },
+        { "value": "bottom center", "label": "Bottom" },
+        { "value": "center left", "label": "Left" },
+        { "value": "center right", "label": "Right" },
+        { "value": "top left", "label": "Top left" },
+        { "value": "top right", "label": "Top right" },
+        { "value": "bottom left", "label": "Bottom left" },
+        { "value": "bottom right", "label": "Bottom right" }
+      ],
+      "default": "center center"
+    },
+    {
+      "type": "text",
+      "id": "card_1_label",
+      "label": "Label",
+      "default": "WORK"
+    },
+    {
+      "type": "textarea",
+      "id": "card_1_text",
+      "label": "Text",
+      "default": "Long hours.\nHigh demands."
+    },
+    {
+      "type": "url",
+      "id": "card_1_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Card 2 - Training"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_2_desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_2_mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "select",
+      "id": "card_2_focal_point",
+      "label": "Image focal point",
+      "options": [
+        { "value": "center center", "label": "Center" },
+        { "value": "top center", "label": "Top" },
+        { "value": "bottom center", "label": "Bottom" },
+        { "value": "center left", "label": "Left" },
+        { "value": "center right", "label": "Right" },
+        { "value": "top left", "label": "Top left" },
+        { "value": "top right", "label": "Top right" },
+        { "value": "bottom left", "label": "Bottom left" },
+        { "value": "bottom right", "label": "Bottom right" }
+      ],
+      "default": "center center"
+    },
+    {
+      "type": "text",
+      "id": "card_2_label",
+      "label": "Label",
+      "default": "TRAINING"
+    },
+    {
+      "type": "textarea",
+      "id": "card_2_text",
+      "label": "Text",
+      "default": "You push hard.\nYour body pays."
+    },
+    {
+      "type": "url",
+      "id": "card_2_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Card 3 - Life"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_3_desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_3_mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "select",
+      "id": "card_3_focal_point",
+      "label": "Image focal point",
+      "options": [
+        { "value": "center center", "label": "Center" },
+        { "value": "top center", "label": "Top" },
+        { "value": "bottom center", "label": "Bottom" },
+        { "value": "center left", "label": "Left" },
+        { "value": "center right", "label": "Right" },
+        { "value": "top left", "label": "Top left" },
+        { "value": "top right", "label": "Top right" },
+        { "value": "bottom left", "label": "Bottom left" },
+        { "value": "bottom right", "label": "Bottom right" }
+      ],
+      "default": "center center"
+    },
+    {
+      "type": "text",
+      "id": "card_3_label",
+      "label": "Label",
+      "default": "LIFE"
+    },
+    {
+      "type": "textarea",
+      "id": "card_3_text",
+      "label": "Text",
+      "default": "Responsibilities\nnever stop."
+    },
+    {
+      "type": "url",
+      "id": "card_3_link",
+      "label": "Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial lifestyle"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "library": {
+      "type": "nocturne-store--main-gift-card",
+      "settings": {
+        "show_qr_code": true,
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

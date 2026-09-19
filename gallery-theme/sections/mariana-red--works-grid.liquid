@@ -1,0 +1,106 @@
+{%- comment -%} Section Library: injected global assets for store "mariana-red" {%- endcomment -%}
+{{ 'mariana-red--base.css' | asset_url | stylesheet_tag }}
+{{ 'mariana-red--components.css' | asset_url | stylesheet_tag }}
+{% render 'mariana-red--layout-tokens' %}
+{%- comment -%}
+  Works grid — eyebrow + view-all pill over a row of portrait project cards
+  (Mariana "Featured works").
+{%- endcomment -%}
+<section class="section works-grid" style="--section-space: {{ section.settings.padding | default: 88 }}px;">
+  <div class="page-width">
+    <div class="works-grid__head">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="rose-eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+      {%- if section.settings.button_label != blank -%}
+        <a href="{{ section.settings.button_link | default: '#' }}" class="pill-link">
+          {{ section.settings.button_label | escape }}
+          <span class="pill-link__arrow">{% render 'mariana-red--icon', name: 'arrow-right', size: 12 %}</span>
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="works-grid__row" style="--works: {{ section.blocks.size | default: 4 }};">
+      {%- for block in section.blocks -%}
+        <a href="{{ block.settings.link | default: '#' }}" class="works-grid__card" {{ block.shopify_attributes }}>
+          <span class="works-grid__media">
+            {%- if block.settings.image != blank -%}
+              {{ block.settings.image | image_url: width: 720 | image_tag: loading: 'lazy', widths: '360, 540, 720', alt: block.settings.title }}
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+          </span>
+          {%- if block.settings.title != blank -%}
+            <span class="works-grid__title">{{ block.settings.title | escape }}</span>
+          {%- endif -%}
+          {%- if block.settings.subtitle != blank -%}
+            <span class="works-grid__subtitle">{{ block.settings.subtitle | escape }}</span>
+          {%- endif -%}
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .works-grid__head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1.5rem; flex-wrap: wrap;
+    margin-bottom: clamp(1.4rem, 3vw, 2.2rem);
+  }
+  .works-grid__row { display: grid; grid-template-columns: repeat(var(--works, 4), 1fr); gap: clamp(0.9rem, 1.6vw, 1.4rem); }
+  .works-grid__card { display: flex; flex-direction: column; text-decoration: none; color: inherit; }
+  .works-grid__media {
+    display: block; aspect-ratio: 3 / 4;
+    border-radius: 0.9rem; overflow: hidden;
+    background: var(--color-background-secondary);
+    border: 1px solid rgba(226, 178, 164, 0.14);
+  }
+  .works-grid__media img, .works-grid__media svg { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.45s ease; }
+  .works-grid__card:hover .works-grid__media img { transform: scale(1.04); }
+  .works-grid__title {
+    font-family: var(--font-heading);
+    font-size: 1.05rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--color-heading);
+    margin-top: 0.85rem;
+  }
+  .works-grid__subtitle { font-size: 0.72rem; color: var(--color-text-muted); margin-top: 0.25rem; }
+  @media (max-width: 989px) { .works-grid__row { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 540px) { .works-grid__row { grid-template-columns: 1fr; } .works-grid__media { aspect-ratio: 4 / 3; } }
+</style>
+
+{% schema %}
+{
+  "name": "Works grid",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Featured works" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "View all projects" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "range", "id": "padding", "label": "Vertical padding", "min": 32, "max": 160, "step": 8, "unit": "px", "default": 88 }
+  ],
+  "blocks": [
+    {
+      "type": "work",
+      "name": "Project card",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Noiré Cosmetics" },
+        { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Branding, Packaging" },
+        { "type": "image_picker", "id": "image", "label": "Cover image" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Works grid",
+      "blocks": [
+        { "type": "work", "settings": { "title": "Noiré Cosmetics", "subtitle": "Branding, Packaging" } },
+        { "type": "work", "settings": { "title": "Enchante Studio", "subtitle": "Branding, Web Design" } },
+        { "type": "work", "settings": { "title": "Velora Jewelry", "subtitle": "Brand Strategy" } },
+        { "type": "work", "settings": { "title": "Aurea Wellness", "subtitle": "Branding, Web Design" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

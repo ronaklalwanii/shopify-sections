@@ -1,0 +1,60 @@
+{
+  "sections": {
+    "library": {
+      "type": "testimonial-fan",
+      "settings": {
+        "autoplay_seconds": 5,
+        "fan_angle": 7,
+        "fan_cards": 2,
+        "spread_x": 140,
+        "fan_y": 8,
+        "scale_step": 7,
+        "card_width": 17,
+        "card_width_max": 240,
+        "card_ratio": "3 / 4",
+        "stage_height": 30,
+        "stage_height_max": 520,
+        "card_radius": 14,
+        "quote_badge_bg": "#1c1e22",
+        "quote_badge_ink": "#ffffff",
+        "background_color": "#f5f4f1",
+        "text_color": "#1c1e22",
+        "font_stack": "system-ui, sans-serif"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "testimonial",
+          "settings": {
+            "name": "Sofia Marinotti",
+            "headline": "Quiet process, loud results.",
+            "text": "No drama, no over-promising — just steady, honest work. Progress is a launch, not a finish line. And when it lands, it lands well."
+          }
+        },
+        "bl-2": {
+          "type": "testimonial",
+          "settings": {
+            "name": "Marco Fenelli",
+            "headline": "Craft you can feel in the details.",
+            "text": "Every corner of the work reveals a second look. Our customers may not articulate why it feels considered, but the numbers say they notice."
+          }
+        },
+        "bl-3": {
+          "type": "testimonial",
+          "settings": {
+            "name": "Alba Moretti",
+            "headline": "They pushed back, and they were right.",
+            "text": "Things felt off-line at times, and we voiced that more than once. Both times we were heard — and both times we ended a week later, better."
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,51 @@
+{%- comment -%} Section Library: injected global assets for store "mariana-red" {%- endcomment -%}
+{{ 'mariana-red--base.css' | asset_url | stylesheet_tag }}
+{{ 'mariana-red--components.css' | asset_url | stylesheet_tag }}
+{% render 'mariana-red--layout-tokens' %}
+{%- comment -%}
+  Article page — hero image, meta, content.
+{%- endcomment -%}
+<section class="section" style="--section-space: 3rem;">
+  <div class="page-width">
+    <article class="article">
+      <header class="page-header" style="padding-block: 0;">
+        <h1 class="h1">{{ article.title | escape }}</h1>
+        <p class="article__meta">
+          {{ article.published_at | date: format: 'abbreviated_date' }}
+          {%- if section.settings.show_author -%}
+            · {{ article.author }}
+          {%- endif -%}
+        </p>
+      </header>
+      {%- if section.settings.show_image and article.image -%}
+        <div class="article__hero">
+          {{ article.image | image_url: width: 1400 | image_tag: widths: '720, 960, 1400', alt: article.title }}
+        </div>
+      {%- endif -%}
+      <div class="rte" style="max-width: none;">
+        {{ article.content }}
+      </div>
+    </article>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Article",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Show article image",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Show author",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,57 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--project-cards",
+      "settings": {
+        "heading": "Selected work",
+        "columns": 3,
+        "style": "specs",
+        "show_wishlist": false
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "project",
+          "settings": {
+            "title": "Project one",
+            "meta_1_label": "Location",
+            "meta_2_label": "Scope",
+            "meta_3_label": "Year",
+            "badge": "New",
+            "price": "$ 250,000",
+            "link_label": "View project"
+          }
+        },
+        "bl-2": {
+          "type": "project",
+          "settings": {
+            "title": "Project two",
+            "meta_1_label": "Location",
+            "meta_2_label": "Scope",
+            "meta_3_label": "Year",
+            "price": "$ 320,000",
+            "link_label": "View project"
+          }
+        },
+        "bl-3": {
+          "type": "project",
+          "settings": {
+            "title": "Project three",
+            "meta_1_label": "Location",
+            "meta_2_label": "Scope",
+            "meta_3_label": "Year",
+            "price": "$ 180,000",
+            "link_label": "View project"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

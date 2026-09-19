@@ -1,0 +1,60 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--logo-wall",
+      "settings": {
+        "heading": "Trusted by teams everywhere",
+        "background_color": "#ffffff"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "logo",
+          "settings": {
+            "name": "Logotype"
+          }
+        },
+        "bl-2": {
+          "type": "logo",
+          "settings": {
+            "name": "Brand"
+          }
+        },
+        "bl-3": {
+          "type": "logo",
+          "settings": {
+            "name": "Partner"
+          }
+        },
+        "bl-4": {
+          "type": "logo",
+          "settings": {
+            "name": "Studio"
+          }
+        },
+        "bl-5": {
+          "type": "logo",
+          "settings": {
+            "name": "Group"
+          }
+        },
+        "bl-6": {
+          "type": "logo",
+          "settings": {
+            "name": "Collective"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "sections": {
+    "library": {
+      "type": "arena-cta",
+      "settings": {
+        "bg_color": "#FDF6E8",
+        "max_width": 1400,
+        "gutter": 16,
+        "space_top": 12,
+        "space_bottom": 40,
+        "radius": 16,
+        "card_pad": 24,
+        "gap": 20,
+        "card_bg": "#F5EBDC",
+        "border_color": "#EDE3D3",
+        "eyebrow": "Find your new home",
+        "title": "Find an apartment\nin your ideal home",
+        "title_size": 26,
+        "subtitle": "Current floor plans, favorable purchase terms and support at all stages.",
+        "primary_label": "View projects",
+        "secondary_label": "Calculate mortgage",
+        "btn_bg": "#C2A78A",
+        "btn_text": "#FFFFFF",
+        "eyebrow_color": "#9A8A78",
+        "title_color": "#2B2117",
+        "subtitle_color": "#6B5E4F"
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

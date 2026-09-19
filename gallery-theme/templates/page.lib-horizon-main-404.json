@@ -1,0 +1,44 @@
+{
+  "sections": {
+    "library": {
+      "type": "horizon--main-404",
+      "settings": {
+        "content_direction": "column",
+        "section_width": "page-width",
+        "section_height": "",
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "@theme",
+          "settings": {}
+        },
+        "bl-2": {
+          "type": "@theme",
+          "settings": {}
+        },
+        "bl-3": {
+          "type": "_divider",
+          "settings": {}
+        },
+        "bl-4": {
+          "type": "_divider",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

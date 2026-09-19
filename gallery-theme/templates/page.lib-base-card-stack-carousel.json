@@ -1,0 +1,75 @@
+{
+  "sections": {
+    "library": {
+      "type": "card-stack-carousel",
+      "settings": {
+        "autoplay_seconds": 4,
+        "card_width": 30,
+        "card_width_max": 430,
+        "card_ratio": "4 / 5",
+        "stage_height": 40,
+        "stage_height_max": 620,
+        "card_offset": 150,
+        "scale_step": 10,
+        "peek_cards": 2,
+        "card_radius": 24,
+        "background_color": "#f2f2f0",
+        "text_color": "#1c1e22",
+        "accent_color": "#1c1e22",
+        "font_stack": "system-ui, sans-serif"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "card",
+          "settings": {
+            "title": "Innovation",
+            "text": "Break creative limits with one clear visual concept.",
+            "button_label": "Discover"
+          }
+        },
+        "bl-2": {
+          "type": "card",
+          "settings": {
+            "title": "Performance",
+            "text": "Look and feel your absolute best on every frame.",
+            "button_label": "Discover"
+          }
+        },
+        "bl-3": {
+          "type": "card",
+          "settings": {
+            "title": "Precision",
+            "text": "Create focused images with a clear visual direction.",
+            "button_label": "Discover"
+          }
+        },
+        "bl-4": {
+          "type": "card",
+          "settings": {
+            "title": "Premium Quality",
+            "text": "Built with premium materials and refined details.",
+            "button_label": "Learn more"
+          }
+        },
+        "bl-5": {
+          "type": "card",
+          "settings": {
+            "title": "Craft",
+            "text": "Every detail considered, every frame earned.",
+            "button_label": "Discover"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

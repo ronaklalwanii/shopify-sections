@@ -1,0 +1,130 @@
+{%- comment -%} Section Library: injected global assets for store "nocturne-store" {%- endcomment -%}
+{{ 'nocturne-store--theme.css' | asset_url | stylesheet_tag }}
+{{ 'nocturne-store--product.css' | asset_url | stylesheet_tag }}
+{% render 'nocturne-store--css-variables' %}
+{%- comment -%} Arena Hero — full-bleed night render, 2 CTAs, beige page bg {%- endcomment -%}
+<section id="ArenaHero-{{ section.id }}" class="ah">
+  {%- style -%}
+    #ArenaHero-{{ section.id }} {
+      --ah-bg: {{ section.settings.bg_color }};
+      --ah-max-w: {{ section.settings.max_width }}px;
+      --ah-gutter: {{ section.settings.gutter }}px;
+      --ah-space-top: {{ section.settings.space_top }}px;
+      --ah-space-bottom: {{ section.settings.space_bottom }}px;
+      --ah-radius: {{ section.settings.radius }}px;
+      --ah-min-h: {{ section.settings.min_height }}px;
+      --ah-min-h-m: {{ section.settings.min_height_mobile }}px;
+      --ah-pad-x: {{ section.settings.pad_x }}px;
+      --ah-pad-y: {{ section.settings.pad_y }}px;
+      --ah-pad-x-m: {{ section.settings.pad_x_mobile }}px;
+      --ah-pad-y-m: {{ section.settings.pad_y_mobile }}px;
+      --ah-title-size: {{ section.settings.title_size }}px;
+      --ah-title-size-m: {{ section.settings.title_size_mobile }}px;
+      --ah-title-color: {{ section.settings.title_color }};
+      --ah-subtitle-size: {{ section.settings.subtitle_size }}px;
+      --ah-desc-size: {{ section.settings.desc_size }}px;
+      --ah-desc-color: {{ section.settings.desc_color }};
+      --ah-btn-h: {{ section.settings.btn_height }}px;
+      --ah-btn-radius: {{ section.settings.btn_radius }}px;
+      --ah-primary-bg: {{ section.settings.primary_bg }};
+      --ah-primary-text: {{ section.settings.primary_text }};
+      --ah-secondary-color: {{ section.settings.secondary_color }};
+      --ah-overlay: {{ section.settings.overlay_color.red }},{{ section.settings.overlay_color.green }},{{ section.settings.overlay_color.blue }};
+      --ah-overlay-a: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    }
+    #ArenaHero-{{ section.id }} { background: var(--ah-bg); padding: var(--ah-space-top) var(--ah-gutter) var(--ah-space-bottom); overflow-x: clip; }
+    #ArenaHero-{{ section.id }} .ah__outer {
+      position: relative; width: min(100%, var(--ah-max-w)); margin: 0 auto;
+      min-height: var(--ah-min-h); border-radius: var(--ah-radius); overflow: hidden; isolation: isolate; background: #1a1a1a; display: flex;
+    }
+    #ArenaHero-{{ section.id }} .ah__media { position: absolute; inset: 0; z-index: 0; }
+    #ArenaHero-{{ section.id }} .ah__media img, #ArenaHero-{{ section.id }} .ah__placeholder { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+    #ArenaHero-{{ section.id }} .ah__placeholder { background: linear-gradient(180deg,#2a2a2a,#1a1a1a); color: #777; display:flex; align-items:center; justify-content:center; font-size:13px; }
+    #ArenaHero-{{ section.id }} .ah__overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(90deg, rgba(var(--ah-overlay),.62) 0%, rgba(var(--ah-overlay),.18) 55%, rgba(var(--ah-overlay),.08) 100%), linear-gradient(180deg, rgba(var(--ah-overlay),.35) 0%, rgba(var(--ah-overlay),0) 45%);
+      opacity: var(--ah-overlay-a); pointer-events: none;
+    }
+    #ArenaHero-{{ section.id }} .ah__content {
+      position: relative; z-index: 2; width: 100%; min-height: var(--ah-min-h);
+      padding: var(--ah-pad-y) var(--ah-pad-x); display: flex; flex-direction: column; justify-content: center; gap: 0; max-width: 560px; min-width: 0;
+    }
+    #ArenaHero-{{ section.id }} .ah__title {
+      margin: 0; color: var(--ah-title-color); font-family: Georgia, serif; font-size: var(--ah-title-size); font-weight: 400; line-height: 1.02; letter-spacing: -.03em; max-width: 520px;
+    }
+    #ArenaHero-{{ section.id }} .ah__subtitle { margin: 14px 0 0; color: var(--ah-desc-color); font-size: var(--ah-subtitle-size); line-height: 1.5; opacity: .88; max-width: 480px; }
+    #ArenaHero-{{ section.id }} .ah__buttons { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; align-items: center; }
+    #ArenaHero-{{ section.id }} .ah__btn {
+      display: inline-flex; align-items: center; justify-content: center; height: var(--ah-btn-h); padding: 0 22px; border-radius: var(--ah-btn-radius);
+      font-size: 13px; font-weight: 500; text-decoration: none; white-space: nowrap; transition: opacity 200ms ease, transform 200ms ease;
+    }
+    #ArenaHero-{{ section.id }} .ah__btn--primary { background: var(--ah-primary-bg); color: var(--ah-primary-text); border: 1px solid var(--ah-primary-bg); }
+    #ArenaHero-{{ section.id }} .ah__btn--secondary { background: transparent; color: var(--ah-secondary-color); border: 1px solid transparent; padding: 0 6px; gap: 6px; }
+    #ArenaHero-{{ section.id }} .ah__btn:hover { opacity: .9; transform: translateY(-1px); }
+    @media (max-width: 768px) {
+      #ArenaHero-{{ section.id }} .ah__outer { min-height: var(--ah-min-h-m); }
+      #ArenaHero-{{ section.id }} .ah__content { min-height: var(--ah-min-h-m); padding: var(--ah-pad-y-m) var(--ah-pad-x-m); max-width: 100%; }
+      #ArenaHero-{{ section.id }} .ah__title { font-size: var(--ah-title-size-m); line-height: 1.08; }
+    }
+  {%- endstyle -%}
+  <div class="ah__outer">
+    <div class="ah__media">
+      {%- if section.settings.bg_image != blank -%}
+        {{ section.settings.bg_image | image_url: width: 2000 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '800,1200,1600,2000', sizes: '100vw', alt: section.settings.title | escape }}
+      {%- else -%}<div class="ah__placeholder">Upload hero image (1920×1080)</div>{%- endif -%}
+      <div class="ah__overlay"></div>
+    </div>
+    <div class="ah__content">
+      {%- if section.settings.title != blank -%}<h1 class="ah__title">{{ section.settings.title }}</h1>{%- endif -%}
+      {%- if section.settings.subtitle != blank -%}<p class="ah__subtitle">{{ section.settings.subtitle }}</p>{%- endif -%}
+      <div class="ah__buttons">
+        {%- if section.settings.primary_label != blank -%}<a class="ah__btn ah__btn--primary" {% if section.settings.primary_link != blank %}href="{{ section.settings.primary_link }}"{% endif %}>{{ section.settings.primary_label }}</a>{%- endif -%}
+        {%- if section.settings.secondary_label != blank -%}<a class="ah__btn ah__btn--secondary" {% if section.settings.secondary_link != blank %}href="{{ section.settings.secondary_link }}"{% endif %}>{{ section.settings.secondary_label }} →</a>{%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Arena Hero",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "color", "id": "bg_color", "label": "Page background", "default": "#FDF6E8" },
+    { "type": "range", "id": "max_width", "label": "Max width", "min": 900, "max": 1800, "step": 20, "default": 1400, "unit": "px" },
+    { "type": "range", "id": "gutter", "label": "Side gutters", "min": 0, "max": 40, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "space_top", "label": "Space above", "min": 0, "max": 80, "step": 4, "default": 12, "unit": "px" },
+    { "type": "range", "id": "space_bottom", "label": "Space below", "min": 0, "max": 80, "step": 4, "default": 12, "unit": "px" },
+    { "type": "range", "id": "radius", "label": "Radius", "min": 0, "max": 32, "step": 2, "default": 20, "unit": "px" },
+    { "type": "range", "id": "min_height", "label": "Min height (desktop)", "min": 480, "max": 800, "step": 20, "default": 640, "unit": "px" },
+    { "type": "range", "id": "min_height_mobile", "label": "Min height (mobile)", "min": 480, "max": 800, "step": 20, "default": 560, "unit": "px" },
+    { "type": "range", "id": "pad_x", "label": "Content pad X", "min": 16, "max": 80, "step": 4, "default": 40, "unit": "px" },
+    { "type": "range", "id": "pad_y", "label": "Content pad Y", "min": 16, "max": 80, "step": 4, "default": 44, "unit": "px" },
+    { "type": "range", "id": "pad_x_mobile", "label": "Content pad X (mobile)", "min": 12, "max": 40, "step": 2, "default": 20, "unit": "px" },
+    { "type": "range", "id": "pad_y_mobile", "label": "Content pad Y (mobile)", "min": 16, "max": 60, "step": 4, "default": 28, "unit": "px" },
+    { "type": "header", "content": "Media" },
+    { "type": "image_picker", "id": "bg_image", "label": "Background image" },
+    { "type": "color", "id": "overlay_color", "label": "Overlay", "default": "#000000" },
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay opacity", "min": 0, "max": 100, "step": 5, "default": 45, "unit": "%" },
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Building residential quarters where you want to live" },
+    { "type": "range", "id": "title_size", "label": "Title size (desktop)", "min": 24, "max": 56, "step": 2, "default": 40, "unit": "px" },
+    { "type": "range", "id": "title_size_mobile", "label": "Title size (mobile)", "min": 20, "max": 40, "step": 2, "default": 30, "unit": "px" },
+    { "type": "color", "id": "title_color", "label": "Title color", "default": "#FFFFFF" },
+    { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "Modern low-rise homes with thoughtful architecture, landscaping, and comfortable urban environment." },
+    { "type": "range", "id": "subtitle_size", "label": "Subtitle size", "min": 12, "max": 18, "step": 1, "default": 14, "unit": "px" },
+    { "type": "color", "id": "desc_color", "label": "Subtitle color", "default": "#FFFFFF" },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "primary_label", "label": "Primary label", "default": "Choose apartment" },
+    { "type": "url", "id": "primary_link", "label": "Primary link" },
+    { "type": "color", "id": "primary_bg", "label": "Primary bg", "default": "#C2A78A" },
+    { "type": "color", "id": "primary_text", "label": "Primary text", "default": "#FFFFFF" },
+    { "type": "text", "id": "secondary_label", "label": "Secondary label", "default": "View projects" },
+    { "type": "url", "id": "secondary_link", "label": "Secondary link" },
+    { "type": "color", "id": "secondary_color", "label": "Secondary color", "default": "#FFFFFF" },
+    { "type": "range", "id": "btn_height", "label": "Button height", "min": 36, "max": 56, "step": 2, "default": 44, "unit": "px" },
+    { "type": "range", "id": "btn_radius", "label": "Button radius", "min": 0, "max": 20, "step": 2, "default": 8, "unit": "px" }
+  ],
+  "presets": [{ "name": "Arena Hero" }]
+}
+{% endschema %}

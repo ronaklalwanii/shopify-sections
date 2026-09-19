@@ -1,0 +1,566 @@
+{%- comment -%}
+  About Us Style 2 - block-based chaptered story page.
+  Each block renders one full-width row: either content overlaid on a
+  full-bleed image ("overlay") or a two-column split ("split", image left or
+  right). Row tones (dark/light) drive colors from the section's own pickers
+  (no theme color schemes); per-block color overrides allowed.
+  Optional per row: auto-numbered eyebrow meta, 3 feature columns, self-
+  rendered CTA button (contrast-guaranteed via tone-derived colors), corner
+  caption.
+{%- endcomment -%}
+
+<section
+  id="AboutUsStyle2-{{ section.id }}"
+  class="aus2{% if section.settings.mobile_image_first %} aus2--mob-img-first{% endif %}{% if section.settings.enable_animation %} aus2-animated{% endif %}"
+  style="
+    --a2-min-h: {{ section.settings.row_min_height }}px;
+    --a2-split: {{ section.settings.split }}%;
+    --a2-pad: {{ section.settings.content_padding }}px;
+    --a2-max-w: {{ section.settings.content_max_width }}rem;
+    --a2-scrim-o: {{ section.settings.overlay_scrim | divided_by: 100.0 }};
+    --a2-index: {{ section.settings.index_size }}px;
+    --a2-eyebrow: {{ section.settings.eyebrow_size }}px;
+    --a2-rule: {{ section.settings.rule_width }}px;
+    --a2-heading: {{ section.settings.heading_size }}px;
+    --a2-body: {{ section.settings.body_size }}px;
+    --a2-cap: {{ section.settings.caption_size }}px;
+    --a2-ficon: {{ section.settings.feature_icon_size }}px;
+    --a2-ftitle: {{ section.settings.feature_title_size }}px;
+    --a2-ftext: {{ section.settings.feature_text_size }}px;
+    --a2-dark-bg: {{ section.settings.dark_bg }};
+    --a2-dark-text: {{ section.settings.dark_text }};
+    --a2-dark-muted: {{ section.settings.dark_muted }};
+    --a2-light-bg: {{ section.settings.light_bg }};
+    --a2-light-text: {{ section.settings.light_text }};
+    --a2-light-muted: {{ section.settings.light_muted }};
+    --a2-anim: {{ section.settings.animation_speed }}ms;
+  "
+>
+  {%- style -%}
+
+    #shopify-section-{{ section.id }} {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    #AboutUsStyle2-{{ section.id }} { display: block; }
+
+    /* ---- row shell + tones ---- */
+    #AboutUsStyle2-{{ section.id }} .aus2-row {
+      position: relative;
+      min-height: var(--a2-min-h);
+      color: var(--row-fg);
+      background: var(--row-bg);
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-row--dark {
+      --row-bg: var(--a2-dark-bg);
+      --row-fg: var(--a2-dark-text);
+      --row-muted: var(--a2-dark-muted);
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-row--light {
+      --row-bg: var(--a2-light-bg);
+      --row-fg: var(--a2-light-text);
+      --row-muted: var(--a2-light-muted);
+    }
+
+    /* ---- split layout ---- */
+    #AboutUsStyle2-{{ section.id }} .aus2-row--split {
+      display: grid;
+      grid-template-columns: var(--a2-split) 1fr;
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-row--split.aus2-row--img-right .aus2-row__media { order: 2; }
+    #AboutUsStyle2-{{ section.id }} .aus2-row--split.aus2-row--img-right .aus2-row__content { order: 1; }
+    #AboutUsStyle2-{{ section.id }} .aus2-row--split .aus2-row__media {
+      position: relative;
+      overflow: hidden;
+      min-height: var(--a2-min-h);
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-row--split .aus2-row__content {
+      background: var(--row-bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--a2-pad);
+    }
+
+    /* ---- overlay layout ---- */
+    #AboutUsStyle2-{{ section.id }} .aus2-row--overlay { display: block; }
+    #AboutUsStyle2-{{ section.id }} .aus2-row--overlay .aus2-row__media {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-row--overlay .aus2-row__media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, var(--a2-scrim-o));
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-row--overlay .aus2-row__content {
+      position: relative;
+      z-index: 2;
+      min-height: var(--a2-min-h);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--a2-pad);
+      max-width: var(--a2-max-w);
+    }
+
+    /* ---- media ---- */
+    #AboutUsStyle2-{{ section.id }} .aus2-row__img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ---- corner caption ---- */
+    #AboutUsStyle2-{{ section.id }} .aus2-cap {
+      position: absolute;
+      z-index: 3;
+      bottom: 1.75rem;
+      max-width: 11rem;
+      font-size: var(--a2-cap);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      line-height: 1.7;
+      color: var(--row-fg);
+      opacity: 0.85;
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-cap--right { right: 2rem; text-align: right; }
+    #AboutUsStyle2-{{ section.id }} .aus2-cap--left { left: 2rem; text-align: left; }
+
+    /* ---- content pieces ---- */
+    #AboutUsStyle2-{{ section.id }} .aus2-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-index {
+      font-size: var(--a2-index);
+      letter-spacing: 0.08em;
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-rule {
+      width: var(--a2-rule);
+      height: 1px;
+      background: var(--row-fg);
+      opacity: 0.45;
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-eyebrow {
+      font-size: var(--a2-eyebrow);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-heading {
+      margin: 1.5rem 0 0;
+      font-family: var(--font-heading-family, system-ui, sans-serif);
+      font-weight: 400;
+      font-size: var(--a2-heading);
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-body {
+      margin: 1.3rem 0 0;
+      max-width: 34rem;
+      font-size: var(--a2-body);
+      line-height: 1.65;
+      color: var(--row-muted);
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-body p { margin: 0 0 0.9rem; }
+    #AboutUsStyle2-{{ section.id }} .aus2-body p:last-child { margin-bottom: 0; }
+
+    /* ---- feature columns ---- */
+    #AboutUsStyle2-{{ section.id }} .aus2-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 2.6rem;
+      max-width: 40rem;
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-feature { padding: 0 1.4rem; }
+    #AboutUsStyle2-{{ section.id }} .aus2-feature:first-child { padding-left: 0; }
+    #AboutUsStyle2-{{ section.id }} .aus2-feature + .aus2-feature {
+      border-left: 1px solid var(--row-fg);
+      border-left-color: color-mix(in srgb, var(--row-fg) 30%, transparent);
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-feature__icon {
+      width: auto;
+      height: var(--a2-ficon);
+      display: block;
+      margin-bottom: 1rem;
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-feature__title {
+      margin: 0;
+      font-size: var(--a2-ftitle);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-feature__text {
+      margin: 0.55rem 0 0;
+      font-size: var(--a2-ftext);
+      line-height: 1.55;
+      color: var(--row-muted);
+    }
+
+    /* ---- CTA: self-rendered, contrast guaranteed ---- */
+    #AboutUsStyle2-{{ section.id }} .aus2-cta { margin-top: 2.2rem; }
+    #AboutUsStyle2-{{ section.id }} .aus2-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.95rem 1.6rem;
+      background: var(--aus2-btn-bg);
+      color: var(--aus2-btn-fg);
+      border-radius: 2px;
+      text-decoration: none;
+      font-family: var(--font-body-family, system-ui, sans-serif);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      line-height: 1;
+      transition: filter 0.2s ease;
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-btn:hover { filter: brightness(0.94); }
+    #AboutUsStyle2-{{ section.id }} .aus2-btn__label { color: inherit; }
+    #AboutUsStyle2-{{ section.id }} .aus2-btn__arrow { width: 1em; height: 1em; flex: 0 0 auto; }
+
+    /* safety net: force CTA colors even if stray theme rules target anchors */
+    #AboutUsStyle2-{{ section.id }} .aus2-cta a,
+    #AboutUsStyle2-{{ section.id }} .aus2-cta button {
+      background-color: var(--aus2-btn-bg) !important;
+      border-color: var(--aus2-btn-bg) !important;
+      color: var(--aus2-btn-fg) !important;
+    }
+    #AboutUsStyle2-{{ section.id }} .aus2-cta a *,
+    #AboutUsStyle2-{{ section.id }} .aus2-cta button * {
+      color: var(--aus2-btn-fg) !important;
+    }
+
+    /* ---- entrance ---- */
+    #AboutUsStyle2-{{ section.id }}.aus2-animated .aus2-row {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity var(--a2-anim) ease, transform var(--a2-anim) ease;
+    }
+    #AboutUsStyle2-{{ section.id }}.aus2-animated .aus2-row.is-in-view {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ---- responsive ---- */
+    @media (max-width: 749px) {
+      #AboutUsStyle2-{{ section.id }} .aus2-row--split { grid-template-columns: 1fr; }
+      #AboutUsStyle2-{{ section.id }} .aus2-row--split .aus2-row__media { min-height: 62vw; }
+      #AboutUsStyle2-{{ section.id }}.aus2--mob-img-first .aus2-row--split .aus2-row__media { order: -1; }
+      #AboutUsStyle2-{{ section.id }} .aus2-row--split .aus2-row__content,
+      #AboutUsStyle2-{{ section.id }} .aus2-row--overlay .aus2-row__content {
+        padding: 3.25rem 1.5rem;
+        min-height: 0;
+      }
+      #AboutUsStyle2-{{ section.id }} .aus2-features { grid-template-columns: 1fr; max-width: 100%; }
+      #AboutUsStyle2-{{ section.id }} .aus2-feature { padding: 1.2rem 0; }
+      #AboutUsStyle2-{{ section.id }} .aus2-feature:first-child { padding-top: 0; }
+      #AboutUsStyle2-{{ section.id }} .aus2-feature + .aus2-feature {
+        border-left: 0;
+        border-top: 1px solid var(--row-fg);
+        border-top-color: color-mix(in srgb, var(--row-fg) 30%, transparent);
+      }
+      #AboutUsStyle2-{{ section.id }} .aus2-cap--right { right: 1.5rem; }
+      #AboutUsStyle2-{{ section.id }} .aus2-cap--left { left: 1.5rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #AboutUsStyle2-{{ section.id }}.aus2-animated .aus2-row { transition: none; opacity: 1; transform: none; }
+    }
+  {%- endstyle -%}
+
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'chapter' -%}
+      {%- assign btn_url = block.settings.button_link -%}
+      {%- if btn_url == blank -%}{%- assign btn_url = '#' -%}{%- endif -%}
+
+      {%- comment -%} CTA contrast: tone-derived defaults, per-block overrides {%- endcomment -%}
+      {%- assign btn_bg = block.settings.button_bg -%}
+      {%- assign btn_txt = block.settings.button_text -%}
+      {%- if btn_bg == blank -%}
+        {%- if block.settings.tone == 'dark' -%}
+          {%- assign btn_bg = section.settings.dark_text -%}
+        {%- else -%}
+          {%- assign btn_bg = section.settings.light_text -%}
+        {%- endif -%}
+      {%- endif -%}
+      {%- if btn_txt == blank -%}
+        {%- if block.settings.tone == 'dark' -%}
+          {%- assign btn_txt = section.settings.dark_bg -%}
+        {%- else -%}
+          {%- assign btn_txt = section.settings.light_bg -%}
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- assign row_index = forloop.index -%}
+      <article
+        class="aus2-row aus2-row--{{ block.settings.layout }} aus2-row--{{ block.settings.tone }} aus2-row--img-{{ block.settings.image_side }}"
+        style="{% if block.settings.panel_bg != blank %}--row-bg: {{ block.settings.panel_bg }};{% endif %}{% if block.settings.text_color != blank %}--row-fg: {{ block.settings.text_color }};{% endif %}"
+        {{ block.shopify_attributes }}
+      >
+        <div class="aus2-row__media">
+          {%- if block.settings.image != blank -%}
+            <img
+              class="aus2-row__img"
+              src="{{ block.settings.image | image_url: width: 1800 }}"
+              srcset="
+                {{ block.settings.image | image_url: width: 800 }} 800w,
+                {{ block.settings.image | image_url: width: 1200 }} 1200w,
+                {{ block.settings.image | image_url: width: 1800 }} 1800w
+              "
+              sizes="100vw"
+              width="1800"
+              height="{{ 1800 | divided_by: block.settings.image.aspect_ratio | round }}"
+              alt="{{ block.settings.image.alt | default: block.settings.eyebrow | escape }}"
+              loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+            >
+          {%- endif -%}
+          {%- if block.settings.caption != blank -%}
+            <span class="aus2-cap aus2-cap--{{ block.settings.caption_position }}">
+              {{ block.settings.caption | escape | newline_to_br }}
+            </span>
+          {%- endif -%}
+        </div>
+
+        <div class="aus2-row__content">
+          {%- if block.settings.eyebrow != blank -%}
+            <div class="aus2-meta">
+              <span class="aus2-index">
+                {%- if row_index < 10 -%}0{%- endif -%}{{ row_index }}
+              </span>
+              <span class="aus2-rule" aria-hidden="true"></span>
+              <span class="aus2-eyebrow">{{ block.settings.eyebrow | escape }}</span>
+            </div>
+          {%- endif -%}
+
+          {%- if block.settings.heading != blank -%}
+            <h2 class="aus2-heading">{{ block.settings.heading | escape | newline_to_br }}</h2>
+          {%- endif -%}
+
+          {%- if block.settings.body != blank -%}
+            <div class="aus2-body rte">{{ block.settings.body }}</div>
+          {%- endif -%}
+
+          {%- if block.settings.feature_1_title != blank or block.settings.feature_2_title != blank or block.settings.feature_3_title != blank -%}
+            <div class="aus2-features">
+              {%- if block.settings.feature_1_title != blank or block.settings.feature_1_text != blank -%}
+                <div class="aus2-feature">
+                  {%- if block.settings.feature_1_icon != blank -%}
+                    <img class="aus2-feature__icon" src="{{ block.settings.feature_1_icon | image_url: width: 120 }}" alt="" width="120" loading="lazy">
+                  {%- endif -%}
+                  {%- if block.settings.feature_1_title != blank -%}<h3 class="aus2-feature__title">{{ block.settings.feature_1_title | escape }}</h3>{%- endif -%}
+                  {%- if block.settings.feature_1_text != blank -%}<p class="aus2-feature__text">{{ block.settings.feature_1_text | escape }}</p>{%- endif -%}
+                </div>
+              {%- endif -%}
+              {%- if block.settings.feature_2_title != blank or block.settings.feature_2_text != blank -%}
+                <div class="aus2-feature">
+                  {%- if block.settings.feature_2_icon != blank -%}
+                    <img class="aus2-feature__icon" src="{{ block.settings.feature_2_icon | image_url: width: 120 }}" alt="" width="120" loading="lazy">
+                  {%- endif -%}
+                  {%- if block.settings.feature_2_title != blank -%}<h3 class="aus2-feature__title">{{ block.settings.feature_2_title | escape }}</h3>{%- endif -%}
+                  {%- if block.settings.feature_2_text != blank -%}<p class="aus2-feature__text">{{ block.settings.feature_2_text | escape }}</p>{%- endif -%}
+                </div>
+              {%- endif -%}
+              {%- if block.settings.feature_3_title != blank or block.settings.feature_3_text != blank -%}
+                <div class="aus2-feature">
+                  {%- if block.settings.feature_3_icon != blank -%}
+                    <img class="aus2-feature__icon" src="{{ block.settings.feature_3_icon | image_url: width: 120 }}" alt="" width="120" loading="lazy">
+                  {%- endif -%}
+                  {%- if block.settings.feature_3_title != blank -%}<h3 class="aus2-feature__title">{{ block.settings.feature_3_title | escape }}</h3>{%- endif -%}
+                  {%- if block.settings.feature_3_text != blank -%}<p class="aus2-feature__text">{{ block.settings.feature_3_text | escape }}</p>{%- endif -%}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          {%- if block.settings.button_label != blank -%}
+            <div class="aus2-cta" style="--aus2-btn-bg: {{ btn_bg }}; --aus2-btn-fg: {{ btn_txt }};">
+              <a class="aus2-btn" href="{{ btn_url }}">
+                <span class="aus2-btn__label">{{ block.settings.button_label | escape }}</span>
+                {%- if block.settings.button_arrow -%}
+                  <svg class="aus2-btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="M13 6l6 6-6 6"/></svg>
+                {%- endif -%}
+              </a>
+            </div>
+          {%- endif -%}
+        </div>
+      </article>
+    {%- endif -%}
+  {%- endfor -%}
+
+  <script>
+    (function () {
+      var root = document.getElementById('AboutUsStyle2-{{ section.id }}');
+      if (!root || !root.classList.contains('aus2-animated')) return;
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var rows = Array.prototype.slice.call(root.querySelectorAll('.aus2-row'));
+      if (reduced || !('IntersectionObserver' in window)) {
+        rows.forEach(function (r) { r.classList.add('is-in-view'); });
+        return;
+      }
+      var obs = new IntersectionObserver(function (entries, o) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) {
+            en.target.classList.add('is-in-view');
+            o.unobserve(en.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      rows.forEach(function (r) { obs.observe(r); });
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "About Us Style 2",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "header", "content": "Row layout" },
+    { "type": "range", "id": "row_min_height", "label": "Row min height", "min": 320, "max": 900, "step": 20, "unit": "px", "default": 600 },
+    { "type": "range", "id": "split", "label": "Split: image column", "min": 30, "max": 70, "step": 2, "unit": "%", "default": 50 },
+    { "type": "range", "id": "content_padding", "label": "Content padding", "min": 32, "max": 120, "step": 2, "unit": "px", "default": 72 },
+    { "type": "range", "id": "content_max_width", "label": "Overlay content max width", "min": 20, "max": 60, "step": 2, "unit": "rem", "default": 44 },
+    { "type": "range", "id": "overlay_scrim", "label": "Overlay scrim", "min": 0, "max": 80, "step": 2, "unit": "%", "default": 34, "info": "Dark veil over overlay-row images for text legibility." },
+    { "type": "checkbox", "id": "mobile_image_first", "label": "Mobile: image above content", "default": true },
+
+    { "type": "header", "content": "Typography" },
+    { "type": "range", "id": "index_size", "label": "Index size", "min": 10, "max": 20, "step": 2, "unit": "px", "default": 12 },
+    { "type": "range", "id": "eyebrow_size", "label": "Eyebrow size", "min": 10, "max": 16, "step": 2, "unit": "px", "default": 10 },
+    { "type": "range", "id": "rule_width", "label": "Meta rule width", "min": 24, "max": 96, "step": 2, "unit": "px", "default": 48 },
+    { "type": "range", "id": "heading_size", "label": "Heading size", "min": 28, "max": 72, "step": 2, "unit": "px", "default": 44 },
+    { "type": "range", "id": "body_size", "label": "Body size", "min": 12, "max": 22, "step": 2, "unit": "px", "default": 16 },
+    { "type": "range", "id": "caption_size", "label": "Corner caption size", "min": 10, "max": 16, "step": 2, "unit": "px", "default": 10 },
+    { "type": "range", "id": "feature_icon_size", "label": "Feature icon height", "min": 20, "max": 56, "step": 2, "unit": "px", "default": 32 },
+    { "type": "range", "id": "feature_title_size", "label": "Feature title size", "min": 10, "max": 18, "step": 2, "unit": "px", "default": 12 },
+    { "type": "range", "id": "feature_text_size", "label": "Feature text size", "min": 10, "max": 18, "step": 2, "unit": "px", "default": 12 },
+
+    { "type": "header", "content": "Row colors (picked here, no theme schemes)" },
+    { "type": "color", "id": "dark_bg", "label": "Dark row background", "default": "#141311" },
+    { "type": "color", "id": "dark_text", "label": "Dark row text", "default": "#F4F2EE" },
+    { "type": "color", "id": "dark_muted", "label": "Dark row muted text", "default": "#B9B5AE" },
+    { "type": "color", "id": "light_bg", "label": "Light row background", "default": "#F0EFEC" },
+    { "type": "color", "id": "light_text", "label": "Light row text", "default": "#171512" },
+    { "type": "color", "id": "light_muted", "label": "Light row muted text", "default": "#57534C" },
+
+    { "type": "header", "content": "Motion" },
+    { "type": "checkbox", "id": "enable_animation", "label": "Enable row entrance", "default": true },
+    { "type": "range", "id": "animation_speed", "label": "Entrance speed", "min": 250, "max": 1200, "step": 50, "unit": "ms", "default": 700 }
+  ],
+  "blocks": [
+    {
+      "type": "chapter",
+      "name": "Chapter row",
+      "settings": [
+        { "type": "select", "id": "layout", "label": "Layout", "default": "split", "options": [
+          { "value": "overlay", "label": "Content over full-bleed image" },
+          { "value": "split", "label": "Split image / panel" }
+        ] },
+        { "type": "select", "id": "image_side", "label": "Image side (split)", "default": "left", "options": [
+          { "value": "left", "label": "Left" },
+          { "value": "right", "label": "Right" }
+        ] },
+        { "type": "select", "id": "tone", "label": "Tone", "default": "light", "options": [
+          { "value": "dark", "label": "Dark" },
+          { "value": "light", "label": "Light" }
+        ] },
+        { "type": "image_picker", "id": "image", "label": "Row image" },
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "About us" },
+        { "type": "textarea", "id": "heading", "label": "Heading", "default": "Better-smelling journeys,\nmade simple." },
+        { "type": "richtext", "id": "body", "label": "Body", "default": "<p>We created ScentedDrive to make everyday driving feel fresher, without complicating the experience.</p>" },
+        { "type": "text", "id": "button_label", "label": "Button label" },
+        { "type": "url", "id": "button_link", "label": "Button link" },
+        { "type": "checkbox", "id": "button_arrow", "label": "Show arrow icon", "default": true },
+        { "type": "color", "id": "button_bg", "label": "Button background override", "info": "Optional. Defaults to the tone's text color (light pill on dark rows)." },
+        { "type": "color", "id": "button_text", "label": "Button label color override", "info": "Optional. Defaults to the tone's background color (dark label on light pill)." },
+        { "type": "textarea", "id": "caption", "label": "Corner caption", "info": "Short stacked lines over the image. Use line breaks between words/groups." },
+        { "type": "select", "id": "caption_position", "label": "Caption corner", "default": "right", "options": [
+          { "value": "left", "label": "Bottom left" },
+          { "value": "right", "label": "Bottom right" }
+        ] },
+        { "type": "image_picker", "id": "feature_1_icon", "label": "Feature 1 icon" },
+        { "type": "text", "id": "feature_1_title", "label": "Feature 1 title" },
+        { "type": "text", "id": "feature_1_text", "label": "Feature 1 text" },
+        { "type": "image_picker", "id": "feature_2_icon", "label": "Feature 2 icon" },
+        { "type": "text", "id": "feature_2_title", "label": "Feature 2 title" },
+        { "type": "text", "id": "feature_2_text", "label": "Feature 2 text" },
+        { "type": "image_picker", "id": "feature_3_icon", "label": "Feature 3 icon" },
+        { "type": "text", "id": "feature_3_title", "label": "Feature 3 title" },
+        { "type": "text", "id": "feature_3_text", "label": "Feature 3 text" },
+        { "type": "color", "id": "panel_bg", "label": "Background override", "info": "Optional. Overrides the tone background for this row." },
+        { "type": "color", "id": "text_color", "label": "Text override", "info": "Optional. Overrides the tone text color for this row." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Us Style 2",
+      "blocks": [
+        {
+          "type": "chapter",
+          "settings": {
+            "layout": "overlay",
+            "tone": "dark",
+            "eyebrow": "About ScentedDrive",
+            "heading": "Better-smelling journeys,\nmade simple.",
+            "body": "<p>We created ScentedDrive to make everyday driving feel fresher, without complicating the experience.</p>",
+            "button_label": "Shop ScentedDrive",
+            "caption": "Fresher\ndrives\nbrighter\ndays"
+          }
+        },
+        {
+          "type": "chapter",
+          "settings": {
+            "layout": "split",
+            "image_side": "left",
+            "tone": "light",
+            "eyebrow": "Why we started",
+            "heading": "Your car is part\nof everyday life.",
+            "body": "<p>School runs. Commutes. Gym bags. Dogs. Coffee. Weekend trips.</p><p>Cars pick up the smells of everything we do in them. We wanted a simple way to keep the cabin feeling fresh through all of it.</p>",
+            "caption": "Same roads\na fresher\nfeeling",
+            "caption_position": "left"
+          }
+        },
+        {
+          "type": "chapter",
+          "settings": {
+            "layout": "split",
+            "image_side": "right",
+            "tone": "light",
+            "eyebrow": "Our approach",
+            "heading": "Keep it simple.\nMake it useful.\nMake it feel good.",
+            "feature_1_title": "Automatic",
+            "feature_1_text": "Activates while you drive.",
+            "feature_2_title": "Adjustable",
+            "feature_2_text": "Three fragrance intensities.",
+            "feature_3_title": "Refillable",
+            "feature_3_text": "Change the scent, keep the diffuser."
+          }
+        },
+        {
+          "type": "chapter",
+          "settings": {
+            "layout": "overlay",
+            "tone": "dark",
+            "eyebrow": "The ScentedDrive system",
+            "heading": "One diffuser.\nDifferent journeys.",
+            "body": "<p>Choose your fragrance. Set your intensity. Let ScentedDrive take care of the rest.</p>",
+            "button_label": "Shop ScentedDrive",
+            "caption": "A fresher car\nevery journey."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

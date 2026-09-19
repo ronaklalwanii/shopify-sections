@@ -1,0 +1,54 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--faq",
+      "settings": {
+        "eyebrow": "Common questions",
+        "heading": "Frequently asked questions",
+        "split": false,
+        "open_first": false,
+        "link_label": "View all FAQs",
+        "padding": 64
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "question",
+          "settings": {
+            "question": "What is your delivery time?",
+            "answer": "<p>Orders are dispatched within 2 working days and typically arrive within 3–5 working days.</p>"
+          }
+        },
+        "bl-2": {
+          "type": "question",
+          "settings": {
+            "question": "Do you offer a warranty?",
+            "answer": "<p>Every piece is covered by a 2-year warranty against manufacturing defects.</p>"
+          }
+        },
+        "bl-3": {
+          "type": "question",
+          "settings": {
+            "question": "Can I return an item?",
+            "answer": "<p>You can return any item within 30 days, hassle-free.</p>"
+          }
+        },
+        "bl-4": {
+          "type": "question",
+          "settings": {
+            "question": "Are your products sustainable?",
+            "answer": "<p>We prioritise responsibly sourced materials and plastic-free packaging.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

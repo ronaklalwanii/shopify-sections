@@ -1,0 +1,58 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--product-callouts",
+      "settings": {
+        "heading": "Why choose us",
+        "accent_color": "#7ba888"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "callout",
+          "settings": {
+            "position": "top-left",
+            "icon": "leaf",
+            "title": "Natural",
+            "text": "97% natural ingredients"
+          }
+        },
+        "bl-2": {
+          "type": "callout",
+          "settings": {
+            "position": "top-right",
+            "icon": "sparkle",
+            "title": "Cooling",
+            "text": "Soothes on contact"
+          }
+        },
+        "bl-3": {
+          "type": "callout",
+          "settings": {
+            "position": "bottom-left",
+            "icon": "shield",
+            "title": "Non-Toxic",
+            "text": "Free of parabens"
+          }
+        },
+        "bl-4": {
+          "type": "callout",
+          "settings": {
+            "position": "bottom-right",
+            "icon": "drop",
+            "title": "Hydrating",
+            "text": "72h moisture"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

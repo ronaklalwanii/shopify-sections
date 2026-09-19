@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--custom-liquid",
+      "settings": {
+        "section_width": "page-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

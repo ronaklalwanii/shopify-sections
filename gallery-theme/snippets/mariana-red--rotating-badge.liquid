@@ -1,0 +1,21 @@
+{%- comment -%}
+  Rotating circular badge — text set on a circle path, slowly spinning.
+  Accepts:
+  - text: {String} circle text (single ring)
+  - center_text: {String} optional short centred line
+  - class: {String} extra classes
+  Usage: {% render 'mariana-red--rotating-badge', text: 'AVAILABLE FOR WORK • BRANDING & DESIGN • ' %}
+{%- endcomment -%}
+<svg class="rotating-badge {{ class }}" viewBox="0 0 120 120" role="img" aria-label="{{ text | escape }}">
+  <defs>
+    <path id="rb-path-{{ text | slice: 0, 8 | replace: ' ', '' | replace: '&', '' | replace: '.', '' }}" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" fill="none"/>
+  </defs>
+  <circle cx="60" cy="60" r="58.5" fill="none" stroke="currentColor" stroke-opacity="0.5"/>
+  <circle cx="60" cy="60" r="30" fill="none" stroke="currentColor" stroke-opacity="0.35"/>
+  <text class="rotating-badge__text" font-size="10.2" letter-spacing="2.4">
+    <textPath href="#rb-path-{{ text | slice: 0, 8 | replace: ' ', '' | replace: '&', '' | replace: '.', '' }}">{{ text | escape }}</textPath>
+  </text>
+  {%- if center_text != blank -%}
+    <text x="60" y="64" text-anchor="middle" class="rotating-badge__center">{{ center_text | escape }}</text>
+  {%- endif -%}
+</svg>

@@ -1,0 +1,299 @@
+{%- comment -%} Section Library: injected global assets for store "mariana-red" {%- endcomment -%}
+{{ 'mariana-red--base.css' | asset_url | stylesheet_tag }}
+{{ 'mariana-red--components.css' | asset_url | stylesheet_tag }}
+{% render 'mariana-red--layout-tokens' %}
+{%- comment -%}
+  USP bar — icon + title + text items. Two styles:
+  - bar: compact strip with dividers (boutique / chocolatier / homeware)
+  - columns: larger editorial columns with optional heading (Why row)
+{%- endcomment -%}
+{%- capture section_colors_style -%}
+  {%- if section.settings.colors_background != blank or section.settings.colors_text != blank -%}
+    {%- assign override_bg = section.settings.colors_background | default: settings.colors_background -%}
+    {%- assign override_fg = section.settings.colors_text | default: settings.colors_text -%}
+    style="--color-background: {{ override_bg }}; --color-surface: {{ override_bg | color_lighten: 3 }}; --color-border: {{ override_bg | color_darken: 9 | color_modify: 'alpha', 0.85 }}; --color-foreground: {{ override_fg }}; --color-heading: {{ override_fg }}; --color-text-muted: {{ override_fg | color_modify: 'alpha', 0.62 }};"
+  {%- endif -%}
+{%- endcapture -%}
+<section {{ section_colors_style }} class="section section--{{ section.settings.width }}"{% if section.settings.spacing != 'normal' %} spacing="{{ section.settings.spacing }}"{% endif %}>
+  <div class="page-width">
+    {%- if section.settings.style == 'columns' and section.settings.heading != blank -%}
+      <div style="display: grid; grid-template-columns: 1fr 2.6fr; gap: clamp(1.5rem, 4vw, 4rem); align-items: center;" class="usp-heading-row">
+        <h2 class="h2" style="margin: 0;">{{ section.settings.heading | escape }}</h2>
+        <div class="usp-columns" style="--usp-count: {{ section.blocks.size }};">
+          {%- for block in section.blocks -%}
+            <div class="usp-columns__item" {{ block.shopify_attributes }}>
+              {% render 'mariana-red--icon', name: block.settings.icon, size: 26 %}
+              <h3 class="usp-columns__title">{{ block.settings.title | escape }}</h3>
+              {%- if block.settings.text != blank -%}<p class="usp-columns__text">{{ block.settings.text | escape }}</p>{%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+      <style>
+        @media (max-width: 900px) { .usp-heading-row { grid-template-columns: 1fr !important; } }
+      </style>
+    {%- else -%}
+      <div
+        class="{% if section.settings.style == 'columns' %}usp-columns{% else %}usp-bar usp-bar__list{% if section.settings.card %} usp-bar--card{% endif %}{% if section.settings.dividers %} usp-bar--divided{% endif %}{% if section.settings.center %} usp-bar--center{% endif %}{% endif %}"
+        style="--usp-count: {{ section.blocks.size }};{% if section.settings.style == 'columns' %} margin-inline: auto;{% endif %}"
+      >
+        {%- for block in section.blocks -%}
+          {%- if section.settings.style == 'columns' -%}
+            <div class="usp-columns__item" {{ block.shopify_attributes }}>
+              {% render 'mariana-red--icon', name: block.settings.icon, size: 26 %}
+              <h3 class="usp-columns__title">{{ block.settings.title | escape }}</h3>
+              {%- if block.settings.text != blank -%}<p class="usp-columns__text">{{ block.settings.text | escape }}</p>{%- endif -%}
+            </div>
+          {%- else -%}
+            <div class="usp-bar__item" {{ block.shopify_attributes }}>
+              <span class="usp-bar__icon">{% render 'mariana-red--icon', name: block.settings.icon, size: 28 %}</span>
+              <div>
+                <p class="usp-bar__title">{{ block.settings.title | escape }}</p>
+                {%- if block.settings.text != blank -%}<p class="usp-bar__text">{{ block.settings.text | escape }}</p>{%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Icon features",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        {
+          "value": "bar",
+          "label": "Compact bar"
+        },
+        {
+          "value": "columns",
+          "label": "Large columns"
+        }
+      ],
+      "default": "bar"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading (columns style)",
+      "default": "Why shop with us"
+    },
+    {
+      "type": "checkbox",
+      "id": "dividers",
+      "label": "Show dividers (bar style)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "card",
+      "label": "Card background (bar style)",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "center",
+      "label": "Center content (bar style)",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Section width",
+      "options": [
+        {
+          "value": "page",
+          "label": "Page width"
+        },
+        {
+          "value": "full",
+          "label": "Full width"
+        }
+      ],
+      "default": "page"
+    },
+    {
+      "type": "select",
+      "id": "spacing",
+      "label": "Vertical spacing",
+      "options": [
+        {
+          "value": "compact",
+          "label": "Compact"
+        },
+        {
+          "value": "normal",
+          "label": "Normal"
+        },
+        {
+          "value": "spacious",
+          "label": "Spacious"
+        }
+      ],
+      "default": "compact"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_background",
+      "label": "Background override",
+      "info": "Leave empty to use the theme colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_text",
+      "label": "Text color override"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {
+              "value": "leaf",
+              "label": "Leaf"
+            },
+            {
+              "value": "flower",
+              "label": "Flower"
+            },
+            {
+              "value": "hands",
+              "label": "Hands"
+            },
+            {
+              "value": "shield",
+              "label": "Shield"
+            },
+            {
+              "value": "shield-check",
+              "label": "Shield with check"
+            },
+            {
+              "value": "truck",
+              "label": "Truck"
+            },
+            {
+              "value": "globe",
+              "label": "Globe"
+            },
+            {
+              "value": "heart",
+              "label": "Heart"
+            },
+            {
+              "value": "sparkle",
+              "label": "Sparkle"
+            },
+            {
+              "value": "box",
+              "label": "Box"
+            },
+            {
+              "value": "package",
+              "label": "Package"
+            },
+            {
+              "value": "gift",
+              "label": "Gift"
+            },
+            {
+              "value": "refresh",
+              "label": "Refresh"
+            },
+            {
+              "value": "ruler",
+              "label": "Ruler"
+            },
+            {
+              "value": "stove",
+              "label": "Stove"
+            },
+            {
+              "value": "fire",
+              "label": "Fire"
+            },
+            {
+              "value": "user-heart",
+              "label": "Person"
+            },
+            {
+              "value": "bag",
+              "label": "Bag"
+            }
+          ],
+          "default": "leaf"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Sustainable fabrics"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Kind to skin and planet"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Icon features",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "icon": "leaf",
+            "title": "Sustainable fabrics",
+            "text": "Kind to skin and planet"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "hands",
+            "title": "Ethically made",
+            "text": "Fair craftsmanship"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "refresh",
+            "title": "Free returns",
+            "text": "Within 30 days"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "globe",
+            "title": "Worldwide shipping",
+            "text": "Delivered to your door"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

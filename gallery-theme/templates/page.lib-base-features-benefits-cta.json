@@ -1,0 +1,77 @@
+{
+  "sections": {
+    "library": {
+      "type": "features-benefits-cta",
+      "settings": {
+        "eyebrow": "Why you'll love it",
+        "heading": "Built for people who expect more",
+        "heading_size": "large",
+        "subheading": "<p>Add a short line that sets up the benefits below.</p>",
+        "content_alignment": "center",
+        "columns_desktop": 3,
+        "columns_mobile": "1",
+        "card_style": "plain",
+        "transparent_bg": false,
+        "section_background": "#ffffff",
+        "heading_color": "#121212",
+        "text_color": "#555555",
+        "eyebrow_color": "#9a6a3c",
+        "icon_color": "#121212",
+        "card_background": "#f6f5f3",
+        "card_border_color": "#e6e3df",
+        "show_cta": true,
+        "cta_heading": "Ready when you are.",
+        "button_label": "Add to cart",
+        "button_action": "add_to_cart",
+        "redirect_to_cart": false,
+        "button_style": "primary",
+        "button_bg": "#121212",
+        "button_text": "#ffffff",
+        "enable_animation": true,
+        "max_width": 1100,
+        "padding_top": 56,
+        "padding_bottom": 56
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "benefit",
+          "settings": {
+            "icon_source": "preset",
+            "preset_icon": "truck",
+            "icon_size": 36,
+            "title": "Free, fast shipping",
+            "description": "<p>Dispatched within 24 hours with tracking on every order.</p>"
+          }
+        },
+        "bl-2": {
+          "type": "benefit",
+          "settings": {
+            "icon_source": "preset",
+            "preset_icon": "shield",
+            "icon_size": 36,
+            "title": "2-year guarantee",
+            "description": "<p>If anything goes wrong, we replace it. No fine print.</p>"
+          }
+        },
+        "bl-3": {
+          "type": "benefit",
+          "settings": {
+            "icon_source": "preset",
+            "preset_icon": "refresh",
+            "icon_size": 36,
+            "title": "30-day returns",
+            "description": "<p>Not the right fit? Send it back for a full refund.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "sections": {
+    "library": {
+      "type": "horizon--quick-order-list",
+      "settings": {
+        "variants_per_page": 50,
+        "show_image": false,
+        "show_sku": false,
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

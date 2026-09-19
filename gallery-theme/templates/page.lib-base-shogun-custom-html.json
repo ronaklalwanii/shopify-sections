@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "library": {
+      "type": "shogun-custom-html",
+      "settings": {}
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

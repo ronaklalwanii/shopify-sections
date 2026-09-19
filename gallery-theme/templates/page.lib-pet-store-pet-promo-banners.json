@@ -1,0 +1,53 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--pet-promo-banners",
+      "settings": {
+        "accessibility_label": "Featured collections",
+        "columns_desktop": 2,
+        "grid_gap": 16,
+        "edge_padding": 14,
+        "min_height": 560,
+        "card_corner_radius": 20,
+        "background_color": "#FFFFFF",
+        "padding_top": 16,
+        "padding_bottom": 16
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "banner",
+          "settings": {
+            "focal_point": "center",
+            "watermark_color": "#FFFFFF",
+            "watermark_top": 10,
+            "heading": "New Collection\nof Beds",
+            "link_label": "Shop Products",
+            "text_color": "#FFFFFF",
+            "watermark_text": "new",
+            "badge_text": "Always Luxy Fur Home"
+          }
+        },
+        "bl-2": {
+          "type": "banner",
+          "settings": {
+            "focal_point": "center",
+            "watermark_color": "#FFFFFF",
+            "watermark_top": 10,
+            "heading": "Premium Walking\nAccessories",
+            "link_label": "Exclusive Products",
+            "text_color": "#FFFFFF",
+            "watermark_text": "premium",
+            "badge_text": "Top Rated Collars"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

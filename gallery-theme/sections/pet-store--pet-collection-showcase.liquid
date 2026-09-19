@@ -1,0 +1,699 @@
+{%- comment -%} Section Library: injected global assets for store "pet store" {%- endcomment -%}
+{{ 'pet-store--overflow-list.css' | asset_url | stylesheet_tag }}
+{{ 'pet-store--base.css' | asset_url | stylesheet_tag }}
+{% render 'pet-store--theme-styles-variables' %}
+{%- comment -%}
+  Pet Store — Collection Showcase
+  Tinted section with badge + heading and large collection cards
+  (image, tag pills, title, optional rating chip). Optional arrows scroll the row.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .pet-showcase-{{ section.id }} {
+    --pet-sc-bg: {{ s.background_color }};
+    --pet-sc-fg: {{ s.text_color }};
+    --pet-sc-muted: {{ s.muted_text_color }};
+    --pet-sc-accent: {{ s.accent_color }};
+    --pet-sc-accent-text: {{ s.accent_text_color }};
+    --pet-sc-chip-bg: {{ s.chip_background_color }};
+    --pet-sc-chip-text: {{ s.chip_text_color }};
+    --pet-sc-container: {{ s.container_max_width }}px;
+    --pet-sc-radius: {{ s.card_corner_radius }}px;
+    --pet-sc-badge-bg: {{ s.badge_background_color }};
+    --pet-sc-tag-bg: {{ s.tag_background_color }};
+
+    background-color: var(--pet-sc-bg);
+    color: var(--pet-sc-fg);
+    padding-block: {{ s.padding_top }}px {{ s.padding_bottom }}px;
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+  }
+
+  .pet-showcase-{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__container {
+    max-width: var(--pet-sc-container);
+    margin-inline: auto;
+    padding-inline: clamp(16px, 4vw, 48px);
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+    margin-bottom: clamp(28px, 4vw, 44px);
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+    padding: 8px 16px;
+    border: 1px solid color-mix(in srgb, var(--pet-sc-accent) 22%, transparent);
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--pet-sc-accent);
+    background-color: var(--pet-sc-badge-bg);
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__badge svg,
+  .pet-showcase-{{ section.id }} .pet-sc__badge img {
+    width: 13px;
+    height: 13px;
+    object-fit: contain;
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__heading {
+    margin: 0;
+    max-width: 620px;
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-size: clamp(26px, 3vw, 38px);
+    font-weight: 700;
+    line-height: 1.18;
+    letter-spacing: -0.01em;
+    color: var(--pet-sc-fg);
+    white-space: pre-line;
+    text-wrap: balance;
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__row {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - ({{ s.grid_gap }}px * ({{ s.columns_desktop }} - 1))) / {{ s.columns_desktop }});
+    gap: {{ s.grid_gap }}px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-block: 4px;
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    scroll-snap-align: start;
+    position: relative;
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__media {
+    position: relative;
+    border-radius: var(--pet-sc-radius);
+    overflow: hidden;
+    aspect-ratio: {{ s.image_ratio }};
+    background-color: rgb(0 0 0 / 0.04);
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.45s var(--ease-out-cubic, ease);
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__card:hover .pet-sc__media img {
+    transform: scale(1.04);
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__media svg {
+    position: absolute;
+    inset: 0;
+    width: 38%;
+    height: 38%;
+    margin: auto;
+    opacity: 0.3;
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__chip {
+    position: absolute;
+    top: 50%;
+    right: -18px;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--pet-sc-chip-bg);
+    color: var(--pet-sc-chip-text);
+    font-size: 12.5px;
+    font-weight: 700;
+    box-shadow: 0 6px 16px rgb(0 0 0 / 0.14);
+    z-index: 1;
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__tag {
+    padding: 5px 13px;
+    border: 1px solid color-mix(in srgb, var(--pet-sc-accent) 25%, transparent);
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--pet-sc-accent);
+    background-color: var(--pet-sc-tag-bg);
+    line-height: 1.4;
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__title {
+    margin: 10px 0 0;
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-size: clamp(18px, 1.8vw, 24px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    color: var(--pet-sc-fg);
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: clamp(24px, 3vw, 36px);
+    padding: 9px 14px;
+    width: fit-content;
+    margin-inline: auto;
+    border-radius: 100px;
+    background-color: var(--pet-sc-badge-bg);
+    box-shadow: 0 6px 16px rgb(0 0 0 / 0.06);
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__dot {
+    width: 7px;
+    height: 7px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background-color: color-mix(in srgb, var(--pet-sc-accent) 25%, transparent);
+    cursor: pointer;
+    transition: background-color var(--animation-speed, 0.125s) ease, transform var(--animation-speed, 0.125s) ease;
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__dot.is-active {
+    background-color: var(--pet-sc-accent);
+    transform: scale(1.3);
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__nav {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: clamp(24px, 3vw, 36px);
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid color-mix(in srgb, var(--pet-sc-fg) 22%, transparent);
+    border-radius: 50%;
+    background-color: transparent;
+    color: var(--pet-sc-fg);
+    cursor: pointer;
+    transition: background-color var(--animation-speed, 0.125s) ease, color var(--animation-speed, 0.125s) ease;
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__arrow:hover {
+    background-color: var(--pet-sc-accent);
+    border-color: var(--pet-sc-accent);
+    color: var(--pet-sc-accent-text);
+  }
+
+  .pet-showcase-{{ section.id }} .pet-sc__arrow svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  @media (min-width: 990px) {
+    .pet-showcase-{{ section.id }} .pet-sc__row {
+      overflow-x: {% if s.carousel_controls == 'none' %}visible{% else %}auto{% endif %};
+    }
+  }
+
+  @media (max-width: 989px) {
+    .pet-showcase-{{ section.id }} .pet-sc__row {
+      grid-auto-columns: calc((100% - {{ s.grid_gap }}px) / 1.6);
+    }
+
+    .pet-showcase-{{ section.id }} .pet-sc__chip {
+      right: 10px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pet-showcase-{{ section.id }} .pet-sc__row {
+      scroll-behavior: auto;
+    }
+
+    .pet-showcase-{{ section.id }} .pet-sc__media img {
+      transition: none;
+    }
+  }
+{% endstyle %}
+
+<section class="pet-showcase pet-showcase-{{ section.id }}" aria-labelledby="pet-sc-heading-{{ section.id }}">
+  <div class="pet-sc__container">
+    <div class="pet-sc__header">
+      {%- if s.badge_text != blank -%}
+        <p class="pet-sc__badge">
+          {%- if s.badge_icon != blank -%}
+            {{ s.badge_icon | image_url: width: 52 | image_tag: alt: '' }}
+          {%- else -%}
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><ellipse cx="6" cy="9" rx="1.8" ry="2.4"/><ellipse cx="18" cy="9" rx="1.8" ry="2.4"/><ellipse cx="9.6" cy="5.6" rx="1.8" ry="2.4"/><ellipse cx="14.4" cy="5.6" rx="1.8" ry="2.4"/><path d="M12 10.5c2.8 0 5.5 2.3 5.5 4.9 0 1.6-1.2 2.6-2.7 2.6-1 0-1.8-.4-2.8-.4s-1.8.4-2.8.4c-1.5 0-2.7-1-2.7-2.6 0-2.6 2.7-4.9 5.5-4.9Z"/></svg>
+          {%- endif -%}
+          {{ s.badge_text }}
+        </p>
+      {%- endif -%}
+
+      {%- if s.heading != blank -%}
+        <h2 class="pet-sc__heading" id="pet-sc-heading-{{ section.id }}">{{ s.heading }}</h2>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="pet-sc__row" data-pet-sc-row>
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign b = block.settings
+            assign card_collection = b.collection
+            assign card_image = b.image
+            assign card_title = b.title
+            assign card_link = b.link
+
+            if card_collection != blank
+              assign card_link = card_collection.url
+            endif
+
+            if card_collection != blank and card_title == blank
+              assign card_title = card_collection.title
+            endif
+          -%}
+          {%- if card_link != blank -%}
+            <a class="pet-sc__card" href="{{ card_link }}" {{ block.shopify_attributes }}>
+          {%- else -%}
+            <div class="pet-sc__card" {{ block.shopify_attributes }}>
+          {%- endif -%}
+            <div class="pet-sc__media">
+              {%- if card_image != blank -%}
+                {{ card_image | image_url: width: 900 | image_tag:
+                  widths: '400,600,900',
+                  sizes: '(min-width: 990px) 33vw, 60vw',
+                  loading: 'lazy',
+                  alt: card_image.alt | default: card_title | escape
+                }}
+              {%- elsif card_collection != blank and card_collection.featured_image != blank -%}
+                {{ card_collection.featured_image | image_url: width: 900 | image_tag:
+                  widths: '400,600,900',
+                  sizes: '(min-width: 990px) 33vw, 60vw',
+                  loading: 'lazy',
+                  alt: card_collection.title | escape
+                }}
+              {%- else -%}
+                {{ 'collection-2' | placeholder_svg_tag }}
+              {%- endif -%}
+            </div>
+
+            {%- if b.chip_text != blank -%}
+              <span class="pet-sc__chip">{{ b.chip_text }}</span>
+            {%- endif -%}
+
+            {%- if b.tags != blank -%}
+              <div class="pet-sc__tags">
+                {%- assign tag_list = b.tags | split: ',' -%}
+                {%- for tag in tag_list -%}
+                  <span class="pet-sc__tag">{{ tag | strip }}</span>
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+
+            <h3 class="pet-sc__title">{{ card_title | default: 'Collection' }}</h3>
+          {%- if card_link != blank -%}
+            </a>
+          {%- else -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if s.carousel_controls == 'arrows' -%}
+      <div class="pet-sc__nav">
+        <button class="pet-sc__arrow" data-pet-sc-prev aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" focusable="false"><path d="M20 12H4m6-6-6 6 6 6"/></svg>
+        </button>
+        <button class="pet-sc__arrow" data-pet-sc-next aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" focusable="false"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+        </button>
+      </div>
+    {%- elsif s.carousel_controls == 'dots' and section.blocks.size > 1 -%}
+      <div class="pet-sc__dots" data-pet-sc-dots role="tablist" aria-label="Carousel pagination">
+        {%- for block in section.blocks -%}
+          <button class="pet-sc__dot{% if forloop.first %} is-active{% endif %}" data-pet-sc-dot="{{ forloop.index0 }}" aria-label="Go to slide {{ forloop.index }}"></button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+  (function () {
+    function initShowcase(root) {
+      if (root.dataset.petScInit === 'true') return;
+      root.dataset.petScInit = 'true';
+
+      var row = root.querySelector('[data-pet-sc-row]');
+      if (!row) return;
+
+      var prev = root.querySelector('[data-pet-sc-prev]');
+      var next = root.querySelector('[data-pet-sc-next]');
+      var dots = Array.prototype.slice.call(root.querySelectorAll('[data-pet-sc-dot]'));
+
+      function step() {
+        var card = row.querySelector('.pet-sc__card');
+        if (!card) return 300;
+        var style = window.getComputedStyle(row);
+        var gap = parseFloat(style.columnGap || style.gap || '0');
+        return card.getBoundingClientRect().width + gap;
+      }
+
+      if (prev) prev.addEventListener('click', function () {
+        row.scrollBy({ left: -step(), behavior: 'smooth' });
+      });
+
+      if (next) next.addEventListener('click', function () {
+        row.scrollBy({ left: step(), behavior: 'smooth' });
+      });
+
+      dots.forEach(function (dot) {
+        dot.addEventListener('click', function () {
+          var index = parseInt(dot.getAttribute('data-pet-sc-dot'), 10);
+          row.scrollTo({ left: index * step(), behavior: 'smooth' });
+          dots.forEach(function (d) { d.classList.toggle('is-active', d === dot); });
+        });
+      });
+
+      var scrollTimer;
+      row.addEventListener('scroll', function () {
+        if (!dots.length) return;
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(function () {
+          var index = Math.round(row.scrollLeft / step());
+          index = Math.max(0, Math.min(index, dots.length - 1));
+          dots.forEach(function (d, i) { d.classList.toggle('is-active', i === index); });
+        }, 80);
+      });
+    }
+
+    function ready(fn) {
+      if (document.readyState !== 'loading') fn();
+      else document.addEventListener('DOMContentLoaded', fn);
+    }
+
+    ready(function () {
+      document.querySelectorAll('.pet-showcase').forEach(initShowcase);
+    });
+
+    document.addEventListener('shopify:section:load', function (event) {
+      var root = event.target.querySelector('.pet-showcase');
+      if (root) initShowcase(root);
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Pet Collection Showcase",
+  "tag": "section",
+  "class": "pet-showcase-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "Pet Care In Action"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_icon",
+      "label": "Badge icon",
+      "info": "Optional. Falls back to a paw icon"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Trusted by Pet Owners Who\nWant the Very Best"
+    },
+    {
+      "type": "header",
+      "content": "Cards"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns (desktop)",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "7 / 6", "label": "Soft portrait" },
+        { "value": "5 / 4", "label": "Portrait" },
+        { "value": "4 / 3", "label": "Landscape" },
+        { "value": "3 / 2", "label": "Wide" }
+      ],
+      "default": "7 / 6"
+    },
+    {
+      "type": "range",
+      "id": "card_corner_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "carousel_controls",
+      "label": "Carousel controls",
+      "options": [
+        { "value": "dots", "label": "Dots" },
+        { "value": "arrows", "label": "Arrows" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "dots"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#EAE2D9"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#211D1A"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text",
+      "default": "#6F6963"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#6E1622"
+    },
+    {
+      "type": "color",
+      "id": "accent_text_color",
+      "label": "Accent text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "badge_background_color",
+      "label": "Badge background",
+      "default": "#FBF7EF"
+    },
+    {
+      "type": "color",
+      "id": "tag_background_color",
+      "label": "Tag pill background",
+      "default": "#FBF7EF"
+    },
+    {
+      "type": "color",
+      "id": "chip_background_color",
+      "label": "Rating chip background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "chip_text_color",
+      "label": "Rating chip text",
+      "default": "#211D1A"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "label": "Container max width",
+      "min": 1000,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1320
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection card",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Title, link and image fall back to the collection"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "info": "Overrides the collection title"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Overrides the collection image"
+        },
+        {
+          "type": "text",
+          "id": "tags",
+          "label": "Tag pills",
+          "default": "Nutrition, Dog Food",
+          "info": "Comma-separated"
+        },
+        {
+          "type": "text",
+          "id": "chip_text",
+          "label": "Rating chip",
+          "info": "Optional, e.g. 4.8. Leave empty to hide"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Used when no collection is selected"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pet Collection Showcase",
+      "blocks": [
+        {
+          "type": "collection",
+          "settings": { "title": "Pet Nutrition", "tags": "Nutrition, Dog Food", "chip_text": "4.8" }
+        },
+        {
+          "type": "collection",
+          "settings": { "title": "Cat Essentials", "tags": "Care, Wellness", "chip_text": "4.9" }
+        },
+        {
+          "type": "collection",
+          "settings": { "title": "Pet Wellness", "tags": "Care, Vitamins", "chip_text": "4.8" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

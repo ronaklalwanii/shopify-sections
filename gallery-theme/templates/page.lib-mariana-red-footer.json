@@ -1,0 +1,56 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--footer",
+      "settings": {
+        "card_layout": false,
+        "overlap": false,
+        "heading": "Clean Ingredients. Healthy Skin.\nEveryday Confidence.",
+        "cta_label": "Get Started",
+        "giant_text": "PYKO",
+        "tagline": "Timeless fashion for the modern woman."
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "menu",
+          "settings": {
+            "heading": "Shop",
+            "show_heading": true
+          }
+        },
+        "bl-2": {
+          "type": "menu",
+          "settings": {
+            "heading": "Collections",
+            "show_heading": true
+          }
+        },
+        "bl-3": {
+          "type": "menu",
+          "settings": {
+            "heading": "Support",
+            "show_heading": true
+          }
+        },
+        "bl-4": {
+          "type": "newsletter",
+          "settings": {
+            "heading": "Newsletter",
+            "text": "Stay inspired with new arrivals, style tips and exclusive offers.",
+            "placeholder": "Enter your email",
+            "button_label": "Subscribe"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

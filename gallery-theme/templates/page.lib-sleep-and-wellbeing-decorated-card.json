@@ -1,0 +1,91 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--decorated-card",
+      "settings": {
+        "card_bg": "#2F4A3C",
+        "card_full_width": true,
+        "card_radius": 0,
+        "card_shadow": true,
+        "card_max_width": 1200,
+        "card_min_height": 420,
+        "card_padding": 64,
+        "card_padding_x": 64,
+        "side_gutter": 0,
+        "space_top": 48,
+        "space_bottom": 48,
+        "content_side": "text_left",
+        "content_gap": 48,
+        "script_text": "Merry",
+        "script_size": 64,
+        "script_color": "#F2E8DC",
+        "script_margin": 4,
+        "display_text": "Christmas",
+        "display_size": 72,
+        "display_weight": 600,
+        "display_uppercase": true,
+        "display_color": "#D9A441",
+        "display_spacing": 2,
+        "body_text": "Warm up the season with our hand-picked gift edit — cozy textures, golden light and little surprises for everyone on your list.",
+        "body_size": 13,
+        "body_color": "#CBD3CB",
+        "body_max_width": 380,
+        "text_align": "left",
+        "cta_bg": "#D9A441",
+        "cta_text_color": "#2F4A3C",
+        "cta_radius": 30,
+        "cta_size": 12,
+        "art_size": 80,
+        "enable_float": true,
+        "enable_animation": true,
+        "animation_speed": 700
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "decor",
+          "settings": {
+            "position": "top-right",
+            "size": 34,
+            "nudge_x": 0,
+            "nudge_y": 0,
+            "rotation": 0,
+            "above_content": false,
+            "hide_mobile": false
+          }
+        },
+        "bl-2": {
+          "type": "decor",
+          "settings": {
+            "position": "bottom-left",
+            "size": 26,
+            "nudge_x": 0,
+            "nudge_y": 0,
+            "rotation": 0,
+            "above_content": false,
+            "hide_mobile": false
+          }
+        },
+        "bl-3": {
+          "type": "decor",
+          "settings": {
+            "position": "top-left",
+            "size": 22,
+            "nudge_x": 0,
+            "nudge_y": 0,
+            "rotation": 0,
+            "above_content": false,
+            "hide_mobile": true
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

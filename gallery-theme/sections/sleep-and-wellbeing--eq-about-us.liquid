@@ -1,0 +1,684 @@
+{%- comment -%} Section Library: injected global assets for store "sleep-and-wellbeing" {%- endcomment -%}
+{{ 'sleep-and-wellbeing--theme.css' | asset_url | stylesheet_tag }}
+{{ 'sleep-and-wellbeing--product.css' | asset_url | stylesheet_tag }}
+{% render 'sleep-and-wellbeing--css-variables' %}
+{%- liquid
+  assign s = section.settings
+-%}
+{%- comment -%}
+  Participates in Change's section padding-collapsing chain, same as the hero.
+{%- endcomment -%}
+{%- render 'sleep-and-wellbeing--section-spacing-collapsing' -%}
+
+{{ 'sleep-and-wellbeing--eq-about-us.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sleep-and-wellbeing--eq-about-us.js' | asset_url }}" defer></script>
+
+{%- if s.enable_custom_font -%}
+  <style>{{ s.font_serif | font_face: font_display: 'swap' }}</style>
+{%- endif -%}
+
+<style>
+  /* ====== centralized page tokens ====== */
+  .eau--{{ section.id }} {
+    --elq-dark: {{ s.dark_bg }};
+    --elq-ivory: {{ s.ivory_bg }};
+    --elq-accent: {{ s.accent_color }};
+    --elq-text-dark: {{ s.heading_on_ivory }};
+    --elq-text-light: {{ s.heading_on_dark }};
+    --elq-muted-dark: {{ s.body_on_ivory }};
+    --elq-muted-light: {{ s.body_on_dark }};
+    --elq-border-ivory: {{ s.border_color_ivory }};
+    --elq-border-dark: {{ s.border_color_dark }};
+    --elq-serif: {% if s.enable_custom_font %}{{ s.font_serif.family }}, {{ s.font_serif.fallback_families }}{% else %}Georgia, 'Times New Roman', serif{% endif %};
+    --elq-speed: {{ s.animation_speed }}ms;
+  }
+</style>
+
+<section class="eau eau--{{ section.id }}" data-eau-section data-reveal="{{ s.enable_reveal }}">
+
+  {%- comment -%} ================= 01 · HERO / ABOUT ELQORIN ================= {%- endcomment -%}
+  <div class="eau-hero" style="--eau-text-w: {{ s.hero_text_width }}%; --eau-img-pos: {{ s.hero_image_position }};">
+    <div class="eau-hero__panel">
+      {%- if s.hero_eyebrow != blank -%}
+        <p class="eau__eyebrow eau__eyebrow--light" data-eau-reveal>{{ s.hero_eyebrow }}</p>
+      {%- endif -%}
+      {%- if s.hero_heading != blank -%}
+        <h1 class="eau-hero__heading" data-eau-reveal>{{ s.hero_heading }}</h1>
+      {%- endif -%}
+      <div class="eau__divider" data-eau-reveal aria-hidden="true"></div>
+      {%- if s.hero_body != blank -%}
+        {%- assign hero_paras = s.hero_body | escape | newline_to_br | split: '<br />' -%}
+        <div class="eau__body eau__body--light" data-eau-reveal>
+          {%- for para in hero_paras -%}
+            {%- assign para_t = para | strip -%}
+            {%- if para_t != blank -%}<p>{{ para_t }}</p>{%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+    {%- if s.hero_image != blank -%}
+      {%- assign hero_alt = s.hero_image.alt | default: s.hero_heading | escape -%}
+      <div class="eau-hero__media" data-eau-reveal>
+        {{
+          s.hero_image
+          | image_url: width: 2000
+          | image_tag:
+            loading: 'eager',
+            class: 'eau__img',
+            widths: '600,900,1200,1600,2000',
+            sizes: '(max-width: 767px) 100vw, 60vw',
+            alt: hero_alt
+        }}
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} ================= 02 · WELLNESS, WITHOUT LEAVING HOME ================= {%- endcomment -%}
+  <div class="eau-wellness{% if s.wellness_mobile_image_first %} eau-wellness--img-first-m{% endif %}">
+    {%- if s.wellness_image != blank -%}
+      {%- assign wellness_alt = s.wellness_image.alt | default: s.wellness_heading | escape -%}
+      <div class="eau-wellness__media" style="--eau-img-pos: {{ s.wellness_image_position }};" data-eau-reveal>
+        {{
+          s.wellness_image
+          | image_url: width: 1600
+          | image_tag:
+            loading: 'lazy',
+            class: 'eau__img',
+            widths: '500,750,1000,1300,1600',
+            sizes: '(max-width: 767px) 100vw, 50vw',
+            alt: wellness_alt
+        }}
+      </div>
+    {%- endif -%}
+    <div class="eau-wellness__panel">
+      <div class="eau-wellness__content">
+        {%- if s.wellness_eyebrow != blank -%}
+          <p class="eau__eyebrow eau__eyebrow--dark" data-eau-reveal>{{ s.wellness_eyebrow }}</p>
+        {%- endif -%}
+        {%- if s.wellness_heading != blank -%}
+          <h2 class="eau__heading" data-eau-reveal>{{ s.wellness_heading }}</h2>
+        {%- endif -%}
+        {%- if s.wellness_body != blank -%}
+          {%- assign wellness_paras = s.wellness_body | escape | newline_to_br | split: '<br />' -%}
+          <div class="eau__body eau__body--dark" data-eau-reveal>
+            {%- for para in wellness_paras -%}
+              {%- assign para_t = para | strip -%}
+              {%- if para_t != blank -%}<p>{{ para_t }}</p>{%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        <ul class="eau-benefits" data-eau-reveal>
+          {%- for i in (1..3) -%}
+            {%- case i -%}
+              {%- when 1 -%}{%- assign b_icon = s.benefit_1_icon -%}{%- assign b_label = s.benefit_1_label -%}
+              {%- when 2 -%}{%- assign b_icon = s.benefit_2_icon -%}{%- assign b_label = s.benefit_2_label -%}
+              {%- when 3 -%}{%- assign b_icon = s.benefit_3_icon -%}{%- assign b_label = s.benefit_3_label -%}
+            {%- endcase -%}
+            {%- if b_label != blank -%}
+              <li class="eau-benefits__item">
+                {%- if b_icon != blank -%}
+                  <img class="eau-benefits__icon" src="{{ b_icon | image_url: width: 96 }}" alt="" width="28" height="28" loading="lazy">
+                {%- endif -%}
+                <span>{{ b_label | escape }}</span>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+
+        {%- if s.wellness_closing != blank -%}
+          <p class="eau-wellness__closing" data-eau-reveal>{{ s.wellness_closing | escape }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} ================= 03 · THE POWER OF CONTRAST ================= {%- endcomment -%}
+  <div class="eau-contrast">
+    <div class="eau-contrast__panel">
+      {%- if s.contrast_eyebrow != blank -%}
+        <p class="eau__eyebrow eau__eyebrow--accent" data-eau-reveal>{{ s.contrast_eyebrow }}</p>
+      {%- endif -%}
+      <h2 class="eau__heading eau__heading--light" data-eau-reveal>
+        {%- if s.contrast_heading_1 != blank -%}<span class="eau__heading-line">{{ s.contrast_heading_1 }}</span>{%- endif -%}
+        {%- if s.contrast_heading_2 != blank -%}<span class="eau__heading-line">{{ s.contrast_heading_2 }}</span>{%- endif -%}
+      </h2>
+      {%- if s.contrast_body != blank -%}
+        {%- assign contrast_paras = s.contrast_body | escape | newline_to_br | split: '<br />' -%}
+        <div class="eau__body eau__body--light" data-eau-reveal>
+          {%- for para in contrast_paras -%}
+            {%- assign para_t = para | strip -%}
+            {%- if para_t != blank -%}<p>{{ para_t }}</p>{%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="eau-contrast__media">
+      {%- if s.contrast_image_1 != blank -%}
+        {%- assign c1_alt = s.contrast_image_1.alt | default: s.contrast_heading_1 | escape -%}
+        <div class="eau-contrast__img-wrap" style="--eau-img-pos: {{ s.contrast_image_1_position }};" data-eau-reveal>
+          {{
+            s.contrast_image_1
+            | image_url: width: 1200
+            | image_tag:
+              loading: 'lazy',
+              class: 'eau__img',
+              widths: '400,600,800,1000,1200',
+              sizes: '(max-width: 767px) 100vw, 28vw',
+              alt: c1_alt
+          }}
+        </div>
+      {%- endif -%}
+      {%- if s.contrast_image_2 != blank -%}
+        {%- assign c2_alt = s.contrast_image_2.alt | default: s.contrast_heading_2 | escape -%}
+        <div class="eau-contrast__img-wrap" style="--eau-img-pos: {{ s.contrast_image_2_position }};" data-eau-reveal>
+          {{
+            s.contrast_image_2
+            | image_url: width: 1200
+            | image_tag:
+              loading: 'lazy',
+              class: 'eau__img',
+              widths: '400,600,800,1000,1200',
+              sizes: '(max-width: 767px) 100vw, 28vw',
+              alt: c2_alt
+          }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- comment -%} ================= 04 · INVESTMENT + ELQORIN STANDARD ================= {%- endcomment -%}
+  <div class="eau-duo">
+    <div class="eau-duo__col">
+      {%- if s.invest_icon != blank -%}
+        <span class="eau-duo__icon" data-eau-reveal>
+          <img src="{{ s.invest_icon | image_url: width: 96 }}" alt="" width="26" height="26" loading="lazy">
+        </span>
+      {%- endif -%}
+      {%- if s.invest_eyebrow != blank -%}
+        <p class="eau__eyebrow eau__eyebrow--dark" data-eau-reveal>{{ s.invest_eyebrow }}</p>
+      {%- endif -%}
+      {%- if s.invest_body != blank -%}
+        {%- assign invest_paras = s.invest_body | escape | newline_to_br | split: '<br />' -%}
+        <div class="eau__body eau__body--dark" data-eau-reveal>
+          {%- for para in invest_paras -%}
+            {%- assign para_t = para | strip -%}
+            {%- if para_t != blank -%}<p>{{ para_t }}</p>{%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+      {%- if s.invest_quote != blank -%}
+        {%- assign quote_lines = s.invest_quote | escape | newline_to_br | split: '<br />' -%}
+        <p class="eau-duo__quote" data-eau-reveal>
+          {%- for line in quote_lines -%}
+            {%- assign line_t = line | strip -%}
+            {%- if line_t != blank -%}<span class="eau-duo__quote-line">{{ line_t }}</span>{%- endif -%}
+          {%- endfor -%}
+        </p>
+      {%- endif -%}
+    </div>
+    <div class="eau-duo__col">
+      {%- if s.standard_icon != blank -%}
+        <span class="eau-duo__icon" data-eau-reveal>
+          <img src="{{ s.standard_icon | image_url: width: 96 }}" alt="" width="26" height="26" loading="lazy">
+        </span>
+      {%- endif -%}
+      {%- if s.standard_eyebrow != blank -%}
+        <p class="eau__eyebrow eau__eyebrow--dark" data-eau-reveal>{{ s.standard_eyebrow }}</p>
+      {%- endif -%}
+      {%- if s.standard_body != blank -%}
+        {%- assign standard_paras = s.standard_body | escape | newline_to_br | split: '<br />' -%}
+        <div class="eau__body eau__body--dark" data-eau-reveal>
+          {%- for para in standard_paras -%}
+            {%- assign para_t = para | strip -%}
+            {%- if para_t != blank -%}<p>{{ para_t }}</p>{%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- comment -%} ================= 05 · MISSION / FINAL CTA ================= {%- endcomment -%}
+  <div
+    class="eau-mission"
+    style="--eau-img-pos: {{ s.mission_image_position }}; --eau-overlay: {{ s.mission_overlay }}; --eau-min-h: {{ s.mission_height }}px;"
+  >
+    {%- if s.mission_image != blank -%}
+      {%- assign mission_alt = s.mission_image.alt | default: s.mission_heading_1 | escape -%}
+      <div class="eau-mission__media" aria-hidden="true">
+        {{
+          s.mission_image
+          | image_url: width: 2200
+          | image_tag:
+            loading: 'lazy',
+            class: 'eau__img',
+            widths: '600,900,1200,1600,2000,2200',
+            sizes: '100vw',
+            alt: mission_alt
+        }}
+      </div>
+    {%- endif -%}
+    <div class="eau-mission__content">
+      {%- if s.mission_eyebrow != blank -%}
+        <p class="eau__eyebrow eau__eyebrow--light" data-eau-reveal>{{ s.mission_eyebrow }}</p>
+      {%- endif -%}
+      <h2 class="eau__heading eau__heading--light" data-eau-reveal>
+        {%- if s.mission_heading_1 != blank -%}<span class="eau__heading-line">{{ s.mission_heading_1 }}</span>{%- endif -%}
+        {%- if s.mission_heading_2 != blank -%}<span class="eau__heading-line">{{ s.mission_heading_2 }}</span>{%- endif -%}
+      </h2>
+      {%- if s.mission_body != blank -%}
+        {%- assign mission_paras = s.mission_body | escape | newline_to_br | split: '<br />' -%}
+        <div class="eau__body eau__body--light" data-eau-reveal>
+          {%- for para in mission_paras -%}
+            {%- assign para_t = para | strip -%}
+            {%- if para_t != blank -%}<p>{{ para_t }}</p>{%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+      {%- if s.mission_closing != blank -%}
+        <p class="eau-mission__closing" data-eau-reveal>{{ s.mission_closing | escape }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "EQ About Us",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Palette"
+    },
+    {
+      "type": "color",
+      "id": "dark_bg",
+      "label": "Dark background",
+      "default": "#11110F"
+    },
+    {
+      "type": "color",
+      "id": "ivory_bg",
+      "label": "Ivory background",
+      "default": "#F1ECE4"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#A98E63"
+    },
+    {
+      "type": "color",
+      "id": "heading_on_dark",
+      "label": "Heading on dark",
+      "default": "#F2EFE9"
+    },
+    {
+      "type": "color",
+      "id": "body_on_dark",
+      "label": "Body on dark",
+      "default": "#A8A49C"
+    },
+    {
+      "type": "color",
+      "id": "heading_on_ivory",
+      "label": "Heading on ivory",
+      "default": "#1C1A17"
+    },
+    {
+      "type": "color",
+      "id": "body_on_ivory",
+      "label": "Body on ivory",
+      "default": "#55524B"
+    },
+    {
+      "type": "color",
+      "id": "border_color_ivory",
+      "label": "Dividers on ivory",
+      "default": "#D8D1C5"
+    },
+    {
+      "type": "color",
+      "id": "border_color_dark",
+      "label": "Dividers on dark",
+      "default": "#33312C"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_font",
+      "label": "Override serif font",
+      "info": "Applies to all display headings. Body text keeps the theme font.",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "font_serif",
+      "label": "Serif display font",
+      "default": "playfair_display_n4"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_reveal",
+      "label": "Reveal on scroll",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "animation_speed",
+      "label": "Reveal speed",
+      "min": 400,
+      "max": 1200,
+      "step": 100,
+      "unit": "ms",
+      "default": 800
+    },
+    {
+      "type": "header",
+      "content": "01 · Hero"
+    },
+    {
+      "type": "text",
+      "id": "hero_eyebrow",
+      "label": "Eyebrow",
+      "default": "About us"
+    },
+    {
+      "type": "text",
+      "id": "hero_heading",
+      "label": "Heading",
+      "default": "About Elqorin"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_body",
+      "label": "Body",
+      "info": "Start a new paragraph on each new line.",
+      "default": "Feeling better shouldn't have to mean finding more time in an already busy schedule. We created Elqorin to bring the benefits of heat, cold and recovery into the comfort of your own space, making it easier to build moments of restoration into everyday life.\nFrom the deep warmth of a sauna to the invigorating reset of a cold plunge, our collection is designed for people who want to invest in how they feel, perform and recover."
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "hero_image_position",
+      "label": "Image focus point",
+      "info": "CSS object-position, e.g. center, center top, 30% 50%.",
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "hero_text_width",
+      "label": "Text panel width",
+      "min": 30,
+      "max": 60,
+      "step": 1,
+      "unit": "%",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "02 · Wellness"
+    },
+    {
+      "type": "text",
+      "id": "wellness_eyebrow",
+      "label": "Eyebrow",
+      "default": "Wellness, without leaving home"
+    },
+    {
+      "type": "text",
+      "id": "wellness_heading",
+      "label": "Heading",
+      "default": "Wellness, without leaving home"
+    },
+    {
+      "type": "textarea",
+      "id": "wellness_body",
+      "label": "Body",
+      "info": "Start a new paragraph on each new line.",
+      "default": "Finding time to prioritise yourself isn't always easy. Gym memberships, spa appointments and recovery sessions can quickly become another commitment to fit into your week.\nElqorin offers another way. Our range of home saunas, cold plunges and cooling solutions allows you to create your own wellness environment, ready whenever you are. Whether it's unwinding after a demanding day, supporting your post-workout routine or starting your morning with the clarity of cold immersion, Elqorin puts the experience within reach."
+    },
+    {
+      "type": "image_picker",
+      "id": "wellness_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "wellness_image_position",
+      "label": "Image focus point",
+      "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "wellness_mobile_image_first",
+      "label": "Show image first on mobile",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "benefit_1_icon",
+      "label": "Benefit 1 · icon"
+    },
+    {
+      "type": "text",
+      "id": "benefit_1_label",
+      "label": "Benefit 1 · label",
+      "default": "No appointments"
+    },
+    {
+      "type": "image_picker",
+      "id": "benefit_2_icon",
+      "label": "Benefit 2 · icon"
+    },
+    {
+      "type": "text",
+      "id": "benefit_2_label",
+      "label": "Benefit 2 · label",
+      "default": "No travelling"
+    },
+    {
+      "type": "image_picker",
+      "id": "benefit_3_icon",
+      "label": "Benefit 3 · icon"
+    },
+    {
+      "type": "text",
+      "id": "benefit_3_label",
+      "label": "Benefit 3 · label",
+      "default": "No waiting"
+    },
+    {
+      "type": "text",
+      "id": "wellness_closing",
+      "label": "Closing line",
+      "default": "Just your space, your routine, your reset."
+    },
+    {
+      "type": "header",
+      "content": "03 · The power of contrast"
+    },
+    {
+      "type": "text",
+      "id": "contrast_eyebrow",
+      "label": "Eyebrow",
+      "default": "The power of contrast"
+    },
+    {
+      "type": "text",
+      "id": "contrast_heading_1",
+      "label": "Heading · line 1",
+      "default": "Heat and cold."
+    },
+    {
+      "type": "text",
+      "id": "contrast_heading_2",
+      "label": "Heading · line 2",
+      "default": "Reset and recover."
+    },
+    {
+      "type": "textarea",
+      "id": "contrast_body",
+      "label": "Body",
+      "info": "Start a new paragraph on each new line.",
+      "default": "Heat and cold have long been incorporated into wellness and recovery rituals around the world.\nOur sauna collection brings enveloping warmth into the home, creating a space to switch off, slow down and make relaxation part of your routine.\nAt the other end of the spectrum, our cold plunge collection delivers a completely different experience, refreshing, energising and designed for those moments when you want to feel awake and ready for what comes next.\nAnd because wellness isn't one-size-fits-all, our range spans from compact individual saunas and inflatable ice baths to larger saunas, wooden plunges and dedicated chillers.\nWhether you're creating a small recovery corner or an entire home wellness space, Elqorin is designed to grow with the way you live."
+    },
+    {
+      "type": "image_picker",
+      "id": "contrast_image_1",
+      "label": "Image 1 (warm)"
+    },
+    {
+      "type": "text",
+      "id": "contrast_image_1_position",
+      "label": "Image 1 focus point",
+      "default": "center"
+    },
+    {
+      "type": "image_picker",
+      "id": "contrast_image_2",
+      "label": "Image 2 (cold)"
+    },
+    {
+      "type": "text",
+      "id": "contrast_image_2_position",
+      "label": "Image 2 focus point",
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "04 · Investment"
+    },
+    {
+      "type": "image_picker",
+      "id": "invest_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "invest_eyebrow",
+      "label": "Eyebrow",
+      "default": "An investment in your everyday"
+    },
+    {
+      "type": "textarea",
+      "id": "invest_body",
+      "label": "Body",
+      "info": "Start a new paragraph on each new line.",
+      "default": "We don't see wellness equipment as something that should sit unused in the corner of your home. It should become part of your lifestyle. That's why Elqorin is centred around products that make regular wellness rituals more accessible.\nInstead of waiting for the occasional spa day or recovery session, you can create an experience you look forward to returning to again and again."
+    },
+    {
+      "type": "textarea",
+      "id": "invest_quote",
+      "label": "Highlight quote",
+      "info": "Start a new line for each line of the quote.",
+      "default": "Because sometimes luxury isn't having more.\nIt's having the things that make you feel better,\nright where you need them."
+    },
+    {
+      "type": "header",
+      "content": "05 · The Elqorin standard"
+    },
+    {
+      "type": "image_picker",
+      "id": "standard_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "standard_eyebrow",
+      "label": "Eyebrow",
+      "default": "The Elqorin standard"
+    },
+    {
+      "type": "textarea",
+      "id": "standard_body",
+      "label": "Body",
+      "info": "Start a new paragraph on each new line.",
+      "default": "Purchasing premium wellness equipment is an investment, and we believe the experience surrounding that purchase should feel just as considered as the product itself.\nCustomer service sits at the heart of Elqorin. From choosing the right product for your space to questions about your order, our aim is to provide clear, reliable and genuinely helpful support throughout your journey with us.\nWe want every Elqorin customer to feel confident not only in what they purchase, but in the brand they purchase it from."
+    },
+    {
+      "type": "header",
+      "content": "06 · Mission"
+    },
+    {
+      "type": "text",
+      "id": "mission_eyebrow",
+      "label": "Eyebrow",
+      "default": "Our mission"
+    },
+    {
+      "type": "text",
+      "id": "mission_heading_1",
+      "label": "Heading · line 1",
+      "default": "Premium wellness."
+    },
+    {
+      "type": "text",
+      "id": "mission_heading_2",
+      "label": "Heading · line 2",
+      "default": "Made part of everyday life."
+    },
+    {
+      "type": "textarea",
+      "id": "mission_body",
+      "label": "Body",
+      "info": "Start a new paragraph on each new line.",
+      "default": "Our mission at Elqorin is to make premium wellness and recovery an effortless part of everyday life.\nThrough thoughtfully selected heat and cold therapy solutions, we empower people to create their own space to recover, reset and recharge, without having to leave home."
+    },
+    {
+      "type": "text",
+      "id": "mission_closing",
+      "label": "Closing line (accent)",
+      "default": "We're here to make investing in your wellbeing feel simpler, more accessible and built around you."
+    },
+    {
+      "type": "image_picker",
+      "id": "mission_image",
+      "label": "Background image"
+    },
+    {
+      "type": "text",
+      "id": "mission_image_position",
+      "label": "Image focus point",
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "mission_height",
+      "label": "Section height",
+      "min": 420,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 680
+    },
+    {
+      "type": "range",
+      "id": "mission_overlay",
+      "label": "Image darkening",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 55
+    }
+  ],
+  "presets": [
+    {
+      "name": "EQ About Us"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,90 @@
+<style>
+	 #shopify-section-{{ section.id }} {
+
+	{% if section.settings.custom_padding %}
+	padding-top: {{ section.settings.padding_top }}px;
+	padding-bottom: {{ section.settings.padding_bottom }}px;
+
+	{% endif %}
+	     --ul-page-max-width: {{ section.settings.content_width }}
+	     ;
+	 }
+</style>
+
+<div class="container">
+	<div class="page-spacer">
+		<div class="page">
+			<h1 class="h1 text-center">{{ page.title }}</h1>
+
+			{%- if page.content != empty -%}
+				<div class="prose">
+					{{ page.content }}
+				</div>
+			{%- endif -%}
+		</div>
+	</div>
+</div>
+
+{% schema %}
+{
+	"name": "Page",
+	"class": "shopify-section--main-page",
+	"tag": "section",
+	"settings": [
+		{
+			"type": "select",
+			"id": "content_width",
+			"label": "Content width",
+			"options": [
+				{
+					"value": "60ch",
+					"label": "Small"
+				},
+				{
+					"value": "80ch",
+					"label": "Medium"
+				},
+				{
+					"value": "100ch",
+					"label": "Large"
+				},
+				{
+					"value": "120ch",
+					"label": "X-Large"
+				},
+				{
+					"value": "100%",
+					"label": "Full width"
+				}
+			],
+			"default": "80ch"
+		},
+		{
+			"type": "checkbox",
+			"id": "custom_padding",
+			"label": "Custom padding",
+			"default": false
+		},
+		{
+			"type": "range",
+			"id": "padding_top",
+			"label": "Top padding",
+			"min": 0,
+			"max": 200,
+			"step": 4,
+			"default": 40,
+			"unit": "px"
+		},
+		{
+			"type": "range",
+			"id": "padding_bottom",
+			"label": "Bottom padding",
+			"min": 0,
+			"max": 200,
+			"step": 4,
+			"default": 40,
+			"unit": "px"
+		}
+	]
+}
+{% endschema %}

@@ -1,0 +1,69 @@
+{
+  "sections": {
+    "library": {
+      "type": "ss-trust-badges-3",
+      "settings": {
+        "trust_position": "below_title",
+        "item_gap": 10,
+        "item_gap_mobile": 10,
+        "item_mt": 16,
+        "item_mt_mobile": 16,
+        "image_icon_size": 22,
+        "image_icon_size_mobile": 20,
+        "text_custom": false,
+        "text_size": 14,
+        "text_size_mobile": 14,
+        "text_height": 150,
+        "icon_color": "#121212",
+        "text_color": "#121212",
+        "border_color": "#000000",
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "padding_horizontal": 0,
+        "padding_horizontal_mobile": 0,
+        "border_thickness": 0
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "item",
+          "settings": {
+            "icon": "tick",
+            "text": "<p>Secure checkout, your data protected.</p>"
+          }
+        },
+        "bl-2": {
+          "type": "item",
+          "settings": {
+            "icon": "tick",
+            "text": "<p>Quality assured, satisfaction guaranteed.</p>"
+          }
+        },
+        "bl-3": {
+          "type": "item",
+          "settings": {
+            "icon": "tick",
+            "text": "<p>Hassle-free returns, shop with confidence.</p>"
+          }
+        },
+        "bl-4": {
+          "type": "item",
+          "settings": {
+            "icon": "tick",
+            "text": "<p>Real reviews, verified customer feedback.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

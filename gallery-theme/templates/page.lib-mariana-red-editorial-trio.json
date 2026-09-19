@@ -1,0 +1,41 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--editorial-trio",
+      "settings": {
+        "heading": "Made for the way you actually cook.",
+        "text": "From quick weekday meals to long, slow weekends. Our kitchenware is designed to be part of your everyday rituals — not just special occasions.",
+        "link_label": "Our story",
+        "padding": 72
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "tile",
+          "settings": {
+            "caption": "For everyday moments"
+          }
+        },
+        "bl-2": {
+          "type": "tile",
+          "settings": {
+            "caption": "For bigger gatherings"
+          }
+        },
+        "bl-3": {
+          "type": "tile",
+          "settings": {
+            "caption": "For a more beautiful home"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

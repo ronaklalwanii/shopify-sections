@@ -1,0 +1,891 @@
+{%- comment -%} Section Library: injected global assets for store "pet store" {%- endcomment -%}
+{{ 'pet-store--overflow-list.css' | asset_url | stylesheet_tag }}
+{{ 'pet-store--base.css' | asset_url | stylesheet_tag }}
+{% render 'pet-store--theme-styles-variables' %}
+{%- comment -%}
+  Pet Store — Featured Products
+  Badge + heading + product grid with star ratings and AJAX quick-add.
+  Single-variant products add straight to the cart; multi-variant products
+  link to the product page.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .pet-products-{{ section.id }} {
+    --pet-pr-bg: {{ s.background_color }};
+    --pet-pr-fg: {{ s.text_color }};
+    --pet-pr-muted: {{ s.muted_text_color }};
+    --pet-pr-accent: {{ s.accent_color }};
+    --pet-pr-accent-text: {{ s.accent_text_color }};
+    --pet-pr-card-bg: {{ s.card_background_color }};
+    --pet-pr-card-border: {{ s.card_border_color }};
+    --pet-pr-badge-bg: {{ s.badge_background_color }};
+    --pet-pr-price: {{ s.price_color }};
+    --pet-pr-btn-bg: {{ s.cart_button_background }};
+    --pet-pr-image-bg: {{ s.image_background_color }};
+    --pet-pr-star: {{ s.star_color }};
+    --pet-pr-star-empty: {{ s.star_empty_color }};
+    --pet-pr-container: {{ s.container_max_width }}px;
+    --pet-pr-radius: {{ s.card_corner_radius }}px;
+
+    background-color: var(--pet-pr-bg);
+    color: var(--pet-pr-fg);
+    padding-block: {{ s.padding_top }}px {{ s.padding_bottom }}px;
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+  }
+
+  .pet-products-{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__container {
+    max-width: var(--pet-pr-container);
+    margin-inline: auto;
+    padding-inline: clamp(16px, 4vw, 48px);
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+    margin-bottom: clamp(28px, 4vw, 44px);
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+    padding: 8px 16px;
+    border: 1px solid color-mix(in srgb, var(--pet-pr-accent) 22%, transparent);
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--pet-pr-accent);
+    background-color: var(--pet-pr-badge-bg);
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__badge svg,
+  .pet-products-{{ section.id }} .pet-pr__badge img {
+    width: 13px;
+    height: 13px;
+    object-fit: contain;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__heading {
+    margin: 0;
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-size: clamp(28px, 3vw, 38px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--pet-pr-fg);
+    white-space: pre-line;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__grid {
+    display: grid;
+    grid-template-columns: repeat({{ s.columns_desktop }}, minmax(0, 1fr));
+    gap: {{ s.grid_gap }}px {{ s.grid_gap }}px;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__card {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__media {
+    position: relative;
+    display: block;
+    border: 1px solid var(--pet-pr-card-border);
+    border-radius: var(--pet-pr-radius);
+    background-color: var(--pet-pr-image-bg);
+    overflow: hidden;
+    aspect-ratio: {{ s.image_ratio }};
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 8%;
+    transition: transform 0.4s var(--ease-out-cubic, ease);
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__card:hover .pet-pr__media img {
+    transform: scale(1.04);
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__media svg {
+    position: absolute;
+    inset: 0;
+    width: 42%;
+    height: 42%;
+    margin: auto;
+    opacity: 0.3;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__flags {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 1;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__flag {
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__flag--sale {
+    background-color: var(--pet-pr-accent);
+    color: var(--pet-pr-accent-text);
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__flag--soldout {
+    background-color: rgb(0 0 0 / 0.72);
+    color: #ffffff;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__stars {
+    position: relative;
+    display: inline-flex;
+    line-height: 0;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__stars svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__stars-bg {
+    display: inline-flex;
+    gap: 1px;
+    color: var(--pet-pr-star-empty);
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__stars-fill {
+    position: absolute;
+    inset: 0;
+    display: inline-flex;
+    gap: 1px;
+    color: var(--pet-pr-star);
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__rating-count {
+    font-size: 11.5px;
+    color: var(--pet-pr-muted);
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__title {
+    margin: 10px 0 3px;
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--pet-pr-fg);
+    text-decoration: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__title:hover {
+    text-decoration: underline;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__price {
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+    margin: 0;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--pet-pr-price);
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__price del {
+    font-weight: 400;
+    color: var(--pet-pr-muted);
+    font-size: 12.5px;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__price ins {
+    text-decoration: none;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__add {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border: 0;
+    border-radius: 50%;
+    background-color: var(--pet-pr-btn-bg);
+    color: var(--pet-pr-accent);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color var(--animation-speed, 0.125s) ease, color var(--animation-speed, 0.125s) ease, border-color var(--animation-speed, 0.125s) ease;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__add:hover {
+    background-color: var(--pet-pr-accent);
+    color: var(--pet-pr-accent-text);
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__add svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__add.is-loading {
+    pointer-events: none;
+    opacity: 0.55;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__footer {
+    display: flex;
+    justify-content: center;
+    margin-top: clamp(28px, 4vw, 44px);
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__view-all {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 28px;
+    border-radius: {{ s.button_radius }}px;
+    background-color: var(--pet-pr-accent);
+    color: var(--pet-pr-accent-text);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: filter var(--animation-speed, 0.125s) ease, transform var(--animation-speed, 0.125s) ease;
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__view-all:hover {
+    filter: brightness(1.12);
+  }
+
+  .pet-products-{{ section.id }} .pet-pr__view-all:active {
+    transform: scale(0.98);
+  }
+
+  @media (max-width: 989px) {
+    .pet-products-{{ section.id }} .pet-pr__grid {
+      grid-template-columns: repeat({{ s.columns_tablet }}, minmax(0, 1fr));
+      gap: 14px;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .pet-products-{{ section.id }} .pet-pr__grid {
+      grid-template-columns: repeat({{ s.columns_mobile }}, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .pet-products-{{ section.id }} .pet-pr__card {
+      padding: 8px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pet-products-{{ section.id }} .pet-pr__card,
+    .pet-products-{{ section.id }} .pet-pr__media img,
+    .pet-products-{{ section.id }} .pet-pr__add,
+    .pet-products-{{ section.id }} .pet-pr__view-all {
+      transition: none;
+    }
+  }
+{% endstyle %}
+
+{%- liquid
+  assign placeholder_handles = 'product-1,product-2,product-3,product-4,product-5,product-6' | split: ','
+-%}
+
+<section class="pet-products pet-products-{{ section.id }}" aria-labelledby="pet-pr-heading-{{ section.id }}">
+  <div class="pet-pr__container">
+    <div class="pet-pr__header">
+      {%- if s.badge_text != blank -%}
+        <p class="pet-pr__badge">
+          {%- if s.badge_icon != blank -%}
+            {{ s.badge_icon | image_url: width: 52 | image_tag: alt: '' }}
+          {%- else -%}
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><ellipse cx="6" cy="9" rx="1.8" ry="2.4"/><ellipse cx="18" cy="9" rx="1.8" ry="2.4"/><ellipse cx="9.6" cy="5.6" rx="1.8" ry="2.4"/><ellipse cx="14.4" cy="5.6" rx="1.8" ry="2.4"/><path d="M12 10.5c2.8 0 5.5 2.3 5.5 4.9 0 1.6-1.2 2.6-2.7 2.6-1 0-1.8-.4-2.8-.4s-1.8.4-2.8.4c-1.5 0-2.7-1-2.7-2.6 0-2.6 2.7-4.9 5.5-4.9Z"/></svg>
+          {%- endif -%}
+          {{ s.badge_text }}
+        </p>
+      {%- endif -%}
+
+      {%- if s.heading != blank -%}
+        <h2 class="pet-pr__heading" id="pet-pr-heading-{{ section.id }}">{{ s.heading }}</h2>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="pet-pr__grid" data-pet-products-grid>
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign card_product = block.settings.product
+            assign onboarding = false
+            if card_product == blank
+              assign onboarding = true
+            endif
+
+            assign rating_whole = block.settings.rating | floor
+          -%}
+          <div class="pet-pr__card" {{ block.shopify_attributes }}>
+            <a class="pet-pr__media" href="{% if onboarding %}{{ routes.all_products_collection_url }}{% else %}{{ card_product.url }}{% endif %}" tabindex="-1" aria-hidden="true">
+              {%- unless onboarding -%}
+                {%- if card_product.featured_image != blank -%}
+                  {{ card_product.featured_image | image_url: width: 640 | image_tag:
+                    widths: '200,300,400,640',
+                    sizes: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw',
+                    loading: 'lazy',
+                    alt: card_product.title | escape
+                  }}
+                {%- endif -%}
+              {%- else -%}
+                {%- assign ph_index = forloop.index0 | modulo: 6 -%}
+                {{ placeholder_handles[ph_index] | placeholder_svg_tag }}
+              {%- endunless -%}
+
+              {%- unless onboarding -%}
+                {%- if card_product.available == false -%}
+                  <span class="pet-pr__flags">
+                    <span class="pet-pr__flag pet-pr__flag--soldout">{{ 'products.product.sold_out' | t }}</span>
+                  </span>
+                {%- elsif card_product.compare_at_price > card_product.price -%}
+                  <span class="pet-pr__flags">
+                    <span class="pet-pr__flag pet-pr__flag--sale">Sale</span>
+                  </span>
+                {%- endif -%}
+              {%- endunless -%}
+            </a>
+
+            {%- if block.settings.show_rating -%}
+              <div class="pet-pr__rating" role="img" aria-label="{{ block.settings.rating }} out of 5 stars">
+                <span class="pet-pr__stars">
+                  <span class="pet-pr__stars-bg" aria-hidden="true">
+                    {%- for i in (1..5) -%}
+                      <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.5 15 9l7 .7-5.3 4.6 1.6 6.9L12 17.5l-6.3 3.7 1.6-6.9L2 9.7 9 9l3-6.5Z"/></svg>
+                    {%- endfor -%}
+                  </span>
+                  <span class="pet-pr__stars-fill" style="width: {{ block.settings.rating | divided_by: 5.0 | times: 100 }}%" aria-hidden="true">
+                    {%- for i in (1..5) -%}
+                      <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.5 15 9l7 .7-5.3 4.6 1.6 6.9L12 17.5l-6.3 3.7 1.6-6.9L2 9.7 9 9l3-6.5Z"/></svg>
+                    {%- endfor -%}
+                  </span>
+                </span>
+                {%- if block.settings.reviews_count > 0 -%}
+                  <span class="pet-pr__rating-count">({{ block.settings.reviews_count }})</span>
+                {%- endif -%}
+              </div>
+            {%- else -%}
+              <div class="pet-pr__rating" aria-hidden="true"></div>
+            {%- endif -%}
+
+            <a class="pet-pr__title" href="{% if onboarding %}{{ routes.all_products_collection_url }}{% else %}{{ card_product.url }}{% endif %}">
+              {%- if onboarding -%}
+                {{ block.settings.fallback_title | default: 'Product title' }}
+              {%- else -%}
+                {{ card_product.title | escape }}
+              {%- endif -%}
+            </a>
+
+            <div class="pet-pr__bottom">
+              {%- if onboarding -%}
+                <p class="pet-pr__price">{{ block.settings.fallback_price | default: '$29.00' }}</p>
+              {%- else -%}
+                <p class="pet-pr__price">
+                  {%- if card_product.compare_at_price > card_product.price -%}
+                    <del>{{ card_product.compare_at_price | money }}</del>
+                    <ins>{{ card_product.price | money }}</ins>
+                  {%- else -%}
+                    <span>{{ card_product.price | money }}</span>
+                  {%- endif -%}
+                </p>
+              {%- endif -%}
+
+              {%- if onboarding -%}
+                <span class="pet-pr__add" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" focusable="false"><path d="M6 7h12l1.2 13H4.8L6 7Z"/><path d="M8.5 9.5V6a3.5 3.5 0 0 1 7 0v3.5"/></svg>
+                </span>
+              {%- elsif card_product.available == false -%}
+                <span class="pet-pr__add" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" focusable="false"><path d="M6 7h12l1.2 13H4.8L6 7Z"/><path d="M8.5 9.5V6a3.5 3.5 0 0 1 7 0v3.5"/></svg>
+                </span>
+              {%- elsif card_product.variants.size == 1 -%}
+                <form
+                  method="post"
+                  action="{{ routes.cart_add_url }}"
+                  accept-charset="UTF-8"
+                  data-pet-quick-add
+                >
+                  <input type="hidden" name="form_type" value="product">
+                  <input type="hidden" name="utf8" value="✓">
+                  <input type="hidden" name="id" value="{{ card_product.selected_or_first_available_variant.id }}">
+                  <input type="hidden" name="quantity" value="1">
+                  <button
+                    class="pet-pr__add"
+                    type="submit"
+                    aria-label="{{ 'products.product.add_to_cart' | t }} — {{ card_product.title | escape }}"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" focusable="false"><path d="M6 7h12l1.2 13H4.8L6 7Z"/><path d="M8.5 9.5V6a3.5 3.5 0 0 1 7 0v3.5"/></svg>
+                  </button>
+                </form>
+              {%- else -%}
+                <a
+                  class="pet-pr__add"
+                  href="{{ card_product.url }}"
+                  aria-label="Choose options — {{ card_product.title | escape }}"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" focusable="false"><path d="M6 7h12l1.2 13H4.8L6 7Z"/><path d="M8.5 9.5V6a3.5 3.5 0 0 1 7 0v3.5"/></svg>
+                </a>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if s.view_all_label != blank -%}
+      <div class="pet-pr__footer">
+        <a class="pet-pr__view-all" href="{{ s.view_all_link | default: routes.all_products_collection_url }}">{{ s.view_all_label }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Hidden trigger that opens Horizon's cart drawer after AJAX add {%- endcomment -%}
+  <button class="visually-hidden" data-pet-cart-drawer-trigger on:click="#cart-drawer/toggle" tabindex="-1" aria-hidden="true"></button>
+</section>
+
+<script>
+  (function () {
+    function initPetProducts(root) {
+      if (root.dataset.petProductsInit === 'true') return;
+      root.dataset.petProductsInit = 'true';
+
+      var cartAddUrl = {{ routes.cart_add_url | json }};
+      var cartUrl = {{ routes.cart_url | json }};
+
+      function updateCartBubble(quantity) {
+        var bubbles = document.querySelectorAll('.cart-bubble__text-count');
+        bubbles.forEach(function (bubble) {
+          bubble.textContent = quantity > 99 ? '99+' : String(quantity);
+          bubble.classList.toggle('hidden', quantity === 0);
+        });
+        document.querySelectorAll('.cart-bubble').forEach(function (bubble) {
+          bubble.classList.toggle('visually-hidden', quantity === 0);
+        });
+      }
+
+      root.addEventListener('submit', function (event) {
+        var form = event.target.closest('form[data-pet-quick-add]');
+        if (!form || !root.contains(form)) return;
+
+        event.preventDefault();
+
+        var button = form.querySelector('[type="submit"]');
+        var trigger = root.querySelector('[data-pet-cart-drawer-trigger]');
+        if (button) button.classList.add('is-loading');
+
+        var formData = new FormData(form);
+
+        fetch(cartAddUrl + '.js', {
+          method: 'POST',
+          headers: { 'X-Requested-With': 'XMLHttpRequest' },
+          body: formData
+        })
+          .then(function (response) {
+            if (!response.ok) throw new Error('Add to cart failed');
+            return response.json();
+          })
+          .then(function () {
+            return fetch(cartUrl + '.js', { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+          })
+          .then(function (response) { return response.json(); })
+          .then(function (cart) {
+            updateCartBubble(cart.item_count || 0);
+            if (trigger && '{{ settings.cart_type }}' === 'drawer' && '{{ template.name }}' !== 'cart') {
+              trigger.click();
+            }
+          })
+          .catch(function () {
+            {%- comment -%} Graceful fallback: plain form post {%- endcomment -%}
+            form.removeAttribute('data-pet-quick-add');
+            form.submit();
+          })
+          .finally(function () {
+            if (button) button.classList.remove('is-loading');
+          });
+      });
+    }
+
+    function ready(fn) {
+      if (document.readyState !== 'loading') fn();
+      else document.addEventListener('DOMContentLoaded', fn);
+    }
+
+    ready(function () {
+      document.querySelectorAll('[data-pet-products-grid]').forEach(function (grid) {
+        var root = grid.closest('.pet-products');
+        if (root) initPetProducts(root);
+      });
+    });
+
+    document.addEventListener('shopify:section:load', function (event) {
+      var root = event.target.querySelector('.pet-products');
+      if (root) initPetProducts(root);
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Pet Featured Products",
+  "tag": "section",
+  "class": "pet-products-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "Find The Perfect Products"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_icon",
+      "label": "Badge icon",
+      "info": "Optional. Falls back to a paw icon"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Latest Arrivals"
+    },
+    {
+      "type": "header",
+      "content": "Product cards"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns (desktop)",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "label": "Columns (tablet)",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns (mobile)",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "4 / 5", "label": "Portrait" },
+        { "value": "5 / 4", "label": "Landscape" },
+        { "value": "3 / 2", "label": "Wide" }
+      ],
+      "default": "1 / 1"
+    },
+    {
+      "type": "range",
+      "id": "card_corner_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "label": "Button corner radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "Button label",
+      "default": "Explore All Products",
+      "info": "Leave empty to hide"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "Button link",
+      "info": "Defaults to the All Products collection"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#211D1A"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text",
+      "default": "#6F6963"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#6E1622"
+    },
+    {
+      "type": "color",
+      "id": "accent_text_color",
+      "label": "Accent text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border",
+      "default": "#E9E5E0"
+    },
+    {
+      "type": "color",
+      "id": "image_background_color",
+      "label": "Image background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "badge_background_color",
+      "label": "Badge background",
+      "default": "#FBF7EF"
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Price",
+      "default": "#792011"
+    },
+    {
+      "type": "color",
+      "id": "cart_button_background",
+      "label": "Cart button background",
+      "default": "#F3F1EF"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#E8A33B"
+    },
+    {
+      "type": "color",
+      "id": "star_empty_color",
+      "label": "Empty star color",
+      "default": "#EDEBE8"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "label": "Container max width",
+      "min": 700,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 980
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "header",
+          "content": "Rating"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_rating",
+          "label": "Show star rating",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 0,
+          "max": 5,
+          "step": 0.1,
+          "default": 4.8
+        },
+        {
+          "type": "number",
+          "id": "reviews_count",
+          "label": "Review count",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Fallbacks"
+        },
+        {
+          "type": "text",
+          "id": "fallback_title",
+          "label": "Fallback title",
+          "info": "Shown when no product is selected"
+        },
+        {
+          "type": "text",
+          "id": "fallback_price",
+          "label": "Fallback price",
+          "info": "Shown when no product is selected"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pet Featured Products",
+      "blocks": [
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" }
+      ]
+    }
+  ]
+}
+{% endschema %}

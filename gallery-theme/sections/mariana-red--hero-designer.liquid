@@ -1,0 +1,165 @@
+{%- comment -%} Section Library: injected global assets for store "mariana-red" {%- endcomment -%}
+{{ 'mariana-red--base.css' | asset_url | stylesheet_tag }}
+{{ 'mariana-red--components.css' | asset_url | stylesheet_tag }}
+{% render 'mariana-red--layout-tokens' %}
+{%- comment -%}
+  Designer hero — serif greeting + huge rose accent word, services tag line,
+  pill CTA; portrait card with giant circle, rotating badge and bloom.
+{%- endcomment -%}
+<section class="designer-hero">
+  <div class="page-width designer-hero__grid">
+    <div class="designer-hero__content">
+      {%- if section.settings.greeting != blank -%}
+        <p class="designer-hero__greeting">{{ section.settings.greeting | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.word_accent != blank -%}
+        <p class="designer-hero__accent">{{ section.settings.word_accent | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.line3_pre != blank or section.settings.line3_italic != blank -%}
+        <p class="designer-hero__line3">
+          {{ section.settings.line3_pre | escape }}
+          {%- if section.settings.line3_italic != blank -%}
+            {{ ' ' }}<em>{{ section.settings.line3_italic | escape }}</em>
+          {%- endif -%}
+        </p>
+      {%- endif -%}
+
+      {%- if section.settings.tags != blank -%}
+        <div class="designer-hero__tags">
+          {%- assign tag_list = section.settings.tags | split: '+' -%}
+          {%- for tag in tag_list -%}
+            <span class="designer-hero__tag">{{ tag | strip | escape }}</span>
+            {%- unless forloop.last -%}<span class="designer-hero__tag-sep">+</span>{%- endunless -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <a href="{{ section.settings.button_link | default: '#' }}" class="pill-link">
+          {{ section.settings.button_label | escape }}
+          <span class="pill-link__arrow">{% render 'mariana-red--icon', name: 'arrow-right', size: 12 %}</span>
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="designer-hero__media">
+      <span class="designer-hero__halo" aria-hidden="true"></span>
+      {%- if section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 1000 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '480, 720, 1000', sizes: '(min-width: 990px) 42vw, 90vw', alt: section.settings.image.alt }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+      {%- if section.settings.badge_text != blank -%}
+        <span class="designer-hero__badge">
+          {% render 'mariana-red--rotating-badge', text: section.settings.badge_text %}
+        </span>
+      {%- endif -%}
+      {% render 'mariana-red--bloom', class: 'designer-hero__bloom' %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .designer-hero { overflow: hidden; }
+  .designer-hero__grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: center;
+    padding-block: clamp(2rem, 5vh, 3.5rem);
+  }
+  .designer-hero__content { padding-block: clamp(1rem, 3vh, 2rem); }
+  .designer-hero__greeting {
+    font-family: var(--font-heading);
+    font-size: clamp(2.6rem, 5vw, 4.6rem);
+    line-height: 1.02;
+    color: var(--color-heading);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+  .designer-hero__accent {
+    font-family: var(--font-heading);
+    font-size: clamp(3.6rem, 7.4vw, 7rem);
+    line-height: 1;
+    margin: 0 0 0.05em;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    background: linear-gradient(100deg, #f0cdbf 8%, #d98d7c 45%, #f0cdbf 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .designer-hero__line3 {
+    font-family: var(--font-heading);
+    font-size: clamp(2.2rem, 4.2vw, 3.9rem);
+    line-height: 1.05;
+    color: var(--color-heading);
+    margin: 0 0 clamp(1.4rem, 3vh, 2.2rem);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+  .designer-hero__line3 em { font-style: italic; font-weight: 400; }
+  .designer-hero__tags {
+    display: flex; align-items: center; flex-wrap: wrap;
+    gap: 0.6rem;
+    border-top: 1px solid rgba(226, 178, 164, 0.25);
+    padding-top: 1.1rem;
+    margin-bottom: 1.6rem;
+    max-width: 26rem;
+  }
+  .designer-hero__tag { font-size: 0.64rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-text-muted); }
+  .designer-hero__tag-sep { color: var(--color-accent); }
+  .designer-hero__media {
+    position: relative;
+    align-self: stretch;
+    min-height: 26rem;
+  }
+  .designer-hero__halo {
+    position: absolute; inset: -6% -18% -12% -10%;
+    background: radial-gradient(circle at 55% 42%, #571b23 0%, #4a151d 55%, transparent 72%);
+    border-radius: 50%;
+  }
+  .designer-hero__media > img, .designer-hero__media > .placeholder-svg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: 1.4rem;
+  }
+  .designer-hero__badge {
+    position: absolute; top: -1.6rem; right: -1rem;
+    width: 7.2rem; height: 7.2rem;
+    z-index: 3;
+  }
+  .designer-hero__bloom {
+    position: absolute; right: -4.5rem; bottom: -3.5rem;
+    width: 12rem; height: 12rem;
+    opacity: 0.9;
+    z-index: 2;
+    filter: drop-shadow(0 18px 30px rgba(0,0,0,0.35));
+  }
+  @media (max-width: 989px) {
+    .designer-hero__grid { grid-template-columns: 1fr; }
+    .designer-hero__media { min-height: 22rem; margin-top: 1rem; }
+    .designer-hero__badge { width: 5.6rem; height: 5.6rem; top: -1rem; right: 0.4rem; }
+    .designer-hero__bloom { width: 8rem; height: 8rem; right: -1.5rem; bottom: -1.5rem; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Designer hero",
+  "settings": [
+    { "type": "text", "id": "greeting", "label": "Greeting line", "default": "I design" },
+    { "type": "text", "id": "word_accent", "label": "Accent word (rose)", "default": "Brands" },
+    { "type": "text", "id": "line3_pre", "label": "Third line", "default": "That" },
+    { "type": "text", "id": "line3_italic", "label": "Third line italic part", "default": "stand out." },
+    { "type": "text", "id": "tags", "label": "Service tags", "info": "Separate with +", "default": "Branding + Web Design + Digital Experience" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "View works" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "image_picker", "id": "image", "label": "Portrait" },
+    { "type": "text", "id": "badge_text", "label": "Rotating badge text", "default": "AVAILABLE FOR WORK • BRANDING & DESIGN • " }
+  ],
+  "presets": [{ "name": "Designer hero" }]
+}
+{% endschema %}

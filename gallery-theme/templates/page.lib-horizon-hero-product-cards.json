@@ -1,0 +1,57 @@
+{
+  "sections": {
+    "library": {
+      "type": "horizon--hero-product-cards",
+      "settings": {
+        "custom_mobile_image": false,
+        "image_position": "center",
+        "toggle_overlay": true,
+        "overlay_color": "#2A1D104D",
+        "overlay_style": "gradient",
+        "gradient_direction": "to top",
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "flex-start",
+        "gap": 16,
+        "section_width": "page-width",
+        "section_height": "full-screen",
+        "section_height_custom": 100,
+        "padding-block-start": 224,
+        "padding-block-end": 24,
+        "padding-inline-start": 24,
+        "padding-inline-end": 24
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "@theme",
+          "settings": {}
+        },
+        "bl-2": {
+          "type": "@theme",
+          "settings": {}
+        },
+        "bl-3": {
+          "type": "_hero-product-cards",
+          "settings": {}
+        },
+        "bl-4": {
+          "type": "_hero-product-cards",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,2042 @@
+{
+  "base/about-snatched.liquid": {
+    "template": "lib-base-about-snatched",
+    "url": "/pages/section-library?view=lib-base-about-snatched"
+  },
+  "base/about-us-style-2.liquid": {
+    "template": "lib-base-about-us-style-2",
+    "url": "/pages/section-library?view=lib-base-about-us-style-2"
+  },
+  "base/accordion-content.liquid": {
+    "template": "lib-base-accordion-content",
+    "url": "/pages/section-library?view=lib-base-accordion-content"
+  },
+  "base/account-banner.liquid": {
+    "template": "lib-base-account-banner",
+    "url": "/pages/section-library?view=lib-base-account-banner"
+  },
+  "base/announcement-bar.liquid": {
+    "template": "lib-base-announcement-bar",
+    "url": "/pages/section-library?view=lib-base-announcement-bar"
+  },
+  "base/apps.liquid": {
+    "template": "lib-base-apps",
+    "url": "/pages/section-library?view=lib-base-apps"
+  },
+  "base/arena-cta.liquid": {
+    "template": "lib-base-arena-cta",
+    "url": "/pages/section-library?view=lib-base-arena-cta"
+  },
+  "base/arena-hero.liquid": {
+    "template": "lib-base-arena-hero",
+    "url": "/pages/section-library?view=lib-base-arena-hero"
+  },
+  "base/arena-process.liquid": {
+    "template": "lib-base-arena-process",
+    "url": "/pages/section-library?view=lib-base-arena-process"
+  },
+  "base/arena-stats-intro.liquid": {
+    "template": "lib-base-arena-stats-intro",
+    "url": "/pages/section-library?view=lib-base-arena-stats-intro"
+  },
+  "base/arena-why-us.liquid": {
+    "template": "lib-base-arena-why-us",
+    "url": "/pages/section-library?view=lib-base-arena-why-us"
+  },
+  "base/aura-categories.liquid": {
+    "template": "lib-base-aura-categories",
+    "url": "/pages/section-library?view=lib-base-aura-categories"
+  },
+  "base/aura-duo.liquid": {
+    "template": "lib-base-aura-duo",
+    "url": "/pages/section-library?view=lib-base-aura-duo"
+  },
+  "base/aura-hero.liquid": {
+    "template": "lib-base-aura-hero",
+    "url": "/pages/section-library?view=lib-base-aura-hero"
+  },
+  "base/aura-newsletter-band.liquid": {
+    "template": "lib-base-aura-newsletter-band",
+    "url": "/pages/section-library?view=lib-base-aura-newsletter-band"
+  },
+  "base/before-after-image.liquid": {
+    "template": "lib-base-before-after-image",
+    "url": "/pages/section-library?view=lib-base-before-after-image"
+  },
+  "base/bento-grid.liquid": {
+    "template": "lib-base-bento-grid",
+    "url": "/pages/section-library?view=lib-base-bento-grid"
+  },
+  "base/blog-posts.liquid": {
+    "template": "lib-base-blog-posts",
+    "url": "/pages/section-library?view=lib-base-blog-posts"
+  },
+  "base/brand-value-showcase.liquid": {
+    "template": "lib-base-brand-value-showcase",
+    "url": "/pages/section-library?view=lib-base-brand-value-showcase"
+  },
+  "base/bundle-showcase.liquid": {
+    "template": "lib-base-bundle-showcase",
+    "url": "/pages/section-library?view=lib-base-bundle-showcase"
+  },
+  "base/button-grid.liquid": {
+    "template": "lib-base-button-grid",
+    "url": "/pages/section-library?view=lib-base-button-grid"
+  },
+  "base/card-stack-carousel.liquid": {
+    "template": "lib-base-card-stack-carousel",
+    "url": "/pages/section-library?view=lib-base-card-stack-carousel"
+  },
+  "base/cart-drawer.liquid": {
+    "template": "lib-base-cart-drawer",
+    "url": "/pages/section-library?view=lib-base-cart-drawer"
+  },
+  "base/collection-banner.liquid": {
+    "template": "lib-base-collection-banner",
+    "url": "/pages/section-library?view=lib-base-collection-banner"
+  },
+  "base/collection-list.liquid": {
+    "template": "lib-base-collection-list",
+    "url": "/pages/section-library?view=lib-base-collection-list"
+  },
+  "base/collection-showcase.liquid": {
+    "template": "lib-base-collection-showcase",
+    "url": "/pages/section-library?view=lib-base-collection-showcase"
+  },
+  "base/contact.liquid": {
+    "template": "lib-base-contact",
+    "url": "/pages/section-library?view=lib-base-contact"
+  },
+  "base/countdown-banner.liquid": {
+    "template": "lib-base-countdown-banner",
+    "url": "/pages/section-library?view=lib-base-countdown-banner"
+  },
+  "base/custom-html.liquid": {
+    "template": "lib-base-custom-html",
+    "url": "/pages/section-library?view=lib-base-custom-html"
+  },
+  "base/custom-liquid.liquid": {
+    "template": "lib-base-custom-liquid",
+    "url": "/pages/section-library?view=lib-base-custom-liquid"
+  },
+  "base/custom-product-showcase.liquid": {
+    "template": "lib-base-custom-product-showcase",
+    "url": "/pages/section-library?view=lib-base-custom-product-showcase"
+  },
+  "base/custom-testimonial-showcase.liquid": {
+    "template": "lib-base-custom-testimonial-showcase",
+    "url": "/pages/section-library?view=lib-base-custom-testimonial-showcase"
+  },
+  "base/dark-fan-carousel.liquid": {
+    "template": "lib-base-dark-fan-carousel",
+    "url": "/pages/section-library?view=lib-base-dark-fan-carousel"
+  },
+  "base/decorated-card.liquid": {
+    "template": "lib-base-decorated-card",
+    "url": "/pages/section-library?view=lib-base-decorated-card"
+  },
+  "base/eq-about-us.liquid": {
+    "template": "lib-base-eq-about-us",
+    "url": "/pages/section-library?view=lib-base-eq-about-us"
+  },
+  "base/eq-footer.liquid": {
+    "template": "lib-base-eq-footer",
+    "url": "/pages/section-library?view=lib-base-eq-footer"
+  },
+  "base/faq.liquid": {
+    "template": "lib-base-faq",
+    "url": "/pages/section-library?view=lib-base-faq"
+  },
+  "base/fashion-coverflow.liquid": {
+    "template": "lib-base-fashion-coverflow",
+    "url": "/pages/section-library?view=lib-base-fashion-coverflow"
+  },
+  "base/feature-chart.liquid": {
+    "template": "lib-base-feature-chart",
+    "url": "/pages/section-library?view=lib-base-feature-chart"
+  },
+  "base/featured-collection.liquid": {
+    "template": "lib-base-featured-collection",
+    "url": "/pages/section-library?view=lib-base-featured-collection"
+  },
+  "base/featured-product-showcase.liquid": {
+    "template": "lib-base-featured-product-showcase",
+    "url": "/pages/section-library?view=lib-base-featured-product-showcase"
+  },
+  "base/featured-product.liquid": {
+    "template": "lib-base-featured-product",
+    "url": "/pages/section-library?view=lib-base-featured-product"
+  },
+  "base/features-benefits-cta.liquid": {
+    "template": "lib-base-features-benefits-cta",
+    "url": "/pages/section-library?view=lib-base-features-benefits-cta"
+  },
+  "base/flip-note.liquid": {
+    "template": "lib-base-flip-note",
+    "url": "/pages/section-library?view=lib-base-flip-note"
+  },
+  "base/footer.liquid": {
+    "template": "lib-base-footer",
+    "url": "/pages/section-library?view=lib-base-footer"
+  },
+  "base/gift-set-grid.liquid": {
+    "template": "lib-base-gift-set-grid",
+    "url": "/pages/section-library?view=lib-base-gift-set-grid"
+  },
+  "base/glow-button.liquid": {
+    "template": "lib-base-glow-button",
+    "url": "/pages/section-library?view=lib-base-glow-button"
+  },
+  "base/haven-booking.liquid": {
+    "template": "lib-base-haven-booking",
+    "url": "/pages/section-library?view=lib-base-haven-booking"
+  },
+  "base/haven-cards-about.liquid": {
+    "template": "lib-base-haven-cards-about",
+    "url": "/pages/section-library?view=lib-base-haven-cards-about"
+  },
+  "base/haven-gallery.liquid": {
+    "template": "lib-base-haven-gallery",
+    "url": "/pages/section-library?view=lib-base-haven-gallery"
+  },
+  "base/haven-hero.liquid": {
+    "template": "lib-base-haven-hero",
+    "url": "/pages/section-library?view=lib-base-haven-hero"
+  },
+  "base/header.liquid": {
+    "template": "lib-base-header",
+    "url": "/pages/section-library?view=lib-base-header"
+  },
+  "base/hero-split-minimal.liquid": {
+    "template": "lib-base-hero-split-minimal",
+    "url": "/pages/section-library?view=lib-base-hero-split-minimal"
+  },
+  "base/hero-with-cards.liquid": {
+    "template": "lib-base-hero-with-cards",
+    "url": "/pages/section-library?view=lib-base-hero-with-cards"
+  },
+  "base/hero-with-products.liquid": {
+    "template": "lib-base-hero-with-products",
+    "url": "/pages/section-library?view=lib-base-hero-with-products"
+  },
+  "base/hot-spots.liquid": {
+    "template": "lib-base-hot-spots",
+    "url": "/pages/section-library?view=lib-base-hot-spots"
+  },
+  "base/image-link-blocks.liquid": {
+    "template": "lib-base-image-link-blocks",
+    "url": "/pages/section-library?view=lib-base-image-link-blocks"
+  },
+  "base/image-with-text-overlay.liquid": {
+    "template": "lib-base-image-with-text-overlay",
+    "url": "/pages/section-library?view=lib-base-image-with-text-overlay"
+  },
+  "base/images-with-text-scrolling.liquid": {
+    "template": "lib-base-images-with-text-scrolling",
+    "url": "/pages/section-library?view=lib-base-images-with-text-scrolling"
+  },
+  "base/impact-text.liquid": {
+    "template": "lib-base-impact-text",
+    "url": "/pages/section-library?view=lib-base-impact-text"
+  },
+  "base/logo-list.liquid": {
+    "template": "lib-base-logo-list",
+    "url": "/pages/section-library?view=lib-base-logo-list"
+  },
+  "base/main-article.liquid": {
+    "template": "lib-base-main-article",
+    "url": "/pages/section-library?view=lib-base-main-article"
+  },
+  "base/main-blog.liquid": {
+    "template": "lib-base-main-blog",
+    "url": "/pages/section-library?view=lib-base-main-blog"
+  },
+  "base/main-cart.liquid": {
+    "template": "lib-base-main-cart",
+    "url": "/pages/section-library?view=lib-base-main-cart"
+  },
+  "base/main-collection.liquid": {
+    "template": "lib-base-main-collection",
+    "url": "/pages/section-library?view=lib-base-main-collection"
+  },
+  "base/main-customers-account.liquid": {
+    "template": "lib-base-main-customers-account",
+    "url": "/pages/section-library?view=lib-base-main-customers-account"
+  },
+  "base/main-customers-activate-account.liquid": {
+    "template": "lib-base-main-customers-activate-account",
+    "url": "/pages/section-library?view=lib-base-main-customers-activate-account"
+  },
+  "base/main-customers-addresses.liquid": {
+    "template": "lib-base-main-customers-addresses",
+    "url": "/pages/section-library?view=lib-base-main-customers-addresses"
+  },
+  "base/main-customers-login.liquid": {
+    "template": "lib-base-main-customers-login",
+    "url": "/pages/section-library?view=lib-base-main-customers-login"
+  },
+  "base/main-customers-order.liquid": {
+    "template": "lib-base-main-customers-order",
+    "url": "/pages/section-library?view=lib-base-main-customers-order"
+  },
+  "base/main-customers-register.liquid": {
+    "template": "lib-base-main-customers-register",
+    "url": "/pages/section-library?view=lib-base-main-customers-register"
+  },
+  "base/main-customers-reset-password.liquid": {
+    "template": "lib-base-main-customers-reset-password",
+    "url": "/pages/section-library?view=lib-base-main-customers-reset-password"
+  },
+  "base/main-gift-card.liquid": {
+    "template": "lib-base-main-gift-card",
+    "url": "/pages/section-library?view=lib-base-main-gift-card"
+  },
+  "base/main-list-collections.liquid": {
+    "template": "lib-base-main-list-collections",
+    "url": "/pages/section-library?view=lib-base-main-list-collections"
+  },
+  "base/main-not-found.liquid": {
+    "template": "lib-base-main-not-found",
+    "url": "/pages/section-library?view=lib-base-main-not-found"
+  },
+  "base/main-page.liquid": {
+    "template": "lib-base-main-page",
+    "url": "/pages/section-library?view=lib-base-main-page"
+  },
+  "base/main-password.liquid": {
+    "template": "lib-base-main-password",
+    "url": "/pages/section-library?view=lib-base-main-password"
+  },
+  "base/main-product.liquid": {
+    "template": "lib-base-main-product",
+    "url": "/pages/section-library?view=lib-base-main-product"
+  },
+  "base/main-search.liquid": {
+    "template": "lib-base-main-search",
+    "url": "/pages/section-library?view=lib-base-main-search"
+  },
+  "base/media-grid.liquid": {
+    "template": "lib-base-media-grid",
+    "url": "/pages/section-library?view=lib-base-media-grid"
+  },
+  "base/media-with-text.liquid": {
+    "template": "lib-base-media-with-text",
+    "url": "/pages/section-library?view=lib-base-media-with-text"
+  },
+  "base/mega-header.liquid": {
+    "template": "lib-base-mega-header",
+    "url": "/pages/section-library?view=lib-base-mega-header"
+  },
+  "base/minimal-centered-footer.liquid": {
+    "template": "lib-base-minimal-centered-footer",
+    "url": "/pages/section-library?view=lib-base-minimal-centered-footer"
+  },
+  "base/minimal-footer.liquid": {
+    "template": "lib-base-minimal-footer",
+    "url": "/pages/section-library?view=lib-base-minimal-footer"
+  },
+  "base/multi-column.liquid": {
+    "template": "lib-base-multi-column",
+    "url": "/pages/section-library?view=lib-base-multi-column"
+  },
+  "base/multiple-images-with-text.liquid": {
+    "template": "lib-base-multiple-images-with-text",
+    "url": "/pages/section-library?view=lib-base-multiple-images-with-text"
+  },
+  "base/newsletter-popup.liquid": {
+    "template": "lib-base-newsletter-popup",
+    "url": "/pages/section-library?view=lib-base-newsletter-popup"
+  },
+  "base/newsletter.liquid": {
+    "template": "lib-base-newsletter",
+    "url": "/pages/section-library?view=lib-base-newsletter"
+  },
+  "base/pickup-availability.liquid": {
+    "template": "lib-base-pickup-availability",
+    "url": "/pages/section-library?view=lib-base-pickup-availability"
+  },
+  "base/press.liquid": {
+    "template": "lib-base-press",
+    "url": "/pages/section-library?view=lib-base-press"
+  },
+  "base/privacy-banner.liquid": {
+    "template": "lib-base-privacy-banner",
+    "url": "/pages/section-library?view=lib-base-privacy-banner"
+  },
+  "base/promo-payment-methods.liquid": {
+    "template": "lib-base-promo-payment-methods",
+    "url": "/pages/section-library?view=lib-base-promo-payment-methods"
+  },
+  "base/promo-split-banner.liquid": {
+    "template": "lib-base-promo-split-banner",
+    "url": "/pages/section-library?view=lib-base-promo-split-banner"
+  },
+  "base/recently-viewed-products.liquid": {
+    "template": "lib-base-recently-viewed-products",
+    "url": "/pages/section-library?view=lib-base-recently-viewed-products"
+  },
+  "base/related-products.liquid": {
+    "template": "lib-base-related-products",
+    "url": "/pages/section-library?view=lib-base-related-products"
+  },
+  "base/rich-text.liquid": {
+    "template": "lib-base-rich-text",
+    "url": "/pages/section-library?view=lib-base-rich-text"
+  },
+  "base/ritual-accessories.liquid": {
+    "template": "lib-base-ritual-accessories",
+    "url": "/pages/section-library?view=lib-base-ritual-accessories"
+  },
+  "base/ritual-banner.liquid": {
+    "template": "lib-base-ritual-banner",
+    "url": "/pages/section-library?view=lib-base-ritual-banner"
+  },
+  "base/ritual-cards.liquid": {
+    "template": "lib-base-ritual-cards",
+    "url": "/pages/section-library?view=lib-base-ritual-cards"
+  },
+  "base/scrolling-text.liquid": {
+    "template": "lib-base-scrolling-text",
+    "url": "/pages/section-library?view=lib-base-scrolling-text"
+  },
+  "base/scrolling-video.liquid": {
+    "template": "lib-base-scrolling-video",
+    "url": "/pages/section-library?view=lib-base-scrolling-video"
+  },
+  "base/search-drawer.liquid": {
+    "template": "lib-base-search-drawer",
+    "url": "/pages/section-library?view=lib-base-search-drawer"
+  },
+  "base/section-navigator.liquid": {
+    "template": "lib-base-section-navigator",
+    "url": "/pages/section-library?view=lib-base-section-navigator"
+  },
+  "base/shogun-above.liquid": {
+    "template": "lib-base-shogun-above",
+    "url": "/pages/section-library?view=lib-base-shogun-above"
+  },
+  "base/shogun-below.liquid": {
+    "template": "lib-base-shogun-below",
+    "url": "/pages/section-library?view=lib-base-shogun-below"
+  },
+  "base/shogun-custom-html.liquid": {
+    "template": "lib-base-shogun-custom-html",
+    "url": "/pages/section-library?view=lib-base-shogun-custom-html"
+  },
+  "base/shogun-helper.liquid": {
+    "template": "lib-base-shogun-helper",
+    "url": "/pages/section-library?view=lib-base-shogun-helper"
+  },
+  "base/shogun-optimizer.liquid": {
+    "template": "lib-base-shogun-optimizer",
+    "url": "/pages/section-library?view=lib-base-shogun-optimizer"
+  },
+  "base/sleek-hero.liquid": {
+    "template": "lib-base-sleek-hero",
+    "url": "/pages/section-library?view=lib-base-sleek-hero"
+  },
+  "base/slideshow.liquid": {
+    "template": "lib-base-slideshow",
+    "url": "/pages/section-library?view=lib-base-slideshow"
+  },
+  "base/split-featured-product.liquid": {
+    "template": "lib-base-split-featured-product",
+    "url": "/pages/section-library?view=lib-base-split-featured-product"
+  },
+  "base/ss-hero-16.liquid": {
+    "template": "lib-base-ss-hero-16",
+    "url": "/pages/section-library?view=lib-base-ss-hero-16"
+  },
+  "base/ss-trust-badges-3.liquid": {
+    "template": "lib-base-ss-trust-badges-3",
+    "url": "/pages/section-library?view=lib-base-ss-trust-badges-3"
+  },
+  "base/ss-video-slider.liquid": {
+    "template": "lib-base-ss-video-slider",
+    "url": "/pages/section-library?view=lib-base-ss-video-slider"
+  },
+  "base/statement-banner.liquid": {
+    "template": "lib-base-statement-banner",
+    "url": "/pages/section-library?view=lib-base-statement-banner"
+  },
+  "base/stats-achievement.liquid": {
+    "template": "lib-base-stats-achievement",
+    "url": "/pages/section-library?view=lib-base-stats-achievement"
+  },
+  "base/story-cards.liquid": {
+    "template": "lib-base-story-cards",
+    "url": "/pages/section-library?view=lib-base-story-cards"
+  },
+  "base/styling-layout.liquid": {
+    "template": "lib-base-styling-layout",
+    "url": "/pages/section-library?view=lib-base-styling-layout"
+  },
+  "base/tabs.liquid": {
+    "template": "lib-base-tabs",
+    "url": "/pages/section-library?view=lib-base-tabs"
+  },
+  "base/terra-featured-product.liquid": {
+    "template": "lib-base-terra-featured-product",
+    "url": "/pages/section-library?view=lib-base-terra-featured-product"
+  },
+  "base/terra-hero.liquid": {
+    "template": "lib-base-terra-hero",
+    "url": "/pages/section-library?view=lib-base-terra-hero"
+  },
+  "base/terra-services.liquid": {
+    "template": "lib-base-terra-services",
+    "url": "/pages/section-library?view=lib-base-terra-services"
+  },
+  "base/terra-trust.liquid": {
+    "template": "lib-base-terra-trust",
+    "url": "/pages/section-library?view=lib-base-terra-trust"
+  },
+  "base/testimonial-fan.liquid": {
+    "template": "lib-base-testimonial-fan",
+    "url": "/pages/section-library?view=lib-base-testimonial-fan"
+  },
+  "base/testimonials-animated.liquid": {
+    "template": "lib-base-testimonials-animated",
+    "url": "/pages/section-library?view=lib-base-testimonials-animated"
+  },
+  "base/testimonials.liquid": {
+    "template": "lib-base-testimonials",
+    "url": "/pages/section-library?view=lib-base-testimonials"
+  },
+  "base/text-with-icons.liquid": {
+    "template": "lib-base-text-with-icons",
+    "url": "/pages/section-library?view=lib-base-text-with-icons"
+  },
+  "base/the-problem.liquid": {
+    "template": "lib-base-the-problem",
+    "url": "/pages/section-library?view=lib-base-the-problem"
+  },
+  "base/the-reality.liquid": {
+    "template": "lib-base-the-reality",
+    "url": "/pages/section-library?view=lib-base-the-reality"
+  },
+  "base/the-solution.liquid": {
+    "template": "lib-base-the-solution",
+    "url": "/pages/section-library?view=lib-base-the-solution"
+  },
+  "base/three-paths.liquid": {
+    "template": "lib-base-three-paths",
+    "url": "/pages/section-library?view=lib-base-three-paths"
+  },
+  "base/trust-badge.liquid": {
+    "template": "lib-base-trust-badge",
+    "url": "/pages/section-library?view=lib-base-trust-badge"
+  },
+  "base/upsell-bundle.liquid": {
+    "template": "lib-base-upsell-bundle",
+    "url": "/pages/section-library?view=lib-base-upsell-bundle"
+  },
+  "base/usp-row.liquid": {
+    "template": "lib-base-usp-row",
+    "url": "/pages/section-library?view=lib-base-usp-row"
+  },
+  "base/variant-added.liquid": {
+    "template": "lib-base-variant-added",
+    "url": "/pages/section-library?view=lib-base-variant-added"
+  },
+  "base/video.liquid": {
+    "template": "lib-base-video",
+    "url": "/pages/section-library?view=lib-base-video"
+  },
+  "base/why-buy.liquid": {
+    "template": "lib-base-why-buy",
+    "url": "/pages/section-library?view=lib-base-why-buy"
+  },
+  "base/why-us-commitment.liquid": {
+    "template": "lib-base-why-us-commitment",
+    "url": "/pages/section-library?view=lib-base-why-us-commitment"
+  },
+  "base/why-us-pillars.liquid": {
+    "template": "lib-base-why-us-pillars",
+    "url": "/pages/section-library?view=lib-base-why-us-pillars"
+  },
+  "base/word-scroll-reveal.liquid": {
+    "template": "lib-base-word-scroll-reveal",
+    "url": "/pages/section-library?view=lib-base-word-scroll-reveal"
+  },
+  "horizon/_blocks.liquid": {
+    "template": "lib-horizon-blocks",
+    "url": "/pages/section-library?view=lib-horizon-blocks"
+  },
+  "horizon/carousel.liquid": {
+    "template": "lib-horizon-carousel",
+    "url": "/pages/section-library?view=lib-horizon-carousel"
+  },
+  "horizon/cart-drawer-section.liquid": {
+    "template": "lib-horizon-cart-drawer-section",
+    "url": "/pages/section-library?view=lib-horizon-cart-drawer-section"
+  },
+  "horizon/collection-links.liquid": {
+    "template": "lib-horizon-collection-links",
+    "url": "/pages/section-library?view=lib-horizon-collection-links"
+  },
+  "horizon/collection-list.liquid": {
+    "template": "lib-horizon-collection-list",
+    "url": "/pages/section-library?view=lib-horizon-collection-list"
+  },
+  "horizon/custom-liquid.liquid": {
+    "template": "lib-horizon-custom-liquid",
+    "url": "/pages/section-library?view=lib-horizon-custom-liquid"
+  },
+  "horizon/divider.liquid": {
+    "template": "lib-horizon-divider",
+    "url": "/pages/section-library?view=lib-horizon-divider"
+  },
+  "horizon/featured-blog-posts.liquid": {
+    "template": "lib-horizon-featured-blog-posts",
+    "url": "/pages/section-library?view=lib-horizon-featured-blog-posts"
+  },
+  "horizon/featured-product-information.liquid": {
+    "template": "lib-horizon-featured-product-information",
+    "url": "/pages/section-library?view=lib-horizon-featured-product-information"
+  },
+  "horizon/featured-product.liquid": {
+    "template": "lib-horizon-featured-product",
+    "url": "/pages/section-library?view=lib-horizon-featured-product"
+  },
+  "horizon/footer-utilities.liquid": {
+    "template": "lib-horizon-footer-utilities",
+    "url": "/pages/section-library?view=lib-horizon-footer-utilities"
+  },
+  "horizon/footer.liquid": {
+    "template": "lib-horizon-footer",
+    "url": "/pages/section-library?view=lib-horizon-footer"
+  },
+  "horizon/header-announcements.liquid": {
+    "template": "lib-horizon-header-announcements",
+    "url": "/pages/section-library?view=lib-horizon-header-announcements"
+  },
+  "horizon/header.liquid": {
+    "template": "lib-horizon-header",
+    "url": "/pages/section-library?view=lib-horizon-header"
+  },
+  "horizon/hero-product-cards.liquid": {
+    "template": "lib-horizon-hero-product-cards",
+    "url": "/pages/section-library?view=lib-horizon-hero-product-cards"
+  },
+  "horizon/hero.liquid": {
+    "template": "lib-horizon-hero",
+    "url": "/pages/section-library?view=lib-horizon-hero"
+  },
+  "horizon/layered-slideshow.liquid": {
+    "template": "lib-horizon-layered-slideshow",
+    "url": "/pages/section-library?view=lib-horizon-layered-slideshow"
+  },
+  "horizon/logo.liquid": {
+    "template": "lib-horizon-logo",
+    "url": "/pages/section-library?view=lib-horizon-logo"
+  },
+  "horizon/main-404.liquid": {
+    "template": "lib-horizon-main-404",
+    "url": "/pages/section-library?view=lib-horizon-main-404"
+  },
+  "horizon/main-blog-post.liquid": {
+    "template": "lib-horizon-main-blog-post",
+    "url": "/pages/section-library?view=lib-horizon-main-blog-post"
+  },
+  "horizon/main-blog.liquid": {
+    "template": "lib-horizon-main-blog",
+    "url": "/pages/section-library?view=lib-horizon-main-blog"
+  },
+  "horizon/main-cart.liquid": {
+    "template": "lib-horizon-main-cart",
+    "url": "/pages/section-library?view=lib-horizon-main-cart"
+  },
+  "horizon/main-collection-list.liquid": {
+    "template": "lib-horizon-main-collection-list",
+    "url": "/pages/section-library?view=lib-horizon-main-collection-list"
+  },
+  "horizon/main-collection.liquid": {
+    "template": "lib-horizon-main-collection",
+    "url": "/pages/section-library?view=lib-horizon-main-collection"
+  },
+  "horizon/main-page.liquid": {
+    "template": "lib-horizon-main-page",
+    "url": "/pages/section-library?view=lib-horizon-main-page"
+  },
+  "horizon/marquee.liquid": {
+    "template": "lib-horizon-marquee",
+    "url": "/pages/section-library?view=lib-horizon-marquee"
+  },
+  "horizon/media-with-content.liquid": {
+    "template": "lib-horizon-media-with-content",
+    "url": "/pages/section-library?view=lib-horizon-media-with-content"
+  },
+  "horizon/password-footer.liquid": {
+    "template": "lib-horizon-password-footer",
+    "url": "/pages/section-library?view=lib-horizon-password-footer"
+  },
+  "horizon/password.liquid": {
+    "template": "lib-horizon-password",
+    "url": "/pages/section-library?view=lib-horizon-password"
+  },
+  "horizon/predictive-search-empty.liquid": {
+    "template": "lib-horizon-predictive-search-empty",
+    "url": "/pages/section-library?view=lib-horizon-predictive-search-empty"
+  },
+  "horizon/predictive-search.liquid": {
+    "template": "lib-horizon-predictive-search",
+    "url": "/pages/section-library?view=lib-horizon-predictive-search"
+  },
+  "horizon/product-hotspots.liquid": {
+    "template": "lib-horizon-product-hotspots",
+    "url": "/pages/section-library?view=lib-horizon-product-hotspots"
+  },
+  "horizon/product-information.liquid": {
+    "template": "lib-horizon-product-information",
+    "url": "/pages/section-library?view=lib-horizon-product-information"
+  },
+  "horizon/product-list.liquid": {
+    "template": "lib-horizon-product-list",
+    "url": "/pages/section-library?view=lib-horizon-product-list"
+  },
+  "horizon/product-recommendations.liquid": {
+    "template": "lib-horizon-product-recommendations",
+    "url": "/pages/section-library?view=lib-horizon-product-recommendations"
+  },
+  "horizon/quick-order-list.liquid": {
+    "template": "lib-horizon-quick-order-list",
+    "url": "/pages/section-library?view=lib-horizon-quick-order-list"
+  },
+  "horizon/search-header.liquid": {
+    "template": "lib-horizon-search-header",
+    "url": "/pages/section-library?view=lib-horizon-search-header"
+  },
+  "horizon/search-results.liquid": {
+    "template": "lib-horizon-search-results",
+    "url": "/pages/section-library?view=lib-horizon-search-results"
+  },
+  "horizon/section-rendering-product-card.liquid": {
+    "template": "lib-horizon-section-rendering-product-card",
+    "url": "/pages/section-library?view=lib-horizon-section-rendering-product-card"
+  },
+  "horizon/section.liquid": {
+    "template": "lib-horizon-section",
+    "url": "/pages/section-library?view=lib-horizon-section"
+  },
+  "horizon/slideshow.liquid": {
+    "template": "lib-horizon-slideshow",
+    "url": "/pages/section-library?view=lib-horizon-slideshow"
+  },
+  "mariana-red/about-stats.liquid": {
+    "template": "lib-mariana-red-about-stats",
+    "url": "/pages/section-library?view=lib-mariana-red-about-stats"
+  },
+  "mariana-red/advantages.liquid": {
+    "template": "lib-mariana-red-advantages",
+    "url": "/pages/section-library?view=lib-mariana-red-advantages"
+  },
+  "mariana-red/announcement-bar.liquid": {
+    "template": "lib-mariana-red-announcement-bar",
+    "url": "/pages/section-library?view=lib-mariana-red-announcement-bar"
+  },
+  "mariana-red/banner.liquid": {
+    "template": "lib-mariana-red-banner",
+    "url": "/pages/section-library?view=lib-mariana-red-banner"
+  },
+  "mariana-red/case-studies.liquid": {
+    "template": "lib-mariana-red-case-studies",
+    "url": "/pages/section-library?view=lib-mariana-red-case-studies"
+  },
+  "mariana-red/collection-list.liquid": {
+    "template": "lib-mariana-red-collection-list",
+    "url": "/pages/section-library?view=lib-mariana-red-collection-list"
+  },
+  "mariana-red/contact-form.liquid": {
+    "template": "lib-mariana-red-contact-form",
+    "url": "/pages/section-library?view=lib-mariana-red-contact-form"
+  },
+  "mariana-red/editorial-trio.liquid": {
+    "template": "lib-mariana-red-editorial-trio",
+    "url": "/pages/section-library?view=lib-mariana-red-editorial-trio"
+  },
+  "mariana-red/faq.liquid": {
+    "template": "lib-mariana-red-faq",
+    "url": "/pages/section-library?view=lib-mariana-red-faq"
+  },
+  "mariana-red/feature-cards.liquid": {
+    "template": "lib-mariana-red-feature-cards",
+    "url": "/pages/section-library?view=lib-mariana-red-feature-cards"
+  },
+  "mariana-red/featured-collection.liquid": {
+    "template": "lib-mariana-red-featured-collection",
+    "url": "/pages/section-library?view=lib-mariana-red-featured-collection"
+  },
+  "mariana-red/featured-product.liquid": {
+    "template": "lib-mariana-red-featured-product",
+    "url": "/pages/section-library?view=lib-mariana-red-featured-product"
+  },
+  "mariana-red/footer-designer.liquid": {
+    "template": "lib-mariana-red-footer-designer",
+    "url": "/pages/section-library?view=lib-mariana-red-footer-designer"
+  },
+  "mariana-red/footer.liquid": {
+    "template": "lib-mariana-red-footer",
+    "url": "/pages/section-library?view=lib-mariana-red-footer"
+  },
+  "mariana-red/header.liquid": {
+    "template": "lib-mariana-red-header",
+    "url": "/pages/section-library?view=lib-mariana-red-header"
+  },
+  "mariana-red/hero-designer.liquid": {
+    "template": "lib-mariana-red-hero-designer",
+    "url": "/pages/section-library?view=lib-mariana-red-hero-designer"
+  },
+  "mariana-red/hero.liquid": {
+    "template": "lib-mariana-red-hero",
+    "url": "/pages/section-library?view=lib-mariana-red-hero"
+  },
+  "mariana-red/image-with-text.liquid": {
+    "template": "lib-mariana-red-image-with-text",
+    "url": "/pages/section-library?view=lib-mariana-red-image-with-text"
+  },
+  "mariana-red/logo-wall.liquid": {
+    "template": "lib-mariana-red-logo-wall",
+    "url": "/pages/section-library?view=lib-mariana-red-logo-wall"
+  },
+  "mariana-red/main-404.liquid": {
+    "template": "lib-mariana-red-main-404",
+    "url": "/pages/section-library?view=lib-mariana-red-main-404"
+  },
+  "mariana-red/main-article.liquid": {
+    "template": "lib-mariana-red-main-article",
+    "url": "/pages/section-library?view=lib-mariana-red-main-article"
+  },
+  "mariana-red/main-blog.liquid": {
+    "template": "lib-mariana-red-main-blog",
+    "url": "/pages/section-library?view=lib-mariana-red-main-blog"
+  },
+  "mariana-red/main-cart.liquid": {
+    "template": "lib-mariana-red-main-cart",
+    "url": "/pages/section-library?view=lib-mariana-red-main-cart"
+  },
+  "mariana-red/main-collection.liquid": {
+    "template": "lib-mariana-red-main-collection",
+    "url": "/pages/section-library?view=lib-mariana-red-main-collection"
+  },
+  "mariana-red/main-list-collections.liquid": {
+    "template": "lib-mariana-red-main-list-collections",
+    "url": "/pages/section-library?view=lib-mariana-red-main-list-collections"
+  },
+  "mariana-red/main-page.liquid": {
+    "template": "lib-mariana-red-main-page",
+    "url": "/pages/section-library?view=lib-mariana-red-main-page"
+  },
+  "mariana-red/main-password.liquid": {
+    "template": "lib-mariana-red-main-password",
+    "url": "/pages/section-library?view=lib-mariana-red-main-password"
+  },
+  "mariana-red/main-product.liquid": {
+    "template": "lib-mariana-red-main-product",
+    "url": "/pages/section-library?view=lib-mariana-red-main-product"
+  },
+  "mariana-red/main-search.liquid": {
+    "template": "lib-mariana-red-main-search",
+    "url": "/pages/section-library?view=lib-mariana-red-main-search"
+  },
+  "mariana-red/marquee-ribbon.liquid": {
+    "template": "lib-mariana-red-marquee-ribbon",
+    "url": "/pages/section-library?view=lib-mariana-red-marquee-ribbon"
+  },
+  "mariana-red/newsletter.liquid": {
+    "template": "lib-mariana-red-newsletter",
+    "url": "/pages/section-library?view=lib-mariana-red-newsletter"
+  },
+  "mariana-red/process-timeline.liquid": {
+    "template": "lib-mariana-red-process-timeline",
+    "url": "/pages/section-library?view=lib-mariana-red-process-timeline"
+  },
+  "mariana-red/product-callouts.liquid": {
+    "template": "lib-mariana-red-product-callouts",
+    "url": "/pages/section-library?view=lib-mariana-red-product-callouts"
+  },
+  "mariana-red/project-cards.liquid": {
+    "template": "lib-mariana-red-project-cards",
+    "url": "/pages/section-library?view=lib-mariana-red-project-cards"
+  },
+  "mariana-red/promo-tiles.liquid": {
+    "template": "lib-mariana-red-promo-tiles",
+    "url": "/pages/section-library?view=lib-mariana-red-promo-tiles"
+  },
+  "mariana-red/quote-stats.liquid": {
+    "template": "lib-mariana-red-quote-stats",
+    "url": "/pages/section-library?view=lib-mariana-red-quote-stats"
+  },
+  "mariana-red/rich-text.liquid": {
+    "template": "lib-mariana-red-rich-text",
+    "url": "/pages/section-library?view=lib-mariana-red-rich-text"
+  },
+  "mariana-red/slideshow.liquid": {
+    "template": "lib-mariana-red-slideshow",
+    "url": "/pages/section-library?view=lib-mariana-red-slideshow"
+  },
+  "mariana-red/stats.liquid": {
+    "template": "lib-mariana-red-stats",
+    "url": "/pages/section-library?view=lib-mariana-red-stats"
+  },
+  "mariana-red/steps.liquid": {
+    "template": "lib-mariana-red-steps",
+    "url": "/pages/section-library?view=lib-mariana-red-steps"
+  },
+  "mariana-red/style-cards.liquid": {
+    "template": "lib-mariana-red-style-cards",
+    "url": "/pages/section-library?view=lib-mariana-red-style-cards"
+  },
+  "mariana-red/testimonials.liquid": {
+    "template": "lib-mariana-red-testimonials",
+    "url": "/pages/section-library?view=lib-mariana-red-testimonials"
+  },
+  "mariana-red/trust-row.liquid": {
+    "template": "lib-mariana-red-trust-row",
+    "url": "/pages/section-library?view=lib-mariana-red-trust-row"
+  },
+  "mariana-red/usp-bar.liquid": {
+    "template": "lib-mariana-red-usp-bar",
+    "url": "/pages/section-library?view=lib-mariana-red-usp-bar"
+  },
+  "mariana-red/works-grid.liquid": {
+    "template": "lib-mariana-red-works-grid",
+    "url": "/pages/section-library?view=lib-mariana-red-works-grid"
+  },
+  "nocturne-store/about-snatched.liquid": {
+    "template": "lib-nocturne-store-about-snatched",
+    "url": "/pages/section-library?view=lib-nocturne-store-about-snatched"
+  },
+  "nocturne-store/accordion-content.liquid": {
+    "template": "lib-nocturne-store-accordion-content",
+    "url": "/pages/section-library?view=lib-nocturne-store-accordion-content"
+  },
+  "nocturne-store/account-banner.liquid": {
+    "template": "lib-nocturne-store-account-banner",
+    "url": "/pages/section-library?view=lib-nocturne-store-account-banner"
+  },
+  "nocturne-store/announcement-bar.liquid": {
+    "template": "lib-nocturne-store-announcement-bar",
+    "url": "/pages/section-library?view=lib-nocturne-store-announcement-bar"
+  },
+  "nocturne-store/apps.liquid": {
+    "template": "lib-nocturne-store-apps",
+    "url": "/pages/section-library?view=lib-nocturne-store-apps"
+  },
+  "nocturne-store/arena-cta.liquid": {
+    "template": "lib-nocturne-store-arena-cta",
+    "url": "/pages/section-library?view=lib-nocturne-store-arena-cta"
+  },
+  "nocturne-store/arena-hero.liquid": {
+    "template": "lib-nocturne-store-arena-hero",
+    "url": "/pages/section-library?view=lib-nocturne-store-arena-hero"
+  },
+  "nocturne-store/arena-process.liquid": {
+    "template": "lib-nocturne-store-arena-process",
+    "url": "/pages/section-library?view=lib-nocturne-store-arena-process"
+  },
+  "nocturne-store/arena-why-us.liquid": {
+    "template": "lib-nocturne-store-arena-why-us",
+    "url": "/pages/section-library?view=lib-nocturne-store-arena-why-us"
+  },
+  "nocturne-store/before-after-image.liquid": {
+    "template": "lib-nocturne-store-before-after-image",
+    "url": "/pages/section-library?view=lib-nocturne-store-before-after-image"
+  },
+  "nocturne-store/blog-posts.liquid": {
+    "template": "lib-nocturne-store-blog-posts",
+    "url": "/pages/section-library?view=lib-nocturne-store-blog-posts"
+  },
+  "nocturne-store/brand-value-showcase.liquid": {
+    "template": "lib-nocturne-store-brand-value-showcase",
+    "url": "/pages/section-library?view=lib-nocturne-store-brand-value-showcase"
+  },
+  "nocturne-store/bundle-showcase.liquid": {
+    "template": "lib-nocturne-store-bundle-showcase",
+    "url": "/pages/section-library?view=lib-nocturne-store-bundle-showcase"
+  },
+  "nocturne-store/button-grid.liquid": {
+    "template": "lib-nocturne-store-button-grid",
+    "url": "/pages/section-library?view=lib-nocturne-store-button-grid"
+  },
+  "nocturne-store/cart-drawer.liquid": {
+    "template": "lib-nocturne-store-cart-drawer",
+    "url": "/pages/section-library?view=lib-nocturne-store-cart-drawer"
+  },
+  "nocturne-store/collection-banner.liquid": {
+    "template": "lib-nocturne-store-collection-banner",
+    "url": "/pages/section-library?view=lib-nocturne-store-collection-banner"
+  },
+  "nocturne-store/collection-list.liquid": {
+    "template": "lib-nocturne-store-collection-list",
+    "url": "/pages/section-library?view=lib-nocturne-store-collection-list"
+  },
+  "nocturne-store/collection-showcase.liquid": {
+    "template": "lib-nocturne-store-collection-showcase",
+    "url": "/pages/section-library?view=lib-nocturne-store-collection-showcase"
+  },
+  "nocturne-store/contact.liquid": {
+    "template": "lib-nocturne-store-contact",
+    "url": "/pages/section-library?view=lib-nocturne-store-contact"
+  },
+  "nocturne-store/countdown-banner.liquid": {
+    "template": "lib-nocturne-store-countdown-banner",
+    "url": "/pages/section-library?view=lib-nocturne-store-countdown-banner"
+  },
+  "nocturne-store/custom-html.liquid": {
+    "template": "lib-nocturne-store-custom-html",
+    "url": "/pages/section-library?view=lib-nocturne-store-custom-html"
+  },
+  "nocturne-store/custom-liquid.liquid": {
+    "template": "lib-nocturne-store-custom-liquid",
+    "url": "/pages/section-library?view=lib-nocturne-store-custom-liquid"
+  },
+  "nocturne-store/custom-product-showcase.liquid": {
+    "template": "lib-nocturne-store-custom-product-showcase",
+    "url": "/pages/section-library?view=lib-nocturne-store-custom-product-showcase"
+  },
+  "nocturne-store/custom-testimonial-showcase.liquid": {
+    "template": "lib-be157058d1ff",
+    "url": "/pages/section-library?view=lib-be157058d1ff"
+  },
+  "nocturne-store/decorated-card.liquid": {
+    "template": "lib-nocturne-store-decorated-card",
+    "url": "/pages/section-library?view=lib-nocturne-store-decorated-card"
+  },
+  "nocturne-store/eq-about-us.liquid": {
+    "template": "lib-nocturne-store-eq-about-us",
+    "url": "/pages/section-library?view=lib-nocturne-store-eq-about-us"
+  },
+  "nocturne-store/eq-footer.liquid": {
+    "template": "lib-nocturne-store-eq-footer",
+    "url": "/pages/section-library?view=lib-nocturne-store-eq-footer"
+  },
+  "nocturne-store/faq.liquid": {
+    "template": "lib-nocturne-store-faq",
+    "url": "/pages/section-library?view=lib-nocturne-store-faq"
+  },
+  "nocturne-store/feature-chart.liquid": {
+    "template": "lib-nocturne-store-feature-chart",
+    "url": "/pages/section-library?view=lib-nocturne-store-feature-chart"
+  },
+  "nocturne-store/featured-collection.liquid": {
+    "template": "lib-nocturne-store-featured-collection",
+    "url": "/pages/section-library?view=lib-nocturne-store-featured-collection"
+  },
+  "nocturne-store/featured-product-showcase.liquid": {
+    "template": "lib-a0f79d1b27e5",
+    "url": "/pages/section-library?view=lib-a0f79d1b27e5"
+  },
+  "nocturne-store/featured-product.liquid": {
+    "template": "lib-nocturne-store-featured-product",
+    "url": "/pages/section-library?view=lib-nocturne-store-featured-product"
+  },
+  "nocturne-store/features-benefits-cta.liquid": {
+    "template": "lib-nocturne-store-features-benefits-cta",
+    "url": "/pages/section-library?view=lib-nocturne-store-features-benefits-cta"
+  },
+  "nocturne-store/footer.liquid": {
+    "template": "lib-nocturne-store-footer",
+    "url": "/pages/section-library?view=lib-nocturne-store-footer"
+  },
+  "nocturne-store/gift-set-grid.liquid": {
+    "template": "lib-nocturne-store-gift-set-grid",
+    "url": "/pages/section-library?view=lib-nocturne-store-gift-set-grid"
+  },
+  "nocturne-store/header.liquid": {
+    "template": "lib-nocturne-store-header",
+    "url": "/pages/section-library?view=lib-nocturne-store-header"
+  },
+  "nocturne-store/hero-with-cards.liquid": {
+    "template": "lib-nocturne-store-hero-with-cards",
+    "url": "/pages/section-library?view=lib-nocturne-store-hero-with-cards"
+  },
+  "nocturne-store/hero-with-products.liquid": {
+    "template": "lib-nocturne-store-hero-with-products",
+    "url": "/pages/section-library?view=lib-nocturne-store-hero-with-products"
+  },
+  "nocturne-store/hot-spots.liquid": {
+    "template": "lib-nocturne-store-hot-spots",
+    "url": "/pages/section-library?view=lib-nocturne-store-hot-spots"
+  },
+  "nocturne-store/image-link-blocks.liquid": {
+    "template": "lib-nocturne-store-image-link-blocks",
+    "url": "/pages/section-library?view=lib-nocturne-store-image-link-blocks"
+  },
+  "nocturne-store/image-with-text-overlay.liquid": {
+    "template": "lib-nocturne-store-image-with-text-overlay",
+    "url": "/pages/section-library?view=lib-nocturne-store-image-with-text-overlay"
+  },
+  "nocturne-store/images-with-text-scrolling.liquid": {
+    "template": "lib-b351209cafc2",
+    "url": "/pages/section-library?view=lib-b351209cafc2"
+  },
+  "nocturne-store/impact-text.liquid": {
+    "template": "lib-nocturne-store-impact-text",
+    "url": "/pages/section-library?view=lib-nocturne-store-impact-text"
+  },
+  "nocturne-store/logo-list.liquid": {
+    "template": "lib-nocturne-store-logo-list",
+    "url": "/pages/section-library?view=lib-nocturne-store-logo-list"
+  },
+  "nocturne-store/main-article.liquid": {
+    "template": "lib-nocturne-store-main-article",
+    "url": "/pages/section-library?view=lib-nocturne-store-main-article"
+  },
+  "nocturne-store/main-blog.liquid": {
+    "template": "lib-nocturne-store-main-blog",
+    "url": "/pages/section-library?view=lib-nocturne-store-main-blog"
+  },
+  "nocturne-store/main-cart.liquid": {
+    "template": "lib-nocturne-store-main-cart",
+    "url": "/pages/section-library?view=lib-nocturne-store-main-cart"
+  },
+  "nocturne-store/main-collection.liquid": {
+    "template": "lib-nocturne-store-main-collection",
+    "url": "/pages/section-library?view=lib-nocturne-store-main-collection"
+  },
+  "nocturne-store/main-customers-account.liquid": {
+    "template": "lib-nocturne-store-main-customers-account",
+    "url": "/pages/section-library?view=lib-nocturne-store-main-customers-account"
+  },
+  "nocturne-store/main-customers-activate-account.liquid": {
+    "template": "lib-8143dd6abb0a",
+    "url": "/pages/section-library?view=lib-8143dd6abb0a"
+  },
+  "nocturne-store/main-customers-addresses.liquid": {
+    "template": "lib-nocturne-store-main-customers-addresses",
+    "url": "/pages/section-library?view=lib-nocturne-store-main-customers-addresses"
+  },
+  "nocturne-store/main-customers-login.liquid": {
+    "template": "lib-nocturne-store-main-customers-login",
+    "url": "/pages/section-library?view=lib-nocturne-store-main-customers-login"
+  },
+  "nocturne-store/main-customers-order.liquid": {
+    "template": "lib-nocturne-store-main-customers-order",
+    "url": "/pages/section-library?view=lib-nocturne-store-main-customers-order"
+  },
+  "nocturne-store/main-customers-register.liquid": {
+    "template": "lib-nocturne-store-main-customers-register",
+    "url": "/pages/section-library?view=lib-nocturne-store-main-customers-register"
+  },
+  "nocturne-store/main-customers-reset-password.liquid": {
+    "template": "lib-fd2bf9f29853",
+    "url": "/pages/section-library?view=lib-fd2bf9f29853"
+  },
+  "nocturne-store/main-gift-card.liquid": {
+    "template": "lib-nocturne-store-main-gift-card",
+    "url": "/pages/section-library?view=lib-nocturne-store-main-gift-card"
+  },
+  "nocturne-store/main-list-collections.liquid": {
+    "template": "lib-nocturne-store-main-list-collections",
+    "url": "/pages/section-library?view=lib-nocturne-store-main-list-collections"
+  },
+  "nocturne-store/main-not-found.liquid": {
+    "template": "lib-nocturne-store-main-not-found",
+    "url": "/pages/section-library?view=lib-nocturne-store-main-not-found"
+  },
+  "nocturne-store/main-page.liquid": {
+    "template": "lib-nocturne-store-main-page",
+    "url": "/pages/section-library?view=lib-nocturne-store-main-page"
+  },
+  "nocturne-store/main-password.liquid": {
+    "template": "lib-nocturne-store-main-password",
+    "url": "/pages/section-library?view=lib-nocturne-store-main-password"
+  },
+  "nocturne-store/main-product.liquid": {
+    "template": "lib-nocturne-store-main-product",
+    "url": "/pages/section-library?view=lib-nocturne-store-main-product"
+  },
+  "nocturne-store/main-search.liquid": {
+    "template": "lib-nocturne-store-main-search",
+    "url": "/pages/section-library?view=lib-nocturne-store-main-search"
+  },
+  "nocturne-store/media-grid.liquid": {
+    "template": "lib-nocturne-store-media-grid",
+    "url": "/pages/section-library?view=lib-nocturne-store-media-grid"
+  },
+  "nocturne-store/media-with-text.liquid": {
+    "template": "lib-nocturne-store-media-with-text",
+    "url": "/pages/section-library?view=lib-nocturne-store-media-with-text"
+  },
+  "nocturne-store/mega-header.liquid": {
+    "template": "lib-nocturne-store-mega-header",
+    "url": "/pages/section-library?view=lib-nocturne-store-mega-header"
+  },
+  "nocturne-store/minimal-centered-footer.liquid": {
+    "template": "lib-nocturne-store-minimal-centered-footer",
+    "url": "/pages/section-library?view=lib-nocturne-store-minimal-centered-footer"
+  },
+  "nocturne-store/minimal-footer.liquid": {
+    "template": "lib-nocturne-store-minimal-footer",
+    "url": "/pages/section-library?view=lib-nocturne-store-minimal-footer"
+  },
+  "nocturne-store/multi-column.liquid": {
+    "template": "lib-nocturne-store-multi-column",
+    "url": "/pages/section-library?view=lib-nocturne-store-multi-column"
+  },
+  "nocturne-store/multiple-images-with-text.liquid": {
+    "template": "lib-e7ffd7bfef18",
+    "url": "/pages/section-library?view=lib-e7ffd7bfef18"
+  },
+  "nocturne-store/newsletter-popup.liquid": {
+    "template": "lib-nocturne-store-newsletter-popup",
+    "url": "/pages/section-library?view=lib-nocturne-store-newsletter-popup"
+  },
+  "nocturne-store/newsletter.liquid": {
+    "template": "lib-nocturne-store-newsletter",
+    "url": "/pages/section-library?view=lib-nocturne-store-newsletter"
+  },
+  "nocturne-store/pickup-availability.liquid": {
+    "template": "lib-nocturne-store-pickup-availability",
+    "url": "/pages/section-library?view=lib-nocturne-store-pickup-availability"
+  },
+  "nocturne-store/press.liquid": {
+    "template": "lib-nocturne-store-press",
+    "url": "/pages/section-library?view=lib-nocturne-store-press"
+  },
+  "nocturne-store/privacy-banner.liquid": {
+    "template": "lib-nocturne-store-privacy-banner",
+    "url": "/pages/section-library?view=lib-nocturne-store-privacy-banner"
+  },
+  "nocturne-store/promo-payment-methods.liquid": {
+    "template": "lib-nocturne-store-promo-payment-methods",
+    "url": "/pages/section-library?view=lib-nocturne-store-promo-payment-methods"
+  },
+  "nocturne-store/promo-split-banner.liquid": {
+    "template": "lib-nocturne-store-promo-split-banner",
+    "url": "/pages/section-library?view=lib-nocturne-store-promo-split-banner"
+  },
+  "nocturne-store/recently-viewed-products.liquid": {
+    "template": "lib-nocturne-store-recently-viewed-products",
+    "url": "/pages/section-library?view=lib-nocturne-store-recently-viewed-products"
+  },
+  "nocturne-store/related-products.liquid": {
+    "template": "lib-nocturne-store-related-products",
+    "url": "/pages/section-library?view=lib-nocturne-store-related-products"
+  },
+  "nocturne-store/rich-text.liquid": {
+    "template": "lib-nocturne-store-rich-text",
+    "url": "/pages/section-library?view=lib-nocturne-store-rich-text"
+  },
+  "nocturne-store/ritual-accessories.liquid": {
+    "template": "lib-nocturne-store-ritual-accessories",
+    "url": "/pages/section-library?view=lib-nocturne-store-ritual-accessories"
+  },
+  "nocturne-store/ritual-banner.liquid": {
+    "template": "lib-nocturne-store-ritual-banner",
+    "url": "/pages/section-library?view=lib-nocturne-store-ritual-banner"
+  },
+  "nocturne-store/ritual-cards.liquid": {
+    "template": "lib-nocturne-store-ritual-cards",
+    "url": "/pages/section-library?view=lib-nocturne-store-ritual-cards"
+  },
+  "nocturne-store/scrolling-text.liquid": {
+    "template": "lib-nocturne-store-scrolling-text",
+    "url": "/pages/section-library?view=lib-nocturne-store-scrolling-text"
+  },
+  "nocturne-store/scrolling-video.liquid": {
+    "template": "lib-nocturne-store-scrolling-video",
+    "url": "/pages/section-library?view=lib-nocturne-store-scrolling-video"
+  },
+  "nocturne-store/search-drawer.liquid": {
+    "template": "lib-nocturne-store-search-drawer",
+    "url": "/pages/section-library?view=lib-nocturne-store-search-drawer"
+  },
+  "nocturne-store/section-navigator.liquid": {
+    "template": "lib-nocturne-store-section-navigator",
+    "url": "/pages/section-library?view=lib-nocturne-store-section-navigator"
+  },
+  "nocturne-store/shogun-above.liquid": {
+    "template": "lib-nocturne-store-shogun-above",
+    "url": "/pages/section-library?view=lib-nocturne-store-shogun-above"
+  },
+  "nocturne-store/shogun-below.liquid": {
+    "template": "lib-nocturne-store-shogun-below",
+    "url": "/pages/section-library?view=lib-nocturne-store-shogun-below"
+  },
+  "nocturne-store/shogun-custom-html.liquid": {
+    "template": "lib-nocturne-store-shogun-custom-html",
+    "url": "/pages/section-library?view=lib-nocturne-store-shogun-custom-html"
+  },
+  "nocturne-store/shogun-helper.liquid": {
+    "template": "lib-nocturne-store-shogun-helper",
+    "url": "/pages/section-library?view=lib-nocturne-store-shogun-helper"
+  },
+  "nocturne-store/shogun-optimizer.liquid": {
+    "template": "lib-nocturne-store-shogun-optimizer",
+    "url": "/pages/section-library?view=lib-nocturne-store-shogun-optimizer"
+  },
+  "nocturne-store/sleek-hero.liquid": {
+    "template": "lib-nocturne-store-sleek-hero",
+    "url": "/pages/section-library?view=lib-nocturne-store-sleek-hero"
+  },
+  "nocturne-store/slideshow.liquid": {
+    "template": "lib-nocturne-store-slideshow",
+    "url": "/pages/section-library?view=lib-nocturne-store-slideshow"
+  },
+  "nocturne-store/split-featured-product.liquid": {
+    "template": "lib-nocturne-store-split-featured-product",
+    "url": "/pages/section-library?view=lib-nocturne-store-split-featured-product"
+  },
+  "nocturne-store/ss-hero-16.liquid": {
+    "template": "lib-nocturne-store-ss-hero-16",
+    "url": "/pages/section-library?view=lib-nocturne-store-ss-hero-16"
+  },
+  "nocturne-store/ss-trust-badges-3.liquid": {
+    "template": "lib-nocturne-store-ss-trust-badges-3",
+    "url": "/pages/section-library?view=lib-nocturne-store-ss-trust-badges-3"
+  },
+  "nocturne-store/ss-video-slider.liquid": {
+    "template": "lib-nocturne-store-ss-video-slider",
+    "url": "/pages/section-library?view=lib-nocturne-store-ss-video-slider"
+  },
+  "nocturne-store/statement-banner.liquid": {
+    "template": "lib-nocturne-store-statement-banner",
+    "url": "/pages/section-library?view=lib-nocturne-store-statement-banner"
+  },
+  "nocturne-store/stats-achievement.liquid": {
+    "template": "lib-nocturne-store-stats-achievement",
+    "url": "/pages/section-library?view=lib-nocturne-store-stats-achievement"
+  },
+  "nocturne-store/story-cards.liquid": {
+    "template": "lib-nocturne-store-story-cards",
+    "url": "/pages/section-library?view=lib-nocturne-store-story-cards"
+  },
+  "nocturne-store/styling-layout.liquid": {
+    "template": "lib-nocturne-store-styling-layout",
+    "url": "/pages/section-library?view=lib-nocturne-store-styling-layout"
+  },
+  "nocturne-store/tabs.liquid": {
+    "template": "lib-nocturne-store-tabs",
+    "url": "/pages/section-library?view=lib-nocturne-store-tabs"
+  },
+  "nocturne-store/terra-featured-product.liquid": {
+    "template": "lib-nocturne-store-terra-featured-product",
+    "url": "/pages/section-library?view=lib-nocturne-store-terra-featured-product"
+  },
+  "nocturne-store/terra-hero.liquid": {
+    "template": "lib-nocturne-store-terra-hero",
+    "url": "/pages/section-library?view=lib-nocturne-store-terra-hero"
+  },
+  "nocturne-store/terra-services.liquid": {
+    "template": "lib-nocturne-store-terra-services",
+    "url": "/pages/section-library?view=lib-nocturne-store-terra-services"
+  },
+  "nocturne-store/terra-trust.liquid": {
+    "template": "lib-nocturne-store-terra-trust",
+    "url": "/pages/section-library?view=lib-nocturne-store-terra-trust"
+  },
+  "nocturne-store/testimonials-animated.liquid": {
+    "template": "lib-nocturne-store-testimonials-animated",
+    "url": "/pages/section-library?view=lib-nocturne-store-testimonials-animated"
+  },
+  "nocturne-store/testimonials.liquid": {
+    "template": "lib-nocturne-store-testimonials",
+    "url": "/pages/section-library?view=lib-nocturne-store-testimonials"
+  },
+  "nocturne-store/text-with-icons.liquid": {
+    "template": "lib-nocturne-store-text-with-icons",
+    "url": "/pages/section-library?view=lib-nocturne-store-text-with-icons"
+  },
+  "nocturne-store/the-problem.liquid": {
+    "template": "lib-nocturne-store-the-problem",
+    "url": "/pages/section-library?view=lib-nocturne-store-the-problem"
+  },
+  "nocturne-store/the-reality.liquid": {
+    "template": "lib-nocturne-store-the-reality",
+    "url": "/pages/section-library?view=lib-nocturne-store-the-reality"
+  },
+  "nocturne-store/the-solution.liquid": {
+    "template": "lib-nocturne-store-the-solution",
+    "url": "/pages/section-library?view=lib-nocturne-store-the-solution"
+  },
+  "nocturne-store/three-paths.liquid": {
+    "template": "lib-nocturne-store-three-paths",
+    "url": "/pages/section-library?view=lib-nocturne-store-three-paths"
+  },
+  "nocturne-store/trust-badge.liquid": {
+    "template": "lib-nocturne-store-trust-badge",
+    "url": "/pages/section-library?view=lib-nocturne-store-trust-badge"
+  },
+  "nocturne-store/upsell-bundle.liquid": {
+    "template": "lib-nocturne-store-upsell-bundle",
+    "url": "/pages/section-library?view=lib-nocturne-store-upsell-bundle"
+  },
+  "nocturne-store/variant-added.liquid": {
+    "template": "lib-nocturne-store-variant-added",
+    "url": "/pages/section-library?view=lib-nocturne-store-variant-added"
+  },
+  "nocturne-store/video.liquid": {
+    "template": "lib-nocturne-store-video",
+    "url": "/pages/section-library?view=lib-nocturne-store-video"
+  },
+  "nocturne-store/why-buy.liquid": {
+    "template": "lib-nocturne-store-why-buy",
+    "url": "/pages/section-library?view=lib-nocturne-store-why-buy"
+  },
+  "nocturne-store/why-us-commitment.liquid": {
+    "template": "lib-nocturne-store-why-us-commitment",
+    "url": "/pages/section-library?view=lib-nocturne-store-why-us-commitment"
+  },
+  "nocturne-store/why-us-pillars.liquid": {
+    "template": "lib-nocturne-store-why-us-pillars",
+    "url": "/pages/section-library?view=lib-nocturne-store-why-us-pillars"
+  },
+  "nocturne-store/word-scroll-reveal.liquid": {
+    "template": "lib-nocturne-store-word-scroll-reveal",
+    "url": "/pages/section-library?view=lib-nocturne-store-word-scroll-reveal"
+  },
+  "pet store/_blocks.liquid": {
+    "template": "lib-pet-store-blocks",
+    "url": "/pages/section-library?view=lib-pet-store-blocks"
+  },
+  "pet store/carousel.liquid": {
+    "template": "lib-pet-store-carousel",
+    "url": "/pages/section-library?view=lib-pet-store-carousel"
+  },
+  "pet store/cart-drawer-section.liquid": {
+    "template": "lib-pet-store-cart-drawer-section",
+    "url": "/pages/section-library?view=lib-pet-store-cart-drawer-section"
+  },
+  "pet store/collection-links.liquid": {
+    "template": "lib-pet-store-collection-links",
+    "url": "/pages/section-library?view=lib-pet-store-collection-links"
+  },
+  "pet store/collection-list.liquid": {
+    "template": "lib-pet-store-collection-list",
+    "url": "/pages/section-library?view=lib-pet-store-collection-list"
+  },
+  "pet store/custom-liquid.liquid": {
+    "template": "lib-pet-store-custom-liquid",
+    "url": "/pages/section-library?view=lib-pet-store-custom-liquid"
+  },
+  "pet store/divider.liquid": {
+    "template": "lib-pet-store-divider",
+    "url": "/pages/section-library?view=lib-pet-store-divider"
+  },
+  "pet store/featured-blog-posts.liquid": {
+    "template": "lib-pet-store-featured-blog-posts",
+    "url": "/pages/section-library?view=lib-pet-store-featured-blog-posts"
+  },
+  "pet store/featured-product-information.liquid": {
+    "template": "lib-pet-store-featured-product-information",
+    "url": "/pages/section-library?view=lib-pet-store-featured-product-information"
+  },
+  "pet store/featured-product.liquid": {
+    "template": "lib-pet-store-featured-product",
+    "url": "/pages/section-library?view=lib-pet-store-featured-product"
+  },
+  "pet store/footer-utilities.liquid": {
+    "template": "lib-pet-store-footer-utilities",
+    "url": "/pages/section-library?view=lib-pet-store-footer-utilities"
+  },
+  "pet store/footer.liquid": {
+    "template": "lib-pet-store-footer",
+    "url": "/pages/section-library?view=lib-pet-store-footer"
+  },
+  "pet store/header-announcements.liquid": {
+    "template": "lib-pet-store-header-announcements",
+    "url": "/pages/section-library?view=lib-pet-store-header-announcements"
+  },
+  "pet store/header.liquid": {
+    "template": "lib-pet-store-header",
+    "url": "/pages/section-library?view=lib-pet-store-header"
+  },
+  "pet store/hero.liquid": {
+    "template": "lib-pet-store-hero",
+    "url": "/pages/section-library?view=lib-pet-store-hero"
+  },
+  "pet store/layered-slideshow.liquid": {
+    "template": "lib-pet-store-layered-slideshow",
+    "url": "/pages/section-library?view=lib-pet-store-layered-slideshow"
+  },
+  "pet store/logo.liquid": {
+    "template": "lib-pet-store-logo",
+    "url": "/pages/section-library?view=lib-pet-store-logo"
+  },
+  "pet store/main-404.liquid": {
+    "template": "lib-pet-store-main-404",
+    "url": "/pages/section-library?view=lib-pet-store-main-404"
+  },
+  "pet store/main-blog-post.liquid": {
+    "template": "lib-pet-store-main-blog-post",
+    "url": "/pages/section-library?view=lib-pet-store-main-blog-post"
+  },
+  "pet store/main-blog.liquid": {
+    "template": "lib-pet-store-main-blog",
+    "url": "/pages/section-library?view=lib-pet-store-main-blog"
+  },
+  "pet store/main-cart.liquid": {
+    "template": "lib-pet-store-main-cart",
+    "url": "/pages/section-library?view=lib-pet-store-main-cart"
+  },
+  "pet store/main-collection-list.liquid": {
+    "template": "lib-pet-store-main-collection-list",
+    "url": "/pages/section-library?view=lib-pet-store-main-collection-list"
+  },
+  "pet store/main-collection.liquid": {
+    "template": "lib-pet-store-main-collection",
+    "url": "/pages/section-library?view=lib-pet-store-main-collection"
+  },
+  "pet store/main-page.liquid": {
+    "template": "lib-pet-store-main-page",
+    "url": "/pages/section-library?view=lib-pet-store-main-page"
+  },
+  "pet store/marquee.liquid": {
+    "template": "lib-pet-store-marquee",
+    "url": "/pages/section-library?view=lib-pet-store-marquee"
+  },
+  "pet store/media-with-content.liquid": {
+    "template": "lib-pet-store-media-with-content",
+    "url": "/pages/section-library?view=lib-pet-store-media-with-content"
+  },
+  "pet store/password-footer.liquid": {
+    "template": "lib-pet-store-password-footer",
+    "url": "/pages/section-library?view=lib-pet-store-password-footer"
+  },
+  "pet store/password.liquid": {
+    "template": "lib-pet-store-password",
+    "url": "/pages/section-library?view=lib-pet-store-password"
+  },
+  "pet store/pet-blog.liquid": {
+    "template": "lib-pet-store-pet-blog",
+    "url": "/pages/section-library?view=lib-pet-store-pet-blog"
+  },
+  "pet store/pet-category-grid.liquid": {
+    "template": "lib-pet-store-pet-category-grid",
+    "url": "/pages/section-library?view=lib-pet-store-pet-category-grid"
+  },
+  "pet store/pet-collection-showcase.liquid": {
+    "template": "lib-pet-store-pet-collection-showcase",
+    "url": "/pages/section-library?view=lib-pet-store-pet-collection-showcase"
+  },
+  "pet store/pet-featured-products.liquid": {
+    "template": "lib-pet-store-pet-featured-products",
+    "url": "/pages/section-library?view=lib-pet-store-pet-featured-products"
+  },
+  "pet store/pet-footer.liquid": {
+    "template": "lib-pet-store-pet-footer",
+    "url": "/pages/section-library?view=lib-pet-store-pet-footer"
+  },
+  "pet store/pet-header.liquid": {
+    "template": "lib-pet-store-pet-header",
+    "url": "/pages/section-library?view=lib-pet-store-pet-header"
+  },
+  "pet store/pet-hero.liquid": {
+    "template": "lib-pet-store-pet-hero",
+    "url": "/pages/section-library?view=lib-pet-store-pet-hero"
+  },
+  "pet store/pet-logo-strip.liquid": {
+    "template": "lib-pet-store-pet-logo-strip",
+    "url": "/pages/section-library?view=lib-pet-store-pet-logo-strip"
+  },
+  "pet store/pet-promo-banners.liquid": {
+    "template": "lib-pet-store-pet-promo-banners",
+    "url": "/pages/section-library?view=lib-pet-store-pet-promo-banners"
+  },
+  "pet store/pet-testimonials.liquid": {
+    "template": "lib-pet-store-pet-testimonials",
+    "url": "/pages/section-library?view=lib-pet-store-pet-testimonials"
+  },
+  "pet store/predictive-search-empty.liquid": {
+    "template": "lib-pet-store-predictive-search-empty",
+    "url": "/pages/section-library?view=lib-pet-store-predictive-search-empty"
+  },
+  "pet store/predictive-search.liquid": {
+    "template": "lib-pet-store-predictive-search",
+    "url": "/pages/section-library?view=lib-pet-store-predictive-search"
+  },
+  "pet store/product-hotspots.liquid": {
+    "template": "lib-pet-store-product-hotspots",
+    "url": "/pages/section-library?view=lib-pet-store-product-hotspots"
+  },
+  "pet store/product-information.liquid": {
+    "template": "lib-pet-store-product-information",
+    "url": "/pages/section-library?view=lib-pet-store-product-information"
+  },
+  "pet store/product-list.liquid": {
+    "template": "lib-pet-store-product-list",
+    "url": "/pages/section-library?view=lib-pet-store-product-list"
+  },
+  "pet store/product-recommendations.liquid": {
+    "template": "lib-pet-store-product-recommendations",
+    "url": "/pages/section-library?view=lib-pet-store-product-recommendations"
+  },
+  "pet store/quick-order-list.liquid": {
+    "template": "lib-pet-store-quick-order-list",
+    "url": "/pages/section-library?view=lib-pet-store-quick-order-list"
+  },
+  "pet store/search-header.liquid": {
+    "template": "lib-pet-store-search-header",
+    "url": "/pages/section-library?view=lib-pet-store-search-header"
+  },
+  "pet store/search-results.liquid": {
+    "template": "lib-pet-store-search-results",
+    "url": "/pages/section-library?view=lib-pet-store-search-results"
+  },
+  "pet store/section-rendering-product-card.liquid": {
+    "template": "lib-826edca2284b",
+    "url": "/pages/section-library?view=lib-826edca2284b"
+  },
+  "pet store/section.liquid": {
+    "template": "lib-pet-store-section",
+    "url": "/pages/section-library?view=lib-pet-store-section"
+  },
+  "pet store/slideshow.liquid": {
+    "template": "lib-pet-store-slideshow",
+    "url": "/pages/section-library?view=lib-pet-store-slideshow"
+  },
+  "sleep-and-wellbeing/about-snatched.liquid": {
+    "template": "lib-sleep-and-wellbeing-about-snatched",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-about-snatched"
+  },
+  "sleep-and-wellbeing/accordion-content.liquid": {
+    "template": "lib-sleep-and-wellbeing-accordion-content",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-accordion-content"
+  },
+  "sleep-and-wellbeing/account-banner.liquid": {
+    "template": "lib-sleep-and-wellbeing-account-banner",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-account-banner"
+  },
+  "sleep-and-wellbeing/announcement-bar.liquid": {
+    "template": "lib-sleep-and-wellbeing-announcement-bar",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-announcement-bar"
+  },
+  "sleep-and-wellbeing/apps.liquid": {
+    "template": "lib-sleep-and-wellbeing-apps",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-apps"
+  },
+  "sleep-and-wellbeing/before-after-image.liquid": {
+    "template": "lib-sleep-and-wellbeing-before-after-image",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-before-after-image"
+  },
+  "sleep-and-wellbeing/blog-posts.liquid": {
+    "template": "lib-sleep-and-wellbeing-blog-posts",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-blog-posts"
+  },
+  "sleep-and-wellbeing/brand-value-showcase.liquid": {
+    "template": "lib-bea06f06bb6e",
+    "url": "/pages/section-library?view=lib-bea06f06bb6e"
+  },
+  "sleep-and-wellbeing/bundle-showcase.liquid": {
+    "template": "lib-sleep-and-wellbeing-bundle-showcase",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-bundle-showcase"
+  },
+  "sleep-and-wellbeing/button-grid.liquid": {
+    "template": "lib-sleep-and-wellbeing-button-grid",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-button-grid"
+  },
+  "sleep-and-wellbeing/cart-drawer.liquid": {
+    "template": "lib-sleep-and-wellbeing-cart-drawer",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-cart-drawer"
+  },
+  "sleep-and-wellbeing/collection-banner.liquid": {
+    "template": "lib-sleep-and-wellbeing-collection-banner",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-collection-banner"
+  },
+  "sleep-and-wellbeing/collection-list.liquid": {
+    "template": "lib-sleep-and-wellbeing-collection-list",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-collection-list"
+  },
+  "sleep-and-wellbeing/collection-showcase.liquid": {
+    "template": "lib-sleep-and-wellbeing-collection-showcase",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-collection-showcase"
+  },
+  "sleep-and-wellbeing/contact.liquid": {
+    "template": "lib-sleep-and-wellbeing-contact",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-contact"
+  },
+  "sleep-and-wellbeing/countdown-banner.liquid": {
+    "template": "lib-sleep-and-wellbeing-countdown-banner",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-countdown-banner"
+  },
+  "sleep-and-wellbeing/custom-html.liquid": {
+    "template": "lib-sleep-and-wellbeing-custom-html",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-custom-html"
+  },
+  "sleep-and-wellbeing/custom-liquid.liquid": {
+    "template": "lib-sleep-and-wellbeing-custom-liquid",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-custom-liquid"
+  },
+  "sleep-and-wellbeing/custom-product-showcase.liquid": {
+    "template": "lib-114850f8de5e",
+    "url": "/pages/section-library?view=lib-114850f8de5e"
+  },
+  "sleep-and-wellbeing/custom-testimonial-showcase.liquid": {
+    "template": "lib-32eea5255209",
+    "url": "/pages/section-library?view=lib-32eea5255209"
+  },
+  "sleep-and-wellbeing/decorated-card.liquid": {
+    "template": "lib-sleep-and-wellbeing-decorated-card",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-decorated-card"
+  },
+  "sleep-and-wellbeing/eq-about-us.liquid": {
+    "template": "lib-sleep-and-wellbeing-eq-about-us",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-eq-about-us"
+  },
+  "sleep-and-wellbeing/eq-footer.liquid": {
+    "template": "lib-sleep-and-wellbeing-eq-footer",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-eq-footer"
+  },
+  "sleep-and-wellbeing/faq.liquid": {
+    "template": "lib-sleep-and-wellbeing-faq",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-faq"
+  },
+  "sleep-and-wellbeing/feature-chart.liquid": {
+    "template": "lib-sleep-and-wellbeing-feature-chart",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-feature-chart"
+  },
+  "sleep-and-wellbeing/featured-collection.liquid": {
+    "template": "lib-sleep-and-wellbeing-featured-collection",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-featured-collection"
+  },
+  "sleep-and-wellbeing/featured-product-showcase.liquid": {
+    "template": "lib-f01511b64538",
+    "url": "/pages/section-library?view=lib-f01511b64538"
+  },
+  "sleep-and-wellbeing/featured-product.liquid": {
+    "template": "lib-sleep-and-wellbeing-featured-product",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-featured-product"
+  },
+  "sleep-and-wellbeing/features-benefits-cta.liquid": {
+    "template": "lib-318b8d7ddef7",
+    "url": "/pages/section-library?view=lib-318b8d7ddef7"
+  },
+  "sleep-and-wellbeing/footer.liquid": {
+    "template": "lib-sleep-and-wellbeing-footer",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-footer"
+  },
+  "sleep-and-wellbeing/gift-set-grid.liquid": {
+    "template": "lib-sleep-and-wellbeing-gift-set-grid",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-gift-set-grid"
+  },
+  "sleep-and-wellbeing/header.liquid": {
+    "template": "lib-sleep-and-wellbeing-header",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-header"
+  },
+  "sleep-and-wellbeing/hero-with-cards.liquid": {
+    "template": "lib-sleep-and-wellbeing-hero-with-cards",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-hero-with-cards"
+  },
+  "sleep-and-wellbeing/hero-with-products.liquid": {
+    "template": "lib-sleep-and-wellbeing-hero-with-products",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-hero-with-products"
+  },
+  "sleep-and-wellbeing/hot-spots.liquid": {
+    "template": "lib-sleep-and-wellbeing-hot-spots",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-hot-spots"
+  },
+  "sleep-and-wellbeing/image-link-blocks.liquid": {
+    "template": "lib-sleep-and-wellbeing-image-link-blocks",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-image-link-blocks"
+  },
+  "sleep-and-wellbeing/image-with-text-overlay.liquid": {
+    "template": "lib-d053b303cd1f",
+    "url": "/pages/section-library?view=lib-d053b303cd1f"
+  },
+  "sleep-and-wellbeing/images-with-text-scrolling.liquid": {
+    "template": "lib-db5c5d0a08ac",
+    "url": "/pages/section-library?view=lib-db5c5d0a08ac"
+  },
+  "sleep-and-wellbeing/impact-text.liquid": {
+    "template": "lib-sleep-and-wellbeing-impact-text",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-impact-text"
+  },
+  "sleep-and-wellbeing/logo-list.liquid": {
+    "template": "lib-sleep-and-wellbeing-logo-list",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-logo-list"
+  },
+  "sleep-and-wellbeing/main-article.liquid": {
+    "template": "lib-sleep-and-wellbeing-main-article",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-main-article"
+  },
+  "sleep-and-wellbeing/main-blog.liquid": {
+    "template": "lib-sleep-and-wellbeing-main-blog",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-main-blog"
+  },
+  "sleep-and-wellbeing/main-cart.liquid": {
+    "template": "lib-sleep-and-wellbeing-main-cart",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-main-cart"
+  },
+  "sleep-and-wellbeing/main-collection.liquid": {
+    "template": "lib-sleep-and-wellbeing-main-collection",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-main-collection"
+  },
+  "sleep-and-wellbeing/main-customers-account.liquid": {
+    "template": "lib-23f2b0667905",
+    "url": "/pages/section-library?view=lib-23f2b0667905"
+  },
+  "sleep-and-wellbeing/main-customers-activate-account.liquid": {
+    "template": "lib-46acc284b02d",
+    "url": "/pages/section-library?view=lib-46acc284b02d"
+  },
+  "sleep-and-wellbeing/main-customers-addresses.liquid": {
+    "template": "lib-c02ae3c941dc",
+    "url": "/pages/section-library?view=lib-c02ae3c941dc"
+  },
+  "sleep-and-wellbeing/main-customers-login.liquid": {
+    "template": "lib-77493c7824fd",
+    "url": "/pages/section-library?view=lib-77493c7824fd"
+  },
+  "sleep-and-wellbeing/main-customers-order.liquid": {
+    "template": "lib-4396f4e92578",
+    "url": "/pages/section-library?view=lib-4396f4e92578"
+  },
+  "sleep-and-wellbeing/main-customers-register.liquid": {
+    "template": "lib-811a8b38b847",
+    "url": "/pages/section-library?view=lib-811a8b38b847"
+  },
+  "sleep-and-wellbeing/main-customers-reset-password.liquid": {
+    "template": "lib-ef347bf63cb1",
+    "url": "/pages/section-library?view=lib-ef347bf63cb1"
+  },
+  "sleep-and-wellbeing/main-gift-card.liquid": {
+    "template": "lib-sleep-and-wellbeing-main-gift-card",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-main-gift-card"
+  },
+  "sleep-and-wellbeing/main-list-collections.liquid": {
+    "template": "lib-6c86f55b2c84",
+    "url": "/pages/section-library?view=lib-6c86f55b2c84"
+  },
+  "sleep-and-wellbeing/main-not-found.liquid": {
+    "template": "lib-sleep-and-wellbeing-main-not-found",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-main-not-found"
+  },
+  "sleep-and-wellbeing/main-page.liquid": {
+    "template": "lib-sleep-and-wellbeing-main-page",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-main-page"
+  },
+  "sleep-and-wellbeing/main-password.liquid": {
+    "template": "lib-sleep-and-wellbeing-main-password",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-main-password"
+  },
+  "sleep-and-wellbeing/main-product.liquid": {
+    "template": "lib-sleep-and-wellbeing-main-product",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-main-product"
+  },
+  "sleep-and-wellbeing/main-search.liquid": {
+    "template": "lib-sleep-and-wellbeing-main-search",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-main-search"
+  },
+  "sleep-and-wellbeing/media-grid.liquid": {
+    "template": "lib-sleep-and-wellbeing-media-grid",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-media-grid"
+  },
+  "sleep-and-wellbeing/media-with-text.liquid": {
+    "template": "lib-sleep-and-wellbeing-media-with-text",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-media-with-text"
+  },
+  "sleep-and-wellbeing/mega-header.liquid": {
+    "template": "lib-sleep-and-wellbeing-mega-header",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-mega-header"
+  },
+  "sleep-and-wellbeing/minimal-centered-footer.liquid": {
+    "template": "lib-63d0bc76d671",
+    "url": "/pages/section-library?view=lib-63d0bc76d671"
+  },
+  "sleep-and-wellbeing/minimal-footer.liquid": {
+    "template": "lib-sleep-and-wellbeing-minimal-footer",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-minimal-footer"
+  },
+  "sleep-and-wellbeing/multi-column.liquid": {
+    "template": "lib-sleep-and-wellbeing-multi-column",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-multi-column"
+  },
+  "sleep-and-wellbeing/multiple-images-with-text.liquid": {
+    "template": "lib-7ab69b9abe62",
+    "url": "/pages/section-library?view=lib-7ab69b9abe62"
+  },
+  "sleep-and-wellbeing/newsletter-popup.liquid": {
+    "template": "lib-sleep-and-wellbeing-newsletter-popup",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-newsletter-popup"
+  },
+  "sleep-and-wellbeing/newsletter.liquid": {
+    "template": "lib-sleep-and-wellbeing-newsletter",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-newsletter"
+  },
+  "sleep-and-wellbeing/pickup-availability.liquid": {
+    "template": "lib-sleep-and-wellbeing-pickup-availability",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-pickup-availability"
+  },
+  "sleep-and-wellbeing/press.liquid": {
+    "template": "lib-sleep-and-wellbeing-press",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-press"
+  },
+  "sleep-and-wellbeing/privacy-banner.liquid": {
+    "template": "lib-sleep-and-wellbeing-privacy-banner",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-privacy-banner"
+  },
+  "sleep-and-wellbeing/promo-payment-methods.liquid": {
+    "template": "lib-1bdebe451030",
+    "url": "/pages/section-library?view=lib-1bdebe451030"
+  },
+  "sleep-and-wellbeing/promo-split-banner.liquid": {
+    "template": "lib-sleep-and-wellbeing-promo-split-banner",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-promo-split-banner"
+  },
+  "sleep-and-wellbeing/recently-viewed-products.liquid": {
+    "template": "lib-779042d86e96",
+    "url": "/pages/section-library?view=lib-779042d86e96"
+  },
+  "sleep-and-wellbeing/related-products.liquid": {
+    "template": "lib-sleep-and-wellbeing-related-products",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-related-products"
+  },
+  "sleep-and-wellbeing/rich-text.liquid": {
+    "template": "lib-sleep-and-wellbeing-rich-text",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-rich-text"
+  },
+  "sleep-and-wellbeing/ritual-accessories.liquid": {
+    "template": "lib-sleep-and-wellbeing-ritual-accessories",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-ritual-accessories"
+  },
+  "sleep-and-wellbeing/ritual-banner.liquid": {
+    "template": "lib-sleep-and-wellbeing-ritual-banner",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-ritual-banner"
+  },
+  "sleep-and-wellbeing/ritual-cards.liquid": {
+    "template": "lib-sleep-and-wellbeing-ritual-cards",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-ritual-cards"
+  },
+  "sleep-and-wellbeing/scrolling-text.liquid": {
+    "template": "lib-sleep-and-wellbeing-scrolling-text",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-scrolling-text"
+  },
+  "sleep-and-wellbeing/scrolling-video.liquid": {
+    "template": "lib-sleep-and-wellbeing-scrolling-video",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-scrolling-video"
+  },
+  "sleep-and-wellbeing/search-drawer.liquid": {
+    "template": "lib-sleep-and-wellbeing-search-drawer",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-search-drawer"
+  },
+  "sleep-and-wellbeing/section-navigator.liquid": {
+    "template": "lib-sleep-and-wellbeing-section-navigator",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-section-navigator"
+  },
+  "sleep-and-wellbeing/shogun-above.liquid": {
+    "template": "lib-sleep-and-wellbeing-shogun-above",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-shogun-above"
+  },
+  "sleep-and-wellbeing/shogun-below.liquid": {
+    "template": "lib-sleep-and-wellbeing-shogun-below",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-shogun-below"
+  },
+  "sleep-and-wellbeing/shogun-custom-html.liquid": {
+    "template": "lib-sleep-and-wellbeing-shogun-custom-html",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-shogun-custom-html"
+  },
+  "sleep-and-wellbeing/shogun-helper.liquid": {
+    "template": "lib-sleep-and-wellbeing-shogun-helper",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-shogun-helper"
+  },
+  "sleep-and-wellbeing/shogun-optimizer.liquid": {
+    "template": "lib-sleep-and-wellbeing-shogun-optimizer",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-shogun-optimizer"
+  },
+  "sleep-and-wellbeing/sleek-hero.liquid": {
+    "template": "lib-sleep-and-wellbeing-sleek-hero",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-sleek-hero"
+  },
+  "sleep-and-wellbeing/slideshow.liquid": {
+    "template": "lib-sleep-and-wellbeing-slideshow",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-slideshow"
+  },
+  "sleep-and-wellbeing/split-featured-product.liquid": {
+    "template": "lib-8fafec8c5203",
+    "url": "/pages/section-library?view=lib-8fafec8c5203"
+  },
+  "sleep-and-wellbeing/ss-hero-16.liquid": {
+    "template": "lib-sleep-and-wellbeing-ss-hero-16",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-ss-hero-16"
+  },
+  "sleep-and-wellbeing/ss-trust-badges-3.liquid": {
+    "template": "lib-sleep-and-wellbeing-ss-trust-badges-3",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-ss-trust-badges-3"
+  },
+  "sleep-and-wellbeing/ss-video-slider.liquid": {
+    "template": "lib-sleep-and-wellbeing-ss-video-slider",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-ss-video-slider"
+  },
+  "sleep-and-wellbeing/statement-banner.liquid": {
+    "template": "lib-sleep-and-wellbeing-statement-banner",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-statement-banner"
+  },
+  "sleep-and-wellbeing/stats-achievement.liquid": {
+    "template": "lib-sleep-and-wellbeing-stats-achievement",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-stats-achievement"
+  },
+  "sleep-and-wellbeing/story-cards.liquid": {
+    "template": "lib-sleep-and-wellbeing-story-cards",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-story-cards"
+  },
+  "sleep-and-wellbeing/styling-layout.liquid": {
+    "template": "lib-sleep-and-wellbeing-styling-layout",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-styling-layout"
+  },
+  "sleep-and-wellbeing/tabs.liquid": {
+    "template": "lib-sleep-and-wellbeing-tabs",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-tabs"
+  },
+  "sleep-and-wellbeing/testimonials-animated.liquid": {
+    "template": "lib-287025f32a0c",
+    "url": "/pages/section-library?view=lib-287025f32a0c"
+  },
+  "sleep-and-wellbeing/testimonials.liquid": {
+    "template": "lib-sleep-and-wellbeing-testimonials",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-testimonials"
+  },
+  "sleep-and-wellbeing/text-with-icons.liquid": {
+    "template": "lib-sleep-and-wellbeing-text-with-icons",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-text-with-icons"
+  },
+  "sleep-and-wellbeing/the-problem.liquid": {
+    "template": "lib-sleep-and-wellbeing-the-problem",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-the-problem"
+  },
+  "sleep-and-wellbeing/the-reality.liquid": {
+    "template": "lib-sleep-and-wellbeing-the-reality",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-the-reality"
+  },
+  "sleep-and-wellbeing/the-solution.liquid": {
+    "template": "lib-sleep-and-wellbeing-the-solution",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-the-solution"
+  },
+  "sleep-and-wellbeing/three-paths.liquid": {
+    "template": "lib-sleep-and-wellbeing-three-paths",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-three-paths"
+  },
+  "sleep-and-wellbeing/trust-badge.liquid": {
+    "template": "lib-sleep-and-wellbeing-trust-badge",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-trust-badge"
+  },
+  "sleep-and-wellbeing/upsell-bundle.liquid": {
+    "template": "lib-sleep-and-wellbeing-upsell-bundle",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-upsell-bundle"
+  },
+  "sleep-and-wellbeing/variant-added.liquid": {
+    "template": "lib-sleep-and-wellbeing-variant-added",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-variant-added"
+  },
+  "sleep-and-wellbeing/video.liquid": {
+    "template": "lib-sleep-and-wellbeing-video",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-video"
+  },
+  "sleep-and-wellbeing/why-buy.liquid": {
+    "template": "lib-sleep-and-wellbeing-why-buy",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-why-buy"
+  },
+  "sleep-and-wellbeing/why-us-commitment.liquid": {
+    "template": "lib-sleep-and-wellbeing-why-us-commitment",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-why-us-commitment"
+  },
+  "sleep-and-wellbeing/why-us-pillars.liquid": {
+    "template": "lib-sleep-and-wellbeing-why-us-pillars",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-why-us-pillars"
+  },
+  "sleep-and-wellbeing/word-scroll-reveal.liquid": {
+    "template": "lib-sleep-and-wellbeing-word-scroll-reveal",
+    "url": "/pages/section-library?view=lib-sleep-and-wellbeing-word-scroll-reveal"
+  }
+}

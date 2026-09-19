@@ -1,0 +1,49 @@
+{
+  "sections": {
+    "library": {
+      "type": "mariana-red--promo-tiles",
+      "settings": {
+        "heading": "Your complete resource",
+        "background_color": "#f08a1d",
+        "heading_color": "#111111",
+        "caption_bg": "#ffffff",
+        "caption_ink": "#111111"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "tile",
+          "settings": {
+            "caption": "Guides"
+          }
+        },
+        "bl-2": {
+          "type": "tile",
+          "settings": {
+            "caption": "Training"
+          }
+        },
+        "bl-3": {
+          "type": "tile",
+          "settings": {
+            "caption": "Athletes"
+          }
+        },
+        "bl-4": {
+          "type": "tile",
+          "settings": {
+            "caption": "Accessories"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

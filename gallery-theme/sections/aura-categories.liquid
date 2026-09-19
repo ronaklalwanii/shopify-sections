@@ -1,0 +1,150 @@
+{%- comment -%}
+  Aura Categories — floating white card with icon-above-label category
+  shortcuts in a single row (skincare outline icon set included).
+  Self-contained. Scoped styles. Responsive (wraps to 4 / 2 per row).
+{%- endcomment -%}
+
+<section id="AuraCategories-{{ section.id }}" class="acat">
+  {%- style -%}
+    #AuraCategories-{{ section.id }} {
+      --acat-bg: {{ section.settings.bg_color }};
+      --acat-radius: {{ section.settings.radius }}px;
+      --acat-max-w: {{ section.settings.max_width }}px;
+      --acat-pad-y: {{ section.settings.padding_y }}px;
+      --acat-icon-c: {{ section.settings.icon_color }};
+      --acat-icon-s: {{ section.settings.icon_size }}px;
+      --acat-label-c: {{ section.settings.label_color }};
+      --acat-label-s: {{ section.settings.label_size }}px;
+      --acat-border: {{ section.settings.border_color }};
+      background: var(--acat-bg);
+      padding: 10px var(--page-gutter, 40px);
+    }
+    #AuraCategories-{{ section.id }} .acat__card {
+      max-width: var(--acat-max-w);
+      margin: 0 auto;
+      background: #FFFFFF;
+      border: 1px solid var(--acat-border);
+      border-radius: var(--acat-radius);
+      box-shadow: 0 10px 30px rgba(31,29,26,.05);
+      display: grid;
+      grid-template-columns: repeat({{ section.blocks.size | at_least: 1 }}, minmax(0, 1fr));
+      padding: var(--acat-pad-y) 10px;
+    }
+    #AuraCategories-{{ section.id }} .acat__item {
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      padding: 8px 6px;
+      text-decoration: none;
+      color: var(--acat-label-c);
+      border-right: 1px solid var(--acat-border);
+      transition: opacity 200ms ease;
+    }
+    #AuraCategories-{{ section.id }} .acat__item:last-child { border-right: none; }
+    #AuraCategories-{{ section.id }} .acat__item:hover { opacity: .6; }
+    #AuraCategories-{{ section.id }} .acat__item svg {
+      width: var(--acat-icon-s); height: var(--acat-icon-s);
+      stroke: var(--acat-icon-c); fill: none;
+      stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round;
+    }
+    #AuraCategories-{{ section.id }} .acat__item img {
+      width: var(--acat-icon-s); height: var(--acat-icon-s); object-fit: contain;
+    }
+    #AuraCategories-{{ section.id }} .acat__label {
+      font-size: var(--acat-label-s);
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 1.4;
+    }
+    @media (max-width: 900px) {
+      #AuraCategories-{{ section.id }} .acat__card { grid-template-columns: repeat(4, minmax(0,1fr)); row-gap: 18px; }
+      #AuraCategories-{{ section.id }} .acat__item:nth-child(4n) { border-right: none; }
+    }
+    @media (max-width: 560px) {
+      #AuraCategories-{{ section.id }} { padding: 10px 16px; }
+      #AuraCategories-{{ section.id }} .acat__card { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      #AuraCategories-{{ section.id }} .acat__item:nth-child(2n) { border-right: none; }
+    }
+  {%- endstyle -%}
+
+  <div class="acat__card">
+    {%- for block in section.blocks -%}
+      <a class="acat__item" href="{{ block.settings.link }}" {{ block.shopify_attributes }}>
+        {%- if block.settings.custom_icon != blank -%}
+          <img src="{{ block.settings.custom_icon | image_url: width: 80 }}" alt="" loading="lazy">
+        {%- else -%}
+          {%- case block.settings.icon -%}
+            {%- when 'bottle' -%}
+              <svg viewBox="0 0 24 24"><path d="M10 2h4v3h-4z"/><path d="M9.5 5h5l1 4.5c.3 1.2.5 2 .5 3.2V20a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 8 20v-7.3c0-1.2.2-2 .5-3.2z"/><path d="M8 13.5h8"/></svg>
+            {%- when 'dropper' -%}
+              <svg viewBox="0 0 24 24"><path d="M10 2h4v3h-4z"/><path d="M10.5 5h3l-.5 4h-2z"/><path d="M12 9c-2.5 3.2-4 5.6-4 7.6A4 4 0 0 0 16 16.6c0-2-1.5-4.4-4-7.6z"/></svg>
+            {%- when 'jar' -%}
+              <svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="3.5" rx="1"/><path d="M7 6.5h10c.6 0 1 .5 1 1V19a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7.5c0-.5.4-1 1-1z"/></svg>
+            {%- when 'tube' -%}
+              <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="3" rx="1"/><path d="M9.5 5h5L17 18.5a2 2 0 0 1-2 2.4H9a2 2 0 0 1-2-2.4z"/><path d="M9 11h6"/></svg>
+            {%- when 'mask' -%}
+              <svg viewBox="0 0 24 24"><path d="M12 2.5c5 0 8.5 3.5 8.5 8.5 0 6-4 10.5-8.5 10.5S3.5 17 3.5 11C3.5 6 7 2.5 12 2.5z"/><path d="M8 10.5c1-.8 2-.8 3 0M13 10.5c1-.8 2-.8 3 0"/><path d="M9.5 15.5c1.6 1 3.4 1 5 0"/></svg>
+            {%- when 'gift' -%}
+              <svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="4" rx="1"/><path d="M6 12h12v8a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1z"/><path d="M12 8v13"/><path d="M12 8c-1.5 0-3.5-.6-3.5-2.5S11 3 12 5c1-2 3.5-2.5 3.5-.5S13.5 8 12 8z"/></svg>
+            {%- when 'tag' -%}
+              <svg viewBox="0 0 24 24"><path d="M3 11 11 3h8a2 2 0 0 1 2 2v8l-8.6 8.6a2 2 0 0 1-2.8 0L3 13.8a2 2 0 0 1 0-2.8z"/><circle cx="16" cy="8" r="1.6"/></svg>
+          {%- endcase -%}
+        {%- endif -%}
+        <span class="acat__label">{{ block.settings.label }}</span>
+      </a>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Aura Categories",
+  "tag": "section",
+  "settings": [
+    { "type": "color", "id": "bg_color", "label": "Page background", "default": "#F7F3EE" },
+    { "type": "color", "id": "border_color", "label": "Card border", "default": "#E8E2D8" },
+    { "type": "range", "id": "radius", "label": "Card radius", "min": 0, "max": 28, "step": 2, "default": 14, "unit": "px" },
+    { "type": "range", "id": "padding_y", "label": "Card padding (vertical)", "min": 10, "max": 60, "step": 2, "default": 26, "unit": "px" },
+    { "type": "range", "id": "max_width", "label": "Card max width", "min": 800, "max": 1600, "step": 20, "default": 1320, "unit": "px" },
+    { "type": "header", "content": "Items" },
+    { "type": "range", "id": "icon_size", "label": "Icon size", "min": 18, "max": 40, "step": 2, "default": 26, "unit": "px" },
+    { "type": "color", "id": "icon_color", "label": "Icon color", "default": "#1F1D1A" },
+    { "type": "range", "id": "label_size", "label": "Label size", "min": 9, "max": 14, "step": 1, "default": 11, "unit": "px" },
+    { "type": "color", "id": "label_color", "label": "Label color", "default": "#26231F" }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "options": [
+          { "value": "bottle", "label": "Pump bottle" },
+          { "value": "dropper", "label": "Dropper" },
+          { "value": "jar", "label": "Jar" },
+          { "value": "tube", "label": "Tube" },
+          { "value": "mask", "label": "Sheet mask" },
+          { "value": "gift", "label": "Gift set" },
+          { "value": "tag", "label": "New tag" }
+        ], "default": "bottle" },
+        { "type": "image_picker", "id": "custom_icon", "label": "Custom icon (overrides)" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Cleansers" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Aura Categories",
+      "blocks": [
+        { "type": "category", "settings": { "icon": "bottle", "label": "Cleansers" } },
+        { "type": "category", "settings": { "icon": "dropper", "label": "Serums" } },
+        { "type": "category", "settings": { "icon": "jar", "label": "Moisturizers" } },
+        { "type": "category", "settings": { "icon": "tube", "label": "Sun care" } },
+        { "type": "category", "settings": { "icon": "mask", "label": "Masks" } },
+        { "type": "category", "settings": { "icon": "gift", "label": "Sets & kits" } },
+        { "type": "category", "settings": { "icon": "tag", "label": "New arrivals" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

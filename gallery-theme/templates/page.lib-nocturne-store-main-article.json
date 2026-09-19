@@ -1,0 +1,41 @@
+{
+  "sections": {
+    "library": {
+      "type": "nocturne-store--main-article",
+      "settings": {
+        "allow_transparent_header": false,
+        "layout": "content_first",
+        "show_author": true,
+        "show_date": true,
+        "show_comments_count": true,
+        "show_share_buttons": true,
+        "overlay_color": "#000000",
+        "overlay_opacity": 0,
+        "content_width": "750px",
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "navigation",
+          "settings": {}
+        },
+        "bl-2": {
+          "type": "comments",
+          "settings": {
+            "show_gravatar": true,
+            "comments_per_page": 5
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "sections": {
+    "library": {
+      "type": "aura-duo",
+      "settings": {
+        "bg_color": "#F7F3EE",
+        "gap": 16,
+        "radius": 18,
+        "min_height": 460,
+        "a_bg": "#23231F",
+        "a_eyebrow": "The ritual",
+        "a_eyebrow_color": "#A89F91",
+        "a_title": "Skincare that\nbecomes a ritual.",
+        "a_title_size": 36,
+        "a_text": "Simple steps. Powerful results.\nMade to fit effortlessly into your everyday.",
+        "a_text_color": "#C7C2B8",
+        "a_btn_label": "Explore collection",
+        "b_bg": "#FFFFFF",
+        "b_eyebrow": "Our promise",
+        "b_eyebrow_color": "#8A8378",
+        "title_size": 26,
+        "text_size": 13,
+        "text_color": "#6B675F"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "promise",
+          "settings": {
+            "icon": "leaf",
+            "title": "Clean & Safe",
+            "text": "No harmful chemicals"
+          }
+        },
+        "bl-2": {
+          "type": "promise",
+          "settings": {
+            "icon": "recycle",
+            "title": "Sustainable",
+            "text": "Eco-friendly packaging"
+          }
+        },
+        "bl-3": {
+          "type": "promise",
+          "settings": {
+            "icon": "heart",
+            "title": "Cruelty Free",
+            "text": "Never tested on animals"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "sections": {
+    "library": {
+      "type": "sleep-and-wellbeing--story-cards",
+      "settings": {
+        "bg_color": "#F2EFEA",
+        "max_width": 1500,
+        "space_top": 24,
+        "space_bottom": 24,
+        "mobile_gutter": 20,
+        "panel_gap": 24,
+        "panel_radius": 20,
+        "panel_pad": 48,
+        "image_fade": 35,
+        "image_position": "center",
+        "stat_size": 64,
+        "stat_label_size": 16,
+        "eyebrow_size": 12,
+        "eyebrow_spacing": 2,
+        "show_eyebrow_icon": true,
+        "eyebrow_icon_size": 16,
+        "heading_size": 32,
+        "heading_uppercase": true,
+        "desc_size": 13,
+        "btn_size": 11,
+        "btn_weight": 600,
+        "btn_spacing": 1.5,
+        "btn_pad_x": 24,
+        "btn_pad_y": 12,
+        "btn_radius": 4
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "panel",
+          "settings": {
+            "layout": "img-right",
+            "background_color": "#3F4A38",
+            "text_color": "#F3EADB",
+            "stat_number": "5%",
+            "stat_label": "Of every sale supports Pug Nation LA",
+            "heading": "It started with Fig & Mouse.",
+            "description": "Five percent of every sale goes to Pug Nation LA — the rescue that brought Mouse home — helping more dogs find the loving homes they deserve.",
+            "btn_text": "Our Giving Back",
+            "btn_text_color": "#F3EADB",
+            "btn_border_color": "#F3EADB",
+            "btn_bg_color": "rgba(255,255,255,0)",
+            "image_width": 42
+          }
+        },
+        "bl-2": {
+          "type": "panel",
+          "settings": {
+            "layout": "img-right",
+            "background_color": "#EFEAE2",
+            "text_color": "#3B2E22",
+            "stat_number": "",
+            "stat_label": "Of every sale supports Pug Nation LA",
+            "heading": "It started with Fig & Mouse.",
+            "description": "We met in the fashion industry, fell in love with thoughtful design — and with each other — and built a life surrounded by our animals.",
+            "btn_text": "Read Our Story",
+            "btn_text_color": "#3B2E22",
+            "btn_border_color": "#3B2E22",
+            "btn_bg_color": "rgba(255,255,255,0)",
+            "image_width": 42,
+            "eyebrow_text": "Our Story"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

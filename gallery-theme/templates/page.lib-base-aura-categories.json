@@ -1,0 +1,81 @@
+{
+  "sections": {
+    "library": {
+      "type": "aura-categories",
+      "settings": {
+        "bg_color": "#F7F3EE",
+        "border_color": "#E8E2D8",
+        "radius": 14,
+        "padding_y": 26,
+        "max_width": 1320,
+        "icon_size": 26,
+        "icon_color": "#1F1D1A",
+        "label_size": 11,
+        "label_color": "#26231F"
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "category",
+          "settings": {
+            "icon": "bottle",
+            "label": "Cleansers"
+          }
+        },
+        "bl-2": {
+          "type": "category",
+          "settings": {
+            "icon": "dropper",
+            "label": "Serums"
+          }
+        },
+        "bl-3": {
+          "type": "category",
+          "settings": {
+            "icon": "jar",
+            "label": "Moisturizers"
+          }
+        },
+        "bl-4": {
+          "type": "category",
+          "settings": {
+            "icon": "tube",
+            "label": "Sun care"
+          }
+        },
+        "bl-5": {
+          "type": "category",
+          "settings": {
+            "icon": "mask",
+            "label": "Masks"
+          }
+        },
+        "bl-6": {
+          "type": "category",
+          "settings": {
+            "icon": "gift",
+            "label": "Sets & kits"
+          }
+        },
+        "bl-7": {
+          "type": "category",
+          "settings": {
+            "icon": "tag",
+            "label": "New arrivals"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6",
+        "bl-7"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--pet-testimonials",
+      "settings": {
+        "badge_text": "People Testimonials",
+        "heading": "What Clients Say",
+        "watermark_text": "woof",
+        "image_ratio": "1 / 1",
+        "image_focal_point": "center",
+        "image_width": 40,
+        "background_color": "#EAE3DD",
+        "text_color": "#1F1D1B",
+        "muted_text_color": "#8A8178",
+        "accent_color": "#6E1622",
+        "watermark_color": "#F5F0E9",
+        "badge_background_color": "#FBF7EF",
+        "corner_radius": 0,
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "container_max_width": 1440
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Excellent service, friendly staff, and outstanding veterinary care. They treat every pet like family, and it shows in everything they do.",
+            "name": "Hanna D.",
+            "role": "Mother of Cats"
+          }
+        },
+        "bl-2": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "The best pet store in the city. Healthy animals, quality food, and a team that genuinely cares about every wagging tail that walks in.",
+            "name": "Marcus T.",
+            "role": "Dog Dad of Two"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

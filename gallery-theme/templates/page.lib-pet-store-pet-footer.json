@@ -1,0 +1,44 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--pet-footer",
+      "settings": {
+        "logo_height": 40,
+        "logo_text": "Happy\nTails",
+        "tagline": "Where Healthy Pets Come First 🦴",
+        "show_newsletter": true,
+        "newsletter_title": "Get Pet Care Updates",
+        "newsletter_note": "Subscribe for pet care tips, exclusive offers and early access to new arrivals.",
+        "newsletter_placeholder": "Get news & updates",
+        "newsletter_button": "Subscribe",
+        "show_social": true,
+        "show_contacts": true,
+        "contacts_heading": "Our Contacts",
+        "contact_address_label": "We are Here",
+        "contact_address": "27 Division St, New York,\nNY 10002, USA",
+        "contact_email_label": "Send Mail",
+        "contact_email": "vireon@mail.com",
+        "contact_phone_label": "Phone",
+        "contact_phone": "+1 800 123 46 57",
+        "contact_hours_label": "Opening Hours",
+        "contact_hours": "Mon - Sat: 7.00am - 19.00pm",
+        "links_heading": "Useful Links",
+        "copyright": "Copyright © [year] Happy Tails. All Rights Reserved.",
+        "background_color": "#372322",
+        "text_color": "#F5F1EC",
+        "muted_text_color": "#B9AA9E",
+        "accent_color": "#6E1622",
+        "accent_text_color": "#FFFFFF",
+        "border_color": "#48352B",
+        "show_scrolltop": true,
+        "logo_icon_radius": 10,
+        "input_radius": 100,
+        "padding_top": 56,
+        "container_max_width": 980
+      }
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

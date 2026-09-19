@@ -1,0 +1,40 @@
+{
+  "sections": {
+    "library": {
+      "type": "pet-store--main-page",
+      "settings": {
+        "content_direction": "column",
+        "gap": 12,
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "@theme",
+          "settings": {}
+        },
+        "bl-2": {
+          "type": "@theme",
+          "settings": {}
+        },
+        "bl-3": {
+          "type": "_divider",
+          "settings": {}
+        },
+        "bl-4": {
+          "type": "_divider",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ]
+}

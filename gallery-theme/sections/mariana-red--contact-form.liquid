@@ -1,0 +1,204 @@
+{%- comment -%} Section Library: injected global assets for store "mariana-red" {%- endcomment -%}
+{{ 'mariana-red--base.css' | asset_url | stylesheet_tag }}
+{{ 'mariana-red--components.css' | asset_url | stylesheet_tag }}
+{% render 'mariana-red--layout-tokens' %}
+{%- comment -%}
+  Contact form — details column + Shopify contact form.
+{%- endcomment -%}
+{%- capture section_colors_style -%}
+  {%- if section.settings.colors_background != blank or section.settings.colors_text != blank -%}
+    {%- assign override_bg = section.settings.colors_background | default: settings.colors_background -%}
+    {%- assign override_fg = section.settings.colors_text | default: settings.colors_text -%}
+    style="--color-background: {{ override_bg }}; --color-surface: {{ override_bg | color_lighten: 3 }}; --color-border: {{ override_bg | color_darken: 9 | color_modify: 'alpha', 0.85 }}; --color-foreground: {{ override_fg }}; --color-heading: {{ override_fg }}; --color-text-muted: {{ override_fg | color_modify: 'alpha', 0.62 }};"
+  {%- endif -%}
+{%- endcapture -%}
+<section {{ section_colors_style }} class="section" style="--section-space: {{ section.settings.padding | default: 64 }}px;">
+  <div class="page-width">
+    <header class="page-header" style="padding-block: 0 2.4rem;">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+      <h1 class="h1">{{ section.settings.heading | default: page.title | escape }}</h1>
+      {%- if section.settings.text != blank -%}
+        <p class="subtitle">{{ section.settings.text | escape }}</p>
+      {%- endif -%}
+    </header>
+
+    <div class="contact-page">
+      <div class="contact-page__details">
+        {%- if section.settings.show_phone and shop.phone != blank -%}
+          <div>
+            <h3>{{ 'contact.form.phone' | t }}</h3>
+            <p>{{ shop.phone }}</p>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.show_email and shop.email != blank -%}
+          <div>
+            <h3>{{ 'contact.form.email' | t }}</h3>
+            <p>{{ shop.email }}</p>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.show_address and shop.address.summary != blank -%}
+          <div>
+            <h3>{{ 'contact.form.address' | t }}</h3>
+            <p>{{ shop.address.summary }}</p>
+          </div>
+        {%- endif -%}
+        {%- if section.blocks.size > 0 -%}
+          <div>
+            <h3>{{ 'contact.form.hours' | t }}</h3>
+            {%- for block in section.blocks -%}
+              <p style="margin: 0;">{{ block.settings.day | escape }} — {{ block.settings.hours | escape }}</p>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div>
+        {%- form 'contact', class: 'contact-form' -%}
+          {%- if form.posted_successfully? -%}
+            <p class="form__message form__message--success" role="status">{{ 'contact.form.success' | t }}</p>
+          {%- endif -%}
+          {%- if form.errors -%}
+            <p class="form__message form__message--error" role="alert">{{ 'contact.form.error' | t }}</p>
+          {%- endif -%}
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;" class="contact-grid">
+            <div class="field">
+              <label class="field__label" for="ContactName">{{ 'contact.form.name' | t }}</label>
+              <input class="field__input" id="ContactName" type="text" name="contact[name]" autocomplete="name" {% if customer %}value="{{ customer.name }}"{% endif %}>
+            </div>
+            <div class="field">
+              <label class="field__label" for="ContactEmail">{{ 'contact.form.email' | t }} *</label>
+              <input
+                class="field__input"
+                id="ContactEmail"
+                type="email"
+                name="contact[email]"
+                autocomplete="email"
+                required
+                value="{{ form.email }}"
+                {% if form.errors contains 'email' %}aria-invalid="true"{% endif %}
+              >
+            </div>
+          </div>
+          <style>@media (max-width: 540px) { .contact-grid { grid-template-columns: 1fr !important; } }</style>
+          {%- if section.settings.show_phone_field -%}
+            <div class="field" style="margin-top: 1rem;">
+              <label class="field__label" for="ContactPhone">{{ 'contact.form.phone' | t }}</label>
+              <input class="field__input" id="ContactPhone" type="tel" name="contact[phone]" autocomplete="tel">
+            </div>
+          {%- endif -%}
+          <div class="field" style="margin-top: 1rem;">
+            <label class="field__label" for="ContactBody">{{ 'contact.form.comment' | t }} *</label>
+            <textarea class="field__input" id="ContactBody" name="contact[body]" required>{{ form.body }}</textarea>
+          </div>
+          <div style="margin-top: 1.4rem;">
+            <button type="submit" class="button button--dark">{{ 'contact.form.submit' | t }}</button>
+          </div>
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact form",
+  "tag": "section",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get in touch"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "We usually reply within one business day."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phone_field",
+      "label": "Show phone field",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Store details"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phone",
+      "label": "Show store phone",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_email",
+      "label": "Show store email",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_address",
+      "label": "Show store address",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 24,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hours",
+      "name": "Opening hours",
+      "settings": [
+        {
+          "type": "text",
+          "id": "day",
+          "label": "Days",
+          "default": "Mon \u2013 Fri"
+        },
+        {
+          "type": "text",
+          "id": "hours",
+          "label": "Hours",
+          "default": "9:00 \u2013 17:00"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact form",
+      "blocks": [
+        {
+          "type": "hours"
+        },
+        {
+          "type": "hours",
+          "settings": {
+            "day": "Sat \u2013 Sun",
+            "hours": "10:00 \u2013 16:00"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
