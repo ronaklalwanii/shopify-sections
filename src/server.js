@@ -127,6 +127,38 @@ app.post('/api/render-preview', async (req, res) => {
   res.json(res2);
 });
 
+app.post('/api/custom', (req, res) => {
+  try { res.json(saveCustomSection(req.body || {}, { isNew: true })); }
+  catch (e) { res.status(400).json({ error: e.message }); }
+});
+
+app.put('/api/custom/:slug', (req, res) => {
+  try {
+    const existing = customSectionMeta(req.params.slug);
+    if (!existing) return res.status(404).json({ error: 'not found' });
+    const meta = saveCustomSection({ ...req.body, name: req.body.name || existing.name }, { isNew: false });
+    if (meta.slug !== req.params.slug) {
+      // renamed — remove the old files
+      for (const f of [`${req.params.slug}.liquid`, `${req.params.slug}.json`]) {
+        try { fs.unlinkSync(path.join(CUSTOM_DIR, f)); } catch {}
+      }
+      gitCommit(`Rename section: ${existing.name} -> ${meta.name}`);
+    }
+    res.json(meta);
+  } catch (e) { res.status(400).json({ error: e.message }); }
+});
+
+app.delete('/api/custom/:slug', (req, res) => {
+  const slug = req.params.slug;
+  const meta = customSectionMeta(slug);
+  if (!meta) return res.status(404).json({ error: 'not found' });
+  for (const f of [`${slug}.liquid`, `${slug}.json`]) {
+    try { fs.unlinkSync(path.join(CUSTOM_DIR, f)); } catch {}
+  }
+  gitCommit(`Delete section: ${meta.name}`);
+  res.json({ ok: true });
+});
+
 /* --------------------------------- previews ---------------------------------- */
 
 const RESET_CSS = `
@@ -167,8 +199,8 @@ ${error ? `<div class="preview-error">Render error: ${String(error).replace(/</g
 app.get('/preview/:store/:file', async (req, res) => {
   const { store, file } = req.params;
   try {
-    if (!/^[\w.-]+\.liquid$/.test(file)) return res.status(400).send('bad file');
     if (store === 'custom') {
+      if (!/^[\w.-]+(\.liquid)?$/.test(file)) return res.status(400).send('bad file');
       const slug = file.replace(/\.liquid$/, '');
       const meta = customSectionMeta(slug);
       if (!meta) return res.status(404).send('not found');
@@ -176,6 +208,7 @@ app.get('/preview/:store/:file', async (req, res) => {
       const r = await renderSectionSource(meta.contextStore === 'custom' ? 'custom' : meta.contextStore, liquid, { sectionId: slug });
       return res.type('html').send(previewPage({ title: meta.name, html: r.html, inlineCss: css, scripts: js ? [js] : [], error: r.error }));
     }
+    if (!/^[\w.-]+\.liquid$/.test(file)) return res.status(400).send('bad file');
     const idx = loadIndex();
     const meta = idx.sections.find((s) => s.store === store && s.file === file);
     const r = await renderStoreSection(store, file);
@@ -193,10 +226,12 @@ app.get('/reset.css', (req, res) => { res.type('css').send(RESET_CSS); });
 
 /* ------------------------------ static assets/ph ------------------------------ */
 
-app.get('/assets/:store/*splat', (req, res) => {
-  const rel = req.params.splat || '';
+app.use('/assets', (req, res, next) => {
+  const parts = req.path.replace(/^\//, '').split('/');
+  const store = decodeURIComponent(parts.shift() || '');
+  const rel = parts.join('/');
   const safe = path.normalize(rel).replace(/^(\.\.[/\\])+/, '');
-  const full = path.join(STORES_ROOT, req.params.store, 'assets', safe);
+  const full = path.join(STORES_ROOT, store, 'assets', safe);
   if (!full.startsWith(path.join(STORES_ROOT))) return res.status(403).end();
   res.sendFile(full, (e) => { if (e) res.status(404).end(); });
 });

@@ -2,7 +2,7 @@
 // with a mock Shopify data layer (settings, product, cart, translations, ...).
 const fs = require('fs');
 const path = require('path');
-const Liquid = require('liquidjs');
+const { Liquid, Tag: LiquidTag } = require('liquidjs');
 
 const STORES_ROOT = process.env.STORES_ROOT || path.resolve(__dirname, '../../shopify-stores');
 
@@ -122,18 +122,19 @@ const availableCountries = ['United States|US|USD|$', 'Canada|CA|CAD|$', 'United
 function linkListMock(handle = 'main-menu') {
   const link = (title, children = []) => ({ title, url: '#', links: children, object: { type: 'http' }, active: false, current: false, levels: children.length ? 2 : 1, type: 'link' });
   const menus = {
-    'main-menu': link => [
+    'main-menu': () => [
       link('Home'),
       link('Shop All'),
       link('Collections', [link('New Arrivals'), link('Bestsellers'), link('Sale')]),
       link('About'),
       link('Contact'),
     ],
-    footer: [
+    footer: () => [
       link('Privacy Policy'), link('Terms of Service'), link('Shipping & Returns'), link('Contact'),
     ],
   };
-  const items = (menus[handle] || menus['main-menu']).map((f) => f());
+  const build = menus[handle] || menus['main-menu'];
+  const items = build();
   return { handle, title: handle.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()), links: items, levels: 2, items, empty: false };
 }
 
@@ -283,15 +284,19 @@ function buildFilters(storeName) {
       const w = +m[1] || info.w, h = +m[2] || Math.round(w / (info.w / info.h));
       return PH(info.seed, w, h);
     },
-    image_tag(input, opts = {}) {
+    image_tag(input, ...rest) {
+      // Merge hash args defensively; liquidjs can degrade complex hashes to positional args.
+      const opts = Object.assign({}, ...rest.filter((r) => r && typeof r === 'object' && !Array.isArray(r)));
       const info = imageInputInfo(input);
       if (!info) return '';
       const src = info.src || (() => { const w = Math.min(+(opts.width || info.w || 1000), 2400); return PH(info.seed, w, Math.round(w * (info.h / info.w))); })();
       const alt = opts.alt != null ? opts.alt : (info.alt || 'Sample image');
+      const excluded = new Set(['width', 'height', 'widths', 'sizes', 'alt', 'loading', 'class']);
       const attrs = Object.entries(opts)
-        .filter(([k]) => !['width', 'height', 'widths', 'sizes', 'alt', 'loading', 'class'].includes(k) && typeof k === 'string' && !k.includes('$'))
+        .filter(([k, v]) => v != null && !/^\d+$/.test(k) && !excluded.has(k) && typeof v !== 'object')
         .map(([k, v]) => `${k}="${String(v).replace(/"/g, '&quot;')}"`).join(' ');
-      return `<img src="${src}" alt="${String(alt).replace(/"/g, '&quot;')}" width="${opts.width || info.w}" height="${opts.height || Math.round((opts.width || info.w) * (info.h / info.w))}" loading="${opts.loading || 'lazy'}"${opts.class ? ` class="${opts.class}"` : ''}${opts.sizes ? ` sizes="${opts.sizes}"` : ''}${attrs ? ' ' + attrs : ''}>`;
+      const w = opts.width || info.w || 1000;
+      return `<img src="${src}" alt="${String(alt).replace(/"/g, '&quot;')}" width="${w}" height="${opts.height || Math.round(w * (info.h / info.w))}" loading="${opts.loading || 'lazy'}"${opts.class ? ` class="${opts.class}"` : ''}${opts.sizes ? ` sizes="${opts.sizes}"` : ''}${attrs ? ' ' + attrs : ''}>`;
     },
     placeholder_svg_tag(name = 'image', cls = '') {
       const label = String(name).replace(/[-_]/g, ' ');
@@ -300,7 +305,7 @@ function buildFilters(storeName) {
     money, money_with_currency: (v, f) => money(v, f || '${{amount}} USD'),
     money_without_currency: (v) => (Number(v) / 100).toFixed(2),
     money_without_trailing_zeros: (v) => String(Number((Number(v) / 100).toFixed(2)).toString()),
-    asset_url, shopify_asset_url: (f) => assetUrl(f),
+    asset_url: assetUrl, shopify_asset_url: (f) => assetUrl(f),
     stylesheet_tag: (href, opts = {}) => `<link rel="stylesheet" href="${assetUrl(href)}"${opts.media ? ` media="${opts.media}"` : ''}>`,
     script_tag: (src, opts = {}) => `<script src="${assetUrl(src)}"${opts.async ? ' async' : ''}${opts.defer ? ' defer' : ''}></script>`,
     preload_tag: (file, opts = {}) => `<link rel="preload" href="${assetUrl(file)}" as="${opts.as || 'style'}">`,
@@ -364,27 +369,32 @@ function splitArgs(s) {
 }
 
 function makeTags(liquid) {
-  const blockTag = (name, openHtml, scopeExtra) => class extends Liquid.Tag {
+  // Collect raw body source until end<name>, synchronously (streams drain at parse time).
+  const collectBody = (name, token, remainTokens) => {
+    const raw = [];
+    const stream = liquid.parser.parseStream(remainTokens)
+      .on('token', (tok) => { if (tok.name === `end${name}`) stream.stop(); else raw.push(tok.getText()); })
+      .on('end', () => { throw new Error(`{% ${name} %} not closed`); });
+    stream.start();
+    return { args: token.args, source: raw.join('') };
+  };
+
+  const blockTag = (name) => ({
     parse(token, remainTokens) {
-      this.args = token.args;
-      this.templates = [];
-      const stream = liquid.parser.parseStream(remainTokens)
-        .on('token', (tok) => { if (tok.name === `end${name}`) stream.stop(); else this.templates.push(tok); })
-        .on('end', () => { throw new Error(`{% ${name} %} not closed`); });
-      stream.start();
-    }
+      const { args, source } = collectBody(name, token, remainTokens);
+      this.args = args;
+      this.templates = liquid.parser.parse(source);
+    },
     async render(ctx, emitter) {
       let attrs = '';
       const scope = { form: { errors: {}, posted_successfully: false, id: 'form' } };
       try {
-        const parts = splitArgs(this.args || '');
         const vals = [];
-        for (const p of parts) vals.push(await liquid.evalValue(p, ctx));
+        for (const p of splitArgs(this.args || '')) vals.push(await liquid.evalValue(p, ctx));
         const type = String(vals[0] ?? '').replace(/['"]/g, '');
         if (name === 'form') {
           const action = FORM_ACTIONS[type] || '#';
-          const method = type === 'product' ? 'post' : 'post';
-          attrs = ` action="${action}" method="${method}"${type === 'product' ? ' enctype="multipart/form-data"' : ''} id="form-${type}"`;
+          attrs = ` action="${action}" method="post"${type === 'product' ? ' enctype="multipart/form-data"' : ''} id="form-${type}"`;
           if (type === 'product' && vals[1]) scope.form.id = `product_form_${vals[1].id ?? ''}`;
           if (type === 'contact') scope.form.id = 'contact_form';
         } else if (name === 'paginate') {
@@ -395,54 +405,48 @@ function makeTags(liquid) {
             next: { url: '#', title: 'Next' }, parts: [{ url: '#', page: 1, is_link: false, title: '1' }],
           };
         }
-        if (scopeExtra) Object.assign(scope, await scopeExtra(vals, ctx));
       } catch { /* render with defaults */ }
       ctx.push(scope);
-      emitter.write(`<form${attrs}>`);
-      if (name === 'paginate') emitter.write(''); // paginate itself isn't a form
+      if (name === 'form') emitter.write(`<form${attrs}>`);
       await liquid.renderer.renderTemplates(this.templates, ctx, emitter);
       ctx.pop();
       if (name === 'form') emitter.write('</form>');
-    }
-  };
+    },
+  });
 
   // Passthrough/absorb tags: schema (parsed separately), legacy stylesheet/javascript.
-  const absorbTag = (name) => class extends Liquid.Tag {
-    parse(token, remainTokens) {
-      const stream = liquid.parser.parseStream(remainTokens)
-        .on('token', (tok) => { if (tok.name === `end${name}`) stream.stop(); })
-        .on('end', () => {});
-      stream.start();
-    }
-    render(_ctx, _emitter) {}
-  };
+  const absorbTag = (name) => ({
+    parse(token, remainTokens) { collectBody(name, token, remainTokens); },
+    render() {},
+  });
 
-  class StyleTag extends Liquid.Tag {
+  const styleTag = {
     parse(token, remainTokens) {
-      this.templates = [];
-      const stream = liquid.parser.parseStream(remainTokens)
-        .on('token', (tok) => { if (tok.name === 'endstyle') stream.stop(); else this.templates.push(tok); })
-        .on('end', () => { throw new Error('{% style %} not closed'); });
-      stream.start();
-    }
+      const { source } = collectBody('style', token, remainTokens);
+      this.templates = liquid.parser.parse(source);
+    },
     async render(ctx, emitter) {
       emitter.write('<style>');
       await liquid.renderer.renderTemplates(this.templates, ctx, emitter);
       emitter.write('</style>');
-    }
-  }
+    },
+  };
+
+  // Single tags without bodies.
+  const noOp = { parse() {}, render() {} };
 
   return {
-    style: StyleTag,
+    style: styleTag,
     form: blockTag('form'),
     paginate: blockTag('paginate'),
     schema: absorbTag('schema'),
     stylesheet: absorbTag('stylesheet'),
     javascript: absorbTag('javascript'),
-    layout: absorbTag('layout'), // {% layout none %}
-    section: class extends Liquid.Tag {
-      render() {} // {% section 'name' %} — templates only, not rendered in previews
-    },
+    layout: noOp,        // {% layout none %}
+    section: noOp,       // {% section 'name' %} — templates only
+    content_for: noOp,   // Horizon theme blocks — not renderable in isolation
+    doc: absorbTag('doc'), // LiquidDoc — documentation comments
+    endcomment: noOp,    // tolerate orphan {% endcomment %} (Shopify is lenient, liquidjs is not)
   };
 }
 
@@ -501,6 +505,14 @@ function tFilter(locale) {
     for (const [k, v] of Object.entries(opts)) {
       out = out.split(`{{${k}}}`).join(v).split(`{{ ${k} }}`).join(v);
     }
+    // Fill placeholders the caller didn't pass so previews don't leak {{ ... }}.
+    out = out.replace(/\{\{\s*([\w.]+)\s*\}\}/g, (_, name) => {
+      const n = name.split('.').pop().toLowerCase();
+      if (/^(count|index|quantity|page|total|number|forloop)$/.test(n)) return '2';
+      if (/^(price|amount|total_price)$/.test(n)) return '$49.00';
+      if (/^(name|title|first_name|product|customer|email)$/.test(n)) return 'Sample';
+      return 'Sample';
+    });
     return out;
   };
 }
@@ -519,9 +531,7 @@ function getEngine(storeName, storePath) {
     cache: true,
     greedySchemas: false,
   });
-  liquid.registerTag('style', makeTags(liquid).style);
-  const tags = makeTags(liquid);
-  for (const [name, Tag] of Object.entries(tags)) liquid.registerTag(name, Tag);
+  for (const [name, Tag] of Object.entries(makeTags(liquid))) liquid.registerTag(name, Tag);
   for (const [name, fn] of Object.entries(buildFilters(storeName))) liquid.registerFilter(name, fn);
   liquid.registerFilter('t', tFilter(locale));
   liquid.registerFilter('translate', tFilter(locale));
@@ -599,15 +609,31 @@ function extractTagBlocks(src, tag) {
 }
 
 async function renderLiquid(engine, source, { sectionId = 'preview', extraGlobals = {}, customer = false } = {}) {
-  // schema is parsed separately; legacy css/js blocks are injected by the caller.
-  const globals = baseGlobals(engine, { customer });
+  // Strip schema before the engine: schema JSON can contain `{{ ... }}` (visible_if)
+  // that defeats the tokenizer; we parse it separately for defaults.
   const schemaMatch = source.match(/{%\s*schema\s*%}([\s\S]*?){%\s*endschema\s*%}/);
+  source = source.replace(/{%\s*schema\s*%}[\s\S]*?{%\s*endschema\s*%}/g, '');
   let schema = null;
   if (schemaMatch) { try { schema = JSON.parse(schemaMatch[1]); } catch {} }
   const sec = sectionMock(schema, sectionId);
-  const scope = { ...globals, ...extraGlobals, section: sec, block: (sec.blocks || [])[0] };
-  const out = await engine.liquid.parseAndRender(source, scope);
+  const scope = { ...baseGlobals(engine, { customer }), ...extraGlobals, section: sec, block: (sec.blocks || [])[0] };
+  let out = await engine.liquid.parseAndRender(source, scope);
+  out = unescapeMediaTags(out);
   return out;
+}
+
+// Shopify binds a trailing `| escape` inside filter hashes to the hash value;
+// liquidjs binds it to the whole chain, double-escaping HTML-producing filters
+// (image_tag, placeholder_svg_tag, ...). Undo that for media tags only.
+function unescapeMediaTags(html) {
+  return html.replace(/&lt;(img|svg|video|source|iframe|picture)\b((?:[^&]|&(?!gt;))*)&gt;/g, (_, tag, attrs) => {
+    const clean = attrs
+      .replace(/&(quot|#34);/g, '"')
+      .replace(/&(apos|#39);/g, "'")
+      .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+      .replace(/&amp;/g, '&');
+    return `<${tag}${clean}>`;
+  });
 }
 
 async function renderSectionSource(storeName, source, opts = {}) {

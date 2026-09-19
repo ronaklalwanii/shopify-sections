@@ -1,14 +1,15 @@
 {
   "name": "section-library",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "0.1.0",
+  "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/server.js",
+    "ingest": "node src/ingest.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Local Shopify section library: browse, filter, preview, and collect sections across stores",
   "dependencies": {
     "express": "^5.2.1",
     "liquidjs": "^10.29.0"
