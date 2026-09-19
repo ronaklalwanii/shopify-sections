@@ -383,14 +383,14 @@ function makeTags(liquid) {
     parse(token, remainTokens) {
       const { args, source } = collectBody(name, token, remainTokens);
       this.args = args;
-      this.templates = liquid.parser.parse(source);
+      this.templates = liquid.parse(source);
     },
-    async render(ctx, emitter) {
+    *render(ctx, emitter) {
       let attrs = '';
       const scope = { form: { errors: {}, posted_successfully: false, id: 'form' } };
       try {
         const vals = [];
-        for (const p of splitArgs(this.args || '')) vals.push(await liquid.evalValue(p, ctx));
+        for (const p of splitArgs(this.args || '')) vals.push(yield liquid.evalValue(p, ctx));
         const type = String(vals[0] ?? '').replace(/['"]/g, '');
         if (name === 'form') {
           const action = FORM_ACTIONS[type] || '#';
@@ -408,7 +408,7 @@ function makeTags(liquid) {
       } catch { /* render with defaults */ }
       ctx.push(scope);
       if (name === 'form') emitter.write(`<form${attrs}>`);
-      await liquid.renderer.renderTemplates(this.templates, ctx, emitter);
+      yield* liquid.renderer.renderTemplates(this.templates, ctx, emitter);
       ctx.pop();
       if (name === 'form') emitter.write('</form>');
     },
@@ -423,11 +423,11 @@ function makeTags(liquid) {
   const styleTag = {
     parse(token, remainTokens) {
       const { source } = collectBody('style', token, remainTokens);
-      this.templates = liquid.parser.parse(source);
+      this.templates = liquid.parse(source);
     },
-    async render(ctx, emitter) {
+    *render(ctx, emitter) {
       emitter.write('<style>');
-      await liquid.renderer.renderTemplates(this.templates, ctx, emitter);
+      yield* this.liquid.renderer.renderTemplates(this.templates, ctx, emitter);
       emitter.write('</style>');
     },
   };
