@@ -22,5 +22,6 @@
   },
   "order": [
     "library"
-  ]
+  ],
+  "layout": "library-preview"
 }

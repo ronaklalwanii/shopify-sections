@@ -246,6 +246,32 @@ function main() {
     order: ['main'],
   }, null, 2));
 
+  // minimal layout for preview templates — no header/footer groups, no chrome
+  fs.writeFileSync(path.join(OUT, 'layout/library-preview.liquid'), `<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {%- render 'css-variables' -%}
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
+    {{ content_for_header }}
+  </head>
+  <body>
+    {{ content_for_layout }}
+  </body>
+</html>
+`);
+  const applyLayout = (dir) => {
+    for (const f of fs.readdirSync(dir)) {
+      if (!f.startsWith('page.lib-')) continue;
+      const p = path.join(dir, f);
+      const json = JSON.parse(fs.readFileSync(p, 'utf8'));
+      json.layout = 'library-preview';
+      fs.writeFileSync(p, JSON.stringify(json, null, 2));
+    }
+  };
+  applyLayout(path.join(OUT, 'templates'));
+
   // merge foreign locales so | t lookups resolve (host wins conflicts)
   const localePath = path.join(OUT, 'locales/en.default.json');
   const locale = JSON.parse(fs.readFileSync(localePath, 'utf8'));

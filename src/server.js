@@ -100,10 +100,45 @@ const GALLERY_MANIFEST = path.join(ROOT, 'data/gallery-manifest.json');
 const storeConfig = () => { try { return JSON.parse(fs.readFileSync(STORE_CONFIG, 'utf8')); } catch { return {}; } };
 const galleryManifest = () => { try { return JSON.parse(fs.readFileSync(GALLERY_MANIFEST, 'utf8')); } catch { return {}; } };
 
+/* ------------------------- live storefront auth/proxy ------------------------ */
+
+const auth = { cookie: null, authedAt: 0 };
+
+async function shopifyAuth() {
+  const cfg = storeConfig();
+  const base = cfg.storeUrl;
+  const jar = [];
+  const collect = (r) => { for (const c of (r.headers.getSetCookie?.() || [])) jar.push(c.split(';')[0]); };
+  const r1 = await fetch(`${base}/password`, { redirect: 'manual' });
+  collect(r1);
+  const html = await r1.text();
+  const token = (html.match(/name="authenticity_token" value="([^"]+)"/) || [])[1];
+  const body = new URLSearchParams({ authenticity_token: token || '', password: cfg.storefrontPassword || '', form_type: 'storefront_password' });
+  const r2 = await fetch(`${base}/password`, {
+    method: 'POST', redirect: 'manual',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Cookie: jar.join('; '), Referer: `${base}/password` },
+    body: body.toString(),
+  });
+  collect(r2);
+  auth.cookie = jar.join('; ') || null;
+  auth.authedAt = Date.now();
+  return auth.cookie;
+}
+
+async function shopifyGet(url) {
+  let r = await fetch(url, { headers: auth.cookie ? { Cookie: auth.cookie } : {}, redirect: 'manual' });
+  const loc = r.headers.get('location') || '';
+  if ((r.status === 302 && loc.includes('/password')) || r.status === 401 || r.status === 403) {
+    await shopifyAuth();
+    r = await fetch(url, { headers: auth.cookie ? { Cookie: auth.cookie } : {}, redirect: 'manual' });
+  }
+  return r;
+}
+
 app.get('/api/config', (req, res) => {
   const cfg = storeConfig();
-  // tell the frontend whether live-store previews are active (never leak the id)
-  res.json({ livePreviews: !!(cfg.storeUrl && cfg.previewThemeId), storeUrl: cfg.storeUrl || null });
+  const live = !!(cfg.storeUrl && (cfg.previewThemeId || cfg.storefrontPassword));
+  res.json({ livePreviews: live, storeUrl: cfg.storeUrl || null });
 });
 
 app.get('/api/index', (req, res) => {
@@ -253,14 +288,18 @@ async function getLayoutHeadExtra(store) {
 app.get('/preview/:store/:file', async (req, res) => {
   const { store, file } = req.params;
 
-  // When a gallery store is configured, previews render on real Shopify.
+  // When a gallery store is configured, previews render on real Shopify,
+  // proxied through this server (authenticates with the storefront password).
   // Custom sections aren't in the manifest and keep the local mock renderer.
   const cfg = storeConfig();
-  if (cfg.storeUrl && cfg.previewThemeId) {
+  if (cfg.storeUrl && (cfg.previewThemeId || cfg.storefrontPassword)) {
     const entry = galleryManifest()[`${store}/${file}`];
     if (entry) {
-      const url = `${cfg.storeUrl}/pages/${cfg.pageHandle}?view=${entry.template}&preview_theme_id=${cfg.previewThemeId}`;
-      return res.redirect(302, url);
+      const params = new URLSearchParams({ view: entry.template });
+      if (cfg.previewThemeId) params.set('preview_theme_id', cfg.previewThemeId);
+      const target = `${cfg.storeUrl}/pages/${cfg.pageHandle}?${params}`;
+      const r = await shopifyGet(target);
+      return res.status(r.status).type('html').send(await r.text());
     }
   }
   try {
