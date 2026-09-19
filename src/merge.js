@@ -180,10 +180,8 @@ function main() {
   const index = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../data/index.json'), 'utf8'));
   fs.rmSync(OUT, { recursive: true, force: true });
   fs.cpSync(path.join(STORES_ROOT, HOST), OUT, { recursive: true });
-  // drop the host's JSON templates except layout-critical ones — our generated ones replace them
-  for (const f of fs.readdirSync(path.join(OUT, 'templates'))) {
-    if (f.endsWith('.json') && f !== 'page.section-library.json') fs.rmSync(path.join(OUT, 'templates', f));
-  }
+  // keep the host's own JSON templates (index, product, 404, ...) so the store
+  // works normally — our generated lib-* templates are added alongside them.
 
   const manifest = {};
   const gallerySnippets = path.join(OUT, 'snippets');

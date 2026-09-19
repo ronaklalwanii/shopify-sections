@@ -95,6 +95,17 @@ app.use(express.static(path.join(ROOT, 'public')));
 
 function loadIndex() { return JSON.parse(fs.readFileSync(DATA_INDEX, 'utf8')); }
 
+const STORE_CONFIG = path.join(ROOT, 'data/store-config.json');
+const GALLERY_MANIFEST = path.join(ROOT, 'data/gallery-manifest.json');
+const storeConfig = () => { try { return JSON.parse(fs.readFileSync(STORE_CONFIG, 'utf8')); } catch { return {}; } };
+const galleryManifest = () => { try { return JSON.parse(fs.readFileSync(GALLERY_MANIFEST, 'utf8')); } catch { return {}; } };
+
+app.get('/api/config', (req, res) => {
+  const cfg = storeConfig();
+  // tell the frontend whether live-store previews are active (never leak the id)
+  res.json({ livePreviews: !!(cfg.storeUrl && cfg.previewThemeId), storeUrl: cfg.storeUrl || null });
+});
+
 app.get('/api/index', (req, res) => {
   const idx = loadIndex();
   res.json({ ...idx, sections: [...idx.sections, ...listCustomSections()] });
@@ -241,6 +252,17 @@ async function getLayoutHeadExtra(store) {
 
 app.get('/preview/:store/:file', async (req, res) => {
   const { store, file } = req.params;
+
+  // When a gallery store is configured, previews render on real Shopify.
+  // Custom sections aren't in the manifest and keep the local mock renderer.
+  const cfg = storeConfig();
+  if (cfg.storeUrl && cfg.previewThemeId) {
+    const entry = galleryManifest()[`${store}/${file}`];
+    if (entry) {
+      const url = `${cfg.storeUrl}/pages/${cfg.pageHandle}?view=${entry.template}&preview_theme_id=${cfg.previewThemeId}`;
+      return res.redirect(302, url);
+    }
+  }
   try {
     if (store === 'custom') {
       if (!/^[\w.-]+(\.liquid)?$/.test(file)) return res.status(400).send('bad file');
