@@ -105,6 +105,25 @@ body {
 .results-sub { color: var(--ink-3); font-size: 12.5px; margin-top: 3px; }
 
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(236px, 1fr)); gap: 14px; }
+.toggle.light { color: var(--ink-2); }
+.toggle.light .toggle-track { background: #d9d6d0; }
+.toggle.light .toggle-track::after { background: #fff; }
+.toggle.light input:checked + .toggle-track { background: var(--accent); }
+
+.card-thumb {
+  position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden;
+  border-radius: 8px; border: 1px solid var(--line); background: #fff;
+}
+.card-thumb iframe {
+  width: 1200px; height: 1560px; border: 0; position: absolute; top: 0; left: 0;
+  transform-origin: 0 0; pointer-events: none; background: #fff;
+}
+.card-thumb .thumb-loading {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  color: var(--ink-3); font-size: 11px; letter-spacing: .04em;
+}
+.card-thumb.loaded .thumb-loading { display: none; }
+.card-thumb.fail .thumb-loading { color: var(--danger); }
 .card {
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
   padding: 14px 15px 12px; cursor: pointer; position: relative;

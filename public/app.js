@@ -8,6 +8,7 @@ const state = {
   category: 'all',
   q: '',
   showFunctional: false,
+  showPreviews: localStorage.getItem('sl-previews') !== 'off',
   current: null,   // section open in detail modal
   code: { liquid: '', css: '', js: '' },
   codeTab: 'liquid',
@@ -69,6 +70,10 @@ function renderGrid() {
   const list = visibleSections();
   $('grid').innerHTML = list.map((s) => `
     <div class="card" data-store="${s.store}" data-file="${s.file}">
+      ${state.showPreviews ? `
+      <div class="card-thumb">
+        <span class="thumb-loading">loading preview…</span>
+      </div>` : ''}
       <div class="card-top">
         <span class="cat-dot" style="background:${catColor(s.category)}"></span>
         <div class="card-name">${esc(s.name)}</div>
@@ -87,6 +92,60 @@ function renderGrid() {
   const scope = [state.category !== 'all' && state.category, state.store !== 'all' && (state.store === 'custom' ? 'custom sections' : `store "${state.store}"`)].filter(Boolean).join(' · ');
   $('resultsTitle').textContent = state.q ? `Results for "${state.q}"` : (scope || 'All sections');
   $('resultsSub').textContent = `${list.length} section${list.length === 1 ? '' : 's'}${state.showFunctional ? '' : ' · functional hidden'}`;
+  if (state.showPreviews) observeThumbs();
+}
+
+/* ------------------------- lazy live-preview thumbnails ------------------------ */
+
+let thumbObserver = null;
+let inFlight = 0;
+const thumbQueue = [];
+
+function observeThumbs() {
+  thumbObserver?.disconnect();
+  const thumbs = [...document.querySelectorAll('.card-thumb:not(.loaded)')];
+  if (!('IntersectionObserver' in window)) { thumbs.forEach(loadThumb); return; }
+  thumbObserver = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) {
+        thumbObserver.unobserve(e.target);
+        queueThumb(e.target);
+      }
+    }
+  }, { rootMargin: '300px' });
+  thumbs.forEach((t) => thumbObserver.observe(t));
+}
+
+function queueThumb(el) {
+  thumbQueue.push(el);
+  pumpThumbs();
+}
+
+function pumpThumbs() {
+  while (inFlight < 4 && thumbQueue.length) {
+    loadThumb(thumbQueue.shift());
+  }
+}
+
+function loadThumb(el) {
+  if (el.dataset.loaded || !el.isConnected) { inFlight--; pumpThumbs(); return; }
+  el.dataset.loaded = '1';
+  inFlight++;
+  const card = el.closest('.card');
+  const frame = document.createElement('iframe');
+  frame.title = 'preview';
+  frame.setAttribute('sandbox', 'allow-scripts');
+  frame.src = previewUrl({ store: card.dataset.store, file: card.dataset.file });
+  frame.onload = () => {
+    el.classList.add('loaded');
+    inFlight--;
+    pumpThumbs();
+    requestAnimationFrame(() => {
+      frame.style.transform = `scale(${el.clientWidth / 1200})`;
+    });
+  };
+  frame.onerror = () => { el.classList.add('fail'); el.querySelector('.thumb-loading').textContent = 'preview failed'; inFlight--; pumpThumbs(); };
+  el.appendChild(frame);
 }
 
 function refresh() { renderSidebar(); renderGrid(); }
@@ -310,6 +369,12 @@ function toast(msg, isErr) {
 /* wire up */
 $('search').addEventListener('input', (e) => { state.q = e.target.value; renderGrid(); });
 $('functionalToggle').addEventListener('change', (e) => { state.showFunctional = e.target.checked; refresh(); });
+$('previewsToggle').checked = state.showPreviews;
+$('previewsToggle').addEventListener('change', (e) => {
+  state.showPreviews = e.target.checked;
+  localStorage.setItem('sl-previews', state.showPreviews ? 'on' : 'off');
+  refresh();
+});
 $('addBtn').onclick = () => openEditor(null);
 $('detailClose').onclick = () => { $('detailOverlay').hidden = true; };
 $('detailOpenTab').onclick = () => state.current && window.open(previewUrl(state.current), '_blank');
