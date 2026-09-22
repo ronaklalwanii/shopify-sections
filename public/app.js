@@ -4,6 +4,7 @@ const $ = (id) => document.getElementById(id);
 const state = {
   sections: [],
   stores: [],
+  storeColors: {},
   store: 'all',
   category: 'all',
   q: '',
@@ -11,6 +12,7 @@ const state = {
   showPreviews: localStorage.getItem('sl-previews') !== 'off',
   current: null,   // section open in detail modal
   code: { liquid: '', css: '', js: '' },
+  schema: null,
   codeTab: 'liquid',
   editing: null,   // meta of section being edited (custom only)
 };
@@ -54,11 +56,12 @@ function counts() {
 
 function renderSidebar() {
   const { stores, cats } = counts();
-  const mk = (label, value, count, active) =>
-    `<button class="side-item ${active ? 'active' : ''}" data-value="${value}"><span>${label}</span><span class="count">${count}</span></button>`;
+  const mk = (label, value, count, active, color) =>
+    `<button class="side-item ${active ? 'active' : ''}" data-value="${value}">${color ? `<span class="side-dot" style="background:${color}"></span>` : ''}<span>${label}</span><span class="count">${count}</span></button>`;
+  const colorOf = (name) => (state.storeColors[name] || {}).color;
   $('storeList').innerHTML =
     mk('All stores', 'all', stores.all, state.store === 'all') +
-    state.stores.map((st) => mk(st.name, st.name, stores[st.name] || 0, state.store === st.name)).join('') +
+    state.stores.map((st) => mk(st.name, st.name, stores[st.name] || 0, state.store === st.name, colorOf(st.name))).join('') +
     mk('Custom sections', 'custom', stores.custom || 0, state.store === 'custom');
   $('categoryList').innerHTML =
     mk('All categories', 'all', Object.values(cats).reduce((a, b) => a + b, 0), state.category === 'all') +
@@ -85,7 +88,7 @@ function renderGrid() {
       </div>
       <div class="card-file">${esc(s.file)}</div>
       <div class="card-meta">
-        <span class="chip store-chip">${s.store === 'custom' ? 'custom' : esc(s.store)}</span>
+        <span class="chip store-chip" style="${storeChipStyle(s.store === 'custom' ? null : s.store)}">${s.store === 'custom' ? 'custom' : esc(s.store)}</span>
         ${(s.group && s.group.length > 1) ? `<span class="chip" title="also in: ${esc(s.group.filter(x => x !== s.store).join(', '))}">${s.group.length} stores</span>` : ''}
         <span class="chip">${esc(s.category)}</span>
         ${s.functional ? '<span class="chip functional">functional</span>' : ''}
@@ -158,6 +161,11 @@ function refresh() { renderSidebar(); renderGrid(); }
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+const storeChipStyle = (storeName) => {
+  const c = state.storeColors[storeName];
+  return c ? `background:${c.color};color:${c.textColor};border-color:transparent` : '';
+};
+
 /* ---------------------------------- detail ----------------------------------- */
 
 function previewUrl(s) {
@@ -177,14 +185,69 @@ async function openDetail(store, file) {
   $('detailFrame').src = previewUrl(s);
   const r = await fetch(`/api/section/${store}/${file}`).then((x) => x.json()).catch(() => null);
   state.code = r ? { liquid: r.liquid || '', css: r.css || '', js: r.js || '' } : { liquid: '', css: '', js: '' };
+  state.schema = r ? r.schema : null;
   state.codeTab = 'liquid';
   document.querySelectorAll('.code-tab').forEach((t) => t.classList.toggle('active', t.dataset.tab === 'liquid'));
+  $('settingsView').hidden = true;
+  $('codeView').hidden = false;
+  $('codeToolbar').hidden = false;
   renderCode();
   $('detailOverlay').hidden = false;
 }
 
+function renderSettingsHtml(schema) {
+  if (!schema || !Array.isArray(schema.settings)) {
+    return `<div class="settings-empty">No schema settings — this section has no theme-editor options${schema ? '' : ' (or its schema could not be parsed)'}.</div>`;
+  }
+  const row = (s) => {
+    if (!s || !s.type || ['header', 'paragraph'].includes(s.type)) {
+      if (s?.type === 'header') return `<div class="set-row" style="grid-template-columns:1fr"><span class="lbl" style="font-weight:700">${esc(s.content || '')}</span></div>`;
+      if (s?.type === 'paragraph') return `<div class="set-row" style="grid-template-columns:1fr"><span style="color:var(--ink-3);font-size:11.5px">${esc(s.content || '')}</span></div>`;
+      return '';
+    }
+    const def = s.default != null ? (typeof s.default === 'object' ? JSON.stringify(s.default) : String(s.default)) : '';
+    const opts = Array.isArray(s.options) ? ` (${s.options.map((o) => o.value ?? o).join(' · ')})` : '';
+    return `<div class="set-row">
+      <span class="lbl" title="${esc(s.label || s.id || '')}">${esc(s.label || s.id || '')}</span>
+      <span><span class="type-badge t-${esc(s.type)}">${esc(s.type)}</span></span>
+      <span class="id" title="${esc(s.id || '')}">${esc(s.id || '')}</span>
+      <span class="def" title="${esc(def + opts)}">${esc(def)}${esc(opts)}</span>
+    </div>`;
+  };
+  const groupHtml = (title, list, countNote = '') => {
+    if (!list || !list.length) return '';
+    const visible = list.filter((s) => s && !['header', 'paragraph'].includes(s.type)).length;
+    return `<div class="settings-group">
+      <h3>${esc(title)} <span class="count">${visible} settings${countNote}</span></h3>
+      ${list.map(row).join('')}
+    </div>`;
+  };
+  const blocks = (schema.blocks || []).filter((b) => b && b.type !== '@app').map((b) => `
+    <div class="settings-group">
+      <h3>Block: ${esc(b.name || b.type)} <span class="count">type "${esc(b.type)}"${b.limit ? ` · max ${b.limit}` : ''}</span></h3>
+      ${(b.settings || []).map(row).join('') || '<div class="set-row"><span style="color:var(--ink-3);font-size:11.5px">no settings</span></div>'}
+    </div>`).join('');
+  const presets = (schema.presets || []).map((p) => p.name).filter(Boolean);
+  return `
+    ${groupHtml('Section settings', schema.settings)}
+    ${blocks}
+    ${presets.length ? `<div class="settings-group"><h3>Presets <span class="count">${presets.length}</span></h3><div class="set-row"><span class="def">${esc(presets.join(' · '))}</span></div></div>` : ''}
+    ${!schema.settings?.length && !blocks ? '<div class="settings-empty">Schema exists but declares no settings.</div>' : ''}
+  `;
+}
+
 function renderCode() {
   const tab = state.codeTab;
+  if (tab === 'settings') {
+    $('codeView').hidden = true;
+    $('codeToolbar').hidden = true;
+    $('settingsView').hidden = false;
+    $('settingsView').innerHTML = renderSettingsHtml(state.schema);
+    return;
+  }
+  $('codeView').hidden = false;
+  $('codeToolbar').hidden = false;
+  $('settingsView').hidden = true;
   const code = state.code[tab];
   const hints = {
     liquid: `${state.code.liquid.split('\n').length} lines — styles are inline in the section`,
@@ -357,6 +420,7 @@ async function load() {
   const idx = await fetch('/api/index').then((r) => r.json());
   state.sections = idx.sections;
   state.stores = idx.stores;
+  state.storeColors = Object.fromEntries(idx.stores.map((s) => [s.name, { color: s.color, textColor: s.textColor }]));
   const cats = [...new Set(idx.sections.map((s) => s.category))].sort();
   const catOptions = ['Hero / Banner', 'Product showcase', 'Trust / Social proof', 'Testimonials', 'Stats', 'Media', 'CTA / Newsletter', 'Header / Footer / Nav', 'Text / Content', ...cats.filter((c) => !['Hero / Banner', 'Product showcase', 'Trust / Social proof', 'Testimonials', 'Stats', 'Media', 'CTA / Newsletter', 'Header / Footer / Nav', 'Text / Content'].includes(c))];
   $('fCategory').innerHTML = catOptions.map((c) => `<option>${esc(c)}</option>`).join('');

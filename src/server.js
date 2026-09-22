@@ -163,7 +163,13 @@ app.get('/api/section/:store/:file', (req, res) => {
     const liquid = fs.readFileSync(full, 'utf8');
     const idx = loadIndex();
     const meta = idx.sections.find((s) => s.store === store && s.file === file) || {};
-    return res.json({ meta, liquid, css: '', js: '' });
+    const sm = liquid.match(/{%\s*schema\s*%}([\s\S]*?){%\s*endschema\s*%}/);
+    let schema = null;
+    if (sm) {
+      try { schema = JSON.parse(sm[1]); } catch {}
+      if (!schema) schema = require('./renderer').parseJsonLoose(sm[1]);
+    }
+    return res.json({ meta, liquid, css: '', js: '', schema });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -226,6 +232,10 @@ function previewCacheSet(key, html) {
     fs.mkdirSync(CACHE_DIR, { recursive: true });
     fs.writeFileSync(path.join(CACHE_DIR, key), html);
   } catch {}
+}
+
+function previewCacheDelete(key) {
+  try { fs.unlinkSync(path.join(CACHE_DIR, key)); } catch {}
 }
 
 /* --------------------------------- previews ---------------------------------- */
@@ -323,10 +333,17 @@ app.get('/preview/:store/:file', async (req, res) => {
       if (cfg.previewThemeId) params.set('preview_theme_id', cfg.previewThemeId);
       const target = `${cfg.storeUrl}/pages/${cfg.pageHandle}?${params}`;
       const key = crypto.createHash('md5').update(target).digest('hex');
-      const cached = previewCacheGet(key);
+      let cached = previewCacheGet(key);
+      if (cached && /Liquid error/i.test(cached)) { previewCacheDelete(key); cached = null; }
       if (cached) return res.type('html').send(cached);
       const r = await shopifyGet(target);
-      const html = await r.text();
+      let html = await r.text();
+      // sections that error live (missing product/blog refs etc.) render better
+      // through the local mock — fall back instead of showing Shopify's error
+      if (r.status === 200 && /Liquid error/i.test(html)) {
+        const mock = await localPreview(req, res);
+        return mock;
+      }
       if (r.status === 200) previewCacheSet(key, html);
       else return localPreview(req, res); // not in the published theme yet — mock render
       return res.status(r.status).type('html').send(html);

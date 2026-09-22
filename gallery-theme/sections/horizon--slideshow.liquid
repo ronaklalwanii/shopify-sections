@@ -71,7 +71,7 @@
     if section.settings.content_position == 'on-media'
       assign skip_section_contrast = true
     endif
-    render 'contrast-override', background_color: section.settings.background_color, section_id: section.id, skip_contrast: skip_section_contrast
+    render 'horizon--contrast-override', background_color: section.settings.background_color, section_id: section.id, skip_contrast: skip_section_contrast
   endif
 %}
 

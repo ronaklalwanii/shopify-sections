@@ -29,7 +29,7 @@
 {% comment %} We always render this full-width, as the child blocks have width: page/full settings {% endcomment %}
 {% liquid
   if section.settings.background_color != blank
-    render 'contrast-override', background_color: section.settings.background_color, section_id: section.id
+    render 'horizon--contrast-override', background_color: section.settings.background_color, section_id: section.id
   endif
 %}
 

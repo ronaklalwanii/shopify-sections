@@ -13,7 +13,7 @@
   assign gallery_aspect_ratio = product.featured_media.preview_image.aspect_ratio | default: 1
 
   if section.settings.background_color != blank
-    render 'contrast-override', background_color: section.settings.background_color, section_id: section.id
+    render 'horizon--contrast-override', background_color: section.settings.background_color, section_id: section.id
   endif
 -%}
 {% render 'horizon--quick-add-styles' %}

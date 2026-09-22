@@ -10,9 +10,9 @@
   capture slides
     for resource in resources
       capture children
-        render 'resource-card', resource_type: resource_type, resource: resource, image_aspect_ratio: '4 / 5', collection_thumbnails: 'multiple', product_view_context: 'search'
+        render 'horizon--resource-card', resource_type: resource_type, resource: resource, image_aspect_ratio: '4 / 5', collection_thumbnails: 'multiple', product_view_context: 'search'
       endcapture
-      render 'slideshow-slide', index: forloop.index0, children: children, class: 'predictive-search-results__card'
+      render 'horizon--slideshow-slide', index: forloop.index0, children: children, class: 'predictive-search-results__card'
     endfor
   endcapture
 %}

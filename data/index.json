@@ -1,115 +1,159 @@
 {
-  "generatedAt": "2026-09-22T15:38:02.755Z",
+  "generatedAt": "2026-09-22T17:55:02.397Z",
   "stores": [
     {
       "name": "base",
       "path": "/Users/ronaklalwani/code/shopify-stores/base",
-      "sectionCount": 141
+      "sectionCount": 141,
+      "color": "#803cee",
+      "textColor": "#ffffff"
     },
     {
       "name": "horizon",
       "path": "/Users/ronaklalwani/code/shopify-stores/horizon",
-      "sectionCount": 41
+      "sectionCount": 41,
+      "color": "#3f7fae",
+      "textColor": "#ffffff"
     },
     {
       "name": "mariana-red",
       "path": "/Users/ronaklalwani/code/shopify-stores/mariana-red",
-      "sectionCount": 45
+      "sectionCount": 45,
+      "color": "#7a5d8a",
+      "textColor": "#ffffff"
     },
     {
       "name": "nocturne-store",
       "path": "/Users/ronaklalwani/code/shopify-stores/nocturne-store",
-      "sectionCount": 122
+      "sectionCount": 122,
+      "color": "#D4AF37",
+      "textColor": "#191a1c"
     },
     {
       "name": "pet store",
       "path": "/Users/ronaklalwani/code/shopify-stores/pet store",
-      "sectionCount": 50
+      "sectionCount": 50,
+      "color": "#792011",
+      "textColor": "#ffffff"
     },
     {
       "name": "sleep-and-wellbeing",
       "path": "/Users/ronaklalwani/code/shopify-stores/sleep-and-wellbeing",
-      "sectionCount": 114
+      "sectionCount": 114,
+      "color": "#803cee",
+      "textColor": "#ffffff"
     },
     {
       "name": "azura",
       "path": "/Users/ronaklalwani/code/shopify-layouts/azura",
-      "sectionCount": 43
+      "sectionCount": 43,
+      "color": "#1d2a3a",
+      "textColor": "#ffffff"
     },
     {
       "name": "cybele",
       "path": "/Users/ronaklalwani/code/shopify-layouts/cybele",
-      "sectionCount": 44
+      "sectionCount": 44,
+      "color": "#a41e34",
+      "textColor": "#ffffff"
     },
     {
       "name": "homeware",
       "path": "/Users/ronaklalwani/code/shopify-layouts/homeware",
-      "sectionCount": 34
+      "sectionCount": 34,
+      "color": "#8f2f6b",
+      "textColor": "#ffffff"
     },
     {
       "name": "jlsport",
       "path": "/Users/ronaklalwani/code/shopify-layouts/jlsport",
-      "sectionCount": 40
+      "sectionCount": 40,
+      "color": "#57604a",
+      "textColor": "#ffffff"
     },
     {
       "name": "kuafi",
       "path": "/Users/ronaklalwani/code/shopify-layouts/kuafi",
-      "sectionCount": 41
+      "sectionCount": 41,
+      "color": "#b98a5e",
+      "textColor": "#ffffff"
     },
     {
       "name": "milo",
       "path": "/Users/ronaklalwani/code/shopify-layouts/milo",
-      "sectionCount": 41
+      "sectionCount": 41,
+      "color": "#5d7263",
+      "textColor": "#ffffff"
     },
     {
       "name": "nexora",
       "path": "/Users/ronaklalwani/code/shopify-layouts/nexora",
-      "sectionCount": 41
+      "sectionCount": 41,
+      "color": "#b99a5e",
+      "textColor": "#191a1c"
     },
     {
       "name": "pyko",
       "path": "/Users/ronaklalwani/code/shopify-layouts/pyko",
-      "sectionCount": 43
+      "sectionCount": 43,
+      "color": "#5c6b4f",
+      "textColor": "#ffffff"
     },
     {
       "name": "sage",
       "path": "/Users/ronaklalwani/code/shopify-layouts/sage",
-      "sectionCount": 41
+      "sectionCount": 41,
+      "color": "#4c5b43",
+      "textColor": "#ffffff"
     },
     {
       "name": "salon",
       "path": "/Users/ronaklalwani/code/shopify-layouts/salon",
-      "sectionCount": 44
+      "sectionCount": 44,
+      "color": "#5d6b7a",
+      "textColor": "#ffffff"
     },
     {
       "name": "speed",
       "path": "/Users/ronaklalwani/code/shopify-layouts/speed",
-      "sectionCount": 41
+      "sectionCount": 41,
+      "color": "#f08a1d",
+      "textColor": "#ffffff"
     },
     {
       "name": "suncare",
       "path": "/Users/ronaklalwani/code/shopify-layouts/suncare",
-      "sectionCount": 46
+      "sectionCount": 46,
+      "color": "#7ba888",
+      "textColor": "#191a1c"
     },
     {
       "name": "theme-boutique",
       "path": "/Users/ronaklalwani/code/shopify-layouts/theme-boutique",
-      "sectionCount": 34
+      "sectionCount": 34,
+      "color": "#5b5bd6",
+      "textColor": "#ffffff"
     },
     {
       "name": "theme-chocolatier",
       "path": "/Users/ronaklalwani/code/shopify-layouts/theme-chocolatier",
-      "sectionCount": 34
+      "sectionCount": 34,
+      "color": "#8f2f6b",
+      "textColor": "#ffffff"
     },
     {
       "name": "theme-noir",
       "path": "/Users/ronaklalwani/code/shopify-layouts/theme-noir",
-      "sectionCount": 34
+      "sectionCount": 34,
+      "color": "#2f8f5b",
+      "textColor": "#ffffff"
     },
     {
       "name": "urbanedge",
       "path": "/Users/ronaklalwani/code/shopify-layouts/urbanedge",
-      "sectionCount": 41
+      "sectionCount": 41,
+      "color": "#f26a1b",
+      "textColor": "#ffffff"
     }
   ],
   "sections": [

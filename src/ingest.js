@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { ROOTS } = require('./roots');
+const { parseJsonLoose } = require('./renderer');
 
 const OUT_FILE = path.resolve(__dirname, '../data/index.json');
 const OVERRIDES_FILE = path.resolve(__dirname, '../data/tag-overrides.json');
@@ -68,6 +69,45 @@ function contentHash(src) {
   return crypto.createHash('sha256').update(norm).digest('hex').slice(0, 16);
 }
 
+/* ------------------------------ store brand color ----------------------------- */
+
+const FALLBACK_PALETTE = ['#2f6f8f', '#c2571f', '#2f8f5b', '#8f2f6b', '#b39322', '#5b5bd6', '#c2478f', '#5d6b7a', '#6b7a2f', '#b3382f', '#3f7fae', '#7a5d8a'];
+
+function hexSaturation(hex) {
+  const m = hex.replace('#', '');
+  const full = m.length === 3 ? m.split('').map((c) => c + c).join('') : m;
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16) / 255);
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  return max === 0 ? 0 : (max - min) / max;
+}
+
+function luminance(hex) {
+  const m = hex.replace('#', '');
+  const full = m.length === 3 ? m.split('').map((c) => c + c).join('') : m;
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16) / 255);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function storeBrandColor(storeDir) {
+  let colors = [];
+  try {
+    const data = parseJsonLoose(fs.readFileSync(path.join(storeDir, 'config/settings_data.json'), 'utf8')) || {};
+    const cur = data.current || {};
+    colors = Object.entries(cur)
+      .filter(([, v]) => typeof v === 'string' && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v))
+      .map(([k, v]) => ({ key: k.toLowerCase(), hex: v }));
+  } catch {}
+  // prefer explicit accent/primary/button keys, else the most saturated color
+  const named = colors.find((c) => /accent|primary|brand|button_?(bg|background|color)?$/.test(c.key) && !/text|label|border|icon|hover/.test(c.key));
+  if (named && hexSaturation(named.hex) > 0.12) return named.hex;
+  const best = colors
+    .map((c) => ({ ...c, sat: hexSaturation(c.hex) }))
+    .sort((a, b) => b.sat - a.sat)[0];
+  if (best && best.sat > 0.2) return best.hex;
+  const hash = crypto.createHash('md5').update(path.basename(storeDir)).digest('hex');
+  return FALLBACK_PALETTE[parseInt(hash.slice(0, 4), 16) % FALLBACK_PALETTE.length];
+}
+
 function ingestStore(root, storeDir) {
   const sectionsDir = path.join(storeDir, 'sections');
   if (!fs.existsSync(sectionsDir)) return null;
@@ -105,7 +145,8 @@ function main() {
       if (!entry.isDirectory()) continue;
       const ingested = ingestStore(root, path.join(root, entry.name));
       if (!ingested) continue;
-      stores.push({ name: entry.name, path: path.join(root, entry.name), sectionCount: ingested.length });
+      const color = storeBrandColor(path.join(root, entry.name));
+      stores.push({ name: entry.name, path: path.join(root, entry.name), sectionCount: ingested.length, color, textColor: luminance(color) > 0.6 ? '#191a1c' : '#ffffff' });
       for (const s of ingested) {
         const ov = overrides[`${s.store}/${s.file}`] || {};
         const { category, functional } = classify(s.file, ov);

@@ -19,7 +19,7 @@
   endif
 
   if section.settings.show_search
-    render 'slideshow-styles'
+    render 'horizon--slideshow-styles'
   endif
 
   if section.settings.enable_transparent_header_home and template.name == 'index'
@@ -106,7 +106,7 @@
   endif
 
   capture actions
-    render 'header-actions', customer_account_menu: section.settings.customer_account_menu, display_style: section.settings.actions_display_style, section: section
+    render 'horizon--header-actions', customer_account_menu: section.settings.customer_account_menu, display_style: section.settings.actions_display_style, section: section
   endcapture
 
   if shop.customer_accounts_enabled
@@ -138,7 +138,7 @@
     endif
   endif
   capture search
-    render 'search', style: search_style, class: search_class, display_style: section.settings.actions_display_style
+    render 'horizon--search', style: search_style, class: search_class, display_style: section.settings.actions_display_style
   endcapture
 
   # Skip drawer search under specific conditions:
@@ -152,7 +152,7 @@
   if section.settings.search_row == 'bottom' or search_style != 'none' and skip_drawer_search == false
     # Mobile search duplicate for when search is not in the right order for mobile layout
     capture drawer_search
-      render 'search', class: 'search-action--hidden-on-menu', style: search_style, display_style: section.settings.actions_display_style
+      render 'horizon--search', class: 'search-action--hidden-on-menu', style: search_style, display_style: section.settings.actions_display_style
     endcapture
   endif
 

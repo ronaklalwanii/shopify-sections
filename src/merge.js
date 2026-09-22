@@ -67,6 +67,17 @@ class Copier {
         return full; // store doesn't have it — leave for host theme to resolve
       },
     );
+    // bare renders inside {% liquid %} blocks: `render 'name'` on its own line
+    source = source.replace(
+      /(^|\n)(\s*)((?:render|include)\s+)(')([\w-]+)(')/g,
+      (full, nl, ws, kw, q1, name, q2) => {
+        if (this.hasStoreSnippet(name)) {
+          this.enqueue('snippet', name);
+          return `${nl}${ws}${kw}${q1}${this.prefix}${name}${q2}`;
+        }
+        return full;
+      },
+    );
     // assets: 'file.ext' | asset_url
     source = source.replace(
       /(['"])([\w./-]+\.(?:css|mjs|js|woff2?|png|jpe?g|svg|gif|webp|avif|eot|ttf|otf))\1\s*\|\s*asset_url/g,
@@ -318,9 +329,13 @@ function lint() {
       if (!f.endsWith('.liquid')) continue;
       const src = fs.readFileSync(path.join(OUT, dir, f), 'utf8');
       const snipRe = /{%-?\s*(?:render|include)\s+'([\w-]+)'/g;
+      const snipReLine = /(^|\n)\s*(?:render|include)\s+'([\w-]+)'/g;
       let m;
       while ((m = snipRe.exec(src))) {
         if (!snippets.has(`${m[1]}.liquid`)) { missingSnips++; if (missingSnips <= 8) console.log(`  missing snippet: ${m[1]} (used in ${dir}/${f})`); }
+      }
+      while ((m = snipReLine.exec(src))) {
+        if (!snippets.has(`${m[2]}.liquid`)) { missingSnips++; if (missingSnips <= 8) console.log(`  missing snippet: ${m[2]} (used in ${dir}/${f})`); }
       }
       const assetRe = /['"]([\w./-]+\.(?:css|mjs|js|woff2?|png|jpe?g|svg|gif|webp|avif|eot|ttf|otf))['"]\s*\|\s*asset_url/g;
       while ((m = assetRe.exec(src))) {

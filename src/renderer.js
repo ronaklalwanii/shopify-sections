@@ -451,10 +451,31 @@ function makeTags(liquid) {
 
 /* --------------------------------- engine ---------------------------------- */
 
+// JSON with Shopify leniency: /* comments */, // comments, trailing commas.
+function parseJsonLoose(text) {
+  try { return JSON.parse(text); } catch {}
+  let out = '', inStr = false, esc = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i], n = text[i + 1];
+    if (inStr) {
+      out += c;
+      if (esc) esc = false;
+      else if (c === '\\') esc = true;
+      else if (c === '"') inStr = false;
+      continue;
+    }
+    if (c === '"') { inStr = true; out += c; continue; }
+    if (c === '/' && n === '*') { const end = text.indexOf('*/', i + 2); i = end === -1 ? text.length : end + 1; continue; }
+    if (c === '/' && n === '/') { const end = text.indexOf('\n', i + 2); i = end === -1 ? text.length : end - 1; continue; }
+    out += c;
+  }
+  try { return JSON.parse(out.replace(/,(\s*[}\]])/g, '$1')); } catch { return null; }
+}
+
 function themeSettings(storePath) {
   const settings = {};
   try {
-    const schema = JSON.parse(fs.readFileSync(path.join(storePath, 'config/settings_schema.json'), 'utf8'));
+    const schema = parseJsonLoose(fs.readFileSync(path.join(storePath, 'config/settings_schema.json'), 'utf8')) || [];
     for (const group of schema) {
       if (!group || !Array.isArray(group.settings)) continue;
       for (const s of group.settings) {
@@ -466,7 +487,7 @@ function themeSettings(storePath) {
     }
   } catch {}
   try {
-    const data = JSON.parse(fs.readFileSync(path.join(storePath, 'config/settings_data.json'), 'utf8'));
+    const data = parseJsonLoose(fs.readFileSync(path.join(storePath, 'config/settings_data.json'), 'utf8')) || {};
     const cur = data.current || {};
     for (const [k, v] of Object.entries(cur)) {
       if (v == null) continue;
@@ -672,4 +693,4 @@ async function renderSnippet(storeName, snippetName) {
   } catch { return ''; }
 }
 
-module.exports = { renderSectionSource, renderStoreSection, getEngine, imageMock, renderSnippet, findStore };
+module.exports = { renderSectionSource, renderStoreSection, getEngine, imageMock, renderSnippet, findStore, parseJsonLoose };

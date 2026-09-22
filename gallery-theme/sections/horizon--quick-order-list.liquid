@@ -20,7 +20,7 @@
 
 {% liquid
   if section.settings.background_color != blank
-    render 'contrast-override', background_color: section.settings.background_color, section_id: section.id
+    render 'horizon--contrast-override', background_color: section.settings.background_color, section_id: section.id
   endif
 %}
 
@@ -130,16 +130,16 @@
                   endif
 
                   capture display_price_formatted
-                    render 'format-price', price: display_price
+                    render 'horizon--format-price', price: display_price
                   endcapture
 
                   capture display_price_per_item_formatted
-                    render 'format-price', price: display_price, type: 'per_item'
+                    render 'horizon--format-price', price: display_price, type: 'per_item'
                   endcapture
 
                   if has_discount
                     capture compare_at_price_formatted
-                      render 'format-price', price: variant.compare_at_price, type: 'compare_at'
+                      render 'horizon--format-price', price: variant.compare_at_price, type: 'compare_at'
                     endcapture
                   endif
 
@@ -152,7 +152,7 @@
                   assign sold_out_message = 'products.product.sold_out' | t
 
                   capture quantity_selector_markup
-                    render 'quantity-selector', product: product, variant: variant, in_cart_quantity: variant_cart_quantity, line_index: forloop.index, min: 0
+                    render 'horizon--quantity-selector', product: product, variant: variant, in_cart_quantity: variant_cart_quantity, line_index: forloop.index, min: 0
                   endcapture
                 %}
                 <div

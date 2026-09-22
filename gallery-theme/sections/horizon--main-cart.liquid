@@ -8,7 +8,7 @@
   assign custom_color = false
   if section.settings.background_color != blank or section.settings.text_color != blank
     assign custom_color = true
-    render 'contrast-override', background_color: section.settings.background_color, text_color: section.settings.text_color, section_id: section.id
+    render 'horizon--contrast-override', background_color: section.settings.background_color, text_color: section.settings.text_color, section_id: section.id
   endif
 %}
 

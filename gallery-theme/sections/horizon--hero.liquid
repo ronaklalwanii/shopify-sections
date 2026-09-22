@@ -456,7 +456,7 @@
 
 {%- liquid
   if section.settings.background_color != blank
-    render 'contrast-override', background_color: section.settings.background_color, section_id: section.id, skip_contrast: true
+    render 'horizon--contrast-override', background_color: section.settings.background_color, section_id: section.id, skip_contrast: true
   endif
 -%}
 
@@ -530,7 +530,7 @@
     >
       {% liquid
         if section.settings.toggle_overlay
-          render 'overlay', settings: section.settings
+          render 'horizon--overlay', settings: section.settings
         endif
       %}
       {{ media }}
