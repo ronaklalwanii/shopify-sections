@@ -4,6 +4,21 @@ A local library of Shopify sections across all your stores — filter by store o
 type, preview every section with realistic mock data, and add your own sections
 for future reference.
 
+## Adding sections
+
+**Single sections (snippets you write):** use the **+ Add section** form in the app.
+Saved sections persist to the `DATA_REPO` GitHub repo and survive restarts/redeploys.
+
+**New themes (a store's section export):** no tooling needed —
+- Drop the theme **zip** into the repo's `new-themes/` folder (drag-and-drop works
+  on github.com), or drop an unzipped theme folder into `stores/<name>/`.
+- Push. A GitHub Action unzips, re-ingests, and Vercel rebuilds automatically —
+  new sections are live at the next deploy (~1 min).
+- To reclassify a section, edit `data/tag-overrides.json`
+  (`{ "store/file.liquid": { "category": "Stats" } }`) and push.
+
+Note: themes are content-hash deduped, so shared sections across stores appear once.
+
 ## Run
 
 ```bash

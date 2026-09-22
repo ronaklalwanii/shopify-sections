@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "node src/ingest.js",
   "functions": {
     "api/index.js": {
       "includeFiles": "stores/**, src/**, data/index.json, data/gallery-manifest.json, public/**",

@@ -1,0 +1,43 @@
+name: Ingest new themes
+on:
+  push:
+    branches: [main]
+    paths: ['new-themes/**', 'stores/**']
+permissions:
+  contents: write
+concurrency:
+  group: ingest
+  cancel-in-progress: true
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - name: Extract dropped zips into stores/
+        run: |
+          shopt -s nullglob
+          for z in new-themes/*.zip; do
+            name="$(basename "$z" .zip)"
+            echo "Extracting $name"
+            rm -rf "stores/$name"
+            mkdir -p "stores/$name/.x"
+            unzip -q "$z" -d "stores/$name/.x"
+            found="$(find "stores/$name/.x" -type d -name sections | head -1)"
+            if [ -z "$found" ]; then
+              echo "!! $z has no sections/ folder — skipping"
+              rm -rf "stores/$name"
+              rm "$z"
+              continue
+            fi
+            mv "$(dirname "$found")"/* "stores/$name/"
+            rm -rf "stores/$name/.x"
+            rm "$z"
+          done
+      - run: node src/ingest.js
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'ingest: new themes added [skip ci]'
