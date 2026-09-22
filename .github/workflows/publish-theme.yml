@@ -1,0 +1,95 @@
+name: Publish gallery theme to Shopify
+on:
+  push:
+    branches: [main]
+    paths: ['stores/**', 'src/merge.js', 'src/ingest.js']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: shopify-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # Only runs when the Shopify connection secrets are configured.
+    if: ${{ vars.SHOPIFY_DEV_STORE != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - name: Build gallery theme
+        run: |
+          node src/ingest.js
+          node src/merge.js --zip
+
+      - name: Upload zip to release (public URL Shopify can fetch)
+        run: |
+          TAG="gallery-$(date +%Y%m%d%H%M%S)"
+          gh release create "$TAG" gallery-theme.zip --title "$TAG" --notes "auto"
+          echo "ZIP_URL=https://github.com/${GITHUB_REPOSITORY}/releases/download/$TAG/gallery-theme.zip" >> "$GITHUB_ENV"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Create theme on Shopify from zip
+        run: |
+          THEME_JSON=$(curl -s -X POST \
+            "https://${SHOPIFY_DEV_STORE}.myshopify.com/admin/api/2024-04/themes.json" \
+            -H "X-Shopify-Access-Token: ${SHOPIFY_ADMIN_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d "{\"theme\":{\"name\":\"gallery-theme (auto)\",\"src\":\"${ZIP_URL}\",\"role\":\"main\"}}")
+          THEME_ID=$(echo "$THEME_JSON" | python3 -c "import json,sys; print(json.load(sys.stdin)['theme']['id'])")
+          echo "THEME_ID=$THEME_ID" >> "$GITHUB_ENV"
+          echo "Created theme $THEME_ID"
+        env:
+          SHOPIFY_DEV_STORE: ${{ vars.SHOPIFY_DEV_STORE }}
+          SHOPIFY_ADMIN_TOKEN: ${{ secrets.SHOPIFY_ADMIN_TOKEN }}
+
+      - name: Wait for Shopify to finish importing
+        run: |
+          for i in $(seq 1 60); do
+            STATUS=$(curl -s "https://${SHOPIFY_DEV_STORE}.myshopify.com/admin/api/2024-04/themes/${THEME_ID}.json" \
+              -H "X-Shopify-Access-Token: ${SHOPIFY_ADMIN_TOKEN}" \
+              | python3 -c "import json,sys; t=json.load(sys.stdin)['theme']; print(t.get('processing','false'), t.get('previewable','false'))")
+            echo "poll $i: $STATUS"
+            [ "$STATUS" = "False True" ] || [ "$STATUS" = "false true" ] && break
+            sleep 10
+          done
+        env:
+          SHOPIFY_DEV_STORE: ${{ vars.SHOPIFY_DEV_STORE }}
+          SHOPIFY_ADMIN_TOKEN: ${{ secrets.SHOPIFY_ADMIN_TOKEN }}
+
+      - name: Replace previous auto theme (keep exactly one)
+        run: |
+          python3 - << 'EOF'
+          import json, os, urllib.request
+
+          store = os.environ['SHOPIFY_DEV_STORE']
+          token = os.environ['SHOPIFY_ADMIN_TOKEN']
+          new_id = os.environ['THEME_ID']
+          base = f'https://{store}.myshopify.com/admin/api/2024-04'
+
+          def req(path, method='GET'):
+              r = urllib.request.Request(f'{base}/{path}', method=method,
+                  headers={'X-Shopify-Access-Token': token})
+              with urllib.request.urlopen(r) as resp:
+                  return json.load(resp) if method == 'GET' else resp.status
+
+          themes = req('themes.json')['themes']
+          old = [t for t in themes if t['name'].startswith('gallery-theme') and str(t['id']) != new_id]
+          for t in old:
+              print(f"deleting old theme {t['id']} ({t['name']})")
+              req(f"themes/{t['id']}.json", method='DELETE')
+          print(f"kept: {new_id} — {len(old)} old removed")
+          EOF
+        env:
+          SHOPIFY_DEV_STORE: ${{ vars.SHOPIFY_DEV_STORE }}
+          SHOPIFY_ADMIN_TOKEN: ${{ secrets.SHOPIFY_ADMIN_TOKEN }}
