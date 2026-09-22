@@ -1,0 +1,72 @@
+{%- comment -%}
+  Renders a product card.
+  Accepts:
+  - product: {Object} product (required)
+  - show_subtitle: {Boolean} show vendor/type line
+  - subtitle_source: {String} vendor | type
+  - show_price: {Boolean}
+  - show_rating: {Boolean}
+  - show_button: {Boolean} add-to-cart button
+  - button_label: {String}
+  - image_ratio: {String} portrait | tall | square | landscape
+  Usage: {% render 'theme-chocolatier--product-card', product: product %}
+{%- endcomment -%}
+{%- liquid
+  assign ratio = image_ratio | default: settings.card_image_ratio | default: 'portrait'
+  assign quick_id = 'QuickAdd-' | append: product.id
+-%}
+<div class="card product-card" id="{{ quick_id }}">
+  <div class="card__media ratio-{{ ratio }}">
+    <a href="{{ product.url }}" aria-label="{{ product.title | escape }}" tabindex="-1">
+      {%- if product.featured_media -%}
+        {{ product.featured_media | image_url: width: 720 | image_tag: loading: 'lazy', widths: '320, 480, 640, 720', alt: product.featured_media.alt}}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+    </a>
+    {%- if product.available == false -%}
+      <span class="badge card__badge">{{ 'products.product.sold_out' | t }}</span>
+    {%- elsif product.compare_at_price > product.price -%}
+      <span class="badge card__badge">{{ 'products.product.on_sale' | t }}</span>
+    {%- endif -%}
+  </div>
+  <div class="card__content">
+    <h3 class="card__title">
+      <a href="{{ product.url }}">{{ product.title | escape }}</a>
+    </h3>
+    {%- if show_subtitle -%}
+      {%- if subtitle_source == 'vendor' and product.vendor != blank -%}
+        <p class="card__subtitle">{{ product.vendor }}</p>
+      {%- elsif product.type != blank -%}
+        <p class="card__subtitle">{{ product.type }}</p>
+      {%- endif -%}
+    {%- endif -%}
+    {%- if show_rating and show_price -%}
+      <div class="card__meta-row">
+        <span class="card__rating">{% render 'theme-chocolatier--rating', rating: 5 %}</span>
+        {% render 'theme-chocolatier--price', product: product %}
+      </div>
+    {%- else -%}
+      {%- if show_rating -%}
+        <span class="card__rating">{% render 'theme-chocolatier--rating', rating: 5 %}</span>
+      {%- endif -%}
+      {%- if show_price -%}
+        {% render 'theme-chocolatier--price', product: product %}
+      {%- endif -%}
+    {%- endif -%}
+    {%- if show_button -%}
+      {%- if product.available -%}
+        <div class="card__button">
+          {%- if product.variants.size == 1 -%}
+            {%- form 'product', product, id: nil, class: 'card-form' -%}
+              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              {% render 'theme-chocolatier--button', label_key: 'products.product.add_to_cart', label: button_label, style: 'primary', size: 'small', type: 'submit', full: true %}
+            {%- endform -%}
+          {%- else -%}
+            {% render 'theme-chocolatier--button', label: 'Choose options', link: product.url, style: 'primary', size: 'small', full: true %}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>

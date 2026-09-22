@@ -1,0 +1,72 @@
+{%- comment -%} Section Library: injected global assets for store "salon" {%- endcomment -%}
+{{ 'salon--base.css' | asset_url | stylesheet_tag }}
+{{ 'salon--components.css' | asset_url | stylesheet_tag }}
+{% render 'salon--layout-tokens' %}
+{%- comment -%} Giant text band — oversized display statement (outline / solid), optional image. Horizon-safe. {%- endcomment -%}
+<section class="gtx gtx-{{ section.id }} gtx--{{ section.settings.layout }}" style="background: {{ section.settings.background_color }};">
+  <div class="page-width gtx__inner">
+    {%- if section.settings.eyebrow != blank -%}<span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>{%- endif -%}
+    <p class="gtx__text" {% if section.settings.outline %}data-outline{% endif %}>{{ section.settings.text | escape }}</p>
+    {%- if section.settings.image != blank -%}
+      <div class="gtx__media">{{ section.settings.image | image_url: width: 1400 | image_tag: loading: 'lazy', alt: section.settings.text }}</div>
+    {%- endif -%}
+    {%- if section.settings.subheading != blank -%}<p class="gtx__sub">{{ section.settings.subheading | escape }}</p>{%- endif -%}
+    {%- if section.settings.link_label != blank -%}
+      <a href="{{ section.settings.link | default: '#' }}" class="gtx__link">{{ section.settings.link_label | escape }} {% render 'salon--icon', name: 'arrow-right', size: 12 %}</a>
+    {%- endif -%}
+  </div>
+</section>
+{% style %}
+  .gtx-{{ section.id }} { padding-block: clamp(2.5rem, 7vh, 5.5rem); overflow: hidden; }
+  .gtx-{{ section.id }} .gtx__inner { text-align: {{ section.settings.align }}; }
+  .gtx-{{ section.id }} .gtx__text {
+    font-family: var(--font-heading);
+    font-size: clamp({{ section.settings.min_size }}px, {{ section.settings.vw_size }}vw, {{ section.settings.max_size }}px);
+    font-weight: {% if section.settings.outline %}900{% else %}{{ section.settings.weight }}{% endif %};
+    line-height: 0.95;
+    letter-spacing: {{ section.settings.letter_spacing }}em;
+    text-transform: {% if section.settings.uppercase %}uppercase{% else %}none{% endif %};
+    color: var(--color-heading);
+    margin-block: 0.2em;
+  }
+  .gtx-{{ section.id }} [data-outline] {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--color-heading);
+  }
+  .gtx-{{ section.id }} .gtx__media { margin-top: 1.6rem; border-radius: var(--card-radius); overflow: hidden; }
+  .gtx-{{ section.id }} .gtx__media img { width: 100%; display: block; }
+  .gtx-{{ section.id }} .gtx__sub { margin-top: 1rem; font-size: 0.9rem; color: var(--color-text-muted); max-width: 36rem; {% if section.settings.align == 'center' %}margin-inline: auto;{% endif %} }
+  .gtx-{{ section.id }} .gtx__link {
+    display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.3rem;
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    border-bottom: 1px solid currentColor; padding-bottom: 0.2rem;
+  }
+{% endstyle %}
+{% schema %}
+{
+  "name": "Giant text",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "text", "label": "Giant text", "default": "Skincare simplified." },
+    { "type": "checkbox", "id": "outline", "label": "Outline style", "default": false },
+    { "type": "checkbox", "id": "uppercase", "label": "Uppercase", "default": false },
+    { "type": "range", "id": "min_size", "label": "Min size", "min": 30, "max": 100, "step": 2, "unit": "px", "default": 52 },
+    { "type": "range", "id": "vw_size", "label": "Fluid size", "min": 4, "max": 16, "step": 0.5, "unit": "vw", "default": 9 },
+    { "type": "range", "id": "max_size", "label": "Max size", "min": 60, "max": 260, "step": 5, "unit": "px", "default": 150 },
+    { "type": "range", "id": "weight", "label": "Weight (solid style)", "min": 300, "max": 900, "step": 100, "default": 600 },
+    { "type": "range", "id": "letter_spacing", "label": "Letter spacing", "min": -5, "max": 20, "step": 1, "unit": "×0.01em", "default": 0 },
+    { "type": "text", "id": "subheading", "label": "Subheading" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "link_label", "label": "Link label" },
+    { "type": "url", "id": "link", "label": "Link" },
+    {
+      "type": "select", "id": "align", "label": "Alignment",
+      "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" } ],
+      "default": "left"
+    },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#f4f0e6" }
+  ],
+  "presets": [ { "name": "Giant text" } ]
+}
+{% endschema %}

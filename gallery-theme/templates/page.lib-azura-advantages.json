@@ -1,0 +1,72 @@
+{
+  "sections": {
+    "library": {
+      "type": "azura--advantages",
+      "settings": {
+        "heading": "Our advantages",
+        "padding": 72,
+        "enr_layout_width": "as_designed",
+        "enr_layout_align": "as_designed",
+        "enr_radius": 0,
+        "enr_border_width": "0",
+        "enable_custom_sizes": false,
+        "enr_title_size": 32,
+        "enr_body_size": 16,
+        "enr_eyebrow_size": 12,
+        "enr_icon_size": 24,
+        "enable_custom_spacing": false,
+        "enr_space_top": 48,
+        "enr_space_bottom": 48,
+        "enr_gap": 16,
+        "enable_custom_media": false,
+        "enr_media_height": 100,
+        "enr_media_height_mobile": 400,
+        "show_heading": true
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "card",
+          "settings": {
+            "title": "Independent designers",
+            "text": "Our platform celebrates the ingenuity of independent designers, offering a diverse range of fashion-forward garments.",
+            "link_label": "Explore"
+          }
+        },
+        "bl-2": {
+          "type": "card",
+          "settings": {
+            "title": "Exclusive & uniquity",
+            "text": "Indulge in curated collections showcasing exclusive, one-of-a-kind pieces, each with its own story and charm.",
+            "link_label": "Explore"
+          }
+        },
+        "bl-3": {
+          "type": "card",
+          "settings": {
+            "title": "High quality",
+            "text": "Embrace superior craftsmanship with meticulously curated, undeniably high-quality garments.",
+            "link_label": "Explore"
+          }
+        },
+        "bl-4": {
+          "type": "card",
+          "settings": {
+            "title": "Eco-friendly",
+            "text": "Join our commitment to sustainability with eco-friendly fashion options, stylish yet mindful of our planet.",
+            "link_label": "Explore"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

@@ -1,0 +1,30 @@
+{%- comment -%}
+  Renders pagination for paginated collections.
+  Accepts:
+  - paginate: {Object} paginate object (required)
+{%- endcomment -%}
+{%- if paginate.pages > 1 -%}
+  <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+    {%- if paginate.previous -%}
+      <a href="{{ paginate.previous.url }}" aria-label="{{ 'general.pagination.previous' | t }}">
+        {% render 'cybele--icon', name: 'chevron-left', size: 13 %}
+      </a>
+    {%- endif -%}
+    {%- for part in paginate.parts -%}
+      {%- if part.is_link -%}
+        <a href="{{ part.url }}">{{ part.title }}</a>
+      {%- else -%}
+        {%- if part.title == '&hellip;' -%}
+          <span>{{ part.title }}</span>
+        {%- else -%}
+          <span class="is-current" aria-current="page">{{ part.title }}</span>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if paginate.next -%}
+      <a href="{{ paginate.next.url }}" aria-label="{{ 'general.pagination.next' | t }}">
+        {% render 'cybele--icon', name: 'chevron-right', size: 13 %}
+      </a>
+    {%- endif -%}
+  </nav>
+{%- endif -%}

@@ -1,0 +1,336 @@
+{%- comment -%} Section Library: injected global assets for store "salon" {%- endcomment -%}
+{{ 'salon--base.css' | asset_url | stylesheet_tag }}
+{{ 'salon--components.css' | asset_url | stylesheet_tag }}
+{% render 'salon--layout-tokens' %}
+{%- comment -%}
+  Site header. Layouts: logo-left (nav center), logo-center (nav left, Cocobella),
+  minimal (nav right, noir). Optional pill nav, sticky, CTA button, icons.
+{%- endcomment -%}
+{%- liquid
+  assign layout = section.settings.layout
+  assign menu = section.settings.menu
+  assign has_cta = false
+  if section.settings.cta_label != blank
+    assign has_cta = true
+  endif
+-%}
+{%- capture section_colors_style -%}
+  {%- if section.settings.colors_background != blank or section.settings.colors_text != blank -%}
+    {%- assign override_bg = section.settings.colors_background | default: settings.colors_background -%}
+    {%- assign override_fg = section.settings.colors_text | default: settings.colors_text -%}
+    style="--color-background: {{ override_bg }}; --color-surface: {{ override_bg | color_lighten: 3 }}; --color-border: {{ override_bg | color_darken: 9 | color_modify: 'alpha', 0.85 }}; --color-foreground: {{ override_fg }}; --color-heading: {{ override_fg }}; --color-text-muted: {{ override_fg | color_modify: 'alpha', 0.62 }};"
+  {%- endif -%}
+{%- endcapture -%}
+<header {{ section_colors_style }}
+  class="site-header site-header--{{ layout }}{% if section.settings.pill_nav %} site-header--pills{% endif %}{% if section.settings.overlay %} site-header--overlay{% elsif section.settings.sticky %} site-header--sticky{% endif %}{% if section.settings.show_burger %} site-header--burger-visible{% endif %}"
+  role="banner"
+>
+  <div class="page-width site-header__inner" style="--logo-width: {{ section.settings.logo_width }}px;">
+    <button
+      type="button"
+      class="header-icon site-header__burger"
+      data-mobile-nav-open
+      aria-label="{{ 'sections.header.menu' | t }}"
+    >
+      {% render 'salon--icon', name: 'menu', size: 20 %}
+    </button>
+
+    {%- if settings.logo != blank -%}
+      <a href="{{ routes.root_url }}" class="site-header__logo">
+        {{ settings.logo | image_url: width: 600 | image_tag: widths: '150, 300, 450, 600', alt: shop.name, style: 'width: 100%;' }}
+      </a>
+    {%- else -%}
+      <a href="{{ routes.root_url }}" class="site-header__wordmark{% if section.settings.wordmark_badge %} site-header__wordmark--badge{% endif %}">
+        {%- if section.settings.wordmark_icon != 'none' -%}
+          <span class="site-header__wordmark-icon">{% render 'salon--icon', name: section.settings.wordmark_icon, size: 18 %}</span>
+        {%- endif -%}
+        {{ section.settings.wordmark | default: shop.name }}
+        {%- if section.settings.tagline != blank -%}<small>{{ section.settings.tagline }}</small>{%- endif -%}
+      </a>
+    {%- endif -%}
+
+    <nav class="site-header__nav" aria-label="{{ 'sections.header.navigation' | t }}">
+      <ul>
+        {%- for link in linklists[menu].links -%}
+          <li>
+            <a href="{{ link.url }}" class="site-header__link{% if link.current or link.child_active %} is-active{% endif %}">
+              {{ link.title | escape }}
+              {%- if link.links.size > 0 -%}{% render 'salon--icon', name: 'chevron-down', size: 10 %}{%- endif -%}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="site-header__icons">
+      {%- if section.settings.show_search -%}
+        <a href="{{ routes.search_url }}" class="header-icon header-icon--secondary" aria-label="{{ 'general.search.search' | t }}">
+          {% render 'salon--icon', name: 'search', size: 18 %}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
+        <a href="{{ routes.account_url }}" class="header-icon header-icon--secondary" aria-label="{{ 'customer.account.title' | t }}">
+          {% render 'salon--icon', name: 'account', size: 18 %}
+        </a>
+      {%- endif -%}
+      <a
+        href="{{ routes.cart_url }}"
+        class="header-icon"
+        {% if settings.cart_type == 'drawer' %}data-cart-open{% endif %}
+        aria-label="{{ 'sections.cart.title' | t }}"
+      >
+        {% render 'salon--icon', name: 'cart', size: 18 %}
+        <span class="header-icon__label" data-cart-count{% if cart.item_count == 0 %} style="display: none;"{% endif %}>
+          {{- cart.item_count -}}
+        </span>
+      </a>
+      {%- if has_cta -%}
+        <span class="site-header__cta desktop-only">
+          {% render 'salon--button', label: section.settings.cta_label, link: section.settings.cta_link, style: section.settings.cta_style, size: 'small' %}
+        </span>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div class="mobile-nav" id="MobileNav-{{ section.id }}" aria-hidden="true">
+    <div class="mobile-nav__overlay" data-mobile-nav-close></div>
+    <div class="mobile-nav__panel" role="dialog" aria-modal="true" aria-label="{{ 'sections.header.menu' | t }}">
+      <div class="mobile-nav__header">
+        <p class="mobile-nav__title h5">{{ 'sections.header.menu' | t }}</p>
+        <button type="button" class="mobile-nav__close" data-mobile-nav-close aria-label="{{ 'accessibility.close' | t }}">
+          {% render 'salon--icon', name: 'close' %}
+        </button>
+      </div>
+      <div class="mobile-nav__body">
+        <nav class="mobile-nav__links">
+          {%- for link in linklists[menu].links -%}
+            <a href="{{ link.url }}" class="mobile-nav__link{% if link.current %} is-active{% endif %}">{{ link.title | escape }}</a>
+            {%- for child in link.links -%}
+              <a href="{{ child.url }}" class="mobile-nav__link mobile-nav__link--child">{{ child.title | escape }}</a>
+            {%- endfor -%}
+          {%- endfor -%}
+        </nav>
+      </div>
+      {%- if has_cta -%}
+        <div class="mobile-nav__footer">
+          {% render 'salon--button', label: section.settings.cta_label, link: section.settings.cta_link, style: section.settings.cta_style, full: true %}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header__wordmark-icon { display: inline-flex; margin-right: 0.35rem; transform: translateY(1px); }
+  .site-header__wordmark-icon svg { width: 1.15em; height: 1.15em; }
+  .site-header__wordmark--badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2.9rem; height: 2.9rem;
+    border: 1.5px solid var(--color-heading); border-radius: 0.9rem;
+    font-family: var(--font-heading); font-size: 0.95rem; font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .site-header--burger-visible .site-header__burger { display: inline-flex; }
+  .site-header--overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    background: transparent;
+    border-bottom: none;
+    box-shadow: none;
+  }
+  .site-header--overlay .site-header__nav ul {
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 999px;
+    padding: 0.3rem 0.55rem;
+    width: max-content;
+    margin-inline: auto;
+  }
+  @media (min-width: 990px) {
+    .site-header--overlay.site-header--burger-visible .site-header__inner { grid-template-columns: auto 1fr auto auto; }
+    .site-header--overlay.site-header--burger-visible .site-header__burger { grid-column: 4; grid-row: 1; }
+    .site-header--overlay.site-header--logo-left .site-header__nav { grid-column: 2; }
+    .site-header--overlay.site-header--logo-left .site-header__icons { grid-column: 3; }
+  }
+  .site-header--overlay .header-icon--secondary { display: none; }
+  .site-header--burger-visible .site-header__burger,
+  .site-header--overlay .site-header__burger {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: #ffffff;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "logo-left",
+          "label": "Logo left, nav center"
+        },
+        {
+          "value": "logo-center",
+          "label": "Nav left, centered logo"
+        },
+        {
+          "value": "minimal",
+          "label": "Minimal, nav right"
+        }
+      ],
+      "default": "logo-left"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "wordmark",
+      "label": "Wordmark override",
+      "info": "Shown when no logo image is set. Defaults to shop name."
+    },
+    {
+      "type": "select",
+      "id": "wordmark_icon",
+      "label": "Wordmark icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "leaf", "label": "Leaf" },
+        { "value": "flower", "label": "Flower" },
+        { "value": "drop", "label": "Drop" },
+        { "value": "sparkle", "label": "Sparkle" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "checkbox",
+      "id": "wordmark_badge",
+      "label": "Badge-style wordmark",
+      "info": "Shows the wordmark inside a rounded square, e.g. initials.",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "overlay",
+      "label": "Transparent over content",
+      "info": "Header floats over the first section (use with a full-bleed hero). Disables sticky.",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_burger",
+      "label": "Always show menu button",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Wordmark tagline",
+      "info": "Small uppercase line under the shop name, e.g. ARTISAN CHOCOLATES"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 60,
+      "max": 320,
+      "step": 10,
+      "unit": "px",
+      "default": 150
+    },
+    {
+      "type": "checkbox",
+      "id": "pill_nav",
+      "label": "Pill-style navigation",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Sticky header",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show account icon",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Call-to-action button"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Label",
+      "default": "Get in touch"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Link"
+    },
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "Style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "Accent"
+        },
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "outline",
+          "label": "Outline"
+        }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_background",
+      "label": "Background override",
+      "info": "Leave empty to use the theme colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_text",
+      "label": "Text color override"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header"
+    }
+  ]
+}
+{% endschema %}

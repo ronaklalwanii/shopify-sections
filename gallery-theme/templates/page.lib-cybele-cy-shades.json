@@ -1,0 +1,57 @@
+{
+  "sections": {
+    "library": {
+      "type": "cybele--cy-shades",
+      "settings": {
+        "background_color": "#e8ddd0",
+        "eyebrow": "Bestsellers",
+        "heading": "Our best sellers lipsticks",
+        "copy": "<p>Rich pigment, comfortable wear, timeless finish.</p>",
+        "badge_text": "GETTING STARTED • ",
+        "badge_size": 120,
+        "ink_color": "#2b2024",
+        "enr_layout_width": "as_designed",
+        "enr_layout_align": "as_designed",
+        "enr_radius": 0,
+        "enr_border_width": "0",
+        "enable_custom_sizes": false,
+        "enr_title_size": 32,
+        "enr_body_size": 16,
+        "enr_eyebrow_size": 12,
+        "enr_icon_size": 24,
+        "enable_custom_spacing": false,
+        "enr_space_top": 48,
+        "enr_space_bottom": 48,
+        "enr_gap": 16,
+        "enable_custom_media": false,
+        "enr_media_height": 480,
+        "enr_media_height_mobile": 400,
+        "show_eyebrow": true
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "shade",
+          "settings": {
+            "color": "#a41e34",
+            "name": "Red Wine"
+          }
+        },
+        "bl-2": {
+          "type": "shade",
+          "settings": {
+            "color": "#a41e34",
+            "name": "Red Wine"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

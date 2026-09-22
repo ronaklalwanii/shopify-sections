@@ -1,0 +1,80 @@
+{
+  "sections": {
+    "library": {
+      "type": "suncare--product-callouts",
+      "settings": {
+        "heading_part1": "Why Choose",
+        "heading_part2": "Suncare",
+        "accent_color": "#7ba888",
+        "blob_color": "#d8ead0",
+        "pill_bg": "#e2efda",
+        "enr_layout_width": "as_designed",
+        "enr_layout_align": "as_designed",
+        "enr_radius": 0,
+        "enr_border_width": "0",
+        "enable_custom_sizes": false,
+        "enr_title_size": 32,
+        "enr_body_size": 16,
+        "enr_eyebrow_size": 12,
+        "enr_icon_size": 24,
+        "enable_custom_spacing": false,
+        "enr_space_top": 48,
+        "enr_space_bottom": 48,
+        "enr_gap": 16,
+        "enable_custom_media": false,
+        "enr_media_height": 480,
+        "enr_media_height_mobile": 400,
+        "show_eyebrow": true,
+        "show_image": true
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "callout",
+          "settings": {
+            "position": "top-left",
+            "icon": "leaf",
+            "title": "Natural",
+            "text": "97% natural ingredients"
+          }
+        },
+        "bl-2": {
+          "type": "callout",
+          "settings": {
+            "position": "top-right",
+            "icon": "sparkle",
+            "title": "Cooling",
+            "text": "Soothes on contact"
+          }
+        },
+        "bl-3": {
+          "type": "callout",
+          "settings": {
+            "position": "bottom-left",
+            "icon": "shield",
+            "title": "Non-Toxic",
+            "text": "Free of parabens"
+          }
+        },
+        "bl-4": {
+          "type": "callout",
+          "settings": {
+            "position": "bottom-right",
+            "icon": "drop",
+            "title": "Hydrating",
+            "text": "72h moisture"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

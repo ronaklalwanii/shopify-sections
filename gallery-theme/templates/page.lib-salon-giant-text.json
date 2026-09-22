@@ -1,0 +1,23 @@
+{
+  "sections": {
+    "library": {
+      "type": "salon--giant-text",
+      "settings": {
+        "text": "Skincare simplified.",
+        "outline": false,
+        "uppercase": false,
+        "min_size": 52,
+        "vw_size": 9,
+        "max_size": 150,
+        "weight": 600,
+        "letter_spacing": 0,
+        "align": "left",
+        "background_color": "#f4f0e6"
+      }
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

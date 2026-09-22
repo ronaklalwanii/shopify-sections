@@ -1,0 +1,363 @@
+{%- comment -%} Section Library: injected global assets for store "salon" {%- endcomment -%}
+{{ 'salon--base.css' | asset_url | stylesheet_tag }}
+{{ 'salon--components.css' | asset_url | stylesheet_tag }}
+{% render 'salon--layout-tokens' %}
+{%- comment -%}
+  Salon hero — split layout: big uppercase heading + service list on the left,
+  rounded photo with floating UI pills (location, search, socials) on the right.
+{%- endcomment -%}
+<section class="salon-hero" style="--section-space: {{ section.settings.padding | default: 24 }}px;">
+  <div class="salon-hero__grid">
+    <div class="salon-hero__content">
+      {%- if section.settings.heading != blank -%}
+        <h1 class="salon-hero__heading">{{ section.settings.heading | escape | newline_to_br }}</h1>
+      {%- endif -%}
+
+      <div class="salon-hero__services-head">
+        {%- if section.settings.services_label != blank -%}
+          <p class="salon-hero__services-label">{{ section.settings.services_label | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.services_note != blank -%}
+          <span class="salon-hero__pill salon-hero__pill--small">{{ section.settings.services_note | escape }}</span>
+        {%- endif -%}
+      </div>
+
+      {%- if section.blocks.size > 0 -%}
+        <ul class="salon-hero__list">
+          {%- for block in section.blocks -%}
+            <li {{ block.shopify_attributes }}>
+              <a href="{{ block.settings.link | default: '#' }}" class="salon-hero__row">
+                <span class="salon-hero__thumb">
+                  {%- if block.settings.image != blank -%}
+                    {{ block.settings.image | image_url: width: 160 | image_tag: loading: 'lazy', alt: block.settings.title }}
+                  {%- else -%}
+                    {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- endif -%}
+                </span>
+                <span class="salon-hero__row-copy">
+                  <span class="salon-hero__row-title">{{ block.settings.title | escape }}</span>
+                  {%- if block.settings.meta != blank -%}
+                    <span class="salon-hero__row-meta">{{ block.settings.meta | escape }}</span>
+                  {%- endif -%}
+                </span>
+                <span class="salon-hero__row-chevron">{% render 'salon--icon', name: 'chevron-right', size: 14 %}</span>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if section.settings.view_all_label != blank -%}
+        <a href="{{ section.settings.view_all_link | default: routes.all_products_collection_url }}" class="salon-hero__view-all">
+          {{ section.settings.view_all_label | escape }}
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="salon-hero__media">
+      {%- if section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 1400 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '640, 960, 1400', sizes: '(min-width: 990px) 50vw, 100vw', alt: section.settings.image.alt }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+
+      {%- if section.settings.show_media_controls -%}
+        <span class="salon-hero__circle-group" aria-hidden="true">
+          <span class="salon-hero__circle">{% render 'salon--icon', name: 'heart', size: 14 %}</span>
+          <span class="salon-hero__circle">{% render 'salon--icon', name: 'star', size: 14 %}</span>
+        </span>
+
+        {%- if section.settings.location != blank -%}
+          <span class="salon-hero__pill salon-hero__pill--location">{{ section.settings.location | escape }}</span>
+        {%- endif -%}
+
+        {%- if section.settings.search_text != blank -%}
+          <span class="salon-hero__search">
+            {% render 'salon--icon', name: 'search', size: 14 %}
+            <span class="salon-hero__search-text">{{ section.settings.search_text | escape }}</span>
+            <span class="salon-hero__search-close">{% render 'salon--icon', name: 'close', size: 12 %}</span>
+          </span>
+        {%- endif -%}
+
+        {%- if section.settings.person_name != blank -%}
+          <span class="salon-hero__chip">
+            <span class="salon-hero__chip-avatar">
+              {%- if section.settings.person_avatar != blank -%}
+                {{ section.settings.person_avatar | image_url: width: 96 | image_tag: loading: 'lazy', alt: section.settings.person_name }}
+              {%- else -%}
+                {{ 'avatar-2' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </span>
+            <span class="salon-hero__chip-copy">
+              <span class="salon-hero__chip-name">{{ section.settings.person_name | escape }}</span>
+              {%- if section.settings.person_role != blank -%}
+                <span class="salon-hero__chip-role">{{ section.settings.person_role | escape }}</span>
+              {%- endif -%}
+            </span>
+          </span>
+        {%- endif -%}
+
+        {%- if section.settings.social_text != blank -%}
+          <span class="salon-hero__pill salon-hero__pill--social">
+            {% render 'salon--icon', name: 'instagram', size: 13 %}
+            {{ section.settings.social_text | escape }}
+          </span>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .salon-hero { background: var(--color-background); }
+  .salon-hero__grid {
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    gap: clamp(1.5rem, 3vw, 3rem);
+    align-items: stretch;
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: clamp(1rem, 3vw, 2.5rem);
+  }
+  .salon-hero__content {
+    display: flex; flex-direction: column; justify-content: center;
+    padding-block: clamp(2rem, 5vh, 3.5rem);
+  }
+  .salon-hero__heading {
+    font-family: var(--font-heading);
+    font-size: clamp(2.4rem, 4.6vw, 4.2rem);
+    font-weight: 600;
+    line-height: 1.04;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin: 0 0 clamp(1.8rem, 4vh, 3rem);
+    max-width: 15ch;
+  }
+  .salon-hero__services-head { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.4rem; }
+  .salon-hero__services-label { font-size: 0.8rem; color: var(--color-text-muted); margin: 0; }
+  .salon-hero__pill {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    background: var(--color-accent); color: var(--color-accent-label);
+    border-radius: 999px;
+    font-size: 0.72rem; font-weight: 600;
+    padding: 0.32rem 0.75rem;
+    white-space: nowrap;
+  }
+  .salon-hero__list { list-style: none; margin: 0; padding: 0; }
+  .salon-hero__list li { border-bottom: 1px solid var(--color-border); }
+  .salon-hero__list li:first-child { border-top: 1px solid var(--color-border); }
+  .salon-hero__row {
+    display: flex; align-items: center; gap: 0.9rem;
+    padding: 0.75rem 0.25rem;
+    text-decoration: none; color: inherit;
+  }
+  .salon-hero__thumb { width: 3rem; height: 3rem; border-radius: 0.75rem; overflow: hidden; flex-shrink: 0; background: var(--color-background-secondary); }
+  .salon-hero__thumb img, .salon-hero__thumb svg { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .salon-hero__row-copy { display: flex; flex-direction: column; gap: 0.12rem; min-width: 0; }
+  .salon-hero__row-title { font-size: 0.95rem; font-weight: 600; }
+  .salon-hero__row-meta { font-size: 0.75rem; color: var(--color-text-muted); }
+  .salon-hero__row-chevron { margin-left: auto; color: var(--color-text-muted); display: inline-flex; }
+  .salon-hero__row:hover .salon-hero__row-title { color: var(--color-accent); }
+  .salon-hero__view-all {
+    margin-top: 1.1rem;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: inherit; text-decoration: none;
+    border-bottom: 1px solid currentColor; padding-bottom: 0.2rem;
+    align-self: flex-start;
+  }
+  .salon-hero__media {
+    position: relative;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    min-height: 30rem;
+    background: var(--color-background-secondary);
+    margin-block: clamp(1rem, 2.5vh, 1.75rem);
+  }
+  .salon-hero__media > img, .salon-hero__media > svg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .salon-hero__circle-group { position: absolute; top: 1rem; left: 1rem; display: flex; gap: 0.45rem; }
+  .salon-hero__circle {
+    width: 2.3rem; height: 2.3rem; border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9); color: #1f1e1a;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .salon-hero__pill--location { position: absolute; top: 1.1rem; right: 1rem; }
+  .salon-hero__search {
+    position: absolute; left: 50%; bottom: 26%;
+    transform: translateX(-50%);
+    display: flex; align-items: center; gap: 0.6rem;
+    background: rgba(255, 255, 255, 0.96); color: #1f1e1a;
+    border-radius: 999px;
+    padding: 0.6rem 1rem;
+    width: min(21rem, 86%);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
+    font-size: 0.8rem;
+  }
+  .salon-hero__search-text { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .salon-hero__search-close { display: inline-flex; color: rgba(0,0,0,0.45); }
+  .salon-hero__chip {
+    position: absolute; left: 1rem; bottom: 1rem;
+    display: inline-flex; align-items: center; gap: 0.55rem;
+    background: rgba(255, 255, 255, 0.94); color: #1f1e1a;
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem 0.35rem 0.4rem;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.14);
+  }
+  .salon-hero__chip-avatar { width: 2.1rem; height: 2.1rem; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+  .salon-hero__chip-avatar img, .salon-hero__chip-avatar svg { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .salon-hero__chip-copy { display: flex; flex-direction: column; line-height: 1.25; }
+  .salon-hero__chip-name { font-size: 0.78rem; font-weight: 600; }
+  .salon-hero__chip-role { font-size: 0.68rem; color: rgba(0,0,0,0.5); }
+  .salon-hero__pill--social { position: absolute; right: 1rem; bottom: 1.1rem; background: rgba(255, 255, 255, 0.92); color: #1f1e1a; }
+  @media (max-width: 989px) {
+    .salon-hero__grid { grid-template-columns: 1fr; }
+    .salon-hero__media { min-height: 24rem; margin-block: 0; }
+    .salon-hero__search { bottom: 4.5rem; }
+  }
+  @media (max-width: 540px) {
+    .salon-hero__pill--social { bottom: 5.4rem; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Salon hero",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Territory of\nBeautiful\nPeople"
+    },
+    {
+      "type": "text",
+      "id": "services_label",
+      "label": "Services label",
+      "default": "Our services"
+    },
+    {
+      "type": "text",
+      "id": "services_note",
+      "label": "Services note pill",
+      "default": "4 categories"
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "View-all link label",
+      "default": "View all"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "View-all link"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_media_controls",
+      "label": "Show floating pills over the photo",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "location",
+      "label": "Location pill",
+      "default": "Moscow"
+    },
+    {
+      "type": "text",
+      "id": "search_text",
+      "label": "Search pill text",
+      "default": "Beauty studio in Moscow"
+    },
+    {
+      "type": "image_picker",
+      "id": "person_avatar",
+      "label": "Chip avatar"
+    },
+    {
+      "type": "text",
+      "id": "person_name",
+      "label": "Chip name",
+      "default": "Anna Smith"
+    },
+    {
+      "type": "text",
+      "id": "person_role",
+      "label": "Chip role",
+      "default": "Founder, lead cosmetologist"
+    },
+    {
+      "type": "text",
+      "id": "social_text",
+      "label": "Social pill text",
+      "default": "Transformations"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "blocks": [
+    {
+      "type": "service",
+      "name": "Service row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Care programs"
+        },
+        {
+          "type": "text",
+          "id": "meta",
+          "label": "Meta text",
+          "default": "10+ programs"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Thumbnail"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Salon hero",
+      "blocks": [
+        { "type": "service" },
+        {
+          "type": "service",
+          "settings": { "title": "Diagnostics", "meta": "20+ years of practice" }
+        },
+        {
+          "type": "service",
+          "settings": { "title": "Manicure", "meta": "7 years of practice" }
+        },
+        {
+          "type": "service",
+          "settings": { "title": "Nail service", "meta": "6 masters" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

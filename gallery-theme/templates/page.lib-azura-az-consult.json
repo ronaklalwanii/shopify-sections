@@ -1,0 +1,42 @@
+{
+  "sections": {
+    "library": {
+      "type": "azura--az-consult",
+      "settings": {
+        "left_eyebrow": "Villa selection",
+        "left_heading": "We'll find the perfect option for your request",
+        "left_text": "<p>Answer a few questions and we'll suggest villas that match your wishes.</p>",
+        "left_button": "Find a villa",
+        "right_eyebrow": "Leave a request",
+        "right_heading": "Get a personal consultation",
+        "right_text": "<p>Our specialist will answer your questions and help you choose correctly.</p>",
+        "name_placeholder": "Your name",
+        "phone_placeholder": "Phone / WhatsApp",
+        "submit_label": "Send request",
+        "privacy_note": "© I agree to the privacy policy",
+        "ink_color": "#1d2a3a",
+        "card_color": "#f2efe9",
+        "enr_layout_width": "as_designed",
+        "enr_layout_align": "as_designed",
+        "enr_radius": 0,
+        "enr_border_width": "0",
+        "enable_custom_sizes": false,
+        "enr_title_size": 32,
+        "enr_body_size": 16,
+        "enr_eyebrow_size": 12,
+        "enr_icon_size": 24,
+        "enable_custom_spacing": false,
+        "enr_space_top": 48,
+        "enr_space_bottom": 48,
+        "enr_gap": 16,
+        "enable_custom_media": false,
+        "enr_media_height": 100,
+        "enr_media_height_mobile": 400
+      }
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

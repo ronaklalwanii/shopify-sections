@@ -1,0 +1,24 @@
+{%- comment -%}
+  Single testimonial card.
+  Accepts: avatar, name, rating, quote, verified (Boolean)
+{%- endcomment -%}
+<div class="testimonial-card">
+  <div class="testimonial-card__header">
+    {%- if avatar != blank -%}
+      {{ avatar | image_url: width: 96 | image_tag: class: 'testimonial-card__avatar', loading: 'lazy', alt: name }}
+    {%- else -%}
+      <span class="testimonial-card__avatar" style="background: var(--color-background-secondary);"></span>
+    {%- endif -%}
+    <div>
+      <p class="testimonial-card__name">{{ name | escape }}</p>
+      {% render 'azura--rating', rating: rating %}
+    </div>
+  </div>
+  <blockquote class="testimonial-card__quote">“{{ quote | escape }}”</blockquote>
+  {%- if verified -%}
+    <span class="testimonial-card__verified">
+      {% render 'azura--icon', name: 'check-circle', size: 14 %}
+      {{ 'sections.testimonials.verified' | t }}
+    </span>
+  {%- endif -%}
+</div>

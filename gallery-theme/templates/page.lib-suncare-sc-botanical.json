@@ -1,0 +1,63 @@
+{
+  "sections": {
+    "library": {
+      "type": "suncare--sc-botanical",
+      "settings": {
+        "heading_part1": "Botanical Beauty, Real",
+        "heading_part2": "Radiance",
+        "text": "We're proud of the visible results our customers see daily. Your trust in our natural ingredients is our greatest success.",
+        "accent_color": "#7ba888",
+        "pill_bg": "#dcedd8",
+        "enr_layout_width": "as_designed",
+        "enr_layout_align": "as_designed",
+        "enr_radius": 0,
+        "enr_border_width": "0",
+        "enable_custom_sizes": false,
+        "enr_title_size": 32,
+        "enr_body_size": 16,
+        "enr_eyebrow_size": 12,
+        "enr_icon_size": 24,
+        "enable_custom_spacing": false,
+        "enr_space_top": 48,
+        "enr_space_bottom": 48,
+        "enr_gap": 16,
+        "enable_custom_media": false,
+        "enr_media_height": 480,
+        "enr_media_height_mobile": 400,
+        "show_image": true
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "stat",
+          "settings": {
+            "label": "Product Users",
+            "value": "50k+"
+          }
+        },
+        "bl-2": {
+          "type": "stat",
+          "settings": {
+            "label": "Client Satisfaction",
+            "value": "99%"
+          }
+        },
+        "bl-3": {
+          "type": "stat",
+          "settings": {
+            "label": "Average Rating",
+            "value": "4.9"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

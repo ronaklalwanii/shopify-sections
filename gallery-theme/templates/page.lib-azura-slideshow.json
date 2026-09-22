@@ -1,0 +1,72 @@
+{
+  "sections": {
+    "library": {
+      "type": "azura--slideshow",
+      "settings": {
+        "height": "lg",
+        "autoplay": "7",
+        "side_note": "Good Food Brings People Together",
+        "enr_layout_width": "as_designed",
+        "enr_layout_align": "as_designed",
+        "enr_radius": 0,
+        "enr_border_width": "0",
+        "enable_custom_sizes": false,
+        "enr_title_size": 32,
+        "enr_body_size": 16,
+        "enr_eyebrow_size": 12,
+        "enr_icon_size": 24,
+        "enable_custom_spacing": false,
+        "enr_space_top": 48,
+        "enr_space_bottom": 48,
+        "enr_gap": 16,
+        "enable_custom_media": false,
+        "enr_media_height": 100,
+        "enr_media_height_mobile": 400
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "slide",
+          "settings": {
+            "overlay_opacity": 46,
+            "eyebrow": "Things worth keeping",
+            "heading": "Better meals, happier days",
+            "text": "Beautiful kitchenware made for the meals you'll remember.",
+            "button_label": "Explore the collection",
+            "overlay_color": "#0f0c08"
+          }
+        },
+        "bl-2": {
+          "type": "slide",
+          "settings": {
+            "overlay_opacity": 46,
+            "eyebrow": "Made to gather",
+            "heading": "Set a table to remember",
+            "text": "Serveware and linens for slow weekends.",
+            "button_label": "Explore the collection",
+            "overlay_color": "#0f0c08"
+          }
+        },
+        "bl-3": {
+          "type": "slide",
+          "settings": {
+            "overlay_opacity": 46,
+            "eyebrow": "Seasonal edit",
+            "heading": "Cook with the seasons",
+            "text": "Fresh tools for fresh produce.",
+            "button_label": "Explore the collection",
+            "overlay_color": "#0f0c08"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

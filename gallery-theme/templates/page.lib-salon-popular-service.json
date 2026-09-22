@@ -1,0 +1,19 @@
+{
+  "sections": {
+    "library": {
+      "type": "salon--popular-service",
+      "settings": {
+        "eyebrow": "Popular services",
+        "title": "Japanese\nmanicure",
+        "text": "A Japanese restorative care technique that revives nails after gel polish and creates a healthy effect that lasts up to three weeks.",
+        "tags_heading": "Who is it for:",
+        "more_label": "More about\nthe procedure",
+        "padding": 88
+      }
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

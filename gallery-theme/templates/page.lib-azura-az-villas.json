@@ -1,0 +1,61 @@
+{
+  "sections": {
+    "library": {
+      "type": "azura--az-villas",
+      "settings": {
+        "eyebrow": "Our villas",
+        "heading": "Choose your villa",
+        "link_label": "View all villas",
+        "enr_layout_width": "as_designed",
+        "enr_layout_align": "as_designed",
+        "enr_radius": 0,
+        "enr_border_width": "0",
+        "enable_custom_sizes": false,
+        "enr_title_size": 32,
+        "enr_body_size": 16,
+        "enr_eyebrow_size": 12,
+        "enr_icon_size": 24,
+        "enable_custom_spacing": false,
+        "enr_space_top": 48,
+        "enr_space_bottom": 48,
+        "enr_gap": 16,
+        "enable_custom_media": false,
+        "enr_media_height": 100,
+        "enr_media_height_mobile": 400,
+        "show_eyebrow": true,
+        "show_heading": true,
+        "show_cta": true
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "villa",
+          "settings": {
+            "title": "AZURA VISTA",
+            "beds": "4 bedrooms",
+            "area": "320 m²",
+            "view": "Sea view",
+            "price": "€890 000"
+          }
+        },
+        "bl-2": {
+          "type": "villa",
+          "settings": {
+            "title": "AZURA VISTA",
+            "beds": "4 bedrooms",
+            "area": "320 m²",
+            "view": "Sea view",
+            "price": "€890 000"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

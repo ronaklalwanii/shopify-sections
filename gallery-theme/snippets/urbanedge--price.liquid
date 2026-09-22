@@ -1,0 +1,17 @@
+{%- comment -%}
+  Renders a price (sale-aware).
+  Accepts:
+  - product: {Object} product (required)
+  Usage: {% render 'urbanedge--price', product: product %}
+{%- endcomment -%}
+{%- liquid
+  assign target = product.selected_or_first_available_variant | default: product
+  assign compare_at = target.compare_at_price
+  assign price = target.price
+-%}
+<span class="{% if compare_at > price %}card__price--sale {% endif %}price">
+  {%- if compare_at > price -%}
+    <s>{{ compare_at | money }}</s>
+  {%- endif -%}
+  {{ price | money }}
+</span>

@@ -3,8 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { Liquid, Tag: LiquidTag } = require('liquidjs');
-
-const STORES_ROOT = process.env.STORES_ROOT || path.resolve(__dirname, '../../shopify-stores');
+const { findStore } = require('./roots');
 
 /* ---------------------------------- mocks ---------------------------------- */
 
@@ -639,7 +638,7 @@ function unescapeMediaTags(html) {
 async function renderSectionSource(storeName, source, opts = {}) {
   const storePath = storeName === 'custom'
     ? null
-    : path.join(STORES_ROOT, storeName);
+    : findStore(storeName);
   const engine = getEngine(storeName, storePath || path.resolve(__dirname, '../custom-sections'));
   try {
     const html = await renderLiquid(engine, source, opts);
@@ -650,7 +649,7 @@ async function renderSectionSource(storeName, source, opts = {}) {
 }
 
 async function renderStoreSection(storeName, file, opts = {}) {
-  const storePath = path.join(STORES_ROOT, storeName);
+  const storePath = findStore(storeName);
   const full = path.join(storePath, 'sections', file);
   const src = fs.readFileSync(full, 'utf8');
   const js = extractTagBlocks(src, 'javascript');
@@ -662,7 +661,8 @@ async function renderStoreSection(storeName, file, opts = {}) {
 // Render a theme snippet (e.g. css-variables) with the store's real settings —
 // used by previews to reproduce the layout's <head> (design tokens, @font-face).
 async function renderSnippet(storeName, snippetName) {
-  const storePath = path.join(STORES_ROOT, storeName);
+  const storePath = findStore(storeName);
+  if (!storePath) return '';
   const p = path.join(storePath, 'snippets', `${snippetName}.liquid`);
   if (!fs.existsSync(p)) return '';
   const engine = getEngine(storeName, storePath);
@@ -672,4 +672,4 @@ async function renderSnippet(storeName, snippetName) {
   } catch { return ''; }
 }
 
-module.exports = { renderSectionSource, renderStoreSection, getEngine, imageMock, renderSnippet, STORES_ROOT };
+module.exports = { renderSectionSource, renderStoreSection, getEngine, imageMock, renderSnippet, findStore };

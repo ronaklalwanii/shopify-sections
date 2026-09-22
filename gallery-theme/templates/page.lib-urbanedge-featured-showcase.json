@@ -1,0 +1,46 @@
+{
+  "sections": {
+    "library": {
+      "type": "urbanedge--featured-showcase",
+      "settings": {
+        "rating_suffix": "4.90 (175 reviews)",
+        "grid_count": 4,
+        "show_rating": true,
+        "grid_rating_suffix": "4.8 (200+ reviews)",
+        "image_ratio": "tall",
+        "heading": "The styles everyone wants right now",
+        "heading_size": "h2",
+        "subheading": "These are the drops everyone's chasing. Limited stock, high demand — get yours before they're gone.",
+        "button_label": "Explore More",
+        "button_style": "dark",
+        "padding": 72,
+        "scrim_color": "#000000",
+        "text_color": "#ffffff",
+        "enr_layout_width": "as_designed",
+        "enr_layout_align": "as_designed",
+        "enr_radius": 0,
+        "enr_border_width": "0",
+        "enable_custom_sizes": false,
+        "enr_title_size": 32,
+        "enr_body_size": 16,
+        "enr_eyebrow_size": 12,
+        "enr_icon_size": 24,
+        "enable_custom_spacing": false,
+        "enr_space_top": 48,
+        "enr_space_bottom": 48,
+        "enr_gap": 16,
+        "enable_custom_media": false,
+        "enr_media_height": 480,
+        "enr_media_height_mobile": 400,
+        "show_eyebrow": true,
+        "show_heading": true,
+        "show_subheading": true,
+        "show_cta": true
+      }
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

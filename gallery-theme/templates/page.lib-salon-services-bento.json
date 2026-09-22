@@ -1,0 +1,77 @@
+{
+  "sections": {
+    "library": {
+      "type": "salon--services-bento",
+      "settings": {
+        "eyebrow": "Directions",
+        "title_dark": "Cosmetology",
+        "title_muted": "Nail service",
+        "padding": 88
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "tile",
+          "settings": {
+            "label": "Consultation",
+            "size": "tall"
+          }
+        },
+        "bl-2": {
+          "type": "tile",
+          "settings": {
+            "label": "Facial cleanups",
+            "size": "tall"
+          }
+        },
+        "bl-3": {
+          "type": "tile",
+          "settings": {
+            "label": "Care programs",
+            "size": "wide"
+          }
+        },
+        "bl-4": {
+          "type": "tile",
+          "settings": {
+            "label": "Peels",
+            "size": "wide"
+          }
+        },
+        "bl-5": {
+          "type": "tile",
+          "settings": {
+            "label": "Ear piercing",
+            "size": "normal"
+          }
+        },
+        "bl-6": {
+          "type": "tile",
+          "settings": {
+            "label": "Skin treatment",
+            "size": "normal"
+          }
+        },
+        "bl-7": {
+          "type": "tile",
+          "settings": {
+            "label": "Follow our news\non Instagram",
+            "size": "cta"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6",
+        "bl-7"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

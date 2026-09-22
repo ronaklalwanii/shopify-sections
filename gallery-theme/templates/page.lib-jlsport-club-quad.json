@@ -1,0 +1,69 @@
+{
+  "sections": {
+    "library": {
+      "type": "jlsport--club-quad",
+      "settings": {
+        "eyebrow": "Join the club",
+        "heading": "Exclusive access. Early drops. Member benefits. More.",
+        "placeholder": "Enter your email",
+        "join_bg": "#5f6753",
+        "join_text": "#ece9e2",
+        "fallback_bg": "#b9b3a4",
+        "scrim_color": "#000000",
+        "enr_layout_width": "as_designed",
+        "enr_layout_align": "as_designed",
+        "enr_radius": 0,
+        "enr_border_width": "0",
+        "enable_custom_sizes": false,
+        "enr_title_size": 32,
+        "enr_body_size": 16,
+        "enr_eyebrow_size": 12,
+        "enr_icon_size": 24,
+        "enable_custom_spacing": false,
+        "enr_space_top": 48,
+        "enr_space_bottom": 48,
+        "enr_gap": 16,
+        "enable_custom_media": false,
+        "enr_media_height": 480,
+        "enr_media_height_mobile": 400,
+        "show_eyebrow": true,
+        "show_heading": true
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "tile",
+          "settings": {
+            "eyebrow": "Our world",
+            "heading": "Life on and off the court.",
+            "link_label": "Explore"
+          }
+        },
+        "bl-2": {
+          "type": "tile",
+          "settings": {
+            "eyebrow": "Technology",
+            "heading": "Fabrics that move with you.",
+            "link_label": "Learn more"
+          }
+        },
+        "bl-3": {
+          "type": "tile",
+          "settings": {
+            "eyebrow": "Accessories",
+            "heading": "The finishing touch.",
+            "link_label": "Shop accessories"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

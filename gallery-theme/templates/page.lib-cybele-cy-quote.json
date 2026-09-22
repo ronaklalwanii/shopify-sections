@@ -1,0 +1,59 @@
+{
+  "sections": {
+    "library": {
+      "type": "cybele--cy-quote",
+      "settings": {
+        "background_color": "#171114",
+        "eyebrow": "Verified results",
+        "heading": "Let's see what the say after use our product",
+        "badge_text": "Discount 15%",
+        "card_text_color": "#f4ece3",
+        "accent_color": "#a41e34",
+        "ink_color": "#2b2024",
+        "enr_layout_width": "as_designed",
+        "enr_layout_align": "as_designed",
+        "enr_radius": 0,
+        "enr_border_width": "0",
+        "enable_custom_sizes": false,
+        "enr_title_size": 32,
+        "enr_body_size": 16,
+        "enr_eyebrow_size": 12,
+        "enr_icon_size": 24,
+        "enable_custom_spacing": false,
+        "enr_space_top": 48,
+        "enr_space_bottom": 48,
+        "enr_gap": 16,
+        "enable_custom_media": false,
+        "enr_media_height": 480,
+        "enr_media_height_mobile": 400,
+        "show_eyebrow": true
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "quote",
+          "settings": {
+            "text": "<p>Rich pigment, comfortable wear, and a finish that lasts from morning to midnight.</p>",
+            "name": "Zulu A",
+            "role": "Verified buyer"
+          }
+        },
+        "bl-2": {
+          "type": "quote",
+          "settings": {
+            "text": "<p>Rich pigment, comfortable wear, and a finish that lasts from morning to midnight.</p>",
+            "name": "Zulu A",
+            "role": "Verified buyer"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

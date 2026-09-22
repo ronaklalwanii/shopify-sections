@@ -1,0 +1,208 @@
+{%- comment -%} Section Library: injected global assets for store "salon" {%- endcomment -%}
+{{ 'salon--base.css' | asset_url | stylesheet_tag }}
+{{ 'salon--components.css' | asset_url | stylesheet_tag }}
+{% render 'salon--layout-tokens' %}
+{%- comment -%}
+  Services bento — two-tone title over a mosaic of photo tiles with
+  arrow buttons and one light call-to-action tile.
+{%- endcomment -%}
+<section class="section services-bento" style="--section-space: {{ section.settings.padding | default: 88 }}px;">
+  <div class="page-width">
+    <div class="services-bento__head">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+      <h2 class="services-bento__title">
+        {%- if section.settings.title_dark != blank -%}
+          <span class="services-bento__title-dark">{{ section.settings.title_dark | escape }}</span>
+        {%- endif -%}
+        {%- if section.settings.title_muted != blank -%}
+          <span class="services-bento__title-sep">/</span>
+          <span class="services-bento__title-muted">{{ section.settings.title_muted | escape }}</span>
+        {%- endif -%}
+      </h2>
+    </div>
+
+    <div class="services-bento__grid">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign size_class = 'services-bento__tile--' | append: block.settings.size
+        -%}
+        {%- if block.settings.size == 'cta' -%}
+          <a href="{{ block.settings.link | default: '#' }}" class="services-bento__tile services-bento__tile--cta {{ size_class }}" {{ block.shopify_attributes }}>
+            <span class="services-bento__label services-bento__label--dark">{{ block.settings.label | escape | newline_to_br }}</span>
+            <span class="services-bento__arrow services-bento__arrow--dark">{% render 'salon--icon', name: 'arrow-right', size: 13 %}</span>
+          </a>
+        {%- else -%}
+          <a href="{{ block.settings.link | default: '#' }}" class="services-bento__tile {{ size_class }}" {{ block.shopify_attributes }}>
+            {%- if block.settings.image != blank -%}
+              {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '360, 540, 900', alt: block.settings.label }}
+            {%- else -%}
+              {{ 'collection-2' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+            <span class="services-bento__scrim" aria-hidden="true"></span>
+            <span class="services-bento__label">{{ block.settings.label | escape | newline_to_br }}</span>
+            <span class="services-bento__arrow">{% render 'salon--icon', name: 'arrow-right', size: 13 %}</span>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .services-bento__head { margin-bottom: clamp(1.4rem, 3vw, 2.2rem); }
+  .services-bento__title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.8rem, 3.2vw, 2.8rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    margin: 0.2rem 0 0;
+    line-height: 1.1;
+  }
+  .services-bento__title-dark { color: var(--color-heading); }
+  .services-bento__title-sep { color: var(--color-heading); margin-inline: 0.35rem; font-weight: 400; }
+  .services-bento__title-muted { color: #b9b5aa; }
+  .services-bento__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 11.5rem;
+    grid-auto-flow: dense;
+    gap: clamp(0.8rem, 1.4vw, 1.2rem);
+  }
+  .services-bento__tile {
+    position: relative;
+    border-radius: 1.1rem;
+    overflow: hidden;
+    background: var(--color-background-secondary);
+    display: block;
+    text-decoration: none;
+  }
+  .services-bento__tile--tall { grid-row: span 2; }
+  .services-bento__tile--wide { grid-column: span 2; }
+  .services-bento__tile img, .services-bento__tile svg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .services-bento__scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 45%);
+  }
+  .services-bento__label {
+    position: absolute; top: 0.95rem; left: 1rem; right: 3rem;
+    z-index: 2;
+    color: #ffffff;
+    font-size: 0.9rem; font-weight: 600; line-height: 1.35;
+  }
+  .services-bento__label--dark { color: var(--color-heading); position: static; padding: 1.1rem 1.1rem 0; }
+  .services-bento__arrow {
+    position: absolute; right: 0.9rem; bottom: 0.9rem;
+    z-index: 2;
+    width: 2rem; height: 2rem; border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92); color: #1f1e1a;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: transform 0.2s ease;
+  }
+  .services-bento__tile:hover .services-bento__arrow { transform: translateX(3px); }
+  .services-bento__tile--cta {
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .services-bento__tile--cta .services-bento__arrow { position: static; margin: 0 1rem 1rem auto; background: var(--color-accent); color: var(--color-accent-label); }
+  .services-bento__tile--cta:hover .services-bento__arrow { transform: translateX(3px); }
+  @media (max-width: 989px) {
+    .services-bento__grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 10rem; }
+    .services-bento__tile--wide { grid-column: span 2; }
+  }
+  @media (max-width: 540px) {
+    .services-bento__grid { grid-template-columns: 1fr; grid-auto-rows: 9.5rem; }
+    .services-bento__tile--tall { grid-row: span 1; }
+    .services-bento__tile--wide { grid-column: span 1; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Services bento",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Directions"
+    },
+    {
+      "type": "text",
+      "id": "title_dark",
+      "label": "Title (dark part)",
+      "default": "Cosmetology"
+    },
+    {
+      "type": "text",
+      "id": "title_muted",
+      "label": "Title (muted part)",
+      "default": "Nail service"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 32,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 88
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Tile",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Consultation"
+        },
+        {
+          "type": "select",
+          "id": "size",
+          "label": "Tile size",
+          "options": [
+            { "value": "normal", "label": "Normal" },
+            { "value": "tall", "label": "Tall (2 rows)" },
+            { "value": "wide", "label": "Wide (2 columns)" },
+            { "value": "cta", "label": "Call-to-action card" }
+          ],
+          "default": "normal"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Services bento",
+      "blocks": [
+        { "type": "tile", "settings": { "label": "Consultation", "size": "tall" } },
+        { "type": "tile", "settings": { "label": "Facial cleanups", "size": "tall" } },
+        { "type": "tile", "settings": { "label": "Care programs", "size": "wide" } },
+        { "type": "tile", "settings": { "label": "Peels", "size": "wide" } },
+        { "type": "tile", "settings": { "label": "Ear piercing" } },
+        { "type": "tile", "settings": { "label": "Skin treatment" } },
+        { "type": "tile", "settings": { "label": "Follow our news\non Instagram", "size": "cta" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

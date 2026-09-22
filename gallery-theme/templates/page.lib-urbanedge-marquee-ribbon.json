@@ -1,0 +1,62 @@
+{
+  "sections": {
+    "library": {
+      "type": "urbanedge--marquee-ribbon",
+      "settings": {
+        "speed": 30,
+        "rotation": 0,
+        "text_size": 14,
+        "uppercase": true,
+        "star_badge": true,
+        "star_color": "#f26a1b",
+        "background_color": "#111111",
+        "text_color": "#ffffff",
+        "enr_layout_width": "as_designed",
+        "enr_layout_align": "as_designed",
+        "enr_radius": 0,
+        "enr_border_width": "0",
+        "enable_custom_sizes": false,
+        "enr_title_size": 32,
+        "enr_body_size": 16,
+        "enr_eyebrow_size": 12,
+        "enr_icon_size": 24,
+        "enable_custom_spacing": false,
+        "enr_space_top": 48,
+        "enr_space_bottom": 48,
+        "enr_gap": 16,
+        "enable_custom_media": false,
+        "enr_media_height": 480,
+        "enr_media_height_mobile": 400
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "item",
+          "settings": {
+            "text": "20% off limited time sale"
+          }
+        },
+        "bl-2": {
+          "type": "item",
+          "settings": {
+            "text": "Latest trends drop now"
+          }
+        },
+        "bl-3": {
+          "type": "item",
+          "settings": {
+            "text": "Winter sale"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

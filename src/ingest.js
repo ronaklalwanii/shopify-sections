@@ -1,12 +1,12 @@
-// Ingest: scan shopify-stores/* themes, parse section schemas, classify, write data/index.json
+// Ingest: scan all store roots, parse section schemas, classify, dedupe, write data/index.json
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
+const { ROOTS } = require('./roots');
 
-const STORES_ROOT = process.env.STORES_ROOT || path.resolve(__dirname, '../../shopify-stores');
 const OUT_FILE = path.resolve(__dirname, '../data/index.json');
 const OVERRIDES_FILE = path.resolve(__dirname, '../data/tag-overrides.json');
 
-// Manual category overrides, keyed "store/file" — wins over auto-classification.
 function loadOverrides() {
   try { return JSON.parse(fs.readFileSync(OVERRIDES_FILE, 'utf8')); } catch { return {}; }
 }
@@ -59,11 +59,16 @@ function extractAssetRefs(src) {
   const re = /['"]([\w./-]+\.(?:css|js))['"]\s*\|\s*(?:asset_url|shopify_asset_url|stylesheet_tag|script_tag|preload_tag)/g;
   let m;
   while ((m = re.exec(src))) refs.add(m[1]);
-  // {% stylesheet %} and {% javascript %} legacy blocks map to no asset file (inline).
   return [...refs];
 }
 
-function ingestStore(storeDir) {
+// Content fingerprint for cross-store dedupe (whitespace-insensitive).
+function contentHash(src) {
+  const norm = src.replace(/\r/g, '').split('\n').map((l) => l.trimEnd()).join('\n').trim();
+  return crypto.createHash('sha256').update(norm).digest('hex').slice(0, 16);
+}
+
+function ingestStore(root, storeDir) {
   const sectionsDir = path.join(storeDir, 'sections');
   if (!fs.existsSync(sectionsDir)) return null;
   const sections = [];
@@ -74,9 +79,10 @@ function ingestStore(storeDir) {
     const schema = extractSchema(src);
     sections.push({
       store: path.basename(storeDir),
+      root,
       file: f,
       name: (schema && schema.name) || f.replace(/\.liquid$/, '').replace(/[-_]/g, ' '),
-      category: null, // filled by classify
+      category: null,
       settings: schema ? (schema.settings || []).length : 0,
       blocks: schema ? (schema.blocks || []).length : 0,
       hasPresets: !!(schema && schema.presets && schema.presets.length),
@@ -84,6 +90,7 @@ function ingestStore(storeDir) {
       assets: extractAssetRefs(src),
       hasSchema: !!schema,
       empty: src.trim().length === 0,
+      hash: contentHash(src),
     });
   }
   return sections;
@@ -93,26 +100,50 @@ function main() {
   const overrides = loadOverrides();
   const stores = [];
   const sections = [];
-  for (const entry of fs.readdirSync(STORES_ROOT, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue;
-    const ingested = ingestStore(path.join(STORES_ROOT, entry.name));
-    if (!ingested) continue;
-    stores.push({ name: entry.name, path: path.join(STORES_ROOT, entry.name), sectionCount: ingested.length });
-    for (const s of ingested) {
-      const ov = overrides[`${s.store}/${s.file}`] || {};
-      const { category, functional } = classify(s.file, ov);
-      s.category = category;
-      s.functional = functional;
-      s.custom = false;
-      sections.push(s);
+  for (const root of ROOTS) {
+    for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      const ingested = ingestStore(root, path.join(root, entry.name));
+      if (!ingested) continue;
+      stores.push({ name: entry.name, path: path.join(root, entry.name), sectionCount: ingested.length });
+      for (const s of ingested) {
+        const ov = overrides[`${s.store}/${s.file}`] || {};
+        const { category, functional } = classify(s.file, ov);
+        s.category = category;
+        s.functional = functional;
+        s.custom = false;
+        sections.push(s);
+      }
     }
   }
+
+  // Cross-store dedupe: identical content across stores collapses to one entry.
+  const groups = new Map();
+  for (const s of sections) {
+    if (!groups.has(s.hash)) groups.set(s.hash, []);
+    groups.get(s.hash).push(s);
+  }
+  for (const group of groups.values()) {
+    if (group.length < 2) continue;
+    group.sort((a, b) => (a.store + a.file).localeCompare(b.store + b.file));
+    const canonical = group[0];
+    canonical.group = group.map((s) => s.store);
+    for (const s of group.slice(1)) {
+      s.duplicate = true;
+      s.canonical = `${canonical.store}/${canonical.file}`;
+      s.group = canonical.group;
+    }
+  }
+
+  for (const s of sections) delete s.root;
   const index = { generatedAt: new Date().toISOString(), stores, sections };
   fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true });
   fs.writeFileSync(OUT_FILE, JSON.stringify(index, null, 2));
   const byCat = {};
-  for (const s of sections) byCat[s.category] = (byCat[s.category] || 0) + 1;
-  console.log(`Ingested ${sections.length} sections from ${stores.length} store(s)`);
+  let dupes = 0;
+  for (const s of sections) { byCat[s.category] = (byCat[s.category] || 0) + 1; if (s.duplicate) dupes++; }
+  console.log(`Ingested ${sections.length} sections from ${stores.length} store(s) across ${ROOTS.length} root(s)`);
+  console.log(`Duplicates collapsed: ${dupes} (${groups.size} unique components)`);
   console.log(byCat);
 }
 

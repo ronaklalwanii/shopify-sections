@@ -1,0 +1,74 @@
+{
+  "sections": {
+    "library": {
+      "type": "nexora--steps",
+      "settings": {
+        "eyebrow": "How we work",
+        "heading": "From idea\nto keys",
+        "text": "We handle every stage of the deal so you can enjoy the result.",
+        "button_label": "More about the process",
+        "padding": 72,
+        "enr_layout_width": "as_designed",
+        "enr_layout_align": "as_designed",
+        "enr_radius": 0,
+        "enr_border_width": "0",
+        "enable_custom_sizes": false,
+        "enr_title_size": 32,
+        "enr_body_size": 16,
+        "enr_eyebrow_size": 12,
+        "enr_icon_size": 24,
+        "enable_custom_spacing": false,
+        "enr_space_top": 48,
+        "enr_space_bottom": 48,
+        "enr_gap": 16,
+        "enable_custom_media": false,
+        "enr_media_height": 480,
+        "enr_media_height_mobile": 400,
+        "show_eyebrow": true,
+        "show_heading": true,
+        "show_cta": true,
+        "show_image": true
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "step",
+          "settings": {
+            "title": "Consultation",
+            "text": "We discuss your goals and wishes"
+          }
+        },
+        "bl-2": {
+          "type": "step",
+          "settings": {
+            "title": "Shortlisting options",
+            "text": "We present the best properties for your brief"
+          }
+        },
+        "bl-3": {
+          "type": "step",
+          "settings": {
+            "title": "Viewings arranged",
+            "text": "We show properties at a time that suits you"
+          }
+        },
+        "bl-4": {
+          "type": "step",
+          "settings": {
+            "title": "Deal & support",
+            "text": "We handle the paperwork right up to handover of keys"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

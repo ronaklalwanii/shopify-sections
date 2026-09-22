@@ -1,0 +1,154 @@
+{%- comment -%} Section Library: injected global assets for store "salon" {%- endcomment -%}
+{{ 'salon--base.css' | asset_url | stylesheet_tag }}
+{{ 'salon--components.css' | asset_url | stylesheet_tag }}
+{% render 'salon--layout-tokens' %}
+{%- comment -%}
+  Why us — four light cards around a ringed centre badge
+  (salon "Why us?" composition).
+{%- endcomment -%}
+<section class="section why-us" style="--section-space: {{ section.settings.padding | default: 88 }}px;">
+  <div class="page-width why-us__wrap">
+    <div class="why-us__rings" aria-hidden="true">
+      <span></span><span></span><span></span>
+      <p class="why-us__center">{{ section.settings.heading | escape | newline_to_br }}</p>
+    </div>
+
+    <div class="why-us__grid" style="--cards: {{ section.blocks.size | default: 4 }};">
+      {%- for block in section.blocks -%}
+        <div class="why-us__card" {{ block.shopify_attributes }}>
+          <span class="why-us__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+          <h3 class="why-us__title">{{ block.settings.title | escape }}</h3>
+          <p class="why-us__text">{{ block.settings.text | escape }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .why-us__wrap { position: relative; }
+  .why-us__rings {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  .why-us__rings span {
+    position: absolute;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+  }
+  .why-us__rings span:nth-child(1) { width: 15rem; height: 15rem; }
+  .why-us__rings span:nth-child(2) { width: 22rem; height: 22rem; opacity: 0.7; }
+  .why-us__rings span:nth-child(3) { width: 29rem; height: 29rem; opacity: 0.45; }
+  .why-us__center {
+    position: relative; z-index: 1;
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    text-align: center;
+    line-height: 1.15;
+    margin: 0;
+    max-width: 12rem;
+  }
+  .why-us__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 21rem));
+    grid-auto-rows: 1fr;
+    gap: clamp(1.2rem, 3vw, 4.5rem) clamp(1.2rem, 12vw, 13rem);
+    justify-content: space-between;
+  }
+  .why-us__card {
+    background: var(--color-background-secondary);
+    border-radius: 1.1rem;
+    padding: clamp(1.2rem, 2vw, 1.7rem);
+    min-height: 10.5rem;
+    display: flex; flex-direction: column;
+  }
+  .why-us__num {
+    align-self: flex-end;
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.22rem 0.55rem;
+    margin-bottom: 0.9rem;
+  }
+  .why-us__title { font-size: 1.02rem; font-weight: 600; margin: 0 0 0.55rem; }
+  .why-us__text { font-size: 0.82rem; line-height: 1.6; color: var(--color-text-muted); margin: 0; }
+  @media (max-width: 989px) {
+    .why-us__rings { position: relative; height: 12rem; margin-bottom: 2rem; }
+    .why-us__rings span:nth-child(1) { width: 9rem; height: 9rem; }
+    .why-us__rings span:nth-child(2) { width: 13rem; height: 13rem; }
+    .why-us__rings span:nth-child(3) { width: 17rem; height: 17rem; }
+    .why-us__grid { grid-template-columns: 1fr; gap: 1rem; }
+    .why-us__card { min-height: 0; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Why us",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Centre heading",
+      "default": "Why us?"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 32,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 88
+    }
+  ],
+  "blocks": [
+    {
+      "type": "reason",
+      "name": "Reason card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Qualified staff"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Over a hundred clients note the quality and warmth of our specialists — and come back soon."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why us",
+      "blocks": [
+        { "type": "reason" },
+        {
+          "type": "reason",
+          "settings": { "title": "Service and quality", "text": "Natural cosmetics, personal care advice at home and professional treatments." }
+        },
+        {
+          "type": "reason",
+          "settings": { "title": "Convenient location", "text": "The studio is located in the city centre, right next to ample parking." }
+        },
+        {
+          "type": "reason",
+          "settings": { "title": "Up-to-date knowledge", "text": "Our specialists constantly follow everything new in cosmetology to stay on top of modern techniques." }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,9 +1,10 @@
 // Section Library server: API + preview renderer + custom section storage (git-backed)
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { execFileSync } = require('child_process');
 const express = require('express');
-const { renderStoreSection, renderSectionSource, renderSnippet, STORES_ROOT } = require('./renderer');
+const { renderStoreSection, renderSectionSource, renderSnippet, findStore } = require('./renderer');
 
 const ROOT = path.resolve(__dirname, '..');
 const DATA_INDEX = path.join(ROOT, 'data/index.json');
@@ -156,8 +157,9 @@ app.get('/api/section/:store/:file', (req, res) => {
       const { liquid } = customSectionSources(meta.slug);
       return res.json({ meta: { ...meta, store: 'custom', file, custom: true }, liquid, css: meta.css || '', js: meta.js || '' });
     }
-    const full = path.join(STORES_ROOT, store, 'sections', file);
-    if (!fs.existsSync(full)) return res.status(404).json({ error: 'not found' });
+    const storePath = findStore(store);
+    if (!storePath) return res.status(404).json({ error: 'not found' });
+    const full = path.join(storePath, 'sections', file);
     const liquid = fs.readFileSync(full, 'utf8');
     const idx = loadIndex();
     const meta = idx.sections.find((s) => s.store === store && s.file === file) || {};
@@ -205,6 +207,27 @@ app.delete('/api/custom/:slug', (req, res) => {
   res.json({ ok: true });
 });
 
+/* ------------------------------- preview cache ------------------------------- */
+
+const CACHE_DIR = path.join(ROOT, 'data/preview-cache');
+const CACHE_TTL = 12 * 3600 * 1000; // 12h
+
+function previewCacheGet(key) {
+  const p = path.join(CACHE_DIR, key);
+  try {
+    if (Date.now() - fs.statSync(p).mtimeMs < CACHE_TTL) return fs.readFileSync(p, 'utf8');
+    fs.unlinkSync(p);
+  } catch {}
+  return null;
+}
+
+function previewCacheSet(key, html) {
+  try {
+    fs.mkdirSync(CACHE_DIR, { recursive: true });
+    fs.writeFileSync(path.join(CACHE_DIR, key), html);
+  } catch {}
+}
+
 /* --------------------------------- previews ---------------------------------- */
 
 const RESET_CSS = `
@@ -249,7 +272,8 @@ ${error ? `<div class="preview-error">Render error: ${String(error).replace(/</g
 const layoutDepsCache = new Map();
 function getLayoutDeps(store) {
   if (layoutDepsCache.has(store)) return layoutDepsCache.get(store);
-  const storePath = path.join(STORES_ROOT, store);
+  const storePath = findStore(store);
+  if (!storePath) return res.status(404).send('unknown store');
   const css = [], js = [];
   const scan = (text) => {
     let m;
@@ -298,10 +322,23 @@ app.get('/preview/:store/:file', async (req, res) => {
       const params = new URLSearchParams({ view: entry.template });
       if (cfg.previewThemeId) params.set('preview_theme_id', cfg.previewThemeId);
       const target = `${cfg.storeUrl}/pages/${cfg.pageHandle}?${params}`;
+      const key = crypto.createHash('md5').update(target).digest('hex');
+      const cached = previewCacheGet(key);
+      if (cached) return res.type('html').send(cached);
       const r = await shopifyGet(target);
-      return res.status(r.status).type('html').send(await r.text());
+      const html = await r.text();
+      if (r.status === 200) previewCacheSet(key, html);
+      else return localPreview(req, res); // not in the published theme yet — mock render
+      return res.status(r.status).type('html').send(html);
     }
   }
+  return localPreview(req, res);
+});
+
+async function localPreview(req, res) {
+  const { store, file } = req.params;
+  const storePath = findStore(store);
+  if (store !== 'custom' && !storePath) return res.status(404).send('unknown store');
   try {
     if (store === 'custom') {
       if (!/^[\w.-]+(\.liquid)?$/.test(file)) return res.status(400).send('bad file');
@@ -317,18 +354,18 @@ app.get('/preview/:store/:file', async (req, res) => {
     const meta = idx.sections.find((s) => s.store === store && s.file === file);
     const r = await renderStoreSection(store, file);
     const deps = getLayoutDeps(store);
-    const exists = (a) => fs.existsSync(path.join(STORES_ROOT, store, 'assets', a));
+    const exists = (a) => fs.existsSync(path.join(storePath, 'assets', a));
     const cssLinks = [...new Set([...deps.css, ...(meta?.assets || []).filter((a) => a.endsWith('.css'))].filter(exists))]
       .map((a) => `/assets/${store}/${a}`);
     const sectionAssetJs = (meta?.assets || []).filter((a) => a.endsWith('.js') && exists(a) && !deps.js.includes(a));
-    const scripts = [...r.js ? [r.js] : [], ...sectionAssetJs.map((a) => fs.readFileSync(path.join(STORES_ROOT, store, 'assets', a), 'utf8'))];
+    const scripts = [...r.js ? [r.js] : [], ...sectionAssetJs.map((a) => fs.readFileSync(path.join(storePath, 'assets', a), 'utf8'))];
     const externalScripts = deps.js.filter(exists).map((a) => `/assets/${store}/${a}`);
     const headExtra = await getLayoutHeadExtra(store);
     res.type('html').send(previewPage({ title: `${meta?.name || file} — ${store}`, html: r.html + (r.legacyCss ? `<style>${r.legacyCss}</style>` : ''), cssLinks, scripts, error: r.error, externalScripts, headExtra }));
   } catch (e) {
     res.status(500).type('html').send(previewPage({ title: 'error', html: '', error: e.message }));
   }
-});
+}
 
 app.get('/reset.css', (req, res) => { res.type('css').send(RESET_CSS); });
 
@@ -339,8 +376,10 @@ app.use('/assets', (req, res, next) => {
   const store = decodeURIComponent(parts.shift() || '');
   const rel = parts.join('/');
   const safe = path.normalize(rel).replace(/^(\.\.[/\\])+/, '');
-  const full = path.join(STORES_ROOT, store, 'assets', safe);
-  if (!full.startsWith(path.join(STORES_ROOT))) return res.status(403).end();
+  const storeRoot = findStore(store);
+  if (!storeRoot) return res.status(404).end();
+  const full = path.join(storeRoot, 'assets', safe);
+  if (!full.startsWith(storeRoot)) return res.status(403).end();
   res.sendFile(full, (e) => { if (e) res.status(404).end(); });
 });
 

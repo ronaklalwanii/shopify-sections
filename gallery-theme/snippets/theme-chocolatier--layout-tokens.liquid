@@ -1,0 +1,51 @@
+
+      {%- liquid
+        assign body_font_bold = settings.body_font | font_modify: 'weight', 'bold'
+        assign body_font_italic = settings.body_font | font_modify: 'style', 'italic'
+        assign heading_font_medium = settings.heading_font | font_modify: 'weight', '500'
+      -%}
+      {{ settings.body_font | font_face: font_display: 'swap' }}
+      {{ body_font_bold | font_face: font_display: 'swap' }}
+      {{ body_font_italic | font_face: font_display: 'swap' }}
+      {{ settings.heading_font | font_face: font_display: 'swap' }}
+      {{ heading_font_medium | font_face: font_display: 'swap' }}
+
+      :root {
+        --font-body: {% if settings.body_font.family %}{{ settings.body_font.family }}, {{ settings.body_font.fallback_families | default: 'sans-serif' }}{% else %}sans-serif{% endif %};
+        --font-heading: {% if settings.heading_font.family %}{{ settings.heading_font.family }}, {{ settings.heading_font.fallback_families | default: 'serif' }}{% else %}serif{% endif %};
+        --font-body-style: {{ settings.body_font.style }};
+        --font-body-weight: {{ settings.body_font.weight }};
+        --font-heading-weight: {{ settings.heading_font.weight }};
+        --body-size: {{ settings.body_size | divided_by: 16.0 }}rem;
+        --heading-scale: {{ settings.heading_scale | divided_by: 100.0 }};
+        --heading-spacing: {{ settings.heading_spacing | divided_by: 100.0 }}em;
+        --nav-spacing: {{ settings.nav_spacing | divided_by: 100.0 }}em;
+        --page-width: {{ settings.page_width }}px;
+        --button-radius: {{ settings.button_radius }}px;
+        --card-radius: {{ settings.card_radius }}px;
+        --nav-uppercase: {% if settings.nav_uppercase %}uppercase{% else %}none{% endif %};
+        --color-accent-2: {{ settings.colors_accent_2 | default: '#b99c66' }};
+
+        --color-background: {{ settings.colors_background }};
+        --color-background-secondary: {{ settings.colors_secondary_background }};
+        --color-foreground: {{ settings.colors_text }};
+        --color-heading: {{ settings.colors_heading }};
+        --color-accent: {{ settings.colors_accent }};
+        --color-accent-label: {{ settings.colors_accent_label }};
+        --color-outline-label: {{ settings.colors_outline_label }};
+        --color-link: {{ settings.colors_accent }};
+        --color-border: {{ settings.colors_background | color_darken: 9 | color_modify: 'alpha', 0.85 }};
+        --color-surface: {{ settings.colors_background | color_lighten: 3 }};
+        --color-text-muted: {{ settings.colors_text | color_modify: 'alpha', 0.62 }};
+      }
+
+      {%- assign card_elems = '.card, .style-card, .testimonial-card, .article-card, .cart-summary' -%}
+      {% case settings.card_style %}
+        {% when 'bordered' %}
+          {{ card_elems }} { --card-border: 1px solid var(--color-border); --card-bg: transparent; }
+        {% when 'filled' %}
+          {{ card_elems }} { --card-border: 1px solid transparent; --card-bg: var(--color-surface); }
+        {% else %}
+          {{ card_elems }} { --card-border: none; --card-bg: transparent; }
+      {% endcase %}
+    

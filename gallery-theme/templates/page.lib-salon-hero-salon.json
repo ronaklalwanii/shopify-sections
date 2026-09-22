@@ -1,0 +1,60 @@
+{
+  "sections": {
+    "library": {
+      "type": "salon--hero-salon",
+      "settings": {
+        "heading": "Territory of\nBeautiful\nPeople",
+        "services_label": "Our services",
+        "services_note": "4 categories",
+        "view_all_label": "View all",
+        "show_media_controls": true,
+        "location": "Moscow",
+        "search_text": "Beauty studio in Moscow",
+        "person_name": "Anna Smith",
+        "person_role": "Founder, lead cosmetologist",
+        "social_text": "Transformations",
+        "padding": 24
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "service",
+          "settings": {
+            "title": "Care programs",
+            "meta": "10+ programs"
+          }
+        },
+        "bl-2": {
+          "type": "service",
+          "settings": {
+            "title": "Diagnostics",
+            "meta": "20+ years of practice"
+          }
+        },
+        "bl-3": {
+          "type": "service",
+          "settings": {
+            "title": "Manicure",
+            "meta": "7 years of practice"
+          }
+        },
+        "bl-4": {
+          "type": "service",
+          "settings": {
+            "title": "Nail service",
+            "meta": "6 masters"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

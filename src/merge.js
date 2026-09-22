@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
-const STORES_ROOT = process.env.STORES_ROOT || path.resolve(__dirname, '../../shopify-stores');
+const { findStore } = require('./roots');
 const OUT = path.resolve(__dirname, '../gallery-theme');
 const HOST = process.env.HOST_STORE || 'base'; // provides layout, config, locales skeleton
 
@@ -19,7 +19,7 @@ const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-
 /* ------------------------------- store scanning ------------------------------ */
 
 function readStoreLayoutDeps(store) {
-  const storePath = path.join(STORES_ROOT, store);
+  const storePath = findStore(store);
   const css = [], js = [], snippets = [], styleBlocks = [];
   const scan = (text) => {
     let m;
@@ -50,7 +50,7 @@ class Copier {
   constructor(store) {
     this.store = store;
     this.prefix = prefixFor(store);
-    this.storePath = path.join(STORES_ROOT, store);
+    this.storePath = findStore(store);
     this.queue = [];            // [{kind:'snippet'|'asset', name}]
     this.copied = new Set();    // prefixed names already handled
   }
@@ -179,7 +179,7 @@ function templateSectionBody(schema) {
 function main() {
   const index = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../data/index.json'), 'utf8'));
   fs.rmSync(OUT, { recursive: true, force: true });
-  fs.cpSync(path.join(STORES_ROOT, HOST), OUT, { recursive: true });
+  fs.cpSync(findStore(HOST), OUT, { recursive: true });
   // keep the host's own JSON templates (index, product, 404, ...) so the store
   // works normally — our generated lib-* templates are added alongside them.
 
@@ -203,15 +203,16 @@ function main() {
       tokensRender = `{% render '${prefixFor(store)}${tokensSnippet}' %}`;
     } else if (deps.styleBlocks.join('\n').trim()) {
       const name = `${prefixFor(store)}layout-tokens`;
-      fs.writeFileSync(path.join(gallerySnippets, `${name}.liquid`), deps.styleBlocks.join('\n'));
+      fs.writeFileSync(path.join(gallerySnippets, `${name}.liquid`), copier.rewrite(deps.styleBlocks.join('\n')));
       tokensRender = `{% render '${name}' %}`;
     }
 
-    const sectionsDir = path.join(STORES_ROOT, store, 'sections');
+    const sectionsDir = path.join(findStore(store), 'sections');
     for (const file of fs.readdirSync(sectionsDir).sort()) {
       if (!file.endsWith('.liquid')) continue;
       const meta = index.sections.find((s) => s.store === store && s.file === file);
       if (!meta || meta.empty) continue;
+      if (meta.duplicate) continue; // canonical section already covers this content
 
       let src = fs.readFileSync(path.join(sectionsDir, file), 'utf8');
       src = copier.rewrite(src);
@@ -284,11 +285,18 @@ function main() {
   for (const store of index.stores.map((s) => s.name)) {
     if (store === HOST) continue;
     try {
-      const l = JSON.parse(fs.readFileSync(path.join(STORES_ROOT, store, 'locales/en.default.json'), 'utf8'));
+      const l = JSON.parse(fs.readFileSync(path.join(findStore(store), 'locales/en.default.json'), 'utf8'));
       deepMerge(locale, l);
     } catch {}
   }
   fs.writeFileSync(localePath, JSON.stringify(locale, null, 2));
+
+  // duplicates share the canonical section's gallery URL
+  for (const s of index.sections) {
+    if (s.duplicate && manifest[s.canonical]) {
+      manifest[`${s.store}/${s.file}`] = manifest[s.canonical];
+    }
+  }
 
   fs.mkdirSync(path.resolve(__dirname, '../data'), { recursive: true });
   fs.writeFileSync(path.resolve(__dirname, '../data/gallery-manifest.json'), JSON.stringify(manifest, null, 2));

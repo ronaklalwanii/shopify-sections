@@ -1,0 +1,67 @@
+{
+  "sections": {
+    "library": {
+      "type": "cybele--testimonials",
+      "settings": {
+        "eyebrow": "Words from our community",
+        "layout": "grid",
+        "columns": "3",
+        "show_verified": true,
+        "padding": 72,
+        "enr_layout_width": "as_designed",
+        "enr_layout_align": "as_designed",
+        "enr_radius": 0,
+        "enr_border_width": "0",
+        "enable_custom_sizes": false,
+        "enr_title_size": 32,
+        "enr_body_size": 16,
+        "enr_eyebrow_size": 12,
+        "enr_icon_size": 24,
+        "enable_custom_spacing": false,
+        "enr_space_top": 48,
+        "enr_space_bottom": 48,
+        "enr_gap": 16,
+        "enable_custom_media": false,
+        "enr_media_height": 480,
+        "enr_media_height_mobile": 400,
+        "show_eyebrow": true,
+        "show_heading": true
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "testimonial",
+          "settings": {
+            "name": "Emily R.",
+            "rating": "5",
+            "quote": "The quality and fit are absolutely lovely. I wear this dress constantly — it's now my go-to for important plans."
+          }
+        },
+        "bl-2": {
+          "type": "testimonial",
+          "settings": {
+            "name": "Sophia L.",
+            "rating": "5",
+            "quote": "Beautiful clothing, sustainable materials and lovely packaging. Couldn't ask for more."
+          }
+        },
+        "bl-3": {
+          "type": "testimonial",
+          "settings": {
+            "name": "Olivia M.",
+            "rating": "5",
+            "quote": "Every piece feels so elegant and comfortable. I get so many compliments whenever I wear them."
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

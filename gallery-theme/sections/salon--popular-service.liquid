@@ -1,0 +1,196 @@
+{%- comment -%} Section Library: injected global assets for store "salon" {%- endcomment -%}
+{{ 'salon--base.css' | asset_url | stylesheet_tag }}
+{{ 'salon--components.css' | asset_url | stylesheet_tag }}
+{% render 'salon--layout-tokens' %}
+{%- comment -%}
+  Popular service — eyebrow + uppercase title, circular photo, description,
+  "who is it for" tag pills and a more-about link (salon composition).
+{%- endcomment -%}
+<section class="section popular-service" style="--section-space: {{ section.settings.padding | default: 88 }}px;">
+  <div class="page-width">
+    {%- if section.settings.eyebrow != blank -%}
+      <span class="eyebrow popular-service__eyebrow">{{ section.settings.eyebrow | escape }}</span>
+    {%- endif -%}
+
+    <div class="popular-service__grid">
+      <div class="popular-service__left">
+        {%- if section.settings.title != blank -%}
+          <h2 class="popular-service__title">{{ section.settings.title | escape | newline_to_br }}</h2>
+        {%- endif -%}
+        {%- if section.settings.tags_heading != blank -%}
+          <p class="popular-service__tags-heading">{{ section.settings.tags_heading | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.tags != blank -%}
+          <div class="popular-service__tags">
+            {%- assign tag_list = section.settings.tags | split: ',' -%}
+            {%- for tag in tag_list -%}
+              <span class="popular-service__tag">{{ tag | strip | escape }}</span>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="popular-service__media">
+        {%- if section.settings.image != blank -%}
+          {{ section.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '360, 540, 900', alt: section.settings.title }}
+        {%- else -%}
+          {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+        {%- if section.settings.more_link != blank -%}
+          <a href="{{ section.settings.more_link }}" class="popular-service__media-arrow" aria-label="{{ section.settings.more_label | default: 'More' | escape }}">
+            {% render 'salon--icon', name: 'arrow-right', size: 14 %}
+          </a>
+        {%- endif -%}
+      </div>
+
+      <div class="popular-service__right">
+        {%- if section.settings.text != blank -%}
+          <p class="popular-service__text">{{ section.settings.text | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.more_label != blank -%}
+          <a href="{{ section.settings.more_link | default: '#' }}" class="popular-service__more">
+            <span class="popular-service__more-copy">
+              {{ section.settings.more_label | escape | newline_to_br }}
+            </span>
+            <span class="popular-service__more-arrow">{% render 'salon--icon', name: 'arrow-right', size: 14 %}</span>
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .popular-service__eyebrow { display: block; margin-bottom: clamp(1.6rem, 4vh, 3rem); }
+  .popular-service__grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: clamp(1.8rem, 4.5vw, 4.5rem);
+    align-items: center;
+  }
+  .popular-service__title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.9rem, 3.2vw, 2.9rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    line-height: 1.12;
+    margin: 0 0 clamp(1.8rem, 5vh, 3.4rem);
+  }
+  .popular-service__tags-heading { font-size: 0.82rem; color: var(--color-text-muted); margin: 0 0 0.7rem; }
+  .popular-service__tags { display: flex; flex-direction: column; align-items: flex-start; gap: 0.55rem; }
+  .popular-service__tag {
+    display: inline-flex;
+    background: var(--color-background-secondary);
+    border-radius: 999px;
+    font-size: 0.76rem;
+    padding: 0.42rem 0.95rem;
+  }
+  .popular-service__media {
+    position: relative;
+    width: clamp(15rem, 24vw, 21rem);
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--color-background-secondary);
+  }
+  .popular-service__media img, .popular-service__media > svg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .popular-service__media-arrow {
+    position: absolute; right: 8%; bottom: 4%;
+    z-index: 2;
+    width: 2.6rem; height: 2.6rem; border-radius: 50%;
+    background: var(--color-accent); color: var(--color-accent-label);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .popular-service__text { font-size: 0.9rem; line-height: 1.7; margin: 0 0 clamp(1.8rem, 6vh, 3.5rem); max-width: 24rem; }
+  .popular-service__more {
+    display: inline-flex; align-items: center; gap: 0.9rem;
+    text-decoration: none; color: inherit;
+    margin-left: auto;
+  }
+  .popular-service__grid .popular-service__right { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
+  .popular-service__more-copy {
+    font-size: 0.8rem; line-height: 1.5; text-align: right;
+    border-bottom: 1px solid var(--color-border); padding-bottom: 0.5rem;
+  }
+  .popular-service__more-arrow {
+    width: 2.2rem; height: 2.2rem; border-radius: 50%; flex-shrink: 0;
+    background: var(--color-accent); color: var(--color-accent-label);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  @media (max-width: 989px) {
+    .popular-service__grid { grid-template-columns: 1fr; justify-items: start; }
+    .popular-service__media { order: -1; width: min(18rem, 80%); margin-inline: auto; }
+    .popular-service__grid .popular-service__right { align-items: flex-start; text-align: left; }
+    .popular-service__more-copy { text-align: left; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Popular service",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Popular services"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Title",
+      "default": "Japanese\nmanicure"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Description",
+      "default": "A Japanese restorative care technique that revives nails after gel polish and creates a healthy effect that lasts up to three weeks."
+    },
+    {
+      "type": "text",
+      "id": "tags_heading",
+      "label": "Tags heading",
+      "default": "Who is it for:"
+    },
+    {
+      "type": "text",
+      "id": "tags",
+      "label": "Tags",
+      "info": "Comma-separated pills, e.g. New to gel polish, Pregnant and nursing"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Circle image"
+    },
+    {
+      "type": "text",
+      "id": "more_label",
+      "label": "More link label",
+      "default": "More about\nthe procedure"
+    },
+    {
+      "type": "url",
+      "id": "more_link",
+      "label": "More link"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 32,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 88
+    }
+  ],
+  "presets": [
+    {
+      "name": "Popular service"
+    }
+  ]
+}
+{% endschema %}

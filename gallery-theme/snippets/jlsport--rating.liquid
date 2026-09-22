@@ -1,0 +1,22 @@
+{%- comment -%}
+  Renders a 5-star rating row.
+  Accepts:
+  - rating: {Number} 0–5 (default 5)
+  Usage: {% render 'jlsport--rating', rating: 4.8 %}
+{%- endcomment -%}
+{%- liquid
+  assign value = rating | default: 5 | times: 1
+  if value > 5
+    assign value = 5
+  endif
+-%}
+<span class="rating" role="img" aria-label="{{ value | times: 20 }}%">
+  {%- for i in (1..5) -%}
+    {%- assign star_index = i | times: 1 -%}
+    {%- if star_index <= value -%}
+      {% render 'jlsport--icon', name: 'star', size: 13 %}
+    {%- else -%}
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true" focusable="false"><path d="M12 2.6 15 9l7 .8-5.2 4.7 1.4 6.9L12 17.8 5.8 21.4l1.4-6.9L2 9.8 9 9l3-6.4Z"/></svg>
+    {%- endif -%}
+  {%- endfor -%}
+</span>

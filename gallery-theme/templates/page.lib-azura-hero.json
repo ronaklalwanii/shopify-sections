@@ -1,0 +1,71 @@
+{
+  "sections": {
+    "library": {
+      "type": "azura--hero",
+      "settings": {
+        "layout": "split",
+        "image_position": "right",
+        "content_width": "default",
+        "mobile_stack_order": "default",
+        "image_height": 100,
+        "enable_mobile_image_height": false,
+        "image_height_mobile": 100,
+        "height": "md",
+        "overlay_opacity": 40,
+        "show_eyebrow": true,
+        "eyebrow": "Pure indulgence, true happiness",
+        "heading": "Wear the Story.\nLive the Style.",
+        "fluid_heading": false,
+        "heading_size": "h0",
+        "subheading": "<p><em>Timeless designs. Thoughtfully crafted. Made for your every moment.</em></p>",
+        "show_cta": true,
+        "content_align": "center",
+        "text_align": "left",
+        "show_social_proof": true,
+        "avatars_count": 0,
+        "show_scroll_hint": true,
+        "scroll_label": "Learn more",
+        "overlay_color": "#000000",
+        "content_radius": 0,
+        "border_width": "0",
+        "enable_custom_sizes": false,
+        "heading_size_px": 56,
+        "subheading_size_px": 18,
+        "meta_text_size_px": 14,
+        "button_text_size_px": 14,
+        "scroll_hint_size_px": 12,
+        "enable_custom_spacing": false,
+        "space_top": 48,
+        "space_bottom": 48,
+        "buttons_gap": 12,
+        "meta_gap": 16,
+        "enable_ken_burns": false,
+        "ken_burns_speed": 24
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "button",
+          "settings": {
+            "label": "Shop new arrivals",
+            "style": "primary"
+          }
+        },
+        "bl-2": {
+          "type": "button",
+          "settings": {
+            "label": "Explore collections",
+            "style": "outline"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

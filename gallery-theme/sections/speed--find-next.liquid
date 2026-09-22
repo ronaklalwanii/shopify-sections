@@ -1,0 +1,505 @@
+{%- comment -%} Section Library: injected global assets for store "speed" {%- endcomment -%}
+{{ 'speed--base.css' | asset_url | stylesheet_tag }}
+{{ 'speed--components.css' | asset_url | stylesheet_tag }}
+{% render 'speed--layout-tokens' %}
+{%- comment -%}
+  Find next — two-column discovery band: heading + fanned deck + text + pill
+  button on the left, rounded video/image card on the right (SPEED pattern).
+{%- endcomment -%}
+{%- liquid
+  assign video = section.settings.video_image
+  assign deck = section.settings.deck_image
+-%}
+<section class="fdn fdn-{{ section.id }}">
+  <div class="page-width fdn__grid">
+    <div class="fdn__left">
+      <h2 class="fdn__heading">
+        {{ section.settings.heading_ink | escape }} <span class="fdn__mut">{{ section.settings.heading_mut_1 | escape }}</span><br>
+        <span class="fdn__mut fdn__ind">{{ section.settings.heading_mut_2 | escape }}</span>
+      </h2>
+      <div class="fdn__deck">
+        {%- if deck != blank -%}
+          {{ deck | image_url: width: 640 | image_tag: loading: 'lazy', alt: section.settings.heading_ink }}
+        {%- else -%}
+          <img src="{{ 'speed--sp-deck.jpg' | asset_url }}" alt="" loading="lazy" width="324" height="249">
+        {%- endif -%}
+      </div>
+      <div class="fdn__foot">
+        <p class="fdn__text">{{ section.settings.text | escape }}</p>
+        {%- if section.settings.show_cta and section.settings.button_label != blank -%}
+          <a href="{{ section.settings.button_link | default: '#' }}" class="fdn__btn">
+            {{ section.settings.button_label | escape }}
+            <svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true" focusable="false"><path d="M2 12 12 2M4.5 2H12v7.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+    <div class="fdn__right">
+      <a href="{{ section.settings.video_link | default: '#' }}" class="fdn__video" aria-label="{{ section.settings.video_label | default: 'Play video' }}">
+        {%- if video != blank -%}
+          {{ video | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '480, 760, 1200', alt: section.settings.video_label }}
+        {%- else -%}
+          <img src="{{ 'speed--sp-video.jpg' | asset_url }}" alt="" loading="lazy" width="611" height="608">
+        {%- endif -%}
+      </a>
+    </div>
+  </div>
+</section>
+{% style %}
+  .fdn-{{ section.id }} { padding-block: clamp(2.5rem, 7vh, 5rem); }
+  .fdn-{{ section.id }} .fdn__grid {
+    display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: clamp(2rem, 4vw, 4rem); align-items: stretch;
+  }
+  .fdn-{{ section.id }} .fdn__left { display: flex; flex-direction: column; }
+  .fdn-{{ section.id }} .fdn__heading {
+    font-family: var(--font-body); font-weight: 400; color: var(--color-heading);
+    font-size: clamp(1.8rem, 3.2vw, 3.4rem); line-height: 1.18; letter-spacing: -0.01em;
+    margin: clamp(1rem, 4vw, 3.6rem) auto 0; width: fit-content;
+  }
+  .fdn-{{ section.id }} .fdn__mut { color: {{ section.settings.muted_color }}; }
+  .fdn-{{ section.id }} .fdn__ind { display: inline-block; margin-left: clamp(2rem, 5vw, 5.5rem); }
+  .fdn-{{ section.id }} .fdn__deck { margin: clamp(1.2rem, 3.5vh, 2.6rem) auto 0; text-align: center; }
+  .fdn-{{ section.id }} .fdn__deck img { width: min(324px, 82%); height: auto; display: inline-block; }
+  .fdn-{{ section.id }} .fdn__foot {
+    margin-top: auto; display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 1.5rem; padding-top: 2rem;
+  }
+  .fdn-{{ section.id }} .fdn__text { font-size: 0.92rem; line-height: 1.5; max-width: 26rem; margin: 0; color: var(--color-heading); }
+  .fdn-{{ section.id }} .fdn__btn {
+    flex: none; display: inline-flex; align-items: center; gap: 0.5rem;
+    background: {{ section.settings.button_color }}; color: {{ section.settings.button_ink }};
+    border-radius: 999px; padding: 0.8rem 1.4rem; font-size: 0.92rem;
+    text-decoration: none; white-space: nowrap;
+  }
+  .fdn-{{ section.id }} .fdn__video {
+    display: block; border-radius: 28px; overflow: hidden; height: 100%;
+    background: {{ section.settings.button_hover_bg }};
+  }
+  .fdn-{{ section.id }} .fdn__video img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  @media (max-width: 860px) {
+    .fdn-{{ section.id }} .fdn__grid { grid-template-columns: 1fr; }
+    .fdn-{{ section.id }} .fdn__heading { margin-left: 0; }
+  }
+{% endstyle %}
+{% style %}
+  /* phase 2 enrichment: every rule is merchant-gated; defaults change nothing */
+  {%- if section.settings.enr_heading_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-heading: {{ section.settings.enr_heading_color }}; }
+  #shopify-section-{{ section.id }} h1, #shopify-section-{{ section.id }} h2, #shopify-section-{{ section.id }} h3, #shopify-section-{{ section.id }} [class*="__heading"], #shopify-section-{{ section.id }} [class*="__title"] { color: var(--enr-heading); }
+  {%- endif -%}
+  {%- if section.settings.enr_text_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-text: {{ section.settings.enr_text_color }}; }
+  #shopify-section-{{ section.id }} p, #shopify-section-{{ section.id }} li, #shopify-section-{{ section.id }} [class*="__text"], #shopify-section-{{ section.id }} [class*="__sub"], #shopify-section-{{ section.id }} [class*="__desc"] { color: var(--enr-text); }
+  {%- endif -%}
+  {%- if section.settings.enr_accent_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-accent: {{ section.settings.enr_accent_color }}; }
+  #shopify-section-{{ section.id }} .eyebrow, #shopify-section-{{ section.id }} [class*="__eyebrow"], #shopify-section-{{ section.id }} [class*="__kicker"] { color: var(--enr-accent); }
+  {%- endif -%}
+  {%- if section.settings.enr_card_bg != blank -%}
+  #shopify-section-{{ section.id }} { --enr-card: {{ section.settings.enr_card_bg }}; }
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__box"] { background-color: var(--enr-card); }
+  {%- endif -%}
+  {%- if section.settings.enr_border_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-border: {{ section.settings.enr_border_color }}; }
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__box"] { border-color: var(--enr-border); }
+  {%- endif -%}
+  {%- if section.settings.enr_muted_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-muted: {{ section.settings.enr_muted_color }}; }
+  #shopify-section-{{ section.id }} small, #shopify-section-{{ section.id }} [class*="__meta"], #shopify-section-{{ section.id }} [class*="__note"], #shopify-section-{{ section.id }} [class*="__caption"] { color: var(--enr-muted); }
+  {%- endif -%}
+  {%- if section.settings.enr_fallback_bg != blank -%}
+  #shopify-section-{{ section.id }} { --enr-fallback: {{ section.settings.enr_fallback_bg }}; }
+  #shopify-section-{{ section.id }} [class*="__placeholder"], #shopify-section-{{ section.id }} .placeholder-svg { background-color: var(--enr-fallback); }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_width == 'narrow' -%}
+  #shopify-section-{{ section.id }} .page-width { max-width: 46rem; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_width == 'wide' -%}
+  #shopify-section-{{ section.id }} .page-width { max-width: none; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'left' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: left; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'center' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: center; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'right' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: right; }
+  {%- endif -%}
+  {%- if section.settings.enr_radius > 0 -%}
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__media"], #shopify-section-{{ section.id }} img { border-radius: {{ section.settings.enr_radius }}px; }
+  {%- endif -%}
+  {%- if section.settings.enr_border_width != '0' -%}
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"] { border: {{ section.settings.enr_border_width }}px solid var(--color-border, currentColor); }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_sizes -%}
+  #shopify-section-{{ section.id }} [class*="__heading"], #shopify-section-{{ section.id }} h1, #shopify-section-{{ section.id }} h2, #shopify-section-{{ section.id }} h3 { font-size: {{ section.settings.enr_title_size }}px; }
+  #shopify-section-{{ section.id }} p, #shopify-section-{{ section.id }} li, #shopify-section-{{ section.id }} [class*="__text"] { font-size: {{ section.settings.enr_body_size }}px; }
+  #shopify-section-{{ section.id }} .eyebrow, #shopify-section-{{ section.id }} [class*="__eyebrow"] { font-size: {{ section.settings.enr_eyebrow_size }}px; }
+  #shopify-section-{{ section.id }} [class*="__icon"] svg, #shopify-section-{{ section.id }} svg.icon { width: {{ section.settings.enr_icon_size }}px; height: {{ section.settings.enr_icon_size }}px; }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_spacing -%}
+  #shopify-section-{{ section.id }} > section, #shopify-section-{{ section.id }} > div { padding-block: {{ section.settings.enr_space_top }}px {{ section.settings.enr_space_bottom }}px; }
+  #shopify-section-{{ section.id }} [class*="__grid"], #shopify-section-{{ section.id }} [class*="__row"], #shopify-section-{{ section.id }} [class*="__cards"], #shopify-section-{{ section.id }} [class*="__list"] { gap: {{ section.settings.enr_gap }}px; }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_media -%}
+  #shopify-section-{{ section.id }} [class*="__media"] img, #shopify-section-{{ section.id }} [class*="__image"] img, #shopify-section-{{ section.id }} [class*="__photo"] img { max-height: {{ section.settings.enr_media_height }}px; width: 100%; object-fit: cover; }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} [class*="__media"] img, #shopify-section-{{ section.id }} [class*="__image"] img, #shopify-section-{{ section.id }} [class*="__photo"] img { max-height: {{ section.settings.enr_media_height_mobile }}px; }
+  }
+  {%- endif -%}
+{% endstyle %}
+{% schema %}
+{
+  "name": "Find next",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading_ink",
+      "label": "Heading — dark part",
+      "default": "Find what"
+    },
+    {
+      "type": "text",
+      "id": "heading_mut_1",
+      "label": "Heading — muted part (line 1)",
+      "default": "you'll"
+    },
+    {
+      "type": "text",
+      "id": "heading_mut_2",
+      "label": "Heading — muted part (line 2)",
+      "default": "love next."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Browse handpicked pieces crafted to refine your everyday look and enhance your style."
+    },
+    {
+      "type": "image_picker",
+      "id": "deck_image",
+      "label": "Fanned deck image",
+      "info": "Falls back to the bundled demo deck."
+    },
+    {
+      "type": "image_picker",
+      "id": "video_image",
+      "label": "Video card image",
+      "info": "Falls back to the bundled demo video still."
+    },
+    {
+      "type": "url",
+      "id": "video_link",
+      "label": "Video link"
+    },
+    {
+      "type": "text",
+      "id": "video_label",
+      "label": "Video label"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button color",
+      "default": "#ffe08d"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text color",
+      "default": "#9a9a9a"
+    },
+    {
+      "type": "color",
+      "id": "button_ink",
+      "label": "Button ink color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg",
+      "label": "Button hover background",
+      "default": "#0c0c0c"
+    },
+    {
+      "type": "header",
+      "content": "Enriched colors (blank = as designed)"
+    },
+    {
+      "type": "color",
+      "id": "enr_heading_color",
+      "label": "Heading color"
+    },
+    {
+      "type": "color",
+      "id": "enr_text_color",
+      "label": "Body text color"
+    },
+    {
+      "type": "color",
+      "id": "enr_accent_color",
+      "label": "Accent / eyebrow color"
+    },
+    {
+      "type": "color",
+      "id": "enr_card_bg",
+      "label": "Card background"
+    },
+    {
+      "type": "color",
+      "id": "enr_border_color",
+      "label": "Card border color"
+    },
+    {
+      "type": "color",
+      "id": "enr_muted_color",
+      "label": "Muted text color"
+    },
+    {
+      "type": "color",
+      "id": "enr_fallback_bg",
+      "label": "Image fallback background"
+    },
+    {
+      "type": "header",
+      "content": "Enriched layout"
+    },
+    {
+      "type": "select",
+      "id": "enr_layout_width",
+      "label": "Content width",
+      "options": [
+        {
+          "value": "as_designed",
+          "label": "As designed"
+        },
+        {
+          "value": "narrow",
+          "label": "Narrow"
+        },
+        {
+          "value": "wide",
+          "label": "Wide"
+        }
+      ],
+      "default": "as_designed"
+    },
+    {
+      "type": "select",
+      "id": "enr_layout_align",
+      "label": "Intro alignment",
+      "options": [
+        {
+          "value": "as_designed",
+          "label": "As designed"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "as_designed"
+    },
+    {
+      "type": "header",
+      "content": "Enriched shape"
+    },
+    {
+      "type": "range",
+      "id": "enr_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "enr_border_width",
+      "label": "Card border width",
+      "options": [
+        {
+          "value": "0",
+          "label": "None"
+        },
+        {
+          "value": "1",
+          "label": "1 px"
+        },
+        {
+          "value": "2",
+          "label": "2 px"
+        },
+        {
+          "value": "3",
+          "label": "3 px"
+        },
+        {
+          "value": "4",
+          "label": "4 px"
+        }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "header",
+      "content": "Enriched sizes (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_sizes",
+      "label": "Enable custom sizes",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_title_size",
+      "label": "Title size",
+      "min": 16,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "enr_body_size",
+      "label": "Body size",
+      "min": 10,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "enr_eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 10,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "enr_icon_size",
+      "label": "Icon size",
+      "min": 12,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Enriched spacing (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_spacing",
+      "label": "Enable custom spacing",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_space_top",
+      "label": "Space top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "enr_space_bottom",
+      "label": "Space bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "enr_gap",
+      "label": "Grid gap",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Enriched media (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_media",
+      "label": "Enable custom media heights",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_media_height",
+      "label": "Media height (desktop)",
+      "min": 380,
+      "max": 580,
+      "step": 2,
+      "unit": "px",
+      "default": 480
+    },
+    {
+      "type": "range",
+      "id": "enr_media_height_mobile",
+      "label": "Media height (mobile)",
+      "min": 300,
+      "max": 500,
+      "step": 2,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Show call-to-action",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Find next"
+    }
+  ]
+}
+  {% endschema %}

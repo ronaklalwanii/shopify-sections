@@ -28,7 +28,10 @@ const catColor = (c) => CAT_COLORS[c] || '#8b8d93';
 function visibleSections() {
   const q = state.q.trim().toLowerCase();
   return state.sections.filter((s) => {
-    if (state.store !== 'all' && s.store !== state.store) return false;
+    // duplicates collapse into their canonical entry; a store filter still
+    // surfaces them when the group belongs to that store
+    if (s.duplicate && !(state.store !== 'all' && (s.group || []).includes(state.store))) return false;
+    if (state.store !== 'all' && !(s.group || [s.store]).includes(state.store)) return false;
     if (state.category !== 'all' && s.category !== state.category) return false;
     if (s.functional && !state.showFunctional) return false;
     if (q && !(`${s.name} ${s.file} ${s.store} ${s.category} ${(s.tags || []).join(' ')}`.toLowerCase().includes(q))) return false;
@@ -39,9 +42,11 @@ function visibleSections() {
 function counts() {
   const stores = { all: 0 }, cats = {};
   for (const s of state.sections) {
+    if (s.duplicate && state.store === 'all') continue; // counted via their canonical group
     if (s.functional && !state.showFunctional) continue;
+    const group = s.group || [s.store];
     stores.all++;
-    stores[s.store] = (stores[s.store] || 0) + 1;
+    for (const st of group) stores[st] = (stores[st] || 0) + 1;
     cats[s.category] = (cats[s.category] || 0) + 1;
   }
   return { stores, cats };
@@ -81,6 +86,7 @@ function renderGrid() {
       <div class="card-file">${esc(s.file)}</div>
       <div class="card-meta">
         <span class="chip store-chip">${s.store === 'custom' ? 'custom' : esc(s.store)}</span>
+        ${(s.group && s.group.length > 1) ? `<span class="chip" title="also in: ${esc(s.group.filter(x => x !== s.store).join(', '))}">${s.group.length} stores</span>` : ''}
         <span class="chip">${esc(s.category)}</span>
         ${s.functional ? '<span class="chip functional">functional</span>' : ''}
         <span class="meta-dim">${s.settings} set · ${s.blocks} blk</span>
@@ -162,7 +168,8 @@ async function openDetail(store, file) {
   const s = state.sections.find((x) => x.store === store && x.file === file);
   if (!s) return;
   state.current = s;
-  $('detailKicker').textContent = `${s.store === 'custom' ? 'Custom section' : `Store: ${s.store}`} · ${s.category}`;
+  const storeLabel = s.group && s.group.length > 1 ? `stores: ${s.group.join(', ')}` : (s.store === 'custom' ? 'Custom section' : `Store: ${s.store}`);
+  $('detailKicker').textContent = `${storeLabel} · ${s.category}`;
   $('detailTitle').textContent = s.name;
   $('detailEdit').hidden = !s.custom;
   $('detailDelete').hidden = !s.custom;

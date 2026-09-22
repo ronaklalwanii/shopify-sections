@@ -1,0 +1,88 @@
+{
+  "sections": {
+    "library": {
+      "type": "urbanedge--lookbook-collage",
+      "settings": {
+        "heading": "Not just clothing. \nA movement.",
+        "heading_size": "h1",
+        "show_star": true,
+        "star_color": "#f26a1b",
+        "text": "We create more than outfits — we create identity. Inspired by the streets and designed for individuality, our streetwear blends comfort with bold aesthetics for those who refuse to blend in.",
+        "button_label": "Learn More About Us",
+        "button_style": "outline",
+        "row_height": 110,
+        "padding": 72,
+        "background_color": "#111111",
+        "text_color": "#ffffff",
+        "enr_layout_width": "as_designed",
+        "enr_layout_align": "as_designed",
+        "enr_radius": 0,
+        "enr_border_width": "0",
+        "enable_custom_sizes": false,
+        "enr_title_size": 32,
+        "enr_body_size": 16,
+        "enr_eyebrow_size": 12,
+        "enr_icon_size": 24,
+        "enable_custom_spacing": false,
+        "enr_space_top": 48,
+        "enr_space_bottom": 48,
+        "enr_gap": 16,
+        "enable_custom_media": false,
+        "enr_media_height": 480,
+        "enr_media_height_mobile": 400,
+        "show_heading": true,
+        "show_cta": true
+      },
+      "blocks": {
+        "bl-1": {
+          "type": "tile",
+          "settings": {
+            "size": "lg"
+          }
+        },
+        "bl-2": {
+          "type": "tile",
+          "settings": {
+            "size": "sm"
+          }
+        },
+        "bl-3": {
+          "type": "tile",
+          "settings": {
+            "size": "tall"
+          }
+        },
+        "bl-4": {
+          "type": "tile",
+          "settings": {
+            "size": "md"
+          }
+        },
+        "bl-5": {
+          "type": "tile",
+          "settings": {
+            "size": "wide"
+          }
+        },
+        "bl-6": {
+          "type": "tile",
+          "settings": {
+            "size": "sm"
+          }
+        }
+      },
+      "block_order": [
+        "bl-1",
+        "bl-2",
+        "bl-3",
+        "bl-4",
+        "bl-5",
+        "bl-6"
+      ]
+    }
+  },
+  "order": [
+    "library"
+  ],
+  "layout": "library-preview"
+}

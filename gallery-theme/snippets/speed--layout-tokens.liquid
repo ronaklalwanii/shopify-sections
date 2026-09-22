@@ -1,0 +1,63 @@
+
+      {%- liquid
+        assign body_font_bold = settings.body_font | font_modify: 'weight', 'bold'
+        assign body_font_italic = settings.body_font | font_modify: 'style', 'italic'
+        assign heading_font_medium = settings.heading_font | font_modify: 'weight', '500'
+      -%}
+      {{ settings.body_font | font_face: font_display: 'swap' }}
+      {{ body_font_bold | font_face: font_display: 'swap' }}
+      {{ body_font_italic | font_face: font_display: 'swap' }}
+      {{ settings.heading_font | font_face: font_display: 'swap' }}
+      {{ heading_font_medium | font_face: font_display: 'swap' }}
+
+      /* Bundled brand fonts (ship with the theme — no font library dependency) */
+      @font-face { font-family: 'Anton'; src: url({{ 'speed--anton-400.woff2' | asset_url }}) format('woff2'); font-weight: 400; font-display: swap; }
+      @font-face { font-family: 'Archivo Black'; src: url({{ 'speed--archivo-black-400.woff2' | asset_url }}) format('woff2'); font-weight: 400; font-display: swap; }
+      @font-face { font-family: 'Jost'; src: url({{ 'speed--jost-400.woff2' | asset_url }}) format('woff2'); font-weight: 400; font-display: swap; }
+      @font-face { font-family: 'Jost'; src: url({{ 'speed--jost-500.woff2' | asset_url }}) format('woff2'); font-weight: 500; font-display: swap; }
+      @font-face { font-family: 'Jost'; src: url({{ 'speed--jost-600.woff2' | asset_url }}) format('woff2'); font-weight: 600; font-display: swap; }
+      @font-face { font-family: 'Jost'; src: url({{ 'speed--jost-700.woff2' | asset_url }}) format('woff2'); font-weight: 700; font-display: swap; }
+      @font-face { font-family: 'IBM Plex Mono'; src: url({{ 'speed--ibm-plex-mono-400.woff2' | asset_url }}) format('woff2'); font-weight: 400; font-display: swap; }
+      @font-face { font-family: 'IBM Plex Mono'; src: url({{ 'speed--ibm-plex-mono-500.woff2' | asset_url }}) format('woff2'); font-weight: 500; font-display: swap; }
+
+      :root {
+        --font-body: 'Jost', {% if settings.body_font.family %}{{ settings.body_font.family }}, {% endif %}{{ settings.body_font.fallback_families | default: 'sans-serif' }};
+        --font-heading: 'Anton', {% if settings.heading_font.family %}{{ settings.heading_font.family }}, {% endif %}sans-serif;
+        --font-display: 'Archivo Black', 'Anton', sans-serif;
+        --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+        --font-body-style: normal;
+        --font-heading-weight: 400;
+        --font-body-weight: 400;
+        --body-size: {{ settings.body_size | divided_by: 16.0 }}rem;
+        --heading-scale: {{ settings.heading_scale | divided_by: 100.0 }};
+        --heading-spacing: {{ settings.heading_spacing | divided_by: 100.0 }}em;
+        --nav-spacing: {{ settings.nav_spacing | divided_by: 100.0 }}em;
+        --page-width: {{ settings.page_width }}px;
+        --button-radius: {{ settings.button_radius }}px;
+        --card-radius: {{ settings.card_radius }}px;
+        --nav-uppercase: {% if settings.nav_uppercase %}uppercase{% else %}none{% endif %};
+      }
+
+      --color-background: {{ settings.colors_background }};
+      --color-background-secondary: {{ settings.colors_secondary_background }};
+      --color-foreground: {{ settings.colors_text }};
+      --color-heading: {{ settings.colors_heading }};
+      --color-accent: {{ settings.colors_accent }};
+      --color-accent-label: {{ settings.colors_accent_label }};
+      --color-outline-label: {{ settings.colors_outline_label }};
+      --color-link: {{ settings.colors_accent }};
+      --color-border: {{ settings.colors_background | color_darken: 9 | color_modify: 'alpha', 0.85 }};
+      --color-surface: {{ settings.colors_background | color_lighten: 3 }};
+      --color-text-muted: {{ settings.colors_text | color_modify: 'alpha', 0.62 }};
+
+      body {
+        {%- assign card_elems = '.card, .style-card, .testimonial-card, .article-card, .cart-summary' -%}
+      {% case settings.card_style %}
+        {% when 'bordered' %}
+          {{ card_elems }} { --card-border: 1px solid var(--color-border); --card-bg: transparent; }
+        {% when 'filled' %}
+          {{ card_elems }} { --card-border: 1px solid transparent; --card-bg: var(--color-surface); }
+        {% else %}
+          {{ card_elems }} { --card-border: none; --card-bg: transparent; }
+      {% endcase %}
+    
