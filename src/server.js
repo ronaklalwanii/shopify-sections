@@ -7,11 +7,14 @@ const express = require('express');
 const { renderStoreSection, renderSectionSource, renderSnippet, findStore } = require('./renderer');
 
 const ROOT = path.resolve(__dirname, '..');
-const DATA_DIR = process.env.DATA_DIR || path.join(ROOT, 'data');
-const DATA_INDEX = path.join(DATA_DIR, 'index.json');
-const GALLERY_MANIFEST = path.join(DATA_DIR, 'gallery-manifest.json');
-const STORE_CONFIG = path.join(DATA_DIR, 'store-config.json');
-const CUSTOM_DIR = process.env.CUSTOM_DIR || path.join(ROOT, 'custom-sections');
+const IS_SERVERLESS = !!process.env.VERCEL;
+// Serverless filesystems are ephemeral: only /tmp is writable.
+const WRITABLE_DIR = process.env.DATA_DIR || (IS_SERVERLESS ? '/tmp/sl-data' : ROOT);
+const DATA_DIR = path.join(WRITABLE_DIR, 'data');
+const DATA_INDEX = path.join(ROOT, 'data', 'index.json');
+const GALLERY_MANIFEST = path.join(ROOT, 'data', 'gallery-manifest.json');
+const STORE_CONFIG = path.join(ROOT, 'data', 'store-config.json');
+const CUSTOM_DIR = process.env.CUSTOM_DIR || (IS_SERVERLESS ? '/tmp/sl-custom' : path.join(ROOT, 'custom-sections'));
 const PORT = process.env.PORT || 4173;
 
 fs.mkdirSync(CUSTOM_DIR, { recursive: true });
@@ -64,6 +67,69 @@ function gitCommit(msg) {
     }
     return committed.status === 0;
   } catch { return false; } // nothing to commit
+}
+
+// On serverless, persist saved sections through the GitHub Contents API
+// (no git binary available): DATA_REPO="owner/repo" + DATA_TOKEN.
+const GH_DATA = (process.env.DATA_REPO && process.env.DATA_TOKEN)
+  ? { repo: process.env.DATA_REPO, token: process.env.DATA_TOKEN } : null;
+
+async function ghReq(path, opts = {}) {
+  return fetch(`https://api.github.com/repos/${GH_DATA.repo}/contents/${path}`, {
+    ...opts,
+    headers: {
+      Authorization: `Bearer ${GH_DATA.token}`,
+      Accept: 'application/vnd.github+json',
+      'User-Agent': 'section-library',
+      ...(opts.body ? { 'Content-Type': 'application/json' } : {}),
+      ...(opts.headers || {}),
+    },
+  });
+}
+
+async function ghRestore() {
+  if (!GH_DATA) return;
+  try {
+    const r = await ghReq('custom-sections');
+    if (!r.ok) { console.warn('gh restore: listing failed', r.status); return; }
+    const items = await r.json();
+    for (const item of items.filter((i) => i.type === 'file')) {
+      const f = await ghReq(`custom-sections/${item.name}`);
+      if (!f.ok) continue;
+      const j = await f.json();
+      fs.writeFileSync(path.join(CUSTOM_DIR, item.name), Buffer.from(j.content, 'base64'));
+    }
+    console.log(`gh restore: ${items.length} files restored`);
+  } catch (e) { console.warn('gh restore failed:', e.message); }
+}
+
+async function ghPersistFile(name, contentStr) {
+  if (!GH_DATA) return;
+  try {
+    const existing = await ghReq(`custom-sections/${name}`);
+    const sha = existing.ok ? (await existing.json()).sha : undefined;
+    await ghReq(`custom-sections/${name}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        message: `section-library: save ${name}`,
+        content: Buffer.from(contentStr, 'utf8').toString('base64'),
+        ...(sha ? { sha } : {}),
+      }),
+    });
+  } catch (e) { console.warn(`gh persist ${name} failed:`, e.message); }
+}
+
+async function ghDeleteFile(name) {
+  if (!GH_DATA) return;
+  try {
+    const existing = await ghReq(`custom-sections/${name}`);
+    if (!existing.ok) return;
+    const sha = (await existing.json()).sha;
+    await ghReq(`custom-sections/${name}`, {
+      method: 'DELETE',
+      body: JSON.stringify({ message: `section-library: delete ${name}`, sha }),
+    });
+  } catch (e) { console.warn(`gh delete ${name} failed:`, e.message); }
 }
 
 // On boot, restore saved custom sections from the GitHub data repo if configured.
@@ -173,6 +239,10 @@ app.post('/login', (req, res) => {
   }
 });
 
+// Cold-start gate: restore persisted custom sections before the first request.
+const bootReady = IS_SERVERLESS ? ghRestore().catch(() => {}) : Promise.resolve();
+if (IS_SERVERLESS) app.use((req, res, next) => { bootReady.then(() => next()); });
+
 app.use(express.static(path.join(ROOT, 'public')));
 
 function loadIndex() { return JSON.parse(fs.readFileSync(DATA_INDEX, 'utf8')); }
@@ -259,12 +329,16 @@ app.post('/api/render-preview', async (req, res) => {
   res.json(res2);
 });
 
-app.post('/api/custom', (req, res) => {
-  try { res.json(saveCustomSection(req.body || {}, { isNew: true })); }
-  catch (e) { res.status(400).json({ error: e.message }); }
+app.post('/api/custom', async (req, res) => {
+  try {
+    const meta = saveCustomSection(req.body || {}, { isNew: true });
+    await ghPersistFile(`${meta.slug}.liquid`, req.body.liquid || '');
+    await ghPersistFile(`${meta.slug}.json`, JSON.stringify(meta, null, 2));
+    res.json(meta);
+  } catch (e) { res.status(400).json({ error: e.message }); }
 });
 
-app.put('/api/custom/:slug', (req, res) => {
+app.put('/api/custom/:slug', async (req, res) => {
   try {
     const existing = customSectionMeta(req.params.slug);
     if (!existing) return res.status(404).json({ error: 'not found' });
@@ -273,19 +347,23 @@ app.put('/api/custom/:slug', (req, res) => {
       // renamed — remove the old files
       for (const f of [`${req.params.slug}.liquid`, `${req.params.slug}.json`]) {
         try { fs.unlinkSync(path.join(CUSTOM_DIR, f)); } catch {}
+        await ghDeleteFile(f);
       }
       gitCommit(`Rename section: ${existing.name} -> ${meta.name}`);
     }
+    await ghPersistFile(`${meta.slug}.liquid`, req.body.liquid || '');
+    await ghPersistFile(`${meta.slug}.json`, JSON.stringify(meta, null, 2));
     res.json(meta);
   } catch (e) { res.status(400).json({ error: e.message }); }
 });
 
-app.delete('/api/custom/:slug', (req, res) => {
+app.delete('/api/custom/:slug', async (req, res) => {
   const slug = req.params.slug;
   const meta = customSectionMeta(slug);
   if (!meta) return res.status(404).json({ error: 'not found' });
   for (const f of [`${slug}.liquid`, `${slug}.json`]) {
     try { fs.unlinkSync(path.join(CUSTOM_DIR, f)); } catch {}
+    await ghDeleteFile(f);
   }
   gitCommit(`Delete section: ${meta.name}`);
   res.json({ ok: true });
@@ -293,7 +371,7 @@ app.delete('/api/custom/:slug', (req, res) => {
 
 /* ------------------------------- preview cache ------------------------------- */
 
-const CACHE_DIR = path.join(ROOT, 'data/preview-cache');
+const CACHE_DIR = path.join(WRITABLE_DIR, 'data', 'preview-cache');
 const CACHE_TTL = 12 * 3600 * 1000; // 12h
 
 function previewCacheGet(key) {
@@ -506,6 +584,12 @@ app.use((req, res) => {
   res.status(404).json({ error: 'not found' });
 });
 
-gitInit();
-initDataRepo();
-app.listen(PORT, () => console.log(`Section Library → http://localhost:${PORT}`));
+if (IS_SERVERLESS) {
+  // Vercel: bootReady handles data restore; no listen call (serverless).
+} else {
+  gitInit();
+  initDataRepo();
+  app.listen(PORT, () => console.log(`Section Library → http://localhost:${PORT}`));
+}
+
+module.exports = app;

@@ -14,7 +14,26 @@ npm start          # → http://localhost:4173
 
 ## Deploy (free, always-on for your team)
 
-The app ships as a Docker container (`Dockerfile`). Two free hosting routes:
+### Vercel (works with your existing account + domain)
+
+The repo is Vercel-ready (`vercel.json` + `api/index.js`). Custom sections are
+persisted through a private GitHub "data repo" (serverless has no disk).
+
+1. Push this repo to a **private** GitHub repo.
+2. Vercel → **Add New → Project → Import** the repo (framework: Other — no build step).
+3. Environment variables:
+   - `ACCESS_PASSWORD` — your team's login password
+   - `STORE_URL`, `STOREFRONT_PASSWORD`, `PAGE_HANDLE=section-library` — live previews
+   - `DATA_REPO` = `you/section-library-data`, `DATA_TOKEN` = a GitHub fine-grained
+     token with **Contents: read/write** on that repo (create the empty private repo
+     first). Without these, saved custom sections vanish on every function restart.
+4. Deploy, then Settings → Domains → attach your domain.
+
+Notes: the ~52MB `stores/` bundle ships inside the function; serverless cold starts
+add ~1s to the first request after inactivity; the preview cache lives in `/tmp`
+(warm until the instance recycles).
+
+The app ships as a Docker container (`Dockerfile`) too — see the alternatives below.
 
 ### Hugging Face Spaces (easiest)
 
