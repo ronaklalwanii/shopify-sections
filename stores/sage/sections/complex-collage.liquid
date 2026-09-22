@@ -1,0 +1,551 @@
+{%- comment -%}
+  Complex collage — "All-in-One Skincare Complex".
+  Top row: intro left, product trio center over a giant background word that
+  bleeds off the right edge. Bottom row: wide card left, copy + CTA right.
+{%- endcomment -%}
+<section
+  class="cplx cplx-{{ section.id }}"
+  style="--section-space: {{ section.settings.padding | default: 52 }}px; --cplx-giant-color: {{ section.settings.giant_color }}; background: {{ section.settings.background_color }};"
+>
+  {%- if section.settings.giant_text != blank -%}
+    <span class="cplx__giant" aria-hidden="true">{{ section.settings.giant_text | escape }}</span>
+  {%- endif -%}
+
+  <div class="page-width">
+    <div class="cplx__row cplx__row--top">
+      <div class="cplx__intro">
+        {%- if section.settings.show_heading and section.settings.heading != blank -%}
+          <h2 class="cplx__heading">{{ section.settings.heading | escape | newline_to_br }}</h2>
+        {%- endif -%}
+        {%- if section.settings.intro_text != blank -%}
+          <p class="cplx__intro-text">{{ section.settings.intro_text | escape }}</p>
+        {%- endif -%}
+      </div>
+
+      <div class="cplx__stage">
+        <div class="cplx__shot cplx__shot--trio">
+          {%- if section.settings.image_top != blank -%}
+            {{ section.settings.image_top | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '500, 750, 1000', sizes: '(min-width: 990px) 26vw, 100vw', alt: section.settings.heading }}
+          {%- else -%}
+            {{ 'product-3' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+    <div class="cplx__row cplx__row--bottom">
+      <div class="cplx__card">
+        <div class="cplx__shot cplx__shot--wide">
+          {%- if section.settings.image_bottom != blank -%}
+            {{ section.settings.image_bottom | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '700, 1000, 1400', sizes: '(min-width: 990px) 50vw, 100vw', alt: section.settings.heading }}
+          {%- else -%}
+            {{ 'product-4' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="cplx__aside">
+        {%- if section.settings.body_text != blank -%}
+          <p class="cplx__body-text">{{ section.settings.body_text | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.show_cta and section.settings.link_label != blank -%}
+          {% render 'button', label: section.settings.link_label, link: section.settings.link, style: 'outline' %}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% style %}
+  .cplx-{{ section.id }} {
+    position: relative;
+    overflow: hidden;
+    padding-block: var(--section-space);
+  }
+  .cplx-{{ section.id }} .cplx__giant {
+    position: absolute;
+    top: clamp(-3.5rem, -2.8vw, -1rem);
+    right: 1.5vw;
+    z-index: 0;
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: clamp(7rem, 22vw, 21rem);
+    line-height: 0.8;
+    letter-spacing: -0.02em;
+    color: var(--cplx-giant-color);
+    pointer-events: none;
+    user-select: none;
+  }
+  .cplx-{{ section.id }} .cplx__row { position: relative; z-index: 1; }
+  .cplx-{{ section.id }} .cplx__row--top {
+    display: grid;
+    grid-template-columns: 1.25fr 0.95fr 1.1fr;
+    column-gap: clamp(1.5rem, 3vw, 3.2rem);
+    align-items: end;
+  }
+  .cplx-{{ section.id }} .cplx__intro { grid-column: 1; }
+  .cplx-{{ section.id }} .cplx__heading {
+    font-size: clamp(1.9rem, 3.7vw, 3.3rem);
+    line-height: 1.12;
+    margin-bottom: 1rem;
+  }
+  .cplx-{{ section.id }} .cplx__intro-text {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    max-width: 24rem;
+  }
+  .cplx-{{ section.id }} .cplx__stage { grid-column: 2; align-self: start; display: flex; justify-content: center; }
+  .cplx-{{ section.id }} .cplx__shot {
+    border-radius: var(--card-radius);
+    overflow: hidden;
+  }
+  .cplx-{{ section.id }} .cplx__shot img,
+  .cplx-{{ section.id }} .cplx__shot svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .cplx-{{ section.id }} .cplx__shot--trio { width: min(100%, 24rem); }
+  .cplx-{{ section.id }} .cplx__shot--trio img,
+  .cplx-{{ section.id }} .cplx__shot--trio svg { aspect-ratio: 7 / 5; }
+  .cplx-{{ section.id }} .cplx__row--bottom {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    column-gap: clamp(1.5rem, 3vw, 3.2rem);
+    align-items: start;
+    margin-top: clamp(0.75rem, 1.2vw, 1.25rem);
+  }
+  .cplx-{{ section.id }} .cplx__shot--wide img,
+  .cplx-{{ section.id }} .cplx__shot--wide svg { aspect-ratio: 21 / 9; }
+  .cplx-{{ section.id }} .cplx__aside { max-width: 36rem; }
+  .cplx-{{ section.id }} .cplx__body-text {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--color-foreground);
+    margin-bottom: 1.4rem;
+  }
+  @media (max-width: 899px) {
+    .cplx-{{ section.id }} .cplx__row--top,
+    .cplx-{{ section.id }} .cplx__row--bottom {
+      grid-template-columns: 1fr;
+      row-gap: 1.5rem;
+    }
+    .cplx-{{ section.id }} .cplx__stage { justify-content: start; }
+  }
+{% endstyle %}
+
+{% style %}
+  /* phase 2 enrichment: every rule is merchant-gated; defaults change nothing */
+  {%- if section.settings.enr_heading_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-heading: {{ section.settings.enr_heading_color }}; }
+  #shopify-section-{{ section.id }} h1, #shopify-section-{{ section.id }} h2, #shopify-section-{{ section.id }} h3, #shopify-section-{{ section.id }} [class*="__heading"], #shopify-section-{{ section.id }} [class*="__title"] { color: var(--enr-heading); }
+  {%- endif -%}
+  {%- if section.settings.enr_text_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-text: {{ section.settings.enr_text_color }}; }
+  #shopify-section-{{ section.id }} p, #shopify-section-{{ section.id }} li, #shopify-section-{{ section.id }} [class*="__text"], #shopify-section-{{ section.id }} [class*="__sub"], #shopify-section-{{ section.id }} [class*="__desc"] { color: var(--enr-text); }
+  {%- endif -%}
+  {%- if section.settings.enr_accent_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-accent: {{ section.settings.enr_accent_color }}; }
+  #shopify-section-{{ section.id }} .eyebrow, #shopify-section-{{ section.id }} [class*="__eyebrow"], #shopify-section-{{ section.id }} [class*="__kicker"] { color: var(--enr-accent); }
+  {%- endif -%}
+  {%- if section.settings.enr_card_bg != blank -%}
+  #shopify-section-{{ section.id }} { --enr-card: {{ section.settings.enr_card_bg }}; }
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__box"] { background-color: var(--enr-card); }
+  {%- endif -%}
+  {%- if section.settings.enr_border_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-border: {{ section.settings.enr_border_color }}; }
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__box"] { border-color: var(--enr-border); }
+  {%- endif -%}
+  {%- if section.settings.enr_muted_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-muted: {{ section.settings.enr_muted_color }}; }
+  #shopify-section-{{ section.id }} small, #shopify-section-{{ section.id }} [class*="__meta"], #shopify-section-{{ section.id }} [class*="__note"], #shopify-section-{{ section.id }} [class*="__caption"] { color: var(--enr-muted); }
+  {%- endif -%}
+  {%- if section.settings.enr_fallback_bg != blank -%}
+  #shopify-section-{{ section.id }} { --enr-fallback: {{ section.settings.enr_fallback_bg }}; }
+  #shopify-section-{{ section.id }} [class*="__placeholder"], #shopify-section-{{ section.id }} .placeholder-svg { background-color: var(--enr-fallback); }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_width == 'narrow' -%}
+  #shopify-section-{{ section.id }} .page-width { max-width: 46rem; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_width == 'wide' -%}
+  #shopify-section-{{ section.id }} .page-width { max-width: none; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'left' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: left; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'center' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: center; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'right' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: right; }
+  {%- endif -%}
+  {%- if section.settings.enr_radius > 0 -%}
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__media"], #shopify-section-{{ section.id }} img { border-radius: {{ section.settings.enr_radius }}px; }
+  {%- endif -%}
+  {%- if section.settings.enr_border_width != '0' -%}
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"] { border: {{ section.settings.enr_border_width }}px solid var(--color-border, currentColor); }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_sizes -%}
+  #shopify-section-{{ section.id }} [class*="__heading"], #shopify-section-{{ section.id }} h1, #shopify-section-{{ section.id }} h2, #shopify-section-{{ section.id }} h3 { font-size: {{ section.settings.enr_title_size }}px; }
+  #shopify-section-{{ section.id }} p, #shopify-section-{{ section.id }} li, #shopify-section-{{ section.id }} [class*="__text"] { font-size: {{ section.settings.enr_body_size }}px; }
+  #shopify-section-{{ section.id }} .eyebrow, #shopify-section-{{ section.id }} [class*="__eyebrow"] { font-size: {{ section.settings.enr_eyebrow_size }}px; }
+  #shopify-section-{{ section.id }} [class*="__icon"] svg, #shopify-section-{{ section.id }} svg.icon { width: {{ section.settings.enr_icon_size }}px; height: {{ section.settings.enr_icon_size }}px; }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_spacing -%}
+  #shopify-section-{{ section.id }} > section, #shopify-section-{{ section.id }} > div { padding-block: {{ section.settings.enr_space_top }}px {{ section.settings.enr_space_bottom }}px; }
+  #shopify-section-{{ section.id }} [class*="__grid"], #shopify-section-{{ section.id }} [class*="__row"], #shopify-section-{{ section.id }} [class*="__cards"], #shopify-section-{{ section.id }} [class*="__list"] { gap: {{ section.settings.enr_gap }}px; }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_media -%}
+  #shopify-section-{{ section.id }} [class*="__media"] img, #shopify-section-{{ section.id }} [class*="__image"] img, #shopify-section-{{ section.id }} [class*="__photo"] img { max-height: {{ section.settings.enr_media_height }}px; width: 100%; object-fit: cover; }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} [class*="__media"] img, #shopify-section-{{ section.id }} [class*="__image"] img, #shopify-section-{{ section.id }} [class*="__photo"] img { max-height: {{ section.settings.enr_media_height_mobile }}px; }
+  }
+  {%- endif -%}
+{% endstyle %}
+{% schema %}
+{
+  "name": "Complex collage",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "All-in-One\nSkincare Complex"
+    },
+    {
+      "type": "textarea",
+      "id": "intro_text",
+      "label": "Intro text",
+      "default": "Sage is about conscious simplicity — effective formulas, thoughtful ingredients."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_top",
+      "label": "Top image (product trio)"
+    },
+    {
+      "type": "text",
+      "id": "giant_text",
+      "label": "Giant background word",
+      "default": "new"
+    },
+    {
+      "type": "color",
+      "id": "giant_color",
+      "label": "Giant word color",
+      "default": "#b9c3a6"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_bottom",
+      "label": "Bottom wide image"
+    },
+    {
+      "type": "textarea",
+      "id": "body_text",
+      "label": "Body text",
+      "default": "Multifunctional line designed to simplify your daily routine without compromising results."
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Button label",
+      "default": "[Catalog]"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f4efe4"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 24,
+      "max": 140,
+      "step": 2,
+      "unit": "px",
+      "default": 52
+    },
+    {
+      "type": "header",
+      "content": "Enriched colors (blank = as designed)"
+    },
+    {
+      "type": "color",
+      "id": "enr_heading_color",
+      "label": "Heading color"
+    },
+    {
+      "type": "color",
+      "id": "enr_text_color",
+      "label": "Body text color"
+    },
+    {
+      "type": "color",
+      "id": "enr_accent_color",
+      "label": "Accent / eyebrow color"
+    },
+    {
+      "type": "color",
+      "id": "enr_card_bg",
+      "label": "Card background"
+    },
+    {
+      "type": "color",
+      "id": "enr_border_color",
+      "label": "Card border color"
+    },
+    {
+      "type": "color",
+      "id": "enr_muted_color",
+      "label": "Muted text color"
+    },
+    {
+      "type": "color",
+      "id": "enr_fallback_bg",
+      "label": "Image fallback background"
+    },
+    {
+      "type": "header",
+      "content": "Enriched layout"
+    },
+    {
+      "type": "select",
+      "id": "enr_layout_width",
+      "label": "Content width",
+      "options": [
+        {
+          "value": "as_designed",
+          "label": "As designed"
+        },
+        {
+          "value": "narrow",
+          "label": "Narrow"
+        },
+        {
+          "value": "wide",
+          "label": "Wide"
+        }
+      ],
+      "default": "as_designed"
+    },
+    {
+      "type": "select",
+      "id": "enr_layout_align",
+      "label": "Intro alignment",
+      "options": [
+        {
+          "value": "as_designed",
+          "label": "As designed"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "as_designed"
+    },
+    {
+      "type": "header",
+      "content": "Enriched shape"
+    },
+    {
+      "type": "range",
+      "id": "enr_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "enr_border_width",
+      "label": "Card border width",
+      "options": [
+        {
+          "value": "0",
+          "label": "None"
+        },
+        {
+          "value": "1",
+          "label": "1 px"
+        },
+        {
+          "value": "2",
+          "label": "2 px"
+        },
+        {
+          "value": "3",
+          "label": "3 px"
+        },
+        {
+          "value": "4",
+          "label": "4 px"
+        }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "header",
+      "content": "Enriched sizes (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_sizes",
+      "label": "Enable custom sizes",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_title_size",
+      "label": "Title size",
+      "min": 16,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "enr_body_size",
+      "label": "Body size",
+      "min": 10,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "enr_eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 10,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "enr_icon_size",
+      "label": "Icon size",
+      "min": 12,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Enriched spacing (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_spacing",
+      "label": "Enable custom spacing",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_space_top",
+      "label": "Space top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "enr_space_bottom",
+      "label": "Space bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "enr_gap",
+      "label": "Grid gap",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Enriched media (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_media",
+      "label": "Enable custom media heights",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_media_height",
+      "label": "Media height (desktop)",
+      "min": 380,
+      "max": 580,
+      "step": 2,
+      "unit": "px",
+      "default": 480
+    },
+    {
+      "type": "range",
+      "id": "enr_media_height_mobile",
+      "label": "Media height (mobile)",
+      "min": 300,
+      "max": 500,
+      "step": 2,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Show heading",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Show call-to-action",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Complex collage"
+    }
+  ]
+}
+  {% endschema %}

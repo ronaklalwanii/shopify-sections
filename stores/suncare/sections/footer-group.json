@@ -1,0 +1,31 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "settings": {
+        "brand_name": "Suncare",
+        "menu": "suncare-footer",
+        "show_social": true,
+        "social_bg": "#4c7a5d",
+        "copyright": "© 2025, Made With Love By Jafar",
+        "legal": "Privacy Policy | Terms & Conditions",
+        "colors_background": "#dceeda",
+        "colors_text": "#2e4633"
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

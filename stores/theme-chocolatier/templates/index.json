@@ -1,0 +1,307 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "blocks": {
+        "btn": {
+          "type": "button",
+          "settings": {
+            "label": "Shop now",
+            "link": "/collections/all",
+            "style": "dark"
+          }
+        }
+      },
+      "block_order": [
+        "btn"
+      ],
+      "settings": {
+        "layout": "split",
+        "image_position": "right",
+        "height": "md",
+        "eyebrow": "Pure indulgence. True happiness ✦",
+        "heading": "Experience Chocolate\nLike <em>Never</em> Before",
+        "heading_size": "h0",
+        "ornament": true,
+        "subheading": "<p>Delight in the finest handcrafted chocolates,<br>made with premium ingredients and endless passion.</p>",
+        "content_align": "center",
+        "avatars_count": 0,
+        "meta_text": "",
+        "colors_background": "#a8b29c",
+        "colors_text": "#2f3627"
+      }
+    },
+    "usp": {
+      "type": "usp-bar",
+      "blocks": {
+        "u1": {
+          "type": "item",
+          "settings": {
+            "icon": "leaf",
+            "title": "Finest Ingredients",
+            "text": "We use the world's finest cocoa"
+          }
+        },
+        "u2": {
+          "type": "item",
+          "settings": {
+            "icon": "hands",
+            "title": "Handcrafted",
+            "text": "Made with love by expert chocolatiers"
+          }
+        },
+        "u3": {
+          "type": "item",
+          "settings": {
+            "icon": "leaf",
+            "title": "Sustainable",
+            "text": "Eco-friendly packaging and ethical sourcing"
+          }
+        },
+        "u4": {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "title": "Fast Delivery",
+            "text": "Quick & secure delivery at your doorstep"
+          }
+        }
+      },
+      "block_order": [
+        "u1",
+        "u2",
+        "u3",
+        "u4"
+      ],
+      "settings": {
+        "style": "bar",
+        "dividers": true,
+        "card": true,
+        "overlap": true,
+        "spacing": "compact"
+      }
+    },
+    "bestsellers": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "bestsellers",
+        "products_count": "5",
+        "layout": "grid",
+        "columns": "5",
+        "image_ratio": "portrait",
+        "show_subtitle": true,
+        "subtitle_source": "vendor",
+        "show_price": true,
+        "show_rating": true,
+        "show_button": false,
+        "eyebrow": "",
+        "heading": "Our Bestsellers",
+        "subheading": "Handpicked favorites loved by our customers",
+        "ornate": true,
+        "section_button_label": "View all products",
+        "button_style": "dark",
+        "padding": 72
+      }
+    },
+    "story": {
+      "type": "image-with-text",
+      "blocks": {
+        "btn": {
+          "type": "button",
+          "settings": {
+            "label": "Our story",
+            "link": "/pages/about",
+            "style": "dark"
+          }
+        },
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "icon": "leaf",
+            "title": "Premium Ingredients",
+            "text": "Sourced from the world's finest cocoa farms"
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "icon": "hands",
+            "title": "Made with Love",
+            "text": "Every piece is handcrafted with care & passion"
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "icon": "gift",
+            "title": "Beautifully Packaged",
+            "text": "Elegant packaging for memorable moments"
+          }
+        }
+      },
+      "block_order": [
+        "btn",
+        "f1",
+        "f2",
+        "f3"
+      ],
+      "settings": {
+        "image_position": "right",
+        "image_ratio": "4 / 3",
+        "eyebrow": "",
+        "ornament": true,
+        "heading": "Crafted with Passion,\nMade with Love",
+        "text": "<p>At Cocobella, every chocolate is more than just a treat — it's an experience of luxury, taste & emotion.</p>",
+        "text_align": "left",
+        "padding": 72,
+        "colors_background": "#a5b09b",
+        "colors_text": "#2f3627"
+      }
+    },
+    "collections": {
+      "type": "collection-list",
+      "blocks": {
+        "col-1": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "truffles",
+            "label": "Truffles"
+          }
+        },
+        "col-2": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "chocolate-bars",
+            "label": "Chocolate Bars"
+          }
+        },
+        "col-3": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "gift-boxes",
+            "label": "Gift Boxes"
+          }
+        },
+        "col-4": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "pralines",
+            "label": "Pralines"
+          }
+        },
+        "col-5": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "chocolate-almonds",
+            "label": "Chocolate Almonds"
+          }
+        },
+        "col-6": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "new-arrivals-sweet",
+            "label": "New Arrivals"
+          }
+        }
+      },
+      "block_order": [
+        "col-1",
+        "col-2",
+        "col-3",
+        "col-4",
+        "col-5",
+        "col-6"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "Explore Our Collections",
+        "ornate": true,
+        "columns": 6,
+        "text_position": "overlay",
+        "scrim_style": "flat",
+        "card_ratio": "1 / 1",
+        "link_label": "Shop now",
+        "padding": 72
+      }
+    },
+    "quote": {
+      "type": "quote-stats",
+      "blocks": {
+        "s1": {
+          "type": "stat",
+          "settings": {
+            "icon": "heart",
+            "value": "10K+",
+            "label": "Happy customers"
+          }
+        },
+        "s2": {
+          "type": "stat",
+          "settings": {
+            "icon": "box",
+            "value": "25+",
+            "label": "Premium products"
+          }
+        },
+        "s3": {
+          "type": "stat",
+          "settings": {
+            "icon": "star",
+            "value": "4.9",
+            "label": "Average rating"
+          }
+        },
+        "s4": {
+          "type": "stat",
+          "settings": {
+            "icon": "globe",
+            "value": "Worldwide",
+            "label": "Shipping"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "settings": {
+        "quote": "The taste, the quality, the packaging — everything is just perfect. Cocobella is my go-to for every celebration!",
+        "author": "– Sarah M.",
+        "padding": 64
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "icon": "gift",
+        "heading": "Stay sweet with us!",
+        "text": "Subscribe to get special offers, new arrivals, and more.",
+        "placeholder": "Enter your email address",
+        "button_label": "Subscribe",
+        "button_style": "primary",
+        "colors_background": "#4a5240",
+        "colors_text": "#eceada"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "usp",
+    "bestsellers",
+    "story",
+    "collections",
+    "quote",
+    "newsletter"
+  ]
+}

@@ -1,0 +1,251 @@
+{%- comment -%}
+  Aura Hero — split editorial hero: text column (eyebrow, serif title, description,
+  button) + image column + trust item blocks beneath the content.
+  Self-contained. Scoped styles. Responsive (stacks below 900px).
+{%- endcomment -%}
+
+<section id="AuraHero-{{ section.id }}" class="ah">
+  {%- style -%}
+    #AuraHero-{{ section.id }} {
+      --ah-bg: {{ section.settings.bg_color }};
+      --ah-min-h: {{ section.settings.min_height }}px;
+      --ah-pad-top: {{ section.settings.padding_top }}px;
+      --ah-pad-bottom: {{ section.settings.padding_bottom }}px;
+      --ah-radius: {{ section.settings.image_radius }}px;
+      --ah-eyebrow-c: {{ section.settings.eyebrow_color }};
+      --ah-title-c: {{ section.settings.title_color }};
+      --ah-title-s: {{ section.settings.title_size }}px;
+      --ah-desc-c: {{ section.settings.desc_color }};
+      --ah-btn-bg: {{ section.settings.btn_bg }};
+      --ah-btn-c: {{ section.settings.btn_text_color }};
+      --ah-btn-r: {{ section.settings.btn_radius }}px;
+      --ah-content-w: {{ section.settings.content_max_width }}px;
+      background: var(--ah-bg);
+    }
+    #AuraHero-{{ section.id }} {
+      overflow-x: clip;
+    }
+    #AuraHero-{{ section.id }} .ah__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 48px;
+      align-items: center;
+      min-height: var(--ah-min-h);
+      padding: var(--ah-pad-top) 0 var(--ah-pad-bottom);
+    }
+    #AuraHero-{{ section.id }} .ah__content {
+      min-width: 0;
+      max-width: none;
+      padding-left: max(40px, calc((100vw - 1400px) / 2 + 40px));
+      padding-right: 48px;
+    }
+    #AuraHero-{{ section.id }} .ah__title,
+    #AuraHero-{{ section.id }} .ah__desc { max-width: none; }
+    #AuraHero-{{ section.id }} .ah__eyebrow {
+      margin: 0 0 18px;
+      font-size: 11px;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--ah-eyebrow-c);
+    }
+    #AuraHero-{{ section.id }} .ah__title {
+      margin: 0 0 20px;
+      font-family: var(--ul-heading-font-family, Georgia, serif);
+      font-weight: 500;
+      font-size: var(--ah-title-s);
+      line-height: 1.12;
+      letter-spacing: -.01em;
+      color: var(--ah-title-c);
+    }
+    #AuraHero-{{ section.id }} .ah__desc {
+      margin: 0 0 30px;
+      color: var(--ah-desc-c);
+      font-size: 15.5px;
+      line-height: 1.65;
+      max-width: 42ch;
+    }
+    #AuraHero-{{ section.id }} .ah__desc p { margin: 0 0 10px; }
+    #AuraHero-{{ section.id }} .ah__btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 30px;
+      border-radius: var(--ah-btn-r);
+      background: var(--ah-btn-bg);
+      color: var(--ah-btn-c);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: opacity 200ms ease;
+    }
+    #AuraHero-{{ section.id }} .ah__btn:hover { opacity: .85; }
+    #AuraHero-{{ section.id }} .ah__btn::after { content: "→"; font-size: 14px; }
+    #AuraHero-{{ section.id }} .ah__media {
+      border-radius: 0;
+      overflow: hidden;
+      align-self: stretch;
+      min-height: var(--ah-min-h);
+    }
+    {%- if section.settings.layout_image_position == 'image-left' -%}
+    #AuraHero-{{ section.id }} .ah__media { order: -1; }
+    {%- endif -%}
+    #AuraHero-{{ section.id }} .ah__media img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    #AuraHero-{{ section.id }} .ah__trust {
+      display: flex;
+      gap: 22px 28px;
+      flex-wrap: wrap;
+      max-width: none;
+      margin-right: -48px;
+      margin-top: 40px;
+      padding-top: 26px;
+      border-top: 1px solid rgba(0,0,0,.08);
+    }
+    #AuraHero-{{ section.id }} .ah__trust-item {
+      display: flex; align-items: center; gap: 11px;
+    }
+    #AuraHero-{{ section.id }} .ah__trust-item svg {
+      width: 22px; height: 22px; stroke: currentColor; fill: none;
+      stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+    #AuraHero-{{ section.id }} .ah__trust-item img {
+      width: 22px; height: 22px; object-fit: contain; flex-shrink: 0;
+    }
+    #AuraHero-{{ section.id }} .ah__trust-item span {
+      font-size: 10.5px; font-weight: 600; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--ah-eyebrow-c); line-height: 1.4;
+      white-space: nowrap;
+    }
+    @media (max-width: 900px) {
+      #AuraHero-{{ section.id }} .ah__grid { gap: 36px; }
+      #AuraHero-{{ section.id }} .ah__content { padding-left: 20px; padding-right: 20px; }
+      #AuraHero-{{ section.id }} .ah__title { font-size: calc(var(--ah-title-s) * .62); }
+      #AuraHero-{{ section.id }} .ah__media { min-height: 320px; order: -1; }
+      #AuraHero-{{ section.id }} .ah__trust { gap: 20px; margin-top: 32px; }
+    }
+  {%- endstyle -%}
+
+  <div class="ah__grid">
+    <div class="ah__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="ah__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.title != blank -%}
+        <h2 class="ah__title">{{ section.settings.title | newline_to_br }}</h2>
+      {%- endif -%}
+      {%- if section.settings.description != blank -%}
+        <div class="ah__desc rte">{{ section.settings.description }}</div>
+      {%- endif -%}
+      {%- if section.settings.btn_label != blank -%}
+        <a class="ah__btn" {% if section.settings.btn_link != blank %}href="{{ section.settings.btn_link }}"{% endif %}>
+          {{ section.settings.btn_label }}
+        </a>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <div class="ah__trust">
+          {%- for block in section.blocks -%}
+            <div class="ah__trust-item" {{ block.shopify_attributes }}>
+              {%- if block.settings.custom_icon != blank -%}
+                <img src="{{ block.settings.custom_icon | image_url: width: 44 }}" alt="" loading="lazy">
+              {%- elsif block.settings.icon != blank -%}
+                {%- case block.settings.icon -%}
+                  {%- when 'leaf' -%}
+                    <svg viewBox="0 0 24 24"><path d="M5 21c0-9 4-16 14-16 0 10-5 14-11 14-1.5 0-3-.5-3-.5z"/><path d="M5 21c3-6 7-9 11-11"/></svg>
+                  {%- when 'drop' -%}
+                    <svg viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg>
+                  {%- when 'shield' -%}
+                    <svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+                  {%- when 'star' -%}
+                    <svg viewBox="0 0 24 24"><path d="M12 3l2.5 5 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9L9.5 8z"/></svg>
+                  {%- when 'heart' -%}
+                    <svg viewBox="0 0 24 24"><path d="M12 21c-5-3.5-8-7-8-11a5 5 0 0 1 8-4 5 5 0 0 1 8 4c0 4-3 7.5-8 11z"/></svg>
+                  {%- when 'sparkle' -%}
+                    <svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M18.5 15.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg>
+                {%- endcase -%}
+              {%- endif -%}
+              <span>{{ block.settings.text }}</span>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="ah__media">
+      {%- if section.settings.image != blank -%}
+        <img src="{{ section.settings.image | image_url: width: 1400 }}" alt="{{ section.settings.image.alt | default: shop.name | escape }}" loading="eager" width="1400" height="1500" fetchpriority="high">
+      {%- else -%}
+        {{- 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' -}}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Aura Hero",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#F7F3EE" },
+    { "type": "select", "id": "layout_image_position", "label": "Image position (desktop)", "options": [
+      { "value": "image-right", "label": "Image right" },
+      { "value": "image-left", "label": "Image left" }
+    ], "default": "image-right" },
+    { "type": "range", "id": "min_height", "label": "Minimum height", "min": 420, "max": 900, "step": 20, "default": 640, "unit": "px" },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 120, "step": 4, "default": 48, "unit": "px" },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 120, "step": 4, "default": 48, "unit": "px" },
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "range", "id": "image_radius", "label": "Image radius", "min": 0, "max": 32, "step": 2, "default": 0, "unit": "px" },
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Glow naturally" },
+    { "type": "color", "id": "eyebrow_color", "label": "Eyebrow color", "default": "#8A8378" },
+    { "type": "textarea", "id": "title", "label": "Title", "default": "Pure Ingredients.\nVisible Results." },
+    { "type": "range", "id": "title_size", "label": "Title size", "min": 32, "max": 84, "step": 2, "default": 58, "unit": "px" },
+    { "type": "color", "id": "title_color", "label": "Title color", "default": "#211E1A" },
+    { "type": "richtext", "id": "description", "label": "Description", "default": "<p>Thoughtfully formulated skincare that nourishes, protects and enhances your natural glow.</p>" },
+    { "type": "color", "id": "desc_color", "label": "Description color", "default": "#6B675F" },
+    { "type": "range", "id": "content_max_width", "label": "Content max width", "min": 360, "max": 720, "step": 20, "default": 520, "unit": "px" },
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Shop now" },
+    { "type": "url", "id": "btn_link", "label": "Button link" },
+    { "type": "color", "id": "btn_bg", "label": "Button background", "default": "#211E1A" },
+    { "type": "color", "id": "btn_text_color", "label": "Button text", "default": "#FFFFFF" },
+    { "type": "range", "id": "btn_radius", "label": "Button radius", "min": 0, "max": 24, "step": 2, "default": 0, "unit": "px" }
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "options": [
+          { "value": "leaf", "label": "Leaf" },
+          { "value": "drop", "label": "Drop" },
+          { "value": "shield", "label": "Shield" },
+          { "value": "star", "label": "Star" },
+          { "value": "heart", "label": "Heart" },
+          { "value": "sparkle", "label": "Sparkle" }
+        ], "default": "leaf" },
+        { "type": "image_picker", "id": "custom_icon", "label": "Custom icon (overrides)" },
+        { "type": "text", "id": "text", "label": "Text", "default": "Clean ingredients" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Aura Hero",
+      "blocks": [
+        { "type": "trust", "settings": { "icon": "leaf", "text": "Clean ingredients" } },
+        { "type": "trust", "settings": { "icon": "drop", "text": "Clinically tested" } },
+        { "type": "trust", "settings": { "icon": "shield", "text": "Suitable for sensitive skin" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

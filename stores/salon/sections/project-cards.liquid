@@ -1,0 +1,172 @@
+{%- comment -%}
+  Project / property cards — photo card with title, spec meta rows and a
+  price + arrow CTA (architecture & real-estate patterns). Horizon-safe.
+{%- endcomment -%}
+<section class="prj prj-{{ section.id }}" style="background: var(--color-background);">
+  <div class="page-width">
+    <div class="prj__head">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>{%- endif -%}
+        {%- if section.settings.heading != blank -%}<h2 class="h2">{{ section.settings.heading | escape }}</h2>{%- endif -%}
+        {%- if section.settings.subheading != blank -%}<p class="subtitle">{{ section.settings.subheading | escape }}</p>{%- endif -%}
+      </div>
+      {%- if section.settings.link_label != blank -%}
+        <a href="{{ section.settings.link }}" class="arrow-link">{{ section.settings.link_label | escape }} {% render 'icon', name: 'arrow-right', size: 12 %}</a>
+      {%- endif -%}
+    </div>
+    <div class="prj__grid" style="--prj-cols: {{ section.settings.columns }};">
+      {%- for block in section.blocks -%}
+        <article class="prj__card{% if section.settings.style == 'overlay' %} prj__card--overlay{% endif %}" {{ block.shopify_attributes }}>
+          <div class="prj__media">
+            {%- if block.settings.image != blank -%}
+              {{ block.settings.image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '400, 600, 1000', alt: block.settings.title }}
+            {%- else -%}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'prj__placeholder' }}
+            {%- endif -%}
+            {%- if block.settings.badge != blank -%}<span class="prj__badge">{{ block.settings.badge | escape }}</span>{%- endif -%}
+            {%- if section.settings.show_wishlist -%}<button type="button" class="prj__wish" aria-label="Save">♡</button>{%- endif -%}
+            {%- if section.settings.style == 'overlay' -%}
+              <div class="prj__overlay">
+                <h3 class="prj__title">{{ block.settings.title | escape }}</h3>
+                <p class="prj__price">{{ block.settings.price | escape }}</p>
+              </div>
+            {%- endif -%}
+          </div>
+          {%- if section.settings.style != 'overlay' -%}
+            <div class="prj__body">
+              <div class="prj__title-row">
+                <h3 class="prj__title">{{ block.settings.title | escape }}</h3>
+                {%- if block.settings.price != blank -%}<p class="prj__price">{{ block.settings.price | escape }}</p>{%- endif -%}
+              </div>
+              {%- if block.settings.meta_1_label != blank -%}
+                <div class="prj__meta">
+                  <span>{{ block.settings.meta_1_label | escape }}</span>
+                  {%- if block.settings.meta_1_value != blank -%}<span>{{ block.settings.meta_1_value | escape }}</span>{%- endif -%}
+                </div>
+              {%- endif -%}
+              {%- if block.settings.meta_2_label != blank -%}
+                <div class="prj__meta">
+                  <span>{{ block.settings.meta_2_label | escape }}</span>
+                  {%- if block.settings.meta_2_value != blank -%}<span>{{ block.settings.meta_2_value | escape }}</span>{%- endif -%}
+                </div>
+              {%- endif -%}
+              {%- if block.settings.meta_3_label != blank -%}
+                <div class="prj__meta">
+                  <span>{{ block.settings.meta_3_label | escape }}</span>
+                  {%- if block.settings.meta_3_value != blank -%}<span>{{ block.settings.meta_3_value | escape }}</span>{%- endif -%}
+                </div>
+              {%- endif -%}
+              {%- if block.settings.link_label != blank -%}
+                <a href="{{ block.settings.link | default: '#' }}" class="prj__cta">{{ block.settings.link_label | escape }} {% render 'icon', name: 'arrow-right', size: 12 %}</a>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{% style %}
+  .prj-{{ section.id }} { padding-block: var(--section-space); color: var(--color-foreground); }
+  .prj-{{ section.id }} .prj__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1.5rem; margin-bottom: clamp(1.6rem, 4vh, 2.8rem); flex-wrap: wrap; }
+  .prj-{{ section.id }} .prj__grid { display: grid; grid-template-columns: repeat(var(--prj-cols, 3), 1fr); gap: clamp(1rem, 2.4vw, 2rem); }
+  .prj-{{ section.id }} .prj__card {
+    border-radius: var(--card-radius); overflow: hidden;
+    background: var(--color-surface); border: 1px solid var(--color-border);
+    display: flex; flex-direction: column;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+  }
+  .prj-{{ section.id }} .prj__card:hover { transform: translateY(-5px); box-shadow: 0 24px 50px rgba(0,0,0,0.12); }
+  .prj-{{ section.id }} .prj__media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; }
+  .prj-{{ section.id }} .prj__media img, .prj-{{ section.id }} .prj__placeholder { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s ease; }
+  .prj-{{ section.id }} .prj__placeholder { background: #ddd6ca; }
+  .prj-{{ section.id }} .prj__card:hover .prj__media img { transform: scale(1.05); }
+  .prj-{{ section.id }}   .prj__badge {
+    position: absolute; top: 0.8rem; left: 0.8rem;
+    background: var(--color-accent); color: var(--color-accent-label);
+    font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.3rem 0.6rem; border-radius: 999px;
+  }
+  .prj__wish {
+    position: absolute; top: 0.8rem; right: 0.8rem; z-index: 2;
+    width: 2rem; height: 2rem; border-radius: 50%;
+    background: rgba(255,255,255,0.92); border: 1px solid var(--color-border);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .prj-{{ section.id }} .prj__body { padding: 1.1rem 1.2rem 1.3rem; display: flex; flex-direction: column; gap: 0.55rem; flex: 1; }
+  .prj-{{ section.id }} .prj__title-row { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+  .prj-{{ section.id }} .prj__title { font-family: var(--font-heading); font-size: 1.15rem; }
+  .prj-{{ section.id }} .prj__price { font-weight: 700; white-space: nowrap; }
+  .prj-{{ section.id }} .prj__meta {
+    display: flex; justify-content: space-between; gap: 1rem;
+    font-size: 0.76rem; color: var(--color-text-muted);
+    border-top: 1px solid var(--color-border); padding-top: 0.5rem;
+  }
+  .prj-{{ section.id }} .prj__meta span:last-child { color: var(--color-foreground); font-weight: 600; text-align: right; }
+  .prj-{{ section.id }} .prj__cta {
+    margin-top: 0.7rem; align-self: flex-end;
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    background: var(--color-accent); color: var(--color-accent-label);
+    border-radius: 999px; padding: 0.5rem 1rem;
+    font-size: 0.66rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .prj-{{ section.id }} .prj__card--overlay .prj__overlay {
+    position: absolute; inset: auto 0 0 0; z-index: 2;
+    padding: clamp(1rem, 2vw, 1.6rem);
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,0.6));
+    color: #fff;
+  }
+  .prj-{{ section.id }} .prj__card--overlay .prj__title { font-size: 1.25rem; }
+  @media (max-width: 980px) { .prj-{{ section.id }} .prj__grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 620px) { .prj-{{ section.id }} .prj__grid { grid-template-columns: 1fr; } }
+{% endstyle %}
+{% schema %}
+{
+  "name": "Project cards",
+  "tag": "section",
+  "max_blocks": 9,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Selected work" },
+    { "type": "text", "id": "subheading", "label": "Subheading" },
+    { "type": "text", "id": "link_label", "label": "Header link label" },
+    { "type": "url", "id": "link", "label": "Header link" },
+    { "type": "range", "id": "columns", "label": "Columns", "min": 2, "max": 4, "step": 1, "default": 3 },
+    {
+      "type": "select", "id": "style", "label": "Card style",
+      "options": [
+        { "value": "specs", "label": "Photo + spec rows" },
+        { "value": "overlay", "label": "Overlay title + price" }
+      ],
+      "default": "specs"
+    },
+    { "type": "checkbox", "id": "show_wishlist", "label": "Show wishlist hearts", "default": false }
+  ],
+  "blocks": [
+    {
+      "type": "project", "name": "Card",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "badge", "label": "Badge" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Project name" },
+        { "type": "text", "id": "price", "label": "Price" },
+        { "type": "text", "id": "meta_1_label", "label": "Meta 1 label", "default": "Location" },
+        { "type": "text", "id": "meta_1_value", "label": "Meta 1 value" },
+        { "type": "text", "id": "meta_2_label", "label": "Meta 2 label", "default": "Scope" },
+        { "type": "text", "id": "meta_2_value", "label": "Meta 2 value" },
+        { "type": "text", "id": "meta_3_label", "label": "Meta 3 label", "default": "Year" },
+        { "type": "text", "id": "meta_3_value", "label": "Meta 3 value" },
+        { "type": "text", "id": "link_label", "label": "Button label" },
+        { "type": "url", "id": "link", "label": "Button link" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Project cards", "blocks": [
+      { "type": "project", "settings": { "title": "Project one", "badge": "New", "price": "$ 250,000", "link_label": "View project" } },
+      { "type": "project", "settings": { "title": "Project two", "price": "$ 320,000", "link_label": "View project" } },
+      { "type": "project", "settings": { "title": "Project three", "price": "$ 180,000", "link_label": "View project" } }
+    ] }
+  ]
+}
+{% endschema %}

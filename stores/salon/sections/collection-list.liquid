@@ -1,0 +1,297 @@
+{%- comment -%}
+  Collection list — photo cards with overlay labels ("Explore our collections")
+  or labels below images (category tiles). Blocks pick a collection each.
+{%- endcomment -%}
+{%- liquid
+  assign ratio = section.settings.card_ratio
+-%}
+{%- capture section_colors_style -%}
+  {%- if section.settings.colors_background != blank or section.settings.colors_text != blank -%}
+    {%- assign override_bg = section.settings.colors_background | default: settings.colors_background -%}
+    {%- assign override_fg = section.settings.colors_text | default: settings.colors_text -%}
+    style="--color-background: {{ override_bg }}; --color-surface: {{ override_bg | color_lighten: 3 }}; --color-border: {{ override_bg | color_darken: 9 | color_modify: 'alpha', 0.85 }}; --color-foreground: {{ override_fg }}; --color-heading: {{ override_fg }}; --color-text-muted: {{ override_fg | color_modify: 'alpha', 0.62 }};"
+  {%- endif -%}
+{%- endcapture -%}
+<section {{ section_colors_style }} class="section" style="--section-space: {{ section.settings.padding | default: 72 }}px;">
+  <div class="page-width">
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.subheading != blank -%}
+      <div class="section-intro{% if section.settings.heading_align == 'left' %} section-intro--left{% endif %}">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="h2 section-intro__title{% if section.settings.ornate %} section-intro--ornate{% endif %}">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subheading != blank -%}
+          <p class="section-intro__sub">{{ section.settings.subheading | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="collection-grid collection-grid--cols-{{ section.settings.columns }}" style="--collection-ratio: {{ ratio }};">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign coll = collections[block.settings.collection]
+          assign img = block.settings.image | default: coll.featured_image
+          assign label = block.settings.label | default: coll.title
+        -%}
+        {%- if section.settings.text_position == 'below' -%}
+          <div class="collection-card collection-card--below" {{ block.shopify_attributes }}>
+            <a href="{{ coll.url | default: block.settings.link | default: '#' }}" class="collection-card__media" aria-label="{{ label | escape }}">
+              {%- if img != blank -%}
+                {{ img | image_url: width: 720 | image_tag: loading: 'lazy', widths: '360, 540, 720', alt: label }}
+              {%- else -%}
+                {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </a>
+            <div class="collection-card__label">
+              <p class="collection-card__title">{{ label | escape }}{% if block.settings.show_arrow %} <span aria-hidden="true">↗</span>{% endif %}</p>
+              {%- if block.settings.count != blank -%}
+                <p class="collection-card__count">{{ block.settings.count | escape }}</p>
+              {%- endif -%}
+              {%- if block.settings.price_note -%}
+                {%- assign min_price = coll.products.first.price -%}
+                <p class="collection-card__price">{{ 'collections.general.from' | t }} {{ min_price | money }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- else -%}
+          <a
+            href="{{ coll.url | default: block.settings.link | default: '#' }}"
+            class="collection-card{% if section.settings.scrim_style == 'flat' %} collection-card--dark{% endif %}"
+            {{ block.shopify_attributes }}
+          >
+            {%- if img != blank -%}
+              {{ img | image_url: width: 900 | image_tag: loading: 'lazy', widths: '360, 540, 720, 900', alt: label }}
+            {%- else -%}
+              {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+            <span class="collection-card__scrim" aria-hidden="true"></span>
+            <span class="collection-card__label">
+              <span class="collection-card__title" style="display: block;">{{ label | escape }}</span>
+              <span class="collection-card__link">{{ section.settings.link_label | default: 'Shop collection' | escape }}</span>
+            </span>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection list",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Explore our collections"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "checkbox",
+      "id": "ornate",
+      "label": "Decorative heading marks",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "heading_align",
+      "label": "Heading alignment",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Cards"
+    },
+    {
+      "type": "select",
+      "id": "text_position",
+      "label": "Label position",
+      "options": [
+        {
+          "value": "overlay",
+          "label": "Overlay on image"
+        },
+        {
+          "value": "below",
+          "label": "Below image"
+        }
+      ],
+      "default": "overlay"
+    },
+    {
+      "type": "select",
+      "id": "scrim_style",
+      "label": "Overlay style",
+      "options": [
+        {
+          "value": "gradient",
+          "label": "Bottom gradient"
+        },
+        {
+          "value": "flat",
+          "label": "Flat dark"
+        }
+      ],
+      "default": "gradient"
+    },
+    {
+      "type": "select",
+      "id": "card_ratio",
+      "label": "Image ratio (overlay style)",
+      "options": [
+        {
+          "value": "3 / 4",
+          "label": "Portrait (3:4)"
+        },
+        {
+          "value": "4 / 5",
+          "label": "Tall (4:5)"
+        },
+        {
+          "value": "1 / 1",
+          "label": "Square (1:1)"
+        },
+        {
+          "value": "4 / 3",
+          "label": "Landscape (4:3)"
+        }
+      ],
+      "default": "4 / 5"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label (overlay style)",
+      "default": "Shop collection"
+    },
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 24,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_background",
+      "label": "Background override",
+      "info": "Leave empty to use the theme colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_text",
+      "label": "Text color override"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_item",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom image",
+          "info": "Overrides the collection image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Custom label",
+          "info": "Defaults to the collection title"
+        },
+        {
+          "type": "text",
+          "id": "count",
+          "label": "Count / subtitle",
+          "info": "e.g. 14 Collections (Urban Edge) — shown below label"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_arrow",
+          "label": "Show ↗ arrow after label",
+          "default": false
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Custom link"
+        },
+        {
+          "type": "checkbox",
+          "id": "price_note",
+          "label": "Show \"from\" price (below style)",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection list",
+      "blocks": [
+        {
+          "type": "collection_item"
+        },
+        {
+          "type": "collection_item"
+        },
+        {
+          "type": "collection_item"
+        },
+        {
+          "type": "collection_item"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

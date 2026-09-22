@@ -1,0 +1,127 @@
+{%- comment -%}
+  Feature cards — filled value-prop cards with arrow links (noir design).
+{%- endcomment -%}
+{%- capture section_colors_style -%}
+  {%- if section.settings.colors_background != blank or section.settings.colors_text != blank -%}
+    {%- assign override_bg = section.settings.colors_background | default: settings.colors_background -%}
+    {%- assign override_fg = section.settings.colors_text | default: settings.colors_text -%}
+    style="--color-background: {{ override_bg }}; --color-surface: {{ override_bg | color_lighten: 3 }}; --color-border: {{ override_bg | color_darken: 9 | color_modify: 'alpha', 0.85 }}; --color-foreground: {{ override_fg }}; --color-heading: {{ override_fg }}; --color-text-muted: {{ override_fg | color_modify: 'alpha', 0.62 }};"
+  {%- endif -%}
+{%- endcapture -%}
+<section {{ section_colors_style }} class="section" style="--section-space: {{ section.settings.padding | default: 64 }}px;">
+  <div class="page-width">
+    <div class="feature-cards" style="--fc-cols: {{ section.blocks.size }};">
+      {%- for block in section.blocks -%}
+        <div class="feature-card" {{ block.shopify_attributes }}>
+          <h3 class="feature-card__title">{{ block.settings.title | escape }}</h3>
+          <p class="feature-card__text">{{ block.settings.text | escape }}</p>
+          {%- if block.settings.link_label != blank -%}
+            <a href="{{ block.settings.link }}" class="feature-card__link">
+              <span class="icon-button">{% render 'icon', name: 'arrow-up-right', size: 12 %}</span>
+              {{ block.settings.link_label | escape }}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Feature cards",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 16,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_background",
+      "label": "Background override",
+      "info": "Leave empty to use the theme colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_text",
+      "label": "Text color override"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Independence"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Explore the creativity of independent designers from around the globe."
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label",
+          "default": "Learn more"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Feature cards",
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "title": "Independence"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "Uniquity",
+            "text": "Discover the charm of unique pieces that stand out effortlessly."
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "Quality",
+            "text": "Experience unparalleled craftsmanship and attention to detail."
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "Sustainability",
+            "text": "Embrace eco-conscious fashion choices without compromising on style."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

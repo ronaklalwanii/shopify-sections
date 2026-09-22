@@ -1,0 +1,130 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "image-with-text",
+      "blocks": {
+        "b": {
+          "type": "button",
+          "settings": {
+            "label": "All products",
+            "link": "/collections/all",
+            "style": "outline"
+          }
+        }
+      },
+      "block_order": [
+        "b"
+      ],
+      "settings": {
+        "image_position": "right",
+        "image_ratio": "1 / 1",
+        "eyebrow": "",
+        "heading": "This is more than\na coffee space;\nit's an experience",
+        "text": "<p>Discover our handcrafted blends, designed to awaken your senses and elevate every moment.</p>",
+        "heading_caps": true,
+        "heading_last": true,
+        "flush": true,
+        "padding": 0
+      }
+    },
+    "marquee": {
+      "type": "marquee-ribbon",
+      "blocks": {
+        "m1": {
+          "type": "item",
+          "settings": {
+            "text": "With Urban Flair"
+          }
+        },
+        "m2": {
+          "type": "item",
+          "settings": {
+            "text": "Chic Coffee Vibes"
+          }
+        }
+      },
+      "block_order": [
+        "m1",
+        "m2"
+      ],
+      "settings": {
+        "speed": 34,
+        "text_size": 12,
+        "uppercase": false,
+        "background_color": "#f4f0e6",
+        "text_color": "#191614"
+      }
+    },
+    "best": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "bestsellers",
+        "products_count": "4",
+        "layout": "grid",
+        "columns": "4",
+        "show_subtitle": false,
+        "show_price": true,
+        "show_button": false,
+        "eyebrow": "",
+        "heading": "",
+        "hairline": true,
+        "padding": 0
+      }
+    },
+    "duo": {
+      "type": "kuafi-duo",
+      "settings": {
+        "heading_1": "Coffee can",
+        "text_1": "<p>Latte coffee · Espresso coffee</p>",
+        "button_1": "All products",
+        "link_1": "/collections/all",
+        "heading_2": "Coffee pouch",
+        "text_2": "<p>Flat White coffee · Macchiato coffee</p>",
+        "button_2": "All products",
+        "link_2": "/collections/all"
+      }
+    },
+    "cta": {
+      "type": "kuafi-order",
+      "settings": {
+        "note": "Place your coffee order today and experience the art of coffee-making, ensuring you can savor the rich flavours without delay.",
+        "button_label": "Order",
+        "link": "/collections/all",
+        "heading": "Purchase today,\nreceive tomorrow"
+      }
+    },
+    "best2": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "bestsellers",
+        "products_count": "4",
+        "layout": "grid",
+        "columns": "4",
+        "show_subtitle": false,
+        "show_price": true,
+        "show_button": false,
+        "eyebrow": "",
+        "heading": "",
+        "hairline": true,
+        "padding": 0
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "marquee",
+    "best",
+    "duo",
+    "best2",
+    "cta"
+  ]
+}

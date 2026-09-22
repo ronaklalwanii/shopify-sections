@@ -1,0 +1,610 @@
+{%- comment -%}
+  Pet Store — Blog
+  Badge + heading + article cards (image, tag pill, date, title, read-more link).
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .pet-blog-{{ section.id }} {
+    --pet-bl-bg: {{ s.background_color }};
+    --pet-bl-fg: {{ s.text_color }};
+    --pet-bl-muted: {{ s.muted_text_color }};
+    --pet-bl-accent: {{ s.accent_color }};
+    --pet-bl-accent-text: {{ s.accent_text_color }};
+    --pet-bl-container: {{ s.container_max_width }}px;
+    --pet-bl-radius: {{ s.card_corner_radius }}px;
+    --pet-bl-badge-bg: {{ s.badge_background_color }};
+
+    background-color: var(--pet-bl-bg);
+    color: var(--pet-bl-fg);
+    padding-block: {{ s.padding_top }}px {{ s.padding_bottom }}px;
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+  }
+
+  .pet-blog-{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__container {
+    max-width: var(--pet-bl-container);
+    margin-inline: auto;
+    padding-inline: clamp(16px, 4vw, 48px);
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+    margin-bottom: clamp(28px, 4vw, 44px);
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+    padding: 8px 16px;
+    border: 1px solid color-mix(in srgb, var(--pet-bl-accent) 22%, transparent);
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--pet-bl-accent);
+    background-color: var(--pet-bl-badge-bg);
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__badge svg,
+  .pet-blog-{{ section.id }} .pet-bl__badge img {
+    width: 13px;
+    height: 13px;
+    object-fit: contain;
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__heading {
+    margin: 0;
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-size: clamp(28px, 3vw, 38px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--pet-bl-fg);
+    white-space: pre-line;
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__grid {
+    display: grid;
+    grid-template-columns: repeat({{ s.columns_desktop }}, minmax(0, 1fr));
+    gap: {{ s.grid_gap }}px;
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__media {
+    position: relative;
+    border-radius: var(--pet-bl-radius);
+    overflow: hidden;
+    aspect-ratio: {{ s.image_ratio }};
+    background-color: rgb(0 0 0 / 0.04);
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.45s var(--ease-out-cubic, ease);
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__card:hover .pet-bl__media img {
+    transform: scale(1.04);
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__media svg {
+    position: absolute;
+    inset: 0;
+    width: 36%;
+    height: 36%;
+    margin: auto;
+    opacity: 0.3;
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__tag {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    padding: 5px 13px;
+    border-radius: 100px;
+    background-color: var(--pet-bl-accent);
+    color: var(--pet-bl-accent-text);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__date {
+    margin: 0;
+    font-size: 11.5px;
+    color: var(--pet-bl-accent);
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__title {
+    margin: 0;
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-size: clamp(16px, 1.5vw, 19px);
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: var(--pet-bl-fg);
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__title a,
+  .pet-blog-{{ section.id }} .pet-bl__more a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__title a:hover {
+    text-decoration: underline;
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__more a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--pet-bl-accent);
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__more svg {
+    width: 13px;
+    height: 13px;
+    transition: transform var(--animation-speed, 0.125s) ease;
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__card:hover .pet-bl__more svg {
+    transform: translateX(4px);
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__footer {
+    display: flex;
+    justify-content: center;
+    margin-top: clamp(28px, 4vw, 44px);
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__view-all {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 28px;
+    border-radius: {{ s.button_radius }}px;
+    background-color: var(--pet-bl-accent);
+    color: var(--pet-bl-accent-text);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: filter var(--animation-speed, 0.125s) ease, transform var(--animation-speed, 0.125s) ease;
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__view-all:hover {
+    filter: brightness(1.12);
+  }
+
+  .pet-blog-{{ section.id }} .pet-bl__view-all:active {
+    transform: scale(0.98);
+  }
+
+  @media (max-width: 989px) {
+    .pet-blog-{{ section.id }} .pet-bl__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .pet-blog-{{ section.id }} .pet-bl__grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pet-blog-{{ section.id }} .pet-bl__media img,
+    .pet-blog-{{ section.id }} .pet-bl__more svg,
+    .pet-blog-{{ section.id }} .pet-bl__view-all {
+      transition: none;
+    }
+  }
+{% endstyle %}
+
+<section class="pet-blog pet-blog-{{ section.id }}" aria-labelledby="pet-bl-heading-{{ section.id }}">
+  <div class="pet-bl__container">
+    <div class="pet-bl__header">
+      {%- if s.badge_text != blank -%}
+        <p class="pet-bl__badge">
+          {%- if s.badge_icon != blank -%}
+            {{ s.badge_icon | image_url: width: 52 | image_tag: alt: '' }}
+          {%- else -%}
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><ellipse cx="6" cy="9" rx="1.8" ry="2.4"/><ellipse cx="18" cy="9" rx="1.8" ry="2.4"/><ellipse cx="9.6" cy="5.6" rx="1.8" ry="2.4"/><ellipse cx="14.4" cy="5.6" rx="1.8" ry="2.4"/><path d="M12 10.5c2.8 0 5.5 2.3 5.5 4.9 0 1.6-1.2 2.6-2.7 2.6-1 0-1.8-.4-2.8-.4s-1.8.4-2.8.4c-1.5 0-2.7-1-2.7-2.6 0-2.6 2.7-4.9 5.5-4.9Z"/></svg>
+          {%- endif -%}
+          {{ s.badge_text }}
+        </p>
+      {%- endif -%}
+
+      {%- if s.heading != blank -%}
+        <h2 class="pet-bl__heading" id="pet-bl-heading-{{ section.id }}">{{ s.heading }}</h2>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="pet-bl__grid">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign b = block.settings
+            assign card_article = b.article
+            assign card_image = b.image
+            assign card_title = b.title
+            assign card_link = b.link
+            assign card_date = b.date
+            assign card_tag = b.tag
+
+            if card_article != blank
+              assign card_link = card_article.url
+              if card_title == blank
+                assign card_title = card_article.title
+              endif
+              if card_date == blank
+                assign card_date = card_article.published_at | date: '%B %-d, %Y'
+              endif
+              if card_tag == blank and card_article.tags.size > 0
+                assign card_tag = card_article.tags.first
+              endif
+            endif
+          -%}
+          <article class="pet-bl__card" {{ block.shopify_attributes }}>
+            {%- if card_link != blank -%}
+              <a class="pet-bl__media" href="{{ card_link }}" tabindex="-1" aria-hidden="true">
+            {%- else -%}
+              <div class="pet-bl__media">
+            {%- endif -%}
+              {%- if card_image != blank -%}
+                {{ card_image | image_url: width: 900 | image_tag:
+                  widths: '400,600,900',
+                  sizes: '(min-width: 990px) 33vw, 100vw',
+                  loading: 'lazy',
+                  alt: card_image.alt | default: card_title | escape
+                }}
+              {%- elsif card_article != blank and card_article.image != blank -%}
+                {{ card_article.image | image_url: width: 900 | image_tag:
+                  widths: '400,600,900',
+                  sizes: '(min-width: 990px) 33vw, 100vw',
+                  loading: 'lazy',
+                  alt: card_article.title | escape
+                }}
+              {%- else -%}
+                {{ 'lifestyle-2' | placeholder_svg_tag }}
+              {%- endif -%}
+              {%- if card_tag != blank -%}
+                <span class="pet-bl__tag">{{ card_tag }}</span>
+              {%- endif -%}
+            {%- if card_link != blank -%}
+              </a>
+            {%- else -%}
+              </div>
+            {%- endif -%}
+
+            {%- if card_date != blank -%}
+              <p class="pet-bl__date">{{ card_date }}</p>
+            {%- endif -%}
+
+            <h3 class="pet-bl__title">
+              {%- if card_link != blank -%}
+                <a href="{{ card_link }}">{{ card_title | default: 'Blog post title' }}</a>
+              {%- else -%}
+                {{ card_title | default: 'Blog post title' }}
+              {%- endif -%}
+            </h3>
+
+            {%- if s.read_more_label != blank -%}
+              <span class="pet-bl__more">
+                {%- if card_link != blank -%}
+                  <a href="{{ card_link }}">{{ s.read_more_label }}</a>
+                {%- else -%}
+                  {{ s.read_more_label }}
+                {%- endif -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+              </span>
+            {%- endif -%}
+          </article>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if s.view_all_label != blank -%}
+      <div class="pet-bl__footer">
+        <a class="pet-bl__view-all" href="{{ s.view_all_link | default: routes.root_url }}">{{ s.view_all_label }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Pet Blog",
+  "tag": "section",
+  "class": "pet-blog-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "Explore Our Blog"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_icon",
+      "label": "Badge icon",
+      "info": "Optional. Falls back to a paw icon"
+    },
+    {
+      "type": "color",
+      "id": "badge_background_color",
+      "label": "Badge background",
+      "default": "#FBF7EF"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Latest News"
+    },
+    {
+      "type": "header",
+      "content": "Cards"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns (desktop)",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "5 / 4", "label": "Portrait" },
+        { "value": "4 / 3", "label": "Landscape" },
+        { "value": "16 / 9", "label": "Wide" }
+      ],
+      "default": "16 / 9"
+    },
+    {
+      "type": "range",
+      "id": "card_corner_radius",
+      "label": "Image corner radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "text",
+      "id": "read_more_label",
+      "label": "Read more label",
+      "default": "Read More",
+      "info": "Leave empty to hide"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "Button label",
+      "default": "Read All News",
+      "info": "Leave empty to hide"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "Button link",
+      "info": "Defaults to the blog home"
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "label": "Button corner radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#211D1A"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text",
+      "default": "#6F6963"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#6E1622"
+    },
+    {
+      "type": "color",
+      "id": "accent_text_color",
+      "label": "Accent text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "label": "Container max width",
+      "min": 700,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 980
+    }
+  ],
+  "blocks": [
+    {
+      "type": "article",
+      "name": "Blog post",
+      "settings": [
+        {
+          "type": "article",
+          "id": "article",
+          "label": "Article",
+          "info": "Title, date, tag and link are pulled from the article"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom image",
+          "info": "Overrides the article image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Custom title"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Custom tag pill"
+        },
+        {
+          "type": "text",
+          "id": "date",
+          "label": "Custom date"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Used when no article is selected"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pet Blog",
+      "blocks": [
+        {
+          "type": "article",
+          "settings": {
+            "title": "Healthy Treats Your Pets Will Love",
+            "tag": "Nutrition",
+            "date": "November 27, 2024"
+          }
+        },
+        {
+          "type": "article",
+          "settings": {
+            "title": "Understanding Your Cat's Daily Habits",
+            "tag": "Nutrition",
+            "date": "November 27, 2024"
+          }
+        },
+        {
+          "type": "article",
+          "settings": {
+            "title": "The Best Nutrition Tips for Active Dogs",
+            "tag": "Nutrition",
+            "date": "November 30, 2024"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

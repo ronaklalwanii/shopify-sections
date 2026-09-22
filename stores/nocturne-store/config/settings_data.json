@@ -1,0 +1,256 @@
+{
+  "current": {
+    "intro_audio_file": "",
+    "intro_desktop_video": "",
+    "intro_mobile_video": "",
+    "volume_intro": 30,
+    "intro_autoplay": false,
+    "page_width": 1800,
+    "section_vertical_spacing": "medium",
+    "button_border_radius": 14,
+    "input_border_radius": 0,
+    "block_border_radius": 20,
+    "block_shadow_opacity": 10,
+    "block_shadow_vertical_offset": 18,
+    "block_shadow_blur": 50,
+    "button_style": "fill",
+    "background": "#0A1220",
+    "text_color": "#EAF0F7",
+    "header_background": "#0A1220",
+    "header_text_color": "#EAF0F7",
+    "footer_background": "#060B14",
+    "footer_text_color": "#8FA0B5",
+    "dialog_background": "#101B2E",
+    "primary_button_background": "#D4AF37",
+    "primary_button_text_color": "#0A1220",
+    "secondary_button_background": "#101B2E",
+    "secondary_button_text_color": "#EAF0F7",
+    "product_card_text_color": "#EAF0F7",
+    "product_rating_color": "#D4AF37",
+    "product_on_sale_accent": "#D4AF37",
+    "product_primary_badge_background": "#D4AF37",
+    "heading_font": "space_grotesk_n5",
+    "heading_font_size": "large",
+    "heading_text_transform": "normal",
+    "heading_letter_spacing": -2,
+    "text_font": "inter_n4",
+    "text_font_size_mobile": 17,
+    "text_font_size_desktop": 18,
+    "heading_apparition": "split_fade",
+    "show_secondary_image": true,
+    "show_quick_buy": true,
+    "show_product_rating": true,
+    "discount_mode": "percentage",
+    "product_color_display": "variant",
+    "product_image_aspect_ratio": "natural",
+    "product_info_alignment": "start",
+    "cart_type": "drawer",
+    "social_facebook": "",
+    "social_twitter": "",
+    "social_threads": "",
+    "social_instagram": "",
+    "favicon": "",
+    "checkout_logo_image": "",
+    "checkout_logo_position": "center",
+    "checkout_logo_size": "large",
+    "checkout_accent_color": "#D4AF37",
+    "checkout_button_color": "#D4AF37",
+    "sections": {
+      "announcement-bar": {
+        "type": "announcement-bar",
+        "blocks": {
+          "message": {
+            "type": "message",
+            "settings": {
+              "text": "Free express shipping over $75 ✦",
+              "url": ""
+            }
+          }
+        },
+        "block_order": [
+          "message"
+        ],
+        "settings": {
+          "enable_sticky": false,
+          "text_size": "text-xs",
+          "navigation_mode": "scrolling",
+          "scrolling_speed": 10,
+          "background": "#060B14",
+          "background_gradient": "",
+          "text_color": "#F0D48A"
+        }
+      },
+      "header": {
+        "type": "header",
+        "blocks": {
+          "36fa66a3-7c9a-4d44-8257-c52a15302a00": {
+            "type": "mega_menu",
+            "settings": {
+              "menu_item": "shop",
+              "layout": "horizontal",
+              "submenu_style": "bold_heading",
+              "image_1": "shopify://shop_images/sowden-collection-1200x1200.webp",
+              "image_heading_1": "",
+              "image_link_1": "",
+              "image_text_color_1": "#ffffff",
+              "image_2": "shopify://shop_images/office-1200x1200.png",
+              "image_heading_2": "",
+              "image_link_2": "",
+              "image_text_color_2": "#ffffff",
+              "image_heading_3": "",
+              "image_link_3": "",
+              "image_text_color_3": "#ffffff",
+              "product": "",
+              "product_card_background": "",
+              "product_card_text_color": "",
+              "promo_content_layout": "grid",
+              "stretch_promo": false,
+              "drawer_link_image": "hide"
+            }
+          },
+          "14553d79-f9b7-45fd-9724-4815c78cb117": {
+            "type": "mega_menu",
+            "settings": {
+              "menu_item": "Inspiration",
+              "layout": "horizontal",
+              "submenu_style": "bold_heading",
+              "image_heading_1": "",
+              "image_link_1": "",
+              "image_text_color_1": "#ffffff",
+              "image_heading_2": "",
+              "image_link_2": "",
+              "image_text_color_2": "#ffffff",
+              "image_heading_3": "",
+              "image_link_3": "",
+              "image_text_color_3": "#ffffff",
+              "product": "",
+              "product_card_background": "",
+              "product_card_text_color": "",
+              "promo_content_layout": "grid",
+              "stretch_promo": false,
+              "drawer_link_image": "hide"
+            }
+          },
+          "62474af5-38fb-413f-8134-eb8dc3294b5e": {
+            "type": "mega_menu",
+            "disabled": true,
+            "settings": {
+              "menu_item": "",
+              "layout": "horizontal",
+              "submenu_style": "bold_heading",
+              "image_heading_1": "",
+              "image_link_1": "",
+              "image_text_color_1": "#ffffff",
+              "image_heading_2": "",
+              "image_link_2": "",
+              "image_text_color_2": "#ffffff",
+              "image_heading_3": "",
+              "image_link_3": "",
+              "image_text_color_3": "#ffffff",
+              "product": "",
+              "product_card_background": "",
+              "product_card_text_color": "",
+              "promo_content_layout": "grid",
+              "stretch_promo": false,
+              "drawer_link_image": "hide"
+            }
+          }
+        },
+        "block_order": [
+          "36fa66a3-7c9a-4d44-8257-c52a15302a00",
+          "14553d79-f9b7-45fd-9724-4815c78cb117",
+          "62474af5-38fb-413f-8134-eb8dc3294b5e"
+        ],
+        "settings": {
+          "enable_sticky": false,
+          "hide_on_scroll": false,
+          "logo": "{{shop.brand.logo}}",
+          "logo_max_width": 120,
+          "logo_mobile_max_width": 100,
+          "menu": "main-menu",
+          "sidebar_menu": "",
+          "secondary_menu": "",
+          "menu_open_trigger": "click",
+          "opening_from": "bottom",
+          "layout": "logo_left_navigation_center",
+          "show_social_media": true,
+          "show_country_selector": true,
+          "show_country_name": false,
+          "transparent_header_text_color": "#ffffff",
+          "reduce_padding": false,
+          "background_opacity": 100,
+          "background_blur_radius": 0
+        }
+      },
+      "cart-drawer": {
+        "type": "cart-drawer",
+        "settings": {
+          "show_cart_note": true,
+          "show_shipping_text": true,
+          "show_checkout_button": true,
+          "recommendations_title": "Trending this month",
+          "products": [],
+          "product_card_background": "#ffffff",
+          "product_card_text_color": ""
+        }
+      },
+      "search-drawer": {
+        "type": "search-drawer",
+        "settings": {
+          "full_width": true,
+          "show_article_category": true,
+          "search_menu": "",
+          "search_menu_show_title": true
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "blocks": {
+          "newsletter": {
+            "type": "newsletter",
+            "settings": {
+              "image": "{{shop.brand.logo}}",
+              "image_width": 150,
+              "heading_size": "h3",
+              "title": "Sign up for new stories and personal offers",
+              "content": ""
+            }
+          },
+          "links": {
+            "type": "links",
+            "settings": {
+              "menu": "footer",
+              "show_menu_title": true
+            }
+          },
+          "text": {
+            "type": "text",
+            "settings": {
+              "title": "About",
+              "content": "<p>Use this text area to tell your customers about your brand and vision. You can change it in the theme editor.</p>"
+            }
+          }
+        },
+        "block_order": [
+          "newsletter",
+          "links",
+          "text"
+        ],
+        "settings": {
+          "show_social_media": true,
+          "show_payment_icons": true,
+          "show_country_selector": true,
+          "show_country_name": true,
+          "show_locale_selector": true
+        }
+      }
+    },
+    "content_for_index": [],
+    "product_card_background": "#101B2E",
+    "product_sold_out_badge_background": "#33445C",
+    "product_rating_mode": "count",
+    "cart_show_free_shipping_threshold": true,
+    "shipping_threshold": 75,
+    "first_threshold_message": "You're $$$ away from FREE express shipping ✦"
+  }
+}

@@ -1,0 +1,350 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "layout": "stacked",
+        "height": "lg",
+        "stacked_image_height": 560,
+        "overlay_opacity": 44,
+        "eyebrow": "Minimal. Bold. Made for the streets.",
+        "heading": "Streetwear redefined.",
+        "heading_size": "h0",
+        "text_align": "left",
+        "show_star": true,
+        "star_color": "#f26a1b",
+        "badge_text": "WE ARE URBANEDGE • STREETWEAR • WE ARE URBANEDGE • STREETWEAR • ",
+        "subheading": "<p>We believe streetwear is more than just clothing — it’s an expression of culture, identity, and confidence.</p>"
+      },
+      "blocks": {
+        "b1": {
+          "type": "button",
+          "settings": {
+            "label": "Shop New Drops",
+            "link": "/collections/all",
+            "style": "light"
+          }
+        },
+        "b2": {
+          "type": "button",
+          "settings": {
+            "label": "Explore Collections",
+            "link": "/collections/all",
+            "style": "outline"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2"
+      ]
+    },
+    "sale": {
+      "type": "marquee-ribbon",
+      "settings": {
+        "speed": 30,
+        "rotation": 0,
+        "uppercase": true,
+        "star_color": "#f26a1b",
+        "background_color": "#111111",
+        "text_color": "#ffffff"
+      },
+      "blocks": {
+        "m1": {
+          "type": "item",
+          "settings": {
+            "text": "20% off limited time sale"
+          }
+        },
+        "m2": {
+          "type": "item",
+          "settings": {
+            "text": "Latest trends drop off now!"
+          }
+        },
+        "m3": {
+          "type": "item",
+          "settings": {
+            "text": "2025 winter sale"
+          }
+        },
+        "m4": {
+          "type": "item",
+          "settings": {
+            "text": "20% off"
+          }
+        }
+      },
+      "block_order": [
+        "m1",
+        "m2",
+        "m3",
+        "m4"
+      ]
+    },
+    "about": {
+      "type": "about-collections",
+      "settings": {
+        "heading": "Refined streetwear that feels effortless and looks unmistakably yours.",
+        "heading_size": "h2",
+        "text": "<p>Our collection is built for the streets: oversized fits, sharp cuts, and standout details crafted for those who define their own style.</p>",
+        "button_label": "Discover Now",
+        "button_link": "/pages/about",
+        "button_style": "dark",
+        "list_heading": "Our Collections",
+        "padding": 72
+      },
+      "blocks": {
+        "c1": {
+          "type": "collection_item",
+          "settings": {
+            "label": "Hoodies",
+            "count": "14 Collections"
+          }
+        },
+        "c2": {
+          "type": "collection_item",
+          "settings": {
+            "label": "Pants",
+            "count": "09 Collections"
+          }
+        },
+        "c3": {
+          "type": "collection_item",
+          "settings": {
+            "label": "Jackets",
+            "count": "20 Collections"
+          }
+        },
+        "c4": {
+          "type": "collection_item",
+          "settings": {
+            "label": "T-Shirts",
+            "count": "12 Collections"
+          }
+        },
+        "c5": {
+          "type": "collection_item",
+          "settings": {
+            "label": "Accessories",
+            "count": "08 Collections"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5"
+      ]
+    },
+    "best": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "bestsellers",
+        "products_count": "6",
+        "layout": "carousel",
+        "columns": "4",
+        "eyebrow": "",
+        "heading": "Top pics just for you",
+        "header_split": true,
+        "subheading": "Stay ahead of the trend. Discover our latest streetwear essentials designed to keep your style fresh every season.",
+        "show_subtitle": false,
+        "show_price": true,
+        "show_rating": true,
+        "rating_count": "4.90 (175 reviews)",
+        "show_button": false,
+        "price_align": "below",
+        "section_button_label": "Shop the Hype",
+        "button_style": "dark",
+        "image_ratio": "portrait",
+        "padding": 56
+      }
+    },
+    "movement": {
+      "type": "lookbook-collage",
+      "settings": {
+        "heading": "Not just clothing. \nA movement.",
+        "heading_size": "h1",
+        "show_star": true,
+        "star_color": "#f26a1b",
+        "text": "We create more than outfits — we create identity. Inspired by the streets and designed for individuality, our streetwear blends comfort with bold aesthetics for those who refuse to blend in.",
+        "button_label": "Learn More About Us",
+        "button_link": "/pages/about",
+        "button_style": "outline",
+        "background_color": "#111111",
+        "text_color": "#ffffff",
+        "padding": 72
+      },
+      "blocks": {
+        "t1": {
+          "type": "tile",
+          "settings": {
+            "size": "lg"
+          }
+        },
+        "t2": {
+          "type": "tile",
+          "settings": {
+            "size": "sm"
+          }
+        },
+        "t3": {
+          "type": "tile",
+          "settings": {
+            "size": "tall"
+          }
+        },
+        "t4": {
+          "type": "tile",
+          "settings": {
+            "size": "md"
+          }
+        },
+        "t5": {
+          "type": "tile",
+          "settings": {
+            "size": "wide"
+          }
+        },
+        "t6": {
+          "type": "tile",
+          "settings": {
+            "size": "sm"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ]
+    },
+    "styles": {
+      "type": "featured-showcase",
+      "settings": {
+        "collection": "bestsellers",
+        "grid_count": 4,
+        "show_rating": true,
+        "rating_suffix": "4.90 (175 reviews)",
+        "grid_rating_suffix": "4.8 (200+ reviews)",
+        "price_text": "$139",
+        "image_ratio": "tall",
+        "eyebrow": "",
+        "heading": "The styles everyone wants right now",
+        "heading_size": "h2",
+        "subheading": "These are the drops everyone's chasing. Limited stock, high demand — get yours before they're gone.",
+        "button_label": "Explore More",
+        "button_link": "/collections/all",
+        "button_style": "dark",
+        "padding": 56
+      }
+    },
+    "info": {
+      "type": "feature-cards",
+      "settings": {
+        "heading": "Explore our diverse range of streetwear essentials for every occasion",
+        "heading_size": "h2",
+        "show_star": true,
+        "star_color": "#f26a1b",
+        "dividers": true,
+        "padding": 72,
+        "colors_background": "#111111",
+        "colors_text": "#ffffff"
+      },
+      "blocks": {
+        "c1": {
+          "type": "card",
+          "settings": {
+            "icon": "ruler",
+            "title": "Find your perfect fit with our curated categories.",
+            "text": "From hoodies to accessories, we have something for everyone.",
+            "link_label": "Shop",
+            "link": "/collections/all"
+          }
+        },
+        "c2": {
+          "type": "card",
+          "settings": {
+            "icon": "smile",
+            "title": "Discover our best-selling styles that everyone is talking about",
+            "text": "These are the must-have pieces that define our brand.",
+            "link_label": "Browse All",
+            "link": "/collections/all"
+          }
+        },
+        "c3": {
+          "type": "card",
+          "settings": {
+            "icon": "tshirt",
+            "title": "Elevate your wardrobe with our exclusive accessories collection",
+            "text": "Complete your look with our unique and stylish accessories.",
+            "link_label": "Browse All",
+            "link": "/collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3"
+      ]
+    },
+    "lifestyle": {
+      "type": "lifestyle-banner",
+      "settings": {
+        "heading": "Not just clothing, but a lifestyle",
+        "heading_size": "h1",
+        "text": "Our collection merges culture and identity with modern design, ensuring every piece resonates with your unique style.",
+        "content_position": "right",
+        "min_height": 460,
+        "inset": 24
+      },
+      "blocks": {
+        "b1": {
+          "type": "button",
+          "settings": {
+            "label": "Learn More",
+            "link": "/pages/about",
+            "style": "light"
+          }
+        },
+        "b2": {
+          "type": "button",
+          "settings": {
+            "label": "Discover Now",
+            "link": "/collections/all",
+            "style": "outline"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2"
+      ]
+    }
+  },
+  "order": [
+    "hero",
+    "sale",
+    "about",
+    "best",
+    "movement",
+    "styles",
+    "info",
+    "lifestyle"
+  ]
+}

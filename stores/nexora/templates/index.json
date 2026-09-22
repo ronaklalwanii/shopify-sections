@@ -1,0 +1,224 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "blocks": {
+        "b1": {
+          "type": "button",
+          "settings": {
+            "label": "Find a property",
+            "link": "/collections/all",
+            "style": "primary",
+            "icon": "arrow-right"
+          }
+        },
+        "v1": {
+          "type": "video",
+          "settings": {
+            "label": "Watch the video"
+          }
+        },
+        "m1": {
+          "type": "property_card",
+          "settings": {
+            "title": "Villa in Sochi",
+            "meta": "420 m² · 4 bedrooms · By the sea",
+            "price": "125 000 000 ₽",
+            "link": "/collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "v1",
+        "m1"
+      ],
+      "settings": {
+        "layout": "card",
+        "eyebrow": "Real estate in the best locations",
+        "badge_chip": "10+ years in the market",
+        "chips_row": "All specifications\nResidential\nCommercial\nSuburban\nInvestment",
+        "heading": "Spaces to\nfall in love\nwith",
+        "heading_size": "h0",
+        "subheading": "<p>We source and sell real estate for living, investing and inspiration</p>",
+        "text_align": "left",
+        "avatars_count": 0
+      }
+    },
+    "steps": {
+      "type": "steps",
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "title": "Consultation",
+            "text": "We discuss your goals and wishes"
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "title": "Shortlisting options",
+            "text": "We present the best properties for your brief"
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "title": "Viewings arranged",
+            "text": "We show properties at a time that suits you"
+          }
+        },
+        "s4": {
+          "type": "step",
+          "settings": {
+            "title": "Deal & support",
+            "text": "We handle the paperwork right up to handover of keys"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "settings": {
+        "eyebrow": "How we work",
+        "heading": "From idea\nto keys",
+        "text": "We handle every stage of the deal so you can enjoy the result.",
+        "button_label": "More about the process",
+        "button_link": "/pages/about",
+        "padding": 72
+      }
+    },
+    "properties": {
+      "type": "project-cards",
+      "blocks": {
+        "p1": {
+          "type": "project",
+          "settings": {
+            "badge": "New",
+            "title": "Sea-view apartment",
+            "location": "Sochi, Romashkovaya street",
+            "specs": "78 m² · 3 bedrooms · 8th floor",
+            "price": "28 500 000 ₽",
+            "link_label": "View",
+            "link": "/collections/all"
+          }
+        },
+        "p2": {
+          "type": "project",
+          "settings": {
+            "badge": "For business",
+            "title": "Modern house in the Moscow region",
+            "location": "Moscow region, Istra residential complex",
+            "specs": "240 m² · 4 bedrooms · 2 floors",
+            "price": "45 000 000 ₽",
+            "link_label": "View",
+            "link": "/collections/all"
+          }
+        },
+        "p3": {
+          "type": "project",
+          "settings": {
+            "badge": "Investment",
+            "title": "Apartment in Dubai",
+            "location": "UAE, Dubai",
+            "specs": "52 m² · 1 bedroom · 15th floor",
+            "price": "18 900 000 ₽",
+            "link_label": "View",
+            "link": "/collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "settings": {
+        "eyebrow": "Curated selection",
+        "heading": "Best offers",
+        "link_label": "View all properties",
+        "link": "/collections/all",
+        "columns": "3",
+        "style": "specs",
+        "show_wishlist": true
+      }
+    },
+    "invest": {
+      "type": "invest-split",
+      "blocks": {
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "icon": "check-circle",
+            "text": "Trusted developers and properties"
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "icon": "shield",
+            "text": "Legal security at every stage"
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "icon": "hands",
+            "text": "A personal approach to every client"
+          }
+        },
+        "f4": {
+          "type": "feature",
+          "settings": {
+            "icon": "sparkle",
+            "text": "Up-to-date analytics and the best terms"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4"
+      ],
+      "settings": {
+        "heading": "Profitable investments\nin reliable real estate",
+        "text": "We help you invest in properties with high income potential and value growth.",
+        "button_label": "Get a consultation",
+        "button_link": "/pages/contact",
+        "dark_color": "#263947",
+        "padding": 56
+      }
+    },
+    "contact": {
+      "type": "contact-strip",
+      "settings": {
+        "prompt": "Still have questions?",
+        "heading": "Contact us in the way that suits you",
+        "button_label": "Contact us",
+        "button_link": "/pages/contact",
+        "padding": 40
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "steps",
+    "properties",
+    "invest",
+    "contact"
+  ]
+}

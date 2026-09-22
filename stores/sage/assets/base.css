@@ -1,0 +1,321 @@
+/* ==========================================================================
+   Atelier Four — base.css
+   Design tokens, reset, typography, layout, buttons, forms, utilities.
+   Palette lives in Shopify color schemes; everything derives from scheme vars.
+   ========================================================================== */
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-style: var(--font-body-style);
+  font-weight: var(--font-body-weight);
+  font-size: var(--body-size);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  color: var(--color-foreground);
+  background-color: var(--color-background);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+img, svg, video { display: block; max-width: 100%; }
+img { height: auto; }
+h1, h2, h3, h4, h5, h6, .h0, .h1, .h2, .h3, .h4, .h5 {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  letter-spacing: var(--heading-spacing);
+  line-height: 1.15;
+  color: var(--color-heading);
+  margin: 0 0 0.6em;
+}
+p { margin: 0 0 1em; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; padding: 0; }
+ul, ol { margin: 0; padding: 0; }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 2px; }
+
+/* ---------- Type scale ---------- */
+.h0, h1 {
+  font-size: calc(clamp(2.4rem, 1.4rem + 3.4vw, 4.3rem) * var(--heading-scale));
+}
+.h1 {
+  font-size: calc(clamp(1.9rem, 1.2rem + 2.2vw, 3rem) * var(--heading-scale));
+}
+.h2 {
+  font-size: calc(clamp(1.55rem, 1.15rem + 1.5vw, 2.3rem) * var(--heading-scale));
+}
+.h3 {
+  font-size: calc(clamp(1.2rem, 1rem + 0.7vw, 1.5rem) * var(--heading-scale));
+}
+.h4 { font-size: calc(1.15rem * var(--heading-scale)); line-height: 1.3; }
+.h5 { font-size: calc(1rem * var(--heading-scale)); line-height: 1.35; }
+
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 0.9rem;
+}
+.subtitle { font-size: 0.95rem; color: var(--color-text-muted, rgba(0,0,0,0.6)); }
+.text-muted { color: var(--color-text-muted, rgba(0,0,0,0.6)); }
+
+/* ---------- Layout ---------- */
+.page-width {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding-inline: clamp(1rem, 4vw, 3rem);
+}
+.page-width--narrow { max-width: 820px; }
+.section {
+  padding-block: var(--section-space);
+}
+:root {
+  --section-space: 5.5rem;
+  --section-space-sm: 3.5rem;
+  --section-gap: 2rem;
+}
+[spacing="compact"] { --section-space: 3.5rem; }
+[spacing="spacious"] { --section-space: 7.5rem; }
+@media (max-width: 749px) {
+  :root { --section-space: 3.5rem; --section-space-sm: 2.5rem; }
+  [spacing="spacious"] { --section-space: 5rem; }
+}
+.section + .section { margin-top: 0; }
+
+.section-header { text-align: center; max-width: 720px; margin: 0 auto var(--section-gap); }
+.section-header--left { text-align: left; margin-left: 0; }
+.section-header p { color: var(--color-text-muted, rgba(0,0,0,0.6)); }
+
+/* ---------- Color schemes (populated per-scheme by CSS custom props) ---------- */
+.color-scheme,
+[class^="color-scheme-"], [class*=" color-scheme-"] {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+.color-scheme--inverse { background-color: var(--color-background-secondary); }
+
+/* ---------- Buttons ---------- */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.95rem 1.9rem;
+  border-radius: var(--button-radius);
+  border: 1px solid transparent;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  text-transform: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  text-align: center;
+}
+.button:hover { transform: translateY(-1px); }
+.button:active { transform: translateY(0); }
+.button--primary { background: var(--color-accent); color: var(--color-accent-label); }
+.button--primary:hover { filter: brightness(1.06); }
+.button--dark { background: var(--color-heading); color: var(--color-background); }
+.button--dark:hover { filter: brightness(1.15); }
+.button--outline {
+  background: transparent;
+  color: var(--color-outline-label);
+  border-color: currentColor;
+}
+.button--outline:hover { background: rgba(0,0,0,0.04); }
+.button--light { background: #ffffff; color: var(--color-heading); }
+.button--link {
+  padding: 0;
+  background: none;
+  color: inherit;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 0.85rem;
+  border-radius: 0;
+}
+.button--link .arrow-link { gap: 0.4rem; }
+.button--small { padding: 0.65rem 1.2rem; font-size: 0.72rem; }
+.button--full { width: 100%; }
+.button[disabled], .button.is-disabled { opacity: 0.55; pointer-events: none; }
+
+.arrow-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: var(--nav-spacing);
+  text-transform: uppercase;
+  color: inherit;
+}
+.arrow-link svg { transition: transform 0.2s ease; }
+.arrow-link:hover svg { transform: translateX(4px); }
+.text-link {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 0.2rem;
+  color: inherit;
+}
+
+/* Round icon-button used across editorial designs */
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  color: inherit;
+  background: transparent;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.icon-button:hover { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-accent-label); }
+
+/* ---------- Forms ---------- */
+.field { position: relative; display: block; }
+.field__input, .input {
+  width: 100%;
+  padding: 0.9rem 1.1rem;
+  font: inherit;
+  font-size: 0.9rem;
+  color: inherit;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--button-radius);
+  appearance: none;
+}
+.field__input:focus, .input:focus { border-color: var(--color-accent); outline: none; }
+textarea.field__input { min-height: 120px; resize: vertical; }
+.field__label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+  color: inherit;
+}
+.form__message { font-size: 0.85rem; margin-top: 0.75rem; }
+.form__message--error { color: #b3261e; }
+.form__message--success { color: var(--color-accent); }
+.select-wrapper { position: relative; display: inline-block; }
+.select-wrapper svg { position: absolute; right: 0.9rem; top: 50%; transform: translateY(-50%); pointer-events: none; }
+select.input { padding-right: 2.4rem; cursor: pointer; }
+
+/* Newsletter underline-style input (boutique look) */
+.newsletter-form { display: flex; gap: 0.75rem; align-items: stretch; }
+.newsletter-form--underline .field__input {
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  padding-inline: 0.25rem;
+}
+.newsletter-form--underline .field__input:focus { border-bottom-color: var(--color-accent); }
+
+/* ---------- Utilities ---------- */
+.visually-hidden {
+  position: absolute !important;
+  overflow: hidden;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  word-wrap: normal !important;
+}
+.skip-to-content-link:focus {
+  position: fixed !important;
+  z-index: 100;
+  top: 0.75rem; left: 0.75rem;
+  width: auto; height: auto;
+  clip: auto;
+  padding: 0.75rem 1.25rem;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  border-radius: var(--button-radius);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+.hidden { display: none !important; }
+.desktop-only { display: initial; }
+@media (max-width: 989px) { .desktop-only { display: none !important; } }
+.mobile-only { display: none !important; }
+@media (max-width: 989px) { .mobile-only { display: initial !important; } }
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.grid { display: grid; gap: var(--grid-gap, 1.5rem); }
+.flex { display: flex; }
+.rte { max-width: 65ch; }
+.rte img { margin: 1.5rem 0; }
+.rte h2, .rte h3 { margin-top: 1.6em; }
+.rte a { text-decoration: underline; text-underline-offset: 3px; }
+.rte blockquote {
+  margin: 1.5rem 0;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--color-accent);
+  font-style: italic;
+}
+
+/* Rating stars */
+.rating { display: inline-flex; align-items: center; gap: 0.15rem; color: var(--color-accent); }
+.rating svg { width: 0.9rem; height: 0.9rem; }
+.rating--static { letter-spacing: 0.1em; }
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: var(--color-accent-label);
+}
+.badge--soft { background: var(--color-accent); color: var(--color-accent-label); }
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: var(--section-gap);
+}
+.pagination a, .pagination span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.4rem;
+  height: 2.4rem;
+  border-radius: var(--button-radius);
+  font-size: 0.85rem;
+  border: 1px solid var(--color-border);
+}
+.pagination .is-current { background: var(--color-accent); color: var(--color-accent-label); border-color: var(--color-accent); }
+.pagination a:hover { border-color: var(--color-accent); }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Sections with a palette override get their colors from the inline vars */
+[style*="--color-background"] {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}

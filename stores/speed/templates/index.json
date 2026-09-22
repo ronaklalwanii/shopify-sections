@@ -1,0 +1,204 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "layout": "full",
+        "height": "lg",
+        "overlay_opacity": 0,
+        "eyebrow": "",
+        "heading": "ENDURANCE",
+        "fluid_heading": true,
+        "giant_heading": true,
+        "giant_size": "16",
+        "overlap_clearance": 150,
+        "edge_padding": 44,
+        "photo_height": 200,
+        "heading_size": "h0",
+        "subheading": "",
+        "text_align": "left",
+        "avatars_count": 4,
+        "meta_text": "The people behind our gear share one mindset: if it supports your run, it must be built to the highest standard.",
+        "scroll_label": ""
+      }
+    },
+    "statement": {
+      "type": "giant-text",
+      "blocks": {
+        "p1": {
+          "type": "pill_image",
+          "settings": {
+            "fallback": "sp-pill-1.jpg"
+          }
+        },
+        "p2": {
+          "type": "pill_image",
+          "settings": {
+            "fallback": "sp-pill-2.jpg"
+          }
+        },
+        "p3": {
+          "type": "pill_image",
+          "settings": {
+            "fallback": "sp-pill-3.jpg"
+          }
+        },
+        "p4": {
+          "type": "pill_image",
+          "settings": {
+            "fallback": "sp-pill-4.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "p1",
+        "p2",
+        "p3",
+        "p4"
+      ],
+      "settings": {
+        "text": "Our curated collection [pill] blends comfort, [pill] strength, and style to support every athlete [pill] in reaching [pill] their full potential.",
+        "use_body_font": true,
+        "uppercase": false,
+        "min_size": 30,
+        "vw_size": "5",
+        "max_size": 80,
+        "weight": 500,
+        "letter_spacing": -2,
+        "subheading": "Performance-driven gear, from training to race day.",
+        "subheading_2": "Now available for dedicated athletes.",
+        "align": "center",
+        "background_color": "#ffffff",
+        "leading": "11"
+      }
+    },
+    "findnext": {
+      "type": "find-next",
+      "settings": {
+        "heading_ink": "Find what",
+        "heading_mut_1": "you'll",
+        "heading_mut_2": "love next.",
+        "text": "Browse handpicked fashion pieces crafted to refine your everyday look and enhance your style.",
+        "button_label": "Learn more",
+        "button_color": "#ffe08d"
+      }
+    },
+    "best": {
+      "type": "featured-collection",
+      "blocks": {
+        "c1": {
+          "type": "category_tab",
+          "settings": {
+            "label": "Running shoes",
+            "count": "52"
+          }
+        },
+        "c2": {
+          "type": "category_tab",
+          "settings": {
+            "label": "Apparel",
+            "count": "24"
+          }
+        },
+        "c3": {
+          "type": "category_tab",
+          "settings": {
+            "label": "Accessories",
+            "count": "16"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3"
+      ],
+      "settings": {
+        "collection": "speed-best",
+        "products_count": "6",
+        "layout": "grid",
+        "columns": "3",
+        "image_ratio": "square",
+        "show_subtitle": false,
+        "show_price": true,
+        "price_align": "split",
+        "show_rating": false,
+        "badge_text": "NEW",
+        "show_swatches": true,
+        "show_button": false,
+        "eyebrow": "Elevated gear for serious runners",
+        "eyebrow_icon": true,
+        "show_tabs_nav": true,
+        "tab_1_label": "New in",
+        "tab_2_label": "Best Sellers",
+        "show_quick_add": true,
+        "heading": "Running Essentials\nThat Deliver",
+        "subheading": "Carefully selected footwear, apparel, and gear crafted to enhance performance and endurance.",
+        "section_button_label": "",
+        "padding": 72
+      }
+    },
+    "tiles": {
+      "type": "promo-tiles",
+      "blocks": {
+        "t1": {
+          "type": "tile",
+          "settings": {
+            "caption": "What to Wear to Play Tennis"
+          }
+        },
+        "t2": {
+          "type": "tile",
+          "settings": {
+            "featured": true,
+            "caption": "",
+            "button_label": "Trail Running Guide"
+          }
+        },
+        "t3": {
+          "type": "tile",
+          "settings": {
+            "caption": "Inspired by athletes"
+          }
+        },
+        "t4": {
+          "type": "tile",
+          "settings": {
+            "caption": "Accessories to Enhance Sports"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ],
+      "settings": {
+        "heading": "Your Complete\nSports Resource",
+        "text": "From what to wear to where to train, discover curated guides and essentials to support your active lifestyle.",
+        "caption_style": "plain",
+        "background_color": "#f08a1d",
+        "glow_color": "#ffd9ae",
+        "band_radius": 24,
+        "heading_color": "#111111"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "statement",
+    "findnext",
+    "best",
+    "tiles"
+  ]
+}

@@ -1,0 +1,138 @@
+{%- comment -%}
+  About + stats — serif intro with pill CTA beside dark stat cards
+  (Mariana "Strategy meets creativity").
+{%- endcomment -%}
+<section class="section about-stats" style="--section-space: {{ section.settings.padding | default: 88 }}px; background: var(--color-background-secondary);">
+  <div class="page-width">
+    <div class="about-stats__grid">
+      <div class="about-stats__intro">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="rose-eyebrow">{{ section.settings.eyebrow | escape }}</span>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="about-stats__heading">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <p class="about-stats__text">{{ section.settings.text | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.button_label != blank -%}
+          <a href="{{ section.settings.button_link | default: '#' }}" class="pill-link">
+            {{ section.settings.button_label | escape }}
+            <span class="pill-link__arrow">{% render 'icon', name: 'arrow-right', size: 12 %}</span>
+          </a>
+        {%- endif -%}
+      </div>
+
+      <div class="about-stats__cards">
+        {%- for block in section.blocks -%}
+          <div class="about-stats__card" {{ block.shopify_attributes }}>
+            <span class="about-stats__icon">{% render 'icon', name: block.settings.icon, size: 18 %}</span>
+            {%- if block.settings.title != blank -%}
+              <p class="about-stats__card-title">{{ block.settings.title | escape }}</p>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <p class="about-stats__card-text">{{ block.settings.text | escape }}</p>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-stats__grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+  }
+  .about-stats__heading {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 3.4vw, 3rem);
+    line-height: 1.15;
+    color: var(--color-heading);
+    margin: 0.9rem 0 1.1rem;
+  }
+  .about-stats__text { font-size: 0.9rem; line-height: 1.7; color: var(--color-text-muted); max-width: 26rem; margin: 0 0 1.6rem; }
+  .about-stats__cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.9rem; }
+  .about-stats__card {
+    background: var(--color-background);
+    border: 1px solid rgba(226, 178, 164, 0.18);
+    border-radius: 0.9rem;
+    padding: 1.2rem 1rem 1.4rem;
+    display: flex; flex-direction: column; gap: 0.55rem;
+  }
+  .about-stats__icon {
+    width: 2.2rem; height: 2.2rem; border-radius: 0.6rem;
+    background: rgba(226, 178, 164, 0.14); color: var(--color-accent);
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 0.4rem;
+  }
+  .about-stats__card-title {
+    font-family: var(--font-heading);
+    font-size: 1.05rem; line-height: 1.3;
+    color: var(--color-heading); margin: 0;
+  }
+  .about-stats__card-text { font-size: 0.74rem; line-height: 1.55; color: var(--color-text-muted); margin: 0; }
+  @media (max-width: 989px) {
+    .about-stats__grid { grid-template-columns: 1fr; }
+    .about-stats__cards { grid-template-columns: 1fr; }
+  }
+  @media (min-width: 541px) and (max-width: 989px) {
+    .about-stats__cards { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "About + stats",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "About me" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Strategy meets creativity:" },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "I'm Mariana, a brand and digital designer with a passion for creating visual experiences and building meaningful brand identities that capture and connect."
+    },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "More about me" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "range", "id": "padding", "label": "Vertical padding", "min": 32, "max": 160, "step": 8, "unit": "px", "default": 88 }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat card",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "sparkle", "label": "Sparkle" },
+            { "value": "flower", "label": "Flower" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "star", "label": "Star" },
+            { "value": "box", "label": "Box" }
+          ],
+          "default": "sparkle"
+        },
+        { "type": "text", "id": "title", "label": "Title", "default": "5+ Years Experience" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Helping businesses stand out and find their people." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About + stats",
+      "blocks": [
+        { "type": "stat" },
+        { "type": "stat", "settings": { "icon": "flower", "title": "100+ Projects Completed", "text": "From small local brands to national names." } },
+        { "type": "stat", "settings": { "icon": "heart", "title": "Brand Strategist", "text": "Turning ideas into visual stories that connect." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

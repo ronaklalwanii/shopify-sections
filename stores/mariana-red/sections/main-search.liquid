@@ -1,0 +1,67 @@
+{%- comment -%}
+  Search page — form, product results, pages and articles.
+{%- endcomment -%}
+<section class="section" style="--section-space: 3rem;">
+  <div class="page-width">
+    <header class="page-header" style="padding-block: 0 1.6rem;">
+      <h1 class="h2">{{ 'general.search.search' | t }}</h1>
+      <form action="{{ routes.search_url }}" method="get" role="search" class="search-page__form">
+        <label class="visually-hidden" for="SearchInput">{{ 'general.search.search' | t }}</label>
+        <input
+          type="search"
+          id="SearchInput"
+          class="input"
+          name="q"
+          value="{{ search.terms | escape }}"
+          placeholder="{{ 'general.search.placeholder' | t }}"
+        >
+        <button type="submit" class="button button--dark">{{ 'general.search.submit' | t }}</button>
+      </form>
+      {%- if search.performed -%}
+        <p class="subtitle" role="status">
+          {%- if search.results_count == 0 -%}
+            {{ 'general.search.no_results' | t: terms: search.terms }}
+          {%- else -%}
+            {{ 'general.search.results_with_count' | t: count: search.results_count }}
+          {%- endif -%}
+        </p>
+      {%- endif -%}
+    </header>
+
+    {%- if search.performed and search.results_count > 0 -%}
+      {%- paginate search.results by 12 -%}
+        <div class="product-grid product-grid--cols-4" style="margin-top: 2rem;">
+          {%- for item in search.results -%}
+            {%- if item.object_type == 'product' -%}
+              {% render 'product-card', product: item, show_price: true %}
+            {%- else -%}
+              <div class="card">
+                {%- if item.image -%}
+                  <div class="card__media ratio-landscape">
+                    {{ item.image | image_url: width: 600 | image_tag: loading: 'lazy', alt: item.title }}
+                  </div>
+                {%- endif -%}
+                <div class="card__content" style="text-align: left;">
+                  <p class="card__subtitle">{{ item.object_type | capitalize }}</p>
+                  <h3 class="card__title"><a href="{{ item.url }}">{{ item.title | escape }}</a></h3>
+                  {%- if item.content != blank -%}
+                    <p class="card__subtitle">{{ item.content | strip_html | truncate: 90 }}</p>
+                  {%- endif -%}
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        {% render 'pagination', paginate: paginate %}
+      {%- endpaginate -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Search results",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

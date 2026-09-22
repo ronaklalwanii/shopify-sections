@@ -1,0 +1,65 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "menu-1": {
+          "type": "menu",
+          "settings": {
+            "heading": "Shop",
+            "menu": "footer"
+          }
+        },
+        "menu-2": {
+          "type": "menu",
+          "settings": {
+            "heading": "Collections",
+            "menu": "footer"
+          }
+        },
+        "menu-3": {
+          "type": "menu",
+          "settings": {
+            "heading": "Support",
+            "menu": "footer"
+          }
+        },
+        "newsletter": {
+          "type": "newsletter",
+          "settings": {
+            "heading": "Newsletter",
+            "text": "Stay inspired with new arrivals, style tips and exclusive offers.",
+            "placeholder": "Enter your email",
+            "button_label": "Subscribe"
+          }
+        }
+      },
+      "block_order": [
+        "menu-1",
+        "menu-2",
+        "menu-3",
+        "newsletter"
+      ],
+      "settings": {
+        "tagline": "Conscious simplicity — healthy skin & hair.",
+        "colors_background": "#e5ded4",
+        "colors_text": "#33302b",
+        "brand_name": "Sage"
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

@@ -1,0 +1,166 @@
+{%- comment -%}
+  ==========================================================================
+  FLIP NOTE — self-contained Shopify section
+  A colored card with a note tucked behind it. Click (or tap) and the note
+  slides out and flips up to reveal its message. Interactive, playful.
+  Single file, no dependencies. Horizon-era settings only.
+  ==========================================================================
+{%- endcomment -%}
+{%- assign sid = section.id -%}
+
+<section class="fn fn-{{ section.id }}" id="fn-{{ section.id }}"
+  style="--fn-bg: {{ section.settings.background_color }}; --fn-card: {{ section.settings.card_color }}; --fn-card-ink: {{ section.settings.card_text_color }}; --fn-note: {{ section.settings.note_color }}; --fn-note-ink: {{ section.settings.note_text_color }}; --fn-radius: {{ section.settings.card_radius }}px;"
+>
+  <button type="button" class="fn__scene" data-fn-flip aria-pressed="false" aria-label="Reveal the note">
+    <span class="fn__card">
+      {%- if section.settings.card_mark != blank -%}<span class="fn__mark">{{ section.settings.card_mark | escape }}</span>{%- endif -%}
+      <span class="fn__label">{{ section.settings.card_label | escape }}</span>
+      {%- if section.settings.card_sub != blank -%}<span class="fn__sub">{{ section.settings.card_sub | escape }}</span>{%- endif -%}
+    </span>
+    <span class="fn__note">
+      <span class="fn__note-text">{{ section.settings.note_text }}</span>
+      {%- if section.settings.note_note != blank -%}<span class="fn__note-foot">{{ section.settings.note_note | escape }}</span>{%- endif -%}
+    </span>
+  </button>
+  {%- if section.settings.hint != blank -%}
+    <p class="fn__hint">{{ section.settings.hint | escape }}</p>
+  {%- endif -%}
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('fn-{{ section.id }}');
+    if (!root || root.dataset.fnInit) return;
+    root.dataset.fnInit = '1';
+    var btn = root.querySelector('[data-fn-flip]');
+    btn.addEventListener('click', function () {
+      var open = root.classList.toggle('is-open');
+      btn.setAttribute('aria-pressed', open ? 'true' : 'false');
+    });
+    /* subtle pointer tilt on the card */
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      root.addEventListener('pointermove', function (e) {
+        var r = root.getBoundingClientRect();
+        var dx = (e.clientX - r.left) / r.width - 0.5;
+        var dy = (e.clientY - r.top) / r.height - 0.5;
+        btn.style.setProperty('--fn-tilt', (dx * -6) + 'deg');
+        btn.style.setProperty('--fn-tilt2', (dy * 4) + 'deg');
+      });
+      root.addEventListener('pointerleave', function () {
+        btn.style.setProperty('--fn-tilt', '0deg');
+        btn.style.setProperty('--fn-tilt2', '0deg');
+      });
+    }
+  })();
+</script>
+
+{% style %}
+  #fn-{{ sid }} {
+    background: var(--fn-bg);
+    min-height: {{ section.settings.height }}vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 1.6rem;
+    font-family: {{ section.settings.font_stack }};
+    overflow: hidden; padding: 2rem 1rem;
+  }
+  #fn-{{ sid }} *, #fn-{{ sid }} *::before, #fn-{{ sid }} *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  #fn-{{ sid }} .fn__scene {
+    position: relative;
+    width: min({{ section.settings.card_width }}px, 82vw);
+    aspect-ratio: {{ section.settings.card_ratio }};
+    background: transparent; border: 0; cursor: pointer;
+    perspective: 1200px;
+    transform: rotate(calc(var(--fn-tilt, 0deg) + var(--fn-tilt2, 0deg)));
+    transition: transform 0.2s ease-out;
+  }
+  #fn-{{ sid }} .fn__card, #fn-{{ sid }} .fn__note {
+    position: absolute; inset: 0;
+    border-radius: var(--fn-radius);
+    display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end;
+    padding: clamp(1rem, 3vw, 1.8rem);
+    text-align: left;
+  }
+  #fn-{{ sid }} .fn__card {
+    background: var(--fn-card); color: var(--fn-card-ink);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+    transform-origin: left bottom;
+    z-index: 2;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
+  }
+  #fn-{{ sid }} .fn__mark { position: absolute; top: 1rem; left: 1.1rem; font-size: 1.6rem; line-height: 1; }
+  #fn-{{ sid }} .fn__label {
+    font-size: clamp(0.72rem, 1.4vw, 0.9rem); font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase; margin-top: 0.4rem;
+  }
+  #fn-{{ sid }} .fn__sub { font-size: 0.66rem; opacity: 0.7; margin-top: 0.25rem; }
+
+  #fn-{{ sid }} .fn__note {
+    background: var(--fn-note); color: var(--fn-note-ink);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
+    transform: translate(9%, -8%) rotate(6deg) scale(0.86);
+    transform-origin: left bottom;
+    justify-content: center; gap: 0.8rem;
+    z-index: 1;
+    transition: transform 0.65s cubic-bezier(0.34, 1.4, 0.64, 1), z-index 0s 0.3s;
+  }
+  #fn-{{ sid }} .fn__note-text { font-size: clamp(0.78rem, 1.5vw, 0.95rem); line-height: 1.65; }
+  #fn-{{ sid }} .fn__note-foot { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.7; }
+
+  /* open state: note swings to the front */
+  #fn-{{ sid }}.is-open .fn__note {
+    transform: translate(4%, -4%) rotate(-4deg) scale(1);
+    z-index: 3;
+    transition: transform 0.7s cubic-bezier(0.34, 1.4, 0.64, 1), z-index 0s;
+  }
+  #fn-{{ sid }}.is-open .fn__card { transform: rotate(-2deg) scale(0.98); box-shadow: 0 14px 34px rgba(0,0,0,0.16); }
+
+  #fn-{{ sid }} .fn__hint { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.5; }
+  #fn-{{ sid }}.is-open .fn__hint { opacity: 0.25; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #fn-{{ sid }} .fn__card, #fn-{{ sid }} .fn__note, #fn-{{ sid }} .fn__scene { transition: none !important; transform: none !important; }
+    #fn-{{ sid }}.is-open .fn__note { transform: none; z-index: 3; }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Flip Note",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Card" },
+    { "type": "text", "id": "card_mark", "label": "Corner mark", "default": "✳" },
+    { "type": "text", "id": "card_label", "label": "Card label", "default": "Confidential files" },
+    { "type": "text", "id": "card_sub", "label": "Card sub-line", "default": "A note from the founders" },
+    { "type": "color", "id": "card_color", "label": "Card color", "default": "#2f52c4" },
+    { "type": "color", "id": "card_text_color", "label": "Card text", "default": "#ffffff" },
+    { "type": "range", "id": "card_width", "label": "Card width", "min": 200, "max": 520, "step": 10, "unit": "px", "default": 340 },
+    { "type": "select", "id": "card_ratio", "label": "Card ratio", "options": [
+      { "value": "3 / 4", "label": "Portrait (3:4)" },
+      { "value": "1 / 1", "label": "Square" },
+      { "value": "4 / 5", "label": "Portrait (4:5)" }
+    ], "default": "3 / 4" },
+    { "type": "range", "id": "card_radius", "label": "Card corner radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 16 },
+    { "type": "header", "content": "Hidden note" },
+    { "type": "richtext", "id": "note_text", "label": "Note message", "default": "<p>This document is intended and intended solely for the individual or entity specifically named as a recipient and for no other person or entity. If you are not the intended recipient, be aware that any disclosure, copying or distribution is strictly prohibited.</p>" },
+    { "type": "text", "id": "note_note", "label": "Note footer", "default": "Yes, we make bad life decisions. So poor." },
+    { "type": "color", "id": "note_color", "label": "Note color", "default": "#ffffff" },
+    { "type": "color", "id": "note_text_color", "label": "Note text", "default": "#1c1e22" },
+    { "type": "header", "content": "Section" },
+    { "type": "text", "id": "hint", "label": "Hint text", "default": "Click the card" },
+    { "type": "range", "id": "height", "label": "Section height", "min": 50, "max": 110, "step": 5, "unit": "vh", "default": 85 },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#f6e9dc" },
+    {
+      "type": "select", "id": "font_stack", "label": "Typeface",
+      "options": [
+        { "value": "system-ui, sans-serif", "label": "System" },
+        { "value": "'Helvetica Neue', Helvetica, Arial, sans-serif", "label": "Grotesque" },
+        { "value": "Georgia, 'Times New Roman', serif", "label": "Serif" }
+      ],
+      "default": "system-ui, sans-serif"
+    }
+  ],
+  "presets": [ { "name": "Flip Note" } ]
+}
+{% endschema %}

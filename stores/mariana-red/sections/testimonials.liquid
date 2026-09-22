@@ -1,0 +1,194 @@
+{%- comment -%}
+  Testimonials — bordered review cards with optional carousel behavior.
+{%- endcomment -%}
+{%- capture section_colors_style -%}
+  {%- if section.settings.colors_background != blank or section.settings.colors_text != blank -%}
+    {%- assign override_bg = section.settings.colors_background | default: settings.colors_background -%}
+    {%- assign override_fg = section.settings.colors_text | default: settings.colors_text -%}
+    style="--color-background: {{ override_bg }}; --color-surface: {{ override_bg | color_lighten: 3 }}; --color-border: {{ override_bg | color_darken: 9 | color_modify: 'alpha', 0.85 }}; --color-foreground: {{ override_fg }}; --color-heading: {{ override_fg }}; --color-text-muted: {{ override_fg | color_modify: 'alpha', 0.62 }};"
+  {%- endif -%}
+{%- endcapture -%}
+<section {{ section_colors_style }} class="section" style="--section-space: {{ section.settings.padding | default: 72 }}px;">
+  <div class="page-width">
+    <div class="section-intro">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="h2 section-intro__title">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.layout == 'carousel' -%}
+      <div class="card-carousel" data-carousel>
+        <div class="card-carousel__track" style="--visible: {{ section.settings.columns }}; --grid-gap: 0;">
+          {%- for block in section.blocks -%}
+            <div {{ block.shopify_attributes }}>
+              {% render 'testimonial-card',
+                avatar: block.settings.avatar,
+                name: block.settings.name,
+                rating: block.settings.rating,
+                quote: block.settings.quote,
+                verified: section.settings.show_verified
+              %}
+            </div>
+          {%- endfor -%}
+        </div>
+        <button type="button" class="card-carousel__arrow card-carousel__arrow--prev" data-carousel-prev aria-label="{{ 'general.slider.previous' | t }}">
+          <span class="icon-button">{% render 'icon', name: 'chevron-left', size: 14 %}</span>
+        </button>
+        <button type="button" class="card-carousel__arrow card-carousel__arrow--next" data-carousel-next aria-label="{{ 'general.slider.next' | t }}">
+          <span class="icon-button">{% render 'icon', name: 'chevron-right', size: 14 %}</span>
+        </button>
+      </div>
+    {%- else -%}
+      <div class="testimonial-grid" style="--t-cols: {{ section.settings.columns }};">
+        {%- for block in section.blocks -%}
+          <div {{ block.shopify_attributes }}>
+            {% render 'testimonial-card',
+              avatar: block.settings.avatar,
+              name: block.settings.name,
+              rating: block.settings.rating,
+              quote: block.settings.quote,
+              verified: section.settings.show_verified
+            %}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "max_blocks": 9,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Words from our community"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "carousel",
+          "label": "Carousel"
+        }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "show_verified",
+      "label": "Show \"Verified buyer\" badge",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 24,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_background",
+      "label": "Background override",
+      "info": "Leave empty to use the theme colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_text",
+      "label": "Text color override"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "avatar",
+          "label": "Avatar"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Emily R."
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "The quality and fit are absolutely lovely. I wear this dress constantly \u2014 it's now my go-to for important plans."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        {
+          "type": "testimonial"
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "name": "Sophia L.",
+            "quote": "Beautiful clothing, sustainable materials and lovely packaging. Couldn't ask for more."
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "name": "Olivia M.",
+            "quote": "Every piece feels so elegant and comfortable. I get so many compliments whenever I wear them."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

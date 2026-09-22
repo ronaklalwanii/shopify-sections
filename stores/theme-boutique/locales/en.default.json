@@ -1,0 +1,154 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin language editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "accessibility": {
+    "skip_to_text": "Skip to content",
+    "close": "Close"
+  },
+  "general": {
+    "meta": {
+      "tags": "Tagged \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
+    "continue_shopping": "Continue shopping",
+    "search": {
+      "search": "Search",
+      "placeholder": "Search products, pages…",
+      "submit": "Search",
+      "no_results": "No results found for “{{ terms }}”. Check the spelling or try a different word.",
+      "results_with_count": "{{ count }} results"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous page",
+      "next": "Next page"
+    },
+    "slider": {
+      "previous": "Previous slide",
+      "next": "Next slide"
+    },
+    "share": {
+      "copy": "Share"
+    },
+    "404": {
+      "title": "404",
+      "subtext": "This page has wandered off.",
+      "help": "The page you were looking for doesn't exist or has moved.",
+      "home": "Back to home"
+    },
+    "password_page": {
+      "opening_soon": "Opening soon",
+      "subtext": "Enter store password",
+      "submit": "Enter",
+      "admin_link_html": "Are you the store owner? <a href=\"/admin\" style=\"text-decoration: underline;\">Log in here</a>."
+    }
+  },
+  "newsletter": {
+    "label": "Email address",
+    "success": "Thanks for subscribing!"
+  },
+  "sections": {
+    "header": {
+      "menu": "Menu",
+      "navigation": "Primary navigation"
+    },
+    "cart": {
+      "title": "Your cart",
+      "error": "There was an error while updating your cart. Please try again.",
+      "remove": "Remove",
+      "note": "Order note",
+      "note_placeholder": "Anything we should know?",
+      "subtotal": "Subtotal",
+      "checkout": "Checkout",
+      "view_cart": "View cart",
+      "empty": "Your cart is empty",
+      "empty_hint": "Discover something you'll love.",
+      "shipping_taxes": "Taxes and shipping calculated at checkout.",
+      "quantity": "Quantity",
+      "decrease": "Decrease quantity",
+      "increase": "Increase quantity",
+      "free_shipping_unlocked": "🎉 You've unlocked free shipping!",
+      "free_shipping_remaining": "You're {{ amount }} away from free shipping."
+    },
+    "testimonials": {
+      "verified": "Verified buyer"
+    },
+    "footer": {
+      "secondary": "Footer"
+    },
+    "slideshow": {
+      "previous_slide": "Previous review",
+      "next_slide": "Next review"
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "added": "Added to cart",
+      "sold_out": "Sold out",
+      "on_sale": "Sale",
+      "error": "Unable to add this item to the cart.",
+      "include_taxes": "Taxes included. ",
+      "shipping_policy_html": "<a href=\"{{ link }}\">Shipping</a> calculated at checkout.",
+      "media": {
+        "load_image": "Load image {{ index }}"
+      }
+    }
+  },
+  "onboarding": {
+    "product_title": "Example product title",
+    "featured_product_text": "Tell your story here — what makes this piece special, how it's made and why customers love it."
+  },
+  "collections": {
+    "general": {
+      "product_count": {
+        "one": "{{ count }} product",
+        "other": "{{ count }} products"
+      },
+      "from": "From",
+      "to": "to",
+      "apply": "Apply",
+      "no_matches": "No products match these filters.",
+      "all_collections": "All collections"
+    },
+    "sorting": {
+      "title": "Sort by"
+    }
+  },
+  "blogs": {
+    "article": {
+      "read_more": "Read more"
+    },
+    "general": {
+      "no_articles": "No articles yet. Check back soon."
+    }
+  },
+  "customer": {
+    "account": {
+      "title": "Account"
+    }
+  },
+  "contact": {
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "hours": "Opening hours",
+      "comment": "Message",
+      "submit": "Send message",
+      "success": "Thanks for reaching out. We'll reply as soon as we can.",
+      "error": "Please fill in the highlighted fields."
+    }
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  }
+}

@@ -1,0 +1,65 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "menu-1": {
+          "type": "menu",
+          "settings": {
+            "heading": "Shop",
+            "menu": "footer"
+          }
+        },
+        "menu-2": {
+          "type": "menu",
+          "settings": {
+            "heading": "Collections",
+            "menu": "footer"
+          }
+        },
+        "menu-3": {
+          "type": "menu",
+          "settings": {
+            "heading": "Support",
+            "menu": "footer"
+          }
+        },
+        "newsletter": {
+          "type": "newsletter",
+          "settings": {
+            "heading": "Stay in touch",
+            "text": "Subscribe to new properties and offers.",
+            "placeholder": "Your email",
+            "button_label": "Subscribe"
+          }
+        }
+      },
+      "block_order": [
+        "menu-1",
+        "menu-2",
+        "menu-3",
+        "newsletter"
+      ],
+      "settings": {
+        "tagline": "Spaces to fall in love with. Real estate for living and investing.",
+        "colors_background": "#171717",
+        "colors_text": "#f6f5f2",
+        "brand_name": "NEXORA"
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

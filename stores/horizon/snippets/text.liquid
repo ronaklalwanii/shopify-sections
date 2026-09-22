@@ -1,0 +1,145 @@
+{%- doc -%}
+  Intended for use in a block similar to the text block.
+
+  @param {string} [class] - custom class to define in addition to text-block classes
+  @param {string} [fallback_text] - fallback text if settings.text does not exist
+  @param {object} [block] - The block object
+  @param {string} [width] - width of the text block
+{%- enddoc -%}
+
+{% render 'text-block-styles' %}
+
+{% liquid
+  assign block_settings = block.settings
+  assign plain_text = block_settings.text | strip_newlines | strip
+  assign visible_text = plain_text | strip_html
+  assign text_width = width | default: block_settings.width
+
+  assign font_size_value = block_settings.font_size | split: 'rem' | first | times: 1.0
+
+  if block_settings.font_size contains 'heading-lg' or block_settings.font_size contains 'heading-xl' or font_size_value >= 3
+    assign type = 'display'
+  elsif block_settings.font_size contains 'heading' or font_size_value >= 1.25
+    assign type = 'heading'
+  else
+    assign type = 'body'
+  endif
+  if block_settings.type_preset == 'rte' or block_settings.type_preset == 'paragraph'
+    assign is_rte = true
+  endif
+
+  capture text_block_classes
+    if text_width == '100%'
+      echo 'text-block--align-' | append: block_settings.alignment
+      if block_settings.max_width == 'none'
+        echo ' text-block--full-width '
+      endif
+    endif
+    if block_settings.type_preset == 'custom'
+      echo ' custom-typography '
+      if block_settings.font_size != ''
+        echo ' custom-font-size '
+      endif
+      if block_settings.color != ''
+        echo ' custom-color '
+      endif
+    endif
+    if block_settings.background
+      echo ' text-block--background '
+    endif
+    if is_rte
+      echo ' rte '
+    endif
+  endcapture
+%}
+
+{% capture attributes %}
+  class="{{ class }} spacing-style text-block text-block--{{ block.id }} {{ block_settings.type_preset }}
+    {{ text_block_classes }}
+  "
+
+  style="
+    {% render 'spacing-padding', settings: block_settings %}
+    {% render 'typography-style', settings: block_settings %}
+    {% if block_settings.text_color != blank %}
+      --color: {{ block_settings.text_color }};
+      --color-rgb: {{ block_settings.text_color.rgb }};
+    {% endif %}
+
+    --width: {{ text_width }};
+    --max-width: var(--max-width--{{ type }}-{{ block_settings.max_width }});
+    {% if text_width == "100%" %}
+      --text-align: {{ block_settings.alignment }};
+    {% endif %}
+    {% if block_settings.background %}
+      --text-background-color: {{ block_settings.background_color | default: 'rgb(255 255 255 / 1.0)' }};
+      --text-corner-radius: {{ block_settings.corner_radius }}px;
+      --text-padding: max(var(--padding-2xs), calc((var(--text-corner-radius) + var(--padding-xs)) * (1 - cos(45deg))));
+    {% endif %}
+  "
+
+  {{ block.shopify_attributes }}
+{% endcapture %}
+
+{% liquid
+  # {{ attributes }} must be on the immediate HTML parent of the text to preserve
+  # the click-to-edit connection in the theme editor. Any break between the text,
+  # including if-statements, will break the connection.
+
+  assign element = 'div'
+  if is_rte
+    assign element = 'rte-formatter'
+  endif
+%}
+
+{% if fallback_text != blank and visible_text == blank %}
+  <div {{ attributes | strip_newlines | strip }}>
+    {{ fallback_text }}
+  </div>
+{% elsif plain_text != blank %}
+  <{{ element }} {{ attributes | strip_newlines | strip }}>
+    {{ block.settings.text }}
+  </{{ element }}>
+{% endif %}
+
+{% stylesheet %}
+  :root {
+    --text-align-default: left;
+  }
+
+  /* Base text-block sizing, spacing, wrapping, and helper classes live in text-block-styles.liquid. */
+  .text-block {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: var(--horizontal-alignment);
+    color: var(--color, var(--color-foreground));
+  }
+
+  [style*='--horizontal-alignment: center'] .text-block {
+    --text-align-default: center;
+  }
+
+  [style*='--horizontal-alignment: flex-end'] .text-block {
+    --text-align-default: right;
+  }
+
+  [style*='--horizontal-alignment: flex-start'] > .text-block {
+    --text-align-default: left;
+  }
+
+  [style*='--horizontal-alignment: center'] > .text-block {
+    --text-align-default: center;
+  }
+
+  [style*='--horizontal-alignment: flex-end'] > .text-block {
+    --text-align-default: right;
+  }
+
+  .text-block > * {
+    width: var(--width, 100%);
+    max-inline-size: min(100%, var(--max-width, 100%));
+    text-align: var(--text-align, var(--text-align-default));
+    text-wrap: var(--text-wrap);
+  }
+{% endstylesheet %}

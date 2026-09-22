@@ -1,0 +1,485 @@
+{%- comment -%}
+  Collection page — header, sort, storefront filters, product grid, pagination.
+{%- endcomment -%}
+{%- liquid
+  assign per_page = section.settings.products_per_page | default: 12
+-%}
+<section class="section" style="--section-space: {{ section.settings.padding | default: 48 }}px;">
+  <div class="page-width">
+    <div class="collection-header">
+      {%- if section.settings.show_collection_title -%}
+        <h1 class="h1">{{ collection.title | escape }}</h1>
+      {%- endif -%}
+      {%- if section.settings.show_collection_description and collection.description != blank -%}
+        <div class="rte" style="margin-inline: auto;">{{ collection.description }}</div>
+      {%- endif -%}
+      {%- if section.settings.show_collection_image and collection.image -%}
+        {{ collection.image | image_url: width: 1200 | image_tag: widths: '540, 720, 1200', alt: collection.image.alt }}
+      {%- endif -%}
+    </div>
+
+    <div class="collection-toolbar">
+      <p class="collection-toolbar__count" role="status">
+        {{ 'collections.general.product_count' | t: count: collection.products_count }}
+      </p>
+      <div class="collection-toolbar__filters">
+        {%- for filter in collection.filters -%}
+          {%- case filter.type -%}
+            {%- when 'boolean', 'list' -%}
+              <details class="collection-filter">
+                <summary>
+                  {{ filter.label | escape }}
+                  {%- if filter.active_values.size > 0 -%}
+                    <span class="badge" style="padding: 0.1rem 0.45rem;">{{ filter.active_values.size }}</span>
+                  {%- endif -%}
+                  {% render 'icon', name: 'chevron-down', size: 11 %}
+                </summary>
+                <form class="collection-filter__panel">
+                  <ul>
+                    {%- for value in filter.values -%}
+                      <li>
+                        <label>
+                          <input
+                            type="checkbox"
+                            name="{{ value.param_name }}"
+                            value="{{ value.value }}"
+                            {% if value.active %}checked{% endif %}
+                            {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                          >
+                          {{ value.label | escape }} ({{ value.count }})
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                  {%- if collection.current_type or collection.current_vendor or collection.current_tags -%}
+                    <input type="hidden" name="q" value="{{ collection.title }}">
+                  {%- endif -%}
+                  <button type="submit" class="button button--dark button--small collection-filter__apply">{{ 'collections.general.apply' | t }}</button>
+                </form>
+              </details>
+            {%- when 'price_range' -%}
+              <details class="collection-filter">
+                <summary>
+                  {{ filter.label | escape }}
+                  {% render 'icon', name: 'chevron-down', size: 11 %}
+                </summary>
+                <form class="collection-filter__panel">
+                  <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <label class="visually-hidden" for="Filter-{{ filter.min_value.param_name }}">{{ 'collections.general.from' | t }}</label>
+                    <input class="input" id="Filter-{{ filter.min_value.param_name }}" type="number" name="{{ filter.min_value.param_name }}" placeholder="Min" min="0" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.min_value.value | divided_by: 100 }}">
+                    <span>—</span>
+                    <label class="visually-hidden" for="Filter-{{ filter.max_value.param_name }}">{{ 'collections.general.to' | t }}</label>
+                    <input class="input" id="Filter-{{ filter.max_value.param_name }}" type="number" name="{{ filter.max_value.param_name }}" placeholder="Max" min="0" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.max_value.value | divided_by: 100 }}">
+                  </div>
+                  <button type="submit" class="button button--dark button--small collection-filter__apply">{{ 'collections.general.apply' | t }}</button>
+                </form>
+              </details>
+          {%- endcase -%}
+        {%- endfor -%}
+
+        {%- if section.settings.show_sort -%}
+          <form class="select-wrapper">
+            <label class="visually-hidden" for="SortBy">{{ 'collections.sorting.title' | t }}</label>
+            <select name="sort_by" id="SortBy" class="input" style="padding-block: 0.5rem; font-size: 0.8rem;" onchange="this.form.submit()">
+              {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+              {%- for option in collection.sort_options -%}
+                <option value="{{ option.value }}" {% if option.value == sort_by %}selected{% endif %}>{{ option.name }}</option>
+              {%- endfor -%}
+            </select>
+          </form>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- paginate collection.products by per_page -%}
+      {%- if collection.products.size > 0 -%}
+        <div class="product-grid product-grid--cols-4 collection-grid--products">
+          {%- for product in collection.products -%}
+            {% render 'product-card', product: product, show_price: true, show_button: section.settings.card_button %}
+          {%- endfor -%}
+        </div>
+        {% render 'pagination', paginate: paginate %}
+      {%- else -%}
+        <div class="collection-empty">
+          <p>{{ 'collections.general.no_matches' | t }}</p>
+          {% render 'button', label_key: 'general.continue_shopping', link: collection.url, style: 'outline', size: 'small' %}
+        </div>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% style %}
+  /* phase 2 enrichment: every rule is merchant-gated; defaults change nothing */
+  {%- if section.settings.enr_heading_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-heading: {{ section.settings.enr_heading_color }}; }
+  #shopify-section-{{ section.id }} h1, #shopify-section-{{ section.id }} h2, #shopify-section-{{ section.id }} h3, #shopify-section-{{ section.id }} [class*="__heading"], #shopify-section-{{ section.id }} [class*="__title"] { color: var(--enr-heading); }
+  {%- endif -%}
+  {%- if section.settings.enr_text_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-text: {{ section.settings.enr_text_color }}; }
+  #shopify-section-{{ section.id }} p, #shopify-section-{{ section.id }} li, #shopify-section-{{ section.id }} [class*="__text"], #shopify-section-{{ section.id }} [class*="__sub"], #shopify-section-{{ section.id }} [class*="__desc"] { color: var(--enr-text); }
+  {%- endif -%}
+  {%- if section.settings.enr_accent_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-accent: {{ section.settings.enr_accent_color }}; }
+  #shopify-section-{{ section.id }} .eyebrow, #shopify-section-{{ section.id }} [class*="__eyebrow"], #shopify-section-{{ section.id }} [class*="__kicker"] { color: var(--enr-accent); }
+  {%- endif -%}
+  {%- if section.settings.enr_card_bg != blank -%}
+  #shopify-section-{{ section.id }} { --enr-card: {{ section.settings.enr_card_bg }}; }
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__box"] { background-color: var(--enr-card); }
+  {%- endif -%}
+  {%- if section.settings.enr_border_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-border: {{ section.settings.enr_border_color }}; }
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__box"] { border-color: var(--enr-border); }
+  {%- endif -%}
+  {%- if section.settings.enr_muted_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-muted: {{ section.settings.enr_muted_color }}; }
+  #shopify-section-{{ section.id }} small, #shopify-section-{{ section.id }} [class*="__meta"], #shopify-section-{{ section.id }} [class*="__note"], #shopify-section-{{ section.id }} [class*="__caption"] { color: var(--enr-muted); }
+  {%- endif -%}
+  {%- if section.settings.enr_fallback_bg != blank -%}
+  #shopify-section-{{ section.id }} { --enr-fallback: {{ section.settings.enr_fallback_bg }}; }
+  #shopify-section-{{ section.id }} [class*="__placeholder"], #shopify-section-{{ section.id }} .placeholder-svg { background-color: var(--enr-fallback); }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_width == 'narrow' -%}
+  #shopify-section-{{ section.id }} .page-width { max-width: 46rem; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_width == 'wide' -%}
+  #shopify-section-{{ section.id }} .page-width { max-width: none; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'left' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: left; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'center' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: center; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'right' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: right; }
+  {%- endif -%}
+  {%- if section.settings.enr_radius > 0 -%}
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__media"], #shopify-section-{{ section.id }} img { border-radius: {{ section.settings.enr_radius }}px; }
+  {%- endif -%}
+  {%- if section.settings.enr_border_width != '0' -%}
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"] { border: {{ section.settings.enr_border_width }}px solid var(--color-border, currentColor); }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_sizes -%}
+  #shopify-section-{{ section.id }} [class*="__heading"], #shopify-section-{{ section.id }} h1, #shopify-section-{{ section.id }} h2, #shopify-section-{{ section.id }} h3 { font-size: {{ section.settings.enr_title_size }}px; }
+  #shopify-section-{{ section.id }} p, #shopify-section-{{ section.id }} li, #shopify-section-{{ section.id }} [class*="__text"] { font-size: {{ section.settings.enr_body_size }}px; }
+  #shopify-section-{{ section.id }} .eyebrow, #shopify-section-{{ section.id }} [class*="__eyebrow"] { font-size: {{ section.settings.enr_eyebrow_size }}px; }
+  #shopify-section-{{ section.id }} [class*="__icon"] svg, #shopify-section-{{ section.id }} svg.icon { width: {{ section.settings.enr_icon_size }}px; height: {{ section.settings.enr_icon_size }}px; }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_spacing -%}
+  #shopify-section-{{ section.id }} > section, #shopify-section-{{ section.id }} > div { padding-block: {{ section.settings.enr_space_top }}px {{ section.settings.enr_space_bottom }}px; }
+  #shopify-section-{{ section.id }} [class*="__grid"], #shopify-section-{{ section.id }} [class*="__row"], #shopify-section-{{ section.id }} [class*="__cards"], #shopify-section-{{ section.id }} [class*="__list"] { gap: {{ section.settings.enr_gap }}px; }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_media -%}
+  #shopify-section-{{ section.id }} [class*="__media"] img, #shopify-section-{{ section.id }} [class*="__image"] img, #shopify-section-{{ section.id }} [class*="__photo"] img { max-height: {{ section.settings.enr_media_height }}px; width: 100%; object-fit: cover; }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} [class*="__media"] img, #shopify-section-{{ section.id }} [class*="__image"] img, #shopify-section-{{ section.id }} [class*="__photo"] img { max-height: {{ section.settings.enr_media_height_mobile }}px; }
+  }
+  {%- endif -%}
+{% endstyle %}
+{% schema %}
+{
+  "name": "Product grid",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 8,
+      "max": 36,
+      "step": 2,
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_title",
+      "label": "Show collection title",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_description",
+      "label": "Show collection description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_image",
+      "label": "Show collection image",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort",
+      "label": "Show sort dropdown",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "card_button",
+      "label": "Show add-to-cart on cards",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 16,
+      "max": 140,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Enriched colors (blank = as designed)"
+    },
+    {
+      "type": "color",
+      "id": "enr_heading_color",
+      "label": "Heading color"
+    },
+    {
+      "type": "color",
+      "id": "enr_text_color",
+      "label": "Body text color"
+    },
+    {
+      "type": "color",
+      "id": "enr_accent_color",
+      "label": "Accent / eyebrow color"
+    },
+    {
+      "type": "color",
+      "id": "enr_card_bg",
+      "label": "Card background"
+    },
+    {
+      "type": "color",
+      "id": "enr_border_color",
+      "label": "Card border color"
+    },
+    {
+      "type": "color",
+      "id": "enr_muted_color",
+      "label": "Muted text color"
+    },
+    {
+      "type": "color",
+      "id": "enr_fallback_bg",
+      "label": "Image fallback background"
+    },
+    {
+      "type": "header",
+      "content": "Enriched layout"
+    },
+    {
+      "type": "select",
+      "id": "enr_layout_width",
+      "label": "Content width",
+      "options": [
+        {
+          "value": "as_designed",
+          "label": "As designed"
+        },
+        {
+          "value": "narrow",
+          "label": "Narrow"
+        },
+        {
+          "value": "wide",
+          "label": "Wide"
+        }
+      ],
+      "default": "as_designed"
+    },
+    {
+      "type": "select",
+      "id": "enr_layout_align",
+      "label": "Intro alignment",
+      "options": [
+        {
+          "value": "as_designed",
+          "label": "As designed"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "as_designed"
+    },
+    {
+      "type": "header",
+      "content": "Enriched shape"
+    },
+    {
+      "type": "range",
+      "id": "enr_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "enr_border_width",
+      "label": "Card border width",
+      "options": [
+        {
+          "value": "0",
+          "label": "None"
+        },
+        {
+          "value": "1",
+          "label": "1 px"
+        },
+        {
+          "value": "2",
+          "label": "2 px"
+        },
+        {
+          "value": "3",
+          "label": "3 px"
+        },
+        {
+          "value": "4",
+          "label": "4 px"
+        }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "header",
+      "content": "Enriched sizes (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_sizes",
+      "label": "Enable custom sizes",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_title_size",
+      "label": "Title size",
+      "min": 16,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "enr_body_size",
+      "label": "Body size",
+      "min": 10,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "enr_eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 10,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "enr_icon_size",
+      "label": "Icon size",
+      "min": 12,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Enriched spacing (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_spacing",
+      "label": "Enable custom spacing",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_space_top",
+      "label": "Space top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "enr_space_bottom",
+      "label": "Space bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "enr_gap",
+      "label": "Grid gap",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Enriched media (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_media",
+      "label": "Enable custom media heights",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_media_height",
+      "label": "Media height (desktop)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "enr_media_height_mobile",
+      "label": "Media height (mobile)",
+      "min": 100,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 400
+    }
+  ]
+}
+  {% endschema %}

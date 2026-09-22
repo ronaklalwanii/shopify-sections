@@ -1,0 +1,142 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; {{ 'general.meta.tags' | t: tags: current_tags | join: ', ' }}{% endif -%}
+      {%- if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    {% style %}
+      {%- liquid
+        assign body_font_bold = settings.body_font | font_modify: 'weight', 'bold'
+        assign body_font_italic = settings.body_font | font_modify: 'style', 'italic'
+        assign heading_font_medium = settings.heading_font | font_modify: 'weight', '500'
+      -%}
+      {{ settings.body_font | font_face: font_display: 'swap' }}
+      {{ body_font_bold | font_face: font_display: 'swap' }}
+      {{ body_font_italic | font_face: font_display: 'swap' }}
+      {{ settings.heading_font | font_face: font_display: 'swap' }}
+      {{ heading_font_medium | font_face: font_display: 'swap' }}
+
+      /* Bundled brand fonts (ship with the theme — no font library dependency) */
+      @font-face { font-family: 'Anton'; src: url({{ 'anton-400.woff2' | asset_url }}) format('woff2'); font-weight: 400; font-display: swap; }
+      @font-face { font-family: 'Archivo Black'; src: url({{ 'archivo-black-400.woff2' | asset_url }}) format('woff2'); font-weight: 400; font-display: swap; }
+      @font-face { font-family: 'Jost'; src: url({{ 'jost-400.woff2' | asset_url }}) format('woff2'); font-weight: 400; font-display: swap; }
+      @font-face { font-family: 'Jost'; src: url({{ 'jost-500.woff2' | asset_url }}) format('woff2'); font-weight: 500; font-display: swap; }
+      @font-face { font-family: 'Jost'; src: url({{ 'jost-600.woff2' | asset_url }}) format('woff2'); font-weight: 600; font-display: swap; }
+      @font-face { font-family: 'Jost'; src: url({{ 'jost-700.woff2' | asset_url }}) format('woff2'); font-weight: 700; font-display: swap; }
+      @font-face { font-family: 'IBM Plex Mono'; src: url({{ 'ibm-plex-mono-400.woff2' | asset_url }}) format('woff2'); font-weight: 400; font-display: swap; }
+      @font-face { font-family: 'IBM Plex Mono'; src: url({{ 'ibm-plex-mono-500.woff2' | asset_url }}) format('woff2'); font-weight: 500; font-display: swap; }
+
+      :root {
+        --font-body: 'Jost', {% if settings.body_font.family %}{{ settings.body_font.family }}, {% endif %}{{ settings.body_font.fallback_families | default: 'sans-serif' }};
+        --font-heading: 'Anton', {% if settings.heading_font.family %}{{ settings.heading_font.family }}, {% endif %}sans-serif;
+        --font-display: 'Archivo Black', 'Anton', sans-serif;
+        --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+        --font-body-style: normal;
+        --font-heading-weight: 400;
+        --font-body-weight: 400;
+        --body-size: {{ settings.body_size | divided_by: 16.0 }}rem;
+        --heading-scale: {{ settings.heading_scale | divided_by: 100.0 }};
+        --heading-spacing: {{ settings.heading_spacing | divided_by: 100.0 }}em;
+        --nav-spacing: {{ settings.nav_spacing | divided_by: 100.0 }}em;
+        --page-width: {{ settings.page_width }}px;
+        --button-radius: {{ settings.button_radius }}px;
+        --card-radius: {{ settings.card_radius }}px;
+        --nav-uppercase: {% if settings.nav_uppercase %}uppercase{% else %}none{% endif %};
+      }
+
+      --color-background: {{ settings.colors_background }};
+      --color-background-secondary: {{ settings.colors_secondary_background }};
+      --color-foreground: {{ settings.colors_text }};
+      --color-heading: {{ settings.colors_heading }};
+      --color-accent: {{ settings.colors_accent }};
+      --color-accent-label: {{ settings.colors_accent_label }};
+      --color-outline-label: {{ settings.colors_outline_label }};
+      --color-link: {{ settings.colors_accent }};
+      --color-border: {{ settings.colors_background | color_darken: 9 | color_modify: 'alpha', 0.85 }};
+      --color-surface: {{ settings.colors_background | color_lighten: 3 }};
+      --color-text-muted: {{ settings.colors_text | color_modify: 'alpha', 0.62 }};
+
+      body {
+        {%- assign card_elems = '.card, .style-card, .testimonial-card, .article-card, .cart-summary' -%}
+      {% case settings.card_style %}
+        {% when 'bordered' %}
+          {{ card_elems }} { --card-border: 1px solid var(--color-border); --card-bg: transparent; }
+        {% when 'filled' %}
+          {{ card_elems }} { --card-border: 1px solid transparent; --card-bg: var(--color-surface); }
+        {% else %}
+          {{ card_elems }} { --card-border: none; --card-bg: transparent; }
+      {% endcase %}
+    {% endstyle %}
+
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ 'components.css' | asset_url | stylesheet_tag }}
+
+    <script>
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+      window.themeSettings = {
+        cartType: {{ settings.cart_type | json }},
+        strings: {
+          addToCart: {{ 'products.product.add_to_cart' | t | json }},
+          soldOut: {{ 'products.product.sold_out' | t | json }},
+          added: {{ 'products.product.added' | t | json }},
+          error: {{ 'products.product.error' | t | json }},
+          cartError: {{ 'sections.cart.error' | t | json }}
+        }
+      };
+    </script>
+    <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'wishlist.js' | asset_url }}" defer="defer"></script>
+
+    {{ content_for_header }}
+  </head>
+
+  <body class="template-{{ template.name | handle }} color-scheme">
+    <a class="skip-to-content-link visually-hidden" href="#MainContent">
+      {{ 'accessibility.skip_to_text' | t }}
+    </a>
+
+    {% sections 'header-group' %}
+
+    <main id="MainContent" class="content-for-layout" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    <cart-drawer class="cart-drawer" id="CartDrawer" aria-hidden="true">
+      <div class="cart-drawer__overlay" data-cart-close></div>
+      <div class="cart-drawer__panel" role="dialog" aria-modal="true" aria-label="{{ 'sections.cart.title' | t }}">
+        <div class="cart-drawer__header">
+          <p class="cart-drawer__title h5">{{ 'sections.cart.title' | t }}</p>
+          <button type="button" class="cart-drawer__close" data-cart-close aria-label="{{ 'accessibility.close' | t }}">
+            {% render 'icon', name: 'close' %}
+          </button>
+        </div>
+        <div class="cart-drawer__body" data-cart-drawer-body>
+          {% render 'cart-drawer-content' %}
+        </div>
+      </div>
+    </cart-drawer>
+
+    <script type="application/json" id="CartData">{{ cart | json }}</script>
+  </body>
+</html>

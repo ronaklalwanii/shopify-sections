@@ -1,0 +1,1459 @@
+{% doc %}
+  @prompt
+    Create a premium Interactive Editorial Cards section with a horizontal row of 5 vertical rounded cards.
+    
+    The interaction should work by changing the width of the cards, not by scaling them.
+    
+    Desktop Layout
+    Display 5 cards in one row.
+    Each card should have a tall portrait aspect ratio with large rounded corners (pill shape).
+    The section should span the full width of the page.
+    Cards should have a small consistent gap between them.
+    Show only the centre 3 cards fully.
+    The first and fifth cards should be partially visible on the left and right edges.
+    
+    Use Flexbox for the layout.
+    
+    Default widths should be approximately:
+    
+    15% | 27.5% | 27.5% | 15% | 15%
+    
+    (or another proportional layout that produces the same visual result.)
+    
+    Hover Behaviour
+    
+    When hovering over a card:
+    
+    Do NOT scale or zoom the card.
+    
+    Instead:
+    
+    Smoothly increase that card's width.
+    Smoothly reduce the widths of the remaining cards.
+    Keep the overall row width exactly the same.
+    The card height must never change.
+    Border radius must remain unchanged.
+    Images should not stretch.
+    Images should use object-fit: cover.
+    
+    Example:
+    
+    Before hover
+    
+    15% | 27.5% | 27.5% | 15% | 15%
+    
+    Hover second card
+    
+    12% | 40% | 18% | 15% | 15%
+    
+    Hover fourth card
+    
+    12% | 15% | 18% | 40% | 15%
+    
+    The transition should feel smooth and luxurious.
+    
+    Transition duration:
+    
+    350ms–450ms
+    ease
+    Card Content
+    
+    Each card should support:
+    
+    Background Image
+    Heading
+    Subtitle
+    Optional Description
+    Optional Button
+    Product Link
+    Collection Link
+    
+    Entire card should be clickable.
+    
+    Text Animation
+    
+    When hovered:
+    
+    Heading increases slightly (around 5%)
+    Subtitle fades in if hidden
+    Description fades in
+    Button fades in
+    
+    Do NOT animate the card using transform: scale().
+    
+    Only animate opacity, font size and width.
+    
+    Product Integration
+    
+    Each card should allow selecting either:
+    
+    Product
+    or
+    Collection
+    
+    If a product is selected:
+    
+    Automatically populate title
+    Automatically populate featured image (optional)
+    Link directly to the product
+    
+    If a collection is selected:
+    
+    Automatically populate collection image
+    Automatically populate collection title
+    Link directly to the collection
+    
+    Allow manual overrides.
+    
+    Typography
+    
+    Provide font controls for:
+    
+    Section Heading
+    
+    Section Subtitle
+    
+    Card Heading
+    
+    Card Subtitle
+    
+    Description
+    
+    Button
+    
+    Each should allow editing:
+    
+    Font Family
+    Font Size
+    Font Weight
+    Letter Spacing
+    Line Height
+    Text Colour
+    Text Transform
+    
+    Do not hardcode fonts.
+    
+    Section Settings
+    
+    Allow editing of:
+    
+    Section Width
+    Card Height
+    Card Gap
+    Border Radius
+    Overlay Colour
+    Overlay Opacity
+    Image Brightness
+    Image Position
+    Vertical Content Alignment
+    Horizontal Content Alignment
+    Hover Transition Speed
+    Mobile Layout
+    
+    On mobile:
+    
+    Stack all five cards vertically.
+    Full-width cards.
+    Keep the same rounded corners.
+    Disable the width animation.
+    Cards should simply display one beneath another with spacing.
+    Performance
+    Use Flexbox.
+    Animate using flex-grow or flex-basis.
+    Avoid transform: scale().
+    No layout jumps.
+    Maintain smooth 60fps animations.
+    Overall Design Style
+    
+    The finished section should feel:
+    
+    Minimal
+    Editorial
+    Luxury
+    Fashion-forward
+    Premium eyewear
+    Similar in interaction to Apple TV, Gentle Monster and high-end fashion websites.
+    
+    The entire section must be fully editable from the Shopify Theme Editor with no hardcoded content., Give me only 3 sections.
+    Make the background of the section black. 
+    
+    IN cards, allow me to add a picture and also link that with a product.
+    
+    Give me text in each card over the image. 
+    
+    GIve me imahe opacity for the text overlay in each card., Give me option to control the radius of each card seperately in mobile and computer version.
+    
+    ALso add a heading and sub heading above the cards., Give me padding on both right and left sides in compurter mode and give me an option to control the padding.
+    
+    Give me text for each card that read as:
+    
+    Card 1: Aero
+    Card 2: Atlas
+    Card 3: Elite
+    
+    Below the text give me a button for each card that reads Explore.
+    
+    Button style should be link style and when hovered on the card, the underline should form under the button. and the text increases the size by 1 px.
+    
+    Make the radius of each card as 80 px by default in computer mode, The 3rd card is being cut off, correct that, Give me option to select alignment for text inside the cards like top center and bottom. left, middle and right, Give me more space between cards 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-editorial-cards-{{ ai_gen_id }} {
+    width: 100%;
+    display: block;
+    padding: {{ block.settings.section_padding_top }}px {{ block.settings.section_padding_horizontal }}px {{ block.settings.section_padding_bottom }}px;
+    background-color: {{ block.settings.section_background_color }};
+  }
+
+  .ai-editorial-cards__container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.section_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-editorial-cards__header-{{ ai_gen_id }} {
+    text-align: {{ block.settings.header_alignment }};
+    margin-bottom: {{ block.settings.header_spacing }}px;
+  }
+
+  .ai-editorial-cards__title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.section_heading_font.family }}, {{ block.settings.section_heading_font.fallback_families }};
+    font-weight: {{ block.settings.section_heading_font.weight }};
+    font-size: {{ block.settings.section_heading_size }}px;
+    letter-spacing: {{ block.settings.section_heading_letter_spacing }}em;
+    line-height: {{ block.settings.section_heading_line_height }};
+    text-transform: {{ block.settings.section_heading_transform }};
+    color: {{ block.settings.section_heading_color }};
+    margin: 0 0 {{ block.settings.section_subtitle_spacing }}px;
+  }
+
+  .ai-editorial-cards__subtitle-{{ ai_gen_id }} {
+    font-family: {{ block.settings.section_subtitle_font.family }}, {{ block.settings.section_subtitle_font.fallback_families }};
+    font-weight: {{ block.settings.section_subtitle_font.weight }};
+    font-size: {{ block.settings.section_subtitle_size }}px;
+    letter-spacing: {{ block.settings.section_subtitle_letter_spacing }}em;
+    line-height: {{ block.settings.section_subtitle_line_height }};
+    text-transform: {{ block.settings.section_subtitle_transform }};
+    color: {{ block.settings.section_subtitle_color }};
+    margin: 0;
+  }
+
+  .ai-editorial-cards__row-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.card_gap }}px;
+    width: 100%;
+  }
+
+  .ai-editorial-card-{{ ai_gen_id }} {
+    position: relative;
+    height: {{ block.settings.card_height }}px;
+    overflow: hidden;
+    transition: flex-basis {{ block.settings.transition_speed }}ms ease, flex-grow {{ block.settings.transition_speed }}ms ease;
+    flex-shrink: 0;
+  }
+
+  .ai-editorial-card-{{ ai_gen_id }}:nth-child(1) {
+    flex-basis: {{ block.settings.card_1_default_width }}%;
+    flex-grow: 0;
+    border-radius: {{ block.settings.card_1_border_radius }}px;
+  }
+
+  .ai-editorial-card-{{ ai_gen_id }}:nth-child(2) {
+    flex-basis: {{ block.settings.card_2_default_width }}%;
+    flex-grow: 0;
+    border-radius: {{ block.settings.card_2_border_radius }}px;
+  }
+
+  .ai-editorial-card-{{ ai_gen_id }}:nth-child(3) {
+    flex-basis: {{ block.settings.card_3_default_width }}%;
+    flex-grow: 0;
+    border-radius: {{ block.settings.card_3_border_radius }}px;
+  }
+
+  .ai-editorial-cards__row-{{ ai_gen_id }}:hover .ai-editorial-card-{{ ai_gen_id }}:nth-child(1):not(:hover) {
+    flex-basis: {{ block.settings.card_1_hover_width }}%;
+  }
+
+  .ai-editorial-cards__row-{{ ai_gen_id }}:hover .ai-editorial-card-{{ ai_gen_id }}:nth-child(2):not(:hover) {
+    flex-basis: {{ block.settings.card_2_hover_width }}%;
+  }
+
+  .ai-editorial-cards__row-{{ ai_gen_id }}:hover .ai-editorial-card-{{ ai_gen_id }}:nth-child(3):not(:hover) {
+    flex-basis: {{ block.settings.card_3_hover_width }}%;
+  }
+
+  .ai-editorial-card-{{ ai_gen_id }}:hover {
+    flex-basis: {{ block.settings.card_active_width }}% !important;
+  }
+
+  .ai-editorial-card__link-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .ai-editorial-card__image-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: {{ block.settings.image_position }};
+  }
+
+  .ai-editorial-card__content-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: {{ block.settings.card_padding }}px;
+  }
+
+  .ai-editorial-card-{{ ai_gen_id }}:nth-child(1) .ai-editorial-card__content-{{ ai_gen_id }} {
+    justify-content: {{ block.settings.card_1_vertical_alignment }};
+    align-items: {{ block.settings.card_1_horizontal_alignment }};
+    text-align: {{ block.settings.card_1_text_alignment }};
+  }
+
+  .ai-editorial-card-{{ ai_gen_id }}:nth-child(2) .ai-editorial-card__content-{{ ai_gen_id }} {
+    justify-content: {{ block.settings.card_2_vertical_alignment }};
+    align-items: {{ block.settings.card_2_horizontal_alignment }};
+    text-align: {{ block.settings.card_2_text_alignment }};
+  }
+
+  .ai-editorial-card-{{ ai_gen_id }}:nth-child(3) .ai-editorial-card__content-{{ ai_gen_id }} {
+    justify-content: {{ block.settings.card_3_vertical_alignment }};
+    align-items: {{ block.settings.card_3_horizontal_alignment }};
+    text-align: {{ block.settings.card_3_text_alignment }};
+  }
+
+  .ai-editorial-card__heading-{{ ai_gen_id }} {
+    font-family: {{ block.settings.card_heading_font.family }}, {{ block.settings.card_heading_font.fallback_families }};
+    font-weight: {{ block.settings.card_heading_font.weight }};
+    font-size: {{ block.settings.card_heading_size }}px;
+    letter-spacing: {{ block.settings.card_heading_letter_spacing }}em;
+    line-height: {{ block.settings.card_heading_line_height }};
+    text-transform: {{ block.settings.card_heading_transform }};
+    color: {{ block.settings.card_heading_color }};
+    margin: 0 0 {{ block.settings.card_heading_spacing }}px;
+    transition: font-size {{ block.settings.transition_speed }}ms ease;
+  }
+
+  .ai-editorial-card-{{ ai_gen_id }}:hover .ai-editorial-card__heading-{{ ai_gen_id }} {
+    font-size: calc({{ block.settings.card_heading_size }}px * 1.05);
+  }
+
+  .ai-editorial-card__subtitle-{{ ai_gen_id }} {
+    font-family: {{ block.settings.card_subtitle_font.family }}, {{ block.settings.card_subtitle_font.fallback_families }};
+    font-weight: {{ block.settings.card_subtitle_font.weight }};
+    font-size: {{ block.settings.card_subtitle_size }}px;
+    letter-spacing: {{ block.settings.card_subtitle_letter_spacing }}em;
+    line-height: {{ block.settings.card_subtitle_line_height }};
+    text-transform: {{ block.settings.card_subtitle_transform }};
+    color: {{ block.settings.card_subtitle_color }};
+    margin: 0 0 {{ block.settings.button_spacing }}px;
+  }
+
+  .ai-editorial-card__button-{{ ai_gen_id }} {
+    font-family: {{ block.settings.button_font.family }}, {{ block.settings.button_font.fallback_families }};
+    font-weight: {{ block.settings.button_font.weight }};
+    font-size: {{ block.settings.button_size }}px;
+    letter-spacing: {{ block.settings.button_letter_spacing }}em;
+    text-transform: {{ block.settings.button_transform }};
+    color: {{ block.settings.button_color }};
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    transition: font-size {{ block.settings.transition_speed }}ms ease;
+  }
+
+  .ai-editorial-card__button-{{ ai_gen_id }}::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: {{ block.settings.button_color }};
+    transition: width {{ block.settings.transition_speed }}ms ease;
+  }
+
+  .ai-editorial-card-{{ ai_gen_id }}:hover .ai-editorial-card__button-{{ ai_gen_id }} {
+    font-size: calc({{ block.settings.button_size }}px + 1px);
+  }
+
+  .ai-editorial-card-{{ ai_gen_id }}:hover .ai-editorial-card__button-{{ ai_gen_id }}::after {
+    width: 100%;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-editorial-cards-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_top }}px {{ block.settings.mobile_section_padding_horizontal }}px {{ block.settings.section_padding_bottom }}px;
+    }
+
+    .ai-editorial-cards__row-{{ ai_gen_id }} {
+      flex-direction: column;
+      gap: {{ block.settings.mobile_card_gap }}px;
+    }
+
+    .ai-editorial-card-{{ ai_gen_id }},
+    .ai-editorial-card-{{ ai_gen_id }}:nth-child(1),
+    .ai-editorial-card-{{ ai_gen_id }}:nth-child(2),
+    .ai-editorial-card-{{ ai_gen_id }}:nth-child(3) {
+      flex-basis: auto !important;
+      width: 100%;
+      height: {{ block.settings.mobile_card_height }}px;
+    }
+
+    .ai-editorial-card-{{ ai_gen_id }}:nth-child(1) {
+      border-radius: {{ block.settings.card_1_mobile_border_radius }}px;
+    }
+
+    .ai-editorial-card-{{ ai_gen_id }}:nth-child(2) {
+      border-radius: {{ block.settings.card_2_mobile_border_radius }}px;
+    }
+
+    .ai-editorial-card-{{ ai_gen_id }}:nth-child(3) {
+      border-radius: {{ block.settings.card_3_mobile_border_radius }}px;
+    }
+
+    .ai-editorial-cards__row-{{ ai_gen_id }}:hover .ai-editorial-card-{{ ai_gen_id }}:nth-child(1):not(:hover),
+    .ai-editorial-cards__row-{{ ai_gen_id }}:hover .ai-editorial-card-{{ ai_gen_id }}:nth-child(2):not(:hover),
+    .ai-editorial-cards__row-{{ ai_gen_id }}:hover .ai-editorial-card-{{ ai_gen_id }}:nth-child(3):not(:hover) {
+      flex-basis: auto !important;
+    }
+
+    .ai-editorial-cards__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.section_heading_size | times: 0.7 }}px;
+    }
+
+    .ai-editorial-cards__subtitle-{{ ai_gen_id }} {
+      font-size: {{ block.settings.section_subtitle_size | times: 0.8 }}px;
+    }
+
+    .ai-editorial-card__heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.card_heading_size | times: 0.8 }}px;
+    }
+
+    .ai-editorial-card__subtitle-{{ ai_gen_id }} {
+      font-size: {{ block.settings.card_subtitle_size | times: 0.8 }}px;
+    }
+
+    .ai-editorial-card__button-{{ ai_gen_id }} {
+      font-size: {{ block.settings.button_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<editorial-cards-{{ ai_gen_id }} class="ai-editorial-cards-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-editorial-cards__container-{{ ai_gen_id }}">
+    {% if block.settings.section_title != blank or block.settings.section_subtitle != blank %}
+      <div class="ai-editorial-cards__header-{{ ai_gen_id }}">
+        {% if block.settings.section_title != blank %}
+          <h2 class="ai-editorial-cards__title-{{ ai_gen_id }}">{{ block.settings.section_title }}</h2>
+        {% endif %}
+        {% if block.settings.section_subtitle != blank %}
+          <p class="ai-editorial-cards__subtitle-{{ ai_gen_id }}">{{ block.settings.section_subtitle }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="ai-editorial-cards__row-{{ ai_gen_id }}">
+      {% for i in (1..3) %}
+        {% liquid
+  assign card_enabled_key = 'card_' | append: i | append: '_enabled'
+  assign card_product_key = 'card_' | append: i | append: '_product'
+  assign card_collection_key = 'card_' | append: i | append: '_collection'
+  assign card_image_key = 'card_' | append: i | append: '_image'
+  assign card_overlay_opacity_key = 'card_' | append: i | append: '_overlay_opacity'
+  assign card_heading_key = 'card_' | append: i | append: '_heading'
+  assign card_subtitle_key = 'card_' | append: i | append: '_subtitle'
+  assign card_button_text_key = 'card_' | append: i | append: '_button_text'
+
+  assign card_enabled = block.settings[card_enabled_key]
+  assign card_product = block.settings[card_product_key]
+  assign card_collection = block.settings[card_collection_key]
+  assign card_image = block.settings[card_image_key]
+  assign card_overlay_opacity = block.settings[card_overlay_opacity_key]
+  assign card_heading = block.settings[card_heading_key]
+  assign card_subtitle = block.settings[card_subtitle_key]
+  assign card_button_text = block.settings[card_button_text_key]
+
+  assign final_image = card_image
+  assign final_heading = card_heading
+  assign final_link = ''
+
+  if card_product != blank
+    if final_image == blank
+      assign final_image = card_product.featured_image
+    endif
+    if final_heading == blank
+      assign final_heading = card_product.title
+    endif
+    assign final_link = card_product.url
+  elsif card_collection != blank
+    if final_image == blank
+      assign final_image = card_collection.image
+    endif
+    if final_image == blank and card_collection.products.first != blank
+      assign final_image = card_collection.products.first.featured_image
+    endif
+    if final_heading == blank
+      assign final_heading = card_collection.title
+    endif
+    assign final_link = card_collection.url
+  endif
+%}
+
+        {% if card_enabled %}
+          <div class="ai-editorial-card-{{ ai_gen_id }}">
+            <a href="{{ final_link | default: '#' }}" class="ai-editorial-card__link-{{ ai_gen_id }}">
+              {% if final_image != blank %}
+                <img
+                  src="{{ final_image | image_url: width: 800 }}"
+                  alt="{{ final_image.alt | escape }}"
+                  class="ai-editorial-card__image-{{ ai_gen_id }}"
+                  loading="lazy"
+                  width="800"
+                  height="{{ block.settings.card_height }}"
+                  style="opacity: {{ card_overlay_opacity }};"
+                >
+              {% else %}
+                <div class="ai-editorial-card__image-{{ ai_gen_id }}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); opacity: {{ card_overlay_opacity }};"></div>
+              {% endif %}
+
+              <div class="ai-editorial-card__content-{{ ai_gen_id }}">
+                {% if final_heading != blank %}
+                  <h3 class="ai-editorial-card__heading-{{ ai_gen_id }}">{{ final_heading }}</h3>
+                {% endif %}
+
+                {% if card_subtitle != blank %}
+                  <p class="ai-editorial-card__subtitle-{{ ai_gen_id }}">{{ card_subtitle }}</p>
+                {% endif %}
+
+                {% if card_button_text != blank %}
+                  <span class="ai-editorial-card__button-{{ ai_gen_id }}">{{ card_button_text }}</span>
+                {% endif %}
+              </div>
+            </a>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</editorial-cards-{{ ai_gen_id }}>
+
+{% schema %}
+{
+  "name": "Editorial cards",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "color",
+      "id": "section_background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "section_width",
+      "label": "Maximum width",
+      "min": 1000,
+      "max": 2000,
+      "step": 50,
+      "unit": "px",
+      "default": 1600
+    },
+    {
+      "type": "range",
+      "id": "section_padding_horizontal",
+      "label": "Horizontal padding (desktop)",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "mobile_section_padding_horizontal",
+      "label": "Horizontal padding (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "section_title",
+      "label": "Title",
+      "default": "Featured Collection"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "section_subtitle",
+      "label": "Subtitle",
+      "default": "Discover our latest styles"
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "label": "Spacing below header",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Card dimensions"
+    },
+    {
+      "type": "range",
+      "id": "card_height",
+      "label": "Card height (desktop)",
+      "min": 400,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "mobile_card_height",
+      "label": "Card height (mobile)",
+      "min": 300,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "default": 450
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Gap between cards (desktop)",
+      "min": 5,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "mobile_card_gap",
+      "label": "Gap between cards (mobile)",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "label": "Card content padding",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Card border radius (desktop)"
+    },
+    {
+      "type": "range",
+      "id": "card_1_border_radius",
+      "label": "Card 1 radius",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "card_2_border_radius",
+      "label": "Card 2 radius",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "card_3_border_radius",
+      "label": "Card 3 radius",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Card border radius (mobile)"
+    },
+    {
+      "type": "range",
+      "id": "card_1_mobile_border_radius",
+      "label": "Card 1 radius",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "card_2_mobile_border_radius",
+      "label": "Card 2 radius",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "card_3_mobile_border_radius",
+      "label": "Card 3 radius",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Card widths - Default state"
+    },
+    {
+      "type": "range",
+      "id": "card_1_default_width",
+      "label": "Card 1 width",
+      "min": 10,
+      "max": 50,
+      "step": 0.5,
+      "unit": "%",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "card_2_default_width",
+      "label": "Card 2 width",
+      "min": 10,
+      "max": 50,
+      "step": 0.5,
+      "unit": "%",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "card_3_default_width",
+      "label": "Card 3 width",
+      "min": 10,
+      "max": 50,
+      "step": 0.5,
+      "unit": "%",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Card widths - Hover state"
+    },
+    {
+      "type": "range",
+      "id": "card_active_width",
+      "label": "Active (hovered) card width",
+      "min": 30,
+      "max": 60,
+      "step": 0.5,
+      "unit": "%",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "card_1_hover_width",
+      "label": "Card 1 width when others hovered",
+      "min": 10,
+      "max": 35,
+      "step": 0.5,
+      "unit": "%",
+      "default": 26
+    },
+    {
+      "type": "range",
+      "id": "card_2_hover_width",
+      "label": "Card 2 width when others hovered",
+      "min": 10,
+      "max": 35,
+      "step": 0.5,
+      "unit": "%",
+      "default": 26
+    },
+    {
+      "type": "range",
+      "id": "card_3_hover_width",
+      "label": "Card 3 width when others hovered",
+      "min": 10,
+      "max": 35,
+      "step": 0.5,
+      "unit": "%",
+      "default": 26
+    },
+    {
+      "type": "header",
+      "content": "Image settings"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "range",
+      "id": "transition_speed",
+      "label": "Transition speed",
+      "min": 200,
+      "max": 600,
+      "step": 50,
+      "unit": "ms",
+      "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Section heading typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "section_heading_font",
+      "label": "Font",
+      "default": "montserrat_n7"
+    },
+    {
+      "type": "range",
+      "id": "section_heading_size",
+      "label": "Size",
+      "min": 20,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "section_heading_letter_spacing",
+      "label": "Letter spacing",
+      "min": -0.1,
+      "max": 0.3,
+      "step": 0.1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_heading_line_height",
+      "label": "Line height",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "default": 1.2
+    },
+    {
+      "type": "select",
+      "id": "section_heading_transform",
+      "label": "Text transform",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "lowercase", "label": "Lowercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "color",
+      "id": "section_heading_color",
+      "label": "Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "section_subtitle_spacing",
+      "label": "Spacing below title",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Section subtitle typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "section_subtitle_font",
+      "label": "Font",
+      "default": "montserrat_n4"
+    },
+    {
+      "type": "range",
+      "id": "section_subtitle_size",
+      "label": "Size",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "section_subtitle_letter_spacing",
+      "label": "Letter spacing",
+      "min": -0.1,
+      "max": 0.3,
+      "step": 0.1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_subtitle_line_height",
+      "label": "Line height",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "default": 1.5
+    },
+    {
+      "type": "select",
+      "id": "section_subtitle_transform",
+      "label": "Text transform",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "lowercase", "label": "Lowercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "color",
+      "id": "section_subtitle_color",
+      "label": "Color",
+      "default": "#cccccc"
+    },
+    {
+      "type": "header",
+      "content": "Card heading typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "card_heading_font",
+      "label": "Font",
+      "default": "montserrat_n7"
+    },
+    {
+      "type": "range",
+      "id": "card_heading_size",
+      "label": "Size",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "card_heading_letter_spacing",
+      "label": "Letter spacing",
+      "min": -0.1,
+      "max": 0.3,
+      "step": 0.1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "card_heading_line_height",
+      "label": "Line height",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "default": 1.2
+    },
+    {
+      "type": "select",
+      "id": "card_heading_transform",
+      "label": "Text transform",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "lowercase", "label": "Lowercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "color",
+      "id": "card_heading_color",
+      "label": "Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_heading_spacing",
+      "label": "Spacing below heading",
+      "min": 0,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Card subtitle typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "card_subtitle_font",
+      "label": "Font",
+      "default": "montserrat_n4"
+    },
+    {
+      "type": "range",
+      "id": "card_subtitle_size",
+      "label": "Size",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "card_subtitle_letter_spacing",
+      "label": "Letter spacing",
+      "min": -0.1,
+      "max": 0.3,
+      "step": 0.1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "card_subtitle_line_height",
+      "label": "Line height",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "default": 1.4
+    },
+    {
+      "type": "select",
+      "id": "card_subtitle_transform",
+      "label": "Text transform",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "lowercase", "label": "Lowercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "color",
+      "id": "card_subtitle_color",
+      "label": "Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_spacing",
+      "label": "Spacing below subtitle",
+      "min": 0,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Button typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "button_font",
+      "label": "Font",
+      "default": "montserrat_n4"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "label": "Size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_letter_spacing",
+      "label": "Letter spacing",
+      "min": -0.1,
+      "max": 0.3,
+      "step": 0.1,
+      "default": 0.1
+    },
+    {
+      "type": "select",
+      "id": "button_transform",
+      "label": "Text transform",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "lowercase", "label": "Lowercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Card 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_1_enabled",
+      "label": "Enable card 1",
+      "default": true
+    },
+    {
+      "type": "product",
+      "id": "card_1_product",
+      "label": "Product"
+    },
+    {
+      "type": "collection",
+      "id": "card_1_collection",
+      "label": "Collection",
+      "info": "Used when no product is selected."
+    },
+    {
+      "type": "image_picker",
+      "id": "card_1_image",
+      "label": "Custom image"
+    },
+    {
+      "type": "range",
+      "id": "card_1_overlay_opacity",
+      "label": "Image opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.6
+    },
+    {
+      "type": "text",
+      "id": "card_1_heading",
+      "label": "Custom heading",
+      "default": "Aero"
+    },
+    {
+      "type": "text",
+      "id": "card_1_subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "text",
+      "id": "card_1_button_text",
+      "label": "Button text",
+      "default": "Explore"
+    },
+    {
+      "type": "select",
+      "id": "card_1_vertical_alignment",
+      "label": "Vertical alignment",
+      "options": [
+        { "value": "flex-start", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Bottom" }
+      ],
+      "default": "flex-end"
+    },
+    {
+      "type": "select",
+      "id": "card_1_horizontal_alignment",
+      "label": "Horizontal alignment",
+      "options": [
+        { "value": "flex-start", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Right" }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "select",
+      "id": "card_1_text_alignment",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Card 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_2_enabled",
+      "label": "Enable card 2",
+      "default": true
+    },
+    {
+      "type": "product",
+      "id": "card_2_product",
+      "label": "Product"
+    },
+    {
+      "type": "collection",
+      "id": "card_2_collection",
+      "label": "Collection",
+      "info": "Used when no product is selected."
+    },
+    {
+      "type": "image_picker",
+      "id": "card_2_image",
+      "label": "Custom image"
+    },
+    {
+      "type": "range",
+      "id": "card_2_overlay_opacity",
+      "label": "Image opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.6
+    },
+    {
+      "type": "text",
+      "id": "card_2_heading",
+      "label": "Custom heading",
+      "default": "Atlas"
+    },
+    {
+      "type": "text",
+      "id": "card_2_subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "text",
+      "id": "card_2_button_text",
+      "label": "Button text",
+      "default": "Explore"
+    },
+    {
+      "type": "select",
+      "id": "card_2_vertical_alignment",
+      "label": "Vertical alignment",
+      "options": [
+        { "value": "flex-start", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Bottom" }
+      ],
+      "default": "flex-end"
+    },
+    {
+      "type": "select",
+      "id": "card_2_horizontal_alignment",
+      "label": "Horizontal alignment",
+      "options": [
+        { "value": "flex-start", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Right" }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "select",
+      "id": "card_2_text_alignment",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Card 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_3_enabled",
+      "label": "Enable card 3",
+      "default": true
+    },
+    {
+      "type": "product",
+      "id": "card_3_product",
+      "label": "Product"
+    },
+    {
+      "type": "collection",
+      "id": "card_3_collection",
+      "label": "Collection",
+      "info": "Used when no product is selected."
+    },
+    {
+      "type": "image_picker",
+      "id": "card_3_image",
+      "label": "Custom image"
+    },
+    {
+      "type": "range",
+      "id": "card_3_overlay_opacity",
+      "label": "Image opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.6
+    },
+    {
+      "type": "text",
+      "id": "card_3_heading",
+      "label": "Custom heading",
+      "default": "Elite"
+    },
+    {
+      "type": "text",
+      "id": "card_3_subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "text",
+      "id": "card_3_button_text",
+      "label": "Button text",
+      "default": "Explore"
+    },
+    {
+      "type": "select",
+      "id": "card_3_vertical_alignment",
+      "label": "Vertical alignment",
+      "options": [
+        { "value": "flex-start", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Bottom" }
+      ],
+      "default": "flex-end"
+    },
+    {
+      "type": "select",
+      "id": "card_3_horizontal_alignment",
+      "label": "Horizontal alignment",
+      "options": [
+        { "value": "flex-start", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Right" }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "select",
+      "id": "card_3_text_alignment",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial cards"
+    }
+  ]
+}
+{% endschema %}

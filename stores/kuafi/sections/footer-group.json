@@ -1,0 +1,58 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "menu-1": {
+          "type": "menu",
+          "settings": {
+            "heading": "MENU",
+            "menu": "footer"
+          }
+        },
+        "menu-2": {
+          "type": "menu",
+          "settings": {
+            "heading": "INFO",
+            "menu": "footer"
+          }
+        },
+        "newsletter": {
+          "type": "newsletter",
+          "settings": {
+            "heading": "GET PROMOTION FROM US",
+            "text": "New blends and urban drops.",
+            "placeholder": "Your Email",
+            "button_label": "SIGN ME UP",
+            "button_style": "outline"
+          }
+        }
+      },
+      "block_order": [
+        "menu-1",
+        "menu-2",
+        "newsletter"
+      ],
+      "settings": {
+        "tagline": "More than a coffee space — it's an experience.",
+        "colors_background": "#ece6d8",
+        "colors_text": "#191614",
+        "brand_name": "Kuafi"
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

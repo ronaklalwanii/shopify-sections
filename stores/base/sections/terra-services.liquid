@@ -1,0 +1,294 @@
+{%- comment -%}
+  Section: Terra Services — 3+2 grid (design.jpg)
+  - Top row 3 cards, bottom row 2 cards (6-col underlying)
+  - Light / Dark variants per card (settings, default matches design)
+  - Number, title, description, arrow circle link
+  New file: no impact to xmas-sleep-wellbeing, backwards compat by isolation.
+{%- endcomment -%}
+
+<section id="TerraServices-{{ section.id }}" class="ts">
+  {%- style -%}
+    #TerraServices-{{ section.id }} {
+      --ts-bg: {{ section.settings.bg_color }};
+      --ts-max-w: {{ section.settings.max_width }}px;
+      --ts-space-top: {{ section.settings.space_top }}px;
+      --ts-space-bottom: {{ section.settings.space_bottom }}px;
+      --ts-gutter: {{ section.settings.gutter }}px;
+      --ts-gap: {{ section.settings.gap }}px;
+      --ts-radius-outer: {{ section.settings.radius_outer }}px;
+      --ts-radius-card: {{ section.settings.radius_card }}px;
+      --ts-light-bg: {{ section.settings.light_bg }};
+      --ts-light-text: {{ section.settings.light_text }};
+      --ts-dark-bg: {{ section.settings.dark_bg }};
+      --ts-dark-text: {{ section.settings.dark_text }};
+      --ts-muted-light: {{ section.settings.light_muted }};
+      --ts-muted-dark: {{ section.settings.dark_muted }};
+      --ts-arrow-size: {{ section.settings.arrow_size }}px;
+    }
+    #TerraServices-{{ section.id }} {
+      background: var(--ts-bg);
+      padding: var(--ts-space-top) var(--ts-gutter) var(--ts-space-bottom);
+      overflow-x: clip;
+    }
+    #TerraServices-{{ section.id }} .ts__shell {
+      width: min(100%, var(--ts-max-w));
+      margin: 0 auto;
+      min-width: 0;
+    }
+    /* outer dark rounded container like design.jpg page */
+    #TerraServices-{{ section.id }} .ts__outer {
+      background: #0c0c0c;
+      border-radius: var(--ts-radius-outer);
+      padding: 16px;
+      border: 1px solid #1e1e1e;
+    }
+    #TerraServices-{{ section.id }} .ts__grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0,1fr));
+      gap: var(--ts-gap);
+      min-width: 0;
+    }
+    #TerraServices-{{ section.id }} .ts-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--ts-radius-card);
+      min-height: {{ section.settings.card_min_height }}px;
+      padding: 28px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      text-decoration: none;
+      isolation: isolate;
+      border: 1px solid transparent;
+      transition: transform 300ms cubic-bezier(.22,1,.36,1), box-shadow 300ms ease;
+    }
+    #TerraServices-{{ section.id }} .ts-card:hover { transform: translateY(-4px); }
+    /* 3+2 layout: first 3 span 2, next 2 span 3 */
+    #TerraServices-{{ section.id }} .ts-card:nth-child(1),
+    #TerraServices-{{ section.id }} .ts-card:nth-child(2),
+    #TerraServices-{{ section.id }} .ts-card:nth-child(3) { grid-column: span 2; }
+    #TerraServices-{{ section.id }} .ts-card:nth-child(4),
+    #TerraServices-{{ section.id }} .ts-card:nth-child(5) { grid-column: span 3; }
+    /* light */
+    #TerraServices-{{ section.id }} .ts-card--light {
+      background: var(--ts-light-bg);
+      color: var(--ts-light-text);
+      border-color: #E6DDD3;
+    }
+    #TerraServices-{{ section.id }} .ts-card--light .ts-card__bg-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: .14;
+      pointer-events: none;
+      z-index: 0;
+    }
+    /* dark — image as full bg + scrim */
+    #TerraServices-{{ section.id }} .ts-card--dark {
+      background: var(--ts-dark-bg);
+      color: var(--ts-dark-text);
+      border-color: #222;
+    }
+    #TerraServices-{{ section.id }} .ts-card--dark .ts-card__bg-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 1;
+      z-index: 0;
+    }
+    #TerraServices-{{ section.id }} .ts-card--dark::after {
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:1;
+      background: linear-gradient(180deg, rgba(0,0,0,.18) 0%, rgba(0,0,0,.55) 85%);
+      pointer-events:none;
+    }
+    #TerraServices-{{ section.id }} .ts-card__content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-width: 0;
+    }
+    #TerraServices-{{ section.id }} .ts-card__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    #TerraServices-{{ section.id }} .ts-card__number {
+      font-size: 11px;
+      letter-spacing: .08em;
+      opacity: .55;
+      font-weight: 500;
+    }
+    #TerraServices-{{ section.id }} .ts-card__title {
+      margin: 0 0 10px;
+      font-size: {{ section.settings.title_size }}px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -.02em;
+      max-width: 90%;
+    }
+    #TerraServices-{{ section.id }} .ts-card__desc {
+      margin: 0;
+      font-size: {{ section.settings.desc_size }}px;
+      line-height: 1.5;
+      max-width: 90%;
+      opacity: .9;
+    }
+    #TerraServices-{{ section.id }} .ts-card--light .ts-card__desc { color: var(--ts-muted-light); }
+    #TerraServices-{{ section.id }} .ts-card--dark .ts-card__desc { color: var(--ts-muted-dark); }
+    #TerraServices-{{ section.id }} .ts-card__spacer { flex: 1; min-height: 24px; }
+    #TerraServices-{{ section.id }} .ts-card__arrow {
+      width: var(--ts-arrow-size);
+      height: var(--ts-arrow-size);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid currentColor;
+      font-size: 14px;
+      line-height: 1;
+      opacity: .9;
+      flex-shrink: 0;
+    }
+    #TerraServices-{{ section.id }} .ts-card--light .ts-card__arrow { color: #1A1A1A; border-color: rgba(26,26,26,.22); background: rgba(255,255,255,.6); }
+    #TerraServices-{{ section.id }} .ts-card--dark .ts-card__arrow { color: #F2EFE8; border-color: rgba(242,239,232,.7); background: rgba(255,255,255,.08); }
+
+    @media (max-width: 1100px) {
+      #TerraServices-{{ section.id }} .ts__grid { grid-template-columns: repeat(2,1fr); }
+      #TerraServices-{{ section.id }} .ts-card:nth-child(n) { grid-column: span 1; }
+      #TerraServices-{{ section.id }} .ts-card:nth-child(5) { grid-column: 1 / -1; }
+    }
+    @media (max-width: 700px) {
+      #TerraServices-{{ section.id }} { padding: var(--ts-space-top) 12px var(--ts-space-bottom); }
+      #TerraServices-{{ section.id }} .ts__outer { padding: 12px; border-radius: 20px; }
+      #TerraServices-{{ section.id }} .ts__grid { grid-template-columns: 1fr; gap: 12px; }
+      #TerraServices-{{ section.id }} .ts-card:nth-child(n) { grid-column: auto; min-height: 220px; }
+      #TerraServices-{{ section.id }} .ts-card__title { font-size: 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #TerraServices-{{ section.id }} .ts-card { transition: none; }
+    }
+  {%- endstyle -%}
+
+  <div class="ts__shell">
+    <div class="ts__outer">
+      <div class="ts__grid">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign card_style = block.settings.card_style
+            if card_style == 'auto'
+              # match design: 01 light, 02 dark, 03 light, 04 dark, 05 dark
+              assign idx = forloop.index
+              if idx == 1 or idx == 3
+                assign card_style = 'light'
+              else
+                assign card_style = 'dark'
+              endif
+            endif
+          -%}
+          {%- if block.settings.link != blank -%}
+            <a href="{{ block.settings.link }}" class="ts-card ts-card--{{ card_style }}" {{ block.shopify_attributes }}>
+          {%- else -%}
+            <div class="ts-card ts-card--{{ card_style }}" {{ block.shopify_attributes }}>
+          {%- endif -%}
+
+            {%- if block.settings.image != blank -%}
+              <img class="ts-card__bg-img" src="{{ block.settings.image | image_url: width: 900 }}" alt="{{ block.settings.image.alt | default: block.settings.title | escape }}" loading="lazy" width="900" height="700">
+            {%- endif -%}
+
+            <div class="ts-card__content">
+              <div class="ts-card__top">
+                <span class="ts-card__number">{{ block.settings.number }}</span>
+              </div>
+              {%- if block.settings.title != blank -%}
+                <h3 class="ts-card__title">{{ block.settings.title }}</h3>
+              {%- endif -%}
+              {%- if block.settings.description != blank -%}
+                <p class="ts-card__desc">{{ block.settings.description }}</p>
+              {%- endif -%}
+              <div class="ts-card__spacer"></div>
+              <span class="ts-card__arrow" aria-hidden="true">↗</span>
+            </div>
+
+          {%- if block.settings.link != blank -%}
+            </a>
+          {%- else -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Terra Services (3+2)",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "color", "id": "bg_color", "label": "Page background", "default": "#0F0F0F" },
+    { "type": "range", "id": "max_width", "label": "Max width", "min": 900, "max": 1800, "step": 20, "default": 1400, "unit": "px" },
+    { "type": "range", "id": "space_top", "label": "Space above", "min": 0, "max": 80, "step": 4, "default": 20, "unit": "px" },
+    { "type": "range", "id": "space_bottom", "label": "Space below", "min": 0, "max": 80, "step": 4, "default": 20, "unit": "px" },
+    { "type": "range", "id": "gutter", "label": "Side gutters", "min": 0, "max": 40, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "gap", "label": "Grid gap", "min": 8, "max": 32, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "radius_outer", "label": "Outer radius", "min": 0, "max": 40, "step": 2, "default": 28, "unit": "px" },
+    { "type": "range", "id": "radius_card", "label": "Card radius", "min": 0, "max": 32, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "card_min_height", "label": "Card min height", "min": 180, "max": 400, "step": 10, "default": 280, "unit": "px" },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "light_bg", "label": "Light card bg", "default": "#EDE8E0" },
+    { "type": "color", "id": "light_text", "label": "Light card text", "default": "#1A1A1A" },
+    { "type": "color", "id": "light_muted", "label": "Light desc muted", "default": "#6B5B4F" },
+    { "type": "color", "id": "dark_bg", "label": "Dark card bg", "default": "#1A1A1A" },
+    { "type": "color", "id": "dark_text", "label": "Dark card text", "default": "#F2EFE8" },
+    { "type": "color", "id": "dark_muted", "label": "Dark desc muted", "default": "#B8B0A6" },
+
+    { "type": "header", "content": "Typography" },
+    { "type": "range", "id": "title_size", "label": "Title size", "min": 14, "max": 28, "step": 1, "default": 18, "unit": "px" },
+    { "type": "range", "id": "desc_size", "label": "Description size", "min": 11, "max": 16, "step": 1, "default": 12, "unit": "px" },
+    { "type": "range", "id": "arrow_size", "label": "Arrow size", "min": 28, "max": 48, "step": 2, "default": 36, "unit": "px" }
+  ],
+  "blocks": [
+    {
+      "type": "service",
+      "name": "Service",
+      "settings": [
+        { "type": "text", "id": "number", "label": "Number", "default": "01" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Design" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "We develop concepts and detailed plans tailored to your home's architecture and lifestyle." },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "select", "id": "card_style", "label": "Card style", "default": "auto", "options": [
+          { "value": "auto", "label": "Auto (01 light, 02 dark…)" },
+          { "value": "light", "label": "Light (cream)" },
+          { "value": "dark", "label": "Dark (image)" }
+        ]},
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Terra Services (3+2)",
+      "blocks": [
+        { "type": "service", "settings": { "number": "01", "title": "Design", "description": "We develop concepts and detailed plans tailored to your home's architecture and lifestyle.", "card_style": "light" } },
+        { "type": "service", "settings": { "number": "02", "title": "Planting", "description": "We select plants that look beautiful year-round and suit your site perfectly.", "card_style": "dark" } },
+        { "type": "service", "settings": { "number": "03", "title": "Paving", "description": "We lay durable stone, clinker, and concrete surfaces with flawless geometry.", "card_style": "light" } },
+        { "type": "service", "settings": { "number": "04", "title": "Lighting", "description": "We design lighting scenarios for safety, atmosphere, and architectural accents.", "card_style": "dark" } },
+        { "type": "service", "settings": { "number": "05", "title": "Irrigation", "description": "We install automated irrigation systems for plant health and your comfort.", "card_style": "dark" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,32 @@
+{
+  "current": "Mariana Red",
+  "presets": {
+    "Mariana Red": {
+      "heading_font": "playfair_display_n4",
+      "body_font": "assistant_n4",
+      "heading_scale": 100,
+      "heading_spacing": 0,
+      "body_size": 15,
+      "nav_uppercase": true,
+      "nav_spacing": 12,
+      "page_width": 1440,
+      "section_spacing": "normal",
+      "button_radius": "999",
+      "card_style": "bordered",
+      "card_radius": 14,
+      "card_image_ratio": "portrait",
+      "logo_width": 140,
+      "cart_type": "drawer",
+      "cart_show_note": true,
+      "cart_total_note": "static",
+      "free_shipping_threshold": 50,
+      "colors_background": "#3d1117",
+      "colors_secondary_background": "#2b0c11",
+      "colors_text": "#f0ded6",
+      "colors_heading": "#f6e9e2",
+      "colors_accent": "#e2b2a4",
+      "colors_accent_label": "#361016",
+      "colors_outline_label": "#f6e9e2"
+    }
+  }
+}

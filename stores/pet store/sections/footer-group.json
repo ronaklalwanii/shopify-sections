@@ -1,0 +1,14 @@
+{
+  "type": "footer",
+  "name": "t:names.footer",
+  "sections": {
+    "pet_footer": {
+      "type": "pet-footer",
+      "name": "Pet Footer",
+      "settings": {}
+    }
+  },
+  "order": [
+    "pet_footer"
+  ]
+}

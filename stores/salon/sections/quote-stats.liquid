@@ -1,0 +1,173 @@
+{%- comment -%}
+  Quote + stats — large testimonial quote beside a stat columns row (chocolatier).
+{%- endcomment -%}
+{%- capture section_colors_style -%}
+  {%- if section.settings.colors_background != blank or section.settings.colors_text != blank -%}
+    {%- assign override_bg = section.settings.colors_background | default: settings.colors_background -%}
+    {%- assign override_fg = section.settings.colors_text | default: settings.colors_text -%}
+    style="--color-background: {{ override_bg }}; --color-surface: {{ override_bg | color_lighten: 3 }}; --color-border: {{ override_bg | color_darken: 9 | color_modify: 'alpha', 0.85 }}; --color-foreground: {{ override_fg }}; --color-heading: {{ override_fg }}; --color-text-muted: {{ override_fg | color_modify: 'alpha', 0.62 }};"
+  {%- endif -%}
+{%- endcapture -%}
+<section {{ section_colors_style }} class="section" style="--section-space: {{ section.settings.padding | default: 64 }}px;">
+  <div class="page-width">
+    <div class="quote-stats">
+      <div class="quote-stats__quote">
+        {% render 'rating', rating: 5 %}
+        <blockquote>“{{ section.settings.quote | escape }}”</blockquote>
+        {%- if section.settings.author != blank -%}
+          <p class="quote-stats__author">{{ section.settings.author | escape }}</p>
+        {%- endif -%}
+      </div>
+      <div class="quote-stats__stats" style="--stats-count: {{ section.blocks.size }};">
+        {%- for block in section.blocks -%}
+          <div class="stat stat--left" {{ block.shopify_attributes }}>
+            {%- if block.settings.icon != blank -%}
+              <span style="display: inline-flex; color: var(--color-accent); margin-bottom: 0.5rem;">{% render 'icon', name: block.settings.icon, size: 26 %}</span>
+            {%- endif -%}
+            <p class="stat__value">{{ block.settings.value | escape }}</p>
+            <p class="stat__note" style="font-size: 0.82rem;">{{ block.settings.label | escape }}</p>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Quote and stats",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "quote",
+      "label": "Quote",
+      "default": "The taste, the quality, the packaging \u2014 everything is just perfect. Cocobella is my go-to for every celebration!"
+    },
+    {
+      "type": "text",
+      "id": "author",
+      "label": "Author",
+      "default": "Amelia's Fine Gourmet Gifts"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 16,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_background",
+      "label": "Background override",
+      "info": "Leave empty to use the theme colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_text",
+      "label": "Text color override"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {
+              "value": "globe",
+              "label": "Globe"
+            },
+            {
+              "value": "box",
+              "label": "Box"
+            },
+            {
+              "value": "star",
+              "label": "Star"
+            },
+            {
+              "value": "heart",
+              "label": "Heart"
+            },
+            {
+              "value": "sparkle",
+              "label": "Sparkle"
+            },
+            {
+              "value": "gift",
+              "label": "Gift"
+            },
+            {
+              "value": "package",
+              "label": "Package"
+            }
+          ],
+          "default": "globe"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "10K+"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Happy customers"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quote and stats",
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": {
+            "value": "10K+",
+            "label": "Happy customers"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "icon": "box",
+            "value": "25+",
+            "label": "Premium products"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "icon": "star",
+            "value": "4.9",
+            "label": "Average rating"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "value": "Worldwide",
+            "label": "Shipping"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

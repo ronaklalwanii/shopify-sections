@@ -1,0 +1,477 @@
+{%- comment -%}
+  Pet Store — Promo Banners
+  Large image banners with ghost watermark text, pill badge, heading and a link.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .pet-banners-{{ section.id }} {
+    --pet-bn-radius: {{ s.card_corner_radius }}px;
+
+    background-color: {{ s.background_color }};
+    padding-block: {{ s.padding_top }}px {{ s.padding_bottom }}px;
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+  }
+
+  .pet-banners-{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  .pet-banners-{{ section.id }} .pet-bn__grid {
+    display: grid;
+    grid-template-columns: repeat({{ s.columns_desktop }}, minmax(0, 1fr));
+    gap: {{ s.grid_gap }}px;
+    padding-inline: {{ s.edge_padding }}px;
+  }
+
+  .pet-banners-{{ section.id }} .pet-bn__banner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: {{ s.min_height }}px;
+    border-radius: var(--pet-bn-radius);
+    overflow: hidden;
+    text-decoration: none;
+    isolation: isolate;
+  }
+
+  .pet-banners-{{ section.id }} .pet-bn__media {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+  }
+
+  .pet-banners-{{ section.id }} .pet-bn__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--pet-bn-focal, center);
+    display: block;
+  }
+
+  .pet-banners-{{ section.id }} .pet-bn__media svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .pet-banners-{{ section.id }} .pet-bn__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgb(0 0 0 / 0.45) 0%, rgb(0 0 0 / 0.08) 45%, rgb(0 0 0 / 0) 70%);
+  }
+
+  .pet-banners-{{ section.id }} .pet-bn__watermark {
+    position: absolute;
+    top: var(--pet-bn-watermark-top, 12%);
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-size: clamp(80px, 15vw, 230px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--pet-bn-watermark, #ffffff);
+    opacity: 0.4;
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    z-index: -1;
+  }
+
+  .pet-banners-{{ section.id }} .pet-bn__content {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    padding: clamp(18px, 3vw, 32px);
+    width: 100%;
+  }
+
+  .pet-banners-{{ section.id }} .pet-bn__left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    max-width: 70%;
+  }
+
+  .pet-banners-{{ section.id }} .pet-bn__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 14px;
+    border: 1px solid color-mix(in srgb, var(--pet-bn-text, #ffffff) 55%, transparent);
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--pet-bn-text, #ffffff);
+    backdrop-filter: blur(4px);
+    background-color: rgb(255 255 255 / 0.08);
+  }
+
+  .pet-banners-{{ section.id }} .pet-bn__badge svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .pet-banners-{{ section.id }} .pet-bn__heading {
+    margin: 0;
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-size: clamp(22px, 2.4vw, 32px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--pet-bn-text, #ffffff);
+    white-space: pre-line;
+    text-wrap: balance;
+  }
+
+  .pet-banners-{{ section.id }} .pet-bn__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--pet-bn-text, #ffffff);
+    white-space: nowrap;
+  }
+
+  .pet-banners-{{ section.id }} .pet-bn__link svg {
+    width: 14px;
+    height: 14px;
+    transition: transform var(--animation-speed, 0.125s) ease;
+  }
+
+  .pet-banners-{{ section.id }} .pet-bn__banner:hover .pet-bn__link svg {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 989px) {
+    .pet-banners-{{ section.id }} .pet-bn__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .pet-banners-{{ section.id }} .pet-bn__banner {
+      min-height: {{ s.min_height | times: 0.75 | round }}px;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .pet-banners-{{ section.id }} .pet-bn__grid {
+      padding-inline: 12px;
+      gap: 12px;
+    }
+
+    .pet-banners-{{ section.id }} .pet-bn__banner {
+      min-height: 300px;
+    }
+
+    .pet-banners-{{ section.id }} .pet-bn__content {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .pet-banners-{{ section.id }} .pet-bn__left {
+      max-width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pet-banners-{{ section.id }} .pet-bn__link svg {
+      transition: none;
+    }
+  }
+{% endstyle %}
+
+<section class="pet-banners pet-banners-{{ section.id }}" aria-label="{{ s.accessibility_label | default: 'Featured collections' | escape }}">
+  <div class="pet-bn__grid">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign b = block.settings
+        assign banner_link = b.link
+        if b.collection != blank
+          assign banner_link = b.collection.url
+        endif
+      -%}
+      {%- if banner_link != blank -%}
+        <a
+          class="pet-bn__banner"
+          href="{{ banner_link }}"
+          style="--pet-bn-watermark: {{ b.watermark_color }}; --pet-bn-watermark-top: {{ b.watermark_top }}%; --pet-bn-text: {{ b.text_color }}; --pet-bn-focal: {{ b.focal_point }};"
+          {{ block.shopify_attributes }}
+        >
+      {%- else -%}
+        <div
+          class="pet-bn__banner"
+          style="--pet-bn-watermark: {{ b.watermark_color }}; --pet-bn-watermark-top: {{ b.watermark_top }}%; --pet-bn-text: {{ b.text_color }}; --pet-bn-focal: {{ b.focal_point }};"
+          {{ block.shopify_attributes }}
+        >
+      {%- endif -%}
+        <div class="pet-bn__media">
+          {%- if b.image != blank -%}
+            {{ b.image | image_url: width: 1500 | image_tag:
+              widths: '600,900,1200,1500',
+              sizes: '(min-width: 990px) 50vw, 100vw',
+              loading: 'lazy',
+              alt: b.image.alt | default: b.heading | escape
+            }}
+          {%- else -%}
+            {{ 'lifestyle-2' | placeholder_svg_tag }}
+          {%- endif -%}
+        </div>
+
+        {%- if b.watermark_text != blank -%}
+          <p class="pet-bn__watermark" aria-hidden="true">{{ b.watermark_text }}</p>
+        {%- endif -%}
+
+        <div class="pet-bn__content">
+          <div class="pet-bn__left">
+            {%- if b.badge_text != blank -%}
+              <span class="pet-bn__badge">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><ellipse cx="6" cy="9" rx="1.8" ry="2.4"/><ellipse cx="18" cy="9" rx="1.8" ry="2.4"/><ellipse cx="9.6" cy="5.6" rx="1.8" ry="2.4"/><ellipse cx="14.4" cy="5.6" rx="1.8" ry="2.4"/><path d="M12 10.5c2.8 0 5.5 2.3 5.5 4.9 0 1.6-1.2 2.6-2.7 2.6-1 0-1.8-.4-2.8-.4s-1.8.4-2.8.4c-1.5 0-2.7-1-2.7-2.6 0-2.6 2.7-4.9 5.5-4.9Z"/></svg>
+                {{ b.badge_text }}
+              </span>
+            {%- endif -%}
+
+            {%- if b.heading != blank -%}
+              <h2 class="pet-bn__heading">{{ b.heading }}</h2>
+            {%- endif -%}
+          </div>
+
+          {%- if b.link_label != blank -%}
+            <span class="pet-bn__link">
+              {{ b.link_label }}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+            </span>
+          {%- endif -%}
+        </div>
+      {%- if banner_link != blank -%}
+        </a>
+      {%- else -%}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Pet Promo Banners",
+  "tag": "section",
+  "class": "pet-banners-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "accessibility_label",
+      "label": "Accessibility label",
+      "default": "Featured collections"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns (desktop)",
+      "min": 1,
+      "max": 2,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Gap",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "edge_padding",
+      "label": "Outer padding",
+      "min": 0,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Banner height",
+      "min": 280,
+      "max": 700,
+      "step": 20,
+      "unit": "px",
+      "default": 560
+    },
+    {
+      "type": "range",
+      "id": "card_corner_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "blocks": [
+    {
+      "type": "banner",
+      "name": "Banner",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Background image"
+        },
+        {
+          "type": "select",
+          "id": "focal_point",
+          "label": "Image focal point",
+          "options": [
+            { "value": "center", "label": "Center" },
+            { "value": "top", "label": "Top" },
+            { "value": "bottom", "label": "Bottom" },
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "text",
+          "id": "watermark_text",
+          "label": "Watermark text",
+          "info": "Large decorative text. Leave empty to hide"
+        },
+        {
+          "type": "color",
+          "id": "watermark_color",
+          "label": "Watermark color",
+          "default": "#FFFFFF",
+          "info": "Rendered at 40% opacity over the photo"
+        },
+        {
+          "type": "range",
+          "id": "watermark_top",
+          "label": "Watermark vertical position",
+          "min": 0,
+          "max": 80,
+          "step": 5,
+          "unit": "%",
+          "default": 10
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Badge text",
+          "info": "Optional"
+        },
+        {
+          "type": "textarea",
+          "id": "heading",
+          "label": "Heading",
+          "default": "New Collection\nof Beds"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label",
+          "default": "Shop Products"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection link",
+          "info": "Optional. Overrides the link above"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#FFFFFF"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pet Promo Banners",
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "watermark_text": "new",
+            "badge_text": "Always Luxy Fur Home",
+            "heading": "New Collection\nof Beds",
+            "link_label": "Shop Products"
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "watermark_text": "premium",
+            "badge_text": "Top Rated Collars",
+            "heading": "Premium Walking\nAccessories",
+            "link_label": "Exclusive Products"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

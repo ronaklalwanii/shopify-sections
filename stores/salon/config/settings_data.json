@@ -1,0 +1,32 @@
+{
+  "current": "Territory of Beauty",
+  "presets": {
+    "Territory of Beauty": {
+      "heading_font": "assistant_n4",
+      "body_font": "assistant_n4",
+      "heading_scale": 100,
+      "heading_spacing": 0,
+      "body_size": 15,
+      "nav_uppercase": true,
+      "nav_spacing": 10,
+      "page_width": 1500,
+      "section_spacing": "normal",
+      "button_radius": "999",
+      "card_style": "bordered",
+      "card_radius": 16,
+      "card_image_ratio": "portrait",
+      "logo_width": 120,
+      "cart_type": "drawer",
+      "cart_show_note": true,
+      "cart_total_note": "static",
+      "free_shipping_threshold": 50,
+      "colors_background": "#f6f5f1",
+      "colors_secondary_background": "#ecebe4",
+      "colors_text": "#1f1e1a",
+      "colors_heading": "#1f1e1a",
+      "colors_accent": "#a9bfa1",
+      "colors_accent_label": "#ffffff",
+      "colors_outline_label": "#1f1e1a"
+    }
+  }
+}

@@ -1,0 +1,210 @@
+<style>
+	#shopify-section-{{ section.id }}> .section {
+	    padding-block-start: unset;
+	    padding-block-end: unset;
+	}
+
+	.shopify-section.shopify-section--navigator {
+	    position: sticky;
+	    position: -webkit-sticky;
+	    top: 60px;
+	    z-index: 1;
+	    text-align: center;
+	    transition: all 0.4s ease-in-out;
+	    border-top: 1px solid #E5E5E5;
+	    border-bottom: 1px solid #E5E5E5;
+	}
+	.shopify-section.shopify-section--navigator ul {
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    gap: 3rem;
+	}
+	.section-navigator-li {
+	    font: var(--ul-text-font-style) var(--ul-text-font-weight) var(--ul-text-base) / 1.6 var(--ul-text-font-family);
+	    border-bottom: 4px solid #FFF;
+	    padding: 17px 0;
+	}
+
+	@media screen and (max-width: 661px) {
+	    .shopify-section.shopify-section--navigator ul {
+	        justify-content: flex-start;
+	        overflow-x: auto;
+	        overflow-y: hidden;
+	        -webkit-overflow-scrolling: touch;
+	        -ms-scroll-snap-type: x mandatory;
+	        scroll-snap-type: x mandatory;
+	        white-space: nowrap;
+	        gap: 2rem;
+	    }
+	    .shopify-section.shopify-section--navigator ul::-webkit-scrollbar {
+	        width: 0;
+	        height: 0;
+	        background: transparent;
+	    }
+	    .shopify-section.shopify-section--navigator ul::-webkit-scrollbar-thumb {
+	        background: transparent;
+	    }
+	    .section-navigator-li {
+	        flex: 0 0 auto;
+	        white-space: normal;
+	        scroll-snap-align: start;
+	        padding: 10px 0;
+	        font-size: 16px;
+	    }
+	}
+	@media screen and (max-width: 320px) {
+	    .shopify-section.shopify-section--navigator ul {
+	        gap: 1rem;
+	    }
+	}
+	@media screen and (max-width: 360px) {
+	    .shopify-section.shopify-section--navigator ul {
+	        gap: 1.6rem;
+	    }
+	}
+	@media screen and (min-width: 700px) {
+	    .shopify-section.shopify-section--navigator {
+	        top: var(--ul-header-height);
+	    }
+	}
+
+	.section-navigator-li.active {
+	    color: rgb(var(--ul-button-background-secondary));
+	    border-color: rgb(var(--ul-button-background-secondary));
+	}
+	.hide-it {
+	    display: none !important;
+	}
+
+		#shopify-section-{{ section.id }} {
+			{% if section.settings.custom_padding %}
+			padding-top: {{ section.settings.padding_top }}px;
+			padding-bottom: {{ section.settings.padding_bottom }}px;
+			{% endif %}
+		}</style>
+
+<div {% render 'section-attributes' %}>
+	<div class='section-stack'>
+		<ul>
+			{%- for block in section.blocks -%}
+				<li class='section-navigator-li {{ block.settings.related_section_id }} {% if forloop.first %}active{% endif %}'>
+					<a href='#{{ block.settings.related_section_id }}'>
+						{{ block.settings.name }}
+					</a>
+				</li>
+			{%- endfor -%}
+		</ul>
+	</div>
+</div>
+
+{% schema %}
+{
+  "name": "Section Navigator",
+  "class": "shopify-section--navigator",
+  "tag": "section",
+  "enabled_on": {
+    "templates": [
+      "index"
+    ]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "custom_padding",
+      "label": "Custom padding",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab_item",
+      "name": "Tab Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Tab Name"
+        },
+        {
+          "type": "text",
+          "id": "related_section_id",
+          "label": "Section ID",
+          "info": "Add section ID without the # symbol"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Section Navigator"
+    }
+  ]
+}
+{% endschema %}
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const sections = document.querySelectorAll(
+			'{%- for block in section.blocks -%}#{{ block.settings.related_section_id }}{% unless forloop.last %},{% endunless %}{%- endfor -%}',
+		)
+
+		const sectionNavigator = document.querySelector('.shopify-section--navigator')
+		if (sectionNavigator) {
+			const navLi = sectionNavigator.querySelectorAll('.shopify-section--navigator ul li')
+			window.onscroll = () => {
+				let scrollY = window.pageYOffset
+				let isAnyActive = false
+				let firstSectionTop
+				let firstRelatedSection
+
+				sections.forEach((section, index) => {
+					const sectionHeight = section.offsetHeight
+					const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - 150
+					sectionId = section.getAttribute('id')
+
+					if (index == 0) {
+						firstSectionTop = sectionTop
+						firstRelatedSection = document.querySelector('.' + sectionId)
+					}
+
+					const relatedElement = document.querySelector('.' + sectionId)
+					if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+						relatedElement.classList.add('active')
+						isAnyActive = true
+					} else {
+						relatedElement.classList.remove('active')
+					}
+				})
+
+				if (!isAnyActive && scrollY > firstSectionTop) {
+					sectionNavigator.classList.add('hide-it')
+				} else if (isAnyActive) {
+					sectionNavigator.classList.remove('hide-it')
+				} else {
+					firstRelatedSection.classList.add('active')
+				}
+			}
+		}
+	})
+</script>

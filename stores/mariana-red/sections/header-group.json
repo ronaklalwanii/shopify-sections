@@ -1,0 +1,22 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "header": {
+      "type": "header",
+      "settings": {
+        "layout": "minimal",
+        "menu": "mariana-menu",
+        "wordmark": "Mariana",
+        "logo_width": 140,
+        "sticky": true,
+        "show_search": false,
+        "show_account": false,
+        "cta_label": "Let's talk",
+        "cta_link": "/pages/contact",
+        "cta_style": "outline"
+      }
+    }
+  },
+  "order": ["header"]
+}

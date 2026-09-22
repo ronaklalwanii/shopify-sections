@@ -1,0 +1,365 @@
+{%- comment -%}
+  Section: Collection Showcase
+  Intro (heading + description + link) beside a product row.
+  Desktop: equal columns with dividers. ≤1000px: horizontal snap-scroll.
+{%- endcomment -%}
+
+<section id="CollectionShowcase-{{ section.id }}" class="scs">
+  {%- style -%}
+    #CollectionShowcase-{{ section.id }} {
+      --scs-bg: {{ section.settings.bg_color }};
+      --scs-radius: {{ section.settings.radius }}px;
+      --scs-max-width: {{ section.settings.max_width }}px;
+      --scs-space-top: {{ section.settings.space_top }}px;
+      --scs-space-bottom: {{ section.settings.space_bottom }}px;
+      --scs-pad-x: {{ section.settings.padding_x }}px;
+      --scs-pad-y: {{ section.settings.padding_y }}px;
+      --scs-intro-width: {{ section.settings.intro_width }}%;
+      --scs-gap: {{ section.settings.column_gap }}px;
+      --scs-head-size: {{ section.settings.heading_size }}px;
+      --scs-head-color: {{ section.settings.heading_color }};
+      --scs-head-weight: {{ section.settings.heading_weight }};
+      --scs-head-lh: {{ section.settings.heading_line_height }};
+      --scs-desc-size: {{ section.settings.description_size }}px;
+      --scs-desc-color: {{ section.settings.description_color }};
+      --scs-desc-maxw: {{ section.settings.description_max_width }}px;
+      --scs-link-size: {{ section.settings.link_size }}px;
+      --scs-link-color: {{ section.settings.link_color }};
+      --scs-link-weight: {{ section.settings.link_weight }};
+      --scs-link-spacing: {{ section.settings.link_letter_spacing }}px;
+      --scs-link-bg: {{ section.settings.link_bg_color }};
+      --scs-link-pad-x: {{ section.settings.link_pad_x }}px;
+      --scs-link-pad-y: {{ section.settings.link_pad_y }}px;
+      --scs-link-radius: {{ section.settings.link_radius }}px;
+      --scs-img-height: {{ section.settings.image_height }}px;
+      --scs-title-size: {{ section.settings.title_size }}px;
+      --scs-title-color: {{ section.settings.title_color }};
+      --scs-title-weight: {{ section.settings.title_weight }};
+      --scs-price-size: {{ section.settings.price_size }}px;
+      --scs-price-color: {{ section.settings.price_color }};
+      --scs-divider: {{ section.settings.divider_color }};
+      --scs-mobile-item: {{ section.settings.mobile_item_width }}px;
+      --scs-mobile-img: {{ section.settings.mobile_image_height }}px;
+    }
+
+    #CollectionShowcase-{{ section.id }} {
+      margin-top: var(--scs-space-top);
+      margin-bottom: var(--scs-space-bottom);
+      overflow-x: clip;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    #CollectionShowcase-{{ section.id }} .scs__shell {
+      /* width: min(100%, var(--scs-max-width)); */
+      margin: 0 auto;
+      background: var(--scs-bg);
+      border-radius: var(--scs-radius);
+      padding: var(--scs-pad-y) var(--scs-pad-x);
+      display: flex;
+      align-items: center;
+      gap: var(--scs-gap);
+      min-width: 0;
+    }
+
+    /* ---------- Intro ---------- */
+    #CollectionShowcase-{{ section.id }} .scs__intro {
+      flex: 0 0 var(--scs-intro-width);
+      min-width: 0;
+    }
+    #CollectionShowcase-{{ section.id }} .scs__heading {
+      margin: 0;
+      color: var(--scs-head-color);
+      font-size: var(--scs-head-size);
+      font-weight: var(--scs-head-weight);
+      line-height: var(--scs-head-lh);
+    }
+    {%- if section.settings.heading_font == 'serif' %}
+      #CollectionShowcase-{{ section.id }} .scs__heading {
+        font-family: Georgia, 'Times New Roman', serif;
+      }
+    {%- endif %}
+    #CollectionShowcase-{{ section.id }} .scs__description {
+      margin: 12px 0 0;
+      max-width: var(--scs-desc-maxw);
+      color: var(--scs-desc-color);
+      font-size: var(--scs-desc-size);
+      line-height: 1.5;
+    }
+        #CollectionShowcase-{{ section.id }} .scs__link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 18px;
+      color: var(--scs-link-color);
+      background: var(--scs-link-bg);
+      padding: var(--scs-link-pad-y) var(--scs-link-pad-x);
+      border-radius: var(--scs-link-radius);
+      font-size: var(--scs-link-size);
+      font-weight: var(--scs-link-weight);
+      letter-spacing: var(--scs-link-spacing);
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+    #CollectionShowcase-{{ section.id }} .scs__link:hover {
+      opacity: 0.85;
+    }
+    #CollectionShowcase-{{ section.id }} .scs__link svg {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.2s ease;
+    }
+    #CollectionShowcase-{{ section.id }} .scs__link:hover svg {
+      transform: translateX(3px);
+    }
+
+    /* ---------- Product row (desktop: equal columns) ---------- */
+    {%- assign cols = section.blocks.size | at_least: 1 -%}
+    #CollectionShowcase-{{ section.id }} .scs__row {
+      flex: 1;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: repeat({{ cols }}, minmax(0, 1fr));
+    }
+
+    #CollectionShowcase-{{ section.id }} .scs__item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 6px;
+      padding: 8px 16px;
+      min-width: 0;
+      text-decoration: none;
+    }
+    {%- if section.settings.show_dividers %}
+      #CollectionShowcase-{{ section.id }} .scs__item + .scs__item {
+        border-left: 1px solid var(--scs-divider);
+      }
+    {%- endif %}
+
+    #CollectionShowcase-{{ section.id }} .scs__image {
+      display: block;
+      width: 100%;
+      max-width: 140px;
+      height: var(--scs-img-height);
+      object-fit: contain;
+      margin-bottom: 8px;
+    }
+    #CollectionShowcase-{{ section.id }} .scs__title {
+      margin: 0;
+      color: var(--scs-title-color);
+      font-size: var(--scs-title-size);
+      font-weight: var(--scs-title-weight);
+      line-height: 1.3;
+      overflow-wrap: break-word;
+    }
+    #CollectionShowcase-{{ section.id }} .scs__price {
+      margin: 0;
+      color: var(--scs-price-color);
+      font-size: var(--scs-price-size);
+    }
+
+    /* ---------- ≤1000px: snap-scroll carousel ---------- */
+    @media (max-width: 1000px) {
+      #CollectionShowcase-{{ section.id }} .scs__shell {
+        flex-direction: column;
+        align-items: stretch;
+        padding: var(--scs-pad-y) 0;
+      }
+      #CollectionShowcase-{{ section.id }} .scs__intro {
+        flex: none;
+        padding: 0 var(--scs-pad-x);
+        margin-bottom: 20px;
+      }
+      #CollectionShowcase-{{ section.id }} .scs__row {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: var(--scs-mobile-item);
+        grid-template-columns: none;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+        scrollbar-width: none;
+        padding: 0 var(--scs-pad-x);
+      }
+      #CollectionShowcase-{{ section.id }} .scs__row::-webkit-scrollbar {
+        display: none;
+      }
+      #CollectionShowcase-{{ section.id }} .scs__item {
+        scroll-snap-align: start;
+      }
+      #CollectionShowcase-{{ section.id }} .scs__image {
+        height: var(--scs-mobile-img);
+      }
+    }
+
+    /* ---------- ≤700px: full-bleed ---------- */
+    @media (max-width: 700px) {
+      #CollectionShowcase-{{ section.id }} {
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+      }
+      #CollectionShowcase-{{ section.id }} .scs__shell {
+        border-radius: 0;
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="scs__shell">
+    <div class="scs__intro">
+      <h2 class="scs__heading">{{ section.settings.heading_text | newline_to_br }}</h2>
+      {%- if section.settings.description_text != blank -%}
+        <p class="scs__description">{{ section.settings.description_text }}</p>
+      {%- endif -%}
+      {%- if section.settings.link_url != blank -%}
+        <a class="scs__link" href="{{ section.settings.link_url }}">
+          {{ section.settings.link_text }}
+          {%- if section.settings.show_link_arrow -%}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          {%- endif -%}
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="scs__row" role="list">
+      {%- for block in section.blocks -%}
+        {%- assign product = block.settings.product -%}
+
+        {%- if product != blank -%}
+          {%- assign item_title = product.title -%}
+          {%- assign item_price = product.price | money -%}
+          {%- assign item_url = product.url -%}
+        {%- else -%}
+          {%- assign item_title = block.settings.title -%}
+          {%- assign item_price = block.settings.price -%}
+          {%- assign item_url = block.settings.link -%}
+        {%- endif -%}
+
+        {%- if item_url != blank -%}
+          <a class="scs__item" role="listitem" href="{{ item_url }}" {{ block.shopify_attributes }}>
+        {%- else -%}
+          <div class="scs__item" role="listitem" {{ block.shopify_attributes }}>
+        {%- endif -%}
+
+          {%- if product != blank and product.featured_image != blank -%}
+            <img
+              class="scs__image"
+              src="{{ product.featured_image | image_url: width: 400 }}"
+              alt="{{ product.title | escape }}"
+              loading="lazy"
+              width="400"
+              height="400"
+            >
+          {%- elsif block.settings.image != blank -%}
+            <img
+              class="scs__image"
+              src="{{ block.settings.image | image_url: width: 400 }}"
+              alt="{{ block.settings.image.alt | default: item_title | escape }}"
+              loading="lazy"
+              width="400"
+              height="400"
+            >
+          {%- endif -%}
+
+          {%- if item_title != blank -%}
+            <p class="scs__title">{{ item_title }}</p>
+          {%- endif -%}
+          {%- if item_price != blank -%}
+            <p class="scs__price">{{ item_price }}</p>
+          {%- endif -%}
+
+        {%- if item_url != blank -%}
+          </a>
+        {%- else -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection Showcase",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#EFE9E2" },
+    { "type": "range", "id": "radius", "label": "Corner radius", "min": 0, "max": 48, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "max_width", "label": "Maximum width", "min": 800, "max": 2000, "step": 20, "default": 1400, "unit": "px" },
+    { "type": "range", "id": "space_top", "label": "Space above", "min": 0, "max": 160, "step": 4, "default": 24, "unit": "px" },
+    { "type": "range", "id": "space_bottom", "label": "Space below", "min": 0, "max": 160, "step": 4, "default": 24, "unit": "px" },
+    { "type": "range", "id": "padding_x", "label": "Horizontal padding", "min": 16, "max": 96, "step": 4, "default": 40, "unit": "px" },
+    { "type": "range", "id": "padding_y", "label": "Vertical padding", "min": 16, "max": 96, "step": 4, "default": 40, "unit": "px" },
+    { "type": "range", "id": "intro_width", "label": "Intro column width", "min": 15, "max": 40, "step": 1, "default": 20, "unit": "%" },
+    { "type": "range", "id": "column_gap", "label": "Gap intro ↔ row", "min": 0, "max": 80, "step": 2, "default": 32, "unit": "px" },
+    { "type": "checkbox", "id": "show_dividers", "label": "Show dividers", "default": true },
+    { "type": "color", "id": "divider_color", "label": "Divider color", "default": "#DCD3C8" },
+
+    { "type": "header", "content": "Intro" },
+    { "type": "textarea", "id": "heading_text", "label": "Heading (line break = new line)", "default": "Shop\nHaircare" },
+    { "type": "select", "id": "heading_font", "label": "Heading font style", "default": "serif", "options": [
+      { "value": "serif", "label": "Serif" },
+      { "value": "sans", "label": "Sans (theme)" }
+    ] },
+    { "type": "range", "id": "heading_size", "label": "Heading size", "min": 18, "max": 48, "step": 1, "default": 30, "unit": "px" },
+    { "type": "range", "id": "heading_weight", "label": "Heading weight", "min": 300, "max": 700, "step": 100, "default": 500 },
+    { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#1F1F1F" },
+    { "type": "textarea", "id": "description_text", "label": "Description", "default": "High-performance formulas for every hair type." },
+    { "type": "range", "id": "description_size", "label": "Description size", "min": 10, "max": 20, "step": 1, "default": 13, "unit": "px" },
+    { "type": "color", "id": "description_color", "label": "Description color", "default": "#5A5A5A" },
+    { "type": "range", "id": "description_max_width", "label": "Description max width", "min": 120, "max": 400, "step": 10, "default": 220, "unit": "px" },
+    { "type": "text", "id": "link_text", "label": "Link text", "default": "Shop All Haircare" },
+    { "type": "url", "id": "link_url", "label": "Link URL" },
+    { "type": "range", "id": "link_size", "label": "Link size", "min": 9, "max": 16, "step": 1, "default": 11, "unit": "px" },
+    { "type": "range", "id": "link_weight", "label": "Link weight", "min": 400, "max": 800, "step": 100, "default": 600 },
+    { "type": "range", "id": "link_letter_spacing", "label": "Link letter spacing", "min": 0, "max": 4, "step": 0.5, "default": 1.5, "unit": "px" },
+    { "type": "color", "id": "link_color", "label": "Button text color", "default": "#1F1F1F" },
+    { "type": "color", "id": "link_bg_color", "label": "Button background", "default": "rgba(255,255,255,0)" },
+    { "type": "range", "id": "link_pad_x", "label": "Button horizontal padding", "min": 0, "max": 48, "step": 2, "default": 0, "unit": "px" },
+    { "type": "range", "id": "link_pad_y", "label": "Button vertical padding", "min": 0, "max": 32, "step": 2, "default": 0, "unit": "px" },
+    { "type": "range", "id": "link_radius", "label": "Button radius", "min": 0, "max": 99, "step": 1, "default": 0, "unit": "px" },
+    { "type": "checkbox", "id": "show_link_arrow", "label": "Show link arrow", "default": true },
+
+    { "type": "header", "content": "Products" },
+    { "type": "range", "id": "image_height", "label": "Image height (desktop)", "min": 60, "max": 220, "step": 5, "default": 120, "unit": "px" },
+    { "type": "range", "id": "mobile_image_height", "label": "Image height (mobile)", "min": 60, "max": 220, "step": 5, "default": 110, "unit": "px" },
+    { "type": "range", "id": "mobile_item_width", "label": "Mobile item width", "min": 120, "max": 240, "step": 5, "default": 150, "unit": "px" },
+    { "type": "range", "id": "title_size", "label": "Title size", "min": 10, "max": 20, "step": 1, "default": 12, "unit": "px" },
+    { "type": "range", "id": "title_weight", "label": "Title weight", "min": 400, "max": 700, "step": 100, "default": 500 },
+    { "type": "color", "id": "title_color", "label": "Title color", "default": "#1F1F1F" },
+    { "type": "range", "id": "price_size", "label": "Price size", "min": 10, "max": 20, "step": 1, "default": 12, "unit": "px" },
+    { "type": "color", "id": "price_color", "label": "Price color", "default": "#1F1F1F" }
+  ],
+  "blocks": [
+    {
+      "type": "product_item",
+      "name": "Product item",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product (auto title, price, image, link)" },
+        { "type": "text", "id": "title", "label": "Fallback title", "default": "Reset Shampoo" },
+        { "type": "text", "id": "price", "label": "Fallback price", "default": "£24" },
+        { "type": "image_picker", "id": "image", "label": "Fallback image" },
+        { "type": "url", "id": "link", "label": "Fallback link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Showcase",
+      "blocks": [
+        { "type": "product_item", "settings": { "title": "Reset Shampoo", "price": "£24" } },
+        { "type": "product_item", "settings": { "title": "Nourish Conditioner", "price": "£24" } },
+        { "type": "product_item", "settings": { "title": "Repair Mask", "price": "£26" } },
+        { "type": "product_item", "settings": { "title": "Prep Leave-In Spray", "price": "£24" } },
+        { "type": "product_item", "settings": { "title": "Finish Smoothing Serum", "price": "£26" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

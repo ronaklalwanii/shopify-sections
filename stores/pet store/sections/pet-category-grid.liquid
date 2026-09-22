@@ -1,0 +1,517 @@
+{%- comment -%}
+  Pet Store — Category Grid
+  Badge + centered heading + grid of category cards (title top-left, image bottom-right).
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .pet-categories-{{ section.id }} {
+    --pet-cat-bg: {{ s.background_color }};
+    --pet-cat-fg: {{ s.text_color }};
+    --pet-cat-muted: {{ s.muted_text_color }};
+    --pet-cat-accent: {{ s.accent_color }};
+    --pet-cat-card-bg: {{ s.card_background_color }};
+    --pet-cat-border: {{ s.border_color }};
+    --pet-cat-badge-bg: {{ s.badge_background_color }};
+    --pet-cat-container: {{ s.container_max_width }}px;
+    --pet-cat-radius: {{ s.card_corner_radius }}px;
+
+    background-color: var(--pet-cat-bg);
+    color: var(--pet-cat-fg);
+    padding-block: {{ s.padding_top }}px {{ s.padding_bottom }}px;
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+  }
+
+  .pet-categories-{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  .pet-categories-{{ section.id }} .pet-cg__container {
+    max-width: var(--pet-cat-container);
+    margin-inline: auto;
+    padding-inline: clamp(16px, 4vw, 48px);
+  }
+
+  .pet-categories-{{ section.id }} .pet-cg__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+    margin-bottom: clamp(28px, 4vw, 44px);
+  }
+
+  .pet-categories-{{ section.id }} .pet-cg__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    border: 1px solid color-mix(in srgb, var(--pet-cat-accent) 22%, transparent);
+    border-radius: {{ s.badge_radius }}px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--pet-cat-accent);
+    background-color: var(--pet-cat-badge-bg);
+  }
+
+  .pet-categories-{{ section.id }} .pet-cg__badge svg,
+  .pet-categories-{{ section.id }} .pet-cg__badge img {
+    width: 13px;
+    height: 13px;
+    object-fit: contain;
+  }
+
+  .pet-categories-{{ section.id }} .pet-cg__heading {
+    margin: 0;
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-size: clamp(28px, 3vw, 38px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--pet-cat-fg);
+    white-space: pre-line;
+  }
+
+  .pet-categories-{{ section.id }} .pet-cg__subheading {
+    margin: 0;
+    max-width: 480px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--pet-cat-muted);
+  }
+
+  .pet-categories-{{ section.id }} .pet-cg__grid {
+    display: grid;
+    grid-template-columns: repeat({{ s.columns_desktop }}, minmax(0, 1fr));
+    gap: {{ s.grid_gap }}px;
+  }
+
+  .pet-categories-{{ section.id }} .pet-cg__card {
+    position: relative;
+    display: block;
+    min-height: {{ s.card_min_height }}px;
+    padding: 20px;
+    background-color: var(--pet-cat-card-bg);
+    border: 1px solid var(--pet-cat-border);
+    border-radius: var(--pet-cat-radius);
+    text-decoration: none;
+    color: var(--pet-cat-fg);
+    overflow: hidden;
+    transition: box-shadow var(--animation-speed, 0.125s) ease, transform var(--animation-speed, 0.125s) ease;
+  }
+
+  .pet-categories-{{ section.id }} .pet-cg__card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgb(0 0 0 / 0.08);
+  }
+
+  .pet-categories-{{ section.id }} .pet-cg__card-title {
+    margin: 0;
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-size: clamp(16px, 1.4vw, 19px);
+    font-weight: 700;
+    line-height: 1.32;
+    letter-spacing: -0.01em;
+    max-width: 9em;
+    color: var(--pet-cat-accent);
+    position: relative;
+    z-index: 1;
+    white-space: pre-line;
+  }
+
+  .pet-categories-{{ section.id }} .pet-cg__card-media {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: {{ s.image_size }}%;
+  }
+
+  .pet-categories-{{ section.id }} .pet-cg__card-media img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: calc(var(--pet-cat-radius) - 6px);
+  }
+
+  .pet-categories-{{ section.id }} .pet-cg__card-media svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    opacity: 0.35;
+  }
+
+  .pet-categories-{{ section.id }} .pet-cg__card-arrow {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: color-mix(in srgb, var(--pet-cat-accent) 8%, transparent);
+    color: var(--pet-cat-accent);
+    opacity: 0;
+    transform: translate(-4px, 4px);
+    transition: opacity var(--animation-speed, 0.125s) ease, transform var(--animation-speed, 0.125s) ease;
+  }
+
+  .pet-categories-{{ section.id }} .pet-cg__card:hover .pet-cg__card-arrow {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+
+  .pet-categories-{{ section.id }} .pet-cg__card-arrow svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  @media (max-width: 989px) {
+    .pet-categories-{{ section.id }} .pet-cg__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .pet-categories-{{ section.id }} .pet-cg__grid {
+      gap: 10px;
+    }
+
+    .pet-categories-{{ section.id }} .pet-cg__card {
+      min-height: 130px;
+      padding: 14px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pet-categories-{{ section.id }} .pet-cg__card,
+    .pet-categories-{{ section.id }} .pet-cg__card-arrow {
+      transition: none;
+    }
+  }
+{% endstyle %}
+
+<section class="pet-categories pet-categories-{{ section.id }}" aria-labelledby="pet-cg-heading-{{ section.id }}">
+  <div class="pet-cg__container">
+    <div class="pet-cg__header">
+      {%- if s.badge_text != blank -%}
+        <p class="pet-cg__badge">
+          {%- if s.badge_icon != blank -%}
+            {{ s.badge_icon | image_url: width: 52 | image_tag: alt: '' }}
+          {%- else -%}
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><ellipse cx="6" cy="9" rx="1.8" ry="2.4"/><ellipse cx="18" cy="9" rx="1.8" ry="2.4"/><ellipse cx="9.6" cy="5.6" rx="1.8" ry="2.4"/><ellipse cx="14.4" cy="5.6" rx="1.8" ry="2.4"/><path d="M12 10.5c2.8 0 5.5 2.3 5.5 4.9 0 1.6-1.2 2.6-2.7 2.6-1 0-1.8-.4-2.8-.4s-1.8.4-2.8.4c-1.5 0-2.7-1-2.7-2.6 0-2.6 2.7-4.9 5.5-4.9Z"/></svg>
+          {%- endif -%}
+          {{ s.badge_text }}
+        </p>
+      {%- endif -%}
+
+      {%- if s.heading != blank -%}
+        <h2 class="pet-cg__heading" id="pet-cg-heading-{{ section.id }}">{{ s.heading }}</h2>
+      {%- endif -%}
+
+      {%- if s.subheading != blank -%}
+        <p class="pet-cg__subheading">{{ s.subheading }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="pet-cg__grid">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign card_collection = block.settings.collection
+            assign card_image = block.settings.image
+            assign card_title = block.settings.title
+            assign card_link = block.settings.link
+
+            if card_collection != blank
+              assign card_link = card_collection.url
+            endif
+
+            if card_collection != blank and card_title == blank
+              assign card_title = card_collection.title
+            endif
+          -%}
+          {%- if card_link != blank -%}
+            <a class="pet-cg__card" href="{{ card_link }}" {{ block.shopify_attributes }}>
+          {%- else -%}
+            <div class="pet-cg__card" {{ block.shopify_attributes }}>
+          {%- endif -%}
+            {%- if s.show_arrow -%}
+              <span class="pet-cg__card-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" focusable="false"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              </span>
+            {%- endif -%}
+            <h3 class="pet-cg__card-title">{{ card_title | default: 'Category' }}</h3>
+            <div class="pet-cg__card-media">
+              {%- if card_image != blank -%}
+                {{ card_image | image_url: width: 300 | image_tag:
+                  widths: '150,225,300',
+                  sizes: '(min-width: 990px) 150px, 40vw',
+                  loading: 'lazy',
+                  alt: card_image.alt | default: card_title | escape
+                }}
+              {%- elsif card_collection != blank and card_collection.featured_image != blank -%}
+                {{ card_collection.featured_image | image_url: width: 300 | image_tag:
+                  widths: '150,225,300',
+                  sizes: '(min-width: 990px) 150px, 40vw',
+                  loading: 'lazy',
+                  alt: card_collection.title | escape
+                }}
+              {%- else -%}
+                {{ 'collection-1' | placeholder_svg_tag }}
+              {%- endif -%}
+            </div>
+          {%- if card_link != blank -%}
+            </a>
+          {%- else -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Pet Category Grid",
+  "tag": "section",
+  "class": "pet-categories-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "Find The Perfect Products"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_icon",
+      "label": "Badge icon",
+      "info": "Optional. Falls back to a paw icon"
+    },
+    {
+      "type": "range",
+      "id": "badge_radius",
+      "label": "Badge corner radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "color",
+      "id": "badge_background_color",
+      "label": "Badge background",
+      "default": "#FBF7EF"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop by Category"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "info": "Optional"
+    },
+    {
+      "type": "header",
+      "content": "Cards"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns (desktop)",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_min_height",
+      "label": "Card min height",
+      "min": 110,
+      "max": 260,
+      "step": 5,
+      "unit": "px",
+      "default": 200
+    },
+    {
+      "type": "range",
+      "id": "card_corner_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "image_size",
+      "label": "Image size",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrow",
+      "label": "Show arrow on hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#211D1A"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text",
+      "default": "#6F6963"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#6E1622"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Card border",
+      "default": "#E9E5E0"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "label": "Container max width",
+      "min": 700,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 980
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category card",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Title and link are pulled from the collection"
+        },
+        {
+          "type": "textarea",
+          "id": "title",
+          "label": "Title",
+          "info": "Overrides the collection title. Use line breaks for multi-line titles"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Overrides the collection image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Used when no collection is selected"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pet Category Grid",
+      "blocks": [
+        { "type": "category", "settings": { "title": "dry & wet\nfood" } },
+        { "type": "category", "settings": { "title": "toys for\npets" } },
+        { "type": "category", "settings": { "title": "walking\naccessories" } },
+        { "type": "category", "settings": { "title": "pet\nsupplies" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,227 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero_product_cards_Xy7kQm": {
+      "type": "hero-product-cards",
+      "blocks": {
+        "heading_1_Lp2xWq": {
+          "type": "text",
+          "name": "Heading",
+          "settings": {
+            "text": "<h1>A calm ritual</h1>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_size": "4.5rem",
+            "line_height": "tight",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "text_color": "#FCF5E8",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "heading_2_Kr8vTn": {
+          "type": "text",
+          "name": "Heading",
+          "settings": {
+            "text": "<h2>for your skin</h2>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_size": "4.5rem",
+            "line_height": "tight",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "text_color": "#FCF5E8",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "subheading_Pm4zJx": {
+          "type": "text",
+          "name": "Subheading",
+          "settings": {
+            "text": "<p>Science-led skincare inspired by the ocean. Made for you.</p>",
+            "width": "fit-content",
+            "max_width": "narrow",
+            "alignment": "left",
+            "type_preset": "custom",
+            "font": "var(--font-body--family)",
+            "font_size": "1.25rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "text_color": "#F3E8D9",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 8,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "button_Qw7yRf": {
+          "type": "button",
+          "name": "Button",
+          "settings": {
+            "label": "DISCOVER COLLECTION",
+            "link": "shopify://collections/all",
+            "open_in_new_tab": false,
+            "style_class": "button-custom",
+            "custom_button_background": "#F2E8D9",
+            "custom_button_text": "#43301F",
+            "custom_button_border": "#F2E8D9",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fit-content",
+            "custom_width_mobile": 100
+          },
+          "blocks": {}
+        },
+        "cards_Vb9cSe": {
+          "type": "_hero-product-cards",
+          "name": "Product cards row",
+          "settings": {
+            "pin_to_bottom": true,
+            "columns_desktop": 4,
+            "columns_tablet": 2,
+            "mobile_layout": "scroll",
+            "gap": 16,
+            "card_height": 224,
+            "card_height_mobile": 176,
+            "image_width": 50,
+            "card_padding": 24,
+            "card_background": "#EAE0D1F2",
+            "corner_radius": 16,
+            "hover_effect": "lift",
+            "title_color": "#43301F",
+            "title_size": 16,
+            "title_uppercase": true,
+            "title_letter_spacing": "sm",
+            "caption_color": "#63513F",
+            "caption_size": 15,
+            "text_alignment": "left",
+            "info_vertical_alignment": "center"
+          },
+          "blocks": {
+            "card_shop_Nd3kFa": {
+              "type": "_hero-product-card",
+              "name": "Card",
+              "settings": {
+                "title": "Shop",
+                "text": "Curated essentials",
+                "link": "shopify://collections/all",
+                "open_in_new_tab": false,
+                "image_position": "left"
+              },
+              "blocks": {}
+            },
+            "card_routine_Ty6uHs": {
+              "type": "_hero-product-card",
+              "settings": {
+                "title": "Routine",
+                "text": "Your daily ritual",
+                "link": "shopify://collections/all",
+                "open_in_new_tab": false,
+                "image_position": "left"
+              },
+              "blocks": {}
+            },
+            "card_journal_Xe2mWp": {
+              "type": "_hero-product-card",
+              "settings": {
+                "title": "Journal",
+                "text": "Mind, skin & mood",
+                "link": "shopify://collections/all",
+                "open_in_new_tab": false,
+                "image_position": "left"
+              },
+              "blocks": {}
+            },
+            "card_profile_Gz5rBv": {
+              "type": "_hero-product-card",
+              "settings": {
+                "title": "Profile",
+                "text": "Your space",
+                "link": "shopify://collections/all",
+                "open_in_new_tab": false,
+                "image_position": "left"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "card_shop_Nd3kFa",
+            "card_routine_Ty6uHs",
+            "card_journal_Xe2mWp",
+            "card_profile_Gz5rBv"
+          ]
+        }
+      },
+      "block_order": [
+        "heading_1_Lp2xWq",
+        "heading_2_Kr8vTn",
+        "subheading_Pm4zJx",
+        "button_Qw7yRf",
+        "cards_Vb9cSe"
+      ],
+      "name": "Hero product cards",
+      "settings": {
+        "custom_mobile_image": false,
+        "image_position": "center",
+        "toggle_overlay": true,
+        "overlay_color": "#2A1D104D",
+        "overlay_style": "gradient",
+        "gradient_direction": "to top",
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "flex-start",
+        "gap": 16,
+        "section_width": "page-width",
+        "section_height": "full-screen",
+        "section_height_custom": 100,
+        "padding-block-start": 224,
+        "padding-block-end": 24,
+        "padding-inline-start": 24,
+        "padding-inline-end": 24
+      }
+    }
+  },
+  "order": [
+    "hero_product_cards_Xy7kQm"
+  ]
+}

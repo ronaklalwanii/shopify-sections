@@ -1,0 +1,441 @@
+{%- comment -%}
+  Cart page — line items, note, totals, checkout.
+{%- endcomment -%}
+<section class="section" style="--section-space: {{ section.settings.padding | default: 56 }}px;">
+  <div class="page-width">
+    <h1 class="h2" style="margin-bottom: 1.6rem;">{{ 'sections.cart.title' | t }}</h1>
+
+    {%- if cart.item_count > 0 -%}
+      <form action="{{ routes.cart_url }}" method="post" class="cart-form" novalidate>
+        <div class="cart-page">
+          <div class="cart-page__items">
+            {%- for item in cart.items -%}
+              <div class="cart-line">
+                <div class="cart-line__media">
+                  {%- if item.image -%}
+                    <a href="{{ item.url }}">{{ item.image | image_url: width: 240 | image_tag: loading: 'lazy', alt: item.title }}</a>
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- endif -%}
+                </div>
+                <div>
+                  <a href="{{ item.url }}" class="cart-line__title">{{ item.product.title | escape }}</a>
+                  {%- unless item.variant.title contains 'Default' -%}
+                    <p class="cart-line__variant">{{ item.variant.title }}</p>
+                  {%- endunless -%}
+                  {%- if item.selling_plan_allocation -%}
+                    <p class="cart-line__variant">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+                  {%- endif -%}
+                  {%- if item.line_level_discount_allocations.size > 0 -%}
+                    {%- for discount in item.line_level_discount_allocations -%}
+                      <p class="cart-line__variant">{{ discount.discount_application.title }} (−{{ discount.amount | money }})</p>
+                    {%- endfor -%}
+                  {%- endif -%}
+                  <a href="{{ item.url_to_remove }}" class="cart-line__remove">{{ 'sections.cart.remove' | t }}</a>
+                </div>
+                <p class="cart-line__price">{{ item.final_price | money }}</p>
+                <div class="quantity cart-line__quantity-cell">
+                  <button type="button" class="quantity__button" data-qty-step="minus" aria-label="{{ 'sections.cart.decrease' | t }}">
+                    {% render 'icon', name: 'minus', size: 12 %}
+                  </button>
+                  <input type="number" class="quantity__input" name="updates[]" value="{{ item.quantity }}" min="0" aria-label="{{ 'sections.cart.quantity' | t }}">
+                  <button type="button" class="quantity__button" data-qty-step="plus" aria-label="{{ 'sections.cart.increase' | t }}">
+                    {% render 'icon', name: 'plus', size: 12 %}
+                  </button>
+                </div>
+                <p class="cart-line__total">{{ item.final_line_price | money }}</p>
+              </div>
+            {%- endfor -%}
+
+            {%- if settings.cart_show_note -%}
+              <div class="cart-note">
+                <label for="CartNote">{{ 'sections.cart.note' | t }}</label>
+                <textarea id="CartNote" class="input" name="note" placeholder="{{ 'sections.cart.note_placeholder' | t }}">{{ cart.note }}</textarea>
+              </div>
+            {%- endif -%}
+          </div>
+
+          <aside class="cart-summary">
+            <div class="cart-summary__row">
+              <span>{{ 'sections.cart.subtotal' | t }}</span>
+              <span>{{ cart.total_price | money }}</span>
+            </div>
+
+            {%- if settings.cart_total_note == 'threshold' and settings.free_shipping_threshold > 0 -%}
+              {%- assign threshold = settings.free_shipping_threshold | times: 100 -%}
+              {%- if cart.total_price >= threshold -%}
+                <p class="cart-summary__shipping-note">{{ 'sections.cart.free_shipping_unlocked' | t }}</p>
+              {%- else -%}
+                {%- assign remaining = threshold | minus: cart.total_price -%}
+                {%- assign remaining_money = remaining | money -%}
+                <p class="cart-summary__shipping-note">{{ 'sections.cart.free_shipping_remaining' | t: amount: remaining_money }}</p>
+                <div class="cart-summary__progress"><i style="width: {{ cart.total_price | times: 100.0 | divided_by: threshold | at_most: 100 }}%;"></i></div>
+              {%- endif -%}
+            {%- elsif settings.cart_total_note == 'static' -%}
+              <p class="cart-summary__shipping-note">{{ 'sections.cart.shipping_taxes' | t }}</p>
+            {%- endif -%}
+
+            {%- if cart.cart_level_discount_applications.size > 0 -%}
+              {%- for discount in cart.cart_level_discount_applications -%}
+                <div class="cart-summary__row" style="color: var(--color-accent);">
+                  <span>{{ discount.title }}</span>
+                  <span>−{{ discount.total_allocated_amount | money }}</span>
+                </div>
+              {%- endfor -%}
+            {%- endif -%}
+
+            <button type="submit" name="checkout" class="button button--dark button--full">
+              {{ 'sections.cart.checkout' | t }}
+            </button>
+            <a href="{{ routes.all_products_collection_url }}" class="cart-drawer__note" style="display: block; text-align: center;">
+              {{ 'general.continue_shopping' | t }}
+            </a>
+          </aside>
+        </div>
+      </form>
+    {%- else -%}
+      <div class="cart-empty">
+        {% render 'icon', name: 'bag', size: 40 %}
+        <h2 class="h4" style="margin-top: 1.2rem;">{{ 'sections.cart.empty' | t }}</h2>
+        <p class="text-muted">{{ 'sections.cart.empty_hint' | t }}</p>
+        {% render 'button', label_key: 'general.continue_shopping', link: routes.all_products_collection_url, style: 'primary' %}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% style %}
+  /* phase 2 enrichment: every rule is merchant-gated; defaults change nothing */
+  {%- if section.settings.enr_heading_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-heading: {{ section.settings.enr_heading_color }}; }
+  #shopify-section-{{ section.id }} h1, #shopify-section-{{ section.id }} h2, #shopify-section-{{ section.id }} h3, #shopify-section-{{ section.id }} [class*="__heading"], #shopify-section-{{ section.id }} [class*="__title"] { color: var(--enr-heading); }
+  {%- endif -%}
+  {%- if section.settings.enr_text_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-text: {{ section.settings.enr_text_color }}; }
+  #shopify-section-{{ section.id }} p, #shopify-section-{{ section.id }} li, #shopify-section-{{ section.id }} [class*="__text"], #shopify-section-{{ section.id }} [class*="__sub"], #shopify-section-{{ section.id }} [class*="__desc"] { color: var(--enr-text); }
+  {%- endif -%}
+  {%- if section.settings.enr_accent_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-accent: {{ section.settings.enr_accent_color }}; }
+  #shopify-section-{{ section.id }} .eyebrow, #shopify-section-{{ section.id }} [class*="__eyebrow"], #shopify-section-{{ section.id }} [class*="__kicker"] { color: var(--enr-accent); }
+  {%- endif -%}
+  {%- if section.settings.enr_card_bg != blank -%}
+  #shopify-section-{{ section.id }} { --enr-card: {{ section.settings.enr_card_bg }}; }
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__box"] { background-color: var(--enr-card); }
+  {%- endif -%}
+  {%- if section.settings.enr_border_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-border: {{ section.settings.enr_border_color }}; }
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__box"] { border-color: var(--enr-border); }
+  {%- endif -%}
+  {%- if section.settings.enr_muted_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-muted: {{ section.settings.enr_muted_color }}; }
+  #shopify-section-{{ section.id }} small, #shopify-section-{{ section.id }} [class*="__meta"], #shopify-section-{{ section.id }} [class*="__note"], #shopify-section-{{ section.id }} [class*="__caption"] { color: var(--enr-muted); }
+  {%- endif -%}
+  {%- if section.settings.enr_fallback_bg != blank -%}
+  #shopify-section-{{ section.id }} { --enr-fallback: {{ section.settings.enr_fallback_bg }}; }
+  #shopify-section-{{ section.id }} [class*="__placeholder"], #shopify-section-{{ section.id }} .placeholder-svg { background-color: var(--enr-fallback); }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_width == 'narrow' -%}
+  #shopify-section-{{ section.id }} .page-width { max-width: 46rem; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_width == 'wide' -%}
+  #shopify-section-{{ section.id }} .page-width { max-width: none; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'left' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: left; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'center' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: center; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'right' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: right; }
+  {%- endif -%}
+  {%- if section.settings.enr_radius > 0 -%}
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__media"], #shopify-section-{{ section.id }} img { border-radius: {{ section.settings.enr_radius }}px; }
+  {%- endif -%}
+  {%- if section.settings.enr_border_width != '0' -%}
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"] { border: {{ section.settings.enr_border_width }}px solid var(--color-border, currentColor); }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_sizes -%}
+  #shopify-section-{{ section.id }} [class*="__heading"], #shopify-section-{{ section.id }} h1, #shopify-section-{{ section.id }} h2, #shopify-section-{{ section.id }} h3 { font-size: {{ section.settings.enr_title_size }}px; }
+  #shopify-section-{{ section.id }} p, #shopify-section-{{ section.id }} li, #shopify-section-{{ section.id }} [class*="__text"] { font-size: {{ section.settings.enr_body_size }}px; }
+  #shopify-section-{{ section.id }} .eyebrow, #shopify-section-{{ section.id }} [class*="__eyebrow"] { font-size: {{ section.settings.enr_eyebrow_size }}px; }
+  #shopify-section-{{ section.id }} [class*="__icon"] svg, #shopify-section-{{ section.id }} svg.icon { width: {{ section.settings.enr_icon_size }}px; height: {{ section.settings.enr_icon_size }}px; }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_spacing -%}
+  #shopify-section-{{ section.id }} > section, #shopify-section-{{ section.id }} > div { padding-block: {{ section.settings.enr_space_top }}px {{ section.settings.enr_space_bottom }}px; }
+  #shopify-section-{{ section.id }} [class*="__grid"], #shopify-section-{{ section.id }} [class*="__row"], #shopify-section-{{ section.id }} [class*="__cards"], #shopify-section-{{ section.id }} [class*="__list"] { gap: {{ section.settings.enr_gap }}px; }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_media -%}
+  #shopify-section-{{ section.id }} [class*="__media"] img, #shopify-section-{{ section.id }} [class*="__image"] img, #shopify-section-{{ section.id }} [class*="__photo"] img { max-height: {{ section.settings.enr_media_height }}px; width: 100%; object-fit: cover; }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} [class*="__media"] img, #shopify-section-{{ section.id }} [class*="__image"] img, #shopify-section-{{ section.id }} [class*="__photo"] img { max-height: {{ section.settings.enr_media_height_mobile }}px; }
+  }
+  {%- endif -%}
+{% endstyle %}
+{% schema %}
+{
+  "name": "Cart",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 16,
+      "max": 140,
+      "step": 2,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "header",
+      "content": "Enriched colors (blank = as designed)"
+    },
+    {
+      "type": "color",
+      "id": "enr_heading_color",
+      "label": "Heading color"
+    },
+    {
+      "type": "color",
+      "id": "enr_text_color",
+      "label": "Body text color"
+    },
+    {
+      "type": "color",
+      "id": "enr_accent_color",
+      "label": "Accent / eyebrow color"
+    },
+    {
+      "type": "color",
+      "id": "enr_card_bg",
+      "label": "Card background"
+    },
+    {
+      "type": "color",
+      "id": "enr_border_color",
+      "label": "Card border color"
+    },
+    {
+      "type": "color",
+      "id": "enr_muted_color",
+      "label": "Muted text color"
+    },
+    {
+      "type": "color",
+      "id": "enr_fallback_bg",
+      "label": "Image fallback background"
+    },
+    {
+      "type": "header",
+      "content": "Enriched layout"
+    },
+    {
+      "type": "select",
+      "id": "enr_layout_width",
+      "label": "Content width",
+      "options": [
+        {
+          "value": "as_designed",
+          "label": "As designed"
+        },
+        {
+          "value": "narrow",
+          "label": "Narrow"
+        },
+        {
+          "value": "wide",
+          "label": "Wide"
+        }
+      ],
+      "default": "as_designed"
+    },
+    {
+      "type": "select",
+      "id": "enr_layout_align",
+      "label": "Intro alignment",
+      "options": [
+        {
+          "value": "as_designed",
+          "label": "As designed"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "as_designed"
+    },
+    {
+      "type": "header",
+      "content": "Enriched shape"
+    },
+    {
+      "type": "range",
+      "id": "enr_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "enr_border_width",
+      "label": "Card border width",
+      "options": [
+        {
+          "value": "0",
+          "label": "None"
+        },
+        {
+          "value": "1",
+          "label": "1 px"
+        },
+        {
+          "value": "2",
+          "label": "2 px"
+        },
+        {
+          "value": "3",
+          "label": "3 px"
+        },
+        {
+          "value": "4",
+          "label": "4 px"
+        }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "header",
+      "content": "Enriched sizes (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_sizes",
+      "label": "Enable custom sizes",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_title_size",
+      "label": "Title size",
+      "min": 16,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "enr_body_size",
+      "label": "Body size",
+      "min": 10,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "enr_eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 10,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "enr_icon_size",
+      "label": "Icon size",
+      "min": 12,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Enriched spacing (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_spacing",
+      "label": "Enable custom spacing",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_space_top",
+      "label": "Space top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "enr_space_bottom",
+      "label": "Space bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "enr_gap",
+      "label": "Grid gap",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Enriched media (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_media",
+      "label": "Enable custom media heights",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_media_height",
+      "label": "Media height (desktop)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "enr_media_height_mobile",
+      "label": "Media height (mobile)",
+      "min": 100,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 400
+    }
+  ]
+}
+  {% endschema %}

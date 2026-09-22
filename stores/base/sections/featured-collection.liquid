@@ -1,0 +1,376 @@
+<!-- @prettify-ignore -->
+
+{%- render 'section-spacing-collapsing' -%}
+
+<style>
+    {%- assign section_background = section.settings.background | default: settings.background -%}
+    {%- assign card_background = section.settings.product_card_background | default: settings.product_card_background -%}
+    {%- assign card_blends = false -%}
+
+    {%- unless section_background != 'rgba(0,0,0,0)' and card_background != 'rgba(0,0,0,0)' and section_background != card_background -%}
+        {%- assign card_blends = true -%}
+    {%- endunless -%}
+
+    #shopify-section-{{ section.id }} .product-list {
+--ul-product-list-gap: {% if section.settings.stack_products and section.settings.products_per_row_mobile == '2' %}
+            {% if card_blends %}
+                var(--ul-product-list-row-gap){% endif %}
+            var(--ul-spacing-2){% else %}
+            var(--ul-product-list-row-gap) var(--ul-product-list-column-gap){% endif %};
+--ul-product-list-items-per-row: {{ section.settings.products_per_row_mobile | times: 1 }}
+        ;
+--ul-product-list-carousel-item-width: 74vw;
+--ul-product-list-grid: {% if section.settings.stack_products %}
+            auto / repeat(var(--ul-product-list-items-per-row), minmax(0, 1fr)){% else %}
+            auto / auto-flow var(--ul-product-list-carousel-item-width){% endif %};
+        row-gap: 28px;
+    }
+    #shopify-section-{{ section.id }} .section-header .prose h2 {
+        font-size: 24px;
+        font-weight: 900;
+    }
+    #shopify-section-{{ section.id }} .section-header .prose p {
+        margin-top: 12px;
+        font-size: 20px;
+        line-height: 1;
+    }
+    #shopify-section-{{ section.id }} .product-list .product-card__info .product-card__title {
+        width: 100%;
+        line-height: 1.2;
+    }
+    #shopify-section-{{ section.id }} .product-list .product-card__info .product-card__title a {
+        width: 100%;
+        display: block;
+        min-height: 50px;
+    }
+    @media screen and (max-width: 425px) {
+        #shopify-section-{{ section.id }} .product-list .product-card__info .product-card__title.coming-soon-title {
+            padding: 20px 0 10px;
+        }
+        #shopify-section-{{ section.id }} .product-list .product-card-button-wrapper .button {
+            padding: 15px 10px;
+        }
+    }
+    @media screen and (max-width: 320px) {
+        #shopify-section-{{ section.id }} .product-list .product-card-button-wrapper .button {
+            padding: 15px 2px;
+        }
+    }
+    @media screen and (min-width: 700px) {
+        #shopify-section-{{ section.id }} .product-list .product-card {
+            margin-bottom: 1rem;
+        }
+        #shopify-section-{{ section.id }} .product-list {
+--ul-product-list-gap: var(--ul-product-list-row-gap) var(--ul-product-list-column-gap);
+--ul-product-list-items-per-row: 2;
+--ul-product-list-carousel-item-width: 36vw;
+            row-gap: 40px;
+        }
+        #shopify-section-{{ section.id }} .section-header .prose h2 {
+            font-size: 36px;
+            font-weight: 900;
+        }
+        #shopify-section-{{ section.id }} .section-header .prose p {
+            margin-top: 14px;
+            font-size: 32px;
+            line-height: 1;
+        }
+        #shopify-section-{{ section.id }} .product-list .product-card__info .product-card__title a {
+            min-height: 60px;
+        }
+    }
+
+    @media screen and (min-width: 1000px) {
+        #shopify-section-{{ section.id }} .product-list {
+--ul-product-list-items-per-row: {{ section.settings.products_per_row_desktop }}
+            ;
+--ul-product-list-carousel-item-width: calc(var(--ul-container-inner-width) / {{ section.settings.products_per_row_desktop }} -(var(--ul-product-list-column-gap) / {{ section.settings.products_per_row_desktop }} * {{ section.settings.products_per_row_desktop | minus: 1 }}));
+        }
+    }
+
+    @media screen and (min-width: 1440px) {
+        #shopify-section-{{ section.id }} .product-list .product-card__info .product-card__title a {
+            min-height: 90px;
+        }
+    }
+
+		#shopify-section-{{ section.id }} {
+			{% if section.settings.custom_padding %}
+			padding-top: {{ section.settings.padding_top }}px;
+			padding-bottom: {{ section.settings.padding_bottom }}px;
+			{% endif %}
+		}</style>
+
+<div {% render 'section-attributes' %} id="{{section.settings.related_section_id}}">
+    <div class="section-stack">
+        {%- assign link_url = section.settings.link_url | default: section.settings.collection.url -%}
+        {%- render 'section-header', subheading: section.settings.subheading, heading: section.settings.title, text_alignment: section.settings.text_alignment, heading_color: section.settings.heading_color, heading_gradient: section.settings.heading_gradient, content: section.settings.content, link_text: section.settings.link_text, link_url: link_url, featured_section: true -%}
+
+        <div class="{% if section.settings.show_progress_bar %}scrollable-with-controls{% else %}floating-controls-container{% endif %}">
+            {%- assign scroll_area_id = 'scroll-area-' | append: section.id -%}
+
+            <scroll-carousel
+                selector="product-card"
+                id="{{ scroll_area_id }}"
+                class="scroll-area bleed {% if section.settings.products_count > section.settings.products_per_row_desktop %}is-scrollable{% endif %}">
+                <reveal-items selector=".product-list > *">
+                    <product-list class="product-list">
+                        {%- assign products = section.settings.products | default: section.settings.collection.products -%}
+                        {%- for product in products limit: section.settings.products_count -%}
+                            {%- render 'product-card', product: product, stacked: section.settings.stack_products, background: section.settings.product_card_background, text_color: section.settings.product_card_text_color, show_badges: true, products_count: section.settings.products_count -%}
+                        {%- else -%}
+                            {%- for i in (1..section.settings.products_count) -%}
+                                {%- capture placeholder_image -%}product-{% cycle '1', '2', '3', '4', '5', '6' %}{%- endcapture -%}
+                                {%- render 'product-card-placeholder', stacked: section.settings.stack_products, placeholder_image: placeholder_image, background: section.settings.product_card_background, text_color: section.settings.product_card_text_color, text_alignment: settings.product_info_alignment -%}
+                            {%- endfor -%}
+                        {%- endfor -%}
+                        {% if section.settings.show_coming_soon_offer %}
+                            {%- render 'coming-soon-card', title: section.settings.coming_soon_text, stacked: section.settings.stack_products, background: section.settings.product_card_background, text_color: section.settings.product_card_text_color, media: section.settings.coming_soon_card_image -%}
+                        {% endif %}
+                    </product-list>
+                </reveal-items>
+            </scroll-carousel>
+
+            {%- if section.settings.stack_products == false -%}
+                {%- if section.settings.show_progress_bar -%}
+                    {%- assign default_progress = section.settings.products_per_row_desktop | times: 1.0 | divided_by: section.settings.products_count -%}
+                    {%- render 'scrollbar', observes: scroll_area_id, default_progress: default_progress, show_buttons: true -%}
+                {%- else -%}
+                    <button
+                        is="prev-button"
+                        class="circle-button circle-button--lg circle-button--fill border group"
+                        aria-controls="{{ scroll_area_id }}"
+                        disabled>
+                        <span class="sr-only">{{ 'general.accessibility.previous' | t }}</span>
+                        <span class="animated-arrow animated-arrow--reverse"></span>
+                    </button>
+
+                    <button
+                        is="next-button"
+                        class="circle-button circle-button--lg circle-button--fill border group"
+                        aria-controls="{{ scroll_area_id }}">
+                        <span class="sr-only">{{ 'general.accessibility.next' | t }}</span>
+                        <span class="animated-arrow"></span>
+                    </button>
+                {%- endif -%}
+            {%- endif -%}
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured collection",
+  "class": "shopify-section--featured-collection",
+  "tag": "section",
+  "disabled_on": {
+    "templates": [
+      "password"
+    ],
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Products",
+      "info": "Replaces collection when selected."
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "stack_products",
+      "label": "Stack products",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_progress_bar",
+      "label": "Show carousel progress bar",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "products_count",
+      "min": 1,
+      "max": 50,
+      "label": "Products to show",
+      "default": 6
+    },
+    {
+      "type": "select",
+      "id": "products_per_row_mobile",
+      "label": "Products per row (mobile)",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "products_per_row_desktop",
+      "min": 2,
+      "max": 5,
+      "label": "Products per row (desktop)",
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Featured collection"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL",
+      "info": "Default to collection URL."
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link text",
+      "default": "View all"
+    },
+    {
+      "type": "header",
+      "content": "Colors",
+      "info": "Gradient replaces solid colors when set."
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color"
+    },
+    {
+      "type": "color_background",
+      "id": "heading_gradient",
+      "label": "Heading gradient"
+    },
+    {
+      "type": "color",
+      "id": "product_card_background",
+      "label": "Product card background"
+    },
+    {
+      "type": "color",
+      "id": "product_card_text_color",
+      "label": "Product card text"
+    },
+    {
+      "type": "text",
+      "id": "related_section_id",
+      "label": "Related Section id",
+      "info": "Used for quick scroll"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_coming_soon_offer",
+      "label": "Show Coming Soon Offer",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "coming_soon_card_image",
+      "label": "Coming Soon Card Image"
+    },
+    {
+      "type": "text",
+      "id": "coming_soon_text",
+      "label": "Coming Soon title"
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_padding",
+      "label": "Custom padding",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured collection"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,64 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "menu-nav": {
+          "type": "menu",
+          "settings": {
+            "heading": "Menu",
+            "show_heading": false,
+            "menu": "pyko-footer-nav"
+          }
+        },
+        "menu-social": {
+          "type": "menu",
+          "settings": {
+            "heading": "Social",
+            "show_heading": false,
+            "menu": "pyko-footer-social"
+          }
+        },
+        "menu-legal": {
+          "type": "menu",
+          "settings": {
+            "heading": "Legal",
+            "show_heading": false,
+            "menu": "pyko-footer-legal"
+          }
+        }
+      },
+      "block_order": [
+        "menu-nav",
+        "menu-social",
+        "menu-legal"
+      ],
+      "settings": {
+        "card_layout": true,
+        "overlap": true,
+        "heading": "Clean Ingredients. Healthy Skin.\nEveryday Confidence.",
+        "cta_label": "Get Started",
+        "cta_link": "/collections/pyko-best",
+        "email": "hello@gmail.com",
+        "address": "1212 Broadway Oakland, CA 94612",
+        "product": "hydrating-serum",
+        "giant_text": "PYKO SKINCARE",
+        "brand_name": "Pyko"
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

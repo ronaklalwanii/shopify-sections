@@ -1,0 +1,43 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "heading_font": "archivo_black_n4",
+    "body_font": "archivo_n4",
+    "heading_scale": 105,
+    "heading_spacing": 0,
+    "body_size": "15",
+    "nav_uppercase": true,
+    "nav_spacing": 2,
+    "page_width": 1500,
+    "section_spacing": "normal",
+    "button_radius": "999",
+    "card_style": "bordered",
+    "card_radius": 8,
+    "card_image_ratio": "portrait",
+    "logo_width": 140,
+    "cart_type": "drawer",
+    "cart_show_note": true,
+    "cart_total_note": "static",
+    "free_shipping_threshold": 50,
+    "colors_background": "#ffffff",
+    "colors_secondary_background": "#111111",
+    "colors_text": "#111111",
+    "colors_heading": "#111111",
+    "colors_accent": "#f26a1b",
+    "colors_accent_label": "#ffffff",
+    "colors_outline_label": "#111111",
+    "social_instagram_link": "https://instagram.com/",
+    "social_facebook_link": "https://facebook.com/",
+    "social_tiktok_link": "https://tiktok.com/",
+    "social_twitter_link": "https://x.com/",
+    "social_telegram_link": "https://t.me/"
+  }
+}

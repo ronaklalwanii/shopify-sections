@@ -1,0 +1,367 @@
+{% comment %}
+  Section: Arena Stats + Who we are
+  3-column: stats panel | center text | circular/rect image.
+  Everything is block-based so the merchant can compose freely.
+{% endcomment %}
+
+{%- liquid
+  assign stat_blocks = section.blocks | where: 'type', 'stat'
+  assign center_blocks = section.blocks | where: 'type', 'center_content'
+  assign image_blocks = section.blocks | where: 'type', 'side_image'
+-%}
+
+<section id="ArenaStats-{{ section.id }}" class="as">
+  {%- style -%}
+    #ArenaStats-{{ section.id }} {
+      --as-bg: {{ section.settings.bg_color }};
+      --as-max-w: {{ section.settings.max_width }}px;
+      --as-gutter: {{ section.settings.gutter }}px;
+      --as-space-top: {{ section.settings.space_top }}px;
+      --as-space-bottom: {{ section.settings.space_bottom }}px;
+      --as-radius: {{ section.settings.radius }}px;
+      --as-pad: {{ section.settings.card_pad }}px;
+      --as-gap: {{ section.settings.gap }}px;
+      --as-card-bg: {{ section.settings.card_bg }};
+      --as-border: {{ section.settings.border_color }};
+      --as-eyebrow: {{ section.settings.eyebrow_color }};
+      --as-head: {{ section.settings.heading_color }};
+      --as-body: {{ section.settings.body_color }};
+      --as-muted: {{ section.settings.muted_color }};
+      --as-accent: {{ section.settings.accent_color }};
+      --as-num-size: {{ section.settings.num_size }}px;
+      --as-stat-w: {{ section.settings.stats_width }}px;
+      --as-img-w: {{ section.settings.image_width }}px;
+    }
+    .shopify-section {
+      padding: 0;
+    }
+    #ArenaStats-{{ section.id }} {
+      background: var(--as-bg);
+      padding: var(--as-space-top) var(--as-gutter) var(--as-space-bottom);
+      overflow-x: clip;
+    }
+    #ArenaStats-{{ section.id }} .as__shell {
+      width: min(100%, var(--as-max-w));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: var(--as-stat-w) minmax(0, 1fr) var(--as-img-w);
+      gap: var(--as-gap);
+      min-width: 0;
+      align-items: stretch;
+    }
+
+    /* ---------- Stats panel ---------- */
+    #ArenaStats-{{ section.id }} .as__stats {
+      background: var(--as-card-bg);
+      border: 1px solid var(--as-border);
+      border-radius: var(--as-radius);
+      padding: var(--as-pad);
+      display: flex;
+      flex-direction: column;
+      gap: {{ section.settings.stat_gap }}px;
+    }
+    #ArenaStats-{{ section.id }} .as__eyebrow {
+      margin: 0;
+      font-size: {{ section.settings.eyebrow_size }}px;
+      letter-spacing: {{ section.settings.eyebrow_spacing }}px;
+      text-transform: uppercase;
+      color: var(--as-eyebrow);
+      font-weight: {{ section.settings.eyebrow_weight }};
+    }
+    #ArenaStats-{{ section.id }} .as__stat {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    #ArenaStats-{{ section.id }} .as__stat-icon {
+      width: {{ section.settings.icon_size }}px;
+      height: {{ section.settings.icon_size }}px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #ArenaStats-{{ section.id }} .as__stat-icon img,
+    #ArenaStats-{{ section.id }} .as__stat-icon svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+    }
+    #ArenaStats-{{ section.id }} .as__stat-icon--circle {
+      background: var(--as-accent);
+      border-radius: 50%;
+    }
+    #ArenaStats-{{ section.id }} .as__stat-num {
+      font-family: Georgia, serif;
+      font-size: var(--as-num-size);
+      line-height: 1;
+      color: var(--as-head);
+      font-weight: {{ section.settings.num_weight }};
+    }
+    #ArenaStats-{{ section.id }} .as__stat-label {
+      font-size: {{ section.settings.label_size }}px;
+      color: var(--as-muted);
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+    #ArenaStats-{{ section.id }} .as__stat-meta { min-width: 0; }
+
+    /* ---------- Center ---------- */
+    #ArenaStats-{{ section.id }} .as__center {
+      background: var(--as-card-bg);
+      border: 1px solid var(--as-border);
+      border-radius: var(--as-radius);
+      padding: var(--as-pad);
+      min-width: 0;
+    }
+    #ArenaStats-{{ section.id }} .as__center-kicker {
+      font-size: {{ section.settings.eyebrow_size }}px;
+      letter-spacing: {{ section.settings.eyebrow_spacing }}px;
+      text-transform: uppercase;
+      color: var(--as-eyebrow);
+      font-weight: {{ section.settings.eyebrow_weight }};
+      margin: 0;
+    }
+    #ArenaStats-{{ section.id }} .as__center-title {
+      margin: 14px 0 0;
+      font-size: {{ section.settings.center_title_size }}px;
+      font-weight: {{ section.settings.center_title_weight }};
+      line-height: 1.4;
+      color: var(--as-head);
+    }
+    #ArenaStats-{{ section.id }} .as__center-text {
+      margin: 14px 0 0;
+      font-size: {{ section.settings.center_body_size }}px;
+      line-height: 1.65;
+      color: var(--as-body);
+    }
+    #ArenaStats-{{ section.id }} .as__center-sub {
+      margin: 16px 0 0;
+      font-size: {{ section.settings.center_sub_size }}px;
+      line-height: 1.6;
+      color: var(--as-muted);
+      border-top: 1px solid var(--as-border);
+      padding-top: 14px;
+    }
+
+    /* ---------- Image ---------- */
+    #ArenaStats-{{ section.id }} .as__image-wrap {
+      position: relative;
+      border-radius: var(--as-radius);
+      overflow: hidden;
+      min-height: 280px;
+      background: {{ section.settings.image_fallback_bg }};
+    }
+    #ArenaStats-{{ section.id }} .as__image-wrap img,
+    #ArenaStats-{{ section.id }} .as__image-wrap .as__placeholder-svg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      position: absolute;
+      inset: 0;
+    }
+    #ArenaStats-{{ section.id }} .as__image-wrap .as__placeholder-svg { opacity: .4; background: rgba(0,0,0,.06); }
+    #ArenaStats-{{ section.id }} .as__image-wrap--circle {
+      border-radius: 50%;
+      aspect-ratio: 1;
+      min-height: 0;
+      align-self: center;
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 1100px) {
+      #ArenaStats-{{ section.id }} .as__shell {
+        grid-template-columns: var(--as-stat-w) minmax(0, 1fr);
+      }
+      #ArenaStats-{{ section.id }} .as__image-wrap { display: none; }
+    }
+    @media (max-width: 700px) {
+      #ArenaStats-{{ section.id }} .as__shell { grid-template-columns: 1fr; }
+      #ArenaStats-{{ section.id }} .as__image-wrap {
+        display: block;
+        aspect-ratio: 16/10;
+        border-radius: var(--as-radius);
+        min-height: 0;
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="as__shell">
+    <div class="as__stats">
+      <p class="as__eyebrow">{{ section.settings.stats_eyebrow }}</p>
+      {%- for block in stat_blocks -%}
+        <div class="as__stat" {{ block.shopify_attributes }}>
+          <span class="as__stat-icon{% if block.settings.icon_custom == blank and block.settings.icon == 'circle' %} as__stat-icon--circle{% endif %}">
+            {%- if block.settings.icon_custom != blank -%}
+              <img
+                src="{{ block.settings.icon_custom | image_url: width: 120 }}"
+                alt=""
+                loading="lazy"
+                width="120"
+                height="120"
+              >
+            {%- else -%}
+              {%- case block.settings.icon -%}
+                {%- when 'circle' -%}
+                  {%- comment -%} Filled circle renders via the --circle class on the wrapper. {%- endcomment -%}
+                {%- when 'document' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="color: var(--as-accent)"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+                {%- when 'building' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="color: var(--as-accent)"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>
+                {%- when 'ruler' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="color: var(--as-accent)"><rect x="3" y="7" width="18" height="10" rx="1"/><path d="M7 7v10M17 7v10"/></svg>
+                {%- when 'star' -%}
+                  <svg viewBox="0 0 24 24" fill="currentColor" style="color: var(--as-accent)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                {%- when 'award' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="color: var(--as-accent)"><circle cx="12" cy="9" r="6"/><path d="M8.5 14.5 7 22l5-3 5 3-1.5-7.5"/></svg>
+                {%- when 'home' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="color: var(--as-accent)"><path d="M3 10 12 3l9 7v11a2 2 0 0 1-2 2h-4v-7h-6v7H5a2 2 0 0 1-2-2z"/></svg>
+                {%- else -%}
+                  <svg viewBox="0 0 24 24" fill="currentColor" style="color: var(--as-accent)"><circle cx="12" cy="12" r="8"/></svg>
+              {%- endcase -%}
+            {%- endif -%}
+          </span>
+          <div class="as__stat-meta">
+            <div class="as__stat-num">{{ block.settings.number }}</div>
+            <div class="as__stat-label">{{ block.settings.label }}</div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <div class="as__center">
+      {%- for block in center_blocks -%}
+        {%- if block.settings.kicker != blank -%}
+          <p class="as__center-kicker" {{ block.shopify_attributes }}>{{ block.settings.kicker }}</p>
+        {%- endif -%}
+        {%- if block.settings.title != blank -%}
+          <p class="as__center-title" {{ block.shopify_attributes }}>{{ block.settings.title }}</p>
+        {%- endif -%}
+        {%- if block.settings.text != blank -%}
+          <p class="as__center-text" {{ block.shopify_attributes }}>{{ block.settings.text }}</p>
+        {%- endif -%}
+        {%- if block.settings.sub != blank -%}
+          <p class="as__center-sub" {{ block.shopify_attributes }}>{{ block.settings.sub }}</p>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    {%- for block in image_blocks -%}
+      <div class="as__image-wrap{% if block.settings.circle %} as__image-wrap--circle{% endif %}" {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          <img
+            src="{{ block.settings.image | image_url: width: 800 }}"
+            alt="{{ block.settings.image.alt | default: 'Team' | escape }}"
+            loading="lazy"
+            width="800"
+            height="800"
+          >
+        {%- else -%}
+          {{- 'lifestyle-2' | placeholder_svg_tag: 'as__placeholder-svg' -}}
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Arena Stats + Intro",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "color", "id": "bg_color", "label": "Page background", "default": "#FDF6E8" },
+    { "type": "range", "id": "max_width", "label": "Max width", "min": 900, "max": 1800, "step": 20, "default": 1400, "unit": "px" },
+    { "type": "range", "id": "gutter", "label": "Gutter", "min": 0, "max": 40, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "space_top", "label": "Space above", "min": 0, "max": 80, "step": 4, "default": 12, "unit": "px" },
+    { "type": "range", "id": "space_bottom", "label": "Space below", "min": 0, "max": 80, "step": 4, "default": 12, "unit": "px" },
+    { "type": "range", "id": "radius", "label": "Card radius", "min": 0, "max": 40, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "gap", "label": "Column gap", "min": 12, "max": 32, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "card_pad", "label": "Card padding", "min": 16, "max": 40, "step": 2, "default": 22, "unit": "px" },
+    { "type": "range", "id": "stat_gap", "label": "Stat row gap", "min": 8, "max": 40, "step": 2, "default": 22, "unit": "px" },
+    { "type": "color", "id": "card_bg", "label": "Card background", "default": "#F5EBDC" },
+    { "type": "color", "id": "border_color", "label": "Card border", "default": "#EDE3D3" },
+    { "type": "range", "id": "stats_width", "label": "Stats column width", "min": 200, "max": 500, "step": 10, "default": 340, "unit": "px" },
+    { "type": "range", "id": "image_width", "label": "Image column width", "min": 200, "max": 500, "step": 10, "default": 340, "unit": "px" },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "eyebrow_color", "label": "Eyebrow / kicker", "default": "#9A8A78" },
+    { "type": "color", "id": "heading_color", "label": "Headings / numbers", "default": "#2B2117" },
+    { "type": "color", "id": "body_color", "label": "Body text", "default": "#6B5E4F" },
+    { "type": "color", "id": "muted_color", "label": "Muted / labels", "default": "#7A6E5D" },
+    { "type": "color", "id": "accent_color", "label": "Accent (icons + filled circle)", "default": "#C2A78A" },
+    { "type": "color", "id": "image_fallback_bg", "label": "Image fallback bg", "default": "#EDE3D3" },
+
+    { "type": "header", "content": "Typography" },
+    { "type": "range", "id": "eyebrow_size", "label": "Eyebrow size", "min": 9, "max": 16, "step": 1, "default": 10, "unit": "px" },
+    { "type": "range", "id": "eyebrow_spacing", "label": "Eyebrow letter spacing", "min": 0, "max": 6, "step": 1, "default": 2, "unit": "px" },
+    { "type": "range", "id": "eyebrow_weight", "label": "Eyebrow weight", "min": 400, "max": 700, "step": 100, "default": 500 },
+    { "type": "range", "id": "icon_size", "label": "Icon size", "min": 18, "max": 56, "step": 2, "default": 28, "unit": "px" },
+    { "type": "range", "id": "num_size", "label": "Number size", "min": 20, "max": 56, "step": 2, "default": 32, "unit": "px" },
+    { "type": "range", "id": "num_weight", "label": "Number weight", "min": 300, "max": 700, "step": 100, "default": 400 },
+    { "type": "range", "id": "label_size", "label": "Stat label size", "min": 10, "max": 18, "step": 1, "default": 11, "unit": "px" },
+    { "type": "range", "id": "center_title_size", "label": "Center title size", "min": 12, "max": 28, "step": 1, "default": 15, "unit": "px" },
+    { "type": "range", "id": "center_title_weight", "label": "Center title weight", "min": 400, "max": 700, "step": 100, "default": 600 },
+    { "type": "range", "id": "center_body_size", "label": "Center body size", "min": 12, "max": 20, "step": 1, "default": 13, "unit": "px" },
+    { "type": "range", "id": "center_sub_size", "label": "Center sub size", "min": 10, "max": 18, "step": 1, "default": 12, "unit": "px" },
+
+    { "type": "header", "content": "Content (stats)" },
+    { "type": "text", "id": "stats_eyebrow", "label": "Stats eyebrow", "default": "Arena Development — in numbers" }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat row",
+      "settings": [
+        { "type": "image_picker", "id": "icon_custom", "label": "Custom icon (PNG/SVG)", "info": "Upload to override the built-in icon." },
+        { "type": "select", "id": "icon", "label": "Built-in icon (used when no custom icon uploaded)", "default": "circle", "options": [
+          { "value": "circle", "label": "Filled circle" },
+          { "value": "document", "label": "Document" },
+          { "value": "building", "label": "Building" },
+          { "value": "ruler", "label": "Ruler / area" },
+          { "value": "star", "label": "Star" },
+          { "value": "award", "label": "Award" },
+          { "value": "home", "label": "Home" }
+        ] },
+        { "type": "text", "id": "number", "label": "Number", "default": "12" },
+        { "type": "text", "id": "label", "label": "Label", "default": "years on the market" }
+      ]
+    },
+    {
+      "type": "center_content",
+      "name": "Center content",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "kicker", "label": "Kicker", "default": "Who we are" },
+        { "type": "textarea", "id": "title", "label": "Title", "default": "We are a team of professionals creating modern residential quarters for comfortable life." },
+        { "type": "textarea", "id": "text", "label": "Body text", "default": "We are a team of professionals creating modern residential quarters for comfortable life." },
+        { "type": "textarea", "id": "sub", "label": "Sub text (with top border)", "default": "A full-cycle developer — We take on everything from concept and design to construction. Our homes are about comfort, aesthetics, and care for future residents." }
+      ]
+    },
+    {
+      "type": "side_image",
+      "name": "Side image",
+      "limit": 1,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "checkbox", "id": "circle", "label": "Circular crop", "default": true }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Arena Stats + Intro",
+      "blocks": [
+        { "type": "stat", "settings": { "icon": "circle", "number": "12", "label": "years on the market" } },
+        { "type": "stat", "settings": { "icon": "building", "number": "18", "label": "residential complexes" } },
+        { "type": "stat", "settings": { "icon": "ruler", "number": "320 000 m²", "label": "built" } },
+        { "type": "center_content" },
+        { "type": "side_image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

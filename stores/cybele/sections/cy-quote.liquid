@@ -1,0 +1,541 @@
+{%- comment -%} Cybele testimonial — black split card, rotating quotes, application photo, discount pill. {%- endcomment -%}
+<section class="cyq cyq-{{ section.id }}" style="--cyq-bg: {{ section.settings.background_color | default: '#171114' }}; --cyq-text: {{ section.settings.card_text_color }}; --cyq-accent: {{ section.settings.accent_color }}; --cyq-ink: {{ section.settings.ink_color }};">
+  <div class="page-width">
+    <div class="cyq__card">
+      <div class="cyq__content">
+        {%- if section.settings.show_eyebrow and section.settings.eyebrow != blank -%}<span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>{%- endif -%}
+        <h2 class="h1">{{ section.settings.heading | escape }}</h2>
+        <div class="cyq__slides" data-cyq-slides>
+          {%- for block in section.blocks -%}
+            <div class="cyq__slide{% if forloop.first %} is-active{% endif %}" {{ block.shopify_attributes }}>
+              {%- if block.settings.text != blank -%}<div class="cyq__text">{{ block.settings.text }}</div>{%- endif -%}
+              <div class="cyq__profile">
+                {%- if block.settings.avatar != blank -%}
+                  {{ block.settings.avatar | image_url: width: 160 | image_tag: loading: 'lazy', alt: block.settings.name }}
+                {%- else -%}
+                  <span class="cyq__avatar-fallback" aria-hidden="true">{{ block.settings.name | slice: 0, 1 }}</span>
+                {%- endif -%}
+                <span><strong>{{ block.settings.name | escape }}</strong><em>{{ block.settings.role | escape }}</em></span>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+      <div class="cyq__media">
+        <div class="cyq__photos" data-cyq-photos>
+          {%- for block in section.blocks -%}
+            <div class="cyq__photo{% if forloop.first %} is-active{% endif %}">
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '400, 600, 1000', alt: block.settings.name }}
+              {%- else -%}
+                {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+        {%- if section.settings.badge_text != blank -%}<span class="cyq__pill">{{ section.settings.badge_text | escape }}</span>{%- endif -%}
+        {%- if section.blocks.size > 1 -%}
+          <div class="cyq__arrows">
+            <button type="button" data-cyq-prev aria-label="Previous testimonial">{% render 'icon', name: 'chevron-left', size: 14 %}</button>
+            <button type="button" data-cyq-next aria-label="Next testimonial">{% render 'icon', name: 'chevron-right', size: 14 %}</button>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+{% style %}
+  .cyq-{{ section.id }} { padding-block: var(--section-space); }
+  .cyq-{{ section.id }} .cyq__card {
+    background: var(--cyq-bg); color: var(--cyq-text); border-radius: 20px; overflow: hidden;
+    display: grid; grid-template-columns: 0.9fr 1.1fr; align-items: stretch;
+  }
+  .cyq-{{ section.id }} .cyq__content { padding: clamp(1.6rem, 3.5vw, 3rem); display: flex; flex-direction: column; justify-content: center; }
+  .cyq-{{ section.id }} .cyq__content h2 { color: #fff; margin-bottom: 0.6em; }
+  .cyq-{{ section.id }} .cyq__content .eyebrow { color: color-mix(in srgb, var(--cyq-text) 65%, transparent); }
+  .cyq-{{ section.id }} .cyq__slides { display: grid; }
+  .cyq-{{ section.id }} .cyq__slide { grid-area: 1 / 1; opacity: 0; transform: translateY(8px); transition: opacity 0.4s ease, transform 0.4s ease; pointer-events: none; }
+  .cyq-{{ section.id }} .cyq__slide.is-active { opacity: 1; transform: none; pointer-events: auto; }
+  .cyq-{{ section.id }} .cyq__text { font-size: 0.86rem; color: color-mix(in srgb, var(--cyq-text) 72%, transparent); max-width: 28rem; margin-bottom: 1.6rem; }
+  .cyq-{{ section.id }} .cyq__profile { display: flex; align-items: center; gap: 0.8rem; }
+  .cyq-{{ section.id }} .cyq__profile img { width: 2.6rem; height: 2.6rem; border-radius: 50%; object-fit: cover; }
+  .cyq-{{ section.id }} .cyq__avatar-fallback {
+    width: 2.6rem; height: 2.6rem; border-radius: 50%; flex-shrink: 0;
+    background: var(--cyq-accent); color: #fff; display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700;
+  }
+  .cyq-{{ section.id }} .cyq__profile strong { display: block; font-size: 0.88rem; }
+  .cyq-{{ section.id }} .cyq__profile em { display: block; font-style: normal; font-size: 0.72rem; color: color-mix(in srgb, var(--cyq-text) 60%, transparent); }
+  .cyq-{{ section.id }} .cyq__media { position: relative; min-height: 24rem; }
+  .cyq-{{ section.id }} .cyq__photos { position: absolute; inset: 0; display: grid; }
+  .cyq-{{ section.id }} .cyq__photo { grid-area: 1 / 1; opacity: 0; transition: opacity 0.4s ease; }
+  .cyq-{{ section.id }} .cyq__photo.is-active { opacity: 1; }
+  .cyq-{{ section.id }} .cyq__photo > img, .cyq-{{ section.id }} .cyq__photo > svg { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cyq-{{ section.id }} .cyq__pill {
+    position: absolute; top: 1rem; left: 50%; transform: translateX(-50%); z-index: 2;
+    background: rgba(255,255,255,0.9); color: var(--cyq-ink); white-space: nowrap;
+    font-size: 0.64rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.4rem 0.8rem; border-radius: 999px;
+  }
+  .cyq-{{ section.id }} .cyq__arrows {
+    position: absolute; bottom: 1.2rem; left: 50%; transform: translateX(-50%); z-index: 2;
+    display: flex; gap: 0.7rem;
+  }
+  .cyq-{{ section.id }} .cyq__arrows button {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 3.4rem; padding: 0.6rem 1rem;
+    border: 1px solid rgba(255,255,255,0.55); border-radius: 999px; color: #fff;
+    background: rgba(0,0,0,0.15);
+  }
+  .cyq-{{ section.id }} .cyq__arrows button:hover { background: rgba(255,255,255,0.9); color: var(--cyq-ink); }
+  @media (max-width: 989px) {
+    .cyq-{{ section.id }} .cyq__card { grid-template-columns: 1fr; }
+    .cyq-{{ section.id }} .cyq__media { min-height: 20rem; }
+  }
+  /* reduced-motion: kill all added motion; slide fades become instant swaps */
+  @media (prefers-reduced-motion: reduce) {
+    .cyq-{{ section.id }},
+    .cyq-{{ section.id }} * {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+{% endstyle %}
+<script>
+  (function () {
+    var root = document.querySelector('.cyq-{{ section.id }}');
+    if (!root) return;
+    var slides = Array.prototype.slice.call(root.querySelectorAll('[data-cyq-slides] .cyq__slide'));
+    var photos = Array.prototype.slice.call(root.querySelectorAll('[data-cyq-photos] .cyq__photo'));
+    if (slides.length < 2) return;
+    var i = 0;
+    function go(n) {
+      i = (n + slides.length) % slides.length;
+      slides.forEach(function (el, k) { el.classList.toggle('is-active', k === i); });
+      photos.forEach(function (el, k) { el.classList.toggle('is-active', k === i); });
+    }
+    var prev = root.querySelector('[data-cyq-prev]');
+    var next = root.querySelector('[data-cyq-next]');
+    if (prev) prev.addEventListener('click', function () { go(i - 1); });
+    if (next) next.addEventListener('click', function () { go(i + 1); });
+  })();
+</script>
+{% style %}
+  /* phase 2 enrichment: every rule is merchant-gated; defaults change nothing */
+  {%- if section.settings.enr_heading_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-heading: {{ section.settings.enr_heading_color }}; }
+  #shopify-section-{{ section.id }} h1, #shopify-section-{{ section.id }} h2, #shopify-section-{{ section.id }} h3, #shopify-section-{{ section.id }} [class*="__heading"], #shopify-section-{{ section.id }} [class*="__title"] { color: var(--enr-heading); }
+  {%- endif -%}
+  {%- if section.settings.enr_text_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-text: {{ section.settings.enr_text_color }}; }
+  #shopify-section-{{ section.id }} p, #shopify-section-{{ section.id }} li, #shopify-section-{{ section.id }} [class*="__text"], #shopify-section-{{ section.id }} [class*="__sub"], #shopify-section-{{ section.id }} [class*="__desc"] { color: var(--enr-text); }
+  {%- endif -%}
+  {%- if section.settings.enr_accent_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-accent: {{ section.settings.enr_accent_color }}; }
+  #shopify-section-{{ section.id }} .eyebrow, #shopify-section-{{ section.id }} [class*="__eyebrow"], #shopify-section-{{ section.id }} [class*="__kicker"] { color: var(--enr-accent); }
+  {%- endif -%}
+  {%- if section.settings.enr_card_bg != blank -%}
+  #shopify-section-{{ section.id }} { --enr-card: {{ section.settings.enr_card_bg }}; }
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__box"] { background-color: var(--enr-card); }
+  {%- endif -%}
+  {%- if section.settings.enr_border_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-border: {{ section.settings.enr_border_color }}; }
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__box"] { border-color: var(--enr-border); }
+  {%- endif -%}
+  {%- if section.settings.enr_muted_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-muted: {{ section.settings.enr_muted_color }}; }
+  #shopify-section-{{ section.id }} small, #shopify-section-{{ section.id }} [class*="__meta"], #shopify-section-{{ section.id }} [class*="__note"], #shopify-section-{{ section.id }} [class*="__caption"] { color: var(--enr-muted); }
+  {%- endif -%}
+  {%- if section.settings.enr_fallback_bg != blank -%}
+  #shopify-section-{{ section.id }} { --enr-fallback: {{ section.settings.enr_fallback_bg }}; }
+  #shopify-section-{{ section.id }} [class*="__placeholder"], #shopify-section-{{ section.id }} .placeholder-svg { background-color: var(--enr-fallback); }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_width == 'narrow' -%}
+  #shopify-section-{{ section.id }} .page-width { max-width: 46rem; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_width == 'wide' -%}
+  #shopify-section-{{ section.id }} .page-width { max-width: none; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'left' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: left; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'center' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: center; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'right' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: right; }
+  {%- endif -%}
+  {%- if section.settings.enr_radius > 0 -%}
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__media"], #shopify-section-{{ section.id }} img { border-radius: {{ section.settings.enr_radius }}px; }
+  {%- endif -%}
+  {%- if section.settings.enr_border_width != '0' -%}
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"] { border: {{ section.settings.enr_border_width }}px solid var(--color-border, currentColor); }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_sizes -%}
+  #shopify-section-{{ section.id }} [class*="__heading"], #shopify-section-{{ section.id }} h1, #shopify-section-{{ section.id }} h2, #shopify-section-{{ section.id }} h3 { font-size: {{ section.settings.enr_title_size }}px; }
+  #shopify-section-{{ section.id }} p, #shopify-section-{{ section.id }} li, #shopify-section-{{ section.id }} [class*="__text"] { font-size: {{ section.settings.enr_body_size }}px; }
+  #shopify-section-{{ section.id }} .eyebrow, #shopify-section-{{ section.id }} [class*="__eyebrow"] { font-size: {{ section.settings.enr_eyebrow_size }}px; }
+  #shopify-section-{{ section.id }} [class*="__icon"] svg, #shopify-section-{{ section.id }} svg.icon { width: {{ section.settings.enr_icon_size }}px; height: {{ section.settings.enr_icon_size }}px; }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_spacing -%}
+  #shopify-section-{{ section.id }} > section, #shopify-section-{{ section.id }} > div { padding-block: {{ section.settings.enr_space_top }}px {{ section.settings.enr_space_bottom }}px; }
+  #shopify-section-{{ section.id }} [class*="__grid"], #shopify-section-{{ section.id }} [class*="__row"], #shopify-section-{{ section.id }} [class*="__cards"], #shopify-section-{{ section.id }} [class*="__list"] { gap: {{ section.settings.enr_gap }}px; }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_media -%}
+  #shopify-section-{{ section.id }} [class*="__media"] img, #shopify-section-{{ section.id }} [class*="__image"] img, #shopify-section-{{ section.id }} [class*="__photo"] img { max-height: {{ section.settings.enr_media_height }}px; width: 100%; object-fit: cover; }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} [class*="__media"] img, #shopify-section-{{ section.id }} [class*="__image"] img, #shopify-section-{{ section.id }} [class*="__photo"] img { max-height: {{ section.settings.enr_media_height_mobile }}px; }
+  }
+  {%- endif -%}
+{% endstyle %}
+{% schema %}
+{
+  "name": "CY Testimonial",
+  "tag": "section",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Card background",
+      "default": "#171114"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Verified results"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Let's see what the say after use our product"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Photo pill",
+      "default": "Discount 15%"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card text color",
+      "default": "#f4ece3"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent (avatar) color",
+      "default": "#a41e34"
+    },
+    {
+      "type": "color",
+      "id": "ink_color",
+      "label": "Ink (on light) color",
+      "default": "#2b2024"
+    },
+    {
+      "type": "header",
+      "content": "Enriched colors (blank = as designed)"
+    },
+    {
+      "type": "color",
+      "id": "enr_heading_color",
+      "label": "Heading color"
+    },
+    {
+      "type": "color",
+      "id": "enr_text_color",
+      "label": "Body text color"
+    },
+    {
+      "type": "color",
+      "id": "enr_accent_color",
+      "label": "Accent / eyebrow color"
+    },
+    {
+      "type": "color",
+      "id": "enr_card_bg",
+      "label": "Card background"
+    },
+    {
+      "type": "color",
+      "id": "enr_border_color",
+      "label": "Card border color"
+    },
+    {
+      "type": "color",
+      "id": "enr_muted_color",
+      "label": "Muted text color"
+    },
+    {
+      "type": "color",
+      "id": "enr_fallback_bg",
+      "label": "Image fallback background"
+    },
+    {
+      "type": "header",
+      "content": "Enriched layout"
+    },
+    {
+      "type": "select",
+      "id": "enr_layout_width",
+      "label": "Content width",
+      "options": [
+        {
+          "value": "as_designed",
+          "label": "As designed"
+        },
+        {
+          "value": "narrow",
+          "label": "Narrow"
+        },
+        {
+          "value": "wide",
+          "label": "Wide"
+        }
+      ],
+      "default": "as_designed"
+    },
+    {
+      "type": "select",
+      "id": "enr_layout_align",
+      "label": "Intro alignment",
+      "options": [
+        {
+          "value": "as_designed",
+          "label": "As designed"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "as_designed"
+    },
+    {
+      "type": "header",
+      "content": "Enriched shape"
+    },
+    {
+      "type": "range",
+      "id": "enr_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "enr_border_width",
+      "label": "Card border width",
+      "options": [
+        {
+          "value": "0",
+          "label": "None"
+        },
+        {
+          "value": "1",
+          "label": "1 px"
+        },
+        {
+          "value": "2",
+          "label": "2 px"
+        },
+        {
+          "value": "3",
+          "label": "3 px"
+        },
+        {
+          "value": "4",
+          "label": "4 px"
+        }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "header",
+      "content": "Enriched sizes (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_sizes",
+      "label": "Enable custom sizes",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_title_size",
+      "label": "Title size",
+      "min": 16,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "enr_body_size",
+      "label": "Body size",
+      "min": 10,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "enr_eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 10,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "enr_icon_size",
+      "label": "Icon size",
+      "min": 12,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Enriched spacing (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_spacing",
+      "label": "Enable custom spacing",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_space_top",
+      "label": "Space top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "enr_space_bottom",
+      "label": "Space bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "enr_gap",
+      "label": "Grid gap",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Enriched media (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_media",
+      "label": "Enable custom media heights",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_media_height",
+      "label": "Media height (desktop)",
+      "min": 380,
+      "max": 580,
+      "step": 2,
+      "unit": "px",
+      "default": 480
+    },
+    {
+      "type": "range",
+      "id": "enr_media_height_mobile",
+      "label": "Media height (mobile)",
+      "min": 300,
+      "max": 500,
+      "step": 2,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow",
+      "label": "Show eyebrow",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "quote",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Rich pigment, comfortable wear, and a finish that lasts from morning to midnight.</p>"
+        },
+        {
+          "type": "image_picker",
+          "id": "avatar",
+          "label": "Profile photo"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Zulu A"
+        },
+        {
+          "type": "text",
+          "id": "role",
+          "label": "Role",
+          "default": "Verified buyer"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Application photo"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "CY Testimonial"
+    }
+  ]
+}
+  {% endschema %}

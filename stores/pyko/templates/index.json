@@ -1,0 +1,256 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "layout": "full",
+        "height": "xl",
+        "overlay_opacity": 10,
+        "colors_text": "#ffffff",
+        "heading": "Skincare That Feels as\nGood as It Looks.",
+        "heading_size": "h1",
+        "side_text": "Experience Clear, Botanical Skincare Designed To Deeply Hydrate, Restore Your Skin Barrier",
+        "show_button_arrow": true,
+        "product": "hydrating-serum",
+        "script_text": "pure hydration",
+        "script_color": "#e4b54a",
+        "avatars_count": 4,
+        "rating_value": "4.5",
+        "meta_text": "25k Satisfied Customers",
+        "fluid_heading": false,
+        "subheading": "",
+        "scroll_label": ""
+      },
+      "blocks": {
+        "b": {
+          "type": "button",
+          "settings": {
+            "label": "Shop Collection",
+            "link": "/collections/pyko-best",
+            "style": "light"
+          }
+        }
+      },
+      "block_order": [
+        "b"
+      ]
+    },
+    "usp": {
+      "type": "usp-bar",
+      "settings": {
+        "style": "bar",
+        "dividers": true,
+        "spacing": "compact"
+      },
+      "blocks": {
+        "u1": {
+          "type": "item",
+          "settings": {
+            "icon": "box",
+            "title": "Fast Delivery",
+            "text": "Lightning - Fast Delivery"
+          }
+        },
+        "u2": {
+          "type": "item",
+          "settings": {
+            "icon": "refresh",
+            "title": "Money Back",
+            "text": "100% Money-Back Guarantee"
+          }
+        },
+        "u3": {
+          "type": "item",
+          "settings": {
+            "icon": "shield",
+            "title": "Secured Payment",
+            "text": "Shop with Confidence"
+          }
+        },
+        "u4": {
+          "type": "item",
+          "settings": {
+            "icon": "user-heart",
+            "title": "24/7 Support",
+            "text": "Always Here for you"
+          }
+        }
+      },
+      "block_order": [
+        "u1",
+        "u2",
+        "u3",
+        "u4"
+      ]
+    },
+    "about": {
+      "type": "about-ritual",
+      "settings": {
+        "icon": "leaf",
+        "heading": "Keep your body hydrated\nand nourished",
+        "intro": "<p><strong>At Pyko, We Believe Skincare</strong> Should Be Simple, Effective, And Inspired By Nature. 🌿 Every Formula Is Thoughtfully Crafted With Skin-Loving Botanical Extracts And Dermatologist</p>",
+        "bottom_text": "Achieving Visible Results in a Short Period Of Time.",
+        "cta_label": "Get Started",
+        "cta_link": "/collections/pyko-best",
+        "open_first": false,
+        "padding": 80
+      },
+      "blocks": {
+        "a1": {
+          "type": "item",
+          "settings": {
+            "title": "Natural Botanical Extracts",
+            "content": "<p>Plant-derived actives, carefully sourced and gently formulated for daily skin nutrition.</p>"
+          }
+        },
+        "a2": {
+          "type": "item",
+          "settings": {
+            "title": "Keeping Your Body Hydrated",
+            "content": "<p>Deep, lasting hydration that restores your skin barrier and keeps moisture locked in.</p>"
+          }
+        },
+        "a3": {
+          "type": "item",
+          "settings": {
+            "title": "Kin-Friendly Formula",
+            "content": "<p>Dermatologist tested, free from harsh ingredients — kind to every skin type.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "a1",
+        "a2",
+        "a3"
+      ]
+    },
+    "showcase": {
+      "type": "showcase-banner",
+      "settings": {
+        "overlay_opacity": 10,
+        "height": "lg",
+        "min_height": 620,
+        "heading": "Every type of skin can benefit\nfrom this product",
+        "heading_size": "h1",
+        "cta_label": "Shop Best Sellers",
+        "cta_link": "/collections/pyko-best"
+      },
+      "blocks": {
+        "p1": {
+          "type": "product",
+          "settings": {
+            "product": "hydrating-serum"
+          }
+        },
+        "p2": {
+          "type": "product",
+          "settings": {
+            "product": "vitamin-c-cream"
+          }
+        },
+        "b1": {
+          "type": "benefit",
+          "settings": {
+            "text": "Hydrates Dry Skin"
+          }
+        },
+        "b2": {
+          "type": "benefit",
+          "settings": {
+            "text": "Balances Oil Production"
+          }
+        },
+        "b3": {
+          "type": "benefit",
+          "settings": {
+            "text": "Improves Skin Texture"
+          }
+        },
+        "b4": {
+          "type": "benefit",
+          "settings": {
+            "text": "Supports Skin Barrier"
+          }
+        }
+      },
+      "block_order": [
+        "p1",
+        "p2",
+        "b1",
+        "b2",
+        "b3",
+        "b4"
+      ]
+    },
+    "best": {
+      "type": "best-sellers",
+      "settings": {
+        "heading": "Products That Are Among\nOur Best Sellers",
+        "intro": "Our Most-Loved Skincare Essentials Trusted By Thousands For Healthier, Glowing Skin.",
+        "collection": "pyko-best",
+        "products_count": 4,
+        "tile_colors": "#f3d9dc,#f7ead7,#f2edcb,#e0e8d5",
+        "tile_ratio": "tall",
+        "padding": 80
+      }
+    },
+    "testimonial": {
+      "type": "testimonial-feature",
+      "settings": {
+        "person_name": "Eleanor Pena",
+        "person_role": "President of Sales",
+        "padding": 80
+      },
+      "blocks": {
+        "q1": {
+          "type": "quote",
+          "settings": {
+            "text": "My skin feels softer, smoother, and noticeably more hydrated after just a week. It's now an essential part of my daily routine.",
+            "author": "Sarah M."
+          }
+        },
+        "q2": {
+          "type": "quote",
+          "settings": {
+            "text": "The Hydrating Serum completely changed my morning routine. My skin has never felt this smooth.",
+            "author": "Maya R."
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2"
+      ]
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "layout": "banner",
+        "overlay_opacity": 14,
+        "heading": "Today Is The Day To Get The\nBest Skin Of Your Life",
+        "text": "Experience Clear, Effective Skincare Powered By Nature And Loved By Thousands.",
+        "placeholder": "Enter your email",
+        "button_label": "Subscribe",
+        "note": ""
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "usp",
+    "about",
+    "showcase",
+    "best",
+    "testimonial",
+    "newsletter"
+  ]
+}

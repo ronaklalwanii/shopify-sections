@@ -1,0 +1,181 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "blocks": {
+        "b1": {
+          "type": "button",
+          "settings": {
+            "label": "View villas",
+            "link": "/collections/all",
+            "style": "dark"
+          }
+        },
+        "b2": {
+          "type": "button",
+          "settings": {
+            "label": "Get a consultation",
+            "link": "/pages/contact",
+            "style": "outline"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2"
+      ],
+      "settings": {
+        "layout": "full",
+        "height": "xl",
+        "overlay_opacity": 10,
+        "eyebrow": "Premium villas in Fethiye",
+        "heading": "Space, created for life",
+        "heading_size": "h0",
+        "subheading": "<p>Modern villas with sea views, private pools and secluded grounds.</p>",
+        "text_align": "left",
+        "scroll_label": ""
+      }
+    },
+    "about": {
+      "type": "az-about",
+      "settings": {
+        "eyebrow": "About the project",
+        "heading": "Architecture. Comfort. Harmony.",
+        "text": "<p>AZURA is a collection of contemporary villas inspired by the nature of Fethiye. Every space is designed for your comfort and privacy.</p>",
+        "link_label": "Learn more about the project",
+        "link": "/pages/about",
+        "background_color": "#f6f2ea",
+        "f1_icon": "box",
+        "f1_label": "Contemporary architecture",
+        "f2_icon": "sparkle",
+        "f2_label": "Premium materials",
+        "f3_icon": "shield-check",
+        "f3_label": "Privacy & security"
+      }
+    },
+    "villas": {
+      "type": "az-villas",
+      "blocks": {
+        "p1": {
+          "type": "villa",
+          "settings": {
+            "title": "AZURA VISTA",
+            "beds": "4 bedrooms",
+            "area": "320 m²",
+            "view": "Sea view",
+            "price": "€890 000"
+          }
+        },
+        "p2": {
+          "type": "villa",
+          "settings": {
+            "title": "AZURA HILLS",
+            "beds": "3 bedrooms",
+            "area": "230 m²",
+            "view": "Panoramic view",
+            "price": "€760 000"
+          }
+        },
+        "p3": {
+          "type": "villa",
+          "settings": {
+            "title": "AZURA SUNSET",
+            "beds": "3 bedrooms",
+            "area": "215 m²",
+            "view": "Sunset terrace",
+            "price": "€1 050 000"
+          }
+        }
+      },
+      "block_order": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "settings": {
+        "eyebrow": "Our villas",
+        "heading": "Choose your villa",
+        "link_label": "View all villas"
+      }
+    },
+    "consult": {
+      "type": "az-consult",
+      "settings": {
+        "left_eyebrow": "Villa selection",
+        "left_heading": "We'll find the perfect option for your request",
+        "left_text": "<p>Answer a few questions and we'll suggest villas that match your wishes.</p>",
+        "left_button": "Find a villa",
+        "right_eyebrow": "Leave a request",
+        "right_heading": "Get a personal consultation",
+        "right_text": "<p>Our specialist will answer your questions and help you choose correctly.</p>",
+        "name_placeholder": "Your name",
+        "phone_placeholder": "Phone / WhatsApp",
+        "submit_label": "Send request",
+        "privacy_note": "© I agree to the privacy policy"
+      }
+    },
+    "location": {
+      "type": "az-location",
+      "blocks": {
+        "c1": {
+          "type": "place",
+          "settings": {
+            "icon": "map-pin",
+            "title": "5 minutes",
+            "sub": "to the beach and sea"
+          }
+        },
+        "c2": {
+          "type": "place",
+          "settings": {
+            "icon": "plane",
+            "title": "45 minutes",
+            "sub": "to Dalaman airport"
+          }
+        },
+        "c3": {
+          "type": "place",
+          "settings": {
+            "icon": "mountain",
+            "title": "Nature",
+            "sub": "mountains, pines, clean air"
+          }
+        },
+        "c4": {
+          "type": "place",
+          "settings": {
+            "icon": "sail",
+            "title": "Infrastructure",
+            "sub": "restaurants, marinas, shops"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "settings": {
+        "eyebrow": "Location advantages",
+        "heading": "Fethiye — a place you'll love to live"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "about",
+    "location",
+    "villas",
+    "consult"
+  ]
+}

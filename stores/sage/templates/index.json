@@ -1,0 +1,84 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "layout": "full",
+        "height": "screen",
+        "overlay_opacity": 4,
+        "eyebrow": "",
+        "heading": "sage",
+        "heading_style": "wordmark",
+        "heading_size": "h0",
+        "subheading": "",
+        "scroll_label": "",
+        "colors_text": "#ffffff"
+      }
+    },
+    "philosophy": {
+      "type": "image-with-text",
+      "blocks": {
+        "b": {
+          "type": "button",
+          "settings": {
+            "label": "[More about Sage]",
+            "link": "/pages/about",
+            "style": "primary",
+            "size": ""
+          }
+        }
+      },
+      "block_order": [
+        "b"
+      ],
+      "settings": {
+        "image_position": "right",
+        "image_ratio": "1 / 1",
+        "heading_size": "h0",
+        "eyebrow": "",
+        "heading": "New philosophy\nof selfcare: healthy\nskin&hair",
+        "text": "<p>Sage is about conscious simplicity — effective formulas, thoughtful ingredients, and soft textures designed for real everyday life.</p><p>We believe skincare should support your skin, not overwhelm it; combining modern science with a calm, minimal approach.</p>",
+        "padding": 56,
+        "colors_background": "#ffffff"
+      }
+    },
+    "pure-care": {
+      "type": "care-collage",
+      "settings": {
+        "heading": "Pure care by nature",
+        "text": "Thoughtfully crafted formulas designed to bring balance and calm to your daily routine. Lightweight textures, gentle ingredients, and a minimalist approach help support healthy-looking skin — effortlessly, every day.",
+        "background_color": "#ececec",
+        "padding": 64
+      }
+    },
+    "complex": {
+      "type": "complex-collage",
+      "settings": {
+        "heading": "All-in-One\nSkincare Complex",
+        "intro_text": "Sage is about conscious simplicity — an effective formulas, thoughtful ingredients.",
+        "giant_text": "new",
+        "giant_color": "#b9c3a6",
+        "body_text": "Multifunctional line designed to simplify your daily routine without compromising results. Each formula combines hydration, barrier support, and skin-balancing ingredients to work in one effortless step. The collection focuses on smart minimalism — fewer products, more impact, and consistent care for healthy-looking skin.",
+        "link_label": "[Catalog]",
+        "link": "/collections",
+        "background_color": "#f4efe4",
+        "padding": 52
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "philosophy",
+    "pure-care",
+    "complex"
+  ]
+}

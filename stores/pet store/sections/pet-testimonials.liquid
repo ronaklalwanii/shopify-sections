@@ -1,0 +1,636 @@
+{%- comment -%}
+  Pet Store — Testimonials
+  Split layout: image on one side, testimonial slider on the other with a
+  ghost watermark, badge, heading, quote, author and prev/next arrows.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .pet-testimonials-{{ section.id }} {
+    --pet-ts-bg: {{ s.background_color }};
+    --pet-ts-fg: {{ s.text_color }};
+    --pet-ts-muted: {{ s.muted_text_color }};
+    --pet-ts-accent: {{ s.accent_color }};
+    --pet-ts-watermark: {{ s.watermark_color }};
+    --pet-ts-badge-bg: {{ s.badge_background_color }};
+    --pet-ts-container: {{ s.container_max_width }}px;
+    --pet-ts-radius: {{ s.corner_radius }}px;
+
+    background-color: var(--pet-ts-bg);
+    color: var(--pet-ts-fg);
+    padding-block: {{ s.padding_top }}px {{ s.padding_bottom }}px;
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    overflow: hidden;
+  }
+
+  .pet-testimonials-{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__grid {
+    max-width: var(--pet-ts-container);
+    margin-inline: auto;
+    padding-inline: clamp(16px, 4vw, 48px);
+    display: grid;
+    grid-template-columns: minmax(0, {{ s.image_width }}fr) minmax(0, {{ 100 | minus: s.image_width }}fr);
+    align-items: center;
+    gap: clamp(24px, 4vw, 64px);
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: {{ s.image_ratio }};
+    background-color: transparent;
+    border-radius: var(--pet-ts-radius);
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: {{ s.image_focal_point }};
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__media svg {
+    position: absolute;
+    inset: 0;
+    width: 38%;
+    height: 38%;
+    margin: auto;
+    opacity: 0.3;
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__content {
+    position: relative;
+    padding-block: 24px;
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__watermark {
+    position: absolute;
+    top: -0.18em;
+    right: -0.1em;
+    margin: 0;
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-size: clamp(90px, 13vw, 210px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--pet-ts-watermark);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+    padding: 7px 16px;
+    border: 1px solid color-mix(in srgb, var(--pet-ts-accent) 30%, transparent);
+    border-radius: 100px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--pet-ts-accent);
+    background-color: var(--pet-ts-badge-bg);
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__badge svg,
+  .pet-testimonials-{{ section.id }} .pet-ts__badge img {
+    width: 13px;
+    height: 13px;
+    object-fit: contain;
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__heading {
+    margin: 0;
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-size: clamp(26px, 3vw, 38px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--pet-ts-fg);
+    white-space: pre-line;
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__slides {
+    position: relative;
+    width: 100%;
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__slide {
+    display: none;
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__slide.is-active {
+    display: block;
+    animation: pet-ts-fade-{{ section.id }} 0.35s ease;
+  }
+
+  @keyframes pet-ts-fade-{{ section.id }} {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__quote {
+    margin: 0;
+    font-size: clamp(16px, 1.6vw, 20px);
+    line-height: 1.6;
+    color: var(--pet-ts-fg);
+    max-width: 460px;
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__quote p {
+    margin: 0;
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: color-mix(in srgb, var(--pet-ts-accent) 12%, transparent);
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__avatar svg {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    opacity: 0.4;
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__name {
+    margin: 0;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--pet-ts-fg);
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__role {
+    margin: 3px 0 0;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--pet-ts-muted);
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: flex-end;
+    margin-top: -48px;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__arrow {
+    pointer-events: auto;
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background-color: transparent;
+    color: var(--pet-ts-accent);
+    cursor: pointer;
+    transition: opacity var(--animation-speed, 0.125s) ease, transform var(--animation-speed, 0.125s) ease;
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__arrow:hover {
+    opacity: 0.75;
+    transform: translateX(1px);
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__arrow[data-pet-ts-prev]:hover {
+    transform: translateX(-1px);
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__arrow svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .pet-testimonials-{{ section.id }} .pet-ts__counter {
+    font-size: 12.5px;
+    color: var(--pet-ts-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 989px) {
+    .pet-testimonials-{{ section.id }} .pet-ts__grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .pet-testimonials-{{ section.id }} .pet-ts__media {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pet-testimonials-{{ section.id }} .pet-ts__slide.is-active {
+      animation: none;
+    }
+
+    .pet-testimonials-{{ section.id }} .pet-ts__arrow {
+      transition: none;
+    }
+  }
+{% endstyle %}
+
+<section class="pet-testimonials pet-testimonials-{{ section.id }}" aria-labelledby="pet-ts-heading-{{ section.id }}">
+  <div class="pet-ts__grid">
+    <div class="pet-ts__media">
+      {%- if s.image != blank -%}
+        {{ s.image | image_url: width: 1100 | image_tag:
+          widths: '400,600,800,1100',
+          sizes: '(min-width: 990px) 45vw, 100vw',
+          loading: 'lazy',
+          alt: s.image.alt | default: s.heading | escape
+        }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag }}
+      {%- endif -%}
+    </div>
+
+    <div class="pet-ts__content">
+      {%- if s.watermark_text != blank -%}
+        <p class="pet-ts__watermark" aria-hidden="true">{{ s.watermark_text }}</p>
+      {%- endif -%}
+
+      <div class="pet-ts__inner">
+        {%- if s.badge_text != blank -%}
+          <p class="pet-ts__badge">
+            {%- if s.badge_icon != blank -%}
+              {{ s.badge_icon | image_url: width: 52 | image_tag: alt: '' }}
+            {%- else -%}
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><ellipse cx="6" cy="9" rx="1.8" ry="2.4"/><ellipse cx="18" cy="9" rx="1.8" ry="2.4"/><ellipse cx="9.6" cy="5.6" rx="1.8" ry="2.4"/><ellipse cx="14.4" cy="5.6" rx="1.8" ry="2.4"/><path d="M12 10.5c2.8 0 5.5 2.3 5.5 4.9 0 1.6-1.2 2.6-2.7 2.6-1 0-1.8-.4-2.8-.4s-1.8.4-2.8.4c-1.5 0-2.7-1-2.7-2.6 0-2.6 2.7-4.9 5.5-4.9Z"/></svg>
+            {%- endif -%}
+            {{ s.badge_text }}
+          </p>
+        {%- endif -%}
+
+        {%- if s.heading != blank -%}
+          <h2 class="pet-ts__heading" id="pet-ts-heading-{{ section.id }}">{{ s.heading }}</h2>
+        {%- endif -%}
+
+        {%- if section.blocks.size > 0 -%}
+          <div class="pet-ts__slides" data-pet-ts-slides aria-live="polite">
+            {%- for block in section.blocks -%}
+              <figure class="pet-ts__slide{% if forloop.first %} is-active{% endif %}" data-pet-ts-slide {{ block.shopify_attributes }}>
+                <blockquote class="pet-ts__quote">
+                  <p>&ldquo;{{ block.settings.quote }}&rdquo;</p>
+                </blockquote>
+                <figcaption class="pet-ts__author">
+                  <span class="pet-ts__avatar">
+                    {%- if block.settings.avatar != blank -%}
+                      {{ block.settings.avatar | image_url: width: 92 | image_tag:
+                        widths: '46,92',
+                        loading: 'lazy',
+                        alt: block.settings.name | escape
+                      }}
+                    {%- else -%}
+                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Zm0 2c-3.7 0-7.5 1.9-7.5 5.3V21h15v-1.7c0-3.4-3.8-5.3-7.5-5.3Z"/></svg>
+                    {%- endif -%}
+                  </span>
+                  <span>
+                    <p class="pet-ts__name">{{ block.settings.name | default: 'Happy Customer' }}</p>
+                    {%- if block.settings.role != blank -%}
+                      <p class="pet-ts__role">{{ block.settings.role }}</p>
+                    {%- endif -%}
+                  </span>
+                </figcaption>
+              </figure>
+            {%- endfor -%}
+          </div>
+
+          {%- if section.blocks.size > 1 -%}
+            <div class="pet-ts__nav">
+              <button class="pet-ts__arrow" data-pet-ts-prev aria-label="Previous testimonial">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" focusable="false"><path d="M20 12H4m6-6-6 6 6 6"/></svg>
+              </button>
+              <button class="pet-ts__arrow" data-pet-ts-next aria-label="Next testimonial">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" focusable="false"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+              </button>
+              <span class="pet-ts__counter" data-pet-ts-counter>1 / {{ section.blocks.size }}</span>
+            </div>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    function initTestimonials(root) {
+      if (root.dataset.petTsInit === 'true') return;
+      root.dataset.petTsInit = 'true';
+
+      var slides = root.querySelectorAll('[data-pet-ts-slide]');
+      var prev = root.querySelector('[data-pet-ts-prev]');
+      var next = root.querySelector('[data-pet-ts-next]');
+      var counter = root.querySelector('[data-pet-ts-counter]');
+      if (slides.length < 2 || !prev || !next) return;
+
+      var index = 0;
+
+      function show(nextIndex) {
+        index = (nextIndex + slides.length) % slides.length;
+        slides.forEach(function (slide, i) {
+          slide.classList.toggle('is-active', i === index);
+        });
+        if (counter) counter.textContent = (index + 1) + ' / ' + slides.length;
+      }
+
+      prev.addEventListener('click', function () { show(index - 1); });
+      next.addEventListener('click', function () { show(index + 1); });
+
+      root.addEventListener('keyup', function (event) {
+        if (event.key === 'ArrowLeft') show(index - 1);
+        if (event.key === 'ArrowRight') show(index + 1);
+      });
+    }
+
+    function ready(fn) {
+      if (document.readyState !== 'loading') fn();
+      else document.addEventListener('DOMContentLoaded', fn);
+    }
+
+    ready(function () {
+      document.querySelectorAll('.pet-testimonials').forEach(initTestimonials);
+    });
+
+    document.addEventListener('shopify:section:load', function (event) {
+      var root = event.target.querySelector('.pet-testimonials');
+      if (root) initTestimonials(root);
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Pet Testimonials",
+  "tag": "section",
+  "class": "pet-testimonials-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "People Testimonials"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_icon",
+      "label": "Badge icon",
+      "info": "Optional. Falls back to a paw icon"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What Clients Say"
+    },
+    {
+      "type": "text",
+      "id": "watermark_text",
+      "label": "Watermark text",
+      "default": "woof",
+      "info": "Large decorative text. Leave empty to hide"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "4 / 5", "label": "Portrait" },
+        { "value": "1 / 1.15", "label": "Tall portrait" },
+        { "value": "4 / 3", "label": "Landscape" }
+      ],
+      "default": "1 / 1"
+    },
+    {
+      "type": "select",
+      "id": "image_focal_point",
+      "label": "Image focal point",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "label": "Image column width",
+      "min": 30,
+      "max": 70,
+      "step": 5,
+      "unit": "%",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#EAE3DD"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#1F1D1B"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text",
+      "default": "#8A8178"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#6E1622"
+    },
+    {
+      "type": "color",
+      "id": "watermark_color",
+      "label": "Watermark color",
+      "default": "#F5F0E9"
+    },
+    {
+      "type": "color",
+      "id": "badge_background_color",
+      "label": "Badge background",
+      "default": "#FBF7EF"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "label": "Image corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "label": "Container max width",
+      "min": 1000,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1440
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "Excellent service, friendly staff, and outstanding veterinary care. They treat every pet like family, and it shows in everything they do."
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Customer name",
+          "default": "Hanna D."
+        },
+        {
+          "type": "text",
+          "id": "role",
+          "label": "Customer role",
+          "default": "Mother of Cats"
+        },
+        {
+          "type": "image_picker",
+          "id": "avatar",
+          "label": "Avatar"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pet Testimonials",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Excellent service, friendly staff, and outstanding veterinary care. They treat every pet like family, and it shows in everything they do.",
+            "name": "Hanna D.",
+            "role": "Mother of Cats"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "The best pet store in the city. Healthy animals, quality food, and a team that genuinely cares about every wagging tail that walks in.",
+            "name": "Marcus T.",
+            "role": "Dog Dad of Two"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

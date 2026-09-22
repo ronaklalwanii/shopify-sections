@@ -1,0 +1,55 @@
+{%- comment -%} Logo wall — trusted-by row of text/image logos. Horizon-safe. {%- endcomment -%}
+<section class="lgw lgw-{{ section.id }}" style="background: {{ section.settings.background_color }};">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <p class="lgw__heading">{{ section.settings.heading | escape }}</p>
+    {%- endif -%}
+    <div class="lgw__grid" style="--lgw-cols: {{ section.blocks.size | at_most: 8 }};">
+      {%- for block in section.blocks -%}
+        <div class="lgw__cell" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            {{ block.settings.image | image_url: width: 300 | image_tag: loading: 'lazy', alt: block.settings.name }}
+          {%- else -%}
+            <span class="lgw__name">{{ block.settings.name | escape }}</span>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{% style %}
+  .lgw-{{ section.id }} { padding-block: clamp(2rem, 5vh, 3.5rem); color: var(--color-foreground); }
+  .lgw-{{ section.id }} .lgw__heading { text-align: center; font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.6; margin-bottom: 1.6rem; }
+  .lgw-{{ section.id }} .lgw__grid { display: grid; grid-template-columns: repeat(var(--lgw-cols, 6), 1fr); gap: 1px; background: var(--color-border); border: 1px solid var(--color-border); border-radius: var(--card-radius); overflow: hidden; }
+  .lgw-{{ section.id }} .lgw__cell { background: var(--color-background); display: flex; align-items: center; justify-content: center; min-height: 5.2rem; padding: 1rem; }
+  .lgw-{{ section.id }} .lgw__name { font-weight: 800; font-size: 0.95rem; letter-spacing: 0.04em; opacity: 0.75; }
+  .lgw-{{ section.id }} .lgw__cell img { max-height: 2.4rem; width: auto; opacity: 0.8; }
+  @media (max-width: 760px) { .lgw-{{ section.id }} .lgw__grid { grid-template-columns: 1fr 1fr; } }
+{% endstyle %}
+{% schema %}
+{
+  "name": "Logo wall",
+  "tag": "section",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Trusted by teams everywhere" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#ffffff" }
+  ],
+  "blocks": [
+    { "type": "logo", "name": "Logo", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Logo image" },
+      { "type": "text", "id": "name", "label": "Name", "default": "Logotype" }
+    ] }
+  ],
+  "presets": [
+    { "name": "Logo wall", "blocks": [
+      { "type": "logo", "settings": { "name": "Logotype" } },
+      { "type": "logo", "settings": { "name": "Brand" } },
+      { "type": "logo", "settings": { "name": "Partner" } },
+      { "type": "logo", "settings": { "name": "Studio" } },
+      { "type": "logo", "settings": { "name": "Group" } },
+      { "type": "logo", "settings": { "name": "Collective" } }
+    ] }
+  ]
+}
+{% endschema %}

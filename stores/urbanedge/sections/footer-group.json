@@ -1,0 +1,50 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "menu-1": {
+          "type": "menu",
+          "settings": {
+            "heading": "Quick links",
+            "menu": "footer"
+          }
+        },
+        "newsletter": {
+          "type": "newsletter",
+          "settings": {
+            "heading": "Subscribe to our newsletter",
+            "text": "Sign up to stay in the loop with the latest features, tips, and news!",
+            "placeholder": "Enter your email",
+            "button_label": "Subscribe"
+          }
+        }
+      },
+      "block_order": [
+        "menu-1",
+        "newsletter"
+      ],
+      "settings": {
+        "layout": "wordmark",
+        "tagline": "Minimal. Bold. Made for the streets.",
+        "colors_background": "#ffffff",
+        "colors_text": "#111111",
+        "brand_name": "Urban Edge"
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

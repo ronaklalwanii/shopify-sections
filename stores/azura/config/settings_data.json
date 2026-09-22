@@ -1,0 +1,38 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "heading_font": "playfair_display_n4",
+    "body_font": "assistant_n4",
+    "heading_scale": 100,
+    "heading_spacing": 0,
+    "body_size": 15,
+    "nav_uppercase": true,
+    "nav_spacing": 10,
+    "page_width": 1500,
+    "section_spacing": "normal",
+    "button_radius": "999",
+    "card_style": "bordered",
+    "card_radius": 8,
+    "card_image_ratio": "portrait",
+    "logo_width": 140,
+    "cart_type": "drawer",
+    "cart_show_note": true,
+    "cart_total_note": "static",
+    "free_shipping_threshold": 50,
+    "colors_background": "#f2efe9",
+    "colors_secondary_background": "#e7e2d7",
+    "colors_text": "#1d2a3a",
+    "colors_heading": "#1d2a3a",
+    "colors_accent": "#1d2a3a",
+    "colors_accent_label": "#f2efe9",
+    "colors_outline_label": "#1d2a3a"
+  }
+}

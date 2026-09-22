@@ -1,0 +1,41 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": "DVSY",
+  "presets": {
+    "DVSY": {
+      "heading_font": "jost_n3",
+      "body_font": "jost_n3",
+      "heading_scale": 105,
+      "heading_spacing": 0,
+      "body_size": "15",
+      "nav_uppercase": true,
+      "nav_spacing": 10,
+      "page_width": 1500,
+      "section_spacing": "normal",
+      "button_radius": "999",
+      "card_style": "filled",
+      "card_radius": 8,
+      "card_image_ratio": "portrait",
+      "logo_width": 140,
+      "cart_type": "drawer",
+      "cart_show_note": true,
+      "cart_total_note": "static",
+      "free_shipping_threshold": 50,
+      "colors_background": "#141414",
+      "colors_secondary_background": "#1d1d1d",
+      "colors_text": "#f2efe9",
+      "colors_heading": "#ffffff",
+      "colors_accent": "#f0653f",
+      "colors_accent_label": "#161616",
+      "colors_outline_label": "#f2efe9"
+    }
+  }
+}

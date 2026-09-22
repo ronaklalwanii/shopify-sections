@@ -1,0 +1,666 @@
+{%- comment -%}
+  Giant text band — oversized display statement.
+  Inline pill images: insert `[pill]` tokens in the text; each token renders the
+  next `pill_image` block in order (image, with a bundled asset fallback).
+{%- endcomment -%}
+{%- liquid
+  assign parts = section.settings.text | split: '[pill]'
+  assign pill_i = 0
+-%}
+{%- capture pill_urls -%}{%- for block in section.blocks -%}{%- if block.type == 'pill_image' -%}{%- if block.settings.image != blank -%}{{ block.settings.image | image_url: width: 320 }}{%- else -%}{{ block.settings.fallback | asset_url }}{%- endif -%}~{%- endif -%}{%- endfor -%}{%- endcapture -%}
+{%- assign pill_list = pill_urls | split: '~' -%}
+<section class="gtx gtx-{{ section.id }} gtx--{{ section.settings.layout }}" style="background: {{ section.settings.background_color }};">
+  <div class="page-width gtx__inner">
+    {%- if section.settings.show_eyebrow and section.settings.eyebrow != blank -%}<span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>{%- endif -%}
+    <p class="gtx__text" {% if section.settings.outline %}data-outline{% endif %}>{%- for part in parts -%}{{ part | escape }}{%- unless forloop.last -%}{% assign pill_i = forloop.index0 %}{% if pill_list[pill_i] %}<span class="gtx__pill"><img src="{{ pill_list[pill_i] }}" alt="" width="96" height="48" loading="lazy"></span>{% endif %}{% endunless -%}{%- endfor -%}</p>
+    {%- if section.settings.show_subheading and section.settings.subheading != blank -%}<p class="gtx__sub">{{ section.settings.subheading | escape }}</p>{%- endif -%}
+    {%- if section.settings.subheading_2 != blank -%}<p class="gtx__sub gtx__sub--2">{{ section.settings.subheading_2 | escape }}</p>{%- endif -%}
+    {%- if section.settings.show_cta and section.settings.link_label != blank -%}
+      <a href="{{ section.settings.link | default: '#' }}" class="gtx__link">{{ section.settings.link_label | escape }} {% render 'icon', name: 'arrow-right', size: 12 %}</a>
+    {%- endif -%}
+  </div>
+</section>
+{% style %}
+  .gtx-{{ section.id }} { padding-block: clamp(2.5rem, 7vh, 5.5rem); overflow: hidden; }
+  .gtx-{{ section.id }} .gtx__inner { text-align: {{ section.settings.align }}; }
+  .gtx-{{ section.id }} .gtx__text {
+    font-family: {% if section.settings.use_body_font %}var(--font-body){% else %}var(--font-heading){% endif %};
+    font-size: clamp({{ section.settings.min_size }}px, {{ section.settings.vw_size }}vw, {{ section.settings.max_size }}px);
+    font-weight: {% if section.settings.outline %}900{% else %}{{ section.settings.weight }}{% endif %};
+    line-height: {{ section.settings.leading | default: 12 | divided_by: 10.0 }};
+    letter-spacing: {{ section.settings.letter_spacing | divided_by: 100.0 }}em;
+    text-transform: {% if section.settings.uppercase %}uppercase{% else %}none{% endif %};
+    color: var(--color-heading);
+    margin-block: 0.2em;
+  }
+  .gtx-{{ section.id }} .gtx__pill {
+    display: inline-block; height: 0.8em; aspect-ratio: 3.1 / 1;
+    border-radius: 999px; overflow: hidden; vertical-align: baseline;
+    transform: translateY(0.08em); margin-inline: 0.06em; background: #e8e8e8;
+  }
+  .gtx-{{ section.id }} .gtx__pill img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .gtx-{{ section.id }} [data-outline] {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--color-heading);
+  }
+  .gtx-{{ section.id }} .gtx__media { margin-top: 1.6rem; border-radius: var(--card-radius); overflow: hidden; }
+  .gtx-{{ section.id }} .gtx__media img { width: 100%; display: block; }
+  .gtx-{{ section.id }} .gtx__sub { margin-top: 1rem; font-size: 0.9rem; color: var(--color-heading); max-width: 36rem; {% if section.settings.align == 'center' %}margin-inline: auto;{% endif %} }
+  .gtx-{{ section.id }} .gtx__sub--2 { color: var(--color-text-muted); margin-top: 0.3rem; }
+  .gtx-{{ section.id }} .gtx__link {
+    display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.3rem;
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    border-bottom: 1px solid currentColor; padding-bottom: 0.2rem;
+  }
+{% endstyle %}
+{% style %}
+  /* phase 2 enrichment: every rule is merchant-gated; defaults change nothing */
+  {%- if section.settings.enr_heading_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-heading: {{ section.settings.enr_heading_color }}; }
+  #shopify-section-{{ section.id }} h1, #shopify-section-{{ section.id }} h2, #shopify-section-{{ section.id }} h3, #shopify-section-{{ section.id }} [class*="__heading"], #shopify-section-{{ section.id }} [class*="__title"] { color: var(--enr-heading); }
+  {%- endif -%}
+  {%- if section.settings.enr_text_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-text: {{ section.settings.enr_text_color }}; }
+  #shopify-section-{{ section.id }} p, #shopify-section-{{ section.id }} li, #shopify-section-{{ section.id }} [class*="__text"], #shopify-section-{{ section.id }} [class*="__sub"], #shopify-section-{{ section.id }} [class*="__desc"] { color: var(--enr-text); }
+  {%- endif -%}
+  {%- if section.settings.enr_accent_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-accent: {{ section.settings.enr_accent_color }}; }
+  #shopify-section-{{ section.id }} .eyebrow, #shopify-section-{{ section.id }} [class*="__eyebrow"], #shopify-section-{{ section.id }} [class*="__kicker"] { color: var(--enr-accent); }
+  {%- endif -%}
+  {%- if section.settings.enr_card_bg != blank -%}
+  #shopify-section-{{ section.id }} { --enr-card: {{ section.settings.enr_card_bg }}; }
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__box"] { background-color: var(--enr-card); }
+  {%- endif -%}
+  {%- if section.settings.enr_border_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-border: {{ section.settings.enr_border_color }}; }
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__box"] { border-color: var(--enr-border); }
+  {%- endif -%}
+  {%- if section.settings.enr_muted_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-muted: {{ section.settings.enr_muted_color }}; }
+  #shopify-section-{{ section.id }} small, #shopify-section-{{ section.id }} [class*="__meta"], #shopify-section-{{ section.id }} [class*="__note"], #shopify-section-{{ section.id }} [class*="__caption"] { color: var(--enr-muted); }
+  {%- endif -%}
+  {%- if section.settings.enr_fallback_bg != blank -%}
+  #shopify-section-{{ section.id }} { --enr-fallback: {{ section.settings.enr_fallback_bg }}; }
+  #shopify-section-{{ section.id }} [class*="__placeholder"], #shopify-section-{{ section.id }} .placeholder-svg { background-color: var(--enr-fallback); }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_width == 'narrow' -%}
+  #shopify-section-{{ section.id }} .page-width { max-width: 46rem; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_width == 'wide' -%}
+  #shopify-section-{{ section.id }} .page-width { max-width: none; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'left' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: left; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'center' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: center; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'right' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: right; }
+  {%- endif -%}
+  {%- if section.settings.enr_radius > 0 -%}
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__media"], #shopify-section-{{ section.id }} img { border-radius: {{ section.settings.enr_radius }}px; }
+  {%- endif -%}
+  {%- if section.settings.enr_border_width != '0' -%}
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"] { border: {{ section.settings.enr_border_width }}px solid var(--color-border, currentColor); }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_sizes -%}
+  #shopify-section-{{ section.id }} [class*="__heading"], #shopify-section-{{ section.id }} h1, #shopify-section-{{ section.id }} h2, #shopify-section-{{ section.id }} h3 { font-size: {{ section.settings.enr_title_size }}px; }
+  #shopify-section-{{ section.id }} p, #shopify-section-{{ section.id }} li, #shopify-section-{{ section.id }} [class*="__text"] { font-size: {{ section.settings.enr_body_size }}px; }
+  #shopify-section-{{ section.id }} .eyebrow, #shopify-section-{{ section.id }} [class*="__eyebrow"] { font-size: {{ section.settings.enr_eyebrow_size }}px; }
+  #shopify-section-{{ section.id }} [class*="__icon"] svg, #shopify-section-{{ section.id }} svg.icon { width: {{ section.settings.enr_icon_size }}px; height: {{ section.settings.enr_icon_size }}px; }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_spacing -%}
+  #shopify-section-{{ section.id }} > section, #shopify-section-{{ section.id }} > div { padding-block: {{ section.settings.enr_space_top }}px {{ section.settings.enr_space_bottom }}px; }
+  #shopify-section-{{ section.id }} [class*="__grid"], #shopify-section-{{ section.id }} [class*="__row"], #shopify-section-{{ section.id }} [class*="__cards"], #shopify-section-{{ section.id }} [class*="__list"] { gap: {{ section.settings.enr_gap }}px; }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_media -%}
+  #shopify-section-{{ section.id }} [class*="__media"] img, #shopify-section-{{ section.id }} [class*="__image"] img, #shopify-section-{{ section.id }} [class*="__photo"] img { max-height: {{ section.settings.enr_media_height }}px; width: 100%; object-fit: cover; }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} [class*="__media"] img, #shopify-section-{{ section.id }} [class*="__image"] img, #shopify-section-{{ section.id }} [class*="__photo"] img { max-height: {{ section.settings.enr_media_height_mobile }}px; }
+  }
+  {%- endif -%}
+{% endstyle %}
+{% schema %}
+{
+  "name": "Giant text",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Giant text",
+      "info": "Use [pill] to place an inline pill image.",
+      "default": "Skincare simplified."
+    },
+    {
+      "type": "checkbox",
+      "id": "use_body_font",
+      "label": "Use body font (sans) instead of display font",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "outline",
+      "label": "Outline style",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase",
+      "label": "Uppercase",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "min_size",
+      "label": "Min size",
+      "min": 30,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 52
+    },
+    {
+      "type": "select",
+      "id": "vw_size",
+      "label": "Fluid size",
+      "options": [
+        {
+          "value": "4",
+          "label": "4 vw"
+        },
+        {
+          "value": "5",
+          "label": "5 vw"
+        },
+        {
+          "value": "6",
+          "label": "6 vw"
+        },
+        {
+          "value": "7",
+          "label": "7 vw"
+        },
+        {
+          "value": "8",
+          "label": "8 vw"
+        },
+        {
+          "value": "9",
+          "label": "9 vw"
+        },
+        {
+          "value": "10",
+          "label": "10 vw"
+        },
+        {
+          "value": "11",
+          "label": "11 vw"
+        },
+        {
+          "value": "12",
+          "label": "12 vw"
+        },
+        {
+          "value": "13",
+          "label": "13 vw"
+        },
+        {
+          "value": "14",
+          "label": "14 vw"
+        },
+        {
+          "value": "15",
+          "label": "15 vw"
+        },
+        {
+          "value": "16",
+          "label": "16 vw"
+        }
+      ],
+      "default": "9"
+    },
+    {
+      "type": "range",
+      "id": "max_size",
+      "label": "Max size",
+      "min": 60,
+      "max": 260,
+      "step": 2,
+      "unit": "px",
+      "default": 150
+    },
+    {
+      "type": "range",
+      "id": "weight",
+      "label": "Weight (solid style)",
+      "min": 500,
+      "max": 700,
+      "step": 2,
+      "default": 600
+    },
+    {
+      "type": "select",
+      "id": "leading",
+      "label": "Line height",
+      "options": [
+        {
+          "value": "8",
+          "label": "0.8"
+        },
+        {
+          "value": "9",
+          "label": "0.9"
+        },
+        {
+          "value": "10",
+          "label": "1.0"
+        },
+        {
+          "value": "11",
+          "label": "1.1"
+        },
+        {
+          "value": "12",
+          "label": "1.2"
+        },
+        {
+          "value": "13",
+          "label": "1.3"
+        },
+        {
+          "value": "14",
+          "label": "1.4"
+        },
+        {
+          "value": "15",
+          "label": "1.5"
+        },
+        {
+          "value": "16",
+          "label": "1.6"
+        },
+        {
+          "value": "17",
+          "label": "1.7"
+        },
+        {
+          "value": "18",
+          "label": "1.8"
+        },
+        {
+          "value": "19",
+          "label": "1.9"
+        },
+        {
+          "value": "20",
+          "label": "2.0"
+        }
+      ],
+      "default": "12"
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "label": "Letter spacing",
+      "min": -6,
+      "max": 20,
+      "step": 2,
+      "unit": "0.1",
+      "default": 0
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "subheading_2",
+      "label": "Subheading (muted second line)"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Enriched colors (blank = as designed)"
+    },
+    {
+      "type": "color",
+      "id": "enr_heading_color",
+      "label": "Heading color"
+    },
+    {
+      "type": "color",
+      "id": "enr_text_color",
+      "label": "Body text color"
+    },
+    {
+      "type": "color",
+      "id": "enr_accent_color",
+      "label": "Accent / eyebrow color"
+    },
+    {
+      "type": "color",
+      "id": "enr_card_bg",
+      "label": "Card background"
+    },
+    {
+      "type": "color",
+      "id": "enr_border_color",
+      "label": "Card border color"
+    },
+    {
+      "type": "color",
+      "id": "enr_muted_color",
+      "label": "Muted text color"
+    },
+    {
+      "type": "color",
+      "id": "enr_fallback_bg",
+      "label": "Image fallback background"
+    },
+    {
+      "type": "header",
+      "content": "Enriched layout"
+    },
+    {
+      "type": "select",
+      "id": "enr_layout_width",
+      "label": "Content width",
+      "options": [
+        {
+          "value": "as_designed",
+          "label": "As designed"
+        },
+        {
+          "value": "narrow",
+          "label": "Narrow"
+        },
+        {
+          "value": "wide",
+          "label": "Wide"
+        }
+      ],
+      "default": "as_designed"
+    },
+    {
+      "type": "select",
+      "id": "enr_layout_align",
+      "label": "Intro alignment",
+      "options": [
+        {
+          "value": "as_designed",
+          "label": "As designed"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "as_designed"
+    },
+    {
+      "type": "header",
+      "content": "Enriched shape"
+    },
+    {
+      "type": "range",
+      "id": "enr_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "enr_border_width",
+      "label": "Card border width",
+      "options": [
+        {
+          "value": "0",
+          "label": "None"
+        },
+        {
+          "value": "1",
+          "label": "1 px"
+        },
+        {
+          "value": "2",
+          "label": "2 px"
+        },
+        {
+          "value": "3",
+          "label": "3 px"
+        },
+        {
+          "value": "4",
+          "label": "4 px"
+        }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "header",
+      "content": "Enriched sizes (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_sizes",
+      "label": "Enable custom sizes",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_title_size",
+      "label": "Title size",
+      "min": 16,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "enr_body_size",
+      "label": "Body size",
+      "min": 10,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "enr_eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 10,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "enr_icon_size",
+      "label": "Icon size",
+      "min": 12,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Enriched spacing (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_spacing",
+      "label": "Enable custom spacing",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_space_top",
+      "label": "Space top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "enr_space_bottom",
+      "label": "Space bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "enr_gap",
+      "label": "Grid gap",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Enriched media (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_media",
+      "label": "Enable custom media heights",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_media_height",
+      "label": "Media height (desktop)",
+      "min": 380,
+      "max": 580,
+      "step": 2,
+      "unit": "px",
+      "default": 480
+    },
+    {
+      "type": "range",
+      "id": "enr_media_height_mobile",
+      "label": "Media height (mobile)",
+      "min": 300,
+      "max": 500,
+      "step": 2,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow",
+      "label": "Show eyebrow",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subheading",
+      "label": "Show subheading",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Show call-to-action",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "pill_image",
+      "name": "Inline pill image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "fallback",
+          "label": "Fallback asset",
+          "info": "Asset filename used when no image is picked.",
+          "default": "sp-pill-1.jpg"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Giant text",
+      "blocks": [
+        {
+          "type": "pill_image"
+        },
+        {
+          "type": "pill_image"
+        }
+      ]
+    }
+  ]
+}
+  {% endschema %}

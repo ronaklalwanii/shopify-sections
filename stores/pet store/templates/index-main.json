@@ -1,0 +1,320 @@
+{
+  "sections": {
+    "pet_hero": {
+      "type": "pet-hero",
+      "blocks": {
+        "card_1": {
+          "type": "product_card",
+          "settings": {
+            "title": "Metal Bowl",
+            "price": "$22.00"
+          }
+        },
+        "card_2": {
+          "type": "product_card",
+          "settings": {
+            "title": "The Leash 5m",
+            "price": "$50.00"
+          }
+        }
+      },
+      "block_order": [
+        "card_1",
+        "card_2"
+      ],
+      "settings": {}
+    },
+    "pet_categories": {
+      "type": "pet-category-grid",
+      "blocks": {
+        "cat_1": {
+          "type": "category",
+          "settings": {
+            "title": "dry & wet\nfood"
+          }
+        },
+        "cat_2": {
+          "type": "category",
+          "settings": {
+            "title": "toys for\npets"
+          }
+        },
+        "cat_3": {
+          "type": "category",
+          "settings": {
+            "title": "walking\naccessories"
+          }
+        },
+        "cat_4": {
+          "type": "category",
+          "settings": {
+            "title": "pet\nsupplies"
+          }
+        }
+      },
+      "block_order": [
+        "cat_1",
+        "cat_2",
+        "cat_3",
+        "cat_4"
+      ],
+      "settings": {}
+    },
+    "pet_logos": {
+      "type": "pet-logo-strip",
+      "blocks": {
+        "logo_1": {
+          "type": "logo",
+          "settings": {
+            "name": "Organic Fusion"
+          }
+        },
+        "logo_2": {
+          "type": "logo",
+          "settings": {
+            "name": "Vetkey"
+          }
+        },
+        "logo_3": {
+          "type": "logo",
+          "settings": {
+            "name": "Fluffily"
+          }
+        },
+        "logo_4": {
+          "type": "logo",
+          "settings": {
+            "name": "Dogbiology"
+          }
+        },
+        "logo_5": {
+          "type": "logo",
+          "settings": {
+            "name": "Paw Care"
+          }
+        },
+        "logo_6": {
+          "type": "logo",
+          "settings": {
+            "name": "Happy Tails"
+          }
+        }
+      },
+      "block_order": [
+        "logo_1",
+        "logo_2",
+        "logo_3",
+        "logo_4",
+        "logo_5",
+        "logo_6"
+      ],
+      "settings": {}
+    },
+    "pet_banners": {
+      "type": "pet-promo-banners",
+      "blocks": {
+        "banner_1": {
+          "type": "banner",
+          "settings": {
+            "watermark_text": "new",
+            "badge_text": "Always Luxy Fur Home",
+            "heading": "New Collection\nof Beds",
+            "link_label": "Shop Products"
+          }
+        },
+        "banner_2": {
+          "type": "banner",
+          "settings": {
+            "watermark_text": "premium",
+            "badge_text": "Top Rated Collars",
+            "heading": "Premium Walking\nAccessories",
+            "link_label": "Exclusive Products"
+          }
+        }
+      },
+      "block_order": [
+        "banner_1",
+        "banner_2"
+      ],
+      "settings": {}
+    },
+    "pet_arrivals": {
+      "type": "pet-featured-products",
+      "blocks": {
+        "product_1": {
+          "type": "product",
+          "settings": {
+            "fallback_title": "Bed For Pets",
+            "fallback_price": "$60.00"
+          }
+        },
+        "product_2": {
+          "type": "product",
+          "settings": {
+            "fallback_title": "Rubber Toy",
+            "fallback_price": "$20.00"
+          }
+        },
+        "product_3": {
+          "type": "product",
+          "settings": {
+            "fallback_title": "Bed For Pets",
+            "fallback_price": "$50.00"
+          }
+        },
+        "product_4": {
+          "type": "product",
+          "settings": {
+            "fallback_title": "Dog Ceramic Bowl",
+            "fallback_price": "$30.00"
+          }
+        },
+        "product_5": {
+          "type": "product",
+          "settings": {
+            "fallback_title": "Metal Bowl",
+            "fallback_price": "$22.00"
+          }
+        },
+        "product_6": {
+          "type": "product",
+          "settings": {
+            "fallback_title": "Dog Leash",
+            "fallback_price": "$30.00"
+          }
+        },
+        "product_7": {
+          "type": "product",
+          "settings": {
+            "fallback_title": "Dog Collar",
+            "fallback_price": "$30.00"
+          }
+        },
+        "product_8": {
+          "type": "product",
+          "settings": {
+            "fallback_title": "Metal Bowl",
+            "fallback_price": "$25.00"
+          }
+        }
+      },
+      "block_order": [
+        "product_1",
+        "product_2",
+        "product_3",
+        "product_4",
+        "product_5",
+        "product_6",
+        "product_7",
+        "product_8"
+      ],
+      "settings": {}
+    },
+    "pet_showcase": {
+      "type": "pet-collection-showcase",
+      "blocks": {
+        "collection_1": {
+          "type": "collection",
+          "settings": {
+            "title": "Pet Nutrition",
+            "tags": "Nutrition, Dog Food",
+            "chip_text": "4.8"
+          }
+        },
+        "collection_2": {
+          "type": "collection",
+          "settings": {
+            "title": "Cat Essentials",
+            "tags": "Care, Wellness",
+            "chip_text": "4.9"
+          }
+        },
+        "collection_3": {
+          "type": "collection",
+          "settings": {
+            "title": "Pet Wellness",
+            "tags": "Care, Vitamins",
+            "chip_text": "4.8"
+          }
+        }
+      },
+      "block_order": [
+        "collection_1",
+        "collection_2",
+        "collection_3"
+      ],
+      "settings": {}
+    },
+    "pet_testimonials": {
+      "type": "pet-testimonials",
+      "blocks": {
+        "testimonial_1": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Excellent service, friendly staff, and outstanding veterinary care. They treat every pet like family, and it shows in everything they do.",
+            "name": "Hanna G.",
+            "role": "Client of Clinic"
+          }
+        },
+        "testimonial_2": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "The best pet store in the city. Healthy animals, quality food, and a team that genuinely cares about every wagging tail that walks in.",
+            "name": "Marcus T.",
+            "role": "Dog Dad of Two"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_1",
+        "testimonial_2"
+      ],
+      "settings": {}
+    },
+    "pet_blog": {
+      "type": "pet-blog",
+      "blocks": {
+        "post_1": {
+          "type": "article",
+          "settings": {
+            "title": "Healthy Treats Your Pets Will Love",
+            "tag": "Nutrition",
+            "date": "November 22, 2026"
+          }
+        },
+        "post_2": {
+          "type": "article",
+          "settings": {
+            "title": "Understanding Your Cat's Daily Habits",
+            "tag": "Nutrition",
+            "date": "November 22, 2026"
+          }
+        },
+        "post_3": {
+          "type": "article",
+          "settings": {
+            "title": "The Best Nutrition Tips for Active Dogs",
+            "tag": "Nutrition",
+            "date": "November 22, 2026"
+          }
+        }
+      },
+      "block_order": [
+        "post_1",
+        "post_2",
+        "post_3"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "pet_hero",
+    "pet_categories",
+    "pet_logos",
+    "pet_banners",
+    "pet_arrivals",
+    "pet_showcase",
+    "pet_testimonials",
+    "pet_blog"
+  ]
+}

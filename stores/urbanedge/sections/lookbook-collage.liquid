@@ -1,0 +1,624 @@
+{%- comment -%}
+  Lookbook collage — full-bleed dark band with a photo collage,
+  right-aligned display heading, star accent and bottom-left CTA
+  (Urban Edge "Not just clothing. A movement." design).
+{%- endcomment -%}
+{%- capture section_colors_style -%}
+  style="--color-background: {{ section.settings.background_color | default: '#111111' }}; --color-foreground: {{ section.settings.text_color | default: '#ffffff' }}; --color-heading: {{ section.settings.text_color | default: '#ffffff' }}; --color-text-muted: {{ section.settings.text_color | default: '#ffffff' | color_modify: 'alpha', 0.72 }}; --color-border: {{ section.settings.text_color | default: '#ffffff' | color_modify: 'alpha', 0.4 }};"
+{%- endcapture -%}
+<section {{ section_colors_style }} class="movement movement-{{ section.id }}" style="--section-space: {{ section.settings.padding | default: 72 }}px;">
+  <div class="page-width">
+    <div class="movement__head">
+      {%- if section.settings.show_star -%}
+        <span class="movement__star" style="color: {{ section.settings.star_color | default: '#f26a1b' }};" aria-hidden="true">{% render 'icon', name: 'star-burst', size: 56 %}</span>
+      {%- endif -%}
+      {%- if section.settings.show_heading and section.settings.heading != blank -%}
+        <h2 class="{{ section.settings.heading_size }} movement__heading">{{ section.settings.heading | escape | newline_to_br }}</h2>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="movement__collage" style="--movement-rows: {{ section.settings.row_height | default: 110 }}px;">
+        {%- for block in section.blocks -%}
+          <div class="movement__tile movement__tile--{{ block.settings.size }}" {{ block.shopify_attributes }}>
+            {%- if block.settings.image != blank -%}
+              {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '360, 540, 720, 900', alt: block.settings.image.alt }}
+            {%- else -%}
+              {%- assign ph_index = forloop.index0 | modulo: 6 | plus: 1 -%}
+              {%- assign ph_name = 'product-apparel-' | append: ph_index -%}
+              {{ ph_name | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <div class="movement__foot">
+      {%- if section.settings.text != blank -%}
+        <p class="movement__text">{{ section.settings.text | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.show_cta and section.settings.button_label != blank -%}
+        {% render 'button', label: section.settings.button_label, link: section.settings.button_link, style: section.settings.button_style %}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% style %}
+  .movement-{{ section.id }} { background: var(--color-background); color: var(--color-foreground); padding-block: var(--section-space); overflow: hidden; }
+  .movement-{{ section.id }} .movement__head {
+    display: flex; align-items: flex-end; gap: clamp(1rem, 4vw, 3rem);
+    margin-bottom: clamp(1.6rem, 3vw, 2.6rem);
+  }
+  .movement-{{ section.id }} .movement__star { flex-shrink: 0; display: inline-flex; margin-left: clamp(2rem, 18vw, 18rem); margin-right: auto; }
+  .movement-{{ section.id }} .movement__star svg { width: clamp(2.4rem, 4vw, 3.6rem); height: auto; }
+  .movement-{{ section.id }} .movement__heading { text-align: right; margin-bottom: 0; max-width: 46rem; }
+  .movement-{{ section.id }} .movement__collage {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: var(--movement-rows, 110px);
+    grid-auto-flow: dense;
+    gap: clamp(0.6rem, 1.2vw, 1rem);
+  }
+  .movement-{{ section.id }} .movement__tile { overflow: hidden; }
+  .movement-{{ section.id }} .movement__tile img, .movement-{{ section.id }} .movement__tile svg.placeholder-svg { width: 100%; height: 100%; object-fit: cover; }
+  .movement-{{ section.id }} .movement__tile--sm { grid-column: span 2; grid-row: span 2; }
+  .movement-{{ section.id }} .movement__tile--md { grid-column: span 3; grid-row: span 3; }
+  .movement-{{ section.id }} .movement__tile--lg { grid-column: span 4; grid-row: span 3; }
+  .movement-{{ section.id }} .movement__tile--tall { grid-column: span 2; grid-row: span 4; }
+  .movement-{{ section.id }} .movement__tile--wide { grid-column: span 5; grid-row: span 2; }
+  .movement-{{ section.id }} .movement__foot { margin-top: clamp(1.6rem, 3vw, 2.6rem); max-width: 26rem; }
+  .movement-{{ section.id }} .movement__text { font-size: 0.82rem; line-height: 1.65; color: var(--color-text-muted); margin-bottom: 1.2rem; }
+  @media (max-width: 749px) {
+    .movement-{{ section.id }} .movement__head { flex-direction: column; align-items: flex-start; }
+    .movement-{{ section.id }} .movement__star { margin: 0; }
+    .movement-{{ section.id }} .movement__heading { text-align: left; }
+    .movement-{{ section.id }} .movement__collage { grid-auto-rows: calc(var(--movement-rows, 110px) * 0.7); }
+    .movement-{{ section.id }} .movement__tile--sm, .movement-{{ section.id }} .movement__tile--tall { grid-column: span 3; grid-row: span 2; }
+    .movement-{{ section.id }} .movement__tile--md { grid-column: span 6; grid-row: span 2; }
+    .movement-{{ section.id }} .movement__tile--lg { grid-column: span 6; grid-row: span 3; }
+    .movement-{{ section.id }} .movement__tile--wide { grid-column: span 6; grid-row: span 2; }
+  }
+{% endstyle %}
+
+{% style %}
+  /* phase 2 enrichment: every rule is merchant-gated; defaults change nothing */
+  {%- if section.settings.enr_heading_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-heading: {{ section.settings.enr_heading_color }}; }
+  #shopify-section-{{ section.id }} h1, #shopify-section-{{ section.id }} h2, #shopify-section-{{ section.id }} h3, #shopify-section-{{ section.id }} [class*="__heading"], #shopify-section-{{ section.id }} [class*="__title"] { color: var(--enr-heading); }
+  {%- endif -%}
+  {%- if section.settings.enr_text_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-text: {{ section.settings.enr_text_color }}; }
+  #shopify-section-{{ section.id }} p, #shopify-section-{{ section.id }} li, #shopify-section-{{ section.id }} [class*="__text"], #shopify-section-{{ section.id }} [class*="__sub"], #shopify-section-{{ section.id }} [class*="__desc"] { color: var(--enr-text); }
+  {%- endif -%}
+  {%- if section.settings.enr_accent_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-accent: {{ section.settings.enr_accent_color }}; }
+  #shopify-section-{{ section.id }} .eyebrow, #shopify-section-{{ section.id }} [class*="__eyebrow"], #shopify-section-{{ section.id }} [class*="__kicker"] { color: var(--enr-accent); }
+  {%- endif -%}
+  {%- if section.settings.enr_card_bg != blank -%}
+  #shopify-section-{{ section.id }} { --enr-card: {{ section.settings.enr_card_bg }}; }
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__box"] { background-color: var(--enr-card); }
+  {%- endif -%}
+  {%- if section.settings.enr_border_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-border: {{ section.settings.enr_border_color }}; }
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__box"] { border-color: var(--enr-border); }
+  {%- endif -%}
+  {%- if section.settings.enr_muted_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-muted: {{ section.settings.enr_muted_color }}; }
+  #shopify-section-{{ section.id }} small, #shopify-section-{{ section.id }} [class*="__meta"], #shopify-section-{{ section.id }} [class*="__note"], #shopify-section-{{ section.id }} [class*="__caption"] { color: var(--enr-muted); }
+  {%- endif -%}
+  {%- if section.settings.enr_fallback_bg != blank -%}
+  #shopify-section-{{ section.id }} { --enr-fallback: {{ section.settings.enr_fallback_bg }}; }
+  #shopify-section-{{ section.id }} [class*="__placeholder"], #shopify-section-{{ section.id }} .placeholder-svg { background-color: var(--enr-fallback); }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_width == 'narrow' -%}
+  #shopify-section-{{ section.id }} .page-width { max-width: 46rem; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_width == 'wide' -%}
+  #shopify-section-{{ section.id }} .page-width { max-width: none; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'left' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: left; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'center' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: center; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'right' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: right; }
+  {%- endif -%}
+  {%- if section.settings.enr_radius > 0 -%}
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__media"], #shopify-section-{{ section.id }} img { border-radius: {{ section.settings.enr_radius }}px; }
+  {%- endif -%}
+  {%- if section.settings.enr_border_width != '0' -%}
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"] { border: {{ section.settings.enr_border_width }}px solid var(--color-border, currentColor); }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_sizes -%}
+  #shopify-section-{{ section.id }} [class*="__heading"], #shopify-section-{{ section.id }} h1, #shopify-section-{{ section.id }} h2, #shopify-section-{{ section.id }} h3 { font-size: {{ section.settings.enr_title_size }}px; }
+  #shopify-section-{{ section.id }} p, #shopify-section-{{ section.id }} li, #shopify-section-{{ section.id }} [class*="__text"] { font-size: {{ section.settings.enr_body_size }}px; }
+  #shopify-section-{{ section.id }} .eyebrow, #shopify-section-{{ section.id }} [class*="__eyebrow"] { font-size: {{ section.settings.enr_eyebrow_size }}px; }
+  #shopify-section-{{ section.id }} [class*="__icon"] svg, #shopify-section-{{ section.id }} svg.icon { width: {{ section.settings.enr_icon_size }}px; height: {{ section.settings.enr_icon_size }}px; }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_spacing -%}
+  #shopify-section-{{ section.id }} > section, #shopify-section-{{ section.id }} > div { padding-block: {{ section.settings.enr_space_top }}px {{ section.settings.enr_space_bottom }}px; }
+  #shopify-section-{{ section.id }} [class*="__grid"], #shopify-section-{{ section.id }} [class*="__row"], #shopify-section-{{ section.id }} [class*="__cards"], #shopify-section-{{ section.id }} [class*="__list"] { gap: {{ section.settings.enr_gap }}px; }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_media -%}
+  #shopify-section-{{ section.id }} [class*="__media"] img, #shopify-section-{{ section.id }} [class*="__image"] img, #shopify-section-{{ section.id }} [class*="__photo"] img { max-height: {{ section.settings.enr_media_height }}px; width: 100%; object-fit: cover; }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} [class*="__media"] img, #shopify-section-{{ section.id }} [class*="__image"] img, #shopify-section-{{ section.id }} [class*="__photo"] img { max-height: {{ section.settings.enr_media_height_mobile }}px; }
+  }
+  {%- endif -%}
+{% endstyle %}
+{% schema %}
+{
+  "name": "Lookbook collage",
+  "tag": "section",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Not just clothing. \nA movement."
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        {
+          "value": "h0",
+          "label": "Display"
+        },
+        {
+          "value": "h1",
+          "label": "Large"
+        },
+        {
+          "value": "h2",
+          "label": "Medium"
+        }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_star",
+      "label": "Show starburst accent",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Starburst color",
+      "default": "#f26a1b"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "We create more than outfits — we create identity. Inspired by the streets and designed for individuality, our streetwear blends comfort with bold aesthetics for those who refuse to blend in."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Learn More About Us"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "Accent"
+        },
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "outline",
+          "label": "Outline"
+        },
+        {
+          "value": "light",
+          "label": "Light"
+        }
+      ],
+      "default": "outline"
+    },
+    {
+      "type": "range",
+      "id": "row_height",
+      "label": "Collage tile height",
+      "min": 80,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 110
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 24,
+      "max": 140,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Enriched colors (blank = as designed)"
+    },
+    {
+      "type": "color",
+      "id": "enr_heading_color",
+      "label": "Heading color"
+    },
+    {
+      "type": "color",
+      "id": "enr_text_color",
+      "label": "Body text color"
+    },
+    {
+      "type": "color",
+      "id": "enr_accent_color",
+      "label": "Accent / eyebrow color"
+    },
+    {
+      "type": "color",
+      "id": "enr_card_bg",
+      "label": "Card background"
+    },
+    {
+      "type": "color",
+      "id": "enr_border_color",
+      "label": "Card border color"
+    },
+    {
+      "type": "color",
+      "id": "enr_muted_color",
+      "label": "Muted text color"
+    },
+    {
+      "type": "color",
+      "id": "enr_fallback_bg",
+      "label": "Image fallback background"
+    },
+    {
+      "type": "header",
+      "content": "Enriched layout"
+    },
+    {
+      "type": "select",
+      "id": "enr_layout_width",
+      "label": "Content width",
+      "options": [
+        {
+          "value": "as_designed",
+          "label": "As designed"
+        },
+        {
+          "value": "narrow",
+          "label": "Narrow"
+        },
+        {
+          "value": "wide",
+          "label": "Wide"
+        }
+      ],
+      "default": "as_designed"
+    },
+    {
+      "type": "select",
+      "id": "enr_layout_align",
+      "label": "Intro alignment",
+      "options": [
+        {
+          "value": "as_designed",
+          "label": "As designed"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "as_designed"
+    },
+    {
+      "type": "header",
+      "content": "Enriched shape"
+    },
+    {
+      "type": "range",
+      "id": "enr_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "enr_border_width",
+      "label": "Card border width",
+      "options": [
+        {
+          "value": "0",
+          "label": "None"
+        },
+        {
+          "value": "1",
+          "label": "1 px"
+        },
+        {
+          "value": "2",
+          "label": "2 px"
+        },
+        {
+          "value": "3",
+          "label": "3 px"
+        },
+        {
+          "value": "4",
+          "label": "4 px"
+        }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "header",
+      "content": "Enriched sizes (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_sizes",
+      "label": "Enable custom sizes",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_title_size",
+      "label": "Title size",
+      "min": 16,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "enr_body_size",
+      "label": "Body size",
+      "min": 10,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "enr_eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 10,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "enr_icon_size",
+      "label": "Icon size",
+      "min": 12,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Enriched spacing (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_spacing",
+      "label": "Enable custom spacing",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_space_top",
+      "label": "Space top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "enr_space_bottom",
+      "label": "Space bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "enr_gap",
+      "label": "Grid gap",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Enriched media (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_media",
+      "label": "Enable custom media heights",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_media_height",
+      "label": "Media height (desktop)",
+      "min": 380,
+      "max": 580,
+      "step": 2,
+      "unit": "px",
+      "default": 480
+    },
+    {
+      "type": "range",
+      "id": "enr_media_height_mobile",
+      "label": "Media height (mobile)",
+      "min": 300,
+      "max": 500,
+      "step": 2,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Show heading",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Show call-to-action",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Photo tile",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "size",
+          "label": "Tile size",
+          "options": [
+            {
+              "value": "sm",
+              "label": "Small"
+            },
+            {
+              "value": "md",
+              "label": "Medium"
+            },
+            {
+              "value": "lg",
+              "label": "Large"
+            },
+            {
+              "value": "tall",
+              "label": "Tall"
+            },
+            {
+              "value": "wide",
+              "label": "Wide"
+            }
+          ],
+          "default": "md"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lookbook collage",
+      "blocks": [
+        {
+          "type": "tile",
+          "settings": {
+            "size": "lg"
+          }
+        },
+        {
+          "type": "tile",
+          "settings": {
+            "size": "sm"
+          }
+        },
+        {
+          "type": "tile",
+          "settings": {
+            "size": "tall"
+          }
+        },
+        {
+          "type": "tile",
+          "settings": {
+            "size": "md"
+          }
+        },
+        {
+          "type": "tile",
+          "settings": {
+            "size": "wide"
+          }
+        },
+        {
+          "type": "tile",
+          "settings": {
+            "size": "sm"
+          }
+        }
+      ]
+    }
+  ]
+}
+  {% endschema %}

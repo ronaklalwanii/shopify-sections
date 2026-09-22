@@ -1,0 +1,17 @@
+{{ 'product-quiz.css' | asset_url | stylesheet_tag }}
+
+{% assign data = product.metafields.custom.product_quiz.value %}
+{% assign question = data.question %}
+
+{% if question %}
+	<h1 class='product-quiz__heading'>Answer Question</h1>
+	<product-quiz />
+
+	<script src='{{ 'quiz.js' | asset_url }}' async></script>
+
+	<script id='quizData' type='application/json'>
+		{
+		  "data": {% render 'json-product-quiz-data' %}
+		}
+	</script>
+{% endif %}

@@ -1,0 +1,417 @@
+{%- comment -%}
+  Featured collection — product grid or carousel ("New This Season", "Bestsellers").
+{%- endcomment -%}
+{%- liquid
+  assign products = collections[section.settings.collection].products
+  assign limit = section.settings.products_count
+-%}
+{%- capture section_colors_style -%}
+  {%- if section.settings.colors_background != blank or section.settings.colors_text != blank -%}
+    {%- assign override_bg = section.settings.colors_background | default: settings.colors_background -%}
+    {%- assign override_fg = section.settings.colors_text | default: settings.colors_text -%}
+    style="--color-background: {{ override_bg }}; --color-surface: {{ override_bg | color_lighten: 3 }}; --color-border: {{ override_bg | color_darken: 9 | color_modify: 'alpha', 0.85 }}; --color-foreground: {{ override_fg }}; --color-heading: {{ override_fg }}; --color-text-muted: {{ override_fg | color_modify: 'alpha', 0.62 }};"
+  {%- endif -%}
+{%- endcapture -%}
+<section {{ section_colors_style }} class="section" style="--section-space: {{ section.settings.padding | default: 72 }}px;">
+  <div class="page-width">
+    <div class="section-intro{% if section.settings.heading_align == 'left' %} section-intro--left{% endif %}">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="h2 section-intro__title{% if section.settings.ornate %} section-intro--ornate{% endif %}">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subheading != blank -%}
+        <p class="section-intro__sub">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.layout == 'carousel' -%}
+      <div class="card-carousel" data-carousel>
+        <div class="card-carousel__track" style="--visible: {{ section.settings.columns }};">
+          {%- if products.size > 0 -%}
+            {%- for product in products limit: limit -%}
+              {% render 'product-card',
+                product: product,
+                show_subtitle: section.settings.show_subtitle,
+                subtitle_source: section.settings.subtitle_source,
+                subtitle_text: section.settings.subtitle_text,
+                show_price: section.settings.show_price,
+                show_rating: section.settings.show_rating,
+                rating_count: section.settings.rating_count,
+                show_button: section.settings.show_button,
+                button_label: section.settings.button_label,
+                button_style: section.settings.card_button_style,
+                image_ratio: section.settings.image_ratio,
+                badge_text: section.settings.badge_text,
+                show_swatches: section.settings.show_swatches,
+                swatches: section.settings.swatches,
+                show_wishlist: section.settings.show_wishlist,
+                price_align: section.settings.price_align
+              %}
+            {%- endfor -%}
+          {%- else -%}
+            {%- for i in (1..limit) -%}
+              {%- assign ph = 'product-' | append: i -%}
+              <div class="card">
+                <div class="card__media ratio-{{ section.settings.image_ratio | default: 'portrait' }}">
+                  {{ ph | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
+                <div class="card__content">
+                  <h3 class="card__title">{{ 'onboarding.product_title' | t }}</h3>
+                  <p class="card__price">{{ 1999 | money }}</p>
+                </div>
+              </div>
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+        <button type="button" class="card-carousel__arrow card-carousel__arrow--prev" data-carousel-prev aria-label="{{ 'general.slider.previous' | t }}">
+          <span class="icon-button">{% render 'icon', name: 'chevron-left', size: 14 %}</span>
+        </button>
+        <button type="button" class="card-carousel__arrow card-carousel__arrow--next" data-carousel-next aria-label="{{ 'general.slider.next' | t }}">
+          <span class="icon-button">{% render 'icon', name: 'chevron-right', size: 14 %}</span>
+        </button>
+      </div>
+    {%- else -%}
+      <div class="product-grid product-grid--cols-{{ section.settings.columns }}">
+        {%- if products.size > 0 -%}
+          {%- for product in products limit: limit -%}
+            {% render 'product-card',
+              product: product,
+              show_subtitle: section.settings.show_subtitle,
+              subtitle_source: section.settings.subtitle_source,
+              subtitle_text: section.settings.subtitle_text,
+              show_price: section.settings.show_price,
+              show_rating: section.settings.show_rating,
+              rating_count: section.settings.rating_count,
+              show_button: section.settings.show_button,
+              button_label: section.settings.button_label,
+              button_style: section.settings.card_button_style,
+              image_ratio: section.settings.image_ratio,
+              badge_text: section.settings.badge_text,
+              show_swatches: section.settings.show_swatches,
+              swatches: section.settings.swatches,
+              show_wishlist: section.settings.show_wishlist,
+              price_align: section.settings.price_align
+            %}
+          {%- endfor -%}
+        {%- else -%}
+          {%- for i in (1..limit) -%}
+            {%- assign ph = 'product-' | append: i -%}
+            <div class="card">
+              <div class="card__media ratio-{{ section.settings.image_ratio | default: 'portrait' }}">
+                {{ ph | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+              <div class="card__content">
+                <h3 class="card__title">{{ 'onboarding.product_title' | t }}</h3>
+                <p class="card__price">{{ 1999 | money }}</p>
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.section_button_label != blank -%}
+      {%- assign view_all_url = section.settings.button_link -%}
+      {%- if view_all_url == blank -%}{%- assign view_all_url = collections[section.settings.collection].url -%}{%- endif -%}
+      <div style="text-align: center; margin-top: clamp(1.5rem, 3vw, 2.5rem);">
+        {% render 'button', label: section.settings.section_button_label, link: view_all_url, style: section.settings.button_style %}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured collection",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_count",
+      "label": "Products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "carousel",
+          "label": "Carousel"
+        },
+        {
+          "value": "grid",
+          "label": "Grid"
+        }
+      ],
+      "default": "carousel"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "options": [
+        {
+          "value": "portrait",
+          "label": "Portrait (3:4)"
+        },
+        {
+          "value": "tall",
+          "label": "Tall (4:5)"
+        },
+        {
+          "value": "square",
+          "label": "Square (1:1)"
+        },
+        {
+          "value": "landscape",
+          "label": "Landscape (4:3)"
+        }
+      ],
+      "default": "portrait"
+    },
+    {
+      "type": "header",
+      "content": "Product card"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subtitle",
+      "label": "Show secondary line",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "subtitle_source",
+      "label": "Secondary line source",
+      "options": [
+        {
+          "value": "vendor",
+          "label": "Vendor"
+        },
+        {
+          "value": "type",
+          "label": "Product type"
+        },
+        {
+          "value": "custom",
+          "label": "Custom text"
+        }
+      ],
+      "default": "vendor"
+    },
+    {
+      "type": "text",
+      "id": "subtitle_text",
+      "label": "Custom secondary text",
+      "info": "Used when source is Custom text, e.g. CLEANSER"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show price",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "price_align",
+      "label": "Price layout",
+      "options": [
+        { "value": "center", "label": "Centered" },
+        { "value": "split", "label": "Title left / price right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show star rating",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "rating_count",
+      "label": "Rating suffix",
+      "info": "e.g. 4.7 (1504) or 4.90 (175 reviews)"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge override",
+      "info": "e.g. NEW. Empty = automatic Sale / Sold out."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_swatches",
+      "label": "Show color dots",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "swatches",
+      "label": "Swatch colors",
+      "info": "Comma-separated, e.g. #111111,#c2a187,#5c6b4f"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist",
+      "label": "Show wishlist heart",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show add-to-cart button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Card button label",
+      "default": "Add to bag"
+    },
+    {
+      "type": "select",
+      "id": "card_button_style",
+      "label": "Card button style",
+      "options": [
+        { "value": "primary", "label": "Accent" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "outline", "label": "Outline" },
+        { "value": "light", "label": "Light" }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "New arrivals"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "New This Season"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "checkbox",
+      "id": "ornate",
+      "label": "Decorative heading marks",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "heading_align",
+      "label": "Heading alignment",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Section button"
+    },
+    {
+      "type": "text",
+      "id": "section_button_label",
+      "label": "Label",
+      "default": "View all products"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "Accent"
+        },
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "outline",
+          "label": "Outline"
+        }
+      ],
+      "default": "dark"
+    },
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 24,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_background",
+      "label": "Background override",
+      "info": "Leave empty to use the theme colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_text",
+      "label": "Text color override"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured collection"
+    }
+  ]
+}
+{% endschema %}

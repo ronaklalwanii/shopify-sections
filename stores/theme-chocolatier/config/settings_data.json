@@ -1,0 +1,42 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": "Cocobella",
+  "presets": {
+    "Cocobella": {
+      "heading_font": "playfair_display_n4",
+      "body_font": "assistant_n4",
+      "heading_scale": 100,
+      "heading_spacing": 0,
+      "body_size": "15",
+      "nav_uppercase": true,
+      "nav_spacing": 10,
+      "page_width": 1500,
+      "section_spacing": "normal",
+      "button_radius": "4",
+      "card_style": "bordered",
+      "card_radius": 12,
+      "card_image_ratio": "portrait",
+      "logo_width": 140,
+      "cart_type": "drawer",
+      "cart_show_note": true,
+      "cart_total_note": "static",
+      "free_shipping_threshold": 50,
+      "colors_background": "#f4f1ea",
+      "colors_secondary_background": "#e7e5d8",
+      "colors_text": "#3a3a2f",
+      "colors_heading": "#2f2f24",
+      "colors_accent": "#3d4436",
+      "colors_accent_label": "#f7f5ef",
+      "colors_outline_label": "#3d4436",
+      "colors_accent_2": "#b99c66"
+    }
+  }
+}

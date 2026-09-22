@@ -1,0 +1,34 @@
+{
+  "type": "header",
+  "name": "t:names.header",
+  "sections": {
+    "header_section": {
+      "type": "pet-header",
+      "blocks": {
+        "topbar_phone": {
+          "type": "topbar_item",
+          "settings": {
+            "icon": "phone",
+            "text": "+1 800 123 56 89"
+          }
+        },
+        "topbar_location": {
+          "type": "topbar_item",
+          "settings": {
+            "icon": "clock",
+            "text": "Mon - Sat: 9.00am - 19.00pm"
+          }
+        }
+      },
+      "block_order": [
+        "topbar_phone",
+        "topbar_location"
+      ],
+      "name": "Pet Header",
+      "settings": {}
+    }
+  },
+  "order": [
+    "header_section"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "menu-1": {
+          "type": "menu",
+          "settings": { "heading": "Services", "menu": "salon-menu" }
+        },
+        "menu-2": {
+          "type": "menu",
+          "settings": { "heading": "Studio", "menu": "salon-about" }
+        },
+        "menu-3": {
+          "type": "menu",
+          "settings": { "heading": "Help", "menu": "salon-help" }
+        }
+      },
+      "block_order": ["menu-1", "menu-2", "menu-3"],
+      "settings": {
+        "brand_name": "Territory of Beauty",
+        "tagline": "A cosmetology and nail studio where care comes first.",
+        "colors_background": "#f6f5f1",
+        "colors_text": "#1f1e1a"
+      }
+    }
+  },
+  "order": ["footer"]
+}

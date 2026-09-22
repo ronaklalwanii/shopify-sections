@@ -1,0 +1,261 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "blocks": {
+        "b": {
+          "type": "button",
+          "settings": {
+            "label": "Shop skincare",
+            "link": "/collections/all",
+            "style": "primary",
+            "icon": "arrow-right"
+          }
+        },
+        "m": {
+          "type": "product_card",
+          "settings": {
+            "title": "Barrier Repair Moisturizer With Ceramides + Niacinamide",
+            "price": "$38.00",
+            "button_label": "ADD TO BAG"
+          }
+        }
+      },
+      "block_order": [
+        "b",
+        "m"
+      ],
+      "settings": {
+        "layout": "card",
+        "eyebrow": "Everyday skin, done better.",
+        "heading": "YOUR SKIN'S\nNEW FAVORITE\nROUTINE.",
+        "heading_size": "h0",
+        "subheading": "<p>Simple, effective skincare made for real routines, real skin, and everyday glow. No complicated steps. Just products your skin will love.</p>",
+        "text_align": "left",
+        "avatars_count": 0
+      }
+    },
+    "about": {
+      "type": "image-with-text",
+      "blocks": {
+        "b": {
+          "type": "button",
+          "settings": {
+            "label": "Learn more",
+            "link": "/pages/about",
+            "style": "outline"
+          }
+        }
+      },
+      "block_order": [
+        "b"
+      ],
+      "settings": {
+        "image_position": "right",
+        "eyebrow": "",
+        "heading": "SKINCARE THAT\nGETS YOUR SKIN.",
+        "text": "<p>The brand's goal is to give a feeling of luxury spa care without being over the top. We want to focus on the skincare experience and packaging should not be distracting.</p>",
+        "padding": 64
+      }
+    },
+    "grid": {
+      "type": "collection-list",
+      "blocks": {
+        "c1": {
+          "type": "collection_item",
+          "settings": {
+            "label": "Hydrate",
+            "show_arrow": true
+          }
+        },
+        "c2": {
+          "type": "collection_item",
+          "settings": {
+            "label": "Glow",
+            "show_arrow": true
+          }
+        },
+        "c3": {
+          "type": "collection_item",
+          "settings": {
+            "label": "Calm",
+            "show_arrow": true
+          }
+        },
+        "c4": {
+          "type": "collection_item",
+          "settings": {
+            "label": "Clear",
+            "show_arrow": true
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "columns": 4,
+        "text_position": "overlay",
+        "card_ratio": "1 / 1",
+        "link_label": "",
+        "padding": 48
+      }
+    },
+    "giant": {
+      "type": "giant-text",
+      "settings": {
+        "text": "Skincare simplified.",
+        "uppercase": true,
+        "min_size": 40,
+        "vw_size": "8",
+        "max_size": 130,
+        "weight": 400,
+        "left_text": "<p>Good skin starts with knowing what it needs. MILO SKIN creates thoughtfully formulated essentials that fit effortlessly into your everyday routine.</p>",
+        "right_text": "<p>From hydration and glow to calming and clarifying, every formula is made to support your skin's daily rhythm.</p>",
+        "align": "left",
+        "background_color": "#f6f3ee"
+      }
+    },
+    "best": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "bestsellers",
+        "products_count": "4",
+        "layout": "carousel",
+        "columns": "4",
+        "image_ratio": "square",
+        "show_subtitle": true,
+        "subtitle_source": "custom",
+        "subtitle_text": "Cleanser",
+        "show_price": true,
+        "price_align": "split",
+        "show_rating": true,
+        "rating_count": "4.7 (1504)",
+        "show_button": true,
+        "button_label": "ADD TO BAG",
+        "card_button_style": "outline",
+        "eyebrow": "",
+        "heading": "Bestsellers",
+        "heading_align": "left",
+        "section_button_label": "",
+        "padding": 56
+      }
+    },
+    "lifestyle": {
+      "type": "image-duo",
+      "settings": {
+        "image_ratio": "4 / 3",
+        "padding": 32
+      }
+    },
+    "catstrip": {
+      "type": "collection-list",
+      "blocks": {
+        "c1": {
+          "type": "collection_item",
+          "settings": {
+            "label": "Fragrance"
+          }
+        },
+        "c2": {
+          "type": "collection_item",
+          "settings": {
+            "label": "Makeup"
+          }
+        },
+        "c3": {
+          "type": "collection_item",
+          "settings": {
+            "label": "Balms"
+          }
+        },
+        "c4": {
+          "type": "collection_item",
+          "settings": {
+            "label": "Skincare"
+          }
+        },
+        "c5": {
+          "type": "collection_item",
+          "settings": {
+            "label": "Sets"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "columns": 4,
+        "text_position": "below",
+        "padding": 48
+      }
+    },
+    "cta": {
+      "type": "banner",
+      "blocks": {
+        "b": {
+          "type": "button",
+          "settings": {
+            "label": "Shop skincare",
+            "link": "/collections/all",
+            "style": "primary"
+          }
+        }
+      },
+      "block_order": [
+        "b"
+      ],
+      "settings": {
+        "overlay_opacity": 54,
+        "min_height": 420,
+        "eyebrow": "",
+        "heading": "Your skin, your routine.",
+        "heading_size": "h1"
+      }
+    },
+    "footer_name": {
+      "type": "giant-text",
+      "settings": {
+        "text": "Milo Skin",
+        "uppercase": true,
+        "min_size": 60,
+        "vw_size": "11",
+        "max_size": 190,
+        "weight": 400,
+        "align": "center"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "about",
+    "grid",
+    "giant",
+    "best",
+    "lifestyle",
+    "catstrip",
+    "cta",
+    "footer_name"
+  ]
+}

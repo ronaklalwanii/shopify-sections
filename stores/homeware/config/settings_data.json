@@ -1,0 +1,45 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": "Hearth & Home",
+  "presets": {
+    "Hearth & Home": {
+      "heading_font": "lora_n4",
+      "body_font": "assistant_n4",
+      "heading_scale": 100,
+      "heading_spacing": 0,
+      "body_size": "15",
+      "nav_uppercase": true,
+      "nav_spacing": 10,
+      "page_width": 1500,
+      "section_spacing": "normal",
+      "button_radius": "4",
+      "card_style": "bordered",
+      "card_radius": 6,
+      "card_image_ratio": "portrait",
+      "logo_width": 140,
+      "cart_type": "drawer",
+      "cart_show_note": true,
+      "cart_total_note": "static",
+      "free_shipping_threshold": 50,
+      "colors_background": "#f5f2ec",
+      "colors_secondary_background": "#ede9df",
+      "colors_text": "#2f2c26",
+      "colors_heading": "#262420",
+      "colors_accent": "#3f4a3c",
+      "colors_accent_label": "#f7f5ef",
+      "colors_outline_label": "#262420",
+      "social_instagram_link": "https://instagram.com",
+      "social_facebook_link": "https://facebook.com",
+      "social_pinterest_link": "https://pinterest.com",
+      "social_youtube_link": "https://youtube.com"
+    }
+  }
+}

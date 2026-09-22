@@ -1,0 +1,350 @@
+{% comment %}
+  Section: Minimal Centered Footer
+  Logo + store name, divider, centered nav, follow/social/legal bottom row.
+{% endcomment %}
+
+<footer id="Mcf-{{ section.id }}" class="mcf">
+  {%- style -%}
+    #Mcf-{{ section.id }} {
+      --mcf-bg: {{ section.settings.background_color }};
+      --mcf-text: {{ section.settings.text_color }};
+      --mcf-accent: {{ section.settings.accent_color }};
+      --mcf-divider: {{ section.settings.divider_color }};
+      --mcf-nav-color: {{ section.settings.nav_color }};
+      --mcf-sep-color: {{ section.settings.separator_color }};
+      --mcf-social-color: {{ section.settings.social_color }};
+      --mcf-logo-w: {{ section.settings.logo_width }}px;
+      --mcf-name-size: {{ section.settings.name_size }}px;
+      --mcf-name-spacing: {{ section.settings.name_spacing }}px;
+      --mcf-name-weight: {{ section.settings.name_weight }};
+      --mcf-nav-size: {{ section.settings.nav_size }}px;
+      --mcf-nav-spacing: {{ section.settings.nav_spacing }}px;
+      --mcf-nav-gap: {{ section.settings.nav_gap }}px;
+      --mcf-social-size: {{ section.settings.social_size }}px;
+      --mcf-follow-size: {{ section.settings.follow_size }}px;
+      --mcf-legal-size: {{ section.settings.legal_size }}px;
+      --mcf-divider-w: {{ section.settings.divider_width }}%;
+      --mcf-divider-t: {{ section.settings.divider_thickness }}px;
+    }
+
+    #Mcf-{{ section.id }} {
+      background: var(--mcf-bg);
+      color: var(--mcf-text);
+      padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+    }
+
+    #Mcf-{{ section.id }} .mcf__inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    /* Logo + name */
+    #Mcf-{{ section.id }} .mcf__logo {
+      display: block;
+      width: var(--mcf-logo-w);
+      height: auto;
+      margin: 0 auto {{ section.settings.logo_bottom_margin }}px;
+    }
+    #Mcf-{{ section.id }} .mcf__name {
+      margin: 0 0 {{ section.settings.name_bottom_margin }}px;
+      font-size: var(--mcf-name-size);
+      font-weight: var(--mcf-name-weight);
+      letter-spacing: var(--mcf-name-spacing);
+      line-height: 1.2;
+      color: var(--mcf-text);
+      {% if section.settings.name_uppercase %}text-transform: uppercase;{% endif %}
+    }
+
+    /* Divider */
+    #Mcf-{{ section.id }} .mcf__divider {
+      width: var(--mcf-divider-w);
+      max-width: 100%;
+      height: var(--mcf-divider-t);
+      background: var(--mcf-divider);
+      margin: 0 auto {{ section.settings.divider_bottom_margin }}px;
+    }
+
+    /* Nav */
+    #Mcf-{{ section.id }} .mcf__nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: var(--mcf-nav-gap);
+      margin-bottom: {{ section.settings.nav_bottom_margin }}px;
+    }
+    #Mcf-{{ section.id }} .mcf__nav-link {
+      color: var(--mcf-nav-color);
+      font-size: var(--mcf-nav-size);
+      letter-spacing: var(--mcf-nav-spacing);
+      font-weight: 500;
+      text-decoration: none;
+      {% if section.settings.nav_uppercase %}text-transform: uppercase;{% endif %}
+      transition: opacity 200ms ease;
+    }
+    #Mcf-{{ section.id }} .mcf__nav-link:hover { opacity: 0.65; }
+    #Mcf-{{ section.id }} .mcf__sep {
+      color: var(--mcf-sep-color);
+      font-size: var(--mcf-nav-size);
+      user-select: none;
+    }
+
+    /* Bottom row */
+    #Mcf-{{ section.id }} .mcf__bottom {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 24px;
+    }
+    #Mcf-{{ section.id }} .mcf__follow {
+      margin: 0;
+      justify-self: center;
+      color: var(--mcf-accent);
+      font-size: var(--mcf-follow-size);
+      letter-spacing: 0.5px;
+    }
+    #Mcf-{{ section.id }} .mcf__social {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: {{ section.settings.social_gap }}px;
+    }
+    #Mcf-{{ section.id }} .mcf__social-link {
+      display: inline-flex;
+      color: var(--mcf-social-color);
+      transition: opacity 200ms ease, transform 200ms ease;
+    }
+    #Mcf-{{ section.id }} .mcf__social-link:hover {
+      opacity: 0.65;
+      transform: translateY(-1px);
+    }
+    #Mcf-{{ section.id }} .mcf__social-link svg {
+      width: var(--mcf-social-size);
+      height: var(--mcf-social-size);
+      display: block;
+    }
+    #Mcf-{{ section.id }} .mcf__legal {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: {{ section.settings.legal_gap }}px;
+    }
+    #Mcf-{{ section.id }} .mcf__legal-link {
+      color: var(--mcf-accent);
+      font-size: var(--mcf-legal-size);
+      text-decoration: none;
+      transition: opacity 200ms ease;
+    }
+    #Mcf-{{ section.id }} .mcf__legal-link:hover { opacity: 0.65; }
+
+    /* Mobile */
+    @media screen and (max-width: 760px) {
+      #Mcf-{{ section.id }} .mcf__bottom {
+        grid-template-columns: 1fr;
+        gap: {{ section.settings.bottom_gap }}px;
+      }
+      #Mcf-{{ section.id }} .mcf__follow,
+      #Mcf-{{ section.id }} .mcf__legal {
+        justify-self: center;
+        justify-content: center;
+      }
+      #Mcf-{{ section.id }} .mcf__divider { width: 85%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #Mcf-{{ section.id }} .mcf__nav-link,
+      #Mcf-{{ section.id }} .mcf__social-link,
+      #Mcf-{{ section.id }} .mcf__legal-link {
+        transition: none;
+      }
+      #Mcf-{{ section.id }} .mcf__social-link:hover { transform: none; }
+    }
+  {%- endstyle -%}
+
+  <div class="mcf__inner">
+    {%- if section.settings.logo != blank -%}
+      <img
+        class="mcf__logo"
+        src="{{ section.settings.logo | image_url: width: 400 }}"
+        alt="{{ section.settings.logo.alt | default: shop.name | escape }}"
+        loading="lazy"
+        width="400"
+        height="400"
+      >
+    {%- endif -%}
+
+    <p class="mcf__name">{{ section.settings.store_name | default: shop.name }}</p>
+
+    {%- if section.settings.show_divider -%}
+      <div class="mcf__divider" aria-hidden="true"></div>
+    {%- endif -%}
+
+    {%- if section.settings.show_nav -%}
+      <nav class="mcf__nav" aria-label="Footer">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'nav_link' -%}
+            <a class="mcf__nav-link" href="{{ block.settings.url | default: '#' }}" {{ block.shopify_attributes }}>
+              {{ block.settings.label }}
+            </a>
+            {%- unless forloop.last or section.blocks[forloop.index].type != 'nav_link' -%}
+              <span class="mcf__sep" aria-hidden="true">|</span>
+            {%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </nav>
+    {%- endif -%}
+
+    <div class="mcf__bottom">
+      {%- if section.settings.follow_text != blank -%}
+        <p class="mcf__follow">{{ section.settings.follow_text }}</p>
+      {%- else -%}
+        <span></span>
+      {%- endif -%}
+
+      <div class="mcf__social">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'social_link' -%}
+            <a class="mcf__social-link" href="{{ block.settings.url | default: '#' }}" aria-label="{{ block.settings.label | escape }}" {{ block.shopify_attributes }}>
+              {%- case block.settings.icon -%}
+                {%- when 'facebook' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                {%- when 'instagram' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                {%- when 'pinterest' -%}
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.64 7.86 6.36 9.31-.09-.79-.17-2.01.03-2.87.18-.78 1.17-4.97 1.17-4.97s-.3-.6-.3-1.48c0-1.39.81-2.43 1.81-2.43.85 0 1.26.64 1.26 1.41 0 .86-.55 2.14-.83 3.33-.24 1 .5 1.81 1.48 1.81 1.78 0 3.14-1.88 3.14-4.58 0-2.4-1.72-4.07-4.19-4.07-2.85 0-4.53 2.14-4.53 4.35 0 .86.33 1.79.75 2.29.08.1.09.19.07.29-.08.31-.25 1-.28 1.14-.04.19-.15.23-.34.14-1.25-.58-2.03-2.41-2.03-3.87 0-3.15 2.29-6.04 6.6-6.04 3.46 0 6.16 2.47 6.16 5.77 0 3.44-2.17 6.21-5.19 6.21-1.01 0-1.97-.53-2.29-1.15l-.62 2.37c-.23.87-.84 1.96-1.25 2.62.94.29 1.94.45 2.97.45 5.52 0 10-4.48 10-10S17.52 2 12 2z"></path></svg>
+                {%- when 'twitter' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+                {%- when 'youtube' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                {%- else -%}
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"></path></svg>
+              {%- endcase -%}
+            </a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="mcf__legal">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'legal_link' -%}
+            <a class="mcf__legal-link" href="{{ block.settings.url | default: '#' }}" {{ block.shopify_attributes }}>
+              {{ block.settings.label }}
+            </a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Minimal Centered Footer",
+  "tag": "section",
+  "class": "section-minimal-centered-footer",
+  "settings": [
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#22252A" },
+    { "type": "color", "id": "text_color", "label": "Text / name color", "default": "#FFFFFF" },
+    { "type": "color", "id": "accent_color", "label": "Accent (follow + legal)", "default": "#E4573D" },
+    { "type": "color", "id": "divider_color", "label": "Divider color", "default": "#4A4D52" },
+    { "type": "color", "id": "nav_color", "label": "Nav link color", "default": "#FFFFFF" },
+    { "type": "color", "id": "separator_color", "label": "Nav separator color", "default": "#6B6E73" },
+    { "type": "color", "id": "social_color", "label": "Social icon color", "default": "#FFFFFF" },
+
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 20, "max": 140, "step": 4, "default": 64, "unit": "px" },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 20, "max": 140, "step": 4, "default": 64, "unit": "px" },
+    { "type": "range", "id": "logo_bottom_margin", "label": "Logo bottom spacing", "min": 0, "max": 60, "step": 2, "default": 20, "unit": "px" },
+    { "type": "range", "id": "name_bottom_margin", "label": "Name bottom spacing", "min": 0, "max": 60, "step": 2, "default": 24, "unit": "px" },
+    { "type": "range", "id": "divider_bottom_margin", "label": "Divider bottom spacing", "min": 0, "max": 80, "step": 2, "default": 32, "unit": "px" },
+    { "type": "range", "id": "nav_bottom_margin", "label": "Nav bottom spacing", "min": 0, "max": 100, "step": 2, "default": 48, "unit": "px" },
+    { "type": "range", "id": "bottom_gap", "label": "Mobile bottom row gap", "min": 12, "max": 60, "step": 2, "default": 24, "unit": "px" },
+
+    { "type": "header", "content": "Logo & name" },
+    { "type": "image_picker", "id": "logo", "label": "Logo / emblem" },
+    { "type": "range", "id": "logo_width", "label": "Logo width", "min": 40, "max": 200, "step": 2, "default": 64, "unit": "px" },
+    { "type": "text", "id": "store_name", "label": "Store name", "info": "Leave blank to use the shop name." },
+    { "type": "checkbox", "id": "name_uppercase", "label": "Uppercase name", "default": true },
+    { "type": "range", "id": "name_size", "label": "Name size", "min": 14, "max": 40, "step": 1, "default": 20, "unit": "px" },
+    { "type": "range", "id": "name_weight", "label": "Name weight", "min": 100, "max": 900, "step": 100, "default": 700 },
+    { "type": "range", "id": "name_spacing", "label": "Name letter spacing", "min": 0, "max": 8, "step": 0.5, "default": 2, "unit": "px" },
+
+    { "type": "header", "content": "Divider" },
+    { "type": "checkbox", "id": "show_divider", "label": "Show divider", "default": true },
+    { "type": "range", "id": "divider_width", "label": "Divider width", "min": 20, "max": 100, "step": 5, "default": 60, "unit": "%" },
+    { "type": "range", "id": "divider_thickness", "label": "Divider thickness", "min": 1, "max": 4, "step": 1, "default": 1, "unit": "px" },
+
+    { "type": "header", "content": "Navigation" },
+    { "type": "checkbox", "id": "show_nav", "label": "Show navigation", "default": true },
+    { "type": "checkbox", "id": "nav_uppercase", "label": "Uppercase links", "default": true },
+    { "type": "range", "id": "nav_size", "label": "Nav size", "min": 9, "max": 18, "step": 1, "default": 11, "unit": "px" },
+    { "type": "range", "id": "nav_spacing", "label": "Nav letter spacing", "min": 0, "max": 4, "step": 0.5, "default": 1, "unit": "px" },
+    { "type": "range", "id": "nav_gap", "label": "Nav gap", "min": 8, "max": 40, "step": 2, "default": 18, "unit": "px" },
+
+    { "type": "header", "content": "Bottom row" },
+    { "type": "text", "id": "follow_text", "label": "Follow text", "default": "Follow us and have a Merry Christmas" },
+    { "type": "range", "id": "follow_size", "label": "Follow text size", "min": 10, "max": 20, "step": 1, "default": 13, "unit": "px" },
+    { "type": "range", "id": "social_size", "label": "Social icon size", "min": 12, "max": 32, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "social_gap", "label": "Social icon gap", "min": 8, "max": 40, "step": 2, "default": 20, "unit": "px" },
+    { "type": "range", "id": "legal_size", "label": "Legal link size", "min": 10, "max": 20, "step": 1, "default": 13, "unit": "px" },
+    { "type": "range", "id": "legal_gap", "label": "Legal link gap", "min": 8, "max": 48, "step": 2, "default": 28, "unit": "px" }
+  ],
+  "blocks": [
+    {
+      "type": "nav_link",
+      "name": "Nav link",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Home" },
+        { "type": "url", "id": "url", "label": "Link" }
+      ]
+    },
+    {
+      "type": "social_link",
+      "name": "Social link",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "default": "facebook", "options": [
+          { "value": "facebook", "label": "Facebook" },
+          { "value": "instagram", "label": "Instagram" },
+          { "value": "pinterest", "label": "Pinterest" },
+          { "value": "twitter", "label": "Twitter / X" },
+          { "value": "youtube", "label": "YouTube" },
+          { "value": "tiktok", "label": "TikTok" }
+        ] },
+        { "type": "text", "id": "label", "label": "Label", "default": "Facebook" },
+        { "type": "url", "id": "url", "label": "Link" }
+      ]
+    },
+    {
+      "type": "legal_link",
+      "name": "Legal link",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Privacy Policy" },
+        { "type": "url", "id": "url", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Minimal Centered Footer",
+      "blocks": [
+        { "type": "nav_link", "settings": { "label": "Home" } },
+        { "type": "nav_link", "settings": { "label": "Shop All" } },
+        { "type": "nav_link", "settings": { "label": "Christmas Trees" } },
+        { "type": "nav_link", "settings": { "label": "Unique Ornaments" } },
+        { "type": "nav_link", "settings": { "label": "Holiday Lights" } },
+        { "type": "nav_link", "settings": { "label": "About" } },
+        { "type": "nav_link", "settings": { "label": "Contact" } },
+        { "type": "social_link", "settings": { "icon": "facebook", "label": "Facebook" } },
+        { "type": "social_link", "settings": { "icon": "instagram", "label": "Instagram" } },
+        { "type": "social_link", "settings": { "icon": "pinterest", "label": "Pinterest" } },
+        { "type": "legal_link", "settings": { "label": "Shipping & Returns" } },
+        { "type": "legal_link", "settings": { "label": "Privacy Policy" } },
+        { "type": "legal_link", "settings": { "label": "FAQ" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

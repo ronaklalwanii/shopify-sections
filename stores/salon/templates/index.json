@@ -1,0 +1,187 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-salon",
+      "settings": {
+        "heading": "Territory of\nBeautiful\nPeople",
+        "services_label": "Our services",
+        "services_note": "4 categories",
+        "view_all_label": "View all",
+        "view_all_link": "/collections/all",
+        "show_media_controls": true,
+        "location": "Moscow",
+        "search_text": "Beauty studio in Moscow",
+        "person_name": "Anna Smith",
+        "person_role": "Founder, lead cosmetologist",
+        "social_text": "Transformations",
+        "padding": 16
+      },
+      "blocks": {
+        "s1": {
+          "type": "service",
+          "settings": {
+            "title": "Care programs",
+            "meta": "10+ programs"
+          }
+        },
+        "s2": {
+          "type": "service",
+          "settings": {
+            "title": "Diagnostics",
+            "meta": "20+ years of practice"
+          }
+        },
+        "s3": {
+          "type": "service",
+          "settings": {
+            "title": "Manicure",
+            "meta": "7 years of practice"
+          }
+        },
+        "s4": {
+          "type": "service",
+          "settings": {
+            "title": "Nail service",
+            "meta": "6 masters"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    },
+    "why": {
+      "type": "why-us",
+      "settings": {
+        "heading": "Why us?",
+        "padding": 96
+      },
+      "blocks": {
+        "r1": {
+          "type": "reason",
+          "settings": {
+            "title": "Qualified staff",
+            "text": "Over a hundred clients note the quality and warmth of our specialists \u2014 and come back soon."
+          }
+        },
+        "r2": {
+          "type": "reason",
+          "settings": {
+            "title": "Service and quality",
+            "text": "Natural cosmetics, personal home-care advice and professional treatments."
+          }
+        },
+        "r3": {
+          "type": "reason",
+          "settings": {
+            "title": "Convenient location",
+            "text": "The studio is located in the city centre, right next to ample parking."
+          }
+        },
+        "r4": {
+          "type": "reason",
+          "settings": {
+            "title": "Up-to-date knowledge",
+            "text": "Our specialists constantly follow everything new in cosmetology to stay on top of modern techniques."
+          }
+        }
+      },
+      "block_order": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ]
+    },
+    "directions": {
+      "type": "services-bento",
+      "settings": {
+        "eyebrow": "Directions",
+        "title_dark": "Cosmetology",
+        "title_muted": "Nail service",
+        "padding": 88
+      },
+      "blocks": {
+        "b1": {
+          "type": "tile",
+          "settings": {
+            "label": "Consultation",
+            "size": "tall"
+          }
+        },
+        "b2": {
+          "type": "tile",
+          "settings": {
+            "label": "Facial cleanups",
+            "size": "tall"
+          }
+        },
+        "b3": {
+          "type": "tile",
+          "settings": {
+            "label": "Care programs",
+            "size": "wide"
+          }
+        },
+        "b4": {
+          "type": "tile",
+          "settings": {
+            "label": "Peels",
+            "size": "wide"
+          }
+        },
+        "b5": {
+          "type": "tile",
+          "settings": {
+            "label": "Ear piercing"
+          }
+        },
+        "b6": {
+          "type": "tile",
+          "settings": {
+            "label": "Skin treatment"
+          }
+        },
+        "b7": {
+          "type": "tile",
+          "settings": {
+            "label": "Follow our news\non Instagram",
+            "size": "wide",
+            "link": "https://instagram.com"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5",
+        "b6",
+        "b7"
+      ]
+    },
+    "popular": {
+      "type": "popular-service",
+      "settings": {
+        "eyebrow": "Popular services",
+        "title": "Japanese\nmanicure",
+        "text": "A Japanese restorative care technique that revives nails after gel polish and creates a healthy, well-groomed effect that lasts up to three weeks.",
+        "tags_heading": "Who is it for:",
+        "tags": "New to gel polish, Pregnant and nursing, Weak brittle nails",
+        "more_label": "More about\nthe procedure",
+        "more_link": "/collections/all",
+        "padding": 88
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "why",
+    "directions",
+    "popular"
+  ]
+}

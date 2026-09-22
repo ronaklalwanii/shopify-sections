@@ -1,0 +1,451 @@
+{%- comment -%}
+  Site footer. Two styles:
+  - default:  brand column + menu blocks + optional newsletter column
+  - card:     white rounded card with serif tagline, CTA, contacts, menu
+              columns, product image and giant cropped brand text (Pyko)
+{%- endcomment -%}
+{%- liquid
+  assign card_product = section.settings.product
+  if card_product.title == blank
+    assign card_product = all_products[card_product]
+  endif
+-%}
+{%- capture section_colors_style -%}
+  {%- if section.settings.colors_background != blank or section.settings.colors_text != blank -%}
+    {%- assign override_bg = section.settings.colors_background | default: settings.colors_background -%}
+    {%- assign override_fg = section.settings.colors_text | default: settings.colors_text -%}
+    style="--color-background: {{ override_bg }}; --color-surface: {{ override_bg | color_lighten: 3 }}; --color-border: {{ override_bg | color_darken: 9 | color_modify: 'alpha', 0.85 }}; --color-foreground: {{ override_fg }}; --color-heading: {{ override_fg }}; --color-text-muted: {{ override_fg | color_modify: 'alpha', 0.62 }};"
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- if section.settings.card_layout -%}
+<footer {{ section_colors_style }} class="site-footer site-footer--card{% if section.settings.overlap %} site-footer--overlap{% endif %}" role="contentinfo">
+  <div class="page-width">
+    <div class="footer-card">
+      <div class="footer-card__top">
+        <div class="footer-card__brand">
+          {%- if section.settings.heading != blank -%}
+            <h2 class="footer-card__heading">{{ section.settings.heading | escape }}</h2>
+          {%- endif -%}
+          {%- if section.settings.cta_label != blank -%}
+            <span class="footer-card__cta">
+              {% render 'button', label: section.settings.cta_label, link: section.settings.cta_link, style: 'dark', size: 'small' %}
+              <span class="footer-card__cta-arrow" aria-hidden="true">{% render 'icon', name: 'arrow-up-right', size: 13 %}</span>
+            </span>
+          {%- endif -%}
+        </div>
+        <div class="footer-card__contacts">
+          {%- if section.settings.email != blank -%}
+            <p>{% render 'icon', name: 'mail', size: 14 %} {{ section.settings.email | escape }}</p>
+          {%- endif -%}
+          {%- if section.settings.address != blank -%}
+            <p>{% render 'icon', name: 'map-pin', size: 14 %} {{ section.settings.address | escape }}</p>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="footer-card__main" style="--footer-menu-count: {{ section.blocks.size }};">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'menu' -%}
+              <div class="footer-card__col" {{ block.shopify_attributes }}>
+                {%- if block.settings.show_heading -%}
+                  <p class="site-footer__heading">{{ block.settings.heading | escape }}</p>
+                {%- endif -%}
+                {%- if block.settings.menu != blank -%}
+                  <ul class="site-footer__menu footer-card__menu">
+                    {%- for link in linklists[block.settings.menu].links -%}
+                      <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+              </div>
+            {%- when 'newsletter' -%}
+              <div class="footer-card__col footer-card__col--newsletter" {{ block.shopify_attributes }}>
+                <p class="site-footer__heading">{{ block.settings.heading | escape }}</p>
+                <p class="site-footer__newsletter-text">{{ block.settings.text }}</p>
+                {%- form 'customer', class: 'newsletter-form newsletter-form--underline' -%}
+                  <input type="hidden" name="contact[tags]" value="newsletter">
+                  <label class="visually-hidden" for="FooterEmail-{{ block.id }}">{{ 'newsletter.label' | t }}</label>
+                  <input
+                    type="email"
+                    id="FooterEmail-{{ block.id }}"
+                    class="field__input"
+                    name="contact[email]"
+                    value="{{ form.email }}"
+                    placeholder="{{ block.settings.placeholder | default: 'Enter your email' | escape }}"
+                    required
+                  >
+                  <button type="submit" class="button button--primary button--small">{{ block.settings.button_label | default: 'Subscribe' | escape }}</button>
+                {%- endform -%}
+              </div>
+          {%- endcase -%}
+        {%- endfor -%}
+
+        {%- if card_product != blank and card_product.title != blank -%}
+          <a href="{{ card_product.url }}" class="footer-card__product" aria-label="{{ card_product.title | escape }}">
+            {%- if card_product.featured_media -%}
+              {{ card_product.featured_media | image_url: width: 600 | image_tag: loading: 'lazy', widths: '300, 600', alt: card_product.title }}
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.giant_text != blank -%}
+        <div class="footer-card__giant-wrap" aria-hidden="true">
+          <div class="footer-card__giant">{{ section.settings.giant_text | escape }}</div>
+        </div>
+      {%- endif -%}
+
+      <div class="site-footer__bottom footer-card__bottom">
+        <p style="margin: 0;">&copy; {{ 'now' | date: '%Y' }} {{ section.settings.brand_name | default: shop.name }}. {{ 'footer.rights' | t }}</p>
+        <div class="site-footer__payment">
+          {%- for type in shop.enabled_payment_types -%}
+            {{ type | payment_type_svg_tag: class: 'payment-icon' }}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer--card { background: transparent; }
+  .site-footer--overlap { position: relative; z-index: 5; margin-top: clamp(-4.5rem, -6vw, -2.5rem); }
+  .footer-card {
+    background: #ffffff; color: #2f2a24;
+    border-radius: 1.5rem;
+    padding: clamp(1.8rem, 4vw, 3.2rem) clamp(1.4rem, 4vw, 3.2rem) clamp(1.2rem, 2.5vw, 2rem);
+    box-shadow: 0 24px 60px rgba(40, 30, 18, 0.12);
+  }
+  .footer-card__top {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 2rem; flex-wrap: wrap;
+    margin-bottom: clamp(2rem, 4.5vw, 3.4rem);
+  }
+  .footer-card__heading {
+    font-family: var(--font-heading); font-weight: 500;
+    font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+    line-height: 1.35; max-width: 24rem; margin: 0 0 1.3rem;
+  }
+  .footer-card__cta { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .footer-card__cta-arrow {
+    width: 2.2rem; height: 2.2rem; border-radius: 50%;
+    background: #1c1a16; color: #ffffff;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .footer-card__contacts { display: flex; flex-direction: column; gap: 0.9rem; padding-top: 0.4rem; }
+  .footer-card__contacts p { display: flex; align-items: center; gap: 0.5rem; margin: 0; font-size: 0.82rem; }
+  .footer-card__contacts svg { flex-shrink: 0; opacity: 0.75; }
+  .footer-card__main {
+    display: grid;
+    grid-template-columns: 1fr 1fr minmax(9rem, 12rem) 1fr;
+    gap: clamp(1.4rem, 3vw, 2.8rem);
+    align-items: start;
+  }
+  .footer-card__menu { display: flex; flex-direction: column; gap: 0.55rem; }
+  .footer-card__menu a { font-size: 0.88rem; }
+  .footer-card__menu a:hover { color: var(--color-accent); }
+  .footer-card__product { display: block; max-width: 12rem; margin: 0 auto; }
+  .footer-card__product img, .footer-card__product svg { width: 100%; height: auto; display: block; }
+  .footer-card__giant-wrap { overflow: hidden; margin-top: clamp(2rem, 5vw, 3.5rem); }
+  .footer-card__giant {
+    font-family: var(--font-heading); font-weight: 500;
+    font-size: clamp(3.4rem, 11.5vw, 10.5rem);
+    line-height: 0.82; text-align: center; white-space: nowrap;
+    letter-spacing: 0.01em;
+    margin-bottom: -0.2em;
+  }
+  .footer-card__bottom { border-top: 1px solid rgba(0, 0, 0, 0.06); padding-top: 1rem; font-size: 0.75rem; }
+  @media (max-width: 989px) {
+    .footer-card__main { grid-template-columns: 1fr 1fr; }
+    .footer-card__product { grid-column: 1 / -1; order: 4; }
+    .footer-card__giant { font-size: clamp(3rem, 16vw, 8rem); }
+  }
+</style>
+
+{%- else -%}
+<footer {{ section_colors_style }} class="site-footer" role="contentinfo">
+  <div class="page-width">
+    <div class="site-footer__main" style="--footer-menu-count: {{ section.blocks.size }};">
+      <div class="site-footer__brand">
+        {%- if settings.logo != blank -%}
+          <a href="{{ routes.root_url }}" class="site-header__logo">
+            {{ settings.logo | image_url: width: 400 | image_tag: alt: shop.name, style: 'width: var(--logo-width, 140px);' }}
+          </a>
+        {%- else -%}
+          <p class="site-footer__brand-name">{{ section.settings.brand_name | default: shop.name }}</p>
+        {%- endif -%}
+        {%- if section.settings.tagline != blank -%}
+          <p class="site-footer__tagline">{{ section.settings.tagline }}</p>
+        {%- endif -%}
+        {%- assign socials = 'instagram,facebook,pinterest,tiktok,youtube,twitter' | split: ',' -%}
+        {%- assign has_social = false -%}
+        {%- for social in socials -%}
+          {%- assign setting_key = 'social_' | append: social | append: '_link' -%}
+          {%- if settings[setting_key] != blank -%}
+            {%- assign has_social = true -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if has_social -%}
+          <div class="site-footer__social">
+            {%- for social in socials -%}
+              {%- assign setting_key = 'social_' | append: social | append: '_link' -%}
+              {%- if settings[setting_key] != blank -%}
+                <a href="{{ settings[setting_key] }}" aria-label="{{ social | capitalize }}">
+                  {% render 'icon', name: social, size: 15 %}
+                </a>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'menu' -%}
+            <div class="site-footer__menu-col" {{ block.shopify_attributes }}>
+              <p class="site-footer__heading">{{ block.settings.heading | escape }}</p>
+              {%- if block.settings.menu != blank -%}
+                <ul class="site-footer__menu">
+                  {%- for link in linklists[block.settings.menu].links -%}
+                    <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </div>
+          {%- when 'text' -%}
+            <div class="site-footer__menu-col" {{ block.shopify_attributes }}>
+              <p class="site-footer__heading">{{ block.settings.heading | escape }}</p>
+              <div class="site-footer__tagline">{{ block.settings.text }}</div>
+            </div>
+          {%- when 'newsletter' -%}
+            <div class="site-footer__newsletter" {{ block.shopify_attributes }}>
+              <p class="site-footer__heading">{{ block.settings.heading | escape }}</p>
+              <p class="site-footer__newsletter-text">{{ block.settings.text }}</p>
+              {%- form 'customer', class: 'newsletter-form newsletter-form--underline' -%}
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                <label class="visually-hidden" for="FooterEmail-{{ block.id }}">{{ 'newsletter.label' | t }}</label>
+                <input
+                  type="email"
+                  id="FooterEmail-{{ block.id }}"
+                  class="field__input"
+                  name="contact[email]"
+                  value="{{ form.email }}"
+                  placeholder="{{ block.settings.placeholder | default: 'Enter your email' | escape }}"
+                  required
+                >
+                <button type="submit" class="button button--primary button--small">{{ block.settings.button_label | default: 'Subscribe' | escape }}</button>
+                {%- if form.posted_successfully? -%}
+                  <p class="form__message form__message--success">{{ 'newsletter.success' | t }}</p>
+                {%- endif -%}
+                {%- if form.errors -%}
+                  <p class="form__message form__message--error">{{ form.errors.translated_fields.email }} {{ form.errors.messages.email }}</p>
+                {%- endif -%}
+              {%- endform -%}
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+
+    <div class="site-footer__bottom">
+      <p style="margin: 0;">&copy; {{ 'now' | date: '%Y' }} {{ section.settings.brand_name | default: shop.name }}. {{ 'footer.rights' | t }}</p>
+      <div class="site-footer__payment">
+        {%- for type in shop.enabled_payment_types -%}
+          {{ type | payment_type_svg_tag: class: 'payment-icon' }}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</footer>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Footer",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "card_layout",
+      "label": "White card style",
+      "info": "Rounded card with tagline, contacts, product image and giant brand text.",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "overlap",
+      "label": "Overlap the section above (card style)",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Tagline heading (card style)",
+      "default": "Clean Ingredients. Healthy Skin.\nEveryday Confidence."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label (card style)",
+      "default": "Get Started"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link (card style)"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Contact email (card style)"
+    },
+    {
+      "type": "text",
+      "id": "address",
+      "label": "Contact address (card style)"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product image (card style)"
+    },
+    {
+      "type": "text",
+      "id": "giant_text",
+      "label": "Giant brand text (card style)",
+      "default": "PYKO"
+    },
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand name override",
+      "info": "Defaults to shop name when empty."
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline (default style)",
+      "default": "Timeless fashion for the modern woman."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_background",
+      "label": "Background override",
+      "info": "Leave empty to use the theme colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_text",
+      "label": "Text color override"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Shop"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_heading",
+          "label": "Show heading",
+          "default": true
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu",
+          "default": "footer"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "About"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Newsletter"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Stay inspired with new arrivals, style tips and exclusive offers."
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Placeholder",
+          "default": "Enter your email"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Subscribe"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [
+        {
+          "type": "menu",
+          "settings": {
+            "heading": "Shop"
+          }
+        },
+        {
+          "type": "menu",
+          "settings": {
+            "heading": "Collections"
+          }
+        },
+        {
+          "type": "menu",
+          "settings": {
+            "heading": "Support"
+          }
+        },
+        {
+          "type": "newsletter"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,516 @@
+{%- comment -%} Suncare hero — face circle / floating bottle / price row on sage. {%- endcomment -%}
+<section class="sch sch-{{ section.id }}" style="--sch-bg: {{ section.settings.background_color }}; --sch-heading: {{ section.settings.heading_color }}; --sch-ink: {{ section.settings.text_color }}; --sch-accent: {{ section.settings.accent_color }};">
+  <div class="page-width">
+    {%- if section.settings.show_heading and section.settings.heading != blank -%}
+      <h2 class="sch__heading">{{ section.settings.heading | escape }} <span class="sch__spark" aria-hidden="true">✦</span></h2>
+    {%- endif -%}
+    <div class="sch__row">
+      <div class="sch__face">
+        {%- if section.settings.face_image != blank -%}
+          {{ section.settings.face_image | image_url: width: 700 | image_tag: loading: 'eager', alt: '' }}
+        {%- else -%}
+          <img width="800" height="800" src="{{ 'sc-face.jpg' | asset_url }}" alt="" loading="eager">
+        {%- endif -%}
+        {%- if section.settings.play_label != blank -%}
+          <span class="sch__play" aria-hidden="true">
+            <svg class="sch__play-ring" viewBox="0 0 100 100">
+              <defs><path id="sch-ring-{{ section.id }}" d="M 50,50 m -36,0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0"/></defs>
+              <text><textPath href="#sch-ring-{{ section.id }}">{{ section.settings.play_label | escape }} &#8226; Quick tour &#8226; </textPath></text>
+            </svg>
+            <span class="sch__play-btn">&#9654;</span>
+          </span>
+        {%- endif -%}
+      </div>
+      <div class="sch__bottle">
+        {%- if section.settings.bottle_image != blank -%}
+          {{ section.settings.bottle_image | image_url: width: 700 | image_tag: loading: 'eager', alt: section.settings.heading }}
+        {%- else -%}
+          <img width="700" height="900" src="{{ 'sc-bottle.jpg' | asset_url }}" alt="{{ section.settings.heading | escape }}" loading="eager">
+        {%- endif -%}
+      </div>
+      <div class="sch__buy">
+        <p class="sch__price-row"><span class="sch__price-label">{{ section.settings.price_label | escape }}</span> <span class="sch__price-sep">|</span> <span class="sch__price">{{ section.settings.price | escape }}</span></p>
+        <p class="sch__text">{{ section.settings.text | escape }}</p>
+        {%- if section.settings.cta_label != blank -%}
+          <a href="{{ section.settings.cta_link | default: '#' }}" class="sch__cta">{{ section.settings.cta_label | escape }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+{% style %}
+  .sch-{{ section.id }} { background: var(--sch-bg); padding-block: clamp(2rem, 5vh, 3.5rem) clamp(2.5rem, 6vh, 4rem); position: relative; overflow: hidden; }
+  .sch-{{ section.id }}::after {
+    content: '✦'; position: absolute; right: 8%; top: 18%; font-size: 2.2rem; color: var(--sch-accent);
+    opacity: 0.55; pointer-events: none;
+  }
+  .sch-{{ section.id }} .sch__heading {
+    text-align: center; font-family: var(--font-heading);
+    font-size: clamp(2.1rem, 4.5vw, 3.7rem); font-weight: 500; color: var(--sch-heading);
+    max-width: 44rem; margin: 0 auto clamp(1.5rem, 4vh, 2.5rem); line-height: 1.18;
+  }
+  .sch-{{ section.id }} .sch__spark { font-size: 0.42em; vertical-align: super; }
+  .sch-{{ section.id }} .sch__row {
+    display: grid; grid-template-columns: 1.05fr 0.95fr 1fr;
+    gap: clamp(1rem, 3vw, 2.5rem); align-items: center; justify-items: center;
+  }
+  .sch-{{ section.id }} .sch__face { position: relative; width: fit-content; }
+  .sch-{{ section.id }} .sch__face > img { width: min(100%, 21rem); border-radius: 50%; aspect-ratio: 1; object-fit: cover; display: block; }
+  .sch-{{ section.id }} .sch__play {
+    position: absolute; top: -7%; right: -9%;
+    width: 5.6rem; height: 5.6rem; display: grid; place-items: center;
+  }
+  .sch-{{ section.id }} .sch__play::before {
+    content: ''; position: absolute; inset: 0; border-radius: 50%;
+    background: {{ section.settings.card_bg }}; box-shadow: 0 8px 22px rgba(46, 70, 51, 0.16);
+  }
+  .sch-{{ section.id }} .sch__play-ring { position: absolute; inset: 6%; width: 88%; height: 88%; animation: sch-spin-{{ section.id | replace: '-', '' }} 16s linear infinite; }
+  .sch-{{ section.id }} .sch__play-ring text {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+    fill: var(--sch-heading); font-family: var(--font-body);
+  }
+  .sch-{{ section.id }} .sch__play-btn { position: relative; color: var(--sch-accent); font-size: 0.95rem; transform: translateX(6%); }
+  @keyframes sch-spin-{{ section.id | replace: '-', '' }} { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .sch-{{ section.id }} .sch__play-ring { animation: none; } }
+  .sch-{{ section.id }} .sch__bottle img { width: 100%; max-width: 16.5rem; display: block; mix-blend-mode: multiply; }
+  .sch-{{ section.id }} .sch__buy { max-width: 21rem; justify-self: start; }
+  .sch-{{ section.id }} .sch__price-row { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 1rem; }
+  .sch-{{ section.id }} .sch__price-label { font-family: var(--font-heading); font-size: 1.35rem; color: var(--sch-ink); }
+  .sch-{{ section.id }} .sch__price-sep { opacity: 0.25; font-size: 1.2rem; }
+  .sch-{{ section.id }} .sch__price { font-family: var(--font-heading); font-size: 1.45rem; color: var(--sch-ink); }
+  .sch-{{ section.id }} .sch__text { font-size: 0.82rem; line-height: 1.7; color: var(--sch-ink); opacity: 0.82; margin-bottom: 1.3rem; }
+  .sch-{{ section.id }} .sch__cta {
+    display: inline-block; background: var(--sch-accent); color: #fff;
+    font-size: 0.85rem; font-weight: 500; letter-spacing: 0.02em;
+    padding: 0.65rem 1.7rem; border-radius: 999px; transition: transform 0.2s ease;
+  }
+  .sch-{{ section.id }} .sch__cta:hover { transform: translateY(-2px); }
+  @media (max-width: 820px) {
+    .sch-{{ section.id }} .sch__row { grid-template-columns: 1fr; gap: 1.8rem; justify-items: center; }
+    .sch-{{ section.id }} .sch__face { display: none; }
+    .sch-{{ section.id }} .sch__buy { text-align: center; justify-self: center; }
+    .sch-{{ section.id }} .sch__price-row { justify-content: center; }
+    .sch-{{ section.id }}::after { display: none; }
+  }
+{% endstyle %}
+{% style %}
+  /* phase 2 enrichment: every rule is merchant-gated; defaults change nothing */
+  {%- if section.settings.enr_heading_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-heading: {{ section.settings.enr_heading_color }}; }
+  #shopify-section-{{ section.id }} h1, #shopify-section-{{ section.id }} h2, #shopify-section-{{ section.id }} h3, #shopify-section-{{ section.id }} [class*="__heading"], #shopify-section-{{ section.id }} [class*="__title"] { color: var(--enr-heading); }
+  {%- endif -%}
+  {%- if section.settings.enr_text_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-text: {{ section.settings.enr_text_color }}; }
+  #shopify-section-{{ section.id }} p, #shopify-section-{{ section.id }} li, #shopify-section-{{ section.id }} [class*="__text"], #shopify-section-{{ section.id }} [class*="__sub"], #shopify-section-{{ section.id }} [class*="__desc"] { color: var(--enr-text); }
+  {%- endif -%}
+  {%- if section.settings.enr_accent_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-accent: {{ section.settings.enr_accent_color }}; }
+  #shopify-section-{{ section.id }} .eyebrow, #shopify-section-{{ section.id }} [class*="__eyebrow"], #shopify-section-{{ section.id }} [class*="__kicker"] { color: var(--enr-accent); }
+  {%- endif -%}
+  {%- if section.settings.enr_card_bg != blank -%}
+  #shopify-section-{{ section.id }} { --enr-card: {{ section.settings.enr_card_bg }}; }
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__box"] { background-color: var(--enr-card); }
+  {%- endif -%}
+  {%- if section.settings.enr_border_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-border: {{ section.settings.enr_border_color }}; }
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__box"] { border-color: var(--enr-border); }
+  {%- endif -%}
+  {%- if section.settings.enr_muted_color != blank -%}
+  #shopify-section-{{ section.id }} { --enr-muted: {{ section.settings.enr_muted_color }}; }
+  #shopify-section-{{ section.id }} small, #shopify-section-{{ section.id }} [class*="__meta"], #shopify-section-{{ section.id }} [class*="__note"], #shopify-section-{{ section.id }} [class*="__caption"] { color: var(--enr-muted); }
+  {%- endif -%}
+  {%- if section.settings.enr_fallback_bg != blank -%}
+  #shopify-section-{{ section.id }} { --enr-fallback: {{ section.settings.enr_fallback_bg }}; }
+  #shopify-section-{{ section.id }} [class*="__placeholder"], #shopify-section-{{ section.id }} .placeholder-svg { background-color: var(--enr-fallback); }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_width == 'narrow' -%}
+  #shopify-section-{{ section.id }} .page-width { max-width: 46rem; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_width == 'wide' -%}
+  #shopify-section-{{ section.id }} .page-width { max-width: none; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'left' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: left; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'center' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: center; }
+  {%- endif -%}
+  {%- if section.settings.enr_layout_align == 'right' -%}
+  #shopify-section-{{ section.id }} [class*="__head"], #shopify-section-{{ section.id }} [class*="__intro"] { text-align: right; }
+  {%- endif -%}
+  {%- if section.settings.enr_radius > 0 -%}
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"], #shopify-section-{{ section.id }} [class*="__media"], #shopify-section-{{ section.id }} img { border-radius: {{ section.settings.enr_radius }}px; }
+  {%- endif -%}
+  {%- if section.settings.enr_border_width != '0' -%}
+  #shopify-section-{{ section.id }} [class*="__card"], #shopify-section-{{ section.id }} [class*="__tile"], #shopify-section-{{ section.id }} [class*="__panel"] { border: {{ section.settings.enr_border_width }}px solid var(--color-border, currentColor); }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_sizes -%}
+  #shopify-section-{{ section.id }} [class*="__heading"], #shopify-section-{{ section.id }} h1, #shopify-section-{{ section.id }} h2, #shopify-section-{{ section.id }} h3 { font-size: {{ section.settings.enr_title_size }}px; }
+  #shopify-section-{{ section.id }} p, #shopify-section-{{ section.id }} li, #shopify-section-{{ section.id }} [class*="__text"] { font-size: {{ section.settings.enr_body_size }}px; }
+  #shopify-section-{{ section.id }} .eyebrow, #shopify-section-{{ section.id }} [class*="__eyebrow"] { font-size: {{ section.settings.enr_eyebrow_size }}px; }
+  #shopify-section-{{ section.id }} [class*="__icon"] svg, #shopify-section-{{ section.id }} svg.icon { width: {{ section.settings.enr_icon_size }}px; height: {{ section.settings.enr_icon_size }}px; }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_spacing -%}
+  #shopify-section-{{ section.id }} > section, #shopify-section-{{ section.id }} > div { padding-block: {{ section.settings.enr_space_top }}px {{ section.settings.enr_space_bottom }}px; }
+  #shopify-section-{{ section.id }} [class*="__grid"], #shopify-section-{{ section.id }} [class*="__row"], #shopify-section-{{ section.id }} [class*="__cards"], #shopify-section-{{ section.id }} [class*="__list"] { gap: {{ section.settings.enr_gap }}px; }
+  {%- endif -%}
+  {%- if section.settings.enable_custom_media -%}
+  #shopify-section-{{ section.id }} [class*="__media"] img, #shopify-section-{{ section.id }} [class*="__image"] img, #shopify-section-{{ section.id }} [class*="__photo"] img { max-height: {{ section.settings.enr_media_height }}px; width: 100%; object-fit: cover; }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} [class*="__media"] img, #shopify-section-{{ section.id }} [class*="__image"] img, #shopify-section-{{ section.id }} [class*="__photo"] img { max-height: {{ section.settings.enr_media_height_mobile }}px; }
+  }
+  {%- endif -%}
+{% endstyle %}
+{% schema %}
+{
+  "name": "SC Hero",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Suncare: Stay Safe In Summer"
+    },
+    {
+      "type": "image_picker",
+      "id": "face_image",
+      "label": "Face image"
+    },
+    {
+      "type": "text",
+      "id": "play_label",
+      "label": "Play badge text",
+      "default": "Watch video"
+    },
+    {
+      "type": "image_picker",
+      "id": "bottle_image",
+      "label": "Product image"
+    },
+    {
+      "type": "text",
+      "id": "price_label",
+      "label": "Price label",
+      "default": "Price"
+    },
+    {
+      "type": "text",
+      "id": "price",
+      "label": "Price",
+      "default": "$59.50"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Provide deluxe hydration for those with dry or age-related skin concerns. They add intense moisture to dehydrated or mature skin, alleviating uneven sun-damaged textures to promote natural radiance."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA label",
+      "default": "Buy Now"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA link"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#e9f1e3"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#5f8c66"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#3d4a3d"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#7ba888"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card background",
+      "default": "#fdfefc"
+    },
+    {
+      "type": "header",
+      "content": "Enriched colors (blank = as designed)"
+    },
+    {
+      "type": "color",
+      "id": "enr_heading_color",
+      "label": "Heading color"
+    },
+    {
+      "type": "color",
+      "id": "enr_text_color",
+      "label": "Body text color"
+    },
+    {
+      "type": "color",
+      "id": "enr_accent_color",
+      "label": "Accent / eyebrow color"
+    },
+    {
+      "type": "color",
+      "id": "enr_card_bg",
+      "label": "Card background"
+    },
+    {
+      "type": "color",
+      "id": "enr_border_color",
+      "label": "Card border color"
+    },
+    {
+      "type": "color",
+      "id": "enr_muted_color",
+      "label": "Muted text color"
+    },
+    {
+      "type": "color",
+      "id": "enr_fallback_bg",
+      "label": "Image fallback background"
+    },
+    {
+      "type": "header",
+      "content": "Enriched layout"
+    },
+    {
+      "type": "select",
+      "id": "enr_layout_width",
+      "label": "Content width",
+      "options": [
+        {
+          "value": "as_designed",
+          "label": "As designed"
+        },
+        {
+          "value": "narrow",
+          "label": "Narrow"
+        },
+        {
+          "value": "wide",
+          "label": "Wide"
+        }
+      ],
+      "default": "as_designed"
+    },
+    {
+      "type": "select",
+      "id": "enr_layout_align",
+      "label": "Intro alignment",
+      "options": [
+        {
+          "value": "as_designed",
+          "label": "As designed"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "as_designed"
+    },
+    {
+      "type": "header",
+      "content": "Enriched shape"
+    },
+    {
+      "type": "range",
+      "id": "enr_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "enr_border_width",
+      "label": "Card border width",
+      "options": [
+        {
+          "value": "0",
+          "label": "None"
+        },
+        {
+          "value": "1",
+          "label": "1 px"
+        },
+        {
+          "value": "2",
+          "label": "2 px"
+        },
+        {
+          "value": "3",
+          "label": "3 px"
+        },
+        {
+          "value": "4",
+          "label": "4 px"
+        }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "header",
+      "content": "Enriched sizes (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_sizes",
+      "label": "Enable custom sizes",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_title_size",
+      "label": "Title size",
+      "min": 16,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "enr_body_size",
+      "label": "Body size",
+      "min": 10,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "enr_eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 10,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "enr_icon_size",
+      "label": "Icon size",
+      "min": 12,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Enriched spacing (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_spacing",
+      "label": "Enable custom spacing",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_space_top",
+      "label": "Space top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "enr_space_bottom",
+      "label": "Space bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "enr_gap",
+      "label": "Grid gap",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Enriched media (off = as designed)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_media",
+      "label": "Enable custom media heights",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "enr_media_height",
+      "label": "Media height (desktop)",
+      "min": 380,
+      "max": 580,
+      "step": 2,
+      "unit": "px",
+      "default": 480
+    },
+    {
+      "type": "range",
+      "id": "enr_media_height_mobile",
+      "label": "Media height (mobile)",
+      "min": 300,
+      "max": 500,
+      "step": 2,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Show heading",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "SC Hero"
+    }
+  ]
+}
+  {% endschema %}

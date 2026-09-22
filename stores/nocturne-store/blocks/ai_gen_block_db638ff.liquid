@@ -1,0 +1,474 @@
+{% doc %}
+  @prompt
+    Generate me a trust badge section.
+    
+    Have up to 6 trust badges but keep only 4 turned on by default.
+    
+    In mobile mode, badges need to be 2 x 2 stacked.
+    
+    Have some animation for the trust badges.
+    
+    The trust badges need to be:
+    
+    UV400 Lens Protection
+    Secure Checkout
+    Anti-Scratch Guaranteed
+    Lightweight TR90 Frames
+    
+    The turned off needs to be:
+    Free UK Shipping
+    UK-Based Brand, Give me option to upload custom image for each badge.
+    
+    Remove the box and just give me the image and text optional. If the text isnot there, the image size increases to take over.
+    
+    Have light elevation when hovered over the badge., Remove the box style and adapt to only image style making the image main thing as the badge, Give me option to adjust the height of the section manually in computer and mobile mode, Give it an affect of image being enlarged when hovered over. 
+    Let me controlthe intensity of that hover enlargement, Do not highlight the box. Remove the box xtyle and keep the image as just the hover effect and highluight. Enlarghethe image instead of the box
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-trust-badges-{{ ai_gen_id }} {
+    width: 100%;
+    padding-top: {{ block.settings.desktop_padding_top }}px;
+    padding-bottom: {{ block.settings.desktop_padding_bottom }}px;
+    display: block;
+  }
+
+  .ai-trust-badges__container-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-trust-badge-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+    cursor: default;
+  }
+
+  .ai-trust-badge__image-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+  }
+
+  .ai-trust-badge__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    max-width: {{ block.settings.image_size }}px;
+    object-fit: contain;
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+
+  .ai-trust-badge-{{ ai_gen_id }}:hover .ai-trust-badge__image-{{ ai_gen_id }} {
+    transform: scale({{ block.settings.hover_scale }});
+    filter: brightness(1.1);
+  }
+
+  .ai-trust-badge__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    max-width: {{ block.settings.image_size }}px;
+    aspect-ratio: 1;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+
+  .ai-trust-badge-{{ ai_gen_id }}:hover .ai-trust-badge__image-placeholder-{{ ai_gen_id }} {
+    transform: scale({{ block.settings.hover_scale }});
+    filter: brightness(1.05);
+  }
+
+  .ai-trust-badge__image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-trust-badge__text-{{ ai_gen_id }} {
+    text-align: center;
+    font-size: {{ block.settings.text_size }}px;
+    color: {{ block.settings.text_color }};
+    line-height: 1.4;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-trust-badge-{{ ai_gen_id }}--no-text .ai-trust-badge__image-{{ ai_gen_id }},
+  .ai-trust-badge-{{ ai_gen_id }}--no-text .ai-trust-badge__image-placeholder-{{ ai_gen_id }} {
+    max-width: {{ block.settings.image_size | times: 1.5 }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-trust-badges-{{ ai_gen_id }} {
+      padding-top: {{ block.settings.mobile_padding_top }}px;
+      padding-bottom: {{ block.settings.mobile_padding_bottom }}px;
+    }
+
+    .ai-trust-badges__container-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .ai-trust-badge__text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.text_size | times: 0.9 }}px;
+    }
+  }
+
+  @keyframes ai-trust-badge-fade-in-{{ ai_gen_id }} {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .ai-trust-badge-{{ ai_gen_id }} {
+    animation: ai-trust-badge-fade-in-{{ ai_gen_id }} 0.6s ease-out forwards;
+    opacity: 0;
+  }
+
+  .ai-trust-badge-{{ ai_gen_id }}:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+
+  .ai-trust-badge-{{ ai_gen_id }}:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .ai-trust-badge-{{ ai_gen_id }}:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  .ai-trust-badge-{{ ai_gen_id }}:nth-child(4) {
+    animation-delay: 0.4s;
+  }
+
+  .ai-trust-badge-{{ ai_gen_id }}:nth-child(5) {
+    animation-delay: 0.5s;
+  }
+
+  .ai-trust-badge-{{ ai_gen_id }}:nth-child(6) {
+    animation-delay: 0.6s;
+  }
+{% endstyle %}
+
+<trust-badges-{{ ai_gen_id }} class="ai-trust-badges-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-trust-badges__container-{{ ai_gen_id }}">
+    {% for i in (1..6) %}
+      {% liquid
+        assign enabled_key = 'badge_' | append: i | append: '_enabled'
+        assign image_key = 'badge_' | append: i | append: '_image'
+        assign text_key = 'badge_' | append: i | append: '_text'
+        
+        assign is_enabled = block.settings[enabled_key]
+        assign badge_image = block.settings[image_key]
+        assign badge_text = block.settings[text_key]
+        
+        assign has_text = false
+        if badge_text != blank
+          assign has_text = true
+        endif
+      %}
+      
+      {% if is_enabled %}
+        <div class="ai-trust-badge-{{ ai_gen_id }} {% unless has_text %}ai-trust-badge-{{ ai_gen_id }}--no-text{% endunless %}">
+          <div class="ai-trust-badge__image-wrapper-{{ ai_gen_id }}">
+            {% if badge_image %}
+              <img
+                src="{{ badge_image | image_url: width: 400 }}"
+                alt="{{ badge_text | escape }}"
+                class="ai-trust-badge__image-{{ ai_gen_id }}"
+                loading="lazy"
+                width="{{ block.settings.image_size }}"
+                height="{{ block.settings.image_size }}"
+              >
+            {% else %}
+              <div class="ai-trust-badge__image-placeholder-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+          
+          {% if has_text %}
+            <div class="ai-trust-badge__text-{{ ai_gen_id }}">
+              {{ badge_text }}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</trust-badges-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class TrustBadges{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.observeVisibility();
+      }
+
+      observeVisibility() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.style.animationPlayState = 'running';
+            }
+          });
+        }, { threshold: 0.1 });
+
+        const badges = this.querySelectorAll('.ai-trust-badge-{{ ai_gen_id }}');
+        badges.forEach(badge => {
+          badge.style.animationPlayState = 'paused';
+          observer.observe(badge);
+        });
+      }
+    }
+
+    customElements.define('trust-badges-{{ ai_gen_id }}', TrustBadges{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Trust badges",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_top",
+      "label": "Desktop top padding",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_bottom",
+      "label": "Desktop bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Badge style"
+    },
+    {
+      "type": "range",
+      "id": "image_size",
+      "label": "Image size",
+      "min": 40,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Hover effect"
+    },
+    {
+      "type": "range",
+      "id": "hover_scale",
+      "label": "Image enlargement on hover",
+      "min": 1,
+      "max": 1.5,
+      "step": 0.1,
+      "default": 1.1
+    },
+    {
+      "type": "header",
+      "content": "Badge 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "badge_1_enabled",
+      "label": "Enable badge 1",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "badge_1_text",
+      "label": "Text",
+      "default": "UV400 Lens Protection"
+    },
+    {
+      "type": "header",
+      "content": "Badge 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "badge_2_enabled",
+      "label": "Enable badge 2",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "badge_2_text",
+      "label": "Text",
+      "default": "Secure Checkout"
+    },
+    {
+      "type": "header",
+      "content": "Badge 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "badge_3_enabled",
+      "label": "Enable badge 3",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "badge_3_text",
+      "label": "Text",
+      "default": "Anti-Scratch Guaranteed"
+    },
+    {
+      "type": "header",
+      "content": "Badge 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "badge_4_enabled",
+      "label": "Enable badge 4",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_4_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "badge_4_text",
+      "label": "Text",
+      "default": "Lightweight TR90 Frames"
+    },
+    {
+      "type": "header",
+      "content": "Badge 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "badge_5_enabled",
+      "label": "Enable badge 5",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_5_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "badge_5_text",
+      "label": "Text",
+      "default": "Free UK Shipping"
+    },
+    {
+      "type": "header",
+      "content": "Badge 6"
+    },
+    {
+      "type": "checkbox",
+      "id": "badge_6_enabled",
+      "label": "Enable badge 6",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_6_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "badge_6_text",
+      "label": "Text",
+      "default": "UK-Based Brand"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust badges"
+    }
+  ]
+}
+{% endschema %}

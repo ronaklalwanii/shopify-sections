@@ -1,0 +1,190 @@
+{%- comment -%} Terra Trust — dark USP bar 4-up, matches design.jpg language (stats bar) {%- endcomment -%}
+
+<section id="TerraTrust-{{ section.id }}" class="tt">
+  {%- style -%}
+    #TerraTrust-{{ section.id }} {
+      --tt-bg: {{ section.settings.bg_color }};
+      --tt-max-w: {{ section.settings.max_width }}px;
+      --tt-space-top: {{ section.settings.space_top }}px;
+      --tt-space-bottom: {{ section.settings.space_bottom }}px;
+      --tt-gutter: {{ section.settings.gutter }}px;
+      --tt-radius: {{ section.settings.radius }}px;
+      --tt-gap: {{ section.settings.gap }}px;
+      --tt-pad-y: {{ section.settings.pad_y }}px;
+      --tt-pad-x: {{ section.settings.pad_x }}px;
+      --tt-icon-size: {{ section.settings.icon_size }}px;
+      --tt-icon-color: {{ section.settings.icon_color }};
+      --tt-title-size: {{ section.settings.title_size }}px;
+      --tt-title-color: {{ section.settings.title_color }};
+      --tt-desc-size: {{ section.settings.desc_size }}px;
+      --tt-desc-color: {{ section.settings.desc_color }};
+      --tt-border: {{ section.settings.border_color }};
+    }
+    #TerraTrust-{{ section.id }} {
+      background: var(--tt-bg);
+      padding: var(--tt-space-top) var(--tt-gutter) var(--tt-space-bottom);
+      overflow-x: clip;
+    }
+    #TerraTrust-{{ section.id }} .tt__shell {
+      width: min(100%, var(--tt-max-w));
+      margin: 0 auto;
+    }
+    #TerraTrust-{{ section.id }} .tt__grid {
+      display: grid;
+      grid-template-columns: repeat({{ section.settings.columns_desktop }}, minmax(0,1fr));
+      background: #111111;
+      border: 1px solid var(--tt-border);
+      border-radius: var(--tt-radius);
+      overflow: hidden;
+    }
+    #TerraTrust-{{ section.id }} .tt__item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      padding: var(--tt-pad-y) var(--tt-pad-x);
+      min-width: 0;
+      text-decoration: none;
+    }
+    #TerraTrust-{{ section.id }} .tt__item + .tt__item {
+      border-left: 1px solid var(--tt-border);
+    }
+    #TerraTrust-{{ section.id }} .tt__icon {
+      width: var(--tt-icon-size);
+      height: var(--tt-icon-size);
+      color: var(--tt-icon-color);
+      flex-shrink: 0;
+    }
+    #TerraTrust-{{ section.id }} .tt__icon svg,
+    #TerraTrust-{{ section.id }} .tt__icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    #TerraTrust-{{ section.id }} .tt__title {
+      margin: 0;
+      color: var(--tt-title-color);
+      font-size: var(--tt-title-size);
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    #TerraTrust-{{ section.id }} .tt__desc {
+      margin: 2px 0 0;
+      color: var(--tt-desc-color);
+      font-size: var(--tt-desc-size);
+      line-height: 1.6;
+      opacity: .9;
+    }
+
+    @media (max-width: 900px) {
+      #TerraTrust-{{ section.id }} .tt__grid {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+      #TerraTrust-{{ section.id }} .tt__item:nth-child(2n+1) { border-left: 0; }
+      #TerraTrust-{{ section.id }} .tt__item:nth-child(n+3) { border-top: 1px solid var(--tt-border); }
+      #TerraTrust-{{ section.id }} .tt__item:nth-child(even) { border-left: 1px solid var(--tt-border); }
+    }
+    @media (max-width: 560px) {
+      #TerraTrust-{{ section.id }} .tt__grid { grid-template-columns: 1fr; }
+      #TerraTrust-{{ section.id }} .tt__item { flex-direction: row; align-items: center; gap: 14px; }
+      #TerraTrust-{{ section.id }} .tt__item + .tt__item { border-left: 0; border-top: 1px solid var(--tt-border); }
+      #TerraTrust-{{ section.id }} .tt__text { flex: 1; min-width: 0; }
+    }
+  {%- endstyle -%}
+
+  <div class="tt__shell">
+    <div class="tt__grid">
+      {%- for block in section.blocks -%}
+        {%- assign tag = 'div' -%}
+        {%- if block.settings.link != blank -%}{%- assign tag = 'a' -%}{%- endif -%}
+        <{{ tag }} {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %} class="tt__item" {{ block.shopify_attributes }}>
+          {%- if block.settings.icon != 'none' -%}
+            <span class="tt__icon">
+              {%- if block.settings.custom_icon != blank -%}
+                <img src="{{ block.settings.custom_icon | image_url: width: 80 }}" alt="" loading="lazy" width="40" height="40">
+              {%- else -%}
+                {%- case block.settings.icon -%}
+                  {%- when 'delivery' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h11v8H5z"/><path d="M16 11h3l2 3v2h-5"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="17.5" cy="18" r="1.5"/></svg>
+                  {%- when 'shield' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><polyline points="9 12 11 14 15 10"/></svg>
+                  {%- when 'leaf' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+                  {%- when 'star' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  {%- when 'clock' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  {%- when 'warranty' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><circle cx="12" cy="11" r="3"/><path d="M12 14v3"/></svg>
+                  {%- else -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                {%- endcase -%}
+              {%- endif -%}
+            </span>
+          {%- endif -%}
+          <div class="tt__text">
+            {%- if block.settings.title != blank -%}<p class="tt__title">{{ block.settings.title }}</p>{%- endif -%}
+            {%- if block.settings.desc != blank -%}<p class="tt__desc">{{ block.settings.desc }}</p>{%- endif -%}
+          </div>
+        </{{ tag }}>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Terra Trust",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "color", "id": "bg_color", "label": "Page background", "default": "#0F0F0F" },
+    { "type": "range", "id": "max_width", "label": "Max width", "min": 900, "max": 1800, "step": 20, "default": 1400, "unit": "px" },
+    { "type": "range", "id": "space_top", "label": "Space above", "min": 0, "max": 80, "step": 4, "default": 12, "unit": "px" },
+    { "type": "range", "id": "space_bottom", "label": "Space below", "min": 0, "max": 80, "step": 4, "default": 12, "unit": "px" },
+    { "type": "range", "id": "gutter", "label": "Side gutters", "min": 0, "max": 40, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "radius", "label": "Bar radius", "min": 0, "max": 32, "step": 2, "default": 20, "unit": "px" },
+    { "type": "range", "id": "columns_desktop", "label": "Columns (desktop)", "min": 2, "max": 4, "step": 1, "default": 4 },
+    { "type": "range", "id": "gap", "label": "Gap (unused, divider based)", "min": 0, "max": 32, "step": 2, "default": 0, "unit": "px" },
+    { "type": "range", "id": "pad_y", "label": "Item padding Y", "min": 16, "max": 40, "step": 2, "default": 22, "unit": "px" },
+    { "type": "range", "id": "pad_x", "label": "Item padding X", "min": 16, "max": 40, "step": 2, "default": 20, "unit": "px" },
+    { "type": "color", "id": "border_color", "label": "Divider color", "default": "#242424" },
+
+    { "type": "header", "content": "Typography" },
+    { "type": "range", "id": "icon_size", "label": "Icon size", "min": 20, "max": 40, "step": 2, "default": 28, "unit": "px" },
+    { "type": "color", "id": "icon_color", "label": "Icon color", "default": "#EDE8E1" },
+    { "type": "range", "id": "title_size", "label": "Title size", "min": 11, "max": 16, "step": 1, "default": 12, "unit": "px" },
+    { "type": "color", "id": "title_color", "label": "Title color", "default": "#F2EFE8" },
+    { "type": "range", "id": "desc_size", "label": "Description size", "min": 11, "max": 16, "step": 1, "default": 12, "unit": "px" },
+    { "type": "color", "id": "desc_color", "label": "Description color", "default": "#B8B0A6" }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Trust item",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "default": "shield", "options": [
+          { "value": "none", "label": "None" },
+          { "value": "delivery", "label": "Delivery" },
+          { "value": "shield", "label": "Shield" },
+          { "value": "leaf", "label": "Leaf" },
+          { "value": "star", "label": "Star" },
+          { "value": "clock", "label": "Clock" },
+          { "value": "warranty", "label": "Warranty" }
+        ]},
+        { "type": "image_picker", "id": "custom_icon", "label": "Custom icon (overrides)" },
+        { "type": "text", "id": "title", "label": "Title", "default": "3-Year Warranty" },
+        { "type": "text", "id": "desc", "label": "Description", "default": "On all work and materials" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Terra Trust",
+      "blocks": [
+        { "type": "item", "settings": { "icon": "warranty", "title": "3-Year Warranty", "desc": "On all work and materials" } },
+        { "type": "item", "settings": { "icon": "leaf", "title": "Premium Materials", "desc": "Only trusted nurseries" } },
+        { "type": "item", "settings": { "icon": "clock", "title": "On-Time Delivery", "desc": "45 days — average project" } },
+        { "type": "item", "settings": { "icon": "shield", "title": "Turnkey", "desc": "Design + build" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

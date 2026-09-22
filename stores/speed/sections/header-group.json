@@ -1,0 +1,34 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "header": {
+      "type": "header",
+      "settings": {
+        "layout": "logo-center",
+        "menu": "speed-main",
+        "sticky": true,
+        "show_search": true,
+        "show_account": false,
+        "show_cart": false,
+        "show_burger_desktop": true,
+        "wordmark": "SPEED",
+        "wordmark_bolt": true,
+        "phone": "(+45) 779016802369",
+        "cta_label": ""
+      }
+    }
+  },
+  "order": [
+    "header"
+  ]
+}

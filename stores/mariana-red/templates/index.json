@@ -1,0 +1,95 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-designer",
+      "settings": {
+        "greeting": "I design",
+        "word_accent": "Brands",
+        "line3_pre": "That",
+        "line3_italic": "stand out.",
+        "tags": "Branding + Web Design + Digital Experience",
+        "button_label": "View works",
+        "button_link": "/collections/all",
+        "badge_text": "AVAILABLE FOR WORK • BRANDING & DESIGN • "
+      }
+    },
+    "about": {
+      "type": "about-stats",
+      "settings": {
+        "eyebrow": "About me",
+        "heading": "Strategy meets creativity:",
+        "text": "I'm Mariana, a brand and digital designer with a passion for creating visual experiences and building meaningful brand identities that capture and connect.",
+        "button_label": "More about me",
+        "button_link": "/pages/about",
+        "padding": 88
+      },
+      "blocks": {
+        "c1": { "type": "stat", "settings": { "icon": "sparkle", "title": "5+ Years Experience", "text": "Helping businesses stand out and find their people." } },
+        "c2": { "type": "stat", "settings": { "icon": "flower", "title": "100+ Projects Completed", "text": "From small local brands to national names." } },
+        "c3": { "type": "stat", "settings": { "icon": "heart", "title": "Brand Strategist", "text": "Turning ideas into visual stories that connect." } }
+      },
+      "block_order": ["c1", "c2", "c3"]
+    },
+    "works": {
+      "type": "works-grid",
+      "settings": {
+        "eyebrow": "Featured works",
+        "button_label": "View all projects",
+        "button_link": "/collections/all",
+        "padding": 88
+      },
+      "blocks": {
+        "w1": { "type": "work", "settings": { "title": "Noiré Cosmetics", "subtitle": "Branding, Packaging" } },
+        "w2": { "type": "work", "settings": { "title": "Enchante Studio", "subtitle": "Branding, Web Design" } },
+        "w3": { "type": "work", "settings": { "title": "Velora Jewelry", "subtitle": "Brand Strategy" } },
+        "w4": { "type": "work", "settings": { "title": "Aurea Wellness", "subtitle": "Branding, Web Design" } }
+      },
+      "block_order": ["w1", "w2", "w3", "w4"]
+    },
+    "process": {
+      "type": "process-timeline",
+      "settings": { "eyebrow": "My process", "padding": 88 },
+      "blocks": {
+        "p1": { "type": "step", "settings": { "title": "Discover", "text": "We talk about your vision, brand goals, and audience." } },
+        "p2": { "type": "step", "settings": { "title": "Strategy", "text": "I define your brand style, moodboard, and concept." } },
+        "p3": { "type": "step", "settings": { "title": "Design", "text": "I bring your brand to life with typography and graphics." } },
+        "p4": { "type": "step", "settings": { "title": "Refine", "text": "We polish the details so everything feels perfect." } },
+        "p5": { "type": "step", "settings": { "title": "Deliver", "text": "You get a polished brand kit ready to launch and shine." } }
+      },
+      "block_order": ["p1", "p2", "p3", "p4", "p5"]
+    },
+    "cases": {
+      "type": "case-studies",
+      "settings": {
+        "eyebrow": "Selected case studies",
+        "button_label": "New case studies",
+        "button_link": "/collections/all",
+        "padding": 72
+      },
+      "blocks": {
+        "cs1": {
+          "type": "case",
+          "settings": {
+            "title": "Noiré\nCosmetics",
+            "text": "A bold beauty brand with timeless elegance and edge.",
+            "link_label": "View project",
+            "tone": "dark",
+            "image_side": "right"
+          }
+        },
+        "cs2": {
+          "type": "case",
+          "settings": {
+            "title": "Aurea\nWellness",
+            "text": "A wellness brand that promotes balance, beauty, and self-care.",
+            "link_label": "View project",
+            "tone": "blush",
+            "image_side": "right"
+          }
+        }
+      },
+      "block_order": ["cs1", "cs2"]
+    }
+  },
+  "order": ["hero", "about", "works", "process", "cases"]
+}

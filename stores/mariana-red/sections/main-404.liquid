@@ -1,0 +1,22 @@
+{%- comment -%}
+  404 page.
+{%- endcomment -%}
+<div class="page-width">
+  <div class="error-404">
+    <p class="error-404__code">{{ 'general.404.title' | t }}</p>
+    <h1 class="h4">{{ 'general.404.subtext' | t }}</h1>
+    <p class="text-muted" style="max-width: 26rem; margin-inline: auto;">{{ 'general.404.help' | t }}</p>
+    <div style="display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap;">
+      {% render 'button', label_key: 'general.continue_shopping', link: routes.all_products_collection_url, style: 'primary' %}
+      {% render 'button', label_key: 'general.404.home', link: routes.root_url, style: 'outline' %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "404 page",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

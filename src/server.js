@@ -7,11 +7,27 @@ const express = require('express');
 const { renderStoreSection, renderSectionSource, renderSnippet, findStore } = require('./renderer');
 
 const ROOT = path.resolve(__dirname, '..');
-const DATA_INDEX = path.join(ROOT, 'data/index.json');
-const CUSTOM_DIR = path.join(ROOT, 'custom-sections');
+const DATA_DIR = process.env.DATA_DIR || path.join(ROOT, 'data');
+const DATA_INDEX = path.join(DATA_DIR, 'index.json');
+const GALLERY_MANIFEST = path.join(DATA_DIR, 'gallery-manifest.json');
+const STORE_CONFIG = path.join(DATA_DIR, 'store-config.json');
+const CUSTOM_DIR = process.env.CUSTOM_DIR || path.join(ROOT, 'custom-sections');
 const PORT = process.env.PORT || 4173;
 
 fs.mkdirSync(CUSTOM_DIR, { recursive: true });
+fs.mkdirSync(DATA_DIR, { recursive: true });
+
+// secrets come from env on the server; the local json file is a dev fallback
+const storeConfig = () => {
+  const fileCfg = (() => { try { return JSON.parse(fs.readFileSync(STORE_CONFIG, 'utf8')); } catch { return {}; } })();
+  return {
+    ...fileCfg,
+    storeUrl: process.env.STORE_URL || fileCfg.storeUrl,
+    previewThemeId: process.env.PREVIEW_THEME_ID || fileCfg.previewThemeId || '',
+    storefrontPassword: process.env.STOREFRONT_PASSWORD || fileCfg.storefrontPassword || '',
+    pageHandle: process.env.PAGE_HANDLE || fileCfg.pageHandle || 'section-library',
+  };
+};
 
 /* --------------------------------- git setup -------------------------------- */
 
@@ -40,8 +56,34 @@ function gitCommit(msg) {
     execFileSync('git', ['-c', 'user.name=section-library', '-c', 'user.email=library@local', 'add', '-A'], { cwd: CUSTOM_DIR });
     const committed = execFileSync('git', ['-c', 'user.name=section-library', '-c', 'user.email=library@local',
       'commit', '-m', msg], { cwd: CUSTOM_DIR, stdio: ['ignore', 'pipe', 'ignore'] });
+    // On ephemeral hosts the repo persists via a GitHub data repo (env-configured).
+    if (process.env.DATA_REPO && process.env.DATA_TOKEN) {
+      const url = `https://x-access-token:${process.env.DATA_TOKEN}@${process.env.DATA_REPO}.git`;
+      try { execFileSync('git', ['remote', 'add', 'origin', url], { cwd: CUSTOM_DIR, stdio: 'ignore' }); } catch {}
+      execFileSync('git', ['push', '-u', 'origin', 'HEAD'], { cwd: CUSTOM_DIR, stdio: 'ignore' });
+    }
     return committed.status === 0;
   } catch { return false; } // nothing to commit
+}
+
+// On boot, restore saved custom sections from the GitHub data repo if configured.
+function initDataRepo() {
+  if (!process.env.DATA_REPO || !process.env.DATA_TOKEN) return;
+  const url = `https://x-access-token:${process.env.DATA_TOKEN}@${process.env.DATA_REPO}.git`;
+  try {
+    if (fs.existsSync(path.join(CUSTOM_DIR, '.git'))) {
+      execFileSync('git', ['pull'], { cwd: CUSTOM_DIR, stdio: 'ignore' });
+    } else if (fs.readdirSync(CUSTOM_DIR).length === 0) {
+      execFileSync('git', ['clone', url, '.'], { cwd: CUSTOM_DIR, stdio: 'ignore' });
+    } else {
+      execFileSync('git', ['init'], { cwd: CUSTOM_DIR, stdio: 'ignore' });
+      execFileSync('git', ['remote', 'add', 'origin', url], { cwd: CUSTOM_DIR, stdio: 'ignore' });
+      try { execFileSync('git', ['pull', 'origin', 'HEAD'], { cwd: CUSTOM_DIR, stdio: 'ignore' }); } catch {}
+    }
+    console.log('Custom sections restored from data repo');
+  } catch (e) {
+    console.warn('Data repo restore skipped:', String(e.message || e).split('\n')[0]);
+  }
 }
 
 /* ------------------------------ custom sections ------------------------------ */
@@ -92,13 +134,49 @@ function saveCustomSection(body, { isNew }) {
 
 const app = express();
 app.use(express.json({ limit: '4mb' }));
+app.use(express.urlencoded({ extended: false }));
+
+/* ------------------------------ team access gate ------------------------------ */
+
+const ACCESS_PASSWORD = process.env.ACCESS_PASSWORD || '';
+const authCookieValue = () =>
+  crypto.createHmac('sha256', ACCESS_PASSWORD).update('section-library-access').digest('hex');
+
+function loginPage(msg = '') {
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Section Library — sign in</title>
+<style>body{margin:0;font:14px/1.5 system-ui,sans-serif;background:#16171a;color:#c9cbd1;display:grid;place-items:center;min-height:100vh}
+.box{background:#222327;padding:34px 38px;border-radius:14px;width:300px}
+h1{font-size:16px;color:#fff;margin:0 0 4px}p{margin:0 0 18px;font-size:12px;color:#7e8189}
+input{width:100%;box-sizing:border-box;background:#16171a;border:1px solid #313338;color:#e8e9ec;border-radius:8px;padding:10px 12px;font:inherit;outline:none;margin-bottom:12px}
+button{width:100%;background:#2f6f4f;color:#fff;border:0;border-radius:8px;padding:10px;font:inherit;font-weight:600;cursor:pointer}
+.err{color:#e08a80;font-size:12px;margin:-6px 0 12px}</style></head>
+<body><div class="box"><h1>Section Library</h1><p>Team access</p>
+${msg ? `<div class="err">${msg}</div>` : ''}
+<form method="post" action="/login"><input type="password" name="password" placeholder="Access password" autofocus><button>Sign in</button></form>
+</div></body></html>`;
+}
+
+app.use((req, res, next) => {
+  if (!ACCESS_PASSWORD) return next(); // local dev: no gate
+  if (req.path === '/login') return next();
+  if ((req.headers.cookie || '').includes(`sl_auth=${authCookieValue()}`)) return next();
+  if (req.method === 'POST') return res.status(401).json({ error: 'unauthorized' });
+  res.status(401).type('html').send(loginPage());
+});
+
+app.post('/login', (req, res) => {
+  if (req.body.password === ACCESS_PASSWORD) {
+    res.setHeader('Set-Cookie', `sl_auth=${authCookieValue()}; Path=/; HttpOnly; Max-Age=2592000; SameSite=Lax`);
+    res.redirect('/');
+  } else {
+    res.status(401).type('html').send(loginPage('Wrong password — try again.'));
+  }
+});
+
 app.use(express.static(path.join(ROOT, 'public')));
 
 function loadIndex() { return JSON.parse(fs.readFileSync(DATA_INDEX, 'utf8')); }
 
-const STORE_CONFIG = path.join(ROOT, 'data/store-config.json');
-const GALLERY_MANIFEST = path.join(ROOT, 'data/gallery-manifest.json');
-const storeConfig = () => { try { return JSON.parse(fs.readFileSync(STORE_CONFIG, 'utf8')); } catch { return {}; } };
 const galleryManifest = () => { try { return JSON.parse(fs.readFileSync(GALLERY_MANIFEST, 'utf8')); } catch { return {}; } };
 
 /* ------------------------- live storefront auth/proxy ------------------------ */
@@ -429,4 +507,5 @@ app.use((req, res) => {
 });
 
 gitInit();
+initDataRepo();
 app.listen(PORT, () => console.log(`Section Library → http://localhost:${PORT}`));

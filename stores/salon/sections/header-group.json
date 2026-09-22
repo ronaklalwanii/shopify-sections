@@ -1,0 +1,21 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "header": {
+      "type": "header",
+      "settings": {
+        "layout": "logo-left",
+        "menu": "salon-menu",
+        "wordmark": "TB",
+        "wordmark_badge": true,
+        "logo_width": 110,
+        "sticky": true,
+        "show_search": false,
+        "show_account": false,
+        "cta_label": ""
+      }
+    }
+  },
+  "order": ["header"]
+}

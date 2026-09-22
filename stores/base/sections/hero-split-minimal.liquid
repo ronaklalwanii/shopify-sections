@@ -1,0 +1,262 @@
+{%- assign hero_loading = 'lazy' -%}
+{%- if section.index < 2 -%}{%- assign hero_loading = 'eager' -%}{%- endif -%}
+
+<section id="HxHero-{{ section.id }}" class="hhr hhr--align-{{ section.settings.content_align }}">
+  {%- style -%}
+    #shopify-section-{{ section.id }} {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    #HxHero-{{ section.id }} {
+      --hhr-bg: {{ section.settings.bg_color }};
+      --hhr-ink: {{ section.settings.ink_color }};
+      --hhr-muted: {{ section.settings.muted_color }};
+      --hhr-dark-bg: {{ section.settings.dark_btn_bg }};
+      --hhr-dark-text: {{ section.settings.dark_btn_text }};
+      --hhr-split: {{ section.settings.media_split }}%;
+      --hhr-h: {{ section.settings.hero_height }}px;
+      --hhr-h-m: {{ section.settings.hero_height_mobile }}px;
+      --hhr-title: {{ section.settings.title_size }}px;
+      --hhr-ls: {{ section.settings.title_spacing }}px;
+      --hhr-sub: {{ section.settings.subtitle_size }}px;
+      --hhr-speed: {{ section.settings.animation_speed }}ms;
+      --hhr-ease: cubic-bezier(.22, 1, .36, 1);
+    }
+
+    #HxHero-{{ section.id }} {
+      background: var(--hhr-bg);
+      color: var(--hhr-ink);
+      overflow-x: clip;
+    }
+
+    #HxHero-{{ section.id }} .hhr__grid {
+      display: grid;
+      grid-template-columns: var(--hhr-split) minmax(0, 1fr);
+      min-height: var(--hhr-h);
+    }
+
+    #HxHero-{{ section.id }} .hhr__media {
+      position: relative;
+      overflow: hidden;
+      min-height: var(--hhr-h);
+    }
+    #HxHero-{{ section.id }} .hhr__media img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: {{ section.settings.hero_focal }};
+      display: block;
+    }
+
+    #HxHero-{{ section.id }} .hhr__content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 48px 32px;
+    }
+    #HxHero-{{ section.id }}.hhr--align-center .hhr__content { align-items: center; text-align: center; }
+    #HxHero-{{ section.id }}.hhr--align-left .hhr__content { align-items: flex-start; text-align: left; }
+    #HxHero-{{ section.id }}.hhr--align-right .hhr__content { align-items: flex-end; text-align: right; }
+
+    #HxHero-{{ section.id }} .hhr__title {
+      margin: 0;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-weight: 400;
+      font-size: var(--hhr-title);
+      letter-spacing: var(--hhr-ls);
+      line-height: 1.05;
+      color: var(--hhr-ink);
+    }
+    #HxHero-{{ section.id }} .hhr__sub {
+      margin: 16px 0 0;
+      max-width: 360px;
+      font-size: var(--hhr-sub);
+      line-height: 1.5;
+      color: var(--hhr-muted);
+    }
+    #HxHero-{{ section.id }} .hhr__btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+    #HxHero-{{ section.id }}.hhr--align-center .hhr__btns { justify-content: center; }
+    #HxHero-{{ section.id }}.hhr--align-right .hhr__btns { justify-content: flex-end; }
+
+    #HxHero-{{ section.id }} .hhr__btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 30px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-decoration: none;
+      transition: transform 200ms ease, opacity 200ms ease;
+    }
+    #HxHero-{{ section.id }} .hhr__btn:hover { transform: translateY(-1px); opacity: .88; }
+    #HxHero-{{ section.id }} .hhr__btn--dark {
+      background: var(--hhr-dark-bg);
+      color: var(--hhr-dark-text);
+      border: 1px solid var(--hhr-dark-bg);
+    }
+    #HxHero-{{ section.id }} .hhr__btn--outline {
+      background: transparent;
+      color: var(--hhr-ink);
+      border: 1px solid var(--hhr-ink);
+    }
+
+    /* Entrance */
+    #HxHero-{{ section.id }} .hhr__media,
+    #HxHero-{{ section.id }} .hhr__content > * {
+      transition: opacity var(--hhr-speed) ease, transform var(--hhr-speed) var(--hhr-ease);
+    }
+    #HxHero-{{ section.id }} .hhr__content > *:nth-child(2) { transition-delay: 80ms; }
+    #HxHero-{{ section.id }} .hhr__content > *:nth-child(3) { transition-delay: 160ms; }
+    #HxHero-{{ section.id }}.hhr-animated:not(.is-in-view) .hhr__media,
+    #HxHero-{{ section.id }}.hhr-animated:not(.is-in-view) .hhr__content > * {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    /* Mobile: stack image above content */
+    @media screen and (max-width: 760px) {
+      #HxHero-{{ section.id }} .hhr__grid {
+        grid-template-columns: 1fr;
+        min-height: 0;
+      }
+      #HxHero-{{ section.id }} .hhr__media { min-height: var(--hhr-h-m); }
+      #HxHero-{{ section.id }} .hhr__content { padding: 36px 20px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #HxHero-{{ section.id }} .hhr__media,
+      #HxHero-{{ section.id }} .hhr__content > *,
+      #HxHero-{{ section.id }} .hhr__btn {
+        transition: none;
+      }
+      #HxHero-{{ section.id }}.hhr-animated:not(.is-in-view) .hhr__media,
+      #HxHero-{{ section.id }}.hhr-animated:not(.is-in-view) .hhr__content > * {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="hhr__grid">
+    <div class="hhr__media">
+      {%- assign hero_img = section.settings.hero_image_mobile | default: section.settings.hero_image -%}
+      {%- if hero_img != blank -%}
+        <img
+          src="{{ hero_img | image_url: width: 1400 }}"
+          alt="{{ hero_img.alt | default: 'Hero' | escape }}"
+          loading="{{ hero_loading }}"
+          width="1400"
+          height="1400"
+        >
+      {%- endif -%}
+    </div>
+
+    <div class="hhr__content">
+      {%- if section.settings.title != blank -%}
+        <h1 class="hhr__title">{{ section.settings.title }}</h1>
+      {%- endif -%}
+      {%- if section.settings.subtitle != blank -%}
+        <p class="hhr__sub">{{ section.settings.subtitle }}</p>
+      {%- endif -%}
+      <div class="hhr__btns">
+        {%- if section.settings.btn1_text != blank and section.settings.btn1_link != blank -%}
+          <a class="hhr__btn hhr__btn--dark" href="{{ section.settings.btn1_link }}">{{ section.settings.btn1_text }}</a>
+        {%- endif -%}
+        {%- if section.settings.btn2_text != blank and section.settings.btn2_link != blank -%}
+          <a class="hhr__btn hhr__btn--outline" href="{{ section.settings.btn2_link }}">{{ section.settings.btn2_text }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.getElementById('HxHero-{{ section.id }}');
+      if (!root) return;
+
+      {%- if section.settings.enable_animation -%}
+        root.classList.add('hhr-animated');
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduced || !('IntersectionObserver' in window)) {
+          root.classList.add('is-in-view');
+        } else {
+          const obs = new IntersectionObserver((entries, o) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                root.classList.add('is-in-view');
+                o.unobserve(e.target);
+              }
+            });
+          }, { threshold: 0.1 });
+          obs.observe(root);
+        }
+      {%- else -%}
+        root.classList.add('is-in-view');
+      {%- endif -%}
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Split Minimal",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#FAF7F2" },
+    { "type": "color", "id": "ink_color", "label": "Ink / text", "default": "#221A12" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#6E6257" },
+    { "type": "range", "id": "media_split", "label": "Image column width", "min": 30, "max": 60, "step": 2, "default": 46, "unit": "%" },
+    { "type": "range", "id": "hero_height", "label": "Height (desktop)", "min": 420, "max": 900, "step": 10, "default": 620, "unit": "px" },
+    { "type": "range", "id": "hero_height_mobile", "label": "Height (mobile)", "min": 280, "max": 700, "step": 10, "default": 420, "unit": "px" },
+    { "type": "select", "id": "content_align", "label": "Content alignment", "default": "center", "options": [
+      { "value": "center", "label": "Center" },
+      { "value": "left", "label": "Left" },
+      { "value": "right", "label": "Right" }
+    ] },
+
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "hero_image", "label": "Image (desktop)" },
+    { "type": "image_picker", "id": "hero_image_mobile", "label": "Image (mobile)", "info": "Falls back to the desktop image." },
+    { "type": "select", "id": "hero_focal", "label": "Focal point", "default": "center top", "options": [
+      { "value": "center", "label": "Center" },
+      { "value": "center top", "label": "Top" },
+      { "value": "center bottom", "label": "Bottom" },
+      { "value": "left center", "label": "Left" },
+      { "value": "right center", "label": "Right" }
+    ] },
+
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Title" },
+    { "type": "range", "id": "title_size", "label": "Title size", "min": 32, "max": 120, "step": 2, "default": 68, "unit": "px" },
+    { "type": "range", "id": "title_spacing", "label": "Title letter spacing", "min": 0, "max": 30, "step": 1, "default": 8, "unit": "px" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "professional cosmetics for a flawless result" },
+    { "type": "range", "id": "subtitle_size", "label": "Subtitle size", "min": 11, "max": 22, "step": 1, "default": 13, "unit": "px" },
+    { "type": "text", "id": "btn1_text", "label": "Dark button text", "default": "Button 1" },
+    { "type": "url", "id": "btn1_link", "label": "Dark button link" },
+    { "type": "text", "id": "btn2_text", "label": "Outline button text", "default": "Button 2" },
+    { "type": "url", "id": "btn2_link", "label": "Outline button link" },
+
+    { "type": "header", "content": "Animation" },
+    { "type": "color", "id": "dark_btn_bg", "label": "Dark button background", "default": "#2A2118" },
+    { "type": "color", "id": "dark_btn_text", "label": "Dark button text", "default": "#F5EBDC" },
+    { "type": "checkbox", "id": "enable_animation", "label": "Enable entrance animation", "default": true },
+    { "type": "range", "id": "animation_speed", "label": "Animation speed", "min": 250, "max": 1200, "step": 50, "default": 700, "unit": "ms" }
+  ],
+  "presets": [
+    {
+      "name": "Hero Split Minimal"
+    }
+  ]
+}
+{% endschema %}

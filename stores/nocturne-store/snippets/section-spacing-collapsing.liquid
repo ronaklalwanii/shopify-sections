@@ -1,0 +1,86 @@
+{%- comment -%}
+	--ul---------------------------------------------------------------------------------------------------------------------
+	SECTION SPACING
+	--ul---------------------------------------------------------------------------------------------------------------------
+
+	This component creates CSS variables by generating a number hash from the current section color. It then sets the same
+	value on the next section, which allows doing advanced calculation and detect if two consecutive sections have the
+	same background, and eventually doing padding collapsing.
+
+	********************************************
+	Supported variables
+	********************************************
+
+	By default, because section variables are available in snippet, the snippet will infer them from the section,
+	but you can override them by manually passing a different value (although this should not be needed)
+
+	* background_gradient: an optional gradient for the section
+	* background: a background color for the section
+	* block_margin_collapsing: if set to true a random hash is generated to block any margin collapsing
+{%- endcomment -%}
+
+{%- assign background_gradient = background_gradient | default: section.settings.background_gradient -%}
+{%- assign background = background | default: section.settings.background -%}
+{%- assign section_boxed = false -%}
+
+{%- if background_gradient != blank -%}
+	{%- assign background_hash = background_gradient | md5 | split: '' -%}
+
+	{%- unless section.settings.full_width -%}
+		{%- assign section_boxed = true -%}
+	{%- endunless -%}
+{%- elsif background != 'rgba(0,0,0,0)' and background != blank and background != settings.background -%}
+	{%- assign background_hash = background | md5 | split: '' -%}
+
+	{%- unless section.settings.full_width -%}
+		{%- assign section_boxed = true -%}
+	{%- endunless -%}
+{%- endif -%}
+
+{%- assign background_numeric_hash = 0 -%}
+
+{%- for item in background_hash -%}
+	{%- assign background_numeric_hash = item | times: 1 | prepend: background_numeric_hash -%}
+{%- endfor -%}
+
+{%- if block_margin_collapsing == true -%}
+	{%- assign background_numeric_hash = 'now' | date: '%N' -%}
+{%- endif -%}
+
+<style>
+	#shopify-section-{{ section.id }}{
+	    --ul-section-background-hash: {{ background_numeric_hash }}
+	    ;
+	}
+
+	#shopify-section-{{ section.id }}+ * {
+	    --ul-previous-section-background-hash: {{ background_numeric_hash }}
+	    ;
+	}
+
+	{%- if section_boxed and block_margin_collapsing != true -%}
+	    @media screen and (min-width: 700px) {
+	        #shopify-section-{{ section.id }}{
+	            --ul-section-background-hash: 0;
+	        }
+
+	        #shopify-section-{{ section.id }}+ * {
+	            --ul-previous-section-background-hash: 0;
+	        }
+	    }
+	{%- endif -%}
+</style>
+
+{%- comment -%}
+	If a section exposes custom padding settings, apply them here so the value is used consistently
+{%- endcomment -%}
+<style>
+	#shopify-section-{{ section.id }}{
+	    {%- if section.settings.enable_custom_padding == true -%}
+	        {%- assign top_padding_value = section.settings.top_padding | default: section.settings.padding_top | default: section.settings.custom_padding_top | default: 0 -%}
+	        {%- assign bottom_padding_value = section.settings.bottom_padding | default: section.settings.padding_bottom | default: section.settings.custom_padding_bottom | default: 0 -%}
+	        padding-top: {{ top_padding_value }}px;
+	        padding-bottom: {{ bottom_padding_value }}px;
+	    {%- endif -%}
+	}
+</style>

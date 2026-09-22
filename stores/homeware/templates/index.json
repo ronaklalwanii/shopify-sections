@@ -1,0 +1,389 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "slideshow": {
+      "type": "slideshow",
+      "blocks": {
+        "slide-1": {
+          "type": "slide",
+          "settings": {
+            "overlay_opacity": 40,
+            "eyebrow": "Things worth keeping",
+            "heading": "Better meals,\nhappier days",
+            "text": "Beautiful kitchenware made for the meals you'll remember.",
+            "button_label": "Explore the collection",
+            "button_link": "/collections/all"
+          }
+        },
+        "slide-2": {
+          "type": "slide",
+          "settings": {
+            "overlay_opacity": 40,
+            "eyebrow": "Made to gather",
+            "heading": "Set a table\nto remember",
+            "text": "Serveware and linens for slow weekends.",
+            "button_label": "Shop dining",
+            "button_link": "/collections/dining-serveware"
+          }
+        },
+        "slide-3": {
+          "type": "slide",
+          "settings": {
+            "overlay_opacity": 40,
+            "eyebrow": "Seasonal edit",
+            "heading": "Cook with\nthe seasons",
+            "text": "Fresh tools for fresh produce.",
+            "button_label": "Shop cookware",
+            "button_link": "/collections/cookware"
+          }
+        }
+      },
+      "block_order": [
+        "slide-1",
+        "slide-2",
+        "slide-3"
+      ],
+      "settings": {
+        "height": "lg",
+        "autoplay": "0",
+        "side_note": "Good Food Brings People Together"
+      }
+    },
+    "usp": {
+      "type": "usp-bar",
+      "blocks": {
+        "u1": {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "title": "Free delivery",
+            "text": "On orders over £100"
+          }
+        },
+        "u2": {
+          "type": "item",
+          "settings": {
+            "icon": "box",
+            "title": "30-day returns",
+            "text": "Hassle-free"
+          }
+        },
+        "u3": {
+          "type": "item",
+          "settings": {
+            "icon": "shield-check",
+            "title": "2-year warranty",
+            "text": "Built to last"
+          }
+        },
+        "u4": {
+          "type": "item",
+          "settings": {
+            "icon": "leaf",
+            "title": "Sustainable choices",
+            "text": "For a healthier home"
+          }
+        }
+      },
+      "block_order": [
+        "u1",
+        "u2",
+        "u3",
+        "u4"
+      ],
+      "settings": {
+        "style": "bar",
+        "dividers": true,
+        "spacing": "compact"
+      }
+    },
+    "categories": {
+      "type": "collection-list",
+      "blocks": {
+        "cat-1": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "cookware",
+            "label": "Cookware",
+            "price_note": true,
+            "price_text": "£29"
+          }
+        },
+        "cat-2": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "knives",
+            "label": "Knives",
+            "price_note": true,
+            "price_text": "£19"
+          }
+        },
+        "cat-3": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "bakeware",
+            "label": "Bakeware",
+            "price_note": true,
+            "price_text": "£24"
+          }
+        },
+        "cat-4": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "food-storage",
+            "label": "Food Storage",
+            "price_note": true,
+            "price_text": "£12"
+          }
+        },
+        "cat-5": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "small-appliances",
+            "label": "Small Appliances",
+            "price_note": true,
+            "price_text": "£49"
+          }
+        },
+        "cat-6": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "dining-serveware",
+            "label": "Dining & Serveware",
+            "price_note": true,
+            "price_text": "£18"
+          }
+        }
+      },
+      "block_order": [
+        "cat-1",
+        "cat-2",
+        "cat-3",
+        "cat-4",
+        "cat-5",
+        "cat-6"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "Shop by category",
+        "subheading": "Tools for every recipe, from everyday meals to special occasions.",
+        "intro_side": true,
+        "view_all_label": "View all collections",
+        "view_all_link": "/collections",
+        "heading_align": "left",
+        "columns": 6,
+        "text_position": "below",
+        "padding": 72
+      }
+    },
+    "signature": {
+      "type": "featured-product",
+      "blocks": {
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "icon": "fire",
+            "title": "Even heat distribution",
+            "text": "For better flavour, every time."
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "icon": "shield-check",
+            "title": "Built for generations",
+            "text": "A lifetime-minded design."
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "icon": "stove",
+            "title": "Oven-to-table ready",
+            "text": "Looks beautiful on your table."
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3"
+      ],
+      "settings": {
+        "product": "the-everyday-dutch-oven",
+        "eyebrow": "Our signature",
+        "subheading": "Built for Sunday roasts.\nDesigned for Tuesday night pasta.",
+        "text": "Exceptional heat retention, a timeless design and the kind of durability that turns everyday cooking into something special.",
+        "badge_text": "Best seller",
+        "button_label": "Add to cart",
+        "details_label": "View product details",
+        "padding": 72
+      }
+    },
+    "why": {
+      "type": "usp-bar",
+      "blocks": {
+        "w1": {
+          "type": "item",
+          "settings": {
+            "icon": "box",
+            "title": "Premium materials",
+            "text": "Chosen for performance, not just how they look."
+          }
+        },
+        "w2": {
+          "type": "item",
+          "settings": {
+            "icon": "sparkle",
+            "title": "Timeless design",
+            "text": "Objects that feel at home today and for years to come."
+          }
+        },
+        "w3": {
+          "type": "item",
+          "settings": {
+            "icon": "leaf",
+            "title": "Sustainable choices",
+            "text": "A more considered way to cook and live."
+          }
+        },
+        "w4": {
+          "type": "item",
+          "settings": {
+            "icon": "user-heart",
+            "title": "A more personal experience",
+            "text": "Real people. Here to help, always."
+          }
+        }
+      },
+      "block_order": [
+        "w1",
+        "w2",
+        "w3",
+        "w4"
+      ],
+      "settings": {
+        "style": "columns",
+        "heading": "Why Hearth & Home"
+      }
+    },
+    "cook": {
+      "type": "editorial-trio",
+      "blocks": {
+        "editorial-1": {
+          "type": "tile",
+          "settings": {
+            "caption": "For everyday moments"
+          }
+        },
+        "editorial-2": {
+          "type": "tile",
+          "settings": {
+            "caption": "For bigger gatherings"
+          }
+        },
+        "editorial-3": {
+          "type": "tile",
+          "settings": {
+            "caption": "For a more beautiful home"
+          }
+        }
+      },
+      "block_order": [
+        "editorial-1",
+        "editorial-2",
+        "editorial-3"
+      ],
+      "settings": {
+        "heading": "Made for the way you actually cook.",
+        "text": "From quick weekday meals to long, slow weekends. Our kitchenware is designed to be part of your everyday rituals — not just special occasions.",
+        "link_label": "Our story",
+        "link": "/pages/about",
+        "padding": 72
+      }
+    },
+    "trust": {
+      "type": "trust-row",
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "What is your delivery time?",
+            "answer": "<p>Orders arrive within 3–5 working days.</p>"
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "Do you offer a warranty?",
+            "answer": "<p>Every piece is covered by a 2-year warranty.</p>"
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "Can I return an item?",
+            "answer": "<p>Returns are free within 30 days.</p>"
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "Are your products sustainable?",
+            "answer": "<p>Responsibly sourced materials, plastic-free packaging.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4"
+      ],
+      "settings": {
+        "heading": "Loved by home cooks everywhere",
+        "quote": "The quality is exceptional. It feels like a pleasure to cook again.",
+        "author": "Sarah M.",
+        "social_title": "Real kitchens.\nReal stories.",
+        "social_handle": "@hearthandhome",
+        "social_link": "https://instagram.com",
+        "faq_heading": "Common questions",
+        "faq_link_label": "View all FAQs",
+        "padding": 72
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "Join our kitchen community",
+        "text": "Be the first to know about new arrivals, recipes and exclusive offers.",
+        "placeholder": "Your email address",
+        "button_label": "Subscribe",
+        "button_icon": true,
+        "button_style": "primary",
+        "button_bg": "#a98963",
+        "note": "By subscribing, you agree to our Privacy Policy.",
+        "colors_background": "#333d31",
+        "colors_text": "#eceada"
+      }
+    }
+  },
+  "order": [
+    "slideshow",
+    "usp",
+    "categories",
+    "signature",
+    "why",
+    "cook",
+    "trust",
+    "newsletter"
+  ]
+}

@@ -1,0 +1,217 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "blocks": {
+        "b": {
+          "type": "button",
+          "settings": {
+            "label": "Discount 15%",
+            "link": "/collections/all",
+            "style": "pill"
+          }
+        }
+      },
+      "block_order": [
+        "b"
+      ],
+      "settings": {
+        "layout": "full",
+        "image_position": "right",
+        "image_height": 620,
+        "height": "xl",
+        "overlay_opacity": 10,
+        "eyebrow": "Lipluxy",
+        "heading": "Elevate your lips with our stunning lipstick",
+        "fluid_heading": false,
+        "heading_size": "h0",
+        "subheading": "<p>Each shade is crafted with precision — rich pigment, comfortable wear, timeless finish.</p>",
+        "content_align": "center",
+        "text_align": "left",
+        "avatars_count": 0,
+        "meta_text": "",
+        "scroll_label": "",
+        "scroll_link": "",
+        "colors_background": "",
+        "colors_text": "#ffffff"
+      }
+    },
+    "focus": {
+      "type": "cy-focus",
+      "settings": {
+        "product_name": "Lipint",
+        "price": "$29.00",
+        "link": "",
+        "prev_link": "",
+        "next_link": ""
+      }
+    },
+    "quote1": {
+      "type": "image-with-text",
+      "settings": {
+        "image_position": "right",
+        "image_ratio": "3 / 4",
+        "eyebrow": "Sustainable by choice",
+        "heading": "Timeless beauty",
+        "text": "<p>Each shade is crafted with precision — rich pigment, comfortable wear, timeless finish.</p><p>— Riva Haid</p>",
+        "text_align": "left",
+        "padding": 48,
+        "colors_background": "",
+        "colors_text": ""
+      }
+    },
+    "shades": {
+      "type": "cy-shades",
+      "blocks": {
+        "s1": {
+          "type": "shade",
+          "settings": {
+            "color": "#7a1f2b",
+            "name": "Red Wine"
+          }
+        },
+        "s2": {
+          "type": "shade",
+          "settings": {
+            "color": "#a6341f",
+            "name": "Brick Red"
+          }
+        },
+        "s3": {
+          "type": "shade",
+          "settings": {
+            "color": "#c8102e",
+            "name": "Classic Red"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "settings": {
+        "background_color": "#e8ddd0",
+        "eyebrow": "Bestsellers",
+        "heading": "Our best sellers lipsticks",
+        "copy": "<p>Rich pigment, comfortable wear, timeless finish — three reds made for every skin tone.</p>",
+        "badge_text": "GETTING STARTED •",
+        "badge_size": 120
+      }
+    },
+    "grid8": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "bestsellers",
+        "products_count": "8",
+        "layout": "carousel",
+        "columns": "4",
+        "arrows_position": "header",
+        "image_ratio": "portrait",
+        "show_subtitle": false,
+        "subtitle_source": "vendor",
+        "subtitle_text": "",
+        "show_price": true,
+        "price_align": "center",
+        "show_rating": false,
+        "rating_count": "",
+        "badge_text": "Discount 17%",
+        "show_swatches": false,
+        "swatches": "",
+        "show_wishlist": false,
+        "show_button": false,
+        "button_label": "Add to bag",
+        "card_button_style": "primary",
+        "eyebrow": "The lineup",
+        "heading": "Collection of Our lipstick",
+        "subheading": "",
+        "ornate": false,
+        "heading_align": "center",
+        "section_button_label": "",
+        "button_style": "dark",
+        "padding": 64,
+        "colors_background": "",
+        "colors_text": ""
+      }
+    },
+    "testimonial": {
+      "type": "cy-quote",
+      "blocks": {
+        "q1": {
+          "type": "quote",
+          "settings": {
+            "text": "<p>Each piece in our collection is a testament to the artistry and precision of our master jewelers. Meticulously crafted with the finest materials, our jewelry reflects a commitment to quality.</p>",
+            "name": "Zulu A",
+            "role": "CEO of Lipxury"
+          }
+        },
+        "q2": {
+          "type": "quote",
+          "settings": {
+            "text": "<p>Rich pigment, comfortable wear, and a finish that lasts from morning to midnight. My shade stays put through everything.</p>",
+            "name": "Riva Haid",
+            "role": "Loyal customer"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2"
+      ],
+      "settings": {
+        "background_color": "#171114",
+        "eyebrow": "Verified results",
+        "heading": "Let's see what the say after use our product",
+        "badge_text": "Discount 15%"
+      }
+    },
+    "videoband": {
+      "type": "cy-video",
+      "settings": {
+        "background_color": "#9a938b",
+        "heading": "Let's see the effect of our lipstick",
+        "discount_label": "Discount 15%",
+        "discount_link": "",
+        "left_micro": "<p>Each piece in our collection is a testament to the artistry and precision of our master jewelers.</p>",
+        "video_label": "Video",
+        "video_link": "",
+        "right_micro": "<p>Each piece in our collection is a testament to the artistry and precision of our master jewelers.</p>"
+      }
+    },
+    "endquote": {
+      "type": "cy-endquote",
+      "settings": {
+        "background_color": "#a41e34",
+        "name": "Zulu A",
+        "role": "CEO of Lipxury",
+        "quote": "Each piece in our collection is a testament to the artistry and precision of our master jewelers. Meticulously crafted with the finest materials, our jewelry reflects a commitment to quality that stands the test of time",
+        "tiny": "Each piece in our collection is a testament to the artistry and precision of our master jewelers.",
+        "label_1": "X",
+        "link_1": "",
+        "label_2": "Instagram",
+        "link_2": "",
+        "label_3": "Linkedin",
+        "link_3": ""
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "focus",
+    "quote1",
+    "shades",
+    "grid8",
+    "testimonial",
+    "videoband",
+    "endquote"
+  ]
+}

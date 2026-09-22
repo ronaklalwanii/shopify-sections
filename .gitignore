@@ -1,0 +1,6 @@
+node_modules/
+data/preview-cache/
+data/store-config.json
+custom-sections/
+.DS_Store
+*.log

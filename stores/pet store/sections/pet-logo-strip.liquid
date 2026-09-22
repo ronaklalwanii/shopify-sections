@@ -1,0 +1,374 @@
+{%- comment -%}
+  Pet Store — Logo Strip
+  Row of partner/brand logos with optional infinite marquee animation.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign logo_count = section.blocks.size
+  assign logo_sizes = s.logo_height | times: 5 | append: 'px'
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .pet-logos-{{ section.id }} {
+    --pet-logos-bg: {{ s.background_color }};
+    --pet-logos-accent: {{ s.accent_color }};
+
+    background-color: var(--pet-logos-bg);
+    padding-block: {{ s.padding_top }}px {{ s.padding_bottom }}px;
+    overflow: hidden;
+  }
+
+  .pet-logos-{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  .pet-logos-{{ section.id }} .pet-ls__viewport {
+    max-width: {{ s.container_max_width }}px;
+    margin-inline: auto;
+    padding-inline: clamp(16px, 4vw, 48px);
+  }
+
+  .pet-logos-{{ section.id }} .pet-ls__track {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(24px, 5vw, {{ s.logo_gap }}px);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-wrap: nowrap;
+  }
+
+  .pet-logos-{{ section.id }} .pet-ls__item {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pet-logos-{{ section.id }} .pet-ls__item a,
+  .pet-logos-{{ section.id }} .pet-ls__item > span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+
+  .pet-logos-{{ section.id }} .pet-ls__item img {
+    display: block;
+    height: {{ s.logo_height }}px;
+    width: auto;
+    {% if s.grayscale %}
+      filter: grayscale(1);
+    {% endif %}
+    {% if s.tint_accent %}
+      filter: grayscale(1) brightness(0.4) sepia(1) hue-rotate(-30deg) saturate(4);
+    {% endif %}
+    opacity: {{ s.logo_opacity | divided_by: 100.0 }};
+    transition: opacity var(--animation-speed, 0.125s) ease;
+  }
+
+  .pet-logos-{{ section.id }} .pet-ls__item a:hover img {
+    opacity: 1;
+  }
+
+  .pet-logos-{{ section.id }} .pet-ls__placeholder {
+    font-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    font-weight: 700;
+    font-size: {{ s.logo_height | times: 0.6 | round }}px;
+    letter-spacing: 0.02em;
+    color: var(--pet-logos-accent);
+    opacity: {{ s.logo_opacity | divided_by: 100.0 }};
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+
+  {% if s.enable_marquee and logo_count > 0 %}
+    .pet-logos-{{ section.id }} .pet-ls__viewport {
+      max-width: none;
+      padding-inline: 0;
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+      mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    }
+
+    .pet-logos-{{ section.id }} .pet-ls__group {
+      display: flex;
+      align-items: center;
+      width: max-content;
+      animation: pet-ls-scroll-{{ section.id }} {{ s.marquee_speed }}s linear infinite;
+    }
+
+    .pet-logos-{{ section.id }} .pet-ls__viewport:hover .pet-ls__group {
+      animation-play-state: paused;
+    }
+
+    @keyframes pet-ls-scroll-{{ section.id }} {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+  {% endif %}
+
+  @media (max-width: 749px) {
+    .pet-logos-{{ section.id }} .pet-ls__track {
+      justify-content: {% if s.enable_marquee %}flex-start{% else %}center{% endif %};
+      flex-wrap: {% if s.enable_marquee %}nowrap{% else %}wrap{% endif %};
+      row-gap: 20px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pet-logos-{{ section.id }} .pet-ls__group {
+      animation: none;
+      width: auto;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .pet-logos-{{ section.id }} .pet-ls__track {
+      flex-wrap: wrap;
+      justify-content: center;
+      row-gap: 20px;
+    }
+  }
+{% endstyle %}
+
+<section class="pet-logos pet-logos-{{ section.id }}" aria-label="{{ s.accessibility_label | default: 'Our partners' | escape }}">
+  <div class="pet-ls__viewport">
+    <div class="pet-ls__group">
+    <ul class="pet-ls__track">
+      {%- if logo_count == 0 -%}
+        {%- for i in (1..6) -%}
+          <li class="pet-ls__item">
+            <span class="pet-ls__placeholder">Brand {{ i }}</span>
+          </li>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for block in section.blocks -%}
+          <li class="pet-ls__item" {{ block.shopify_attributes }}>
+            {%- if block.settings.link != blank -%}
+              <a href="{{ block.settings.link }}" aria-label="{{ block.settings.name | default: 'Partner logo' | escape }}">
+            {%- else -%}
+              <span>
+            {%- endif -%}
+            {%- if block.settings.image != blank -%}
+              {{ block.settings.image | image_url: width: 400 | image_tag:
+                widths: '100,200,300,400',
+                sizes: logo_sizes,
+                loading: 'lazy',
+                alt: block.settings.name | escape
+              }}
+            {%- else -%}
+              <span class="pet-ls__placeholder">{{ block.settings.name | default: 'Brand' }}</span>
+            {%- endif -%}
+            {%- if block.settings.link != blank -%}
+              </a>
+            {%- else -%}
+              </span>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+
+    {%- if s.enable_marquee and logo_count > 0 -%}
+      {%- comment -%} Duplicate track content for a seamless loop {%- endcomment -%}
+      <ul class="pet-ls__track" aria-hidden="true">
+        {%- for block in section.blocks -%}
+          <li class="pet-ls__item">
+            {%- if block.settings.image != blank -%}
+              {{ block.settings.image | image_url: width: 400 | image_tag:
+                widths: '100,200,300,400',
+                loading: 'lazy',
+                alt: ''
+              }}
+            {%- else -%}
+              <span class="pet-ls__placeholder">{{ block.settings.name | default: 'Brand' }}</span>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Pet Logo Strip",
+  "tag": "section",
+  "class": "pet-logos-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "accessibility_label",
+      "label": "Accessibility label",
+      "default": "Our partners"
+    },
+    {
+      "type": "header",
+      "content": "Logos"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Logo height",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "logo_gap",
+      "label": "Logo spacing",
+      "min": 24,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "logo_opacity",
+      "label": "Logo opacity",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 90
+    },
+    {
+      "type": "checkbox",
+      "id": "grayscale",
+      "label": "Grayscale logos",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "tint_accent",
+      "label": "Tint logos to accent color",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Marquee"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_marquee",
+      "label": "Scroll infinitely",
+      "default": false,
+      "info": "Repeats the logos in an endless loop. Pauses on hover"
+    },
+    {
+      "type": "range",
+      "id": "marquee_speed",
+      "label": "Scroll duration",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "s",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Text fallback color",
+      "default": "#6E1622"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "label": "Container max width",
+      "min": 1000,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1320
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Logo image"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Brand name",
+          "info": "Used as alt text, or shown when no image is set"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Optional"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pet Logo Strip",
+      "blocks": [
+        { "type": "logo", "settings": { "name": "Organic Fusion" } },
+        { "type": "logo", "settings": { "name": "Vetkey" } },
+        { "type": "logo", "settings": { "name": "Fluffily" } },
+        { "type": "logo", "settings": { "name": "Dogbiology" } },
+        { "type": "logo", "settings": { "name": "Paw Care" } },
+        { "type": "logo", "settings": { "name": "Happy Tails" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,1039 @@
+{% doc %}
+  @prompt
+    generate me a cool newsletter section and connect it to the newsletter settijg for the store. 
+    
+    Content as below:
+    
+    Here are a few options:
+    
+    Option 1 — Early access angle:
+    Heading: Get There First.
+    Subheading: New drops, exclusive offers, and early access straight to your inbox.
+    Button: Count Me In
+    
+    Button needs to be rounded square. 
+    
+    Background needs to be black with white text and design , correct the code as it is not proper, Give me option to change the font everywhere.
+    
+    Give me options to change all the things in this section.
+    
+    M<ake the enter your rmail and button in same line.
+    
+    Make the section a bit interesting, Give me ability to control the font size seperately in desktop and mobile, Give me ability to control the height of the section manually in computer and in mobile
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-newsletter-{{ ai_gen_id }} {
+    display: block;
+    {% if block.settings.background_type == 'solid' %}
+      background: {{ block.settings.background_color }};
+    {% else %}
+      background: linear-gradient({{ block.settings.gradient_angle }}deg, {{ block.settings.gradient_color_1 }}, {{ block.settings.gradient_color_2 }});
+    {% endif %}
+    padding: {{ block.settings.padding_vertical }}px {{ block.settings.padding_horizontal }}px;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    position: relative;
+    overflow: hidden;
+    {% if block.settings.height_mode == 'fixed' %}
+      min-height: {{ block.settings.section_height_desktop }}px;
+      display: flex;
+      align-items: {{ block.settings.vertical_alignment }};
+    {% endif %}
+  }
+
+  .ai-newsletter-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: {{ block.settings.accent_color }};
+    opacity: {{ block.settings.accent_opacity | divided_by: 100.0 }};
+    border-radius: 50%;
+    filter: blur({{ block.settings.accent_blur }}px);
+    pointer-events: none;
+  }
+
+  .ai-newsletter-{{ ai_gen_id }}::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -5%;
+    width: 400px;
+    height: 400px;
+    background: {{ block.settings.accent_color_2 }};
+    opacity: {{ block.settings.accent_opacity | divided_by: 100.0 }};
+    border-radius: 50%;
+    filter: blur({{ block.settings.accent_blur }}px);
+    pointer-events: none;
+  }
+
+  .ai-newsletter-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.content_max_width }}px;
+    margin: 0 auto;
+    text-align: {{ block.settings.text_alignment }};
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
+
+  .ai-newsletter-heading-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-style: {{ block.settings.heading_font.style }};
+    font-size: {{ block.settings.heading_size_desktop }}px;
+    margin: 0 0 {{ block.settings.heading_spacing }}px 0;
+    line-height: 1.2;
+    letter-spacing: {{ block.settings.heading_letter_spacing }}px;
+    text-transform: {{ block.settings.heading_text_transform }};
+  }
+
+  .ai-newsletter-subheading-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-weight: {{ block.settings.body_font.weight }};
+    font-style: {{ block.settings.body_font.style }};
+    font-size: {{ block.settings.subheading_size_desktop }}px;
+    margin: 0 0 {{ block.settings.form_spacing }}px 0;
+    opacity: {{ block.settings.subheading_opacity | divided_by: 100.0 }};
+    line-height: 1.5;
+  }
+
+  .ai-newsletter-form-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: row;
+    gap: {{ block.settings.form_gap }}px;
+    align-items: stretch;
+    justify-content: center;
+    max-width: {{ block.settings.form_max_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-newsletter-input-wrapper-{{ ai_gen_id }} {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .ai-newsletter-input-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    padding: {{ block.settings.input_padding_vertical }}px {{ block.settings.input_padding_horizontal }}px;
+    border: {{ block.settings.input_border_width }}px solid {{ block.settings.input_border_color }};
+    border-radius: {{ block.settings.input_border_radius }}px;
+    background-color: {{ block.settings.input_background }};
+    color: {{ block.settings.input_text_color }};
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-size: {{ block.settings.input_font_size_desktop }}px;
+  }
+
+  .ai-newsletter-input-{{ ai_gen_id }}::placeholder {
+    color: {{ block.settings.input_text_color }};
+    opacity: {{ block.settings.placeholder_opacity | divided_by: 100.0 }};
+  }
+
+  .ai-newsletter-input-{{ ai_gen_id }}:focus {
+    outline: none;
+    border-color: {{ block.settings.input_focus_border_color }};
+    box-shadow: 0 0 0 {{ block.settings.input_focus_ring_width }}px {{ block.settings.input_focus_ring_color }};
+  }
+
+  .ai-newsletter-button-{{ ai_gen_id }} {
+    padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    border: {{ block.settings.button_border_width }}px solid {{ block.settings.button_border_color }};
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-family: {{ block.settings.button_font.family }}, {{ block.settings.button_font.fallback_families }};
+    font-weight: {{ block.settings.button_font.weight }};
+    font-size: {{ block.settings.button_font_size_desktop }}px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    text-transform: {{ block.settings.button_text_transform }};
+    letter-spacing: {{ block.settings.button_letter_spacing }}px;
+  }
+
+  .ai-newsletter-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_background }};
+    color: {{ block.settings.button_hover_text_color }};
+    border-color: {{ block.settings.button_hover_border_color }};
+    transform: translateY({{ block.settings.button_hover_lift }}px);
+  }
+
+  .ai-newsletter-message-{{ ai_gen_id }} {
+    margin-top: 16px;
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-size: 14px;
+  }
+
+  .ai-newsletter-success-{{ ai_gen_id }} {
+    color: {{ block.settings.success_color }};
+  }
+
+  .ai-newsletter-error-{{ ai_gen_id }} {
+    color: {{ block.settings.error_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-newsletter-{{ ai_gen_id }} {
+      padding: {{ block.settings.padding_vertical | times: 0.7 }}px {{ block.settings.padding_horizontal | times: 0.7 }}px;
+      {% if block.settings.height_mode == 'fixed' %}
+        min-height: {{ block.settings.section_height_mobile }}px;
+      {% endif %}
+    }
+
+    .ai-newsletter-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size_mobile }}px;
+    }
+
+    .ai-newsletter-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size_mobile }}px;
+    }
+
+    .ai-newsletter-input-{{ ai_gen_id }} {
+      font-size: {{ block.settings.input_font_size_mobile }}px;
+    }
+
+    .ai-newsletter-button-{{ ai_gen_id }} {
+      font-size: {{ block.settings.button_font_size_mobile }}px;
+    }
+
+    .ai-newsletter-form-wrapper-{{ ai_gen_id }} {
+      flex-direction: {{ block.settings.mobile_layout }};
+      gap: {{ block.settings.mobile_form_gap }}px;
+    }
+
+    {% if block.settings.mobile_layout == 'column' %}
+      .ai-newsletter-button-{{ ai_gen_id }} {
+        width: 100%;
+      }
+    {% endif %}
+  }
+{% endstyle %}
+
+<newsletter-signup-{{ ai_gen_id }}
+  class="ai-newsletter-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-newsletter-container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank %}
+      <h2 class="ai-newsletter-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+    {% endif %}
+
+    {% if block.settings.subheading != blank %}
+      <div class="ai-newsletter-subheading-{{ ai_gen_id }}">{{ block.settings.subheading }}</div>
+    {% endif %}
+
+    {% form 'contact' %}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      
+      <div class="ai-newsletter-form-wrapper-{{ ai_gen_id }}">
+        <div class="ai-newsletter-input-wrapper-{{ ai_gen_id }}">
+          <input
+            type="email"
+            name="contact[email]"
+            class="ai-newsletter-input-{{ ai_gen_id }}"
+            value="{{ form.email }}"
+            placeholder="{{ block.settings.email_placeholder }}"
+            aria-label="Email address"
+            aria-required="true"
+            autocorrect="off"
+            autocapitalize="off"
+            autocomplete="email"
+            {% if form.errors %}
+              aria-invalid="true"
+              aria-describedby="ai-newsletter-error-{{ ai_gen_id }}"
+            {% elsif form.posted_successfully? %}
+              aria-describedby="ai-newsletter-success-{{ ai_gen_id }}"
+            {% endif %}
+            required
+          >
+        </div>
+
+        <button
+          type="submit"
+          class="ai-newsletter-button-{{ ai_gen_id }}"
+        >
+          {{ block.settings.button_text }}
+        </button>
+      </div>
+
+      {% if form.errors or form.posted_successfully? %}
+        <div class="ai-newsletter-message-{{ ai_gen_id }}">
+          {% if form.errors %}
+            <div
+              id="ai-newsletter-error-{{ ai_gen_id }}"
+              class="ai-newsletter-error-{{ ai_gen_id }}"
+            >
+              {{ form.errors.messages.email }}
+            </div>
+          {% elsif form.posted_successfully? %}
+            <div
+              id="ai-newsletter-success-{{ ai_gen_id }}"
+              class="ai-newsletter-success-{{ ai_gen_id }}"
+            >
+              {{ block.settings.success_message }}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endform %}
+  </div>
+</newsletter-signup-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class NewsletterSignup{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.form = this.querySelector('form');
+        if (this.form) {
+          this.form.addEventListener('submit', this.handleSubmit.bind(this));
+        }
+      }
+
+      handleSubmit(event) {
+        const emailInput = this.form.querySelector('input[type="email"]');
+        if (emailInput && !emailInput.value) {
+          event.preventDefault();
+        }
+      }
+    }
+
+    customElements.define('newsletter-signup-{{ ai_gen_id }}', NewsletterSignup{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Newsletter signup",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get There First."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "New drops, exclusive offers, and early access straight to your inbox."
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Count Me In"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thanks for subscribing!"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "select",
+      "id": "height_mode",
+      "label": "Height mode",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Auto (content-based)"
+        },
+        {
+          "value": "fixed",
+          "label": "Fixed height"
+        }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "range",
+      "id": "section_height_desktop",
+      "label": "Desktop height",
+      "min": 300,
+      "max": 900,
+      "step": 50,
+      "unit": "px",
+      "default": 500,
+      "info": "Only applies when height mode is set to fixed"
+    },
+    {
+      "type": "range",
+      "id": "section_height_mobile",
+      "label": "Mobile height",
+      "min": 300,
+      "max": 700,
+      "step": 50,
+      "unit": "px",
+      "default": 450,
+      "info": "Only applies when height mode is set to fixed"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "Vertical alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom"
+        }
+      ],
+      "default": "center",
+      "info": "Only applies when height mode is set to fixed"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content max width",
+      "min": 400,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "default": 800
+    },
+    {
+      "type": "range",
+      "id": "form_max_width",
+      "label": "Form max width",
+      "min": 400,
+      "max": 900,
+      "step": 50,
+      "unit": "px",
+      "default": 650
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "label": "Vertical padding",
+      "min": 20,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "form_gap",
+      "label": "Form gap",
+      "min": 8,
+      "max": 32,
+      "step": 4,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile layout",
+      "options": [
+        {
+          "value": "row",
+          "label": "Same line"
+        },
+        {
+          "value": "column",
+          "label": "Stacked"
+        }
+      ],
+      "default": "column"
+    },
+    {
+      "type": "range",
+      "id": "mobile_form_gap",
+      "label": "Mobile form gap",
+      "min": 8,
+      "max": 24,
+      "step": 4,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "options": [
+        {
+          "value": "solid",
+          "label": "Solid color"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_1",
+      "label": "Gradient color 1",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_2",
+      "label": "Gradient color 2",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "gradient_angle",
+      "label": "Gradient angle",
+      "min": 0,
+      "max": 360,
+      "step": 45,
+      "unit": "deg",
+      "default": 135
+    },
+    {
+      "type": "header",
+      "content": "Accent effects"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color 1",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color_2",
+      "label": "Accent color 2",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "accent_opacity",
+      "label": "Accent opacity",
+      "min": 0,
+      "max": 30,
+      "step": 5,
+      "unit": "%",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "accent_blur",
+      "label": "Accent blur",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "success_color",
+      "label": "Success message",
+      "default": "#4ade80"
+    },
+    {
+      "type": "color",
+      "id": "error_color",
+      "label": "Error message",
+      "default": "#ef4444"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "helvetica_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "button_font",
+      "label": "Button font",
+      "default": "helvetica_n7"
+    },
+    {
+      "type": "header",
+      "content": "Heading size"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "label": "Desktop",
+      "min": 24,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "label": "Mobile",
+      "min": 20,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Subheading size"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size_desktop",
+      "label": "Desktop",
+      "min": 14,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "subheading_size_mobile",
+      "label": "Mobile",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Input font size"
+    },
+    {
+      "type": "range",
+      "id": "input_font_size_desktop",
+      "label": "Desktop",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "input_font_size_mobile",
+      "label": "Mobile",
+      "min": 14,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Button font size"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size_desktop",
+      "label": "Desktop",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_font_size_mobile",
+      "label": "Mobile",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Typography style"
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "label": "Heading spacing",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "form_spacing",
+      "label": "Form spacing",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "heading_text_transform",
+      "label": "Heading style",
+      "options": [
+        {
+          "value": "none",
+          "label": "Normal"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalize"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "label": "Heading letter spacing",
+      "min": -2,
+      "max": 4,
+      "step": 0.5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "subheading_opacity",
+      "label": "Subheading opacity",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 85
+    },
+    {
+      "type": "header",
+      "content": "Input field"
+    },
+    {
+      "type": "color",
+      "id": "input_background",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Border",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "input_border_width",
+      "label": "Border width",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "color",
+      "id": "input_focus_border_color",
+      "label": "Focus border",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "input_focus_ring_color",
+      "label": "Focus ring",
+      "default": "rgba(255, 255, 255, 0.3)"
+    },
+    {
+      "type": "range",
+      "id": "input_focus_ring_width",
+      "label": "Focus ring width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "input_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "input_padding_vertical",
+      "label": "Vertical padding",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "input_padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "placeholder_opacity",
+      "label": "Placeholder opacity",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Border",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Hover background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_border_color",
+      "label": "Hover border",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "label": "Vertical padding",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 20,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "button_text_transform",
+      "label": "Text style",
+      "options": [
+        {
+          "value": "none",
+          "label": "Normal"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalize"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "button_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 3,
+      "step": 0.5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "button_hover_lift",
+      "label": "Hover lift",
+      "min": -4,
+      "max": 0,
+      "step": 1,
+      "unit": "px",
+      "default": -2
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter signup"
+    }
+  ]
+}
+{% endschema %}

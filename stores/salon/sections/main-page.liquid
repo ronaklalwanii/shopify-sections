@@ -1,0 +1,24 @@
+{%- comment -%}
+  Standard page — title and rich text content.
+{%- endcomment -%}
+<div class="page-width">
+  <header class="page-header">
+    <h1 class="h1">{{ page.title | escape }}</h1>
+  </header>
+  <div class="page-content">
+    <div class="rte" style="margin-inline: auto;">{{ page.content }}</div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Page content",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Displays the page title and content."
+    }
+  ]
+}
+{% endschema %}

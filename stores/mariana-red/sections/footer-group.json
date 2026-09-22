@@ -1,0 +1,27 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer-designer",
+      "settings": {
+        "eyebrow": "Let's connect",
+        "heading": "Ready to elevate your brand?",
+        "text": "Let's create something beautiful, strategic, and unforgettable.",
+        "button_label": "Let's work together",
+        "button_link": "/pages/contact",
+        "email": "hello@marianastudio.com",
+        "handle": "@mariana.studio",
+        "social_link": "https://instagram.com",
+        "location": "Warsaw, Poland",
+        "badge_text": "LET'S CONNECT • MARIANA STUDIO • ",
+        "brand_name": "Mariana",
+        "legal_1_label": "Privacy Policy",
+        "legal_1_link": "/policies/privacy-policy",
+        "legal_2_label": "Terms & Conditions",
+        "legal_2_link": "/policies/terms-of-service"
+      }
+    }
+  },
+  "order": ["footer"]
+}

@@ -1,0 +1,68 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement": {
+      "type": "announcement-bar",
+      "blocks": {
+        "a": {
+          "type": "message",
+          "settings": {
+            "text": "Free delivery on orders over \u00a3100"
+          }
+        },
+        "b": {
+          "type": "message",
+          "settings": {
+            "text": "30-day returns"
+          }
+        },
+        "c": {
+          "type": "message",
+          "settings": {
+            "text": "2-year warranty"
+          }
+        },
+        "d": {
+          "type": "message",
+          "settings": {
+            "text": "A more sustainable home"
+          }
+        }
+      },
+      "block_order": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "settings": {
+        "colors_background": "#333d31",
+        "colors_text": "#eceada"
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "layout": "logo-left",
+        "menu": "main-menu",
+        "cta_label": "",
+        "sticky": true,
+        "wordmark": "Hearth & Home"
+      }
+    }
+  },
+  "order": [
+    "announcement",
+    "header"
+  ]
+}

@@ -1,0 +1,34 @@
+{%- comment -%}
+  Renders a styled link or button.
+  Accepts:
+  - label: {String} button text (use this OR label_key)
+  - label_key: {String} translation key for the label
+  - link: {String} URL; if empty a <button> is rendered
+  - style: {String} primary | dark | outline | light (default: primary)
+  - size: {String} small (optional)
+  - full: {Boolean} full width (optional)
+  - type: {String} submit (default)
+  - attributes: {String} extra attributes (optional)
+{%- endcomment -%}
+{%- liquid
+  assign btn_style = style | default: 'primary'
+  assign classes = 'button button--' | append: btn_style
+  if size == 'small'
+    assign classes = classes | append: ' button--small'
+  endif
+  if full
+    assign classes = classes | append: ' button--full'
+  endif
+  if label != blank
+    assign btn_label = label
+  elsif label_key != blank
+    assign btn_label = label_key | t
+  else
+    assign btn_label = 'Button'
+  endif
+-%}
+{%- if link != blank -%}
+  <a href="{{ link }}" class="{{ classes }}"{% if attributes %} {{ attributes }}{% endif %}>{% if icon %}<span class="button__icon">{% render 'icon', name: icon, size: 13 %}</span>{% endif %}{{ btn_label }}</a>
+{%- else -%}
+  <button type="{{ type | default: 'submit' }}" class="{{ classes }}"{% if attributes %} {{ attributes }}{% endif %}>{% if icon %}<span class="button__icon">{% render 'icon', name: icon, size: 13 %}</span>{% endif %}{{ btn_label }}</button>
+{%- endif -%}

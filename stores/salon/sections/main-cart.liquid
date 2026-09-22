@@ -1,0 +1,124 @@
+{%- comment -%}
+  Cart page — line items, note, totals, checkout.
+{%- endcomment -%}
+<section class="section" style="--section-space: {{ section.settings.padding | default: 56 }}px;">
+  <div class="page-width">
+    <h1 class="h2" style="margin-bottom: 1.6rem;">{{ 'sections.cart.title' | t }}</h1>
+
+    {%- if cart.item_count > 0 -%}
+      <form action="{{ routes.cart_url }}" method="post" class="cart-form" novalidate>
+        <div class="cart-page">
+          <div class="cart-page__items">
+            {%- for item in cart.items -%}
+              <div class="cart-line">
+                <div class="cart-line__media">
+                  {%- if item.image -%}
+                    <a href="{{ item.url }}">{{ item.image | image_url: width: 240 | image_tag: loading: 'lazy', alt: item.title }}</a>
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- endif -%}
+                </div>
+                <div>
+                  <a href="{{ item.url }}" class="cart-line__title">{{ item.product.title | escape }}</a>
+                  {%- unless item.variant.title contains 'Default' -%}
+                    <p class="cart-line__variant">{{ item.variant.title }}</p>
+                  {%- endunless -%}
+                  {%- if item.selling_plan_allocation -%}
+                    <p class="cart-line__variant">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+                  {%- endif -%}
+                  {%- if item.line_level_discount_allocations.size > 0 -%}
+                    {%- for discount in item.line_level_discount_allocations -%}
+                      <p class="cart-line__variant">{{ discount.discount_application.title }} (−{{ discount.amount | money }})</p>
+                    {%- endfor -%}
+                  {%- endif -%}
+                  <a href="{{ item.url_to_remove }}" class="cart-line__remove">{{ 'sections.cart.remove' | t }}</a>
+                </div>
+                <p class="cart-line__price">{{ item.final_price | money }}</p>
+                <div class="quantity cart-line__quantity-cell">
+                  <button type="button" class="quantity__button" data-qty-step="minus" aria-label="{{ 'sections.cart.decrease' | t }}">
+                    {% render 'icon', name: 'minus', size: 12 %}
+                  </button>
+                  <input type="number" class="quantity__input" name="updates[]" value="{{ item.quantity }}" min="0" aria-label="{{ 'sections.cart.quantity' | t }}">
+                  <button type="button" class="quantity__button" data-qty-step="plus" aria-label="{{ 'sections.cart.increase' | t }}">
+                    {% render 'icon', name: 'plus', size: 12 %}
+                  </button>
+                </div>
+                <p class="cart-line__total">{{ item.final_line_price | money }}</p>
+              </div>
+            {%- endfor -%}
+
+            {%- if settings.cart_show_note -%}
+              <div class="cart-note">
+                <label for="CartNote">{{ 'sections.cart.note' | t }}</label>
+                <textarea id="CartNote" class="input" name="note" placeholder="{{ 'sections.cart.note_placeholder' | t }}">{{ cart.note }}</textarea>
+              </div>
+            {%- endif -%}
+          </div>
+
+          <aside class="cart-summary">
+            <div class="cart-summary__row">
+              <span>{{ 'sections.cart.subtotal' | t }}</span>
+              <span>{{ cart.total_price | money }}</span>
+            </div>
+
+            {%- if settings.cart_total_note == 'threshold' and settings.free_shipping_threshold > 0 -%}
+              {%- assign threshold = settings.free_shipping_threshold | times: 100 -%}
+              {%- if cart.total_price >= threshold -%}
+                <p class="cart-summary__shipping-note">{{ 'sections.cart.free_shipping_unlocked' | t }}</p>
+              {%- else -%}
+                {%- assign remaining = threshold | minus: cart.total_price -%}
+                {%- assign remaining_money = remaining | money -%}
+                <p class="cart-summary__shipping-note">{{ 'sections.cart.free_shipping_remaining' | t: amount: remaining_money }}</p>
+                <div class="cart-summary__progress"><i style="width: {{ cart.total_price | times: 100.0 | divided_by: threshold | at_most: 100 }}%;"></i></div>
+              {%- endif -%}
+            {%- elsif settings.cart_total_note == 'static' -%}
+              <p class="cart-summary__shipping-note">{{ 'sections.cart.shipping_taxes' | t }}</p>
+            {%- endif -%}
+
+            {%- if cart.cart_level_discount_applications.size > 0 -%}
+              {%- for discount in cart.cart_level_discount_applications -%}
+                <div class="cart-summary__row" style="color: var(--color-accent);">
+                  <span>{{ discount.title }}</span>
+                  <span>−{{ discount.total_allocated_amount | money }}</span>
+                </div>
+              {%- endfor -%}
+            {%- endif -%}
+
+            <button type="submit" name="checkout" class="button button--dark button--full">
+              {{ 'sections.cart.checkout' | t }}
+            </button>
+            <a href="{{ routes.all_products_collection_url }}" class="cart-drawer__note" style="display: block; text-align: center;">
+              {{ 'general.continue_shopping' | t }}
+            </a>
+          </aside>
+        </div>
+      </form>
+    {%- else -%}
+      <div class="cart-empty">
+        {% render 'icon', name: 'bag', size: 40 %}
+        <h2 class="h4" style="margin-top: 1.2rem;">{{ 'sections.cart.empty' | t }}</h2>
+        <p class="text-muted">{{ 'sections.cart.empty_hint' | t }}</p>
+        {% render 'button', label_key: 'general.continue_shopping', link: routes.all_products_collection_url, style: 'primary' %}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cart",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 16,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    }
+  ]
+}
+{% endschema %}

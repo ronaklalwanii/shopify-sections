@@ -1,0 +1,32 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "contact-form",
+      "blocks": {
+        "hours-1": { "type": "hours", "settings": { "day": "Mon – Fri", "hours": "9:00 – 17:00" } },
+        "hours-2": { "type": "hours", "settings": { "day": "Sat – Sun", "hours": "10:00 – 16:00" } }
+      },
+      "block_order": ["hours-1", "hours-2"],
+      "settings": {
+        "eyebrow": "We'd love to hear from you",
+        "heading": "Get in touch",
+        "text": "Questions about sizing, shipping or returns — we're here to help.",
+        "show_phone_field": true,
+        "show_phone": true,
+        "show_email": true,
+        "show_address": true,
+        "padding": 64
+      }
+    }
+  },
+  "order": ["main"]
+}

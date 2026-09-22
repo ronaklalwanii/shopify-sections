@@ -1,0 +1,211 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "layout": "full",
+        "height": "lg",
+        "overlay_opacity": 20,
+        "eyebrow": "Designed for movement on and off the court",
+        "heading": "From first serve\nto last orders.",
+        "heading_size": "h0",
+        "text_align": "left",
+        "scroll_label": "",
+        "subheading": "<p>Versatile performance apparel for your game, your routine, your lifestyle.</p>"
+      },
+      "blocks": {
+        "b1": {
+          "type": "button",
+          "settings": {
+            "label": "Shop men",
+            "link": "/collections/all",
+            "style": "primary"
+          }
+        },
+        "b2": {
+          "type": "button",
+          "settings": {
+            "label": "Shop women",
+            "link": "/collections/all",
+            "style": "outline"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2"
+      ]
+    },
+    "tiles": {
+      "type": "editorial-trio",
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "text": "",
+        "padding": 0
+      },
+      "blocks": {
+        "e1": {
+          "type": "tile",
+          "settings": {
+            "caption": "On court"
+          }
+        },
+        "e2": {
+          "type": "tile",
+          "settings": {
+            "caption": "On the green"
+          }
+        },
+        "e3": {
+          "type": "tile",
+          "settings": {
+            "caption": "In motion"
+          }
+        },
+        "e4": {
+          "type": "tile",
+          "settings": {
+            "caption": "After hours"
+          }
+        }
+      },
+      "block_order": [
+        "e1",
+        "e2",
+        "e3",
+        "e4"
+      ]
+    },
+    "usp": {
+      "type": "usp-bar",
+      "settings": {
+        "style": "bar",
+        "dividers": true,
+        "spacing": "compact"
+      },
+      "blocks": {
+        "u1": {
+          "type": "item",
+          "settings": {
+            "icon": "sparkle",
+            "title": "Premium performance fabrics"
+          }
+        },
+        "u2": {
+          "type": "item",
+          "settings": {
+            "icon": "stove",
+            "title": "Designed for movement, on & off the court"
+          }
+        },
+        "u3": {
+          "type": "item",
+          "settings": {
+            "icon": "globe",
+            "title": "Inspired by sport, built for life"
+          }
+        },
+        "u4": {
+          "type": "item",
+          "settings": {
+            "icon": "leaf",
+            "title": "Thoughtful, responsible production"
+          }
+        },
+        "u5": {
+          "type": "item",
+          "settings": {
+            "icon": "globe",
+            "title": "Designed in the UK"
+          }
+        }
+      },
+      "block_order": [
+        "u1",
+        "u2",
+        "u3",
+        "u4",
+        "u5"
+      ]
+    },
+    "best": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "new-arrivals",
+        "products_count": "4",
+        "layout": "grid",
+        "columns": "4",
+        "eyebrow": "New arrivals",
+        "heading": "Timeless pieces. Modern performance.",
+        "subheading": "Discover the latest additions to the JL Sport collection.",
+        "show_subtitle": false,
+        "show_price": true,
+        "show_button": false,
+        "padding": 72,
+        "show_swatches": true,
+        "swatches": "#37402f,#ece9e2,#57604a,#8a9a8b",
+        "section_button_label": "Shop new in",
+        "button_style": "dark"
+      }
+    },
+    "member": {
+      "type": "club-quad",
+      "settings": {
+        "eyebrow": "Join the club",
+        "heading": "Exclusive access.\nEarly drops. Member benefits. More.",
+        "placeholder": "Enter your email"
+      },
+      "blocks": {
+        "t1": {
+          "type": "tile",
+          "settings": {
+            "eyebrow": "Our world",
+            "heading": "Life on and off the court.",
+            "link_label": "Explore",
+            "link": "/pages/about"
+          }
+        },
+        "t2": {
+          "type": "tile",
+          "settings": {
+            "eyebrow": "Technology",
+            "heading": "Fabrics that move with you.",
+            "link_label": "Learn more",
+            "link": "/pages/about"
+          }
+        },
+        "t3": {
+          "type": "tile",
+          "settings": {
+            "eyebrow": "Accessories",
+            "heading": "The finishing touch.",
+            "link_label": "Shop accessories",
+            "link": "/collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3"
+      ]
+    }
+  },
+  "order": [
+    "hero",
+    "tiles",
+    "usp",
+    "best",
+    "member"
+  ]
+}

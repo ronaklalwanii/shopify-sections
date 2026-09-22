@@ -1,0 +1,159 @@
+{%- comment -%}
+  ==========================================================================
+  GLOW BUTTON — self-contained Shopify section
+  Dark stage with a glass pill button ringed by a soft glowing border;
+  drifting sparkle particles inside the button; the glow intensifies on
+  hover and pulses gently. Single file, no dependencies. Horizon-era
+  settings only.
+  ==========================================================================
+{%- endcomment -%}
+{%- assign sid = section.id -%}
+
+<section class="gb gb-{{ section.id }}" id="gb-{{ section.id }}">
+  <a href="{{ section.settings.link | default: '#' }}" class="gb__btn" data-gb-button>
+    <span class="gb__particles" aria-hidden="true">
+      {%- for i in (1..10) -%}
+        <span class="gb__p" style="--i: {{ i }};"></span>
+      {%- endfor -%}
+    </span>
+    <span class="gb__label">{{ section.settings.label | escape }}</span>
+  </a>
+  {%- if section.settings.hint != blank -%}
+    <p class="gb__hint">{{ section.settings.hint | escape }}</p>
+  {%- endif -%}
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('gb-{{ section.id }}');
+    if (!root || root.dataset.gbInit) return;
+    root.dataset.gbInit = '1';
+    var btn = root.querySelector('[data-gb-button]');
+    /* intensify glow under the pointer position */
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      btn.addEventListener('pointermove', function (e) {
+        var r = btn.getBoundingClientRect();
+        btn.style.setProperty('--gb-mx', ((e.clientX - r.left) / r.width * 100) + '%');
+        btn.style.setProperty('--gb-my', ((e.clientY - r.top) / r.height * 100) + '%');
+        btn.style.setProperty('--gb-power', '1.6');
+      });
+      btn.addEventListener('pointerleave', function () { btn.style.setProperty('--gb-power', '1'); });
+    }
+  })();
+</script>
+
+{% style %}
+  #gb-{{ sid }} {
+    background: {{ section.settings.background_color }};
+    min-height: {{ section.settings.height }}vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.4rem;
+    font-family: {{ section.settings.font_stack }};
+    padding: 2rem 1rem;
+  }
+  #gb-{{ sid }} *, #gb-{{ sid }} *::before, #gb-{{ sid }} *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  #gb-{{ sid }} a { color: inherit; text-decoration: none; }
+
+  #gb-{{ sid }} .gb__btn {
+    --gb-power: 1;
+    --gb-mx: 50%;
+    --gb-my: 50%;
+    position: relative;
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: {{ section.settings.button_width }}px;
+    padding: 0.95rem 2rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    color: #fff;
+    font-size: {{ section.settings.text_size }}px;
+    font-weight: 600; letter-spacing: 0.04em;
+    isolation: isolate;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow:
+      0 0 calc(14px * var(--gb-power)) rgba(255, 255, 255, calc(0.35 * var(--gb-power))),
+      inset 0 0 calc(12px * var(--gb-power)) rgba(255, 255, 255, calc(0.16 * var(--gb-power)));
+    transition: box-shadow 0.3s ease, transform 0.25s ease;
+    animation: gb-pulse-{{ section.id | replace: '-', '' }} 3.2s ease-in-out infinite;
+  }
+  #gb-{{ sid }} .gb__btn::before {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: 999px;
+    padding: 1.5px;
+    background: radial-gradient(120% 160% at var(--gb-mx) var(--gb-my),
+      rgba(255,255,255, calc(0.95 * var(--gb-power))),
+      rgba(255,255,255, 0.25) 45%,
+      rgba(255,255,255, 0.08) 75%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+    transition: background 0.25s ease;
+  }
+  #gb-{{ sid }} .gb__btn:hover { transform: translateY(-2px); }
+  #gb-{{ sid }} .gb__btn:active { transform: translateY(0); }
+
+  #gb-{{ sid }} .gb__label { position: relative; z-index: 2; }
+
+  /* drifting sparkle particles */
+  #gb-{{ sid }} .gb__particles { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+  #gb-{{ sid }} .gb__p {
+    position: absolute;
+    width: 2px; height: 2px; border-radius: 50%;
+    background: #fff;
+    left: calc(8% + (var(--i) * 9)%);
+    top: 60%;
+    opacity: 0;
+    filter: drop-shadow(0 0 3px #fff);
+    animation: gb-drift-{{ section.id | replace: '-', '' }} calc(2.4s + var(--i) * 0.45s) linear infinite;
+    animation-delay: calc(var(--i) * -0.7s);
+  }
+  @keyframes gb-drift-{{ section.id | replace: '-', '' }} {
+    0% { transform: translate(0, 0) scale(1); opacity: 0; }
+    15% { opacity: 0.9; }
+    50% { transform: translate(calc(var(--i) * 1.5px), -12px) scale(1.25); opacity: 0.55; }
+    100% { transform: translate(calc(var(--i) * 3px), -26px) scale(0.4); opacity: 0; }
+  }
+  @keyframes gb-pulse-{{ section.id | replace: '-', '' }} {
+    0%, 100% { box-shadow:
+      0 0 calc(14px * var(--gb-power)) rgba(255, 255, 255, calc(0.35 * var(--gb-power))),
+      inset 0 0 calc(12px * var(--gb-power)) rgba(255, 255, 255, calc(0.16 * var(--gb-power))); }
+    50% { box-shadow:
+      0 0 calc(22px * var(--gb-power)) rgba(255, 255, 255, calc(0.5 * var(--gb-power))),
+      inset 0 0 calc(16px * var(--gb-power)) rgba(255, 255, 255, calc(0.24 * var(--gb-power))); }
+  }
+
+  #gb-{{ sid }} .gb__hint { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.35; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #gb-{{ sid }} .gb__btn { animation: none; }
+    #gb-{{ sid }} .gb__p { animation: none; opacity: 0.4; }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Glow Button",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Button label", "default": "Click me" },
+    { "type": "url", "id": "link", "label": "Link" },
+    { "type": "range", "id": "button_width", "label": "Button width", "min": 120, "max": 320, "step": 10, "unit": "px", "default": 160 },
+    { "type": "range", "id": "text_size", "label": "Text size", "min": 12, "max": 22, "step": 1, "unit": "px", "default": 14 },
+    { "type": "range", "id": "height", "label": "Section height", "min": 40, "max": 110, "step": 5, "unit": "vh", "default": 90 },
+    { "type": "text", "id": "hint", "label": "Hint text" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#0a0a0a" },
+    {
+      "type": "select", "id": "font_stack", "label": "Typeface",
+      "options": [
+        { "value": "system-ui, sans-serif", "label": "System" },
+        { "value": "'Helvetica Neue', Helvetica, Arial, sans-serif", "label": "Grotesque" },
+        { "value": "Georgia, 'Times New Roman', serif", "label": "Serif" }
+      ],
+      "default": "system-ui, sans-serif"
+    }
+  ],
+  "presets": [ { "name": "Glow Button" } ]
+}
+{% endschema %}

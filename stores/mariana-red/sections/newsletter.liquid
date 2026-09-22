@@ -1,0 +1,258 @@
+{%- comment -%}
+  Newsletter — two layouts:
+  - strip:  full-width signup band (homeware / chocolatier)
+  - banner: full-bleed image, centered content, pill input (Pyko)
+{%- endcomment -%}
+{%- liquid
+  assign overlay = section.settings.overlay_opacity | divided_by: 100.0
+-%}
+{%- capture section_colors_style -%}
+  {%- if section.settings.colors_background != blank or section.settings.colors_text != blank -%}
+    {%- assign override_bg = section.settings.colors_background | default: settings.colors_background -%}
+    {%- assign override_fg = section.settings.colors_text | default: settings.colors_text -%}
+    style="--color-background: {{ override_bg }}; --color-surface: {{ override_bg | color_lighten: 3 }}; --color-border: {{ override_bg | color_darken: 9 | color_modify: 'alpha', 0.85 }}; --color-foreground: {{ override_fg }}; --color-heading: {{ override_fg }}; --color-text-muted: {{ override_fg | color_modify: 'alpha', 0.62 }};"
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- if section.settings.layout == 'banner' -%}
+  <section {{ section_colors_style }} class="newsletter-banner" style="--overlay-color: rgba(24, 18, 12, {{ overlay }});">
+    {%- if section.settings.image != blank -%}
+      {{ section.settings.image | image_url: width: 2400 | image_tag: class: 'newsletter-banner__bg', loading: 'lazy', widths: '960, 1280, 1600, 2400', sizes: '100vw', alt: section.settings.image.alt }}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'newsletter-banner__bg placeholder-svg' }}
+    {%- endif -%}
+    <div class="newsletter-banner__scrim" aria-hidden="true"></div>
+    <div class="page-width newsletter-banner__inner" {{ section.shopify_attributes }}>
+      {%- if section.settings.heading != blank -%}
+        <h2 class="newsletter-banner__title h1">{{ section.settings.heading | escape | newline_to_br }}</h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <p class="newsletter-banner__text">{{ section.settings.text | escape }}</p>
+      {%- endif -%}
+      {%- form 'customer', class: 'newsletter-form newsletter-banner__form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <div class="newsletter-banner__pill">
+          <label class="visually-hidden" for="NewsletterEmail-{{ section.id }}">{{ 'newsletter.label' | t }}</label>
+          <input
+            type="email"
+            id="NewsletterEmail-{{ section.id }}"
+            class="newsletter-banner__input"
+            name="contact[email]"
+            value="{{ form.email }}"
+            placeholder="{{ section.settings.placeholder | escape }}"
+            required
+          >
+          <button type="submit" class="newsletter-banner__submit">{{ section.settings.button_label | escape }}</button>
+        </div>
+        {%- if form.posted_successfully? -%}
+          <p class="form__message form__message--success newsletter-banner__note">{{ 'newsletter.success' | t }}</p>
+        {%- endif -%}
+        {%- if form.errors -%}
+          <p class="form__message form__message--error newsletter-banner__note">{{ form.errors.translated_fields.email }} {{ form.errors.messages.email }}</p>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+  </section>
+
+<style>
+  .newsletter-banner { position: relative; overflow: hidden; display: flex; align-items: center; min-height: var(--banner-min-height, 540px); }
+  .newsletter-banner img.newsletter-banner__bg, .newsletter-banner svg.newsletter-banner__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .newsletter-banner__scrim { position: absolute; inset: 0; background: var(--overlay-color, rgba(24, 18, 12, 0.18)); }
+  .newsletter-banner__inner {
+    position: relative; z-index: 2; width: 100%;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    color: #ffffff; padding-block: clamp(3rem, 8vh, 5.5rem);
+  }
+  .newsletter-banner__title { max-width: 42rem; margin: 0 0 0.6rem; font-weight: 500; }
+  .newsletter-banner__text { max-width: 26rem; font-size: 0.85rem; line-height: 1.6; opacity: 0.92; margin: 0 0 1.8rem; }
+  .newsletter-banner__pill {
+    display: flex; align-items: center; gap: 0.4rem;
+    background: #ffffff; border-radius: 999px;
+    padding: 0.3rem 0.3rem 0.3rem 1.3rem;
+    width: min(26rem, 100%);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
+  }
+  .newsletter-banner__input {
+    flex: 1; min-width: 0; border: none; background: transparent;
+    font-size: 0.85rem; color: #2f2a24; outline: none;
+  }
+  .newsletter-banner__input::placeholder { color: rgba(0, 0, 0, 0.45); }
+  .newsletter-banner__submit {
+    border: 1px solid rgba(0, 0, 0, 0.14); border-radius: 999px;
+    background: #ffffff; color: #2f2a24;
+    font-size: 0.78rem; font-weight: 600;
+    padding: 0.6rem 1.2rem; cursor: pointer;
+  }
+  .newsletter-banner__submit:hover { background: #f5efe6; }
+  .newsletter-banner__note { margin-top: 0.9rem; }
+  .newsletter-banner .form__message--success { color: #ffffff; }
+  .newsletter-banner .form__message--error { color: #ffd7d2; }
+</style>
+
+{%- else -%}
+<section {{ section_colors_style }} class="newsletter-band">
+  <div class="page-width">
+    <div class="newsletter-band__inner">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="h3 newsletter-band__title">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <p class="newsletter-band__text">{{ section.settings.text | escape }}</p>
+        {%- endif -%}
+      </div>
+      <div {{ section.shopify_attributes }}>
+        {%- form 'customer', class: 'newsletter-form newsletter-band__form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <div style="display: flex; gap: 0.7rem; flex-wrap: wrap;">
+            <label class="visually-hidden" for="NewsletterEmail-{{ section.id }}">{{ 'newsletter.label' | t }}</label>
+            <input
+              type="email"
+              id="NewsletterEmail-{{ section.id }}"
+              class="field__input"
+              style="flex: 1; min-width: 9rem;"
+              name="contact[email]"
+              value="{{ form.email }}"
+              placeholder="{{ section.settings.placeholder | escape }}"
+              required
+            >
+            <button type="submit" class="button button--{{ section.settings.button_style }}" aria-label="{{ section.settings.button_label | escape }}">
+              {%- if section.settings.button_icon -%}
+                {% render 'icon', name: 'arrow-right', size: 14 %}
+              {%- else -%}
+                {{ section.settings.button_label | escape }}
+              {%- endif -%}
+            </button>
+          </div>
+          {%- if form.posted_successfully? -%}
+            <p class="form__message form__message--success">{{ 'newsletter.success' | t }}</p>
+          {%- endif -%}
+          {%- if form.errors -%}
+            <p class="form__message form__message--error">{{ form.errors.translated_fields.email }} {{ form.errors.messages.email }}</p>
+          {%- endif -%}
+          {%- if section.settings.note != blank -%}
+            <p class="newsletter-band__note">{{ section.settings.note | escape }}</p>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "strip", "label": "Signup strip" },
+        { "value": "banner", "label": "Full-bleed banner" }
+      ],
+      "default": "strip"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image (banner layout)"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity (banner layout)",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "%",
+      "default": 15
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow (strip layout)"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Join our kitchen community"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Be the first to know about new arrivals, recipes and exclusive offers."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Input placeholder",
+      "default": "Your email address"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Subscribe"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_icon",
+      "label": "Icon-only arrow button",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "Accent"
+        },
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "light",
+          "label": "Light"
+        }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Privacy note",
+      "default": "By subscribing, you agree to our Privacy Policy."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_background",
+      "label": "Background override",
+      "info": "Leave empty to use the theme colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_text",
+      "label": "Text color override"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter"
+    }
+  ]
+}
+{% endschema %}

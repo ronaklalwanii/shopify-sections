@@ -1,0 +1,248 @@
+{%- comment -%}
+  ==========================================================================
+  TESTIMONIAL FAN — self-contained Shopify section
+  Fanned arc of customer photo cards; the center card enlarges with the
+  customer name + quote mark; beneath, a rotating headline + paragraph per
+  slide. Dots + arrows. Single file, no dependencies. Horizon-era settings.
+  ==========================================================================
+{%- endcomment -%}
+{%- assign sid = section.id -%}
+
+<section class="tf tf-{{ section.id }}" id="tf-{{ section.id }}">
+  <div class="tf__stage" data-tf-stage>
+    {%- for block in section.blocks -%}
+      <div class="tf__card" data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          {{ block.settings.image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '400, 600, 800', alt: block.settings.name }}
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'tf__placeholder' }}
+        {%- endif -%}
+        {%- if block.settings.name != blank -%}
+          <span class="tf__name">{{ block.settings.name | escape }}</span>
+        {%- endif -%}
+        <span class="tf__qmark" aria-hidden="true">“</span>
+      </div>
+    {%- endfor -%}
+  </div>
+
+  <div class="tf__body">
+    {%- if section.blocks.size > 0 -%}
+      {%- for block in section.blocks -%}
+        <div class="tf__slide{% if forloop.first %} is-active{% endif %}" data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+          <p class="tf__headline">{{ block.settings.headline | escape }}</p>
+          {%- if block.settings.text != blank -%}<p class="tf__text">{{ block.settings.text | escape }}</p>{%- endif -%}
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+
+  <div class="tf__controls">
+    <button type="button" class="tf__arrow" data-tf-prev aria-label="Previous">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m15 5-7 7 7 7"/></svg>
+    </button>
+    <div class="tf__dots" role="tablist" aria-label="Testimonials">
+      {%- for block in section.blocks -%}
+        <button type="button" class="tf__dot" data-goto="{{ forloop.index0 }}" aria-label="Testimonial {{ forloop.index }}"></button>
+      {%- endfor -%}
+    </div>
+    <button type="button" class="tf__arrow" data-tf-next aria-label="Next">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m9 5 7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('tf-{{ section.id }}');
+    if (!root || root.dataset.tfInit) return;
+    root.dataset.tfInit = '1';
+    var cards = Array.prototype.slice.call(root.querySelectorAll('.tf__card'));
+    var slides = Array.prototype.slice.call(root.querySelectorAll('.tf__slide'));
+    var dots = root.querySelectorAll('.tf__dot');
+    var idx = 0, timer = null;
+    var AUTO = {{ section.settings.autoplay_seconds | times: 1000 }};
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function layout() {
+      var n = cards.length;
+      cards.forEach(function (card, k) {
+        var pos = ((k - idx) % n + n) % n;
+        if (pos > n / 2) pos -= n;
+        var abs = Math.abs(pos);
+        var show = abs <= {{ section.settings.fan_cards }};
+        card.style.display = show ? '' : 'none';
+        card.style.zIndex = String(60 - abs * 10);
+        card.style.transform =
+          'translateX(calc(-50% + ' + (pos * {{ section.settings.spread_x }}) + 'px))' +
+          ' translateY(calc(-50% + ' + (abs * {{ section.settings.fan_y }}) + 'px))' +
+          ' rotate(' + (pos * {{ section.settings.fan_angle }}) + 'deg)' +
+          ' scale(' + Math.max(1 - abs * {{ section.settings.scale_step | divided_by: 100.0 }}, 0.6) + ')';
+        card.style.opacity = show ? '1' : '0';
+        card.classList.toggle('is-active', abs === 0);
+      });
+      slides.forEach(function (s, k) { s.classList.toggle('is-active', k === idx); });
+      dots.forEach(function (d, k) { d.classList.toggle('is-active', k === idx); });
+    }
+    function go(step) { idx = (idx + step + cards.length) % cards.length; layout(); }
+    function play() { stop(); if (AUTO > 0 && cards.length > 1 && !reduce) timer = setInterval(function () { go(1); }, AUTO); }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+    root.querySelectorAll('[data-tf-prev]').forEach(function (b) { b.addEventListener('click', function () { stop(); go(-1); play(); }); });
+    root.querySelectorAll('[data-tf-next]').forEach(function (b) { b.addEventListener('click', function () { stop(); go(1); play(); }); });
+    dots.forEach(function (d) { d.addEventListener('click', function () { stop(); idx = parseInt(d.dataset.goto, 10); layout(); play(); }); });
+
+    var sx = null;
+    root.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    root.addEventListener('touchend', function (e) {
+      if (sx === null) return;
+      var dx = e.changedTouches[0].clientX - sx;
+      if (Math.abs(dx) > 40) { stop(); go(dx < 0 ? 1 : -1); play(); }
+      sx = null;
+    }, { passive: true });
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', play);
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { layout(); play(); } else { stop(); } });
+    }, { threshold: 0.3 });
+    io.observe(root);
+
+    layout(); play();
+  })();
+</script>
+
+{% style %}
+  #tf-{{ sid }} {
+    background: {{ section.settings.background_color }}; color: {{ section.settings.text_color }};
+    font-family: {{ section.settings.font_stack }};
+    padding-block: clamp(3rem, 8vh, 5.5rem);
+    overflow: hidden;
+  }
+  #tf-{{ sid }} *, #tf-{{ sid }} *::before, #tf-{{ sid }} *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  #tf-{{ sid }} a { color: inherit; text-decoration: none; }
+
+  #tf-{{ sid }} .tf__stage {
+    position: relative;
+    height: clamp(280px, {{ section.settings.stage_height }}vw, {{ section.settings.stage_height_max }}px);
+    margin-bottom: clamp(1.2rem, 3vh, 2rem);
+  }
+  #tf-{{ sid }} .tf__card {
+    position: absolute; left: 50%; top: 50%;
+    width: min({{ section.settings.card_width }}vw, {{ section.settings.card_width_max }}px);
+    aspect-ratio: {{ section.settings.card_ratio }};
+    border-radius: {{ section.settings.card_radius }}px;
+    overflow: hidden;
+    transform-origin: center bottom;
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease;
+    cursor: pointer;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.14);
+  }
+  #tf-{{ sid }} .tf__card img, #tf-{{ sid }} .tf__placeholder { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #tf-{{ sid }} .tf__placeholder { background: #e6e2d8; }
+  #tf-{{ sid }} .tf__name {
+    position: absolute; left: 0; right: 0; bottom: 3rem;
+    text-align: center; color: #fff;
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em;
+    text-shadow: 0 1px 10px rgba(0,0,0,0.4);
+  }
+  #tf-{{ sid }} .tf__qmark {
+    position: absolute; left: 50%; bottom: 0.5rem; transform: translateX(-50%);
+    width: 2.1rem; height: 2.1rem; border-radius: 50%;
+    background: var(--tf-qbg); color: var(--tf-qink);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; font-family: Georgia, serif; line-height: 0; padding-top: 0.9rem;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+  }
+
+  #tf-{{ sid }} .tf__body { position: relative; min-height: 7.5rem; text-align: center; }
+  #tf-{{ sid }} .tf__slide {
+    position: absolute; left: 0; right: 0;
+    opacity: 0; transform: translateY(0.6em); visibility: hidden;
+    transition: opacity 0.45s ease, transform 0.45s ease, visibility 0.45s;
+  }
+  #tf-{{ sid }} .tf__slide.is-active { opacity: 1; transform: none; visibility: visible; position: relative; }
+  #tf-{{ sid }} .tf__headline { font-size: clamp(1.05rem, 2vw, 1.45rem); font-weight: 700; letter-spacing: -0.01em; }
+  #tf-{{ sid }} .tf__text { font-size: 0.8rem; line-height: 1.65; opacity: 0.65; max-width: 34rem; margin: 0.7rem auto 0; }
+
+  #tf-{{ sid }} .tf__controls { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 1rem; }
+  #tf-{{ sid }} .tf__arrow {
+    width: 2.4rem; height: 2.4rem; border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.15); background: transparent; color: inherit;
+    display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+  #tf-{{ sid }} .tf__arrow svg { width: 0.95rem; height: 0.95rem; }
+  #tf-{{ sid }} .tf__arrow:hover { background: #1c1e22; color: #fff; border-color: #1c1e22; }
+  #tf-{{ sid }} .tf__dots { display: flex; gap: 0.4rem; }
+  #tf-{{ sid }} .tf__dot {
+    width: 0.38rem; height: 0.38rem; border-radius: 50%;
+    background: currentColor; opacity: 0.3; border: 0; cursor: pointer;
+    transition: width 0.25s ease, opacity 0.25s ease;
+  }
+  #tf-{{ sid }} .tf__dot.is-active { opacity: 1; width: 1.5rem; border-radius: 999px; }
+
+  @media (prefers-reduced-motion: reduce) { #tf-{{ sid }} .tf__card { transition: none; } }
+  @media (max-width: 767px){
+    #tf-{{ sid }} .tf__card{
+      min-width: 160px
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Testimonial Fan",
+  "tag": "section",
+  "max_blocks": 9,
+  "settings": [
+    { "type": "range", "id": "autoplay_seconds", "label": "Autoplay every", "min": 0, "max": 12, "step": 1, "unit": "s", "info": "0 = manual only", "default": 5 },
+    { "type": "range", "id": "fan_angle", "label": "Fan angle per card", "min": 0, "max": 20, "step": 1, "unit": "°", "default": 7 },
+    { "type": "range", "id": "fan_cards", "label": "Fanned cards each side", "min": 1, "max": 4, "step": 1, "default": 2 },
+    { "type": "range", "id": "spread_x", "label": "Card spacing", "min": 60, "max": 220, "step": 5, "unit": "px", "default": 140 },
+    { "type": "range", "id": "fan_y", "label": "Arc dip per card", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 8 },
+    { "type": "range", "id": "scale_step", "label": "Depth scale step", "min": 5, "max": 25, "step": 1, "unit": "%", "default": 7 },
+    { "type": "range", "id": "card_width", "label": "Active card width", "min": 14, "max": 34, "step": 1, "unit": "vw", "default": 17 },
+    { "type": "range", "id": "card_width_max", "label": "Active card max width", "min": 180, "max": 420, "step": 10, "unit": "px", "default": 240 },
+    {
+      "type": "select", "id": "card_ratio", "label": "Card ratio",
+      "options": [
+        { "value": "3 / 4", "label": "Tall (3:4)" },
+        { "value": "2 / 3", "label": "Editorial (2:3)" },
+        { "value": "4 / 5", "label": "Portrait (4:5)" }
+      ],
+      "default": "3 / 4"
+    },
+    { "type": "range", "id": "stage_height", "label": "Stage height", "min": 24, "max": 50, "step": 1, "unit": "vw", "default": 30 },
+    { "type": "range", "id": "stage_height_max", "label": "Stage max height", "min": 300, "max": 760, "step": 10, "unit": "px", "default": 520 },
+    { "type": "range", "id": "card_radius", "label": "Card corner radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 14 },
+    { "type": "color", "id": "quote_badge_bg", "label": "Quote badge background", "default": "#1c1e22" },
+    { "type": "color", "id": "quote_badge_ink", "label": "Quote badge text", "default": "#ffffff" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#f5f4f1" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#1c1e22" },
+    {
+      "type": "select", "id": "font_stack", "label": "Typeface",
+      "options": [
+        { "value": "system-ui, sans-serif", "label": "System" },
+        { "value": "'Helvetica Neue', Helvetica, Arial, sans-serif", "label": "Grotesque" },
+        { "value": "Georgia, 'Times New Roman', serif", "label": "Serif" }
+      ],
+      "default": "system-ui, sans-serif"
+    }
+  ],
+  "blocks": [
+    { "type": "testimonial", "name": "Testimonial", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Customer photo" },
+      { "type": "text", "id": "name", "label": "Customer name", "default": "Sofia Marinotti" },
+      { "type": "text", "id": "headline", "label": "Headline", "default": "Quiet process, loud results." },
+      { "type": "textarea", "id": "text", "label": "Text", "default": "No drama, no over-promising — just steady, honest work. Progress is a launch, not a finish line." }
+    ] }
+  ],
+  "presets": [
+    { "name": "Testimonial Fan", "blocks": [
+      { "type": "testimonial", "settings": { "name": "Sofia Marinotti", "headline": "Quiet process, loud results.", "text": "No drama, no over-promising — just steady, honest work. Progress is a launch, not a finish line. And when it lands, it lands well." } },
+      { "type": "testimonial", "settings": { "name": "Marco Fenelli", "headline": "Craft you can feel in the details.", "text": "Every corner of the work reveals a second look. Our customers may not articulate why it feels considered, but the numbers say they notice." } },
+      { "type": "testimonial", "settings": { "name": "Alba Moretti", "headline": "They pushed back, and they were right.", "text": "Things felt off-line at times, and we voiced that more than once. Both times we were heard — and both times we ended a week later, better." } }
+    ] }
+  ]
+}
+{% endschema %}

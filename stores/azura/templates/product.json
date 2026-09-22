@@ -1,0 +1,99 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor": {
+          "type": "vendor",
+          "settings": {}
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "rating": {
+          "type": "rating",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "variants": {
+          "type": "variant_picker",
+          "settings": {}
+        },
+        "quantity": {
+          "type": "quantity",
+          "settings": {}
+        },
+        "buttons": {
+          "type": "buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "button_style": "dark"
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "accordion-1": {
+          "type": "accordion",
+          "settings": {
+            "title": "Shipping and returns",
+            "content": "<p>Free delivery on orders over $100. Hassle-free 30-day returns.</p>"
+          }
+        },
+        "accordion-2": {
+          "type": "accordion",
+          "settings": {
+            "title": "Care instructions",
+            "content": "<p>Hand wash cold or dry clean. Store folded away from direct sunlight.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "rating",
+        "price",
+        "variants",
+        "quantity",
+        "buttons",
+        "description",
+        "accordion-1",
+        "accordion-2"
+      ],
+      "settings": {
+        "padding": 56
+      }
+    },
+    "related": {
+      "type": "featured-collection",
+      "settings": {
+        "products_count": "4",
+        "layout": "grid",
+        "columns": "4",
+        "show_subtitle": false,
+        "show_price": true,
+        "show_rating": false,
+        "show_button": false,
+        "eyebrow": "You may also like",
+        "heading": "",
+        "padding": 48,
+        "collection": "new-arrivals"
+      }
+    }
+  },
+  "order": ["main", "related"]
+}

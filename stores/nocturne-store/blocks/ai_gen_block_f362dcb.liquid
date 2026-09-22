@@ -1,0 +1,1437 @@
+{% doc %}
+  @prompt
+    Generate a clean and stylish header. The header should be able to connect with the menu that is created. Give me option to change the font of menu. Give me control over the size of logo seperately in mobile and computer. In mobile, have a stylish menu button with cool animation in the left side that opens the menu drawer. Give me search and cart icons in the right. Make the icons stylish and raw. Give me option to hide and show the menu icons separately in computer and mobile mode. , Give the button for menu only in mobile mode and not in computer mode., Give me different design for the hamburger menu option in mobile mode, In mobile mode, Make the logo centered. Keep the search option turned off in mobile by default. In mobile mode, add a search bar in menu drawer, In desktop the logo should be left and the menu should be centred while in mobile the menu should be center aligned, Logo is not visible in mobile, Give me option to adjust the height of section seperately in mobile and computer mode, In mobile mode, give me different design options for hamburger menu style, The hamburger options don't work.. Correct those options please, Give me another extra button on the menu that reads "Loyalty Program". Give this button a hollow outlined look and give me an option to control the radius of border. In mobile version, this button needs to be in drawer menu and should also have that box outlined.
+    
+    For computer layout, give me layout options:
+    
+    Logo left, menu centered
+    Logo centered, menu left
+    Logo Left, menu inline, Give me option to control the border thickness of loyalty button.
+    Give me option to control the height and width of the loyalty button.
+    , Give me ability to control the colour of the text in menu, Give me more design and animation options for mobile menu hamburger, Now give me different designs for hamburger as well, In hamburger Menu, Give me variations ofr three lines as well for design
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-header-{{ ai_gen_id }} {
+    display: block;
+    background-color: {{ block.settings.header_bg_color }};
+    position: relative;
+    z-index: 100;
+  }
+
+  .ai-header-container-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    height: {{ block.settings.header_height_desktop }}px;
+    max-width: 100%;
+  }
+
+  .ai-header-logo-{{ ai_gen_id }} {
+    flex-shrink: 0;
+  }
+
+  .ai-header-logo-{{ ai_gen_id }} img {
+    display: block;
+    max-width: {{ block.settings.logo_width_desktop }}px;
+    height: auto;
+  }
+
+  .ai-header-nav-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ai-header-nav-{{ ai_gen_id }} a {
+    color: {{ block.settings.menu_text_color }};
+    text-decoration: none;
+    font-family: {{ block.settings.menu_font.family }}, {{ block.settings.menu_font.fallback_families }};
+    font-weight: {{ block.settings.menu_font.weight }};
+    font-size: {{ block.settings.menu_font_size }}px;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-header-nav-{{ ai_gen_id }} a:hover {
+    opacity: 0.7;
+  }
+
+  .ai-header-loyalty-btn-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    height: {{ block.settings.loyalty_button_height }}px;
+    width: {{ block.settings.loyalty_button_width }}px;
+    background: transparent;
+    border: {{ block.settings.loyalty_border_thickness }}px solid {{ block.settings.loyalty_border_color }};
+    border-radius: {{ block.settings.loyalty_border_radius }}px;
+    color: {{ block.settings.loyalty_text_color }};
+    font-family: {{ block.settings.menu_font.family }}, {{ block.settings.menu_font.fallback_families }};
+    font-weight: {{ block.settings.menu_font.weight }};
+    font-size: {{ block.settings.menu_font_size }}px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ai-header-loyalty-btn-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.loyalty_border_color }};
+    color: {{ block.settings.header_bg_color }};
+  }
+
+  .ai-header-icons-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .ai-header-icon-btn-{{ ai_gen_id }} {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: {{ block.settings.icon_color }};
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-header-icon-btn-{{ ai_gen_id }}:hover {
+    opacity: 0.7;
+  }
+
+  .ai-header-icon-btn-{{ ai_gen_id }} svg {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    stroke-width: 1.5;
+  }
+
+  .ai-header-hamburger-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  .ai-header-drawer-{{ ai_gen_id }} {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 80%;
+    max-width: 400px;
+    height: 100vh;
+    background-color: {{ block.settings.drawer_bg_color }};
+    z-index: 1000;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+  }
+
+  .ai-header-drawer-{{ ai_gen_id }}.active {
+    left: 0;
+  }
+
+  .ai-header-drawer-overlay-{{ ai_gen_id }} {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .ai-header-drawer-overlay-{{ ai_gen_id }}.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .ai-header-drawer-content-{{ ai_gen_id }} {
+    padding: 20px;
+  }
+
+  .ai-header-drawer-close-{{ ai_gen_id }} {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: {{ block.settings.drawer_menu_text_color }};
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-header-drawer-close-{{ ai_gen_id }} svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .ai-header-drawer-nav-{{ ai_gen_id }} {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .ai-header-drawer-nav-{{ ai_gen_id }} a {
+    color: {{ block.settings.drawer_menu_text_color }};
+    text-decoration: none;
+    font-family: {{ block.settings.menu_font.family }}, {{ block.settings.menu_font.fallback_families }};
+    font-weight: {{ block.settings.menu_font.weight }};
+    font-size: 18px;
+    display: block;
+  }
+
+  .ai-header-drawer-search-{{ ai_gen_id }} {
+    margin-bottom: 30px;
+  }
+
+  .ai-header-drawer-search-{{ ai_gen_id }} input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid {{ block.settings.drawer_menu_text_color }};
+    border-radius: 8px;
+    background: transparent;
+    color: {{ block.settings.drawer_menu_text_color }};
+    font-size: 16px;
+  }
+
+  .ai-header-drawer-search-{{ ai_gen_id }} input::placeholder {
+    color: {{ block.settings.drawer_menu_text_color }};
+    opacity: 0.6;
+  }
+
+  .ai-header-drawer-loyalty-{{ ai_gen_id }} {
+    margin-top: 30px;
+  }
+
+  .ai-header-drawer-loyalty-{{ ai_gen_id }} .ai-header-loyalty-btn-{{ ai_gen_id }} {
+    width: 100%;
+  }
+
+  {% if block.settings.desktop_layout == 'logo_left_menu_center' %}
+    .ai-header-container-{{ ai_gen_id }} {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+    }
+
+    .ai-header-logo-{{ ai_gen_id }} {
+      justify-self: start;
+    }
+
+    .ai-header-nav-wrapper-{{ ai_gen_id }} {
+      justify-self: center;
+    }
+
+    .ai-header-icons-{{ ai_gen_id }} {
+      justify-self: end;
+    }
+  {% elsif block.settings.desktop_layout == 'logo_center_menu_left' %}
+    .ai-header-container-{{ ai_gen_id }} {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+    }
+
+    .ai-header-nav-wrapper-{{ ai_gen_id }} {
+      justify-self: start;
+      order: 1;
+    }
+
+    .ai-header-logo-{{ ai_gen_id }} {
+      justify-self: center;
+      order: 2;
+    }
+
+    .ai-header-icons-{{ ai_gen_id }} {
+      justify-self: end;
+      order: 3;
+    }
+  {% elsif block.settings.desktop_layout == 'logo_left_menu_inline' %}
+    .ai-header-container-{{ ai_gen_id }} {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .ai-header-nav-wrapper-{{ ai_gen_id }} {
+      margin-left: 40px;
+    }
+  {% endif %}
+
+  @media screen and (max-width: 989px) {
+    .ai-header-container-{{ ai_gen_id }} {
+      height: {{ block.settings.header_height_mobile }}px;
+      display: flex !important;
+      grid-template-columns: none !important;
+      justify-content: space-between;
+    }
+
+    .ai-header-logo-{{ ai_gen_id }} {
+      order: 2;
+      justify-self: center !important;
+      margin: 0 auto;
+    }
+
+    .ai-header-logo-{{ ai_gen_id }} img {
+      max-width: {{ block.settings.logo_width_mobile }}px;
+    }
+
+    .ai-header-hamburger-{{ ai_gen_id }} {
+      display: flex;
+      order: 1;
+    }
+
+    .ai-header-nav-wrapper-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-header-icons-{{ ai_gen_id }} {
+      order: 3;
+    }
+
+    {% if block.settings.hide_search_mobile %}
+      .ai-header-search-desktop-{{ ai_gen_id }} {
+        display: none;
+      }
+    {% endif %}
+
+    {% if block.settings.hide_cart_mobile %}
+      .ai-header-cart-mobile-{{ ai_gen_id }} {
+        display: none;
+      }
+    {% endif %}
+  }
+
+  @media screen and (min-width: 990px) {
+    .ai-header-drawer-{{ ai_gen_id }},
+    .ai-header-drawer-overlay-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    {% if block.settings.hide_search_desktop %}
+      .ai-header-search-desktop-{{ ai_gen_id }} {
+        display: none;
+      }
+    {% endif %}
+
+    {% if block.settings.hide_cart_desktop %}
+      .ai-header-cart-desktop-{{ ai_gen_id }} {
+        display: none;
+      }
+    {% endif %}
+  }
+
+  .ai-hamburger-icon-{{ ai_gen_id }} {
+    width: {{ block.settings.hamburger_size }}px;
+    height: {{ block.settings.hamburger_size }}px;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  {% if block.settings.three_lines_style == 'standard' %}
+    {% if block.settings.hamburger_animation == 'x_rotate' %}
+      .ai-hamburger-line-{{ ai_gen_id }} {
+        position: absolute;
+        width: 100%;
+        height: {{ block.settings.hamburger_thickness }}px;
+        background-color: {{ block.settings.hamburger_color }};
+        transition: all 0.3s ease;
+        border-radius: {{ block.settings.hamburger_line_radius }}px;
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 0;
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 0;
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        opacity: 0;
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 50%;
+        transform: translateY(50%) rotate(-45deg);
+      }
+    {% elsif block.settings.hamburger_animation == 'arrow_left' %}
+      .ai-hamburger-line-{{ ai_gen_id }} {
+        position: absolute;
+        width: 100%;
+        height: {{ block.settings.hamburger_thickness }}px;
+        background-color: {{ block.settings.hamburger_color }};
+        transition: all 0.3s ease;
+        border-radius: {{ block.settings.hamburger_line_radius }}px;
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 0;
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 0;
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 50%;
+        width: 50%;
+        transform: translateY(-50%) rotate(-45deg);
+        transform-origin: left center;
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        transform: translateY(-50%) translateX(5px);
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 50%;
+        width: 50%;
+        transform: translateY(50%) rotate(45deg);
+        transform-origin: left center;
+      }
+    {% elsif block.settings.hamburger_animation == 'squeeze' %}
+      .ai-hamburger-line-{{ ai_gen_id }} {
+        position: absolute;
+        width: 100%;
+        height: {{ block.settings.hamburger_thickness }}px;
+        background-color: {{ block.settings.hamburger_color }};
+        transition: all 0.3s ease;
+        border-radius: {{ block.settings.hamburger_line_radius }}px;
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 0;
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 0;
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+        width: 80%;
+        left: 10%;
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        opacity: 0;
+        transform: translateY(-50%) scale(0);
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 50%;
+        transform: translateY(50%) rotate(-45deg);
+        width: 80%;
+        left: 10%;
+      }
+    {% elsif block.settings.hamburger_animation == 'spin' %}
+      .ai-hamburger-icon-{{ ai_gen_id }} {
+        transition: transform 0.3s ease;
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }} {
+        position: absolute;
+        width: 100%;
+        height: {{ block.settings.hamburger_thickness }}px;
+        background-color: {{ block.settings.hamburger_color }};
+        transition: all 0.3s ease;
+        border-radius: {{ block.settings.hamburger_line_radius }}px;
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 0;
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 0;
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active {
+        transform: rotate(180deg);
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        opacity: 0;
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 50%;
+        transform: translateY(50%) rotate(-45deg);
+      }
+    {% elsif block.settings.hamburger_animation == 'elastic' %}
+      .ai-hamburger-line-{{ ai_gen_id }} {
+        position: absolute;
+        width: 100%;
+        height: {{ block.settings.hamburger_thickness }}px;
+        background-color: {{ block.settings.hamburger_color }};
+        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        border-radius: {{ block.settings.hamburger_line_radius }}px;
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 0;
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 0;
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        opacity: 0;
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 50%;
+        transform: translateY(50%) rotate(-45deg);
+      }
+    {% elsif block.settings.hamburger_animation == 'minus' %}
+      .ai-hamburger-line-{{ ai_gen_id }} {
+        position: absolute;
+        width: 100%;
+        height: {{ block.settings.hamburger_thickness }}px;
+        background-color: {{ block.settings.hamburger_color }};
+        transition: all 0.3s ease;
+        border-radius: {{ block.settings.hamburger_line_radius }}px;
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 0;
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 0;
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0;
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        transform: translateY(-50%);
+      }
+
+      .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 50%;
+        transform: translateY(50%);
+        opacity: 0;
+      }
+    {% endif %}
+  {% elsif block.settings.three_lines_style == 'staggered_right' %}
+    .ai-hamburger-line-{{ ai_gen_id }} {
+      position: absolute;
+      height: {{ block.settings.hamburger_thickness }}px;
+      background-color: {{ block.settings.hamburger_color }};
+      transition: all 0.3s ease;
+      border-radius: {{ block.settings.hamburger_line_radius }}px;
+      right: 0;
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+      top: 0;
+      width: 100%;
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+      top: 50%;
+      transform: translateY(-50%);
+      width: 75%;
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+      bottom: 0;
+      width: 50%;
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+      width: 100%;
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+      opacity: 0;
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+      bottom: 50%;
+      transform: translateY(50%) rotate(-45deg);
+      width: 100%;
+    }
+  {% elsif block.settings.three_lines_style == 'staggered_left' %}
+    .ai-hamburger-line-{{ ai_gen_id }} {
+      position: absolute;
+      height: {{ block.settings.hamburger_thickness }}px;
+      background-color: {{ block.settings.hamburger_color }};
+      transition: all 0.3s ease;
+      border-radius: {{ block.settings.hamburger_line_radius }}px;
+      left: 0;
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+      top: 0;
+      width: 50%;
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+      top: 50%;
+      transform: translateY(-50%);
+      width: 75%;
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+      bottom: 0;
+      width: 100%;
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+      width: 100%;
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+      opacity: 0;
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+      bottom: 50%;
+      transform: translateY(50%) rotate(-45deg);
+      width: 100%;
+    }
+  {% elsif block.settings.three_lines_style == 'centered_short' %}
+    .ai-hamburger-line-{{ ai_gen_id }} {
+      position: absolute;
+      height: {{ block.settings.hamburger_thickness }}px;
+      background-color: {{ block.settings.hamburger_color }};
+      transition: all 0.3s ease;
+      border-radius: {{ block.settings.hamburger_line_radius }}px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+      top: 0;
+      width: 60%;
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+      bottom: 0;
+      width: 60%;
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(45deg);
+      width: 100%;
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+      opacity: 0;
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+      bottom: 50%;
+      transform: translate(-50%, 50%) rotate(-45deg);
+      width: 100%;
+    }
+  {% elsif block.settings.three_lines_style == 'dots_grid' %}
+    .ai-hamburger-dot-{{ ai_gen_id }} {
+      position: absolute;
+      width: {{ block.settings.hamburger_thickness | times: 2 }}px;
+      height: {{ block.settings.hamburger_thickness | times: 2 }}px;
+      background-color: {{ block.settings.hamburger_color }};
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .ai-hamburger-dot-{{ ai_gen_id }}:nth-child(1) {
+      top: 0;
+      left: 0;
+    }
+
+    .ai-hamburger-dot-{{ ai_gen_id }}:nth-child(2) {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .ai-hamburger-dot-{{ ai_gen_id }}:nth-child(3) {
+      top: 0;
+      right: 0;
+    }
+
+    .ai-hamburger-dot-{{ ai_gen_id }}:nth-child(4) {
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+    }
+
+    .ai-hamburger-dot-{{ ai_gen_id }}:nth-child(5) {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .ai-hamburger-dot-{{ ai_gen_id }}:nth-child(6) {
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+    }
+
+    .ai-hamburger-dot-{{ ai_gen_id }}:nth-child(7) {
+      bottom: 0;
+      left: 0;
+    }
+
+    .ai-hamburger-dot-{{ ai_gen_id }}:nth-child(8) {
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .ai-hamburger-dot-{{ ai_gen_id }}:nth-child(9) {
+      bottom: 0;
+      right: 0;
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-dot-{{ ai_gen_id }} {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  {% elsif block.settings.three_lines_style == 'circle_outline' %}
+    .ai-hamburger-circle-{{ ai_gen_id }} {
+      width: 100%;
+      height: 100%;
+      border: {{ block.settings.hamburger_thickness }}px solid {{ block.settings.hamburger_color }};
+      border-radius: 50%;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }} {
+      position: absolute;
+      width: 60%;
+      height: {{ block.settings.hamburger_thickness }}px;
+      background-color: {{ block.settings.hamburger_color }};
+      left: 50%;
+      transform: translateX(-50%);
+      transition: all 0.3s ease;
+      border-radius: {{ block.settings.hamburger_line_radius }}px;
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+      top: 30%;
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+      bottom: 30%;
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-circle-{{ ai_gen_id }} {
+      transform: rotate(90deg);
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+      opacity: 0;
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+      bottom: 50%;
+      transform: translate(-50%, 50%) rotate(-45deg);
+    }
+  {% elsif block.settings.three_lines_style == 'rounded_square' %}
+    .ai-hamburger-square-{{ ai_gen_id }} {
+      width: 100%;
+      height: 100%;
+      border: {{ block.settings.hamburger_thickness }}px solid {{ block.settings.hamburger_color }};
+      border-radius: {{ block.settings.hamburger_line_radius | times: 2 }}px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }} {
+      position: absolute;
+      width: 50%;
+      height: {{ block.settings.hamburger_thickness }}px;
+      background-color: {{ block.settings.hamburger_color }};
+      left: 50%;
+      transform: translateX(-50%);
+      transition: all 0.3s ease;
+      border-radius: {{ block.settings.hamburger_line_radius }}px;
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+      top: 30%;
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+      bottom: 30%;
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-square-{{ ai_gen_id }} {
+      transform: rotate(45deg);
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(90deg);
+      width: 70%;
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+      opacity: 0;
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+      bottom: 50%;
+      transform: translate(-50%, 50%);
+      width: 70%;
+    }
+  {% elsif block.settings.three_lines_style == 'plus_sign' %}
+    .ai-hamburger-line-{{ ai_gen_id }} {
+      position: absolute;
+      background-color: {{ block.settings.hamburger_color }};
+      transition: all 0.3s ease;
+      border-radius: {{ block.settings.hamburger_line_radius }}px;
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+      width: 100%;
+      height: {{ block.settings.hamburger_thickness }}px;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+    }
+
+    .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+      width: {{ block.settings.hamburger_thickness }}px;
+      height: 100%;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+      transform: translateY(-50%) rotate(45deg);
+    }
+
+    .ai-hamburger-icon-{{ ai_gen_id }}.active .ai-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+      transform: translateX(-50%) rotate(45deg);
+    }
+  {% endif %}
+{% endstyle %}
+
+<header-component-{{ ai_gen_id }} class="ai-header-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-header-container-{{ ai_gen_id }}">
+    <button class="ai-header-icon-btn-{{ ai_gen_id }} ai-header-hamburger-{{ ai_gen_id }}" aria-label="Open menu">
+      <div class="ai-hamburger-icon-{{ ai_gen_id }}">
+        {% if block.settings.three_lines_style == 'standard' or block.settings.three_lines_style == 'staggered_right' or block.settings.three_lines_style == 'staggered_left' or block.settings.three_lines_style == 'centered_short' %}
+          <span class="ai-hamburger-line-{{ ai_gen_id }}"></span>
+          <span class="ai-hamburger-line-{{ ai_gen_id }}"></span>
+          <span class="ai-hamburger-line-{{ ai_gen_id }}"></span>
+        {% elsif block.settings.three_lines_style == 'dots_grid' %}
+          <span class="ai-hamburger-dot-{{ ai_gen_id }}"></span>
+          <span class="ai-hamburger-dot-{{ ai_gen_id }}"></span>
+          <span class="ai-hamburger-dot-{{ ai_gen_id }}"></span>
+          <span class="ai-hamburger-dot-{{ ai_gen_id }}"></span>
+          <span class="ai-hamburger-dot-{{ ai_gen_id }}"></span>
+          <span class="ai-hamburger-dot-{{ ai_gen_id }}"></span>
+          <span class="ai-hamburger-dot-{{ ai_gen_id }}"></span>
+          <span class="ai-hamburger-dot-{{ ai_gen_id }}"></span>
+          <span class="ai-hamburger-dot-{{ ai_gen_id }}"></span>
+        {% elsif block.settings.three_lines_style == 'circle_outline' %}
+          <div class="ai-hamburger-circle-{{ ai_gen_id }}">
+            <span class="ai-hamburger-line-{{ ai_gen_id }}"></span>
+            <span class="ai-hamburger-line-{{ ai_gen_id }}"></span>
+            <span class="ai-hamburger-line-{{ ai_gen_id }}"></span>
+          </div>
+        {% elsif block.settings.three_lines_style == 'rounded_square' %}
+          <div class="ai-hamburger-square-{{ ai_gen_id }}">
+            <span class="ai-hamburger-line-{{ ai_gen_id }}"></span>
+            <span class="ai-hamburger-line-{{ ai_gen_id }}"></span>
+            <span class="ai-hamburger-line-{{ ai_gen_id }}"></span>
+          </div>
+        {% elsif block.settings.three_lines_style == 'plus_sign' %}
+          <span class="ai-hamburger-line-{{ ai_gen_id }}"></span>
+          <span class="ai-hamburger-line-{{ ai_gen_id }}"></span>
+        {% endif %}
+      </div>
+    </button>
+
+    <div class="ai-header-logo-{{ ai_gen_id }}">
+      {% if block.settings.logo %}
+        <a href="/">
+          <img src="{{ block.settings.logo | image_url: width: 400 }}" alt="{{ shop.name }}" width="200" height="auto" loading="eager">
+        </a>
+      {% else %}
+        <a href="/" style="font-size: 24px; font-weight: bold; color: {{ block.settings.menu_text_color }}; text-decoration: none;">
+          {{ shop.name }}
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="ai-header-nav-wrapper-{{ ai_gen_id }}">
+      {% if block.settings.menu != blank %}
+        <ul class="ai-header-nav-{{ ai_gen_id }}">
+          {% for link in block.settings.menu.links %}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {% endfor %}
+          <li>
+            <a href="{{ block.settings.loyalty_link }}" class="ai-header-loyalty-btn-{{ ai_gen_id }}">
+              {{ block.settings.loyalty_text }}
+            </a>
+          </li>
+        </ul>
+      {% endif %}
+    </div>
+
+    <div class="ai-header-icons-{{ ai_gen_id }}">
+      <button class="ai-header-icon-btn-{{ ai_gen_id }} ai-header-search-desktop-{{ ai_gen_id }}" aria-label="Search">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+      </button>
+
+      <a href="/cart" class="ai-header-icon-btn-{{ ai_gen_id }} ai-header-cart-desktop-{{ ai_gen_id }} ai-header-cart-mobile-{{ ai_gen_id }}" aria-label="Cart">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="ai-header-drawer-overlay-{{ ai_gen_id }}"></div>
+  <div class="ai-header-drawer-{{ ai_gen_id }}">
+    <div class="ai-header-drawer-content-{{ ai_gen_id }}">
+      <button class="ai-header-drawer-close-{{ ai_gen_id }}" aria-label="Close menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="ai-header-drawer-search-{{ ai_gen_id }}">
+        <form action="/search" method="get">
+          <input type="search" name="q" placeholder="Search..." autocomplete="off">
+        </form>
+      </div>
+
+      {% if block.settings.menu != blank %}
+        <ul class="ai-header-drawer-nav-{{ ai_gen_id }}">
+          {% for link in block.settings.menu.links %}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <div class="ai-header-drawer-loyalty-{{ ai_gen_id }}">
+        <a href="{{ block.settings.loyalty_link }}" class="ai-header-loyalty-btn-{{ ai_gen_id }}">
+          {{ block.settings.loyalty_text }}
+        </a>
+      </div>
+    </div>
+  </div>
+</header-component-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class HeaderComponent{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.hamburger = this.querySelector('.ai-header-hamburger-{{ ai_gen_id }}');
+        this.drawer = this.querySelector('.ai-header-drawer-{{ ai_gen_id }}');
+        this.overlay = this.querySelector('.ai-header-drawer-overlay-{{ ai_gen_id }}');
+        this.closeBtn = this.querySelector('.ai-header-drawer-close-{{ ai_gen_id }}');
+        this.hamburgerIcon = this.querySelector('.ai-hamburger-icon-{{ ai_gen_id }}');
+
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        if (this.hamburger) {
+          this.hamburger.addEventListener('click', () => this.openDrawer());
+        }
+
+        if (this.closeBtn) {
+          this.closeBtn.addEventListener('click', () => this.closeDrawer());
+        }
+
+        if (this.overlay) {
+          this.overlay.addEventListener('click', () => this.closeDrawer());
+        }
+      }
+
+      openDrawer() {
+        if (this.drawer && this.overlay && this.hamburgerIcon) {
+          this.drawer.classList.add('active');
+          this.overlay.classList.add('active');
+          this.hamburgerIcon.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      }
+
+      closeDrawer() {
+        if (this.drawer && this.overlay && this.hamburgerIcon) {
+          this.drawer.classList.remove('active');
+          this.overlay.classList.remove('active');
+          this.hamburgerIcon.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      }
+    }
+
+    customElements.define('header-component-{{ ai_gen_id }}', HeaderComponent{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width_desktop",
+      "label": "Logo width (desktop)",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 150
+    },
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "label": "Logo width (mobile)",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "font_picker",
+      "id": "menu_font",
+      "label": "Menu font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "menu_font_size",
+      "label": "Menu font size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "menu_text_color",
+      "label": "Desktop menu text color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "drawer_menu_text_color",
+      "label": "Mobile menu text color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Loyalty button"
+    },
+    {
+      "type": "text",
+      "id": "loyalty_text",
+      "label": "Button text",
+      "default": "Loyalty Program"
+    },
+    {
+      "type": "url",
+      "id": "loyalty_link",
+      "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "loyalty_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "loyalty_border_thickness",
+      "label": "Border thickness",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "loyalty_button_height",
+      "label": "Button height",
+      "min": 30,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "loyalty_button_width",
+      "label": "Button width",
+      "min": 100,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 160
+    },
+    {
+      "type": "color",
+      "id": "loyalty_border_color",
+      "label": "Border color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "loyalty_text_color",
+      "label": "Text color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "desktop_layout",
+      "label": "Desktop layout",
+      "options": [
+        {
+          "value": "logo_left_menu_center",
+          "label": "Logo left, menu centered"
+        },
+        {
+          "value": "logo_center_menu_left",
+          "label": "Logo centered, menu left"
+        },
+        {
+          "value": "logo_left_menu_inline",
+          "label": "Logo left, menu inline"
+        }
+      ],
+      "default": "logo_left_menu_center"
+    },
+    {
+      "type": "range",
+      "id": "header_height_desktop",
+      "label": "Header height (desktop)",
+      "min": 60,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "header_height_mobile",
+      "label": "Header height (mobile)",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "header_bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 18,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_search_desktop",
+      "label": "Hide search on desktop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_search_mobile",
+      "label": "Hide search on mobile",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_cart_desktop",
+      "label": "Hide cart on desktop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_cart_mobile",
+      "label": "Hide cart on mobile",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Mobile hamburger menu"
+    },
+    {
+      "type": "select",
+      "id": "three_lines_style",
+      "label": "Hamburger style",
+      "options": [
+        {
+          "value": "standard",
+          "label": "Standard three lines"
+        },
+        {
+          "value": "staggered_right",
+          "label": "Staggered right"
+        },
+        {
+          "value": "staggered_left",
+          "label": "Staggered left"
+        },
+        {
+          "value": "centered_short",
+          "label": "Centered short"
+        },
+        {
+          "value": "dots_grid",
+          "label": "Dots grid (3x3)"
+        },
+        {
+          "value": "circle_outline",
+          "label": "Circle outline"
+        },
+        {
+          "value": "rounded_square",
+          "label": "Rounded square"
+        },
+        {
+          "value": "plus_sign",
+          "label": "Plus sign"
+        }
+      ],
+      "default": "standard"
+    },
+    {
+      "type": "select",
+      "id": "hamburger_animation",
+      "label": "Animation style",
+      "info": "Only applies to standard three lines style",
+      "options": [
+        {
+          "value": "x_rotate",
+          "label": "X rotate"
+        },
+        {
+          "value": "arrow_left",
+          "label": "Arrow left"
+        },
+        {
+          "value": "squeeze",
+          "label": "Squeeze"
+        },
+        {
+          "value": "spin",
+          "label": "Spin"
+        },
+        {
+          "value": "elastic",
+          "label": "Elastic"
+        },
+        {
+          "value": "minus",
+          "label": "Minus"
+        }
+      ],
+      "default": "x_rotate"
+    },
+    {
+      "type": "range",
+      "id": "hamburger_size",
+      "label": "Hamburger size",
+      "min": 20,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "hamburger_thickness",
+      "label": "Line thickness",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "hamburger_line_radius",
+      "label": "Line corner radius",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "color",
+      "id": "hamburger_color",
+      "label": "Hamburger color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "drawer_bg_color",
+      "label": "Drawer background",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header"
+    }
+  ]
+}
+{% endschema %}

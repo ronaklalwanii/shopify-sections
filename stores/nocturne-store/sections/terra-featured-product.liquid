@@ -1,0 +1,350 @@
+{%- comment -%} Terra Featured Product — dark split card, matches design.jpg (cream title, muted desc, price + ATC) {%- endcomment -%}
+
+<section id="TerraFeatured-{{ section.id }}" class="tf">
+  {%- style -%}
+    #TerraFeatured-{{ section.id }} {
+      --tf-bg: {{ section.settings.bg_color }};
+      --tf-max-w: {{ section.settings.max_width }}px;
+      --tf-space-top: {{ section.settings.space_top }}px;
+      --tf-space-bottom: {{ section.settings.space_bottom }}px;
+      --tf-gutter: {{ section.settings.gutter }}px;
+      --tf-radius: {{ section.settings.radius }}px;
+      --tf-pad: {{ section.settings.card_pad }}px;
+      --tf-gap: {{ section.settings.gap }}px;
+      --tf-media-radius: {{ section.settings.media_radius }}px;
+      --tf-title-size: {{ section.settings.title_size }}px;
+      --tf-title-color: {{ section.settings.title_color }};
+      --tf-price-size: {{ section.settings.price_size }}px;
+      --tf-price-color: {{ section.settings.price_color }};
+      --tf-compare-size: {{ section.settings.compare_size }}px;
+      --tf-desc-size: {{ section.settings.desc_size }}px;
+      --tf-desc-color: {{ section.settings.desc_color }};
+      --tf-btn-bg: {{ section.settings.btn_bg }};
+      --tf-btn-text: {{ section.settings.btn_text }};
+      --tf-btn-radius: {{ section.settings.btn_radius }}px;
+      --tf-border: {{ section.settings.border_color }};
+    }
+    #TerraFeatured-{{ section.id }} {
+      background: var(--tf-bg);
+      padding: var(--tf-space-top) var(--tf-gutter) var(--tf-space-bottom);
+      overflow-x: clip;
+    }
+    #TerraFeatured-{{ section.id }} .tf__shell {
+      width: min(100%, var(--tf-max-w));
+      margin: 0 auto;
+    }
+    #TerraFeatured-{{ section.id }} .tf__card {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: var(--tf-gap);
+      background: #111111;
+      border: 1px solid var(--tf-border);
+      border-radius: var(--tf-radius);
+      padding: var(--tf-pad);
+      min-width: 0;
+      align-items: center;
+    }
+    #TerraFeatured-{{ section.id }} .tf__media {
+      position: relative;
+      border-radius: var(--tf-media-radius);
+      overflow: hidden;
+      background: #1a1a1a;
+      aspect-ratio: 4 / 3;
+      min-width: 0;
+    }
+    #TerraFeatured-{{ section.id }} .tf__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    #TerraFeatured-{{ section.id }} .tf__placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      font-size: 13px;
+      background: #1e1e1e;
+    }
+    #TerraFeatured-{{ section.id }} .tf__badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 2;
+      background: #EDE8E1;
+      color: #0c0c0c;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+    #TerraFeatured-{{ section.id }} .tf__content {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    #TerraFeatured-{{ section.id }} .tf__eyebrow {
+      margin: 0;
+      color: {{ section.settings.eyebrow_color }};
+      font-size: {{ section.settings.eyebrow_size }}px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    #TerraFeatured-{{ section.id }} .tf__title {
+      margin: 0;
+      color: var(--tf-title-color);
+      font-family: Georgia, serif;
+      font-size: var(--tf-title-size);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -.03em;
+    }
+    #TerraFeatured-{{ section.id }} .tf__desc {
+      margin: 0;
+      color: var(--tf-desc-color);
+      font-size: var(--tf-desc-size);
+      line-height: 1.6;
+      opacity: {{ section.settings.desc_opacity | divided_by: 100.0 }};
+    }
+    #TerraFeatured-{{ section.id }} .tf__desc p { margin: 0; }
+    #TerraFeatured-{{ section.id }} .tf__features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    #TerraFeatured-{{ section.id }} .tf__feature {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #F2EFE8;
+      background: rgba(242,239,232,.08);
+      border: 1px solid rgba(242,239,232,.12);
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+    #TerraFeatured-{{ section.id }} .tf__prices {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    #TerraFeatured-{{ section.id }} .tf__price {
+      color: var(--tf-price-color);
+      font-size: var(--tf-price-size);
+      font-weight: 600;
+      letter-spacing: -.02em;
+    }
+    #TerraFeatured-{{ section.id }} .tf__compare {
+      color: #7a7a7a;
+      font-size: var(--tf-compare-size);
+      text-decoration: line-through;
+    }
+    #TerraFeatured-{{ section.id }} .tf__actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    #TerraFeatured-{{ section.id }} .tf__btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 46px;
+      padding: 0 26px;
+      border-radius: var(--tf-btn-radius);
+      background: var(--tf-btn-bg);
+      color: var(--tf-btn-text);
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      border: 1px solid var(--tf-btn-bg);
+      white-space: nowrap;
+      transition: opacity 200ms ease, transform 200ms ease;
+    }
+    #TerraFeatured-{{ section.id }} .tf__btn:hover { opacity: .9; transform: translateY(-1px); }
+    #TerraFeatured-{{ section.id }} .tf__variant {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 11px 14px;
+      background: transparent;
+      color: inherit;
+      border: 1px solid rgba(242,239,232,.22);
+      border-radius: 8px;
+      font: inherit;
+      font-size: 13px;
+    }
+    #TerraFeatured-{{ section.id }} .tf__variant:disabled { opacity: .5; }
+    #TerraFeatured-{{ section.id }} .tf__btn[disabled] { opacity: .5; cursor: not-allowed; }
+    #TerraFeatured-{{ section.id }} .tf__btn--secondary {
+      background: transparent;
+      color: #F2EFE8;
+      border-color: rgba(242,239,232,.22);
+    }
+
+    @media (max-width: 900px) {
+      #TerraFeatured-{{ section.id }} .tf__card {
+        grid-template-columns: 1fr;
+      }
+      #TerraFeatured-{{ section.id }} .tf__media { aspect-ratio: 16 / 11; }
+    }
+    @media (max-width: 560px) {
+      #TerraFeatured-{{ section.id }} .tf__card { padding: 16px; gap: 18px; }
+      #TerraFeatured-{{ section.id }} .tf__title { font-size: calc(var(--tf-title-size) * .85); }
+    }
+  {%- endstyle -%}
+
+  <div class="tf__shell">
+    <div class="tf__card">
+      <div class="tf__media">
+        {%- assign prod = section.settings.product -%}
+        {%- if section.settings.custom_image != blank -%}
+          <img src="{{ section.settings.custom_image | image_url: width: 1000 }}" alt="{{ section.settings.custom_image.alt | default: section.settings.title | escape }}" loading="lazy" width="1000" height="750">
+        {%- elsif prod != blank and prod.featured_image != blank -%}
+          <img src="{{ prod.featured_image | image_url: width: 1000 }}" alt="{{ prod.title | escape }}" loading="lazy" width="1000" height="750">
+        {%- else -%}
+          <div class="tf__placeholder">Upload image or select product</div>
+        {%- endif -%}
+        {%- if section.settings.badge_text != blank -%}
+          <span class="tf__badge">{{ section.settings.badge_text }}</span>
+        {%- endif -%}
+      </div>
+
+      <div class="tf__content">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="tf__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+
+        <h2 class="tf__title">
+          {%- if section.settings.title != blank -%}
+            {{ section.settings.title }}
+          {%- elsif prod != blank -%}
+            {{ prod.title }}
+          {%- else -%}
+            Featured selection
+          {%- endif -%}
+        </h2>
+
+        {%- if section.settings.description != blank -%}
+          <div class="tf__desc rte">{{ section.settings.description }}</div>
+        {%- elsif prod != blank and prod.description != blank -%}
+          <div class="tf__desc rte">{{ prod.description | truncatewords: 28 }}</div>
+        {%- endif -%}
+
+        {%- if section.settings.features != blank -%}
+          <div class="tf__features">
+            {%- assign feats = section.settings.features | split: ',' -%}
+            {%- for f in feats -%}<span class="tf__feature">{{ f | strip }}</span>{%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        <div class="tf__prices">
+          {%- if prod != blank -%}
+            <span class="tf__price">{{ prod.price | money }}</span>
+            {%- if prod.compare_at_price > prod.price -%}<span class="tf__compare">{{ prod.compare_at_price | money }}</span>{%- endif -%}
+          {%- else -%}
+            {%- if section.settings.price != blank -%}<span class="tf__price">{{ section.settings.price }}</span>{%- endif -%}
+            {%- if section.settings.compare_price != blank -%}<span class="tf__compare">{{ section.settings.compare_price }}</span>{%- endif -%}
+          {%- endif -%}
+        </div>
+
+        <div class="tf__actions">
+          {%- if prod != blank -%}
+            {%- form 'product', prod -%}
+              {%- unless prod.has_only_default_variant -%}
+                <select name="id" class="tf__variant" aria-label="Variant">
+                  {%- for v in prod.variants -%}
+                    <option value="{{ v.id }}" {% if v == prod.selected_or_first_available_variant %}selected="selected"{% endif %} {% unless v.available %}disabled{% endunless %}>{{ v.title }}{% unless v.available %} — sold out{% endunless %}</option>
+                  {%- endfor -%}
+                </select>
+              {%- endunless -%}
+              <button type="submit" name="add" class="tf__btn" {% unless prod.available %}disabled{% endunless %}>
+                {%- if prod.available -%}{{ section.settings.btn_label | default: 'Add to Cart' }}{%- else -%}Sold out{%- endif -%}
+              </button>
+            {%- endform -%}
+          {%- else -%}
+            <a class="tf__btn" {% if section.settings.btn_link != blank %}href="{{ section.settings.btn_link }}"{% endif %}>{{ section.settings.btn_label | default: 'Learn More' }}</a>
+          {%- endif -%}
+          {%- if section.settings.secondary_label != blank -%}
+            <a class="tf__btn tf__btn--secondary" href="{{ section.settings.secondary_link }}">{{ section.settings.secondary_label }}</a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Terra Featured Product",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "color", "id": "bg_color", "label": "Page background", "default": "#0F0F0F" },
+    { "type": "range", "id": "max_width", "label": "Max width", "min": 900, "max": 1800, "step": 20, "default": 1400, "unit": "px" },
+    { "type": "range", "id": "space_top", "label": "Space above", "min": 0, "max": 80, "step": 4, "default": 12, "unit": "px" },
+    { "type": "range", "id": "space_bottom", "label": "Space below", "min": 0, "max": 80, "step": 4, "default": 12, "unit": "px" },
+    { "type": "range", "id": "gutter", "label": "Side gutters", "min": 0, "max": 40, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "radius", "label": "Card radius", "min": 0, "max": 32, "step": 2, "default": 24, "unit": "px" },
+    { "type": "range", "id": "card_pad", "label": "Card padding", "min": 16, "max": 40, "step": 2, "default": 20, "unit": "px" },
+    { "type": "range", "id": "gap", "label": "Gap media ↔ content", "min": 16, "max": 48, "step": 2, "default": 28, "unit": "px" },
+    { "type": "range", "id": "media_radius", "label": "Image radius", "min": 0, "max": 24, "step": 2, "default": 16, "unit": "px" },
+    { "type": "color", "id": "border_color", "label": "Border", "default": "#1E1E1E" },
+
+    { "type": "header", "content": "Media" },
+    { "type": "product", "id": "product", "label": "Product (auto image, title, price)" },
+    { "type": "image_picker", "id": "custom_image", "label": "Custom image (overrides product)" },
+    { "type": "text", "id": "badge_text", "label": "Badge", "default": "Bestseller" },
+
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Recommended" },
+    { "type": "range", "id": "eyebrow_size", "label": "Eyebrow size", "min": 10, "max": 14, "step": 1, "default": 11, "unit": "px" },
+    { "type": "color", "id": "eyebrow_color", "label": "Eyebrow color", "default": "#B8B0A6" },
+    { "type": "text", "id": "title", "label": "Title (overrides product)", "default": "Premium Lawn — Turnkey" },
+    { "type": "range", "id": "title_size", "label": "Title size", "min": 20, "max": 40, "step": 2, "default": 28, "unit": "px" },
+    { "type": "color", "id": "title_color", "label": "Title color", "default": "#F2EFE8" },
+    { "type": "richtext", "id": "description", "label": "Description", "default": "<p>A flawless emerald carpet in 14 days. Ground prep, drainage, and laying — all included.</p>" },
+    { "type": "range", "id": "desc_size", "label": "Description size", "min": 12, "max": 16, "step": 1, "default": 13, "unit": "px" },
+    { "type": "color", "id": "desc_color", "label": "Description color", "default": "#B8B0A6" },
+    { "type": "range", "id": "desc_opacity", "label": "Description opacity", "min": 60, "max": 100, "step": 5, "default": 85, "unit": "%" },
+    { "type": "text", "id": "features", "label": "Features (comma separated)", "default": "3-year warranty, Laid in 1 day, Free irrigation" },
+
+    { "type": "header", "content": "Pricing" },
+    { "type": "text", "id": "price", "label": "Manual price (if no product)", "default": "From $29 / m²" },
+    { "type": "text", "id": "compare_price", "label": "Manual compare price" },
+    { "type": "range", "id": "price_size", "label": "Price size", "min": 14, "max": 28, "step": 1, "default": 18, "unit": "px" },
+    { "type": "color", "id": "price_color", "label": "Price color", "default": "#F2EFE8" },
+    { "type": "range", "id": "compare_size", "label": "Compare size", "min": 11, "max": 16, "step": 1, "default": 13, "unit": "px" },
+
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "btn_label", "label": "Primary button label", "default": "Order Now" },
+    { "type": "url", "id": "btn_link", "label": "Primary link (if no product)" },
+    { "type": "color", "id": "btn_bg", "label": "Button bg", "default": "#EDE8E1" },
+    { "type": "color", "id": "btn_text", "label": "Button text", "default": "#0C0C0C" },
+    { "type": "range", "id": "btn_radius", "label": "Button radius", "min": 0, "max": 60, "step": 2, "default": 60, "unit": "px" },
+    { "type": "text", "id": "secondary_label", "label": "Secondary button label" },
+    { "type": "url", "id": "secondary_link", "label": "Secondary link" }
+  ],
+  "presets": [
+    {
+      "name": "Terra Featured Product",
+      "settings": {
+        "eyebrow": "Recommended",
+        "title": "Premium Lawn — Turnkey",
+        "description": "<p>A flawless emerald carpet in 14 days. Ground prep, drainage, and laying — all included.</p>",
+        "features": "3-year warranty, Laid in 1 day, Free irrigation",
+        "price": "From $29 / m²",
+        "btn_label": "Order Now"
+      }
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,234 @@
+{%- comment -%}
+  Trust row — review + social photo card + FAQ side by side
+  (homeware "Loved by home cooks everywhere").
+{%- endcomment -%}
+{%- capture section_colors_style -%}
+  {%- if section.settings.colors_background != blank or section.settings.colors_text != blank -%}
+    {%- assign override_bg = section.settings.colors_background | default: settings.colors_background -%}
+    {%- assign override_fg = section.settings.colors_text | default: settings.colors_text -%}
+    style="--color-background: {{ override_bg }}; --color-surface: {{ override_bg | color_lighten: 3 }}; --color-border: {{ override_bg | color_darken: 9 | color_modify: 'alpha', 0.85 }}; --color-foreground: {{ override_fg }}; --color-heading: {{ override_fg }}; --color-text-muted: {{ override_fg | color_modify: 'alpha', 0.62 }};"
+  {%- endif -%}
+{%- endcapture -%}
+<section {{ section_colors_style }} class="section" style="--section-space: {{ section.settings.padding | default: 72 }}px;">
+  <div class="page-width">
+    <div class="trust-row">
+      <div>
+        {%- if section.settings.heading != blank -%}
+          <h2 class="h3 trust-row__title">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {% render 'rating', rating: 5 %}
+        {%- if section.settings.quote != blank -%}
+          <blockquote class="trust-row__quote">“{{ section.settings.quote | escape }}”</blockquote>
+        {%- endif -%}
+        <div class="trust-row__author">
+          {%- if section.settings.avatar != blank -%}
+            {{ section.settings.avatar | image_url: width: 96 | image_tag: loading: 'lazy', alt: section.settings.author }}
+          {%- endif -%}
+          <div>
+            <p class="trust-row__author-name" style="margin: 0;">{{ section.settings.author | escape }}</p>
+            <p class="trust-row__author-note" style="margin: 0;">{{ 'sections.testimonials.verified' | t }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="social-card">
+        {%- if section.settings.social_image != blank -%}
+          {{ section.settings.social_image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '540, 720, 1000', alt: section.settings.social_title }}
+        {%- else -%}
+          {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+        <div class="social-card__content">
+          {%- if section.settings.social_title != blank -%}
+            <p class="social-card__title">{{ section.settings.social_title | escape | newline_to_br }}</p>
+          {%- endif -%}
+          {%- if section.settings.social_handle != blank -%}
+            <a href="{{ section.settings.social_link }}" class="social-card__handle">
+              {% render 'icon', name: 'instagram', size: 16 %}
+              {{ section.settings.social_handle | escape }}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div>
+        {%- if section.settings.faq_heading != blank -%}
+          <h2 class="h3 trust-row__title">{{ section.settings.faq_heading | escape }}</h2>
+        {%- endif -%}
+        {%- for block in section.blocks -%}
+          <details class="faq-item" {{ block.shopify_attributes }}>
+            <summary class="faq-item__summary">
+              {{ block.settings.question | escape }}
+              {% render 'icon', name: 'plus', size: 14 %}
+            </summary>
+            <div class="faq-item__answer">{{ block.settings.answer }}</div>
+          </details>
+        {%- endfor -%}
+        {%- if section.settings.faq_link_label != blank -%}
+          <a href="{{ section.settings.faq_link }}" class="arrow-link" style="margin-top: 1rem; font-size: 0.72rem;">
+            {{ section.settings.faq_link_label | escape }}
+            {% render 'icon', name: 'arrow-right', size: 12 %}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Trust row",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Review column"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Loved by home cooks everywhere"
+    },
+    {
+      "type": "textarea",
+      "id": "quote",
+      "label": "Quote",
+      "default": "The quality is exceptional. It feels like a pleasure to cook again."
+    },
+    {
+      "type": "image_picker",
+      "id": "avatar",
+      "label": "Reviewer avatar"
+    },
+    {
+      "type": "text",
+      "id": "author",
+      "label": "Reviewer name",
+      "default": "Sarah M."
+    },
+    {
+      "type": "header",
+      "content": "Social column"
+    },
+    {
+      "type": "image_picker",
+      "id": "social_image",
+      "label": "Image"
+    },
+    {
+      "type": "textarea",
+      "id": "social_title",
+      "label": "Title",
+      "default": "Real kitchens.\nReal stories."
+    },
+    {
+      "type": "text",
+      "id": "social_handle",
+      "label": "Handle",
+      "default": "Follow us @hearthandhome"
+    },
+    {
+      "type": "url",
+      "id": "social_link",
+      "label": "Social link"
+    },
+    {
+      "type": "header",
+      "content": "FAQ column"
+    },
+    {
+      "type": "text",
+      "id": "faq_heading",
+      "label": "Heading",
+      "default": "Common questions"
+    },
+    {
+      "type": "text",
+      "id": "faq_link_label",
+      "label": "Link label",
+      "default": "View all FAQs"
+    },
+    {
+      "type": "url",
+      "id": "faq_link",
+      "label": "Link"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 24,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_background",
+      "label": "Background override",
+      "info": "Leave empty to use the theme colors"
+    },
+    {
+      "type": "color",
+      "id": "colors_text",
+      "label": "Text color override"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What is your delivery time?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Orders arrive within 3\u20135 working days.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust row",
+      "blocks": [
+        {
+          "type": "question"
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Do you offer a warranty?",
+            "answer": "<p>Every piece is covered by a 2-year warranty.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Can I return an item?",
+            "answer": "<p>Returns are free within 30 days.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Are your products sustainable?",
+            "answer": "<p>Responsibly sourced materials, plastic-free packaging.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

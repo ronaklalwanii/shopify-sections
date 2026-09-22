@@ -1,0 +1,31 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "header": {
+      "type": "header",
+      "settings": {
+        "layout": "logo-left",
+        "menu": "main-menu",
+        "sticky": true,
+        "show_search": true,
+        "show_account": true,
+        "cta_label": "Contact us",
+        "wordmark": "NEXORA",
+        "cta_style": "primary"
+      }
+    }
+  },
+  "order": [
+    "header"
+  ]
+}

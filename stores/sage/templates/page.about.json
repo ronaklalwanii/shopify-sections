@@ -1,0 +1,84 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {}
+    },
+    "story": {
+      "type": "image-with-text",
+      "blocks": {
+        "btn": {
+          "type": "button",
+          "settings": {
+            "label": "Explore the collection",
+            "link": "/collections/all",
+            "style": "primary",
+            "size": "small"
+          }
+        }
+      },
+      "block_order": [
+        "btn"
+      ],
+      "settings": {
+        "image_position": "right",
+        "eyebrow": "Our story",
+        "heading": "Made with intention",
+        "text": "<p>Every piece we make begins with a belief: fashion should be an expression of individuality. We craft with care, choose sustainable fabrics and work with partners who share our values.</p>",
+        "padding": 64
+      }
+    },
+    "values": {
+      "type": "usp-bar",
+      "blocks": {
+        "v-1": {
+          "type": "item",
+          "settings": {
+            "icon": "leaf",
+            "title": "Sustainable fabrics",
+            "text": "Kind to skin and planet"
+          }
+        },
+        "v-2": {
+          "type": "item",
+          "settings": {
+            "icon": "hands",
+            "title": "Ethically made",
+            "text": "Fair craftsmanship"
+          }
+        },
+        "v-3": {
+          "type": "item",
+          "settings": {
+            "icon": "heart",
+            "title": "Made with love",
+            "text": "In small batches"
+          }
+        }
+      },
+      "block_order": [
+        "v-1",
+        "v-2",
+        "v-3"
+      ],
+      "settings": {
+        "style": "columns",
+        "heading": "What we stand for"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "story",
+    "values"
+  ]
+}

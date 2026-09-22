@@ -1,0 +1,209 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "sc-hero",
+      "settings": {}
+    },
+    "ribbons": {
+      "type": "sc-ribbons",
+      "blocks": {
+        "b1": {
+          "type": "item",
+          "settings": {
+            "text": "Healthy Skin",
+            "alt_text": "Toxin Free"
+          }
+        },
+        "b2": {
+          "type": "item",
+          "settings": {
+            "text": "Visible Results",
+            "alt_text": "Expert Approved"
+          }
+        },
+        "b3": {
+          "type": "item",
+          "settings": {
+            "text": "Expert Approved",
+            "alt_text": "Non-Greasy"
+          }
+        },
+        "b4": {
+          "type": "item",
+          "settings": {
+            "text": "Natural Ingredients",
+            "alt_text": "Dermatologist Approved"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4"
+      ],
+      "settings": {}
+    },
+    "story": {
+      "type": "sc-story",
+      "settings": {}
+    },
+    "why": {
+      "type": "product-callouts",
+      "blocks": {
+        "c1": {
+          "type": "callout",
+          "settings": {
+            "position": "top-left",
+            "icon": "leaf",
+            "title": "Natural",
+            "text": "Safe, gentle, and effective with no harsh chemicals."
+          }
+        },
+        "c2": {
+          "type": "callout",
+          "settings": {
+            "position": "top-right",
+            "icon": "sparkle",
+            "title": "Cooling",
+            "text": "Provides sun-exposed skin with a refreshing touch."
+          }
+        },
+        "c3": {
+          "type": "callout",
+          "settings": {
+            "position": "bottom-left",
+            "icon": "shield",
+            "title": "Non-Toxic",
+            "text": "Free from parabens, sulfates, and synthetic dyes."
+          }
+        },
+        "c4": {
+          "type": "callout",
+          "settings": {
+            "position": "bottom-right",
+            "icon": "drop",
+            "title": "Hydrating",
+            "text": "Deep moisture that lasts even in dry, sunny weather."
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "settings": {}
+    },
+    "botanical": {
+      "type": "sc-botanical",
+      "blocks": {
+        "s1": {
+          "type": "stat",
+          "settings": {
+            "label": "Product Users",
+            "value": "50k+"
+          }
+        },
+        "s2": {
+          "type": "stat",
+          "settings": {
+            "label": "Client Satisfaction",
+            "value": "99%"
+          }
+        },
+        "s3": {
+          "type": "stat",
+          "settings": {
+            "label": "Average Rating",
+            "value": "4.9"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "settings": {}
+    },
+    "faq": {
+      "type": "sc-faq",
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "Is This Product Natural?",
+            "answer": "<p>Yes, absolutely! Our cream is thoughtfully crafted with a blend of the finest natural ingredients, chosen for their beneficial properties for your skin.</p>"
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "When Will I See Result?"
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "Do You Offer Refund?"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3"
+      ],
+      "settings": {}
+    },
+    "testimonials": {
+      "type": "sc-testimonials",
+      "blocks": {
+        "t1": {
+          "type": "testimonial",
+          "settings": {
+            "name": "Sarah Mitchell",
+            "quote": "This cream is a game-changer for summer in Bangalore! My skin feels amazing and looks so much brighter."
+          }
+        },
+        "t2": {
+          "type": "testimonial",
+          "settings": {
+            "name": "Sarah Mitchell",
+            "quote": "This cream is a game-changer for summer in Bangalore! My skin feels amazing and looks so much brighter."
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2"
+      ],
+      "settings": {}
+    },
+    "banner": {
+      "type": "sc-banner",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "ribbons",
+    "story",
+    "why",
+    "botanical",
+    "faq",
+    "testimonials",
+    "banner"
+  ]
+}

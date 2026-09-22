@@ -1,0 +1,198 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "layout": "full",
+        "height": "xl",
+        "overlay_opacity": 34,
+        "eyebrow": "",
+        "heading": "DESIGN\n& FREEDOM",
+        "heading_size": "h0",
+        "subheading": "<p>Explore Independent Style by Embracing Uniqueness<br>with Our Exclusive Designer Apparel</p>",
+        "text_align": "center",
+        "scroll_label": "Learn more",
+        "scroll_link": "#main"
+      }
+    },
+    "values": {
+      "type": "feature-cards",
+      "blocks": {
+        "c1": {
+          "type": "card",
+          "settings": {
+            "title": "Independence",
+            "text": "Explore the creativity of independent designers from around the globe.",
+            "link_label": "Learn more"
+          }
+        },
+        "c2": {
+          "type": "card",
+          "settings": {
+            "title": "Uniquity",
+            "text": "Discover the charm of unique pieces that stand out effortlessly.",
+            "link_label": "Learn more"
+          }
+        },
+        "c3": {
+          "type": "card",
+          "settings": {
+            "title": "Quality",
+            "text": "Experience unparalleled craftsmanship and attention to detail.",
+            "link_label": "Learn more"
+          }
+        },
+        "c4": {
+          "type": "card",
+          "settings": {
+            "title": "Sustainability",
+            "text": "Embrace eco-conscious fashion choices without compromising on style.",
+            "link_label": "Learn more"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "settings": {
+        "padding": 40
+      }
+    },
+    "stats": {
+      "type": "stats",
+      "blocks": {
+        "s1": {
+          "type": "stat",
+          "settings": {
+            "label": "Designers",
+            "value": "150+"
+          }
+        },
+        "s2": {
+          "type": "stat",
+          "settings": {
+            "label": "Clients",
+            "value": "500+"
+          }
+        },
+        "s3": {
+          "type": "stat",
+          "settings": {
+            "label": "Masterpieces",
+            "value": "20K+"
+          }
+        },
+        "s4": {
+          "type": "stat",
+          "settings": {
+            "label": "Events",
+            "value": "50+"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "settings": {
+        "align": "left",
+        "padding": 48
+      }
+    },
+    "about": {
+      "type": "image-with-text",
+      "blocks": {
+        "btn": {
+          "type": "button",
+          "settings": {
+            "label": "Our designers",
+            "link": "/collections/all",
+            "style": "primary"
+          }
+        }
+      },
+      "block_order": [
+        "btn"
+      ],
+      "settings": {
+        "image_position": "right",
+        "image_ratio": "3 / 4",
+        "boxed": true,
+        "text_columns": "2",
+        "eyebrow": "About",
+        "heading": "Where fashion meets freedom",
+        "text": "<p>We believe that fashion should be an expression of individuality. We encourage creativity and originality in every item we offer, presenting customers with exclusive collections from independent designers.</p><p>With a commitment to fostering a community of creativity and innovation, we strive to connect designers with fashion enthusiasts who appreciate the artistry and individuality behind each piece.</p>",
+        "text_align": "left",
+        "padding": 48
+      }
+    },
+    "advantages": {
+      "type": "advantages",
+      "blocks": {
+        "a1": {
+          "type": "card",
+          "settings": {
+            "title": "Independent designers",
+            "text": "Our platform celebrates the ingenuity of independent designers, offering a diverse range of fashion-forward garments that reflect the creativity and innovation of the artists behind them.",
+            "link_label": "Explore"
+          }
+        },
+        "a2": {
+          "type": "card",
+          "settings": {
+            "title": "Exclusive & uniquity",
+            "text": "Indulge in curated collections showcasing exclusive, one-of-a-kind pieces, each with its own story and charm. Experience the allure of unique fashion pieces.",
+            "link_label": "Explore"
+          }
+        },
+        "a3": {
+          "type": "card",
+          "settings": {
+            "title": "High quality",
+            "text": "Embrace superior craftsmanship with our meticulously curated, undeniably high-quality garments. Discover garments crafted with the finest materials.",
+            "link_label": "Explore"
+          }
+        },
+        "a4": {
+          "type": "card",
+          "settings": {
+            "title": "Eco-friendly",
+            "text": "Join our commitment to sustainability with eco-friendly fashion options, stylish yet mindful of our planet. Explore guilt-free shopping.",
+            "link_label": "Explore"
+          }
+        }
+      },
+      "block_order": [
+        "a1",
+        "a2",
+        "a3",
+        "a4"
+      ],
+      "settings": {
+        "heading": "Our advantages",
+        "padding": 48
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "values",
+    "stats",
+    "about",
+    "advantages"
+  ]
+}

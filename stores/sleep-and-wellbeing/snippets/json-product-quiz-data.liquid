@@ -1,0 +1,6 @@
+{% assign data = product.metafields.custom.product_quiz.value %} { "question": "{{ data.question }}", "options": [
+{% for option in data.options.value %}
+	{"text" : "{{ option.answer }}", "isRightAnswer": {{ option.is_a_right_answer | default: true }}}
+	{%- unless forloop.last %},{% endunless %}
+{% endfor %}
+] }

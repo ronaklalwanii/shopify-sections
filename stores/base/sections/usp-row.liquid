@@ -1,0 +1,191 @@
+
+<section id="HxUsp-{{ section.id }}" class="hhu">
+  {%- style -%}
+    #shopify-section-{{ section.id }} {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    #HxUsp-{{ section.id }} {
+      --hhu-bg: {{ section.settings.bg_color }};
+      --hhu-num: {{ section.settings.number_color }};
+      --hhu-label: {{ section.settings.label_color }};
+      --hhu-line: {{ section.settings.divider_color }};
+      --hhu-max-w: {{ section.settings.max_width }}px;
+      --hhu-cols: {{ section.settings.columns }};
+      --hhu-gap: {{ section.settings.gap }}px;
+      --hhu-num-size: {{ section.settings.number_size }}px;
+      --hhu-num-weight: {{ section.settings.number_weight }};
+      --hhu-label-size: {{ section.settings.label_size }}px;
+      --hhu-speed: {{ section.settings.animation_speed }}ms;
+      --hhu-ease: cubic-bezier(.22, 1, .36, 1);
+    }
+
+    #HxUsp-{{ section.id }} {
+      background: var(--hhu-bg);
+      padding: {{ section.settings.pad_top }}px 20px {{ section.settings.pad_bottom }}px;
+      overflow-x: clip;
+    }
+
+    #HxUsp-{{ section.id }} .hhu__shell {
+      width: min(100%, var(--hhu-max-w));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(var(--hhu-cols), minmax(0, 1fr));
+      gap: var(--hhu-gap);
+    }
+
+    #HxUsp-{{ section.id }} .hhu__item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      min-width: 0;
+      transition: opacity var(--hhu-speed) ease, transform var(--hhu-speed) var(--hhu-ease);
+      transition-delay: calc(var(--i, 0) * 90ms);
+    }
+    {% if section.settings.show_dividers %}
+      #HxUsp-{{ section.id }} .hhu__item + .hhu__item {
+        border-left: 1px solid var(--hhu-line);
+        padding-left: var(--hhu-gap);
+      }
+    {% endif %}
+
+    #HxUsp-{{ section.id }} .hhu__num {
+      font-size: var(--hhu-num-size);
+      font-weight: var(--hhu-num-weight);
+      line-height: 1;
+      color: var(--hhu-num);
+      font-family: Georgia, 'Times New Roman', serif;
+    }
+
+    #HxUsp-{{ section.id }} .hhu__label {
+      margin: 4px 0 0;
+      font-size: var(--hhu-label-size);
+      line-height: 1.45;
+      color: var(--hhu-label);
+    }
+
+    #HxUsp-{{ section.id }}.hhu-animated:not(.is-in-view) .hhu__item {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    
+    @media screen and (max-width: 760px) {
+      #HxUsp-{{ section.id }} .hhu__shell {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      #HxUsp-{{ section.id }} .hhu__item {
+        padding: 18px 0;
+      }
+      #HxUsp-{{ section.id }} .hhu__item + .hhu__item {
+        border-left: 0;
+        padding-left: 0;
+        border-top: 1px solid var(--hhu-line);
+      }
+      #HxUsp-{{ section.id }} .hhu__item:first-child {
+        padding-top: 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #HxUsp-{{ section.id }} .hhu__item {
+        transition: none;
+        transition-delay: 0ms;
+      }
+      #HxUsp-{{ section.id }}.hhu-animated:not(.is-in-view) .hhu__item {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="hhu__shell">
+    {%- for block in section.blocks -%}
+      <div class="hhu__item" style="--i: {{ forloop.index0 }}" {{ block.shopify_attributes }}>
+        <span class="hhu__num">{{ block.settings.number | default: forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+        <p class="hhu__label">{{ block.settings.label }}</p>
+      </div>
+    {%- endfor -%}
+  </div>
+
+  <script>
+    (() => {
+      const root = document.getElementById('HxUsp-{{ section.id }}');
+      if (!root) return;
+
+      {%- if section.settings.enable_animation -%}
+        root.classList.add('hhu-animated');
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduced || !('IntersectionObserver' in window)) {
+          root.classList.add('is-in-view');
+        } else {
+          const obs = new IntersectionObserver((entries, o) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                root.classList.add('is-in-view');
+                o.unobserve(e.target);
+              }
+            });
+          }, { threshold: 0.2 });
+          obs.observe(root);
+        }
+      {%- else -%}
+        root.classList.add('is-in-view');
+      {%- endif -%}
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "USP Row",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#FAF7F2" },
+    { "type": "color", "id": "number_color", "label": "Number color", "default": "#3E3730" },
+    { "type": "color", "id": "label_color", "label": "Label color", "default": "#6E6257" },
+    { "type": "color", "id": "divider_color", "label": "Divider color", "default": "#E4DCD2" },
+
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "max_width", "label": "Max width", "min": 900, "max": 1600, "step": 20, "default": 1280, "unit": "px" },
+    { "type": "range", "id": "columns", "label": "Columns (desktop)", "min": 2, "max": 5, "step": 1, "default": 3 },
+    { "type": "range", "id": "gap", "label": "Column gap", "min": 16, "max": 80, "step": 2, "default": 40, "unit": "px" },
+    { "type": "range", "id": "pad_top", "label": "Top padding", "min": 0, "max": 120, "step": 4, "default": 48, "unit": "px" },
+    { "type": "range", "id": "pad_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 4, "default": 48, "unit": "px" },
+    { "type": "checkbox", "id": "show_dividers", "label": "Show column dividers", "default": false },
+
+    { "type": "header", "content": "Typography" },
+    { "type": "range", "id": "number_size", "label": "Number size", "min": 24, "max": 72, "step": 2, "default": 44, "unit": "px" },
+    { "type": "range", "id": "number_weight", "label": "Number weight", "min": 100, "max": 700, "step": 100, "default": 400 },
+    { "type": "range", "id": "label_size", "label": "Label size", "min": 10, "max": 18, "step": 1, "default": 12, "unit": "px" },
+
+    { "type": "header", "content": "Animation" },
+    { "type": "checkbox", "id": "enable_animation", "label": "Enable entrance animation", "default": true },
+    { "type": "range", "id": "animation_speed", "label": "Animation speed", "min": 250, "max": 1200, "step": 50, "default": 700, "unit": "ms" }
+  ],
+  "blocks": [
+    {
+      "type": "usp",
+      "name": "USP number",
+      "settings": [
+        { "type": "text", "id": "number", "label": "Number", "info": "Leave blank for automatic 01, 02, 03…" },
+        { "type": "text", "id": "label", "label": "Label", "default": "label" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "USP Row",
+      "blocks": [
+        { "type": "usp", "settings": { "label": "label 1" } },
+        { "type": "usp", "settings": { "label": "label 2" } },
+        { "type": "usp", "settings": { "label": "label 3" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

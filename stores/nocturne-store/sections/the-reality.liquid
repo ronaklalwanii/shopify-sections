@@ -1,0 +1,576 @@
+{%- liquid
+  assign s = section.settings
+-%}
+{%- comment -%}
+  Participates in Change's section padding-collapsing chain, same as the hero.
+{%- endcomment -%}
+{%- render 'section-spacing-collapsing' -%}
+
+{{ 'the-reality.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'the-reality.js' | asset_url }}" defer></script>
+
+{%- if s.enable_custom_font -%}
+  <style>{{ s.font_family | font_face: font_display: 'swap' }}</style>
+{%- endif -%}
+
+<style>
+  /* Per-instance design tokens, driven by the section schema. */
+  .tr--{{ section.id }} {
+    --tr-bg: {{ s.background }};
+    --tr-pad-top: {{ s.padding_top }}px;
+    --tr-pad-bottom: {{ s.padding_bottom }}px;
+    --tr-max-w: {{ s.max_width }}px;
+    --tr-side-pad: {{ s.side_padding }}px;
+    --tr-intro-w: {{ s.intro_width }}%;
+    --tr-stat-w: {{ s.stat_width }}%;
+    --tr-stat-gap: {{ s.stat_gap }}px;
+
+    --tr-eyebrow-size: {{ s.eyebrow_size }}px;
+    --tr-eyebrow-tracking: {{ s.eyebrow_tracking | divided_by: 100.0 }}em;
+    --tr-eyebrow-weight: {{ s.eyebrow_weight }};
+    --tr-eyebrow-color: {{ s.eyebrow_color }};
+    --tr-eyebrow-gap: {{ s.eyebrow_gap }}px;
+
+    --tr-title-size: {{ s.heading_size }}px;
+    --tr-title-lh: {{ s.heading_line_height | divided_by: 100.0 }};
+    --tr-title-tracking: {{ s.heading_letter_spacing | divided_by: 100.0 }}em;
+    --tr-title-weight: {{ s.heading_weight }};
+    --tr-title-color: {{ s.heading_color }};
+    --tr-title-max-w: {{ s.heading_max_width }}px;
+
+    --tr-number-size: {{ s.number_size }}px;
+    --tr-number-weight: {{ s.number_weight }};
+    --tr-number-tracking: {{ s.number_letter_spacing | divided_by: 100.0 }}em;
+    --tr-number-color: {{ s.number_color }};
+    --tr-number-gap: {{ s.number_gap }}px;
+
+    --tr-text-size: {{ s.stat_text_size }}px;
+    --tr-text-lh: {{ s.stat_text_line_height | divided_by: 100.0 }};
+    --tr-text-color: {{ s.stat_text_color }};
+    --tr-text-max-w: {{ s.stat_text_max_width }}px;
+    --tr-source-size: {{ s.source_size }}px;
+    --tr-source-color: {{ s.source_color }};
+    --tr-source-gap: {{ s.source_gap }}px;
+
+    --tr-divider: {{ s.divider_color }};
+    --tr-divider-o: {{ s.divider_opacity }};
+    --tr-scrim: {{ s.image_scrim }};
+    {% if s.enable_custom_font -%}
+    --tr-font: {{ s.font_family.family }}, {{ s.font_family.fallback_families }};
+    {%- endif %}
+  }
+</style>
+
+<section
+  class="tr tr--{{ section.id }}"
+  data-tr-section
+  data-reveal="{{ s.enable_reveal }}"
+  data-countup="{{ s.enable_countup }}"
+  data-countup-duration="{{ s.countup_duration }}"
+>
+  {%- if s.background_image != blank -%}
+    <div class="tr__bg" aria-hidden="true">
+      {{
+        s.background_image
+        | image_url: width: 2400
+        | image_tag:
+          loading: 'lazy',
+          class: 'tr__bg-img',
+          widths: '800,1200,1600,2000,2400',
+          sizes: '100vw',
+          alt: ''
+      }}
+    </div>
+    <div class="tr__bg-scrim"></div>
+  {%- endif -%}
+
+  <div class="tr__inner">
+    <div class="tr__grid">
+      <div class="tr__intro">
+        {%- if s.eyebrow != blank -%}
+          <p class="tr__eyebrow" data-tr-reveal>{{ s.eyebrow }}</p>
+        {%- endif -%}
+        {%- if s.heading != blank -%}
+          <h2 class="tr__title" data-tr-reveal>{{ s.heading }}</h2>
+        {%- endif -%}
+      </div>
+
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        <div class="tr__stat" data-tr-reveal {{ block.shopify_attributes }}>
+          {%- if b.number != blank -%}
+            <p class="tr__number" data-tr-number="{{ b.number | escape }}">{{ b.number }}</p>
+          {%- endif -%}
+          {%- if b.description != blank -%}
+            <p class="tr__stat-text">{{ b.description }}</p>
+          {%- endif -%}
+          {%- if b.source != blank -%}
+            <p class="tr__source">{{ b.source }}</p>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "The reality",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout & spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top spacing",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 88
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom spacing",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 88
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Content max width",
+      "min": 1000,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1680
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Side padding",
+      "min": 16,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "intro_width",
+      "label": "Intro column width",
+      "min": 16,
+      "max": 40,
+      "step": 1,
+      "unit": "%",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "stat_width",
+      "label": "Stat column width",
+      "min": 16,
+      "max": 40,
+      "step": 1,
+      "unit": "%",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "stat_gap",
+      "label": "Space after each divider",
+      "min": 24,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#0B0B0A"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "info": "Moody, dark imagery works best. Anchored to the right on desktop."
+    },
+    {
+      "type": "range",
+      "id": "image_scrim",
+      "label": "Image darkening",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 90,
+      "info": "Keeps the left side dark so text stays readable."
+    },
+    {
+      "type": "header",
+      "content": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Text",
+      "default": "The reality"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_tracking",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "%",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_weight",
+      "label": "Weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_gap",
+      "label": "Space below",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Text",
+      "default": "Recovery is becoming a necessity."
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Size",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "heading_line_height",
+      "label": "Line height",
+      "min": 90,
+      "max": 150,
+      "step": 2,
+      "unit": "%",
+      "default": 118
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "label": "Letter spacing",
+      "min": -4,
+      "max": 0,
+      "step": 1,
+      "unit": "%",
+      "default": -1
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "heading_max_width",
+      "label": "Max width",
+      "min": 200,
+      "max": 560,
+      "step": 10,
+      "unit": "px",
+      "default": 300
+    },
+    {
+      "type": "header",
+      "content": "Stats"
+    },
+    {
+      "type": "range",
+      "id": "number_size",
+      "label": "Number size",
+      "min": 36,
+      "max": 110,
+      "step": 2,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "select",
+      "id": "number_weight",
+      "label": "Number weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "range",
+      "id": "number_letter_spacing",
+      "label": "Number letter spacing",
+      "min": -4,
+      "max": 0,
+      "step": 1,
+      "unit": "%",
+      "default": -1
+    },
+    {
+      "type": "color",
+      "id": "number_color",
+      "label": "Number color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "number_gap",
+      "label": "Space below number",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "stat_text_size",
+      "label": "Description size",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "stat_text_line_height",
+      "label": "Description line height",
+      "min": 130,
+      "max": 200,
+      "step": 2,
+      "unit": "%",
+      "default": 154
+    },
+    {
+      "type": "color",
+      "id": "stat_text_color",
+      "label": "Description color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "stat_text_max_width",
+      "label": "Description max width",
+      "min": 160,
+      "max": 420,
+      "step": 10,
+      "unit": "px",
+      "default": 240
+    },
+    {
+      "type": "range",
+      "id": "source_size",
+      "label": "Source size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "color",
+      "id": "source_color",
+      "label": "Source color",
+      "default": "#9C9A96"
+    },
+    {
+      "type": "range",
+      "id": "source_gap",
+      "label": "Space above source",
+      "min": 8,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Dividers"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "divider_opacity",
+      "label": "Divider opacity",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "%",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_countup",
+      "label": "Count up numbers",
+      "info": "Animates the numeric part of each stat (e.g. 964K, 22.1M) when it scrolls into view. Prefixes, suffixes, decimals and thousands separators are preserved.",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "countup_duration",
+      "label": "Count up duration",
+      "min": 800,
+      "max": 3000,
+      "step": 100,
+      "unit": "ms",
+      "default": 1800
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_reveal",
+      "label": "Reveal on scroll",
+      "info": "Fades the columns in, staggered, as the section enters the viewport.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Font"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_font",
+      "label": "Override font",
+      "info": "Uses this font instead of the theme's fonts, for this section only.",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "font_family",
+      "label": "Font family",
+      "default": "helvetica_n4"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number",
+          "default": "964K"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "UK workers affected by work-related stress, depression or anxiety."
+        },
+        {
+          "type": "text",
+          "id": "source",
+          "label": "Source",
+          "default": "Source: HSE 2024/25"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "The reality",
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": {
+            "number": "964K",
+            "description": "UK workers affected by work-related stress, depression or anxiety.",
+            "source": "Source: HSE 2024/25"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "number": "22.1M",
+            "description": "working days lost to work-related stress, depression or anxiety.",
+            "source": "Source: HSE 2024/25"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
