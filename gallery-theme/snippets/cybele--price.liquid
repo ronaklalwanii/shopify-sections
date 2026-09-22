@@ -2,7 +2,7 @@
   Renders a price (sale-aware).
   Accepts:
   - product: {Object} product (required)
-  Usage: {% render 'cybele--price', product: product %}
+  Usage: {% render 'price', product: product %}
 {%- endcomment -%}
 {%- liquid
   assign target = product.selected_or_first_available_variant | default: product

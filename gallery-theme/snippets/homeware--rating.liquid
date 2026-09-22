@@ -2,7 +2,7 @@
   Renders a 5-star rating row.
   Accepts:
   - rating: {Number} 0–5 (default 5)
-  Usage: {% render 'homeware--rating', rating: 4.8 %}
+  Usage: {% render 'rating', rating: 4.8 %}
 {%- endcomment -%}
 {%- liquid
   assign value = rating | default: 5 | times: 1

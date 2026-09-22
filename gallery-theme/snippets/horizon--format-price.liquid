@@ -5,9 +5,9 @@
   @param {string} [type] - Type of price formatting (defaults to 'regular', only 'per_item' has special behavior)
 
   @example
-  {% render 'horizon--format-price', price: variant.price %}
-  {% render 'horizon--format-price', price: variant.price, type: 'per_item' %}
-  {% render 'horizon--format-price', price: variant.compare_at_price %}
+  {% render 'format-price', price: variant.price %}
+  {% render 'format-price', price: variant.price, type: 'per_item' %}
+  {% render 'format-price', price: variant.compare_at_price %}
 {%- enddoc -%}
 
 {% liquid

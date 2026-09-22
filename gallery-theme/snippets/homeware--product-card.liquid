@@ -9,7 +9,7 @@
   - show_button: {Boolean} add-to-cart button
   - button_label: {String}
   - image_ratio: {String} portrait | tall | square | landscape
-  Usage: {% render 'homeware--product-card', product: product %}
+  Usage: {% render 'product-card', product: product %}
 {%- endcomment -%}
 {%- liquid
   assign ratio = image_ratio | default: settings.card_image_ratio | default: 'portrait'

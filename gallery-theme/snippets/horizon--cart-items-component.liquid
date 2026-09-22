@@ -11,7 +11,7 @@
   {% capture cart_content %}
     ... cart items content ...
   {% endcapture %}
-  {% render 'horizon--cart-items-component', children: cart_content, is_drawer: true, section_id: section.id %}
+  {% render 'cart-items-component', children: cart_content, is_drawer: true, section_id: section.id %}
 {% enddoc %}
 
 <cart-items-component

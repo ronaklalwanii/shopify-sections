@@ -16,7 +16,7 @@
   - swatches: {String} comma-separated hex/labels e.g. "#111,#c2a187,#5c6b4f"
   - show_wishlist: {Boolean} heart button top-right
   - price_align: {String} center | split (title left / price right)
-  Usage: {% render 'urbanedge--product-card', product: product %}
+  Usage: {% render 'product-card', product: product %}
 {%- endcomment -%}
 {%- liquid
   assign ratio = image_ratio | default: settings.card_image_ratio | default: 'portrait'

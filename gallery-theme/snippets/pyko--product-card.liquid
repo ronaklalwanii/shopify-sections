@@ -19,7 +19,7 @@
   - tile_bg: {String} hex color — pastel tile behind the image (borderless card)
   - show_quick_plus: {Boolean} circular + quick-add beside title/price row
   - borderless: {Boolean} card without border/shadow chrome
-  Usage: {% render 'pyko--product-card', product: product %}
+  Usage: {% render 'product-card', product: product %}
 {%- endcomment -%}
 {%- liquid
   assign ratio = image_ratio | default: settings.card_image_ratio | default: 'portrait'

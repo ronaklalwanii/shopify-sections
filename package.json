@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "Local Shopify section library: browse, filter, preview, and collect sections across stores",
   "dependencies": {
+    "@shopify/liquid-html-parser": "^2.10.0",
     "express": "^5.2.1",
     "liquidjs": "^10.29.0"
   }

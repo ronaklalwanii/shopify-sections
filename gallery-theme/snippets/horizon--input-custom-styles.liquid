@@ -5,7 +5,7 @@
   @param {object} block_settings - Block settings with input_background_color, input_text_color, input_border_color.
 
   @example
-  <div style="{% render 'horizon--input-custom-styles', block_settings: block.settings %}">
+  <div style="{% render 'input-custom-styles', block_settings: block.settings %}">
 {%- enddoc -%}
 {%- liquid
   assign background_color = block_settings.input_background_color | default: settings.palette_input_background

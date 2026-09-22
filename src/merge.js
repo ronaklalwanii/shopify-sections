@@ -6,12 +6,50 @@
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
+const { toLiquidHtmlAST } = require('@shopify/liquid-html-parser');
 
 const { findStore } = require('./roots');
 const OUT = path.resolve(__dirname, '../gallery-theme');
 const HOST = process.env.HOST_STORE || 'base'; // provides layout, config, locales skeleton
 
 const ASSET_EXT = /\.(css|mjs|js|woff2?|png|jpe?g|svg|gif|webp|avif|eot|ttf|otf)(\?.*)?$/i;
+
+// Use Shopify's liquid-html-parser to find every render/include snippet reference
+// with exact source positions (covers {% render %} tags AND lines inside
+// {% liquid %} blocks). Returns null when a file doesn't parse.
+function scanRenderEdits(source) {
+  let ast;
+  try { ast = toLiquidHtmlAST(source); } catch { return null; }
+  const edits = [];
+  (function walk(node) {
+    if (!node || typeof node !== 'object') return;
+    if (node.type === 'LiquidTag' && (node.name === 'render' || node.name === 'include')) {
+      const raw = source.slice(node.position.start, node.position.end);
+      const m = raw.match(/\b(?:render|include)\s+(')([\w-]+)(')/);
+      if (m) {
+        const nameStart = node.position.start + m.index + m[0].indexOf(`${m[2]}`);
+        edits.push({ start: nameStart, end: nameStart + m[2].length, name: m[2] });
+      }
+    }
+    for (const key of Object.keys(node)) {
+      const v = node[key];
+      if (Array.isArray(v)) v.forEach(walk);
+      else if (v && typeof v === 'object' && v.type) walk(v);
+    }
+  })(ast);
+  return edits;
+}
+
+// Names only — used by lint.
+function scanRenderNames(source) {
+  const edits = scanRenderEdits(source);
+  if (edits) return edits.map((e) => e.name);
+  const names = [];
+  let m;
+  const re = /{%-?\s*(?:render|include)\s+'([\w-]+)'/g;
+  while ((m = re.exec(source))) names.push(m[1]);
+  return names;
+}
 
 const prefixFor = (store) => (store === HOST ? '' : store.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '--');
 const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -56,28 +94,37 @@ class Copier {
   }
 
   rewrite(source) {
-    // snippet renders: {% render 'name' ... %} / include
-    source = source.replace(
-      /({%-?\s*(?:render|include)\s+)(')([\w-]+)(')/g,
-      (full, lead, q1, name, q2) => {
-        if (this.hasStoreSnippet(name)) {
-          this.enqueue('snippet', name);
-          return `${lead}${q1}${this.prefix}${name}${q2}`;
+    // Snippet renders via Shopify's own AST parser (liquid-html-parser) — robust
+    // everywhere, including bare `render 'x'` lines inside {% liquid %} blocks.
+    // Regex fallback only for files that fail to parse.
+    const edits = scanRenderEdits(source);
+    if (edits) {
+      const resolved = [];
+      for (const e of edits) {
+        if (this.hasStoreSnippet(e.name)) {
+          this.enqueue('snippet', e.name);
+          resolved.push({ ...e, replacement: `${this.prefix}${e.name}` });
         }
-        return full; // store doesn't have it — leave for host theme to resolve
-      },
-    );
-    // bare renders inside {% liquid %} blocks: `render 'name'` on its own line
-    source = source.replace(
-      /(^|\n)(\s*)((?:render|include)\s+)(')([\w-]+)(')/g,
-      (full, nl, ws, kw, q1, name, q2) => {
-        if (this.hasStoreSnippet(name)) {
-          this.enqueue('snippet', name);
-          return `${nl}${ws}${kw}${q1}${this.prefix}${name}${q2}`;
-        }
-        return full;
-      },
-    );
+      }
+      resolved.sort((a, b) => b.start - a.start);
+      for (const r of resolved) source = source.slice(0, r.start) + r.replacement + source.slice(r.end);
+    } else {
+      source = source
+        .replace(/({%-?\s*(?:render|include)\s+)(')([\w-]+)(')/g, (full, lead, q1, name, q2) => {
+          if (this.hasStoreSnippet(name)) {
+            this.enqueue('snippet', name);
+            return `${lead}${q1}${this.prefix}${name}${q2}`;
+          }
+          return full;
+        })
+        .replace(/(^|\n)(\s*)((?:render|include)\s+)(')([\w-]+)(')/g, (full, nl, ws, kw, q1, name, q2) => {
+          if (this.hasStoreSnippet(name)) {
+            this.enqueue('snippet', name);
+            return `${nl}${ws}${kw}${q1}${this.prefix}${name}${q2}`;
+          }
+          return full;
+        });
+    }
     // assets: 'file.ext' | asset_url
     source = source.replace(
       /(['"])([\w./-]+\.(?:css|mjs|js|woff2?|png|jpe?g|svg|gif|webp|avif|eot|ttf|otf))\1\s*\|\s*asset_url/g,
@@ -328,14 +375,9 @@ function lint() {
     for (const f of set) {
       if (!f.endsWith('.liquid')) continue;
       const src = fs.readFileSync(path.join(OUT, dir, f), 'utf8');
-      const snipRe = /{%-?\s*(?:render|include)\s+'([\w-]+)'/g;
-      const snipReLine = /(^|\n)\s*(?:render|include)\s+'([\w-]+)'/g;
       let m;
-      while ((m = snipRe.exec(src))) {
-        if (!snippets.has(`${m[1]}.liquid`)) { missingSnips++; if (missingSnips <= 8) console.log(`  missing snippet: ${m[1]} (used in ${dir}/${f})`); }
-      }
-      while ((m = snipReLine.exec(src))) {
-        if (!snippets.has(`${m[2]}.liquid`)) { missingSnips++; if (missingSnips <= 8) console.log(`  missing snippet: ${m[2]} (used in ${dir}/${f})`); }
+      for (const name of scanRenderNames(src)) {
+        if (!snippets.has(`${name}.liquid`)) { missingSnips++; if (missingSnips <= 8) console.log(`  missing snippet: ${name} (used in ${dir}/${f})`); }
       }
       const assetRe = /['"]([\w./-]+\.(?:css|mjs|js|woff2?|png|jpe?g|svg|gif|webp|avif|eot|ttf|otf))['"]\s*\|\s*asset_url/g;
       while ((m = assetRe.exec(src))) {

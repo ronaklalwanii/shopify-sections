@@ -10,7 +10,7 @@
   @param {string} [alt_text_fallback] - Optional text to display if image alt text is blank
 
   @example
-  {% render 'horizon--image', image: product.featured_image, height: 300, class: 'product-image' %}
+  {% render 'image', image: product.featured_image, height: 300, class: 'product-image' %}
 {%- enddoc -%}
 {% if image != blank %}
   {% assign image_height = height | default: image.height %}
