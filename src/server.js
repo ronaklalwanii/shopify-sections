@@ -491,12 +491,15 @@ app.get('/preview/:store/:file', async (req, res) => {
       const key = crypto.createHash('md5').update(target).digest('hex');
       let cached = previewCacheGet(key);
       if (cached && /Liquid error/i.test(cached)) { previewCacheDelete(key); cached = null; }
+      // a missing lib-* template makes Shopify render the default page instead —
+      // our preview templates always emit a "__library" section id
+      if (cached && !cached.includes('__library')) { previewCacheDelete(key); cached = null; }
       if (cached) return res.type('html').send(cached);
       const r = await shopifyGet(target);
       let html = await r.text();
       // sections that error live (missing product/blog refs etc.) render better
       // through the local mock — fall back instead of showing Shopify's error
-      if (r.status === 200 && /Liquid error/i.test(html)) {
+      if (r.status === 200 && (/Liquid error/i.test(html) || !html.includes('__library'))) {
         const mock = await localPreview(req, res);
         return mock;
       }
