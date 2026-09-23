@@ -287,7 +287,11 @@ async function shopifyGet(url) {
 app.get('/api/config', (req, res) => {
   const cfg = storeConfig();
   const live = !!(cfg.storeUrl && (cfg.previewThemeId || cfg.storefrontPassword));
-  res.json({ livePreviews: live, storeUrl: cfg.storeUrl || null });
+  res.json({
+    livePreviews: live,
+    storeUrl: cfg.storeUrl || null,
+    commit: process.env.VERCEL_GIT_COMMIT_SHA ? process.env.VERCEL_GIT_COMMIT_SHA.slice(0, 7) : 'local',
+  });
 });
 
 app.get('/api/index', (req, res) => {
