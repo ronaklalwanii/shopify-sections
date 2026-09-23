@@ -30,10 +30,9 @@ const catColor = (c) => CAT_COLORS[c] || '#8b8d93';
 function visibleSections() {
   const q = state.q.trim().toLowerCase();
   return state.sections.filter((s) => {
-    // duplicates collapse into their canonical entry; a store filter still
-    // surfaces them when the group belongs to that store
-    if (s.duplicate && !(state.store !== 'all' && (s.group || []).includes(state.store))) return false;
-    if (state.store !== 'all' && !(s.group || [s.store]).includes(state.store)) return false;
+    // Duplicates collapse into their canonical entry globally; picking a store
+    // shows that store's own files (which is what the store actually contains).
+    if (state.store === 'all' ? s.duplicate : s.store !== state.store) return false;
     if (state.category !== 'all' && s.category !== state.category) return false;
     if (s.functional && !state.showFunctional) return false;
     if (q && !(`${s.name} ${s.file} ${s.store} ${s.category} ${(s.tags || []).join(' ')}`.toLowerCase().includes(q))) return false;
@@ -43,12 +42,17 @@ function visibleSections() {
 
 function counts() {
   const stores = { all: 0 }, cats = {};
+  // Store chips: own files per store (stable, scope-independent). Sharing info
+  // still surfaces per-card via the "N stores" chip from the dedupe group.
   for (const s of state.sections) {
-    if (s.duplicate && state.store === 'all') continue; // counted via their canonical group
     if (s.functional && !state.showFunctional) continue;
-    const group = s.group || [s.store];
+    stores[s.store] = (stores[s.store] || 0) + 1;
+  }
+  // Headline + categories: current scope (store filter applied, dupes collapsed).
+  for (const s of state.sections) {
+    if (s.functional && !state.showFunctional) continue;
+    if (state.store === 'all' ? s.duplicate : s.store !== state.store) continue;
     stores.all++;
-    for (const st of group) stores[st] = (stores[st] || 0) + 1;
     cats[s.category] = (cats[s.category] || 0) + 1;
   }
   return { stores, cats };
@@ -71,7 +75,7 @@ function renderSidebar() {
     b.onclick = () => { state.store = b.dataset.value; refresh(); });
   $('categoryList').querySelectorAll('.side-item').forEach((b) =>
     b.onclick = () => { state.category = b.dataset.value; refresh(); });
-  $('sideFooter').textContent = `${state.sections.length} sections indexed · add a store folder to shopify-stores/ and re-run ingest`;
+  $('sideFooter').textContent = `${state.sections.length} sections indexed · add a store folder to stores/ and re-run ingest`;
 }
 
 function renderGrid() {
@@ -249,8 +253,9 @@ function renderCode() {
   $('codeToolbar').hidden = false;
   $('settingsView').hidden = true;
   const code = state.code[tab];
+  const hasInlineStyle = /<style[\s>]|{%-?\s*style\b|{%-?\s*stylesheet\b/.test(state.code.liquid);
   const hints = {
-    liquid: `${state.code.liquid.split('\n').length} lines — styles are inline in the section`,
+    liquid: `${state.code.liquid.split('\n').length} lines — ${state.code.css || hasInlineStyle ? 'section carries its own styles' : 'styled by the theme\u2019s global CSS'}`,
     css: code ? 'standalone CSS used by this section' : 'no standalone CSS — styling lives in the Liquid',
     js: code ? 'standalone JS used by this section' : 'no standalone JS for this section',
   };

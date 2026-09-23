@@ -4,7 +4,7 @@ const path = require('path');
 const crypto = require('crypto');
 const { execFileSync } = require('child_process');
 const express = require('express');
-const { renderStoreSection, renderSectionSource, renderSnippet, renderLayoutTokens, findStore, getEngine, googleFontsLink } = require('./renderer');
+const { renderStoreSection, renderSectionSource, renderSnippet, renderLayoutTokens, layoutTokensFallback, findStore, getEngine, googleFontsLink } = require('./renderer');
 
 const ROOT = path.resolve(__dirname, '..');
 const IS_SERVERLESS = !!process.env.VERCEL;
@@ -443,7 +443,7 @@ const layoutDepsCache = new Map();
 function getLayoutDeps(store) {
   if (layoutDepsCache.has(store)) return layoutDepsCache.get(store);
   const storePath = findStore(store);
-  if (!storePath) return res.status(404).send('unknown store');
+  if (!storePath) return { css: [], js: [] };
   const css = [], js = [];
   const scan = (text) => {
     let m;
@@ -471,6 +471,12 @@ const headSnippetCache = new Map();
 async function getLayoutHeadExtra(store) {
   if (headSnippetCache.has(store)) return headSnippetCache.get(store);
   let extra = '';
+  // Defensive :root tokens first: layout {% style %} blocks often declare
+  // --color-* outside any rule (invalid CSS, dropped by browsers), which would
+  // leave theme var() references unresolved in previews. Real theme values
+  // emitted below always win the cascade.
+  const fallback = await layoutTokensFallback(store);
+  if (fallback.trim()) extra += `<style>${fallback}</style>`;
   for (const name of ['css-variables', 'css-vars', 'design-tokens', 'theme-styles-variables']) {
     const out = await renderSnippet(store, name);
     if (out.trim()) { extra += out; break; }

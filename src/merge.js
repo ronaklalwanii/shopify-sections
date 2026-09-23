@@ -170,7 +170,10 @@ class Copier {
 function sectionSettingsFor(schema) {
   // Schema defaults + first preset — the same defaulting the preview renderer does.
   const settings = {};
-  const keep = (v) => v != null && typeof v !== 'object' && !(typeof v === 'string' && ASSET_EXT.test(v));
+  // Editor-time Liquid defaults (e.g. "{{ settings.x }}") are resolved by
+  // Shopify's editor at runtime — never copy the raw expression into static JSON.
+  const keep = (v) => v != null && typeof v !== 'object' && !(typeof v === 'string' && ASSET_EXT.test(v))
+    && !(typeof v === 'string' && /{{|{%/.test(v));
   for (const s of schema?.settings || []) {
     if (!s.id) continue;
     if (['image_picker', 'font_picker', 'link_list', 'collection', 'product', 'blog', 'page', 'article', 'video', 'video_url', 'color_scheme_group', 'color_background'].includes(s.type)) continue;
@@ -200,14 +203,15 @@ function templateSectionBody(schema) {
   let blockSettings = (type, from) => {
     const out = {};
     const def = defFor(type);
+    const clean = (v) => v != null && typeof v !== 'object' && !(typeof v === 'string' && /{{|{%/.test(v));
     for (const s of def?.settings || []) {
       if (!s.id) continue;
       if (['image_picker', 'font_picker', 'link_list', 'collection', 'product', 'blog', 'page', 'article', 'video', 'video_url'].includes(s.type)) continue;
-      if (s.default != null && typeof s.default !== 'object') out[s.id] = s.default;
+      if (clean(s.default)) out[s.id] = s.default;
     }
     if (from?.settings) {
       for (const [k, v] of Object.entries(from.settings)) {
-        if (v != null && typeof v !== 'object' && !(typeof v === 'string' && ASSET_EXT.test(v))) out[k] = v;
+        if (clean(v) && !(typeof v === 'string' && ASSET_EXT.test(v))) out[k] = v;
       }
     }
     return out;

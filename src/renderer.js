@@ -205,7 +205,7 @@ function blockMock(schemaBlocks, presetBlock, ctx) {
   return { id: `bl-${seedFor(ctx.seedBase, type)}`, type, settings, shopify_attributes: '' };
 }
 
-function sectionMock(schema, sectionId) {
+function sectionMock(schema, sectionId, theme = {}) {
   const ctx = { seedBase: sectionId };
   const settings = {};
   for (const s of schema?.settings || []) {
@@ -229,6 +229,18 @@ function sectionMock(schema, sectionId) {
       for (let i = 0; i < Math.max(1, Math.min(n, 3)); i++) blocks.push(blockMock(schema?.blocks, { type: bd.type }, ctx));
     }
   }
+  // Schema defaults may hold editor-time Liquid (e.g. "{{ settings.x.y }}",
+  // resolved by Shopify's editor — never by the storefront). Resolve simple
+  // global references against the theme; anything else becomes blank instead
+  // of leaking raw {{ }} into previews.
+  const resolveWalk = (obj) => {
+    for (const [k, v] of Object.entries(obj)) {
+      if (typeof v === 'string' && v.includes('{{')) obj[k] = resolveDynamicDefault(v, theme);
+      else if (v && typeof v === 'object' && !v.__mock) resolveWalk(v);
+    }
+  };
+  resolveWalk(settings);
+  for (const b of blocks) { resolveWalk(b.settings || {}); for (const nb of b.blocks || []) resolveWalk(nb.settings || {}); }
   return {
     id: sectionId,
     settings,
@@ -237,6 +249,71 @@ function sectionMock(schema, sectionId) {
     shopify_attributes: '',
     location: 'section',
   };
+}
+
+function resolveDynamicDefault(value, theme) {
+  const m = String(value).trim().match(/^{{\s*settings\.([\w.]+)\s*}}$/);
+  if (!m) return '';
+  const resolved = resolveSettingsPath(theme || {}, m[1]);
+  return (resolved == null || typeof resolved === 'object') ? '' : resolved;
+}
+
+/* ------------------------------ color utils -------------------------------- */
+
+function parseCssColor(v) {
+  if (v == null || typeof v === 'object') return null;
+  const s = String(v).trim();
+  let m = s.match(/^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i);
+  if (m) {
+    let hex = m[1];
+    if (hex.length === 3) hex = hex.split('').map((c) => c + c).join('');
+    const r = parseInt(hex.slice(0, 2), 16), g = parseInt(hex.slice(2, 4), 16), b = parseInt(hex.slice(4, 6), 16);
+    const a = hex.length === 8 ? Math.round(parseInt(hex.slice(6, 8), 16) / 255 * 100) / 100 : 1;
+    return { r, g, b, a };
+  }
+  m = s.match(/^rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?\s*\)$/i);
+  if (m) return { r: +m[1], g: +m[2], b: +m[3], a: m[4] == null ? 1 : +m[4] };
+  return null;
+}
+
+function rgbToHsl(r, g, b) {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  if (max === min) return [0, 0, l];
+  const d = max - min;
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  let h;
+  if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
+  else if (max === g) h = (b - r) / d + 2;
+  else h = (r - g) / d + 4;
+  return [h / 6, s, l];
+}
+
+function hslToRgb(h, s, l) {
+  if (s === 0) { const v = Math.round(l * 255); return { r: v, g: v, b: v }; }
+  const hue2rgb = (p, q, t) => {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  };
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
+  return {
+    r: Math.round(hue2rgb(p, q, h + 1 / 3) * 255),
+    g: Math.round(hue2rgb(p, q, h) * 255),
+    b: Math.round(hue2rgb(p, q, h - 1 / 3) * 255),
+  };
+}
+
+function fmtColor({ r, g, b }, a = 1) {
+  if (a == null || Number(a) >= 1) {
+    return '#' + [r, g, b].map((v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('');
+  }
+  return `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${Number(a)})`;
 }
 
 /* --------------------------------- filters --------------------------------- */
@@ -335,10 +412,61 @@ function buildFilters(storeName) {
       return f;
     },
     hex_to_rgba(hex, a = 1) {
-      const m = String(hex).replace('#', '').match(/^([0-9a-f]{3}|[0-9a-f]{6})$/i);
-      if (!m) return hex;
-      let [r, g, b] = m[1].length === 3 ? m[1].split('').map((c) => parseInt(c + c, 16)) : [0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16));
-      return `rgba(${r},${g},${b},${a})`;
+      const c = parseCssColor(hex);
+      if (!c) return hex;
+      return `rgba(${c.r},${c.g},${c.b},${a})`;
+    },
+    color_darken(color, amount = 10) {
+      const c = parseCssColor(color);
+      if (!c) return color;
+      const [h, s, l] = rgbToHsl(c.r, c.g, c.b);
+      return fmtColor(hslToRgb(h, s, Math.max(0, l - Number(amount) / 100)), c.a);
+    },
+    color_lighten(color, amount = 10) {
+      const c = parseCssColor(color);
+      if (!c) return color;
+      const [h, s, l] = rgbToHsl(c.r, c.g, c.b);
+      return fmtColor(hslToRgb(h, s, Math.min(1, l + Number(amount) / 100)), c.a);
+    },
+    color_modify(color, prop, val) {
+      const c = parseCssColor(color);
+      if (!c) return color;
+      const p = String(prop || '').toLowerCase();
+      if (p === 'alpha') return fmtColor(c, Number(val));
+      const ch = { red: 'r', green: 'g', blue: 'b' }[p];
+      if (ch) { c[ch] = Math.max(0, Math.min(255, Math.round(Number(val)))); return fmtColor(c, c.a); }
+      return color;
+    },
+    color_mix(c1, c2, weight = 50) {
+      const a = parseCssColor(c1), b = parseCssColor(c2);
+      if (!a || !b) return c1;
+      const w = Math.max(0, Math.min(100, Number(weight))) / 100;
+      return fmtColor({
+        r: Math.round(a.r * w + b.r * (1 - w)),
+        g: Math.round(a.g * w + b.g * (1 - w)),
+        b: Math.round(a.b * w + b.b * (1 - w)),
+      }, 1);
+    },
+    color_brightness(color) {
+      const c = parseCssColor(color);
+      if (!c) return 0;
+      return Math.round((c.r * 0.299 + c.g * 0.587 + c.b * 0.114) / 255 * 100);
+    },
+    color_extract(color, prop) {
+      const c = parseCssColor(color);
+      if (!c) return '';
+      const p = String(prop || '').toLowerCase();
+      if (p === 'alpha') return c.a;
+      if (p === 'red') return c.r;
+      if (p === 'green') return c.g;
+      if (p === 'blue') return c.b;
+      if (p === 'lightness') return Math.round(rgbToHsl(c.r, c.g, c.b)[2] * 100);
+      return '';
+    },
+    color_to_rgb(color) {
+      const c = parseCssColor(color);
+      if (!c) return color;
+      return `${c.r}, ${c.g}, ${c.b}`;
     },
     handle: (v) => String(v ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
     handleize: (v) => String(v ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
@@ -649,7 +777,7 @@ async function renderLiquid(engine, source, { sectionId = 'preview', extraGlobal
   source = source.replace(/{%\s*schema\s*%}[\s\S]*?{%\s*endschema\s*%}/g, '');
   let schema = null;
   if (schemaMatch) { try { schema = JSON.parse(schemaMatch[1]); } catch {} }
-  const sec = sectionMock(schema, sectionId);
+  const sec = sectionMock(schema, sectionId, engine.theme);
   const scope = { ...baseGlobals(engine, { customer }), ...extraGlobals, section: sec, block: (sec.blocks || [])[0] };
   let out = await engine.liquid.parseAndRender(source, scope);
   out = unescapeMediaTags(out);
@@ -720,7 +848,79 @@ async function renderLayoutTokens(storeName) {
   const source = blocks.join('\n').trim();
   if (!source) return '';
   const engine = getEngine(storeName, storePath);
-  try { return await engine.liquid.parseAndRender(source, baseGlobals(engine, {})); } catch { return ''; }
+  try { return balanceBraces(await engine.liquid.parseAndRender(source, baseGlobals(engine, {}))); } catch { return ''; }
 }
 
-module.exports = { renderSectionSource, renderStoreSection, getEngine, imageMock, renderSnippet, renderLayoutTokens, findStore, parseJsonLoose, googleFontsLink };
+// Balance unclosed rules in extracted token CSS (some layouts never close
+// `body {` before {% endstyle %}). Contained to the token <style> element,
+// but an unbalanced block would still drop the rules inside it.
+function balanceBraces(css) {
+  const stripped = css
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/"([^"\\]|\\.)*"|'([^'\\]|\\.)*'/g, '""');
+  let depth = 0;
+  for (const ch of stripped) {
+    if (ch === '{') depth++;
+    else if (ch === '}') depth--;
+  }
+  return depth > 0 ? `${css}\n${'}'.repeat(depth)}` : css;
+}
+
+function resolveSettingsPath(theme, dotted) {
+  let node = theme;
+  for (const part of String(dotted).split('.')) {
+    if (node == null || typeof node !== 'object') return undefined;
+    node = node[part];
+  }
+  return node;
+}
+
+// Neutral preview defaults for well-known token families — only used when the
+// store has no value configured, so var() references never collapse to nothing.
+function neutralTokenDefault(varName) {
+  const n = String(varName).toLowerCase();
+  if (/accent-label|on-accent/.test(n)) return '#ffffff';
+  if (/accent|link|button/.test(n)) return '#2f6f4f';
+  if (/border|outline|divider/.test(n)) return '#e2ded6';
+  if (/muted|subtle|faded/.test(n)) return 'rgba(26,26,26,.62)';
+  if (/secondary/.test(n)) return '#f4f2ed';
+  if (/background|surface|card-bg|canvas|base/.test(n)) return '#ffffff';
+  if (/foreground|text|heading|color|ink/.test(n)) return '#1a1a1a';
+  return null;
+}
+
+// Design-token fallback: layout {% style %} blocks often declare --color-*
+// custom properties OUTSIDE any rule (dropped as invalid CSS at render time),
+// so theme CSS var() references would resolve to nothing in previews. Re-emit
+// every `--var: {{ settings.* }};` pair from the layout source as a valid
+// :root block, evaluated with the store's real settings. Emitted BEFORE the
+// theme's own tokens, so genuine theme values always win the cascade.
+async function layoutTokensFallback(storeName) {
+  const storePath = findStore(storeName);
+  if (!storePath) return '';
+  const engine = getEngine(storeName, storePath);
+  let layout = '';
+  try { layout = fs.readFileSync(path.join(storePath, 'layout', 'theme.liquid'), 'utf8'); } catch { return ''; }
+  const seen = new Map(); // varName -> { expr, unit }
+  const re = /(--[\w-]+)\s*:\s*({{\s*settings\.[\w.]+[\s\S]*?}})\s*([a-z%]*)\s*;/g;
+  let m;
+  while ((m = re.exec(layout))) {
+    if (!seen.has(m[1])) seen.set(m[1], { expr: m[2], unit: m[3] || '' });
+  }
+  if (!seen.size) return '';
+  const out = [];
+  for (const [varName, { expr, unit }] of seen) {
+    const pathMatch = expr.match(/settings\.([\w.]+)/);
+    const raw = pathMatch ? resolveSettingsPath(engine.theme, pathMatch[1]) : undefined;
+    if (raw != null && typeof raw === 'object') continue; // fonts, images, palettes — not plain tokens
+    let value = '';
+    if (raw != null && raw !== '') {
+      try { value = String(await engine.liquid.parseAndRender(expr, { settings: engine.theme })).trim(); } catch { value = ''; }
+    }
+    if (!value) value = neutralTokenDefault(varName) || '';
+    if (value) out.push(`${varName}: ${value}${unit};`);
+  }
+  return out.length ? `:root{\n${out.join('\n')}\n}` : '';
+}
+
+module.exports = { renderSectionSource, renderStoreSection, getEngine, imageMock, renderSnippet, renderLayoutTokens, layoutTokensFallback, findStore, parseJsonLoose, googleFontsLink };

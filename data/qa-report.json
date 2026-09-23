@@ -1,12 +1,313 @@
 {
-  "generatedAt": "2026-09-22T17:51:03.558Z",
+  "generatedAt": "2026-09-23T14:09:20.669Z",
   "local": {
     "summary": {
-      "ok": 381,
-      "warn": 42,
+      "ok": 416,
+      "warn": 7,
       "fail": 0
     },
     "results": [
+      {
+        "store": "azura",
+        "file": "advantages.liquid",
+        "name": "Advantages",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "announcement-bar.liquid",
+        "name": "Announcement bar",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "az-about.liquid",
+        "name": "AZ About card",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "az-consult.liquid",
+        "name": "AZ Consult split",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "az-location.liquid",
+        "name": "AZ Location quad",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "az-villas.liquid",
+        "name": "AZ Villas",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "banner.liquid",
+        "name": "Banner",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "collection-list.liquid",
+        "name": "Collection list",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "contact-form.liquid",
+        "name": "Contact form",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "editorial-trio.liquid",
+        "name": "Editorial trio",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "faq.liquid",
+        "name": "FAQ",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "feature-cards.liquid",
+        "name": "Feature cards",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "featured-collection.liquid",
+        "name": "Featured collection",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "featured-product.liquid",
+        "name": "Featured product",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "footer.liquid",
+        "name": "Footer",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "header.liquid",
+        "name": "Header",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "hero.liquid",
+        "name": "Hero",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "image-with-text.liquid",
+        "name": "Image with text",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "logo-wall.liquid",
+        "name": "Logo wall",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-404.liquid",
+        "name": "404 page",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-article.liquid",
+        "name": "Article",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-blog.liquid",
+        "name": "Blog posts",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-cart.liquid",
+        "name": "Cart",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-collection.liquid",
+        "name": "Product grid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-list-collections.liquid",
+        "name": "Collections list",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-page.liquid",
+        "name": "Page content",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-password.liquid",
+        "name": "Password",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-product.liquid",
+        "name": "Product information",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-search.liquid",
+        "name": "Search results",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "marquee-ribbon.liquid",
+        "name": "Marquee ribbon",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "newsletter.liquid",
+        "name": "Newsletter",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "product-callouts.liquid",
+        "name": "Product callouts",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "project-cards.liquid",
+        "name": "Project cards",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "promo-tiles.liquid",
+        "name": "Promo tiles",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "quote-stats.liquid",
+        "name": "Quote and stats",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "rich-text.liquid",
+        "name": "Rich text",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "slideshow.liquid",
+        "name": "Slideshow",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "stats.liquid",
+        "name": "Stats",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "steps.liquid",
+        "name": "Steps",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "style-cards.liquid",
+        "name": "Style cards",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "testimonials.liquid",
+        "name": "Testimonials",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "trust-row.liquid",
+        "name": "Trust row",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "usp-bar.liquid",
+        "name": "Icon features",
+        "status": "ok",
+        "issues": []
+      },
       {
         "store": "base",
         "file": "about-snatched.liquid",
@@ -48,8 +349,7 @@
         "name": "Apps",
         "status": "warn",
         "issues": [
-          "empty output",
-          "expected JS missing"
+          "empty output"
         ]
       },
       {
@@ -168,10 +468,8 @@
         "store": "base",
         "file": "cart-drawer.liquid",
         "name": "Cart drawer",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
+        "status": "ok",
+        "issues": []
       },
       {
         "store": "base",
@@ -205,10 +503,8 @@
         "store": "base",
         "file": "countdown-banner.liquid",
         "name": "Countdown Banner",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
+        "status": "ok",
+        "issues": []
       },
       {
         "store": "base",
@@ -798,10 +1094,8 @@
         "store": "base",
         "file": "split-featured-product.liquid",
         "name": "Featured Product",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
+        "status": "ok",
+        "issues": []
       },
       {
         "store": "base",
@@ -954,10 +1248,8 @@
         "store": "base",
         "file": "upsell-bundle.liquid",
         "name": "Upsell / Bundle",
-        "status": "warn",
-        "issues": [
-          "unrendered {{ }} leak"
-        ]
+        "status": "ok",
+        "issues": []
       },
       {
         "store": "base",
@@ -1005,1078 +1297,6 @@
         "store": "base",
         "file": "word-scroll-reveal.liquid",
         "name": "Scroll word reveal",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "_blocks.liquid",
-        "name": "t:names.section",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "carousel.liquid",
-        "name": "t:names.carousel",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "cart-drawer-section.liquid",
-        "name": "t:names.cart_drawer",
-        "status": "warn",
-        "issues": [
-          "empty output"
-        ]
-      },
-      {
-        "store": "horizon",
-        "file": "collection-links.liquid",
-        "name": "t:names.collection_links",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "collection-list.liquid",
-        "name": "t:names.collection_list",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "custom-liquid.liquid",
-        "name": "t:names.custom_liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "divider.liquid",
-        "name": "t:names.divider",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "featured-blog-posts.liquid",
-        "name": "t:names.blog_posts",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "featured-product-information.liquid",
-        "name": "t:names.featured_product_information",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "featured-product.liquid",
-        "name": "t:names.featured_product",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "footer-utilities.liquid",
-        "name": "t:names.policies_and_links",
-        "status": "warn",
-        "issues": [
-          "unrendered {{ }} leak"
-        ]
-      },
-      {
-        "store": "horizon",
-        "file": "footer.liquid",
-        "name": "t:names.footer",
-        "status": "warn",
-        "issues": [
-          "unrendered {{ }} leak"
-        ]
-      },
-      {
-        "store": "horizon",
-        "file": "header-announcements.liquid",
-        "name": "t:names.announcement_bar",
-        "status": "warn",
-        "issues": [
-          "expected JS missing"
-        ]
-      },
-      {
-        "store": "horizon",
-        "file": "header.liquid",
-        "name": "t:names.header",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "hero-product-cards.liquid",
-        "name": "Hero product cards",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "hero.liquid",
-        "name": "t:names.hero",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "layered-slideshow.liquid",
-        "name": "t:names.layered_slideshow",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "logo.liquid",
-        "name": "t:names.logo",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "main-404.liquid",
-        "name": "t:names.404",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "main-blog-post.liquid",
-        "name": "t:names.blog_post",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "main-blog.liquid",
-        "name": "t:names.blog_posts",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "main-cart.liquid",
-        "name": "t:names.cart",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "main-collection-list.liquid",
-        "name": "t:names.collection_list",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "main-collection.liquid",
-        "name": "t:names.collection_container",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "main-page.liquid",
-        "name": "t:names.page",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "marquee.liquid",
-        "name": "t:names.marquee",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "media-with-content.liquid",
-        "name": "t:names.media_with_text",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "password-footer.liquid",
-        "name": "t:names.footer_password",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "password.liquid",
-        "name": "t:names.section",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "predictive-search-empty.liquid",
-        "name": "t:names.predictive_search_empty",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "predictive-search.liquid",
-        "name": "t:names.predictive_search",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "horizon",
-        "file": "product-hotspots.liquid",
-        "name": "t:names.product_hotspots",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "product-information.liquid",
-        "name": "t:names.product_information",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "product-list.liquid",
-        "name": "t:names.product_list",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "product-recommendations.liquid",
-        "name": "t:names.product_recommendations",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "quick-order-list.liquid",
-        "name": "t:names.quick_order_list",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "search-header.liquid",
-        "name": "t:names.search",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "search-results.liquid",
-        "name": "t:names.search_results",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "section-rendering-product-card.liquid",
-        "name": "t:names.product_card_rendering",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "horizon",
-        "file": "section.liquid",
-        "name": "t:names.section",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "slideshow.liquid",
-        "name": "t:names.slideshow",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "about-stats.liquid",
-        "name": "About + stats",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "advantages.liquid",
-        "name": "Advantages",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "announcement-bar.liquid",
-        "name": "Announcement bar",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "banner.liquid",
-        "name": "Banner",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "case-studies.liquid",
-        "name": "Case studies",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "collection-list.liquid",
-        "name": "Collection list",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "contact-form.liquid",
-        "name": "Contact form",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "editorial-trio.liquid",
-        "name": "Editorial trio",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "faq.liquid",
-        "name": "FAQ",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "feature-cards.liquid",
-        "name": "Feature cards",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "featured-collection.liquid",
-        "name": "Featured collection",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "featured-product.liquid",
-        "name": "Featured product",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "footer-designer.liquid",
-        "name": "Designer footer",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "footer.liquid",
-        "name": "Footer",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "header.liquid",
-        "name": "Header",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "hero-designer.liquid",
-        "name": "Designer hero",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "hero.liquid",
-        "name": "Hero",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "image-with-text.liquid",
-        "name": "Image with text",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "logo-wall.liquid",
-        "name": "Logo wall",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "main-404.liquid",
-        "name": "404 page",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "main-article.liquid",
-        "name": "Article",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "main-blog.liquid",
-        "name": "Blog posts",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "main-cart.liquid",
-        "name": "Cart",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "main-collection.liquid",
-        "name": "Product grid",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "main-list-collections.liquid",
-        "name": "Collections list",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "main-page.liquid",
-        "name": "Page content",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "main-password.liquid",
-        "name": "Password",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "main-product.liquid",
-        "name": "Product information",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "main-search.liquid",
-        "name": "Search results",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "marquee-ribbon.liquid",
-        "name": "Marquee ribbon",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "newsletter.liquid",
-        "name": "Newsletter",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "process-timeline.liquid",
-        "name": "Process timeline",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "product-callouts.liquid",
-        "name": "Product callouts",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "project-cards.liquid",
-        "name": "Project cards",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "promo-tiles.liquid",
-        "name": "Promo tiles",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "quote-stats.liquid",
-        "name": "Quote and stats",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "rich-text.liquid",
-        "name": "Rich text",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "slideshow.liquid",
-        "name": "Slideshow",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "stats.liquid",
-        "name": "Stats",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "steps.liquid",
-        "name": "Steps",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "style-cards.liquid",
-        "name": "Style cards",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "testimonials.liquid",
-        "name": "Testimonials",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "trust-row.liquid",
-        "name": "Trust row",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "usp-bar.liquid",
-        "name": "Icon features",
-        "status": "warn",
-        "issues": [
-          "no styling source (no <style>, no css asset)"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "works-grid.liquid",
-        "name": "Works grid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "nocturne-store",
-        "file": "accordion-content.liquid",
-        "name": "Accordion content",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "nocturne-store",
-        "file": "gift-set-grid.liquid",
-        "name": "Gift Sets Grid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "nocturne-store",
-        "file": "header.liquid",
-        "name": "Header",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "nocturne-store",
-        "file": "terra-hero.liquid",
-        "name": "Terra Hero",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "nocturne-store",
-        "file": "why-us-pillars.liquid",
-        "name": "Why Brand",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "pet store",
-        "file": "pet-blog.liquid",
-        "name": "Pet Blog",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "pet store",
-        "file": "pet-category-grid.liquid",
-        "name": "Pet Category Grid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "pet store",
-        "file": "pet-collection-showcase.liquid",
-        "name": "Pet Collection Showcase",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "pet store",
-        "file": "pet-featured-products.liquid",
-        "name": "Pet Featured Products",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "pet store",
-        "file": "pet-footer.liquid",
-        "name": "Pet Footer",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "pet store",
-        "file": "pet-header.liquid",
-        "name": "Pet Header",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "pet store",
-        "file": "pet-hero.liquid",
-        "name": "Pet Hero",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "pet store",
-        "file": "pet-logo-strip.liquid",
-        "name": "Pet Logo Strip",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "pet store",
-        "file": "pet-promo-banners.liquid",
-        "name": "Pet Promo Banners",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "pet store",
-        "file": "pet-testimonials.liquid",
-        "name": "Pet Testimonials",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "advantages.liquid",
-        "name": "Advantages",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "announcement-bar.liquid",
-        "name": "Announcement bar",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "az-about.liquid",
-        "name": "AZ About card",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "az-consult.liquid",
-        "name": "AZ Consult split",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "az-location.liquid",
-        "name": "AZ Location quad",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "az-villas.liquid",
-        "name": "AZ Villas",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "banner.liquid",
-        "name": "Banner",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "collection-list.liquid",
-        "name": "Collection list",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "contact-form.liquid",
-        "name": "Contact form",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "editorial-trio.liquid",
-        "name": "Editorial trio",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "faq.liquid",
-        "name": "FAQ",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "feature-cards.liquid",
-        "name": "Feature cards",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "featured-collection.liquid",
-        "name": "Featured collection",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "featured-product.liquid",
-        "name": "Featured product",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "footer.liquid",
-        "name": "Footer",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "header.liquid",
-        "name": "Header",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "hero.liquid",
-        "name": "Hero",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "image-with-text.liquid",
-        "name": "Image with text",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "logo-wall.liquid",
-        "name": "Logo wall",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-404.liquid",
-        "name": "404 page",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-article.liquid",
-        "name": "Article",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-blog.liquid",
-        "name": "Blog posts",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-cart.liquid",
-        "name": "Cart",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-collection.liquid",
-        "name": "Product grid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-list-collections.liquid",
-        "name": "Collections list",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-page.liquid",
-        "name": "Page content",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-password.liquid",
-        "name": "Password",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-product.liquid",
-        "name": "Product information",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-search.liquid",
-        "name": "Search results",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "marquee-ribbon.liquid",
-        "name": "Marquee ribbon",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "newsletter.liquid",
-        "name": "Newsletter",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "product-callouts.liquid",
-        "name": "Product callouts",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "project-cards.liquid",
-        "name": "Project cards",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "promo-tiles.liquid",
-        "name": "Promo tiles",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "quote-stats.liquid",
-        "name": "Quote and stats",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "rich-text.liquid",
-        "name": "Rich text",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "slideshow.liquid",
-        "name": "Slideshow",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "stats.liquid",
-        "name": "Stats",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "steps.liquid",
-        "name": "Steps",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "style-cards.liquid",
-        "name": "Style cards",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "testimonials.liquid",
-        "name": "Testimonials",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "trust-row.liquid",
-        "name": "Trust row",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "usp-bar.liquid",
-        "name": "Icon features",
         "status": "ok",
         "issues": []
       },
@@ -2445,6 +1665,295 @@
         "issues": []
       },
       {
+        "store": "horizon",
+        "file": "_blocks.liquid",
+        "name": "t:names.section",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "carousel.liquid",
+        "name": "t:names.carousel",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "cart-drawer-section.liquid",
+        "name": "t:names.cart_drawer",
+        "status": "warn",
+        "issues": [
+          "empty output"
+        ]
+      },
+      {
+        "store": "horizon",
+        "file": "collection-links.liquid",
+        "name": "t:names.collection_links",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "collection-list.liquid",
+        "name": "t:names.collection_list",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "custom-liquid.liquid",
+        "name": "t:names.custom_liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "divider.liquid",
+        "name": "t:names.divider",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "featured-blog-posts.liquid",
+        "name": "t:names.blog_posts",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "featured-product-information.liquid",
+        "name": "t:names.featured_product_information",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "featured-product.liquid",
+        "name": "t:names.featured_product",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "footer-utilities.liquid",
+        "name": "t:names.policies_and_links",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "footer.liquid",
+        "name": "t:names.footer",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "header-announcements.liquid",
+        "name": "t:names.announcement_bar",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "header.liquid",
+        "name": "t:names.header",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "hero-product-cards.liquid",
+        "name": "Hero product cards",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "hero.liquid",
+        "name": "t:names.hero",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "layered-slideshow.liquid",
+        "name": "t:names.layered_slideshow",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "logo.liquid",
+        "name": "t:names.logo",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "main-404.liquid",
+        "name": "t:names.404",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "main-blog-post.liquid",
+        "name": "t:names.blog_post",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "main-blog.liquid",
+        "name": "t:names.blog_posts",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "main-cart.liquid",
+        "name": "t:names.cart",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "main-collection-list.liquid",
+        "name": "t:names.collection_list",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "main-collection.liquid",
+        "name": "t:names.collection_container",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "main-page.liquid",
+        "name": "t:names.page",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "marquee.liquid",
+        "name": "t:names.marquee",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "media-with-content.liquid",
+        "name": "t:names.media_with_text",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "password-footer.liquid",
+        "name": "t:names.footer_password",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "password.liquid",
+        "name": "t:names.section",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "predictive-search-empty.liquid",
+        "name": "t:names.predictive_search_empty",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "predictive-search.liquid",
+        "name": "t:names.predictive_search",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "product-hotspots.liquid",
+        "name": "t:names.product_hotspots",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "product-information.liquid",
+        "name": "t:names.product_information",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "product-list.liquid",
+        "name": "t:names.product_list",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "product-recommendations.liquid",
+        "name": "t:names.product_recommendations",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "quick-order-list.liquid",
+        "name": "t:names.quick_order_list",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "search-header.liquid",
+        "name": "t:names.search",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "search-results.liquid",
+        "name": "t:names.search_results",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "section-rendering-product-card.liquid",
+        "name": "t:names.product_card_rendering",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "section.liquid",
+        "name": "t:names.section",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "slideshow.liquid",
+        "name": "t:names.slideshow",
+        "status": "ok",
+        "issues": []
+      },
+      {
         "store": "jlsport",
         "file": "club-quad.liquid",
         "name": "Club quad",
@@ -2522,6 +2031,321 @@
         "issues": []
       },
       {
+        "store": "mariana-red",
+        "file": "about-stats.liquid",
+        "name": "About + stats",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "advantages.liquid",
+        "name": "Advantages",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "announcement-bar.liquid",
+        "name": "Announcement bar",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "banner.liquid",
+        "name": "Banner",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "case-studies.liquid",
+        "name": "Case studies",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "collection-list.liquid",
+        "name": "Collection list",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "contact-form.liquid",
+        "name": "Contact form",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "editorial-trio.liquid",
+        "name": "Editorial trio",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "faq.liquid",
+        "name": "FAQ",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "feature-cards.liquid",
+        "name": "Feature cards",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "featured-collection.liquid",
+        "name": "Featured collection",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "featured-product.liquid",
+        "name": "Featured product",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "footer-designer.liquid",
+        "name": "Designer footer",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "footer.liquid",
+        "name": "Footer",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "header.liquid",
+        "name": "Header",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "hero-designer.liquid",
+        "name": "Designer hero",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "hero.liquid",
+        "name": "Hero",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "image-with-text.liquid",
+        "name": "Image with text",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "logo-wall.liquid",
+        "name": "Logo wall",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "main-404.liquid",
+        "name": "404 page",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "main-article.liquid",
+        "name": "Article",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "main-blog.liquid",
+        "name": "Blog posts",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "main-cart.liquid",
+        "name": "Cart",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "main-collection.liquid",
+        "name": "Product grid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "main-list-collections.liquid",
+        "name": "Collections list",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "main-page.liquid",
+        "name": "Page content",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "main-password.liquid",
+        "name": "Password",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "main-product.liquid",
+        "name": "Product information",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "main-search.liquid",
+        "name": "Search results",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "marquee-ribbon.liquid",
+        "name": "Marquee ribbon",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "newsletter.liquid",
+        "name": "Newsletter",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "process-timeline.liquid",
+        "name": "Process timeline",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "product-callouts.liquid",
+        "name": "Product callouts",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "project-cards.liquid",
+        "name": "Project cards",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "promo-tiles.liquid",
+        "name": "Promo tiles",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "quote-stats.liquid",
+        "name": "Quote and stats",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "rich-text.liquid",
+        "name": "Rich text",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "slideshow.liquid",
+        "name": "Slideshow",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "stats.liquid",
+        "name": "Stats",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "steps.liquid",
+        "name": "Steps",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "style-cards.liquid",
+        "name": "Style cards",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "testimonials.liquid",
+        "name": "Testimonials",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "trust-row.liquid",
+        "name": "Trust row",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "usp-bar.liquid",
+        "name": "Icon features",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "works-grid.liquid",
+        "name": "Works grid",
+        "status": "ok",
+        "issues": []
+      },
+      {
         "store": "milo",
         "file": "collection-list.liquid",
         "name": "Collection list",
@@ -2595,6 +2419,111 @@
         "store": "nexora",
         "file": "steps.liquid",
         "name": "Process steps",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "nocturne-store",
+        "file": "accordion-content.liquid",
+        "name": "Accordion content",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "nocturne-store",
+        "file": "gift-set-grid.liquid",
+        "name": "Gift Sets Grid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "nocturne-store",
+        "file": "header.liquid",
+        "name": "Header",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "nocturne-store",
+        "file": "terra-hero.liquid",
+        "name": "Terra Hero",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "nocturne-store",
+        "file": "why-us-pillars.liquid",
+        "name": "Why Brand",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "pet store",
+        "file": "pet-blog.liquid",
+        "name": "Pet Blog",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "pet store",
+        "file": "pet-category-grid.liquid",
+        "name": "Pet Category Grid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "pet store",
+        "file": "pet-collection-showcase.liquid",
+        "name": "Pet Collection Showcase",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "pet store",
+        "file": "pet-featured-products.liquid",
+        "name": "Pet Featured Products",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "pet store",
+        "file": "pet-footer.liquid",
+        "name": "Pet Footer",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "pet store",
+        "file": "pet-header.liquid",
+        "name": "Pet Header",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "pet store",
+        "file": "pet-hero.liquid",
+        "name": "Pet Hero",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "pet store",
+        "file": "pet-logo-strip.liquid",
+        "name": "Pet Logo Strip",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "pet store",
+        "file": "pet-promo-banners.liquid",
+        "name": "Pet Promo Banners",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "pet store",
+        "file": "pet-testimonials.liquid",
+        "name": "Pet Testimonials",
         "status": "ok",
         "issues": []
       },
@@ -3057,11 +2986,241 @@
   },
   "live": {
     "summary": {
-      "ok": 411,
-      "warn": 12,
+      "ok": 420,
+      "warn": 3,
       "fail": 0
     },
     "results": [
+      {
+        "store": "azura",
+        "file": "announcement-bar.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "az-consult.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "advantages.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "az-villas.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "az-location.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "banner.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "faq.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "collection-list.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "feature-cards.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "featured-product.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "header.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "footer.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "hero.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "image-with-text.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "logo-wall.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-404.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-blog.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-cart.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "az-about.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-collection.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-list-collections.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-page.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-password.liquid",
+        "status": "warn",
+        "issues": [
+          "password page"
+        ]
+      },
+      {
+        "store": "azura",
+        "file": "main-search.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "marquee-ribbon.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-product.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "contact-form.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "product-callouts.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "newsletter.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "featured-collection.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "project-cards.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "promo-tiles.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "rich-text.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "quote-stats.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "slideshow.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "stats.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "steps.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "style-cards.liquid",
+        "status": "ok",
+        "issues": []
+      },
       {
         "store": "base",
         "file": "about-snatched.liquid",
@@ -3082,55 +3241,13 @@
       },
       {
         "store": "base",
-        "file": "announcement-bar.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
-        "file": "arena-stats-intro.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
-        "file": "arena-process.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
-        "file": "arena-cta.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
-        "file": "arena-why-us.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
-        "file": "arena-hero.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
-        "file": "aura-categories.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
-        "file": "aura-hero.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
         "file": "account-banner.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "announcement-bar.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3142,13 +3259,61 @@
       },
       {
         "store": "base",
+        "file": "arena-cta.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "arena-hero.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "arena-process.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "arena-stats-intro.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "arena-why-us.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "aura-categories.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
         "file": "aura-duo.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "base",
+        "file": "aura-hero.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
         "file": "aura-newsletter-band.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "before-after-image.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3171,8 +3336,14 @@
         "issues": []
       },
       {
-        "store": "base",
-        "file": "button-grid.liquid",
+        "store": "azura",
+        "file": "testimonials.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "trust-row.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3184,7 +3355,7 @@
       },
       {
         "store": "base",
-        "file": "before-after-image.liquid",
+        "file": "button-grid.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3196,19 +3367,13 @@
       },
       {
         "store": "base",
-        "file": "collection-banner.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
         "file": "cart-drawer.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "base",
-        "file": "collection-showcase.liquid",
+        "file": "collection-banner.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3220,19 +3385,13 @@
       },
       {
         "store": "base",
+        "file": "collection-showcase.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
         "file": "contact.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
-        "file": "custom-liquid.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
-        "file": "dark-fan-carousel.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3249,8 +3408,14 @@
         "issues": []
       },
       {
-        "store": "base",
-        "file": "custom-product-showcase.liquid",
+        "store": "azura",
+        "file": "usp-bar.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "main-article.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3262,19 +3427,19 @@
       },
       {
         "store": "base",
+        "file": "dark-fan-carousel.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "custom-liquid.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
         "file": "eq-about-us.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
-        "file": "faq.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
-        "file": "decorated-card.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3286,19 +3451,7 @@
       },
       {
         "store": "base",
-        "file": "eq-footer.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
         "file": "feature-chart.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
-        "file": "featured-product.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3316,19 +3469,25 @@
       },
       {
         "store": "base",
+        "file": "faq.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "eq-footer.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
         "file": "flip-note.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "base",
-        "file": "features-benefits-cta.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
-        "file": "footer.liquid",
+        "file": "featured-product.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3340,13 +3499,13 @@
       },
       {
         "store": "base",
-        "file": "haven-gallery.liquid",
+        "file": "glow-button.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "base",
-        "file": "glow-button.liquid",
+        "file": "haven-booking.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3358,7 +3517,7 @@
       },
       {
         "store": "base",
-        "file": "haven-booking.liquid",
+        "file": "haven-gallery.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3376,13 +3535,25 @@
       },
       {
         "store": "base",
+        "file": "hero-split-minimal.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "footer.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
         "file": "hero-with-cards.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "base",
-        "file": "hero-split-minimal.liquid",
+        "file": "features-benefits-cta.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3394,25 +3565,13 @@
       },
       {
         "store": "base",
-        "file": "image-link-blocks.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
-        "file": "impact-text.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
         "file": "hot-spots.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "base",
-        "file": "images-with-text-scrolling.liquid",
+        "file": "image-link-blocks.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3424,25 +3583,21 @@
       },
       {
         "store": "base",
-        "file": "logo-list.liquid",
+        "file": "images-with-text-scrolling.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "base",
-        "file": "main-blog.liquid",
-        "status": "warn",
-        "issues": [
-          "Liquid error (sections/main-blog line 147): Array 'blog.articles' is not paginateable."
-        ]
+        "file": "impact-text.liquid",
+        "status": "ok",
+        "issues": []
       },
       {
         "store": "base",
-        "file": "main-article.liquid",
-        "status": "warn",
-        "issues": [
-          "Liquid error (snippets/article-comments line 75): new_comment form must be given an article"
-        ]
+        "file": "logo-list.liquid",
+        "status": "ok",
+        "issues": []
       },
       {
         "store": "base",
@@ -3452,27 +3607,15 @@
       },
       {
         "store": "base",
-        "file": "main-collection.liquid",
-        "status": "warn",
-        "issues": [
-          "Liquid error (sections/main-collection line 109): Array 'collection.products' is not paginateable."
-        ]
+        "file": "custom-product-showcase.liquid",
+        "status": "ok",
+        "issues": []
       },
       {
         "store": "base",
-        "file": "main-customers-account.liquid",
-        "status": "warn",
-        "issues": [
-          "Liquid error (sections/main-customers-account line 34): Array 'customer.orders' is not paginateable."
-        ]
-      },
-      {
-        "store": "base",
-        "file": "main-customers-addresses.liquid",
-        "status": "warn",
-        "issues": [
-          "Liquid error (sections/main-customers-addresses line 10): Array 'customer.addresses' is not paginateable."
-        ]
+        "file": "main-blog.liquid",
+        "status": "ok",
+        "issues": []
       },
       {
         "store": "base",
@@ -3482,13 +3625,19 @@
       },
       {
         "store": "base",
-        "file": "main-customers-order.liquid",
+        "file": "main-collection.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "base",
         "file": "main-customers-login.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "main-customers-order.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3512,7 +3661,7 @@
       },
       {
         "store": "base",
-        "file": "main-page.liquid",
+        "file": "main-list-collections.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3524,13 +3673,19 @@
       },
       {
         "store": "base",
-        "file": "main-list-collections.liquid",
+        "file": "main-page.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "base",
         "file": "main-password.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "main-customers-account.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3548,27 +3703,19 @@
       },
       {
         "store": "base",
-        "file": "main-product.liquid",
-        "status": "warn",
-        "issues": [
-          "Liquid error (snippets/product-info line 123): product form must be given a product"
-        ]
-      },
-      {
-        "store": "base",
-        "file": "mega-header.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
         "file": "media-with-text.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "base",
-        "file": "multi-column.liquid",
+        "file": "main-product.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "minimal-centered-footer.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3580,7 +3727,7 @@
       },
       {
         "store": "base",
-        "file": "newsletter-popup.liquid",
+        "file": "multi-column.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3592,7 +3739,7 @@
       },
       {
         "store": "base",
-        "file": "minimal-centered-footer.liquid",
+        "file": "newsletter-popup.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3610,7 +3757,7 @@
       },
       {
         "store": "base",
-        "file": "promo-split-banner.liquid",
+        "file": "press.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3622,13 +3769,13 @@
       },
       {
         "store": "base",
-        "file": "press.liquid",
+        "file": "promo-payment-methods.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "base",
-        "file": "promo-payment-methods.liquid",
+        "file": "promo-split-banner.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3640,19 +3787,13 @@
       },
       {
         "store": "base",
-        "file": "ritual-cards.liquid",
+        "file": "mega-header.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "base",
         "file": "rich-text.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
-        "file": "related-products.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3670,6 +3811,12 @@
       },
       {
         "store": "base",
+        "file": "ritual-cards.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
         "file": "scrolling-text.liquid",
         "status": "ok",
         "issues": []
@@ -3682,25 +3829,25 @@
       },
       {
         "store": "base",
-        "file": "shogun-above.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
         "file": "search-drawer.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "base",
-        "file": "shogun-below.liquid",
+        "file": "section-navigator.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "base",
-        "file": "section-navigator.liquid",
+        "file": "shogun-above.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "shogun-below.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3724,19 +3871,7 @@
       },
       {
         "store": "base",
-        "file": "ss-trust-badges-3.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
         "file": "sleek-hero.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
-        "file": "ss-hero-16.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3754,7 +3889,31 @@
       },
       {
         "store": "base",
+        "file": "ss-hero-16.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "ss-trust-badges-3.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
         "file": "ss-video-slider.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "related-products.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "statement-banner.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3772,12 +3931,6 @@
       },
       {
         "store": "base",
-        "file": "statement-banner.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
         "file": "styling-layout.liquid",
         "status": "ok",
         "issues": []
@@ -3790,19 +3943,25 @@
       },
       {
         "store": "base",
-        "file": "terra-trust.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
         "file": "terra-featured-product.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "base",
+        "file": "terra-hero.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
         "file": "terra-services.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "terra-trust.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3820,19 +3979,13 @@
       },
       {
         "store": "base",
-        "file": "terra-hero.liquid",
+        "file": "testimonials.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "base",
         "file": "text-with-icons.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
-        "file": "testimonials.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3850,19 +4003,13 @@
       },
       {
         "store": "base",
-        "file": "three-paths.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "base",
         "file": "the-solution.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "base",
-        "file": "upsell-bundle.liquid",
+        "file": "three-paths.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3874,13 +4021,13 @@
       },
       {
         "store": "base",
-        "file": "usp-row.liquid",
+        "file": "upsell-bundle.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "base",
-        "file": "variant-added.liquid",
+        "file": "usp-row.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3909,6 +4056,338 @@
         "issues": []
       },
       {
+        "store": "base",
+        "file": "main-customers-addresses.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "advantages.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "announcement-bar.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "banner.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "collection-list.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "contact-form.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "decorated-card.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "cy-endquote.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "variant-added.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "cy-quote.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "cy-shades.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "cy-video.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "editorial-trio.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "faq.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "featured-collection.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "featured-product.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "cy-focus.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "header.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "hero.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "image-with-text.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "logo-wall.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "main-404.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "main-article.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "main-blog.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "main-cart.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "main-collection.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "base",
+        "file": "main-article.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "azura",
+        "file": "editorial-trio.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "main-list-collections.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "main-password.liquid",
+        "status": "warn",
+        "issues": [
+          "password page"
+        ]
+      },
+      {
+        "store": "cybele",
+        "file": "main-page.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "main-product.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "marquee-ribbon.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "main-search.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "project-cards.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "newsletter.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "product-callouts.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "quote-stats.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "promo-tiles.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "slideshow.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "stats.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "style-cards.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "steps.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "testimonials.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "trust-row.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "homeware",
+        "file": "collection-list.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "usp-bar.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "homeware",
+        "file": "featured-collection.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "homeware",
+        "file": "featured-product.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "rich-text.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "homeware",
+        "file": "hero.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "homeware",
+        "file": "footer.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "homeware",
+        "file": "style-cards.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "homeware",
+        "file": "newsletter.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "homeware",
+        "file": "usp-bar.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
         "store": "horizon",
         "file": "carousel.liquid",
         "status": "ok",
@@ -3917,12 +4396,6 @@
       {
         "store": "base",
         "file": "word-scroll-reveal.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "_blocks.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3940,7 +4413,7 @@
       },
       {
         "store": "horizon",
-        "file": "divider.liquid",
+        "file": "collection-list.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3952,19 +4425,7 @@
       },
       {
         "store": "horizon",
-        "file": "collection-list.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
         "file": "featured-blog-posts.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "featured-product.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3976,13 +4437,19 @@
       },
       {
         "store": "horizon",
-        "file": "footer.liquid",
+        "file": "featured-product.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "horizon",
         "file": "footer-utilities.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "footer.liquid",
         "status": "ok",
         "issues": []
       },
@@ -3995,32 +4462,12 @@
       {
         "store": "horizon",
         "file": "header.liquid",
-        "status": "warn",
-        "issues": [
-          "Liquid error (sections/horizon--header line 22): Could not find asset snippets/slideshow-styles.liquid\n\n\n\n"
-        ]
+        "status": "ok",
+        "issues": []
       },
       {
         "store": "horizon",
         "file": "hero-product-cards.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "hero.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "logo.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "horizon",
-        "file": "main-404.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4032,7 +4479,25 @@
       },
       {
         "store": "horizon",
-        "file": "main-blog.liquid",
+        "file": "hero.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "main-404.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "main-blog-post.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "cybele",
+        "file": "feature-cards.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4044,7 +4509,13 @@
       },
       {
         "store": "horizon",
-        "file": "main-collection.liquid",
+        "file": "_blocks.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "main-blog.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4056,7 +4527,7 @@
       },
       {
         "store": "horizon",
-        "file": "main-blog-post.liquid",
+        "file": "main-collection.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4067,8 +4538,8 @@
         "issues": []
       },
       {
-        "store": "horizon",
-        "file": "media-with-content.liquid",
+        "store": "cybele",
+        "file": "footer.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4080,7 +4551,7 @@
       },
       {
         "store": "horizon",
-        "file": "password-footer.liquid",
+        "file": "media-with-content.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4092,7 +4563,7 @@
       },
       {
         "store": "horizon",
-        "file": "predictive-search.liquid",
+        "file": "divider.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4104,13 +4575,19 @@
       },
       {
         "store": "horizon",
-        "file": "product-hotspots.liquid",
+        "file": "predictive-search.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "horizon",
         "file": "product-information.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "product-hotspots.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4141,10 +4618,14 @@
       {
         "store": "horizon",
         "file": "search-results.liquid",
-        "status": "warn",
-        "issues": [
-          "Liquid error (sections/horizon--search-results line 42): Array 'search.results' is not paginateable.\n  "
-        ]
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "section-rendering-product-card.liquid",
+        "status": "ok",
+        "issues": []
       },
       {
         "store": "horizon",
@@ -4159,22 +4640,62 @@
         "issues": []
       },
       {
-        "store": "horizon",
-        "file": "section-rendering-product-card.liquid",
-        "status": "warn",
-        "issues": [
-          "Liquid error (sections/horizon--section-rendering-product-card line 40): standard_event_data does not support NilClass. Supported ty"
-        ]
+        "store": "jlsport",
+        "file": "club-quad.liquid",
+        "status": "ok",
+        "issues": []
       },
       {
-        "store": "mariana-red",
-        "file": "about-stats.liquid",
+        "store": "jlsport",
+        "file": "editorial-trio.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "jlsport",
+        "file": "featured-collection.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "jlsport",
+        "file": "hero.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "kuafi",
+        "file": "featured-collection.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "kuafi",
+        "file": "hero.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "kuafi",
+        "file": "image-with-text.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "logo.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "kuafi",
+        "file": "kuafi-order.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "mariana-red",
-        "file": "announcement-bar.liquid",
+        "file": "about-stats.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4186,7 +4707,7 @@
       },
       {
         "store": "mariana-red",
-        "file": "contact-form.liquid",
+        "file": "announcement-bar.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4198,13 +4719,19 @@
       },
       {
         "store": "mariana-red",
+        "file": "case-studies.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
         "file": "collection-list.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "mariana-red",
-        "file": "case-studies.liquid",
+        "file": "contact-form.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4222,13 +4749,13 @@
       },
       {
         "store": "mariana-red",
-        "file": "featured-collection.liquid",
+        "file": "feature-cards.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "mariana-red",
-        "file": "feature-cards.liquid",
+        "file": "featured-collection.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4246,13 +4773,13 @@
       },
       {
         "store": "mariana-red",
-        "file": "footer.liquid",
+        "file": "header.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "mariana-red",
-        "file": "header.liquid",
+        "file": "footer.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4264,7 +4791,25 @@
       },
       {
         "store": "mariana-red",
-        "file": "hero.liquid",
+        "file": "image-with-text.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "kuafi",
+        "file": "footer.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "kuafi",
+        "file": "kuafi-duo.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "kuafi",
+        "file": "marquee-ribbon.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4282,61 +4827,7 @@
       },
       {
         "store": "mariana-red",
-        "file": "image-with-text.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
         "file": "main-article.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "main-blog.liquid",
-        "status": "warn",
-        "issues": [
-          "Liquid error (sections/mariana-red--main-blog line 13): Array 'blog.articles' is not paginateable."
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "main-cart.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "main-collection.liquid",
-        "status": "warn",
-        "issues": [
-          "Liquid error (sections/mariana-red--main-collection line 98): Array 'collection.products' is not paginateable."
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "main-page.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "main-search.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "main-product.liquid",
-        "status": "warn",
-        "issues": [
-          "Liquid error (sections/mariana-red--main-product line 124): product form must be given a product"
-        ]
-      },
-      {
-        "store": "mariana-red",
-        "file": "main-password.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4348,13 +4839,39 @@
       },
       {
         "store": "mariana-red",
-        "file": "marquee-ribbon.liquid",
+        "file": "main-page.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "horizon",
+        "file": "password-footer.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "mariana-red",
-        "file": "process-timeline.liquid",
+        "file": "main-password.liquid",
+        "status": "warn",
+        "issues": [
+          "password page"
+        ]
+      },
+      {
+        "store": "mariana-red",
+        "file": "main-product.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "main-search.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "marquee-ribbon.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4366,25 +4883,13 @@
       },
       {
         "store": "mariana-red",
+        "file": "process-timeline.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
         "file": "product-callouts.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "quote-stats.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "promo-tiles.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "mariana-red",
-        "file": "rich-text.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4396,13 +4901,25 @@
       },
       {
         "store": "mariana-red",
-        "file": "slideshow.liquid",
+        "file": "promo-tiles.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "mariana-red",
-        "file": "stats.liquid",
+        "file": "hero.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "rich-text.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "slideshow.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4414,7 +4931,19 @@
       },
       {
         "store": "mariana-red",
-        "file": "testimonials.liquid",
+        "file": "stats.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "main-blog.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "trust-row.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4426,25 +4955,85 @@
       },
       {
         "store": "mariana-red",
+        "file": "works-grid.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "milo",
+        "file": "collection-list.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "milo",
+        "file": "featured-collection.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "quote-stats.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "milo",
+        "file": "hero.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "milo",
+        "file": "image-duo.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
         "file": "style-cards.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "mariana-red",
-        "file": "works-grid.liquid",
+        "file": "main-collection.liquid",
         "status": "ok",
         "issues": []
       },
       {
-        "store": "mariana-red",
-        "file": "trust-row.liquid",
+        "store": "milo",
+        "file": "image-with-text.liquid",
         "status": "ok",
         "issues": []
       },
       {
-        "store": "nocturne-store",
-        "file": "accordion-content.liquid",
+        "store": "nexora",
+        "file": "hero.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "nexora",
+        "file": "invest-split.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "nexora",
+        "file": "project-cards.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "nexora",
+        "file": "steps.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "milo",
+        "file": "giant-text.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4467,8 +5056,8 @@
         "issues": []
       },
       {
-        "store": "nocturne-store",
-        "file": "why-us-pillars.liquid",
+        "store": "pet store",
+        "file": "pet-blog.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4479,14 +5068,20 @@
         "issues": []
       },
       {
-        "store": "pet store",
-        "file": "pet-blog.liquid",
+        "store": "mariana-red",
+        "file": "testimonials.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "pet store",
         "file": "pet-featured-products.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "nexora",
+        "file": "contact-strip.liquid",
         "status": "ok",
         "issues": []
       },
@@ -4504,12 +5099,6 @@
       },
       {
         "store": "pet store",
-        "file": "pet-collection-showcase.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "pet store",
         "file": "pet-hero.liquid",
         "status": "ok",
         "issues": []
@@ -4522,709 +5111,7 @@
       },
       {
         "store": "pet store",
-        "file": "pet-testimonials.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "pet store",
         "file": "pet-promo-banners.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "advantages.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "announcement-bar.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "az-about.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "az-location.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "az-consult.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "az-villas.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "banner.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "editorial-trio.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "collection-list.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "contact-form.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "faq.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "hero.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "feature-cards.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "featured-collection.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "featured-product.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "header.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "footer.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-404.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-article.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "image-with-text.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "logo-wall.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-cart.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-blog.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-collection.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-list-collections.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-password.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-page.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-search.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "marquee-ribbon.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "newsletter.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "main-product.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "product-callouts.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "promo-tiles.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "project-cards.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "steps.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "quote-stats.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "stats.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "slideshow.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "style-cards.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "rich-text.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "trust-row.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "testimonials.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "azura",
-        "file": "usp-bar.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "advantages.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "announcement-bar.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "banner.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "contact-form.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "cy-endquote.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "collection-list.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "cy-focus.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "cy-shades.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "cy-video.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "feature-cards.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "cy-quote.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "editorial-trio.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "faq.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "footer.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "featured-collection.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "featured-product.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "header.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "hero.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "image-with-text.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "main-article.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "main-blog.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "logo-wall.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "main-404.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "main-cart.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "main-collection.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "main-page.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "main-list-collections.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "main-product.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "main-password.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "main-search.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "marquee-ribbon.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "newsletter.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "project-cards.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "promo-tiles.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "quote-stats.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "rich-text.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "product-callouts.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "slideshow.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "stats.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "steps.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "style-cards.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "testimonials.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "trust-row.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "cybele",
-        "file": "usp-bar.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "homeware",
-        "file": "featured-product.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "homeware",
-        "file": "collection-list.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "homeware",
-        "file": "footer.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "homeware",
-        "file": "featured-collection.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "homeware",
-        "file": "style-cards.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "homeware",
-        "file": "hero.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "homeware",
-        "file": "newsletter.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "homeware",
-        "file": "usp-bar.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "jlsport",
-        "file": "club-quad.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "jlsport",
-        "file": "editorial-trio.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "jlsport",
-        "file": "hero.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "jlsport",
-        "file": "featured-collection.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "kuafi",
-        "file": "featured-collection.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "kuafi",
-        "file": "footer.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "kuafi",
-        "file": "hero.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "kuafi",
-        "file": "kuafi-duo.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "kuafi",
-        "file": "image-with-text.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "kuafi",
-        "file": "kuafi-order.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "kuafi",
-        "file": "marquee-ribbon.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "milo",
-        "file": "collection-list.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "milo",
-        "file": "featured-collection.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "milo",
-        "file": "giant-text.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "milo",
-        "file": "hero.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "milo",
-        "file": "image-with-text.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "milo",
-        "file": "image-duo.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "nexora",
-        "file": "hero.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "nexora",
-        "file": "contact-strip.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "nexora",
-        "file": "invest-split.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "nexora",
-        "file": "project-cards.liquid",
         "status": "ok",
         "issues": []
       },
@@ -5235,20 +5122,26 @@
         "issues": []
       },
       {
-        "store": "nexora",
-        "file": "steps.liquid",
+        "store": "pet store",
+        "file": "pet-testimonials.liquid",
         "status": "ok",
         "issues": []
       },
       {
-        "store": "pyko",
-        "file": "best-sellers.liquid",
+        "store": "nocturne-store",
+        "file": "why-us-pillars.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "pyko",
         "file": "footer.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "pyko",
+        "file": "best-sellers.liquid",
         "status": "ok",
         "issues": []
       },
@@ -5277,26 +5170,32 @@
         "issues": []
       },
       {
-        "store": "sage",
-        "file": "care-collage.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
         "store": "pyko",
         "file": "testimonial-feature.liquid",
         "status": "ok",
         "issues": []
       },
       {
+        "store": "pet store",
+        "file": "pet-collection-showcase.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
         "store": "sage",
-        "file": "complex-collage.liquid",
+        "file": "care-collage.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "sage",
         "file": "header.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "mariana-red",
+        "file": "main-cart.liquid",
         "status": "ok",
         "issues": []
       },
@@ -5350,25 +5249,7 @@
       },
       {
         "store": "speed",
-        "file": "featured-collection.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "speed",
-        "file": "header.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "speed",
         "file": "find-next.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "speed",
-        "file": "footer.liquid",
         "status": "ok",
         "issues": []
       },
@@ -5380,13 +5261,25 @@
       },
       {
         "store": "speed",
-        "file": "promo-tiles.liquid",
+        "file": "header.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "nocturne-store",
+        "file": "accordion-content.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "speed",
         "file": "hero.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "speed",
+        "file": "promo-tiles.liquid",
         "status": "ok",
         "issues": []
       },
@@ -5399,12 +5292,6 @@
       {
         "store": "suncare",
         "file": "header.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "suncare",
-        "file": "sc-banner.liquid",
         "status": "ok",
         "issues": []
       },
@@ -5416,19 +5303,19 @@
       },
       {
         "store": "suncare",
-        "file": "sc-faq.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "suncare",
         "file": "sc-botanical.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "suncare",
-        "file": "sc-hero.liquid",
+        "file": "sc-banner.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "suncare",
+        "file": "sc-faq.liquid",
         "status": "ok",
         "issues": []
       },
@@ -5440,7 +5327,19 @@
       },
       {
         "store": "suncare",
-        "file": "sc-story.liquid",
+        "file": "sc-hero.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "speed",
+        "file": "featured-collection.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "theme-boutique",
+        "file": "banner.liquid",
         "status": "ok",
         "issues": []
       },
@@ -5452,25 +5351,13 @@
       },
       {
         "store": "theme-boutique",
-        "file": "banner.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "theme-boutique",
-        "file": "collection-list.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "theme-boutique",
         "file": "footer.liquid",
         "status": "ok",
         "issues": []
       },
       {
-        "store": "theme-boutique",
-        "file": "header.liquid",
+        "store": "sage",
+        "file": "complex-collage.liquid",
         "status": "ok",
         "issues": []
       },
@@ -5481,14 +5368,8 @@
         "issues": []
       },
       {
-        "store": "theme-boutique",
-        "file": "image-with-text.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "theme-boutique",
-        "file": "style-cards.liquid",
+        "store": "suncare",
+        "file": "sc-story.liquid",
         "status": "ok",
         "issues": []
       },
@@ -5506,19 +5387,31 @@
       },
       {
         "store": "theme-chocolatier",
-        "file": "featured-collection.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "theme-chocolatier",
         "file": "collection-list.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "theme-chocolatier",
+        "file": "featured-collection.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "theme-chocolatier",
         "file": "footer.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "theme-boutique",
+        "file": "collection-list.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "theme-boutique",
+        "file": "header.liquid",
         "status": "ok",
         "issues": []
       },
@@ -5536,19 +5429,7 @@
       },
       {
         "store": "theme-chocolatier",
-        "file": "newsletter.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "theme-chocolatier",
         "file": "quote-stats.liquid",
-        "status": "ok",
-        "issues": []
-      },
-      {
-        "store": "theme-noir",
-        "file": "footer.liquid",
         "status": "ok",
         "issues": []
       },
@@ -5560,19 +5441,31 @@
       },
       {
         "store": "theme-noir",
+        "file": "footer.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "theme-boutique",
+        "file": "style-cards.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "theme-noir",
         "file": "image-with-text.liquid",
         "status": "ok",
         "issues": []
       },
       {
-        "store": "urbanedge",
-        "file": "about-collections.liquid",
+        "store": "theme-chocolatier",
+        "file": "newsletter.liquid",
         "status": "ok",
         "issues": []
       },
       {
-        "store": "urbanedge",
-        "file": "feature-cards.liquid",
+        "store": "speed",
+        "file": "footer.liquid",
         "status": "ok",
         "issues": []
       },
@@ -5584,19 +5477,25 @@
       },
       {
         "store": "urbanedge",
-        "file": "hero.liquid",
+        "file": "feature-cards.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "urbanedge",
-        "file": "featured-showcase.liquid",
+        "file": "about-collections.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "urbanedge",
         "file": "featured-collection.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "urbanedge",
+        "file": "featured-showcase.liquid",
         "status": "ok",
         "issues": []
       },
@@ -5614,13 +5513,25 @@
       },
       {
         "store": "urbanedge",
-        "file": "marquee-ribbon.liquid",
+        "file": "hero.liquid",
         "status": "ok",
         "issues": []
       },
       {
         "store": "urbanedge",
         "file": "lookbook-collage.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "urbanedge",
+        "file": "marquee-ribbon.liquid",
+        "status": "ok",
+        "issues": []
+      },
+      {
+        "store": "theme-boutique",
+        "file": "image-with-text.liquid",
         "status": "ok",
         "issues": []
       }

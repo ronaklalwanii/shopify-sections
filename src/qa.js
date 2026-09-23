@@ -13,18 +13,50 @@ const unique = index.sections.filter((s) => !s.duplicate && !s.empty);
 
 /* --------------------------------- local pass -------------------------------- */
 
+// Stores whose layout (or its snippets) loads global CSS — their sections are
+// styled even without inline <style> or per-section asset refs.
+const globalCssCache = new Map();
+function storeHasGlobalCss(store) {
+  if (globalCssCache.has(store)) return globalCssCache.get(store);
+  let has = false;
+  try {
+    const { findStore } = require('./roots');
+    const storePath = findStore(store);
+    const scan = (text) => /['"]([\w./-]+\.css)['"]\s*\|\s*asset_url/.test(text);
+    const layout = fs.readFileSync(path.join(storePath, 'layout/theme.liquid'), 'utf8');
+    has = scan(layout);
+    if (!has) {
+      const snipRe = /{%[-\s]*render\s+'([\w-]+)'/g;
+      let m;
+      while (!has && (m = snipRe.exec(layout))) {
+        try { has = scan(fs.readFileSync(path.join(storePath, 'snippets', `${m[1]}.liquid`), 'utf8')); } catch {}
+      }
+    }
+  } catch { has = false; }
+  globalCssCache.set(store, has);
+  return has;
+}
+
 function checkLocalHtml(html, meta) {
   const issues = [];
   if (!html || html.trim().length < 40) issues.push('empty output');
-  if (/\{\{\s*[\w.]+\s*[\w|:,'"]*\s*\}\}/.test(html)) issues.push('unrendered {{ }} leak');
-  if (/\{%-?\s*(if|for|render|assign|schema|style)\b/.test(html)) issues.push('unrendered {% %} tag');
+  // Leak checks ignore script/style bodies: JS money formatters legitimately
+  // contain {{amount}}, and CSS can hold template-looking text. Money-format
+  // placeholders in data attributes (e.g. data-money-format="${{amount}}")
+  // are correct Shopify output, not leaks.
+  const markup = html.replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/{{amount[^}]*}}/g, '');
+  if (/\{\{\s*[\w.]+\s*[\w|:,'"]*\s*\}\}/.test(markup)) issues.push('unrendered {{ }} leak');
+  if (/\{%-?\s*(if|for|render|assign|schema|style)\b/.test(markup)) issues.push('unrendered {% %} tag');
   const hasStyle = /<style[\s>]/.test(html);
   const hasCssAsset = (meta.assets || []).some((a) => a.endsWith('.css'));
   const hasClasses = /class="/.test(html);
-  if (hasClasses && !hasStyle && !hasCssAsset && meta.lines > 40) issues.push('no styling source (no <style>, no css asset)');
-  const expectsJs = (meta.assets || []).some((a) => a.endsWith('.js'));
-  const hasScript = /<script/.test(html);
-  if (expectsJs && !hasScript) issues.push('expected JS missing');
+  if (hasClasses && !hasStyle && !hasCssAsset && !storeHasGlobalCss(meta.store) && meta.lines > 40) {
+    issues.push('no styling source (no <style>, no css asset, no global layout CSS)');
+  }
+  // NOTE: no "expected JS" check here by design — section JS assets are wired
+  // up at preview assembly (server.js inlines them); asset refs are often
+  // conditional ({% if section.blocks.size > 1 %}) so a fragment can't tell.
   if (/Liquid error/i.test(html)) issues.push('liquid error string');
   return issues;
 }
@@ -61,7 +93,9 @@ async function fetchOne(store, file) {
     const html = await r.text();
     const issues = [];
     if (r.status !== 200) issues.push(`http ${r.status}`);
-    if (/password/i.test(html.slice(0, 3000)) && r.status === 200 && html.length < 5000) issues.push('password page');
+    // Password templates legitimately contain password copy — only flag it
+    // when the section itself isn't a password page.
+    if (!/password/i.test(file) && /password/i.test(html.slice(0, 3000)) && r.status === 200 && html.length < 5000) issues.push('password page');
     if (/Liquid error[^<]{0,120}/i.test(html)) issues.push((html.match(/Liquid error[^<]{0,120}/i) || [])[0]);
     if (r.status === 200 && html.length < 1200) issues.push(`suspiciously small (${html.length}b)`);
     if (!/shopify-section|<section|<style|asset_url|cdn\.shopify/.test(html)) issues.push('no section markup detected');
