@@ -4,7 +4,7 @@ const path = require('path');
 const crypto = require('crypto');
 const { execFileSync } = require('child_process');
 const express = require('express');
-const { renderStoreSection, renderSectionSource, renderSnippet, findStore } = require('./renderer');
+const { renderStoreSection, renderSectionSource, renderSnippet, findStore, getEngine, googleFontsLink } = require('./renderer');
 
 const ROOT = path.resolve(__dirname, '..');
 const IS_SERVERLESS = !!process.env.VERCEL;
@@ -541,7 +541,8 @@ async function localPreview(req, res) {
     const scripts = [...r.js ? [r.js] : [], ...sectionAssetJs.map((a) => fs.readFileSync(path.join(storePath, 'assets', a), 'utf8'))];
     const externalScripts = deps.js.filter(exists).map((a) => `/assets/${store}/${a}`);
     const headExtra = await getLayoutHeadExtra(store);
-    res.type('html').send(previewPage({ title: `${meta?.name || file} — ${store}`, html: r.html + (r.legacyCss ? `<style>${r.legacyCss}</style>` : ''), cssLinks, scripts, error: r.error, externalScripts, headExtra }));
+    const fontsLink = (() => { try { return googleFontsLink(getEngine(store, storePath)); } catch { return ''; } })();
+    res.type('html').send(previewPage({ title: `${meta?.name || file} — ${store}`, html: r.html + (r.legacyCss ? `<style>${r.legacyCss}</style>` : ''), cssLinks, scripts, error: r.error, externalScripts, headExtra: headExtra + fontsLink }));
   } catch (e) {
     res.status(500).type('html').send(previewPage({ title: 'error', html: '', error: e.message }));
   }

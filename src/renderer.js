@@ -7,7 +7,7 @@ const { findStore } = require('./roots');
 
 /* ---------------------------------- mocks ---------------------------------- */
 
-const PH = (seed, w, h) => `/ph/${encodeURIComponent(seed)}/${w}x${h}.svg`;
+const PH = (seed, w, h) => `https://picsum.photos/seed/${encodeURIComponent(seed)}/${Math.round(w)}/${Math.round(h)}`;
 
 function imageMock(seed, alt = 'Sample image', aspect = 1.5) {
   return { __mock: 'image', seed: String(seed || 'sample'), alt, aspect };
@@ -250,18 +250,32 @@ function money(v, format) {
 }
 
 function imageInputInfo(input) {
-  // Returns {seed,w,h,alt,src} for mock image objects or placeholder URL strings.
+  // Returns {seed,w,h,alt,src} for mock image objects, picsum URLs or placeholder URLs.
   if (input && input.__mock === 'image') {
     const h = Math.round(1000 / (input.aspect || 1.5));
     return { seed: input.seed, w: 1000, h, alt: input.alt || '', src: null };
   }
   if (typeof input === 'string') {
+    const pm = input.match(/^https:\/\/picsum\.photos\/seed\/([^/]+)\/(\d+)\/(\d+)$/);
+    if (pm) return { seed: decodeURIComponent(pm[1]), w: +pm[2], h: +pm[3], alt: '', src: null };
     const m = input.match(/^\/ph\/([^/]+)\/(\d+)x(\d+)\.svg$/);
     if (m) return { seed: m[1], w: +m[2], h: +m[3], alt: '', src: null };
     if (/\.(png|jpe?g|gif|webp|svg)$/i.test(input)) return { seed: input, w: 1000, h: 667, alt: '', src: `/assets/__store__/${input}` };
   }
   if (input && typeof input === 'object' && (input.src || input.preview_image)) return imageInputInfo(input.src || input.preview_image);
   return null;
+}
+
+// Theme typography: map the store's font families to Google Fonts so local
+// previews render with the real typefaces instead of system fonts.
+function googleFontsLink(engine) {
+  const fams = new Set();
+  for (const v of Object.values(engine.theme || {})) {
+    if (v && typeof v === 'object' && v.family && v.fallback) fams.add(v.family);
+  }
+  if (!fams.size) return '';
+  const spec = [...fams].map((f) => `family=${f.replace(/ /g, '+')}:wght@300;400;500;600;700`).join('&');
+  return `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?${spec}&display=swap">`;
 }
 
 function buildFilters(storeName) {
@@ -693,4 +707,4 @@ async function renderSnippet(storeName, snippetName) {
   } catch { return ''; }
 }
 
-module.exports = { renderSectionSource, renderStoreSection, getEngine, imageMock, renderSnippet, findStore, parseJsonLoose };
+module.exports = { renderSectionSource, renderStoreSection, getEngine, imageMock, renderSnippet, findStore, parseJsonLoose, googleFontsLink };
