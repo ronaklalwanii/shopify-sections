@@ -156,7 +156,7 @@ function settingDefault(s, ctx) {
     case 'inline_richtext': return def != null ? def : 'Sample <strong>inline</strong> text';
     case 'image_picker': return imageMock(seedFor(ctx.seedBase, id), id);
     case 'url': return def || '#';
-    case 'color': return def || '#111827';
+    case 'color': return def || ''; // blank by default — sections gate on `!= blank`
     case 'checkbox': return def != null ? !!def : true;
     case 'range': return def != null ? def : (s.min != null ? Math.round(((+s.min) + (+s.max)) / 2) : 0);
     case 'video': case 'video_url':
@@ -707,4 +707,20 @@ async function renderSnippet(storeName, snippetName) {
   } catch { return ''; }
 }
 
-module.exports = { renderSectionSource, renderStoreSection, getEngine, imageMock, renderSnippet, findStore, parseJsonLoose, googleFontsLink };
+// Some themes define their :root design tokens in inline {% style %} blocks
+// inside layout/theme.liquid rather than a snippet — render those too.
+async function renderLayoutTokens(storeName) {
+  const storePath = findStore(storeName);
+  if (!storePath) return '';
+  let layout = '';
+  try { layout = fs.readFileSync(path.join(storePath, 'layout', 'theme.liquid'), 'utf8'); } catch { return ''; }
+  const blocks = [];
+  for (const m of layout.matchAll(/{%-?\s*style\s*-?%}([\s\S]*?){%-?\s*endstyle\s*-?%}/g)) blocks.push(m[1]);
+  for (const m of layout.matchAll(/<style>([\s\S]*?)<\/style>/g)) blocks.push(m[1]);
+  const source = blocks.join('\n').trim();
+  if (!source) return '';
+  const engine = getEngine(storeName, storePath);
+  try { return await engine.liquid.parseAndRender(source, baseGlobals(engine, {})); } catch { return ''; }
+}
+
+module.exports = { renderSectionSource, renderStoreSection, getEngine, imageMock, renderSnippet, renderLayoutTokens, findStore, parseJsonLoose, googleFontsLink };

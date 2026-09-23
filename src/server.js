@@ -4,7 +4,7 @@ const path = require('path');
 const crypto = require('crypto');
 const { execFileSync } = require('child_process');
 const express = require('express');
-const { renderStoreSection, renderSectionSource, renderSnippet, findStore, getEngine, googleFontsLink } = require('./renderer');
+const { renderStoreSection, renderSectionSource, renderSnippet, renderLayoutTokens, findStore, getEngine, googleFontsLink } = require('./renderer');
 
 const ROOT = path.resolve(__dirname, '..');
 const IS_SERVERLESS = !!process.env.VERCEL;
@@ -402,7 +402,7 @@ function previewCacheDelete(key) {
 
 const RESET_CSS = `
 *,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;background:#fff}
 body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.55;color:#1a1a1a;background:#fff;-webkit-font-smoothing:antialiased}
 img,svg,video{max-width:100%;height:auto;display:block}
 img{border-style:none}
@@ -471,10 +471,14 @@ const headSnippetCache = new Map();
 async function getLayoutHeadExtra(store) {
   if (headSnippetCache.has(store)) return headSnippetCache.get(store);
   let extra = '';
-  for (const name of ['css-variables', 'css-vars', 'design-tokens']) {
+  for (const name of ['css-variables', 'css-vars', 'design-tokens', 'theme-styles-variables']) {
     const out = await renderSnippet(store, name);
     if (out.trim()) { extra += out; break; }
   }
+  // themes that define tokens inline in the layout itself — the extracted
+  // blocks are bare CSS, so they need a <style> wrapper
+  const layoutTokens = await renderLayoutTokens(store);
+  if (layoutTokens.trim()) extra += `<style>${layoutTokens}</style>`;
   headSnippetCache.set(store, extra);
   return extra;
 }

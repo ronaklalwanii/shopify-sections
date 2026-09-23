@@ -261,7 +261,7 @@ function main() {
       tokensRender = `{% render '${prefixFor(store)}${tokensSnippet}' %}`;
     } else if (deps.styleBlocks.join('\n').trim()) {
       const name = `${prefixFor(store)}layout-tokens`;
-      fs.writeFileSync(path.join(gallerySnippets, `${name}.liquid`), copier.rewrite(deps.styleBlocks.join('\n')));
+      fs.writeFileSync(path.join(gallerySnippets, `${name}.liquid`), `<style>\n${copier.rewrite(deps.styleBlocks.join('\n'))}\n</style>`);
       tokensRender = `{% render '${name}' %}`;
     }
 
