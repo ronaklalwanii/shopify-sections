@@ -520,6 +520,10 @@ async function getLayoutHeadExtra(store) {
 
 app.get('/preview/:store/:file', async (req, res) => {
   const { store, file } = req.params;
+  // Previews are generated output: never let the browser cache them, or
+  // code/CSS fixes won't show up without a hard refresh. The render path
+  // (live Shopify vs local mock) rides along for debugging.
+  res.set('Cache-Control', 'no-store');
 
   // When a gallery store is configured, previews render on real Shopify,
   // proxied through this server (authenticates with the storefront password).
@@ -537,7 +541,7 @@ app.get('/preview/:store/:file', async (req, res) => {
       // a missing lib-* template makes Shopify render the default page instead —
       // our preview templates always emit a "__library" section id
       if (cached && !cached.includes('__library')) { previewCacheDelete(key); cached = null; }
-      if (cached) return res.type('html').send(cached);
+      if (cached) { res.set('X-Preview-Path', 'live-cached'); return res.type('html').send(cached); }
       const r = await shopifyGet(target);
       let html = await r.text();
       // sections that error live (missing product/blog refs etc.) render better
@@ -554,6 +558,7 @@ app.get('/preview/:store/:file', async (req, res) => {
         previewCacheSet(key, html);
       }
       else return localPreview(req, res); // not in the published theme yet — mock render
+      res.set('X-Preview-Path', 'live');
       return res.status(r.status).type('html').send(html);
     }
   }
@@ -562,6 +567,7 @@ app.get('/preview/:store/:file', async (req, res) => {
 
 async function localPreview(req, res) {
   const { store, file } = req.params;
+  res.set('X-Preview-Path', 'local');
   const storePath = findStore(store);
   if (store !== 'custom' && !storePath) return res.status(404).send('unknown store');
   try {
@@ -621,6 +627,8 @@ app.use('/assets', (req, res, next) => {
   if (!storeRoot) return res.status(404).end();
   const full = path.join(storeRoot, 'assets', safe);
   if (!full.startsWith(storeRoot)) return res.status(403).end();
+  // Theme assets change with the working tree — same staleness rationale as previews.
+  res.set('Cache-Control', 'no-store');
   res.sendFile(full, (e) => { if (e) res.status(404).end(); });
 });
 
