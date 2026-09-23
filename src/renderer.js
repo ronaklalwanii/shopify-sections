@@ -316,6 +316,25 @@ function fmtColor({ r, g, b }, a = 1) {
   return `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${Number(a)})`;
 }
 
+// Static ESM detection: only static import/export statements force module
+// semantics — dynamic import() is legal in classic scripts too.
+function isEsmJs(src) {
+  return /^\s*import(?!\s*\()|^[^'"]*\bexport\s/m.test(String(src || ''));
+}
+
+const assetContentCache = new Map(); // storePath/file -> contents (or null)
+function readAsset(storePath, file) {
+  const key = `${storePath}::${file}`;
+  if (assetContentCache.has(key)) return assetContentCache.get(key);
+  let out = null;
+  try {
+    const full = path.join(storePath, 'assets', path.normalize(file).replace(/^(\.\.[/\\])+/, ''));
+    if (full.startsWith(storePath)) out = fs.readFileSync(full, 'utf8');
+  } catch { out = null; }
+  assetContentCache.set(key, out);
+  return out;
+}
+
 /* --------------------------------- filters --------------------------------- */
 
 function money(v, format) {
@@ -397,7 +416,24 @@ function buildFilters(storeName) {
     money_without_trailing_zeros: (v) => String(Number((Number(v) / 100).toFixed(2)).toString()),
     asset_url: assetUrl, shopify_asset_url: (f) => assetUrl(f),
     stylesheet_tag: (href, opts = {}) => `<link rel="stylesheet" href="${assetUrl(href)}"${opts.media ? ` media="${opts.media}"` : ''}>`,
-    script_tag: (src, opts = {}) => `<script src="${assetUrl(src)}"${opts.async ? ' async' : ''}${opts.defer ? ' defer' : ''}></script>`,
+    script_tag: (src, opts = {}) => {
+      // ESM bundles must load as modules — a classic <script> would throw
+      // "Cannot use import statement outside a module" in the preview.
+      let esm = false;
+      try {
+        const sp = findStore(storeName);
+        if (sp) { const c = readAsset(sp, src); esm = c != null && isEsmJs(c); }
+      } catch { esm = false; }
+      const type = esm ? ' type="module"' : '';
+      return `<script src="${assetUrl(src)}"${type}${opts.async ? ' async' : ''}${opts.defer ? ' defer' : ''}></script>`;
+    },
+    inline_asset_content: (file) => {
+      try {
+        const sp = findStore(storeName);
+        if (!sp) return '';
+        return readAsset(sp, file) || '';
+      } catch { return ''; }
+    },
     preload_tag: (file, opts = {}) => `<link rel="preload" href="${assetUrl(file)}" as="${opts.as || 'style'}">`,
     font_face(font, opts = {}) {
       if (!font || !font.family) return '';
@@ -923,4 +959,4 @@ async function layoutTokensFallback(storeName) {
   return out.length ? `:root{\n${out.join('\n')}\n}` : '';
 }
 
-module.exports = { renderSectionSource, renderStoreSection, getEngine, imageMock, renderSnippet, renderLayoutTokens, layoutTokensFallback, findStore, parseJsonLoose, googleFontsLink };
+module.exports = { renderSectionSource, renderStoreSection, getEngine, imageMock, renderSnippet, renderLayoutTokens, layoutTokensFallback, findStore, parseJsonLoose, googleFontsLink, isEsmJs };

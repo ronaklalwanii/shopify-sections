@@ -4,7 +4,7 @@ const path = require('path');
 const crypto = require('crypto');
 const { execFileSync } = require('child_process');
 const express = require('express');
-const { renderStoreSection, renderSectionSource, renderSnippet, renderLayoutTokens, layoutTokensFallback, findStore, getEngine, googleFontsLink } = require('./renderer');
+const { renderStoreSection, renderSectionSource, renderSnippet, renderLayoutTokens, layoutTokensFallback, isEsmJs, findStore, getEngine, googleFontsLink } = require('./renderer');
 
 const ROOT = path.resolve(__dirname, '..');
 const IS_SERVERLESS = !!process.env.VERCEL;
@@ -400,6 +400,13 @@ function previewCacheDelete(key) {
 
 /* --------------------------------- previews ---------------------------------- */
 
+// Theme JS (and the third-party CDN bundles it imports) is written for full
+// storefronts, not sandboxed preview iframes: bare `exports` / `require` /
+// `module` references throw ReferenceErrors and kill the whole module graph,
+// surfacing as red console errors on otherwise fine previews. This inert shim
+// runs first so foreign bundles degrade to no-ops instead of throwing.
+const CJS_SHIM = `<script>window.exports=window.exports||{};window.module=window.module||{exports:window.exports};window.require=window.require||function(){return{}};</script>`;
+
 const RESET_CSS = `
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;background:#fff}
@@ -416,13 +423,19 @@ table{border-collapse:collapse;width:100%}
 .preview-error{position:fixed;inset:auto 16px 16px 16px;z-index:9999;background:#7f1d1d;color:#fff;padding:14px 18px;border-radius:10px;font:14px/1.5 ui-monospace,monospace;white-space:pre-wrap;max-height:40vh;overflow:auto}
 `;
 
+const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 function previewPage({ title, html, cssLinks = [], inlineCss = '', scripts = [], error = null, headExtra = '', externalScripts = [] }) {
+  const externalTag = (s) => (typeof s === 'string' || s.esm)
+    ? `<script type="module" src="${typeof s === 'string' ? s : s.src}"></script>`
+    : `<script src="${s.src}" defer></script>`;
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title}</title>
+${CJS_SHIM}
 <style>${RESET_CSS}</style>
 ${headExtra}
 ${cssLinks.map((h) => `<link rel="stylesheet" href="${h}">`).join('\n')}
@@ -430,7 +443,7 @@ ${inlineCss ? `<style>${inlineCss}</style>` : ''}
 </head>
 <body>
 ${html}
-${externalScripts.map((s) => `<script type="module" src="${s}"></script>`).join('\n')}
+${externalScripts.map(externalTag).join('\n')}
 ${scripts.map((s) => `<script>${s}</script>`).join('\n')}
 ${error ? `<div class="preview-error">Render error: ${String(error).replace(/</g, '&lt;')}</div>` : ''}
 </body>
@@ -485,6 +498,22 @@ async function getLayoutHeadExtra(store) {
   // blocks are bare CSS, so they need a <style> wrapper
   const layoutTokens = await renderLayoutTokens(store);
   if (layoutTokens.trim()) extra += `<style>${layoutTokens}</style>`;
+  // Global module setup: Horizon-style themes register their ESM import map
+  // plus shared globals (Theme.translations/routes) via a `scripts` snippet
+  // that asset-URL scanning cannot see. Only the importmap and inline setup
+  // scripts are taken — external <script src> tags are already covered by
+  // externalScripts below, and re-emitting them would double-execute.
+  try {
+    const scriptsSnippet = await renderSnippet(store, 'scripts');
+    if (scriptsSnippet) {
+      for (const m of scriptsSnippet.matchAll(/<script(\s[^>]*)?>([\s\S]*?)<\/script\s*>/gi)) {
+        const attrs = (m[1] || '').toLowerCase();
+        if (/src\s*=/.test(attrs)) continue;
+        if (/type\s*=\s*["']module["']/.test(attrs)) continue;
+        extra += m[0];
+      }
+    }
+  } catch { /* no scripts snippet — nothing to add */ }
   headSnippetCache.set(store, extra);
   return extra;
 }
@@ -517,7 +546,13 @@ app.get('/preview/:store/:file', async (req, res) => {
         const mock = await localPreview(req, res);
         return mock;
       }
-      if (r.status === 200) previewCacheSet(key, html);
+      if (r.status === 200) {
+        // Same CJS-shim rationale as local previews: the live theme's own
+        // bundles (and their pinned third-party CDN imports) must not throw
+        // ReferenceErrors inside the sandboxed preview iframe.
+        if (html.includes('</head>')) html = html.replace('</head>', `${CJS_SHIM}</head>`);
+        previewCacheSet(key, html);
+      }
       else return localPreview(req, res); // not in the published theme yet — mock render
       return res.status(r.status).type('html').send(html);
     }
@@ -547,9 +582,24 @@ async function localPreview(req, res) {
     const exists = (a) => fs.existsSync(path.join(storePath, 'assets', a));
     const cssLinks = [...new Set([...deps.css, ...(meta?.assets || []).filter((a) => a.endsWith('.css'))].filter(exists))]
       .map((a) => `/assets/${store}/${a}`);
+    const readAssetText = (a) => {
+      try { return fs.readFileSync(path.join(storePath, 'assets', a), 'utf8'); } catch { return ''; }
+    };
+    const isModuleAsset = (a) => isEsmJs(readAssetText(a));
     const sectionAssetJs = (meta?.assets || []).filter((a) => a.endsWith('.js') && exists(a) && !deps.js.includes(a));
-    const scripts = [...r.js ? [r.js] : [], ...sectionAssetJs.map((a) => fs.readFileSync(path.join(storePath, 'assets', a), 'utf8'))];
-    const externalScripts = deps.js.filter(exists).map((a) => `/assets/${store}/${a}`);
+    const scripts = [...r.js ? [r.js] : []];
+    const externalScripts = deps.js.filter(exists).map((a) => ({ src: `/assets/${store}/${a}`, esm: isModuleAsset(a) }));
+    for (const a of sectionAssetJs) {
+      // The section already loads it with its own <script src> (module or
+      // classic, including document.write loaders) — shipping a second copy
+      // would double-execute behaviours, and a classic inline of an ESM
+      // bundle throws outright.
+      const fileRe = escapeRegExp(a);
+      if (new RegExp(`<script[^>]*src=[^>]*${fileRe}|document\\.write\\([^)]*${fileRe}`, 'i').test(r.html)) continue;
+      if (isModuleAsset(a)) externalScripts.push({ src: `/assets/${store}/${a}`, esm: true });
+      // Escape script-close tags so inlined code cannot break out of its element.
+      else scripts.push(readAssetText(a).replace(/<\/script/gi, '<\\/script'));
+    }
     const headExtra = await getLayoutHeadExtra(store);
     const fontsLink = (() => { try { return googleFontsLink(getEngine(store, storePath)); } catch { return ''; } })();
     res.type('html').send(previewPage({ title: `${meta?.name || file} — ${store}`, html: r.html + (r.legacyCss ? `<style>${r.legacyCss}</style>` : ''), cssLinks, scripts, error: r.error, externalScripts, headExtra: headExtra + fontsLink }));

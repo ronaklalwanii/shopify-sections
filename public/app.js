@@ -384,7 +384,7 @@ async function runLivePreview() {
       $('renderStatus').textContent = 'rendered ✓';
       $('renderStatus').className = 'render-status ok';
     }
-    $('editorFrame').srcdoc = `<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="/reset.css"><style>${$('fCss').value.replace(/<\/style/g, '')}</style></head><body>${r.html || ''}${r.error ? `<div style="position:fixed;inset:auto 14px 14px 14px;background:#7f1d1d;color:#fff;padding:12px 16px;border-radius:10px;font:13px/1.5 ui-monospace,monospace;white-space:pre-wrap">${esc(r.error)}</div>` : ''}<script>${$('fJs').value.replace(/<\/script/g, '')}<\/script></body></html>`;
+    $('editorFrame').srcdoc = `<!DOCTYPE html><html><head><meta charset="utf-8"><script>window.exports=window.exports||{};window.module=window.module||{exports:window.exports};window.require=window.require||function(){return{}};</script><link rel="stylesheet" href="/reset.css"><style>${$('fCss').value.replace(/<\/style/g, '')}</style></head><body>${r.html || ''}${r.error ? `<div style="position:fixed;inset:auto 14px 14px 14px;background:#7f1d1d;color:#fff;padding:12px 16px;border-radius:10px;font:13px/1.5 ui-monospace,monospace;white-space:pre-wrap">${esc(r.error)}</div>` : ''}<script>${$('fJs').value.replace(/<\/script/g, '')}<\/script></body></html>`;
   } catch (e) {
     $('renderStatus').textContent = 'network error';
     $('renderStatus').className = 'render-status err';
