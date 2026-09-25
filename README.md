@@ -24,8 +24,31 @@ Note: themes are content-hash deduped, so shared sections across stores appear o
 Use **Add to pack** on any section card, reorder the selection, then choose one
 of two one-time exports:
 
-- **Ready-to-upload theme ZIP** — a `base` theme with the selected sections,
-  namespaced dependencies, source CSS/JS, and ordered `templates/index.json` plus `page.section-pack.json`.
+- **Ready-to-upload theme ZIP** — everything in the `base` theme is kept as-is
+  (layout, config, locales, templates, snippets, assets, blocks) except `sections/`,
+  which is rebuilt as **base core + your pack**:
+  - *Base core* is derived at export time from the sections the base theme's layout,
+    section groups, and templates actually reference (33 sections: `header`, `footer`,
+    `mega-header`, the drawers, `main-cart`, `main-product`, `main-collection`,
+    `main-search`, `main-gift-card`, the `main-customers-*` set, and so on). Nothing the
+    theme needs to render is ever dropped, so the result is a working store.
+  - *Your pack* is added on top, with namespaced dependencies and source CSS/JS.
+  - Base content sections that only the old `index.json` used (108 of them) are left out,
+    so the merchant's editor shows the pack and the functional core rather than the base
+    store's leftover marketing pages. They are listed in `section-pack.json`.
+
+  `templates/index.json` is regenerated with your selected order (and a matching
+  `page.section-pack.json`), capped at Shopify's limit of 25 sections per template;
+  every selected section is still written to `sections/` and can be added in the theme
+  editor.
+
+  After the pack is written, snippets, blocks, and assets are pruned to the transitive
+  closure of what the theme actually renders, so unused base files never reach the
+  upload. Both the base content sections and the pruned files are listed in
+  `section-pack.json` (`baseDroppedSections`, `unusedFilesDropped`).
+
+  A 20-section pack lands around 1 MB zipped; the remainder is the base theme's own
+  core payload (fonts, `theme.css`/`theme.js`, locale files), not the sections.
 - **Lightweight section pack ZIP** — selected sections and their dependencies
   for merging into an existing theme, with an import manifest.
 

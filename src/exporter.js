@@ -10,6 +10,247 @@ const { templateSectionBody } = require('./merge');
 const SAFE_SECTION = /^[\w.-]+\.liquid$/;
 const MAX_ITEMS = 500;
 const BASE_STORE = 'base';
+// Shopify platform limits, per the theme architecture docs.
+const MAX_SECTIONS_PER_TEMPLATE = 25;
+const MAX_BLOCKS_PER_SECTION = 50;
+// Page types a store needs to actually render. Shopify requires none of these to
+// upload, but a page type without a template cannot be rendered.
+const CORE_TEMPLATES = ['index', 'product', 'collection', 'cart', 'page', 'blog', 'article', 'search', '404', 'password', 'list-collections', 'gift_card'];
+// Deprecated legacy customer templates. Publishing without them upgrades the
+// merchant to new customer accounts, which no longer render from the theme.
+const LEGACY_CUSTOMER_TEMPLATES = ['customers/account', 'customers/activate_account', 'customers/login', 'customers/order', 'customers/register', 'customers/reset_password', 'customers/addresses'];
+// These template types must be Liquid, never JSON.
+const LIQUID_ONLY_TEMPLATES = ['gift_card', 'robots.txt', 'agents.md', 'llms.txt', 'llms-full.txt'];
+
+function liquidTagArgs(source, tag) {
+  const out = [];
+  const pattern = new RegExp(`\\{%-?\\s*${tag}\\s+(['"])([^'"]+)\\1`, 'g');
+  let match;
+  while ((match = pattern.exec(source))) out.push(match[2]);
+  return out;
+}
+
+// The sections a base theme cannot function without: everything its layout, its
+// section groups, or its templates reference. Derived from the base store rather
+// than hardcoded, so adding a template later cannot silently orphan a section.
+function coreSectionTypes(basePath) {
+  const core = new Set();
+  const sectionsDir = path.join(basePath, 'sections');
+  const addGroup = (name) => {
+    const file = path.join(sectionsDir, `${name}.json`);
+    if (!fs.existsSync(file)) return;
+    let data;
+    try { data = JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return; }
+    for (const section of Object.values(data.sections || {})) if (section && section.type) core.add(section.type);
+  };
+  const scanLiquid = (text) => {
+    for (const name of liquidTagArgs(text, 'section')) core.add(name);
+    for (const name of liquidTagArgs(text, 'sections')) addGroup(name);
+  };
+  // Every section group counts, not just the ones a layout renders, so a group can
+  // never end up referencing a section this pass removed.
+  for (const file of listFiles(sectionsDir)) if (file.rel.endsWith('.json')) addGroup(path.basename(file.rel, '.json'));
+  for (const file of listFiles(path.join(basePath, 'layout'))) {
+    if (file.rel.endsWith('.liquid')) scanLiquid(fs.readFileSync(file.full, 'utf8'));
+  }
+  for (const file of listFiles(path.join(basePath, 'templates'))) {
+    if (file.rel === 'index.json') continue; // regenerated from the pack
+    if (file.rel.endsWith('.json')) {
+      let data;
+      try { data = JSON.parse(fs.readFileSync(file.full, 'utf8')); } catch { continue; }
+      for (const section of Object.values(data.sections || {})) if (section && section.type) core.add(section.type);
+    } else if (file.rel.endsWith('.liquid')) {
+      scanLiquid(fs.readFileSync(file.full, 'utf8'));
+    }
+  }
+  return core;
+}
+
+// Keeps only the core section files. Section group JSON files are always kept.
+function pruneSections(outDir, core) {
+  const sectionsDir = path.join(outDir, 'sections');
+  if (!fs.existsSync(sectionsDir)) return [];
+  const removed = [];
+  for (const file of listFiles(sectionsDir)) {
+    if (!file.rel.endsWith('.liquid')) continue;
+    const type = path.basename(file.rel, '.liquid');
+    if (core.has(type)) continue;
+    fs.rmSync(file.full, { force: true });
+    removed.push(type);
+  }
+  return removed;
+}
+
+// Every snippet, block, and asset reachable from the files a theme actually
+// renders. Anything else is dead weight in the upload.
+function pruneOrphans(outDir, protectedFiles = new Set()) {
+  const roots = ['layout', 'templates', 'sections', 'config'];
+  const seeds = [];
+  for (const dir of roots) {
+    for (const file of listFiles(path.join(outDir, dir))) {
+      if (/\.(liquid|json|css|m?js)$/.test(file.rel)) seeds.push(file);
+    }
+  }
+  const keep = { snippets: new Set(), assets: new Set(), blocks: new Set() };
+  const seen = new Set();
+  const sectionSchemas = new Map();
+  const instantiated = new Set();
+  const queue = [];
+
+  const scan = (text) => {
+    for (const name of extractSnippetRefs(text)) keep.snippets.add(name);
+    for (const name of extractAssetRefs(text)) keep.assets.add(name);
+    for (const name of textAssetRefs(text, '')) keep.assets.add(name);
+    for (const match of text.matchAll(/\bcontent_for\s+(['"])block\1[\s\S]{0,500}?\btype\s*:\s*(['"])([\w-]+)\2/gi)) keep.blocks.add(match[3]);
+  };
+
+  // JSON templates and section groups tell us which sections are live, and which
+  // block instances must therefore resolve.
+  for (const file of seeds.filter((f) => f.rel.endsWith('.json') && f.rel.startsWith('templates'))) {
+    let data;
+    try { data = JSON.parse(fs.readFileSync(file.full, 'utf8')); } catch { continue; }
+    for (const section of Object.values(data.sections || {})) {
+      if (!section || !section.type) continue;
+      instantiated.add(section.type);
+      for (const block of Object.values(section.blocks || {})) if (block && block.type) keep.blocks.add(block.type);
+    }
+  }
+  for (const file of seeds.filter((f) => f.rel.startsWith('sections/') && f.rel.endsWith('.json'))) {
+    let data;
+    try { data = JSON.parse(fs.readFileSync(file.full, 'utf8')); } catch { continue; }
+    for (const section of Object.values(data.sections || {})) {
+      if (!section || !section.type) continue;
+      instantiated.add(section.type);
+      for (const block of Object.values(section.blocks || {})) if (block && block.type) keep.blocks.add(block.type);
+    }
+  }
+
+  for (const file of seeds) {
+    seen.add(file.full);
+    queue.push(file.full);
+    if (file.rel.startsWith('sections/') && file.rel.endsWith('.liquid')) {
+      let schema = null;
+      try { schema = extractSchema(fs.readFileSync(file.full, 'utf8')); } catch {}
+      if (schema) sectionSchemas.set(file.full, schema);
+    }
+  }
+
+  // A section that a live template instantiates keeps the blocks its schema declares.
+  for (const [full, schema] of sectionSchemas) {
+    if (!instantiated.has(path.basename(full, '.liquid'))) continue;
+    for (const block of schema.blocks || []) if (block && block.type && !block.type.startsWith('@')) keep.blocks.add(block.type);
+  }
+
+  const enqueue = (kind, name) => {
+    const rel = kind === 'snippet' ? `snippets/${name}.liquid` : kind === 'block' ? `blocks/${name}.liquid` : `assets/${name}`;
+    const full = path.join(outDir, rel);
+    if (fs.existsSync(full) && !seen.has(full)) { seen.add(full); queue.push(full); }
+  };
+
+  while (queue.length) {
+    const full = queue.shift();
+    if (!/\.(liquid|json|css|m?js)$/.test(full)) continue;
+    let text = '';
+    try { text = fs.readFileSync(full, 'utf8'); } catch { continue; }
+    const before = { s: keep.snippets.size, a: keep.assets.size, b: keep.blocks.size };
+    scan(text);
+    for (const name of keep.snippets) enqueue('snippet', name);
+    for (const name of keep.assets) enqueue('asset', name);
+    for (const name of keep.blocks) enqueue('block', name);
+    if (keep.snippets.size !== before.s || keep.assets.size !== before.a || keep.blocks.size !== before.b) {
+      for (const name of keep.snippets) enqueue('snippet', name);
+      for (const name of keep.assets) enqueue('asset', name);
+      for (const name of keep.blocks) enqueue('block', name);
+    }
+  }
+
+  const removed = [];
+  for (const [kind, names] of [['snippet', keep.snippets], ['block', keep.blocks], ['asset', keep.assets]]) {
+    const dir = path.join(outDir, kind === 'asset' ? 'assets' : `${kind}s`);
+    if (!fs.existsSync(dir)) continue;
+    for (const file of listFiles(dir)) {
+      const rel = file.rel;
+      const name = kind === 'asset' ? rel : path.basename(rel, '.liquid');
+      if (names.has(name) || protectedFiles.has(path.posix.join(kind === 'asset' ? 'assets' : `${kind}s`, rel))) continue;
+      fs.rmSync(file.full, { force: true });
+      removed.push(rel);
+    }
+  }
+  return removed;
+}
+
+// Validates a ready-to-upload theme against Shopify's documented requirements so
+// an export is a working store, not just a folder of section files.
+function validateThemeStore(outDir) {
+  const errors = [];
+  const warnings = [];
+  const has = (rel) => fs.existsSync(path.join(outDir, rel));
+  const read = (rel) => {
+    try { return fs.readFileSync(path.join(outDir, rel), 'utf8'); } catch { return ''; }
+  };
+
+  if (!has('layout/theme.liquid')) {
+    errors.push('Missing required layout/theme.liquid (the only file required to upload a theme)');
+  } else {
+    const layout = read('layout/theme.liquid');
+    if (!/content_for_header/.test(layout)) errors.push('layout/theme.liquid is missing the required content_for_header');
+    if (!/content_for_layout/.test(layout)) errors.push('layout/theme.liquid is missing the required content_for_layout');
+    for (const group of liquidTagArgs(layout, 'sections')) {
+      const rel = `sections/${group}.json`;
+      if (!has(rel)) { errors.push(`layout/theme.liquid renders section group ${group} but ${rel} is missing`); continue; }
+      let data;
+      try { data = JSON.parse(read(rel)); } catch { errors.push(`Section group ${rel} is not valid JSON`); continue; }
+      for (const [id, section] of Object.entries(data.sections || {})) {
+        if (section && !has(`sections/${section.type}.liquid`)) errors.push(`Section group ${rel} references missing section: ${section.type} (id ${id})`);
+      }
+      const count = Array.isArray(data.order) ? data.order.length : Object.keys(data.sections || {}).length;
+      if (count > MAX_SECTIONS_PER_TEMPLATE) errors.push(`Section group ${rel} has ${count} sections, over the Shopify limit of ${MAX_SECTIONS_PER_TEMPLATE}`);
+    }
+    for (const name of liquidTagArgs(layout, 'section')) {
+      if (!has(`sections/${name}.liquid`)) errors.push(`layout/theme.liquid renders missing static section: ${name}`);
+    }
+  }
+
+  for (const required of ['config/settings_schema.json', 'config/settings_data.json']) {
+    if (!has(required)) errors.push(`Missing required config/${path.basename(required)}`);
+  }
+
+  for (const name of LIQUID_ONLY_TEMPLATES) {
+    if (has(`templates/${name}.json`)) errors.push(`templates/${name}.json must be a Liquid template, not JSON`);
+  }
+
+  const sectionTypes = new Set(listFiles(path.join(outDir, 'sections')).filter((f) => f.rel.endsWith('.liquid')).map((f) => path.basename(f.rel, '.liquid')));
+  for (const rel of ['templates', 'sections']) {
+    for (const file of listFiles(path.join(outDir, rel))) {
+      if (!file.rel.endsWith('.json')) continue;
+      let data;
+      try { data = JSON.parse(fs.readFileSync(file.full, 'utf8')); } catch { errors.push(`Invalid template JSON: ${file.rel}`); continue; }
+      const sections = data.sections || {};
+      const ids = Object.keys(sections);
+      for (const id of ids) {
+        const section = sections[id];
+        if (section && section.type && !sectionTypes.has(section.type)) errors.push(`${file.rel} references missing section: ${section.type}`);
+        const blockCount = section && section.blocks ? Object.keys(section.blocks).length : 0;
+        if (blockCount > MAX_BLOCKS_PER_SECTION) errors.push(`${file.rel} section ${id} has ${blockCount} blocks, over the Shopify limit of ${MAX_BLOCKS_PER_SECTION}`);
+      }
+      if (rel === 'templates' && ids.length > MAX_SECTIONS_PER_TEMPLATE) {
+        errors.push(`${file.rel} renders ${ids.length} sections, over the Shopify limit of ${MAX_SECTIONS_PER_TEMPLATE}`);
+      }
+      for (const id of data.order || []) {
+        if (!sections[id]) errors.push(`${file.rel} order lists ${id} which is not in sections`);
+      }
+    }
+  }
+
+  const templateFiles = listFiles(path.join(outDir, 'templates')).map((f) => f.rel.replace(/^templates\//, '').replace(/\.(json|liquid)$/, ''));
+  for (const name of CORE_TEMPLATES) {
+    if (!templateFiles.includes(name)) warnings.push(`No ${name} template: that page type cannot render`);
+  }
+  for (const name of LEGACY_CUSTOMER_TEMPLATES) {
+    if (templateFiles.includes(name)) warnings.push(`${name}.json is a deprecated legacy customer template; new customer accounts render independently of the theme`);
+  }
+  return { errors: [...new Set(errors)], warnings: [...new Set(warnings)] };
+}
 
 function slugify(value) {
   return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 70) || 'section';
@@ -56,28 +297,6 @@ function listFiles(dir, prefix = '') {
     else out.push({ full, rel });
   }
   return out;
-}
-
-function sanitizeBaseTemplates(outDir, availableTypes) {
-  const templatesDir = path.join(outDir, 'templates');
-  for (const file of listFiles(templatesDir)) {
-    if (!file.rel.endsWith('.json') || file.rel === 'templates/index.json') continue;
-    let data;
-    try { data = JSON.parse(fs.readFileSync(file.full, 'utf8')); } catch { fs.rmSync(file.full, { force: true }); continue; }
-    if (!data || typeof data !== 'object' || !data.sections || typeof data.sections !== 'object') continue;
-    const sections = {};
-    for (const [id, section] of Object.entries(data.sections)) {
-      if (section && typeof section === 'object' && availableTypes.has(section.type)) sections[id] = section;
-    }
-    const order = (Array.isArray(data.order) ? data.order : Object.keys(sections)).filter((id) => sections[id]);
-    if (!order.length) {
-      fs.rmSync(file.full, { force: true });
-      continue;
-    }
-    data.sections = sections;
-    data.order = order;
-    fs.writeFileSync(file.full, JSON.stringify(data, null, 2));
-  }
 }
 
 function zipDirectory(dir) {
@@ -150,6 +369,8 @@ class ExportBuilder {
     this.assetFiles = [];
     this.missing = [];
     this.warnings = [];
+    this.packFiles = new Set();
+    this.authoredFiles = new Set();
     this.globalRenders = new Map();
   }
 
@@ -244,8 +465,11 @@ class ExportBuilder {
         continue;
       }
       const exportedFile = item.kind === 'asset' ? item.exported : `${item.exported}.liquid`;
-      const destination = path.join(this.outDir, item.kind === 'asset' ? 'assets' : item.kind === 'block' ? 'blocks' : 'snippets', exportedFile);
+      const dir = item.kind === 'asset' ? 'assets' : item.kind === 'block' ? 'blocks' : 'snippets';
+      const destination = path.join(this.outDir, dir, exportedFile);
       fs.mkdirSync(path.dirname(destination), { recursive: true });
+      this.packFiles.add(path.posix.join(dir, exportedFile));
+      if (item.store !== this.baseStore) this.authoredFiles.add(path.posix.join(dir, exportedFile));
       if (item.kind === 'asset') {
         fs.copyFileSync(source, destination);
         this.assetFiles.push({ destination, store: item.store, name: item.name });
@@ -293,6 +517,8 @@ class ExportBuilder {
     const exported = `${this.prefixes[item.store] || ''}${item.stem}`;
     fs.mkdirSync(path.join(this.outDir, 'sections'), { recursive: true });
     fs.writeFileSync(path.join(this.outDir, 'sections', `${exported}.liquid`), `${injection}${source}`);
+    this.packFiles.add(`sections/${exported}.liquid`);
+    if (item.store !== this.baseStore) this.authoredFiles.add(`sections/${exported}.liquid`);
     this.processQueue();
     return exported;
   }
@@ -302,16 +528,29 @@ class ExportBuilder {
     const sections = new Set(fs.existsSync(path.join(this.outDir, 'sections')) ? fs.readdirSync(path.join(this.outDir, 'sections')).filter((f) => f.endsWith('.liquid')).map((f) => f.replace(/\.liquid$/, '')) : []);
     const blocks = new Set(fs.existsSync(path.join(this.outDir, 'blocks')) ? fs.readdirSync(path.join(this.outDir, 'blocks')).filter((f) => f.endsWith('.liquid')).map((f) => f.replace(/\.liquid$/, '')) : []);
     const assets = new Set(fs.existsSync(path.join(this.outDir, 'assets')) ? listFiles(path.join(this.outDir, 'assets')).map((f) => f.rel) : []);
-    const errors = [...this.missing.map((item) => `Missing ${item.kind}: ${item.name}`)];
+    const errors = [];
+    for (const item of this.missing) {
+      // A dependency the base theme never had is a pre-existing gap, not something
+      // this export introduced, so it warns instead of blocking the upload.
+      if (item.store === this.baseStore && this.mode === 'theme') this.warnings.push(`Missing base theme ${item.kind}: ${item.name} (referenced by a selected base section)`);
+      else errors.push(`Missing ${item.kind}: ${item.name}`);
+    }
     const check = (dir, files) => {
       for (const file of files) {
         if (!file.endsWith('.liquid')) continue;
+        // Only content this export actually authored (a foreign store's files) is a
+        // hard error. Pre-existing gaps in the base theme are warnings, because the
+        // export did not introduce them and must not be blocked by them.
+        const rel = path.posix.join(dir, file);
+        const authored = this.authoredFiles.has(rel);
+        const report = authored ? errors : this.warnings;
+        const label = authored ? '' : 'base theme ';
         const source = fs.readFileSync(path.join(this.outDir, dir, file), 'utf8');
-        for (const name of extractSnippetRefs(source)) if (!snippets.has(name)) errors.push(`Missing snippet: ${name}`);
-        for (const name of extractAssetRefs(source)) if (!assets.has(name)) errors.push(`Missing asset: ${name}`);
+        for (const name of extractSnippetRefs(source)) if (!snippets.has(name)) report.push(`Missing ${label}snippet: ${name} (in ${dir}/${file})`);
+        for (const name of extractAssetRefs(source)) if (!assets.has(name)) report.push(`Missing ${label}asset: ${name} (in ${dir}/${file})`);
         const blockPattern = /\bcontent_for\s+(['"])block\1[\s\S]{0,500}?\btype\s*:\s*(['"])([\w-]+)\2/gi;
         let match;
-        while ((match = blockPattern.exec(source))) if (!blocks.has(match[3])) errors.push(`Missing block: ${match[3]}`);
+        while ((match = blockPattern.exec(source))) if (!blocks.has(match[3])) report.push(`Missing ${label}block: ${match[3]} (in ${dir}/${file})`);
       }
     };
     check('sections', fs.existsSync(path.join(this.outDir, 'sections')) ? fs.readdirSync(path.join(this.outDir, 'sections')) : []);
@@ -358,7 +597,7 @@ function resolveItems(items, baseStore, customDir) {
   });
 }
 
-function manifestFor({ mode, baseStore, name, items, exported, warnings, sourceCommit }) {
+function manifestFor({ mode, baseStore, name, items, exported, warnings, sourceCommit, baseCore, baseDropped, orphansDropped }) {
   return {
     format: 'section-pack',
     version: 1,
@@ -368,12 +607,16 @@ function manifestFor({ mode, baseStore, name, items, exported, warnings, sourceC
     sourceCommit: sourceCommit || null,
     createdAt: new Date().toISOString(),
     sections: items.map((item, index) => ({ order: index + 1, store: item.store, file: item.file, exportedAs: `${exported[index]}.liquid` })),
+    ...(mode === 'theme' ? { baseCoreSections: baseCore, baseDroppedSections: baseDropped, unusedFilesDropped: orphansDropped } : {}),
     warnings,
   };
 }
 
 function readmeFor(mode, manifest) {
-  if (mode === 'theme') return `# ${manifest.name}\n\nUpload this ZIP in Shopify Admin > Themes > Add theme > Upload zip file.\n\nThe generated \`templates/index.json\` already uses the selected section order. A matching \`page.section-pack\` template is included for previewing the pack on a page.\n`;
+  if (mode === 'theme') {
+    const dropped = manifest.baseDroppedSections || [];
+    return `# ${manifest.name}\n\nUpload this ZIP in Shopify Admin > Themes > Add theme > Upload zip file.\n\nThe generated \`templates/index.json\` already uses the selected section order. A matching \`page.section-pack\` template is included for previewing the pack on a page.\n\nLayout, config, locales, templates, snippets, assets, and blocks are the ${manifest.baseStore} theme's own files, unmodified. \`sections/\` holds the ${manifest.baseCoreSections.length} sections the theme needs to function (header, footer, cart, product, account, search, and the rest) plus your selection.${dropped.length ? ` The ${dropped.length} unused base content sections were left out; they are listed in \`section-pack.json\`.` : ''}\n`;
+  }
   return `# ${manifest.name}\n\nThis lightweight pack contains selected section files and their required dependencies.\n\nCopy the contents into an existing Shopify theme, preserving the folder structure. Review INSTALL notes and warnings in section-pack.json before publishing.\n`;
 }
 
@@ -383,10 +626,13 @@ function buildExport({ items, mode = 'theme', baseStore = BASE_STORE, name = 'se
   if (!findStore(resolvedBase)) throw new Error(`Base store not found: ${resolvedBase}`);
   const resolved = resolveItems(items, resolvedBase, customDir);
   const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'section-pack-'));
+  let coreDropped = [];
+  let orphansDropped = [];
   try {
     if (mode === 'theme') {
-      copyTheme(findStore(resolvedBase), outDir);
-      clearDirectory(path.join(outDir, 'sections'));
+      const basePath = findStore(resolvedBase);
+      copyTheme(basePath, outDir);
+      coreDropped = pruneSections(outDir, coreSectionTypes(basePath));
     } else {
       for (const dir of ['sections', 'snippets', 'assets', 'blocks']) fs.mkdirSync(path.join(outDir, dir), { recursive: true });
     }
@@ -396,6 +642,7 @@ function buildExport({ items, mode = 'theme', baseStore = BASE_STORE, name = 'se
       const templateSections = {};
       const order = [];
       resolved.forEach((item, index) => {
+        if (order.length >= MAX_SECTIONS_PER_TEMPLATE) return;
         const schema = extractSchema(item.sourceText);
         if (/{%-?\s*schema\s*-?%}/i.test(item.sourceText) && !schema) throw new Error(`Invalid schema in ${item.store}/${item.file}`);
         const body = templateSectionBody(schema);
@@ -407,15 +654,24 @@ function buildExport({ items, mode = 'theme', baseStore = BASE_STORE, name = 'se
         templateSections[id] = body;
         order.push(id);
       });
+      if (resolved.length > MAX_SECTIONS_PER_TEMPLATE) {
+        builder.warnings.push(`Only the first ${MAX_SECTIONS_PER_TEMPLATE} of ${resolved.length} selected sections were placed in templates/index.json (Shopify renders at most ${MAX_SECTIONS_PER_TEMPLATE} sections per template). All ${resolved.length} are still in sections/ and can be added in the theme editor.`);
+      }
       const template = { sections: templateSections, order };
       fs.writeFileSync(path.join(outDir, 'templates', 'index.json'), JSON.stringify(template, null, 2));
       fs.writeFileSync(path.join(outDir, 'templates', 'page.section-pack.json'), JSON.stringify(template, null, 2));
-      sanitizeBaseTemplates(outDir, new Set(exported));
+      orphansDropped = pruneOrphans(outDir, builder.packFiles);
     }
     builder.finalizeAssets();
     const errors = builder.validate();
-    if (errors.length) throw new Error(`Export validation failed: ${errors.slice(0, 6).join('; ')}`);
-    const manifest = manifestFor({ mode, baseStore: resolvedBase, name, items: resolved, exported, warnings: builder.warnings, sourceCommit });
+    if (mode === 'theme') {
+      const store = validateThemeStore(outDir);
+      errors.push(...store.errors);
+      builder.warnings.push(...store.warnings);
+    }
+    if (errors.length) throw new Error(`Export validation failed: ${[...new Set(errors)].slice(0, 6).join('; ')}`);
+    const baseCore = mode === 'theme' ? [...coreSectionTypes(findStore(resolvedBase))].sort() : [];
+    const manifest = manifestFor({ mode, baseStore: resolvedBase, name, items: resolved, exported, warnings: builder.warnings, sourceCommit, baseCore, baseDropped: coreDropped.sort(), orphansDropped: orphansDropped.sort() });
     fs.writeFileSync(path.join(outDir, 'section-pack.json'), JSON.stringify(manifest, null, 2));
     fs.writeFileSync(path.join(outDir, 'README.md'), readmeFor(mode, manifest));
     return { buffer: zipDirectory(outDir), manifest, warnings: builder.warnings };
