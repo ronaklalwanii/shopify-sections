@@ -48,11 +48,20 @@
         <h1 id="resultsTitle">All sections</h1>
         <div class="results-sub" id="resultsSub"></div>
       </div>
-      <label class="toggle light">
-        <input type="checkbox" id="previewsToggle" checked>
-        <span class="toggle-track"></span>
-        <span>Live previews</span>
-      </label>
+      <div class="topbar-controls">
+        <div class="column-control">
+          <span class="control-label">Cards per row</span>
+          <div class="segmented" id="columnSwitch" role="group" aria-label="Cards per row">
+            <button type="button" data-columns="2" aria-pressed="false">2</button>
+            <button type="button" data-columns="4" aria-pressed="true" class="active">4</button>
+          </div>
+        </div>
+        <label class="toggle light">
+          <input type="checkbox" id="previewsToggle" checked>
+          <span class="toggle-track"></span>
+          <span>Live previews</span>
+        </label>
+      </div>
     </div>
     <div class="grid" id="grid"></div>
     <button type="button" class="btn btn-ghost load-more" id="loadMore" hidden>Load more</button>

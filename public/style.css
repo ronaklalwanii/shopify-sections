@@ -108,7 +108,16 @@ body {
 .topbar h1 { font-size: 19px; margin: 0; font-weight: 700; letter-spacing: -0.01em; }
 .results-sub { color: var(--ink-3); font-size: 12.5px; margin-top: 3px; }
 
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(236px, 1fr)); gap: 14px; }
+.topbar-controls { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.column-control { display: flex; align-items: center; gap: 8px; }
+.control-label { color: var(--ink-3); font-size: 11.5px; font-weight: 600; }
+.segmented { display: flex; background: #f0efeb; border-radius: 8px; padding: 2.5px; gap: 2px; }
+.segmented button {
+  border: 0; background: none; font: inherit; font-size: 12px; font-weight: 570;
+  padding: 4.5px 12px; border-radius: 6px; cursor: pointer; color: var(--ink-2);
+}
+.segmented button.active { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+.grid { display: grid; grid-template-columns: repeat(var(--columns, 4), minmax(0, 1fr)); gap: 14px; }
 .load-more { display: block; margin: 22px auto 0; }
 .load-more[hidden] { display: none; }
 .toggle.light { color: var(--ink-2); }
@@ -121,8 +130,8 @@ body {
   border-radius: 8px; border: 1px solid var(--line); background: #fff;
 }
 .card-thumb iframe {
-  width: 100%; height: 100%; border: 0; position: absolute; top: 0; left: 0;
-  pointer-events: none; background: #fff;
+  width: 1200px; height: 1560px; border: 0; position: absolute; top: 0; left: 0;
+  transform-origin: 0 0; pointer-events: none; background: #fff;
 }
 .card-thumb .thumb-loading {
   position: absolute; inset: 0; display: grid; place-items: center;

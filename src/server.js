@@ -283,6 +283,25 @@ const PREVIEW_COOKIE = crypto.randomBytes(32).toString('hex');
 const hasPreviewCookie = (header) => String(header || '').split(';')
   .map((part) => part.trim()).some((part) => part === `sl_preview=${PREVIEW_COOKIE}`);
 
+function previewAssetToken(url) {
+  const value = String(url || '');
+  if (!/^\/assets\//i.test(value)) return value;
+  try {
+    const parsed = new URL(value, 'http://preview.local');
+    if (parsed.searchParams.get('sl_preview') === PREVIEW_COOKIE) return value;
+    parsed.searchParams.set('sl_preview', PREVIEW_COOKIE);
+    return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+  } catch { return value; }
+}
+
+function tokenizePreviewAssets(value) {
+  return String(value || '').replace(/(^|["'(=\s])\/assets\/[^\s"'<>)]+/gi, (match, prefix) => prefix + previewAssetToken(match.slice(prefix.length)));
+}
+
+function hasPreviewAssetToken(req) {
+  return req.path.startsWith('/assets/') && req.query.sl_preview === PREVIEW_COOKIE;
+}
+
 function loginPage(msg = '') {
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Section Library — sign in</title>
 <style>body{margin:0;font:14px/1.5 system-ui,sans-serif;background:#16171a;color:#c9cbd1;display:grid;place-items:center;min-height:100vh}
@@ -312,7 +331,7 @@ app.use((req, res, next) => {
   if (!ACCESS_PASSWORD) return next();
   if (req.path === '/login') return next();
   if (hasAuthCookie(req.headers.cookie)) return next();
-  if (isPreviewAssetRequest(req) || (req.path.startsWith('/assets/') && hasPreviewCookie(req.headers.cookie))) return next();
+  if (isPreviewAssetRequest(req) || hasPreviewAssetToken(req) || (req.path.startsWith('/assets/') && hasPreviewCookie(req.headers.cookie))) return next();
   if (req.path.startsWith('/api/') || req.path.startsWith('/preview/')) return res.status(401).json({ error: 'unauthorized' });
   res.status(401).type('html').send(loginPage());
 });
@@ -576,10 +595,14 @@ function hasVisiblePreview(html) {
 function previewPage({ title, html, cssLinks = [], inlineCss = '', scripts = [], error = null, headExtra = '', externalScripts = [] }) {
   const externalTag = (script) => {
     const src = typeof script === 'string' ? script : script.src;
+    const href = escapeHtml(previewAssetToken(src));
     return typeof script === 'string' || script.esm
-      ? `<script type="module" src="${escapeHtml(src)}"></script>`
-      : `<script src="${escapeHtml(src)}" defer></script>`;
+      ? `<script type="module" src="${href}"></script>`
+      : `<script src="${href}" defer></script>`;
   };
+  const stylesheetTag = (href) => `<link rel="stylesheet" href="${escapeHtml(previewAssetToken(href))}">`;
+  const inlineStyle = String(inlineCss || '').replace(/<\/style/gi, '<\\/style');
+  const inlineScripts = scripts.map((script) => tokenizePreviewAssets(String(script).replace(/<\/script/gi, '<\\/script')));
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -588,14 +611,14 @@ function previewPage({ title, html, cssLinks = [], inlineCss = '', scripts = [],
 <title>${escapeHtml(title)}</title>
 ${CJS_SHIM}
 <style>${RESET_CSS}</style>
-${headExtra}
-${cssLinks.map((href) => `<link rel="stylesheet" href="${escapeHtml(href)}">`).join('\n')}
-${inlineCss ? `<style>${String(inlineCss).replace(/<\/style/gi, '<\\/style')}</style>` : ''}
+${tokenizePreviewAssets(headExtra)}
+${cssLinks.map(stylesheetTag).join('\n')}
+${inlineCss ? `<style>${tokenizePreviewAssets(inlineStyle)}</style>` : ''}
 </head>
 <body>
-${html}
+${tokenizePreviewAssets(html)}
 ${externalScripts.map(externalTag).join('\n')}
-${scripts.map((script) => `<script>${String(script).replace(/<\/script/gi, '<\\/script')}</script>`).join('\n')}
+${inlineScripts.map((script) => `<script>${script}</script>`).join('\n')}
 ${error ? `<div class="preview-error">Render error: ${escapeHtml(error)}</div>` : ''}
 </body>
 </html>`;

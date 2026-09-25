@@ -10,6 +10,7 @@ const state = {
   q: '',
   showFunctional: false,
   showPreviews: localStorage.getItem('sl-previews') !== 'off',
+  columns: [2, 4].includes(Number(localStorage.getItem('sl-columns'))) ? Number(localStorage.getItem('sl-columns')) : 4,
   visibleCount: 48,
   current: null,   // section open in detail modal
   code: { liquid: '', css: '', js: '' },
@@ -84,6 +85,7 @@ function renderSidebar() {
 function renderGrid() {
   const all = visibleSections();
   const list = all.slice(0, state.visibleCount);
+  $('grid').style.setProperty('--columns', state.columns);
   $('grid').innerHTML = list.map((s) => {
     const dependencies = s.dependencies || {};
     const dependencyCount = (dependencies.snippets || []).length + (dependencies.assets || []).length;
@@ -125,6 +127,7 @@ function renderGrid() {
 let thumbObserver = null;
 let inFlight = 0;
 const thumbQueue = [];
+const THUMB_CANVAS_WIDTH = 1200;
 
 function observeThumbs() {
   thumbObserver?.disconnect();
@@ -169,6 +172,10 @@ function loadThumb(el) {
       if (loading) loading.textContent = 'preview failed';
     } else {
       el.classList.add('loaded');
+      requestAnimationFrame(() => {
+        const width = el.getBoundingClientRect().width || 320;
+        frame.style.transform = `scale(${Math.min(1, width / THUMB_CANVAS_WIDTH)})`;
+      });
     }
     inFlight--;
     pumpThumbs();
@@ -181,6 +188,22 @@ function loadThumb(el) {
   frame.onload = () => finish();
   frame.onerror = () => finish(true);
   el.appendChild(frame);
+}
+
+function syncColumnButtons() {
+  document.querySelectorAll('#columnSwitch button').forEach((button) => {
+    const active = Number(button.dataset.columns) === state.columns;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+}
+
+function setColumns(value) {
+  const count = Number(value);
+  state.columns = count === 2 ? 2 : 4;
+  localStorage.setItem('sl-columns', state.columns);
+  syncColumnButtons();
+  renderGrid();
 }
 
 function refresh({ reset = true } = {}) {
@@ -541,6 +564,11 @@ $('search').addEventListener('input', (e) => {
 });
 $('loadMore').onclick = () => { state.visibleCount += 48; renderGrid(); };
 $('functionalToggle').addEventListener('change', (e) => { state.showFunctional = e.target.checked; refresh(); });
+syncColumnButtons();
+$('columnSwitch').addEventListener('click', (e) => {
+  const button = e.target.closest('button[data-columns]');
+  if (button) setColumns(button.dataset.columns);
+});
 $('previewsToggle').checked = state.showPreviews;
 $('previewsToggle').addEventListener('change', (e) => {
   state.showPreviews = e.target.checked;

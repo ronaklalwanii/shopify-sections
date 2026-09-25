@@ -79,10 +79,20 @@ test('does not call blank rendered output healthy', () => {
   assert.equal(hardIssue('needs Shopify block context'), false);
 });
 
-test('renders catalog thumbnails at the card viewport', () => {
+test('scales catalog thumbnails and supports two or four columns', () => {
   const css = fs.readFileSync(path.join(__dirname, '../public/style.css'), 'utf8');
   const app = fs.readFileSync(path.join(__dirname, '../public/app.js'), 'utf8');
-  assert.match(css, /\.card-thumb iframe\s*\{[^}]*width: 100%;[^}]*height: 100%;/s);
-  assert.doesNotMatch(css, /width: 1200px; height: 1560px;/);
-  assert.doesNotMatch(app, /frame\.style\.transform\s*=/);
+  const html = fs.readFileSync(path.join(__dirname, '../public/index.html'), 'utf8');
+  assert.match(css, /\.card-thumb iframe\s*\{[^}]*width: 1200px;[^}]*height: 1560px;[^}]*transform-origin: 0 0;/s);
+  assert.match(app, /frame\.style\.transform\s*=\s*`scale/);
+  assert.match(css, /grid-template-columns:\s*repeat\(var\(--columns, 4\), minmax\(0, 1fr\)\)/);
+  assert.match(html, /data-columns="2"/);
+  assert.match(html, /data-columns="4"/);
+});
+
+test('protects sandboxed preview assets with a preview token', () => {
+  const server = fs.readFileSync(path.join(__dirname, '../src/server.js'), 'utf8');
+  assert.match(server, /req\.query\.sl_preview === PREVIEW_COOKIE/);
+  assert.match(server, /function tokenizePreviewAssets\(/);
+  assert.match(server, /previewAssetToken\(src\)/);
 });
