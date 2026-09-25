@@ -130,3 +130,12 @@ test('protects sandboxed preview assets with a signed preview token', () => {
   assert.match(server, /function tokenizePreviewAssets\(/);
   assert.match(server, /previewAssetToken\(src, previewToken\)/);
 });
+
+test('rolls back custom sections when persistence fails', () => {
+  const server = fs.readFileSync(path.join(__dirname, '../src/server.js'), 'utf8');
+  assert.match(server, /Liquid is required/);
+  assert.match(server, /persistCustomSectionRemote\(saved, \{ rollbackCreated: true \}\)/);
+  assert.match(server, /removeCustomFiles\(saved\.meta\.slug\)/);
+  assert.match(server, /if \(!liquid\.trim\(\)\) continue/);
+  assert.match(server, /Contents: read and write permission/);
+});

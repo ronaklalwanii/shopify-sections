@@ -143,6 +143,31 @@ async function ghDeleteFile(name) {
   return true;
 }
 
+function describePersistenceError(error) {
+  const message = String(error?.message || error || 'Custom section persistence failed');
+  if (/\b403\b/.test(message)) return `${message}. Check that DATA_REPO is accessible and DATA_TOKEN has Contents: read and write permission.`;
+  return message;
+}
+
+async function persistCustomSectionRemote({ meta, liquid, json }, { rollbackCreated = false } = {}) {
+  if (!GH_DATA) return;
+  const files = [[`${meta.slug}.liquid`, liquid], [`${meta.slug}.json`, json]];
+  const written = [];
+  try {
+    for (const [name, content] of files) {
+      await ghPersistFile(name, content);
+      written.push(name);
+    }
+  } catch (error) {
+    if (rollbackCreated) {
+      for (const name of written) {
+        try { await ghDeleteFile(name); } catch {}
+      }
+    }
+    throw new Error(describePersistenceError(error));
+  }
+}
+
 // On boot, restore saved custom sections from the GitHub data repo if configured.
 function initDataRepo() {
   if (!process.env.DATA_REPO || !process.env.DATA_TOKEN) return;
@@ -214,6 +239,27 @@ function writeCustomFiles(slug, liquid, json) {
   }
 }
 
+function removeCustomFiles(slug) {
+  for (const extension of ['liquid', 'json']) {
+    try { fs.unlinkSync(customPath(slug, extension)); } catch {}
+  }
+}
+
+function snapshotCustomFiles(slug) {
+  const snapshot = {};
+  for (const extension of ['liquid', 'json']) {
+    try { snapshot[extension] = fs.readFileSync(customPath(slug, extension), 'utf8'); } catch {}
+  }
+  return snapshot;
+}
+
+function restoreCustomFiles(slug, snapshot) {
+  removeCustomFiles(slug);
+  for (const extension of ['liquid', 'json']) {
+    if (snapshot[extension] != null) fs.writeFileSync(customPath(slug, extension), snapshot[extension]);
+  }
+}
+
 function listCustomSections() {
   const out = [];
   for (const file of fs.readdirSync(CUSTOM_DIR)) {
@@ -223,6 +269,7 @@ function listCustomSections() {
     const meta = customSectionMeta(slug);
     if (!meta) continue;
     const { liquid } = customSectionSources(slug);
+    if (!liquid.trim()) continue;
     const schema = extractSchema(liquid);
     out.push({
       ...meta, slug, store: 'custom', file: `${slug}.liquid`, custom: true, functional: false,
@@ -238,6 +285,8 @@ function listCustomSections() {
 function saveCustomSection(body, { isNew, previousSlug = null }) {
   const name = String(body.name || '').trim();
   if (!name) throw new Error('Name is required');
+  const liquid = String(body.liquid || '');
+  if (!liquid.trim()) throw new Error('Liquid is required');
   const slug = slugify(name);
   if (fs.existsSync(customPath(slug, 'liquid')) && slug !== previousSlug) throw new Error('A section with this name already exists');
   const contextStore = body.contextStore || 'custom';
@@ -253,9 +302,8 @@ function saveCustomSection(body, { isNew, previousSlug = null }) {
     css: String(body.css || ''), js: String(body.js || ''),
   };
   const json = JSON.stringify(meta, null, 2);
-  writeCustomFiles(slug, String(body.liquid || ''), json);
-  if (!IS_SERVERLESS) gitCommit(`${isNew ? 'Add' : 'Update'} section: ${name}`);
-  return { meta, json };
+  writeCustomFiles(slug, liquid, json);
+  return { meta, json, liquid };
 }
 
 /* --------------------------------- app setup --------------------------------- */
@@ -463,7 +511,7 @@ app.get('/api/section/:store/:file', (req, res) => {
       const slug = file.replace(/\.liquid$/, '');
       assertCustomSlug(slug);
       const sources = customSectionSources(slug);
-      if (!sources.meta) return res.status(404).json({ error: 'not found' });
+      if (!sources.meta || !sources.liquid.trim()) return res.status(404).json({ error: 'not found' });
       const contextPath = sources.meta.contextStore === 'custom' ? null : findStore(sources.meta.contextStore);
       const dependencies = contextPath
         ? collectSectionDependencies(contextPath, sources.liquid)
@@ -497,36 +545,46 @@ app.post('/api/render-preview', async (req, res) => {
 });
 
 app.post('/api/custom', async (req, res) => {
+  let saved;
   try {
-    const { meta, json } = saveCustomSection(req.body || {}, { isNew: true });
-    await ghPersistFile(`${meta.slug}.liquid`, req.body.liquid || '');
-    await ghPersistFile(`${meta.slug}.json`, json);
-    res.json(meta);
-  } catch (error) { res.status(400).json({ error: error.message }); }
+    saved = saveCustomSection(req.body || {}, { isNew: true });
+    await persistCustomSectionRemote(saved, { rollbackCreated: true });
+    if (!IS_SERVERLESS) gitCommit(`Add section: ${saved.meta.name}`);
+    res.json(saved.meta);
+  } catch (error) {
+    if (saved?.meta?.slug) removeCustomFiles(saved.meta.slug);
+    const status = /GitHub|persistence|Contents: read/i.test(String(error.message || error)) ? 502 : 400;
+    res.status(status).json({ error: error.message });
+  }
 });
 
 app.put('/api/custom/:slug', async (req, res) => {
+  let saved;
+  let previousSlug;
+  let snapshot;
   try {
-    const previousSlug = assertCustomSlug(req.params.slug);
+    previousSlug = assertCustomSlug(req.params.slug);
     const existing = customSectionMeta(previousSlug);
     if (!existing) return res.status(404).json({ error: 'not found' });
-    const { meta, json } = saveCustomSection(
+    snapshot = snapshotCustomFiles(previousSlug);
+    saved = saveCustomSection(
       { ...req.body, name: req.body.name || existing.name },
       { isNew: false, previousSlug },
     );
-    await ghPersistFile(`${meta.slug}.liquid`, req.body.liquid || '');
-    await ghPersistFile(`${meta.slug}.json`, json);
-    if (meta.slug !== previousSlug) {
+    await persistCustomSectionRemote(saved);
+    if (saved.meta.slug !== previousSlug) {
       for (const file of [`${previousSlug}.liquid`, `${previousSlug}.json`]) {
         const extension = file.endsWith('.liquid') ? 'liquid' : 'json';
         try { fs.unlinkSync(customPath(previousSlug, extension)); } catch {}
         await ghDeleteFile(file);
       }
-      if (!IS_SERVERLESS) gitCommit(`Rename section: ${existing.name} -> ${meta.name}`);
     }
-    res.json(meta);
+    if (!IS_SERVERLESS) gitCommit(saved.meta.slug !== previousSlug ? `Rename section: ${existing.name} -> ${saved.meta.name}` : `Update section: ${saved.meta.name}`);
+    res.json(saved.meta);
   } catch (error) {
-    const status = /Invalid|required|already exists|not found/i.test(error.message) ? 400 : 500;
+    if (saved?.meta?.slug && saved.meta.slug !== previousSlug) removeCustomFiles(saved.meta.slug);
+    if (previousSlug && snapshot) restoreCustomFiles(previousSlug, snapshot);
+    const status = /Invalid|required|already exists|not found/i.test(error.message) ? 400 : (/GitHub|persistence|Contents: read/i.test(String(error.message || error)) ? 502 : 500);
     res.status(status).json({ error: error.message });
   }
 });
@@ -918,8 +976,8 @@ async function localPreview(req, res) {
       const slug = file.replace(/\.liquid$/, '');
       assertCustomSlug(slug);
       const meta = customSectionMeta(slug);
-      if (!meta) return res.status(404).send('not found');
       const { liquid, css, js } = customSectionSources(slug);
+      if (!meta || !liquid.trim()) return res.status(404).send('not found');
       if (/{%-?\s*content_for\b/i.test(liquid)) res.set('X-Preview-Path', 'local-context');
       const contextStore = meta.contextStore === 'custom' ? 'custom' : meta.contextStore;
       const contextPath = contextStore === 'custom' ? null : findStore(contextStore);
