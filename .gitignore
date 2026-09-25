@@ -4,3 +4,4 @@ data/store-config.json
 custom-sections/
 .DS_Store
 *.log
+data/index.json

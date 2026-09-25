@@ -23,6 +23,14 @@ const PORT = process.env.PORT || 4173;
 fs.mkdirSync(CUSTOM_DIR, { recursive: true });
 fs.mkdirSync(DATA_DIR, { recursive: true });
 
+// Local/dev only: rebuild the index when it is missing or behind stores/.
+// Serverless builds run ingest via vercel.json buildCommand, and a cold start
+// must not spend its request budget on a re-ingest.
+if (!IS_SERVERLESS) {
+  try { require('./ensure-index').ensureIndex({ log: (m) => console.log(`[index] ${m}`) }); }
+  catch (error) { console.warn(`[index] rebuild failed: ${error.message}`); }
+}
+
 // secrets come from env on the server; the local json file is a dev fallback
 const storeConfig = () => {
   const fileCfg = (() => { try { return JSON.parse(fs.readFileSync(STORE_CONFIG, 'utf8')); } catch { return {}; } })();

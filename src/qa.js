@@ -4,6 +4,10 @@
 const fs = require("fs");
 const path = require("path");
 const { renderStoreSection } = require("./renderer");
+const { ensureIndex } = require("./ensure-index");
+
+// QA reads the index directly, so make sure it reflects stores/ before sweeping.
+ensureIndex({ log: (m) => console.log(`[index] ${m}`) });
 
 const ROOT = path.resolve(__dirname, "..");
 const BASE = process.env.LIB_URL || "http://localhost:4173";
