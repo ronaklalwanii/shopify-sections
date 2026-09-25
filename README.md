@@ -98,6 +98,7 @@ No sleeping, persistent disk, and the VM stays inside the Always Free allowance.
 | Env var | Purpose |
 | --- | --- |
 | `ACCESS_PASSWORD` | Team login gate (required when `NODE_ENV=production`; unset is open only for local development) |
+| `PREVIEW_TOKEN_SECRET` | Optional stable secret for cross-instance preview assets; defaults to `ACCESS_PASSWORD` |
 | `STORE_URL` / `STOREFRONT_PASSWORD` / `PAGE_HANDLE` | Live-preview connection to the dev store |
 | `LIVE_PREVIEWS=1` | Opt into live Shopify previews; local previews are the default |
 | `PREVIEW_THEME_ID` | Optional preview-theme bypass |
@@ -128,11 +129,14 @@ Sections are Liquid, so the server renders them at request time with
 [liquidjs](https://github.com/harttle/liquidjs) plus a mock Shopify layer:
 schema settings get defaults/preset content, images use the bundled demo image,
 icons use the bundled star asset, `settings_data.json` supplies the store's real theme settings,
-and translations come from the theme locales. Each preview loads the store's
-own CSS/JavaScript dependencies inside a sandboxed iframe, so sections look and
-behave more like they do on the real store. Sections depending on live store
-objects or Shopify editor block context show sample data or are marked as
-context-dependent instead of being presented as fully verified.
+and translations come from the theme locales. A final local-preview media pass
+also replaces direct image fallbacks, lazy sources, posters, CSS media URLs, and
+small icon SVGs, so newly added stores do not need per-theme patches. Each
+preview loads the store's own CSS/JavaScript dependencies inside a sandboxed
+iframe, so sections look and behave more like they do on the real store. Sections
+depending on live store objects or Shopify editor block context show sample
+data or are marked as context-dependent instead of being presented as fully
+verified.
 
 ## Layout
 

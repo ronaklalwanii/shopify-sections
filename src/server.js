@@ -279,27 +279,41 @@ const authCookieValue = () =>
   crypto.createHmac('sha256', ACCESS_PASSWORD).update('section-library-access').digest('hex');
 const hasAuthCookie = (header) => String(header || '').split(';')
   .map((part) => part.trim()).some((part) => part === `sl_auth=${authCookieValue()}`);
-const PREVIEW_COOKIE = crypto.randomBytes(32).toString('hex');
+const PREVIEW_TOKEN_SECRET = process.env.PREVIEW_TOKEN_SECRET || ACCESS_PASSWORD || 'section-library-preview-local';
+const PREVIEW_TOKEN_TTL = 60 * 60 * 1000;
+const previewTokenSignature = (expires) => crypto.createHmac('sha256', PREVIEW_TOKEN_SECRET).update(String(expires)).digest('hex');
+function createPreviewToken() {
+  const expires = Date.now() + PREVIEW_TOKEN_TTL;
+  return `${expires}.${previewTokenSignature(expires)}`;
+}
+function verifyPreviewToken(token) {
+  const [expires, signature] = String(token || '').split('.');
+  const expiry = Number(expires);
+  if (!Number.isSafeInteger(expiry) || expiry <= Date.now() || !signature) return false;
+  const expected = Buffer.from(previewTokenSignature(expires), 'utf8');
+  const actual = Buffer.from(signature, 'utf8');
+  return actual.length === expected.length && crypto.timingSafeEqual(actual, expected);
+}
 const hasPreviewCookie = (header) => String(header || '').split(';')
-  .map((part) => part.trim()).some((part) => part === `sl_preview=${PREVIEW_COOKIE}`);
+  .map((part) => part.trim()).some((part) => part.startsWith('sl_preview=') && verifyPreviewToken(part.slice('sl_preview='.length)));
 
-function previewAssetToken(url) {
+function previewAssetToken(url, token) {
   const value = String(url || '');
   if (!/^\/assets\//i.test(value)) return value;
   try {
     const parsed = new URL(value, 'http://preview.local');
-    if (parsed.searchParams.get('sl_preview') === PREVIEW_COOKIE) return value;
-    parsed.searchParams.set('sl_preview', PREVIEW_COOKIE);
+    if (parsed.searchParams.get('sl_preview') === token) return value;
+    parsed.searchParams.set('sl_preview', token);
     return `${parsed.pathname}${parsed.search}${parsed.hash}`;
   } catch { return value; }
 }
 
-function tokenizePreviewAssets(value) {
-  return String(value || '').replace(/(^|["'(=\s])\/assets\/[^\s"'<>)]+/gi, (match, prefix) => prefix + previewAssetToken(match.slice(prefix.length)));
+function tokenizePreviewAssets(value, token) {
+  return String(value || '').replace(/(^|["'(=\s])\/assets\/[^\s"'<>)]+/gi, (match, prefix) => prefix + previewAssetToken(match.slice(prefix.length), token));
 }
 
 function hasPreviewAssetToken(req) {
-  return req.path.startsWith('/assets/') && req.query.sl_preview === PREVIEW_COOKIE;
+  return req.path.startsWith('/assets/') && verifyPreviewToken(req.query.sl_preview);
 }
 
 function loginPage(msg = '') {
@@ -478,7 +492,8 @@ app.get('/api/section/:store/:file', (req, res) => {
 app.post('/api/render-preview', async (req, res) => {
   const { liquid = '', css = '', js = '', store = 'custom' } = req.body || {};
   const res2 = await renderSectionSource(store === 'custom' ? 'custom' : store, liquid, { sectionId: 'live-preview' });
-  res.json(res2);
+  const token = createPreviewToken();
+  res.json({ ...res2, html: tokenizePreviewAssets(normalizePreviewMedia(res2.html), token) });
 });
 
 app.post('/api/custom', async (req, res) => {
@@ -593,16 +608,17 @@ function hasVisiblePreview(html) {
 }
 
 function previewPage({ title, html, cssLinks = [], inlineCss = '', scripts = [], error = null, headExtra = '', externalScripts = [] }) {
+  const previewToken = createPreviewToken();
   const externalTag = (script) => {
     const src = typeof script === 'string' ? script : script.src;
-    const href = escapeHtml(previewAssetToken(src));
+    const href = escapeHtml(previewAssetToken(src, previewToken));
     return typeof script === 'string' || script.esm
       ? `<script type="module" src="${href}"></script>`
       : `<script src="${href}" defer></script>`;
   };
-  const stylesheetTag = (href) => `<link rel="stylesheet" href="${escapeHtml(previewAssetToken(href))}">`;
+  const stylesheetTag = (href) => `<link rel="stylesheet" href="${escapeHtml(previewAssetToken(href, previewToken))}">`;
   const inlineStyle = String(inlineCss || '').replace(/<\/style/gi, '<\\/style');
-  const inlineScripts = scripts.map((script) => tokenizePreviewAssets(String(script).replace(/<\/script/gi, '<\\/script')));
+  const inlineScripts = scripts.map((script) => tokenizePreviewAssets(String(script).replace(/<\/script/gi, '<\\/script'), previewToken));
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -611,12 +627,12 @@ function previewPage({ title, html, cssLinks = [], inlineCss = '', scripts = [],
 <title>${escapeHtml(title)}</title>
 ${CJS_SHIM}
 <style>${RESET_CSS}</style>
-${tokenizePreviewAssets(headExtra)}
+${tokenizePreviewAssets(normalizePreviewMedia(headExtra), previewToken)}
 ${cssLinks.map(stylesheetTag).join('\n')}
-${inlineCss ? `<style>${tokenizePreviewAssets(inlineStyle)}</style>` : ''}
+${inlineCss ? `<style>${normalizeCssUrls(inlineStyle, 'inline style', previewToken)}</style>` : ''}
 </head>
 <body>
-${tokenizePreviewAssets(html)}
+${tokenizePreviewAssets(normalizePreviewMedia(html), previewToken)}
 ${externalScripts.map(externalTag).join('\n')}
 ${inlineScripts.map((script) => `<script>${script}</script>`).join('\n')}
 ${error ? `<div class="preview-error">Render error: ${escapeHtml(error)}</div>` : ''}
@@ -699,7 +715,7 @@ app.get('/preview/:store/:file', async (req, res) => {
   const { store, file } = req.params;
   res.set('Cache-Control', 'private, max-age=60, stale-while-revalidate=300');
   const previewSecure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
-  res.set('Set-Cookie', `sl_preview=${PREVIEW_COOKIE}; Path=/; HttpOnly; Max-Age=3600; SameSite=Lax${previewSecure}`);
+  res.set('Set-Cookie', `sl_preview=${createPreviewToken()}; Path=/; HttpOnly; Max-Age=3600; SameSite=Lax${previewSecure}`);
   res.set('Content-Security-Policy', "default-src * data: blob:; script-src * 'unsafe-inline'; style-src * 'unsafe-inline'; connect-src 'none'; frame-ancestors 'self'; form-action 'none'; base-uri 'none'");
 
   // When a gallery store is configured, previews render on real Shopify,
@@ -765,20 +781,121 @@ function assetExists(storePath, asset) {
   return !relative.startsWith('..') && !path.isAbsolute(relative) && fs.existsSync(full);
 }
 
+const DEMO_IMAGE = '/assets/demo-image.jpg';
+const DEMO_ICON = '/assets/star.svg';
+const MEDIA_EXT_RE = /\.(?:avif|gif|jpe?g|png|svg|webp)(?:[?#].*)?$/i;
+const ICON_CONTEXT_RE = /(?:icon|pictogram|logo|favicon|symbol|badge|arrow|chevron|caret|cart|search|account|user|menu|close|check|plus|minus|social|payment|star|heart|filter|share|flag)/i;
+
+function isIconContext(value) {
+  return ICON_CONTEXT_RE.test(String(value || '').replace(/[-_]/g, ' '));
+}
+
+function mediaPlaceholder(value, context = '') {
+  const url = String(value || '').trim();
+  if (/(?:^|\/)assets\/star\.svg(?:[?#]|$)/i.test(url)) return DEMO_ICON;
+  if (/(?:^|\/)assets\/demo-image\.jpg(?:[?#]|$)/i.test(url)) return DEMO_IMAGE;
+  if (isIconContext(`${url} ${context}`)) return DEMO_ICON;
+  return DEMO_IMAGE;
+}
+
+function replaceAttribute(attrs, name, replacer) {
+  return attrs.replace(new RegExp(`\\b${name}\\s*=\\s*(["'])([\\s\\S]*?)\\1`, 'gi'), (_, quote, value) => `${name}=${quote}${replacer(value, name)}${quote}`);
+}
+
+function normalizeSrcset(value, context = '') {
+  return String(value || '').split(',').map((candidate) => {
+    const trimmed = candidate.trim();
+    const match = trimmed.match(/^(\S+)(\s+[\s\S]*)?$/);
+    return match ? `${mediaPlaceholder(match[1], context)}${match[2] || ''}` : mediaPlaceholder(trimmed, context);
+  }).join(', ');
+}
+
+function normalizeCssUrls(value, context = '', token = '') {
+  return String(value || '').replace(/url\(\s*(["'])([\s\S]*?)\1\s*\)|url\(\s*([^)'"\s][^)]*?)\s*\)/gi, (full, quote, quotedUrl, bareUrl) => {
+    const trimmed = String(quotedUrl ?? bareUrl ?? '').trim();
+    const actualQuote = quote || '';
+    if (/^(?:blob:|#)/i.test(trimmed)) return full;
+    if (/^data:image\//i.test(trimmed)) {
+      const placeholder = /^data:image\/svg\+xml/i.test(trimmed) ? DEMO_ICON : DEMO_IMAGE;
+      return `url(${actualQuote}${token ? previewAssetToken(placeholder, token) : placeholder}${actualQuote})`;
+    }
+    if (/^data:/i.test(trimmed)) return full;
+    if (!trimmed || trimmed === '[object Object]' || MEDIA_EXT_RE.test(trimmed)) {
+      const placeholder = mediaPlaceholder(trimmed, context);
+      return `url(${actualQuote}${token ? previewAssetToken(placeholder, token) : placeholder}${actualQuote})`;
+    }
+    return full;
+  });
+}
+
+function normalizeTextSymbols(html) {
+  const star = `<img src="${DEMO_ICON}" alt="" aria-hidden="true" class="preview-symbol">`;
+  return String(html || '')
+    .replace(/[★☆✦]{2,}/g, (run) => run.split('').map(() => star).join(''))
+    .replace(/>(\s*)([✦✕✖→←↑↓])(?:\s*)</g, (_, space) => `${space}${star}`);
+}
+
+function normalizeInlineSvg(html) {
+  return String(html || '').replace(/<svg\b([^>]*)>[\s\S]*?<\/svg>/gi, (full, attrs) => {
+    const width = Number((attrs.match(/\bwidth=["']?(\d+)/i) || [])[1] || 0);
+    const viewBox = (attrs.match(/\bviewBox=["']\s*[\d.-]+\s+[\d.-]+\s+([\d.]+)\s+([\d.]+)/i) || []);
+    const viewWidth = Number(viewBox[1] || 0), viewHeight = Number(viewBox[2] || 0);
+    const smallGraphic = (width > 0 && width <= 32) || (viewWidth > 0 && viewWidth <= 32 && viewHeight > 0 && viewHeight <= 32);
+    const iconContext = /\b(?:class|id|aria-label|data-icon)=["'][^"']*\b(?:icon|pictogram|logo|symbol|mute|unmute|play|pause|arrow|chevron|caret|check|close|plus|minus|star|heart)\b/i.test(attrs)
+      || smallGraphic;
+    if (!iconContext) return full;
+    const cls = (attrs.match(/\bclass=["']([^"']*)["']/i) || [])[1];
+    return `<img src="${DEMO_ICON}" alt="" aria-hidden="true"${cls ? ` class="${cls}"` : ''}>`;
+  });
+}
+
+function normalizePreviewMedia(html) {
+  let out = String(html || '').replace(/<([a-z][\w:-]*)\b([^>]*)>/gi, (full, tag, attrs) => {
+    let next = attrs;
+    const context = `${tag} ${attrs}`;
+    if (tag.toLowerCase() === 'img') {
+      next = replaceAttribute(next, 'src', (value) => mediaPlaceholder(value, context));
+      next = replaceAttribute(next, 'data-src', (value) => mediaPlaceholder(value, context));
+      next = replaceAttribute(next, 'srcset', (value) => normalizeSrcset(value, context));
+      next = replaceAttribute(next, 'data-srcset', (value) => normalizeSrcset(value, context));
+      if (!/\bsrc\s*=/i.test(next) && /\b(?:srcset|data-srcset)\s*=/i.test(next)) next += ` src="${mediaPlaceholder('', context)}"`;
+    } else if (tag.toLowerCase() === 'video') {
+      next = replaceAttribute(next, 'poster', (value) => mediaPlaceholder(value, context));
+      next = replaceAttribute(next, 'data-poster', (value) => mediaPlaceholder(value, context));
+      next = next.replace(/\s(?:data-)?src\s*=\s*(["'])\s*\1/gi, '');
+      if (!/\bposter\s*=/i.test(next)) next += ` poster="${mediaPlaceholder('', context)}"`;
+    } else if (tag.toLowerCase() === 'source') {
+      if (/\btype=["']image\//i.test(attrs) || /\bsrcset\s*=/i.test(attrs)) {
+        next = replaceAttribute(next, 'src', (value) => mediaPlaceholder(value, context));
+        next = replaceAttribute(next, 'srcset', (value) => normalizeSrcset(value, context));
+        next = replaceAttribute(next, 'data-srcset', (value) => normalizeSrcset(value, context));
+      }
+      next = next.replace(/\s(?:data-)?src\s*=\s*(["'])\s*\1/gi, '');
+    } else if (tag.toLowerCase() === 'link' && /\brel=["'][^"']*preload[^"']*["']/i.test(attrs) && /\bas=["']image["']/i.test(attrs)) {
+      next = replaceAttribute(next, 'href', (value) => mediaPlaceholder(value, context));
+    }
+    next = next.replace(/\bstyle\s*=\s*(["'])([\s\S]*?)\1/gi, (match, quote, style) => `style=${quote}${normalizeCssUrls(style, context)}${quote}`);
+    return `<${tag}${next}>`;
+  });
+  out = out.replace(/<style\b([^>]*)>([\s\S]*?)<\/style>/gi, (full, attrs, css) => `<style${attrs}>${normalizeCssUrls(css, 'style')}</style>`);
+  return normalizeTextSymbols(normalizeInlineSvg(out));
+}
+
 function sanitizePreviewHtml(html, store, storePath) {
-  return String(html || '').replace(/\b(src|href)=(["'])([^"']+)\2/gi, (full, attribute, quote, url) => {
+  const canonical = String(html || '').replace(/\b(src|href)=(["'])([^"']+)\2/gi, (full, attribute, quote, url) => {
     if (!/^\/assets\//i.test(url)) return full;
     const file = assetFileFromUrl(url, store);
     if (!file) return full;
     if (assetExists(storePath, file)) {
-      const canonical = assetUrlForStore(store, file);
-      return url === canonical ? full : `${attribute}=${quote}${canonical}${quote}`;
+      const canonicalUrl = assetUrlForStore(store, file);
+      return url === canonicalUrl ? full : `${attribute}=${quote}${canonicalUrl}${quote}`;
     }
     const extension = path.extname(file).toLowerCase();
     if (['.js', '.mjs', '.css'].includes(extension)) return '';
-    if (['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif', '.svg'].includes(extension)) return `${attribute}=${quote}/assets/demo-image.jpg${quote}`;
+    if (['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif', '.svg'].includes(extension)) return `${attribute}=${quote}${mediaPlaceholder(file, attribute)}${quote}`;
     return full;
   });
+  return normalizePreviewMedia(canonical);
 }
 
 function readAssetText(storePath, asset) {
@@ -814,7 +931,7 @@ async function localPreview(req, res) {
       const headExtra = contextPath ? await getLayoutHeadExtra(contextStore) : '';
       const fontsLink = contextPath ? (() => { try { return googleFontsLink(getEngine(contextStore, contextPath)); } catch { return ''; } })() : '';
       const rendered = await renderSectionSource(contextStore, liquid, { sectionId: slug });
-      const renderedHtml = contextPath ? sanitizePreviewHtml(rendered.html, contextStore, contextPath) : rendered.html;
+      const renderedHtml = contextPath ? sanitizePreviewHtml(rendered.html, contextStore, contextPath) : normalizePreviewMedia(rendered.html);
       return res.type('html').send(previewPage({
         title: meta.name, html: renderedHtml, inlineCss: css, scripts: js ? [js] : [],
         error: rendered.error, cssLinks, externalScripts, headExtra: headExtra + fontsLink,
@@ -873,6 +990,12 @@ app.use('/assets', (req, res, next) => {
   const full = path.resolve(assetsRoot, safe);
   if (path.relative(assetsRoot, full).startsWith('..') || path.isAbsolute(path.relative(assetsRoot, full))) return res.status(403).end();
   res.set('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
+  if (path.extname(safe).toLowerCase() === '.css') {
+    try {
+      const token = typeof req.query.sl_preview === 'string' && verifyPreviewToken(req.query.sl_preview) ? req.query.sl_preview : '';
+      return res.type('css').send(normalizeCssUrls(fs.readFileSync(full, 'utf8'), safe, token));
+    } catch { return res.status(404).end(); }
+  }
   res.sendFile(full, (e) => { if (e) res.status(404).end(); });
 });
 
@@ -906,10 +1029,12 @@ app.use((req, res) => {
 
 if (IS_SERVERLESS) {
   // Vercel: bootReady handles data restore; no listen call (serverless).
-} else {
+} else if (require.main === module) {
   gitInit();
   initDataRepo();
   app.listen(PORT, () => console.log(`Section Library → http://localhost:${PORT}`));
 }
 
 module.exports = app;
+module.exports.normalizePreviewMedia = normalizePreviewMedia;
+module.exports.verifyPreviewToken = verifyPreviewToken;

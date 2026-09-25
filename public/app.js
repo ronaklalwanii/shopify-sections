@@ -10,7 +10,7 @@ const state = {
   q: '',
   showFunctional: false,
   showPreviews: localStorage.getItem('sl-previews') !== 'off',
-  columns: [2, 4].includes(Number(localStorage.getItem('sl-columns'))) ? Number(localStorage.getItem('sl-columns')) : 4,
+  columns: [2, 4].includes(Number(localStorage.getItem('sl-columns'))) ? Number(localStorage.getItem('sl-columns')) : 2,
   visibleCount: 48,
   current: null,   // section open in detail modal
   code: { liquid: '', css: '', js: '' },

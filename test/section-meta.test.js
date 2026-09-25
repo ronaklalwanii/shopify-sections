@@ -6,6 +6,7 @@ const path = require('path');
 const { extractSchema, extractSnippetRefs, extractAssetRefs, collectSectionDependencies, parseJsonLoose } = require('../src/section-meta');
 const { assertCustomSlug, customFilePath } = require('../src/path-safety');
 const { renderSectionSource, renderStoreSection } = require('../src/renderer');
+const { normalizePreviewMedia } = require('../src/server');
 const { visibleContentIssues, hardIssue } = require('../src/qa');
 
 test('parses Shopify-style loose JSON', () => {
@@ -62,6 +63,37 @@ test('uses the supplied demo assets for mocked images and icons', async () => {
   assert.match(placeholder.html, /\/assets\/star\.svg/);
 });
 
+test('handles new-store media patterns and Shopify-style arguments', async () => {
+  const source = `{% schema %}{"settings":[{"id":"image","type":"image_picker"},{"id":"icon","type":"image_picker"}]}{% endschema %}
+    {{ section.settings.image | image_tag: width: 320, alt: 'Photo', class: 'hero' }}
+    {{ section.settings.icon | image_url }}
+    {% render 'icon', name: 'cart' %}
+    {{ 'photo.jpg' | asset_url | image_url }}
+    {{ 'card' | placeholder_svg_tag }}
+    {{ 'payment' | payment_type_svg_tag }}
+    {{ localization.country | image_url }}
+    {{ 'sample' | video_tag }}`;
+  const result = await renderSectionSource('custom', source, { sectionId: 'new-store-media' });
+  assert.equal(result.error, null);
+  assert.match(result.html, /width="320"/);
+  assert.match(result.html, /alt="Photo"/);
+  assert.match(result.html, /class="hero"/);
+  assert.match(result.html, /\/assets\/demo-image\.jpg/);
+  assert.match(result.html, /\/assets\/star\.svg/);
+  assert.doesNotMatch(result.html, /\[object Object\]/);
+});
+
+test('normalizes media fallbacks for future store markup', () => {
+  const html = `<img class="hero" src="https://cdn.example.com/photo.jpg"><img class="icon" src="/assets/new/cart.svg"><img srcset="/assets/new/photo.jpg 1x"><video src=""></video><div style="background-image:url(/assets/new/hero.jpg)"></div>`;
+  const result = normalizePreviewMedia(html);
+  assert.match(result, /hero.*demo-image\.jpg/);
+  assert.match(result, /icon.*star\.svg/);
+  assert.match(result, /srcset="\/assets\/demo-image\.jpg 1x"/);
+  assert.match(result, /poster="\/assets\/demo-image\.jpg"/);
+  assert.doesNotMatch(result, /src=""/);
+  assert.doesNotMatch(result, /cdn\.example\.com/);
+});
+
 test('keeps the Azura collection and announcement sections renderable', async () => {
   const announcement = await renderStoreSection('azura', 'announcement-bar.liquid');
   const collection = await renderStoreSection('azura', 'collection-list.liquid');
@@ -85,14 +117,16 @@ test('scales catalog thumbnails and supports two or four columns', () => {
   const html = fs.readFileSync(path.join(__dirname, '../public/index.html'), 'utf8');
   assert.match(css, /\.card-thumb iframe\s*\{[^}]*width: 1200px;[^}]*height: 1560px;[^}]*transform-origin: 0 0;/s);
   assert.match(app, /frame\.style\.transform\s*=\s*`scale/);
-  assert.match(css, /grid-template-columns:\s*repeat\(var\(--columns, 4\), minmax\(0, 1fr\)\)/);
-  assert.match(html, /data-columns="2"/);
+  assert.match(app, /columns: \[2, 4\]\.includes\(Number\(localStorage\.getItem\('sl-columns'\)\)\) \? Number\(localStorage\.getItem\('sl-columns'\)\) : 2/);
+  assert.match(css, /grid-template-columns:\s*repeat\(var\(--columns, 2\), minmax\(0, 1fr\)\)/);
+  assert.match(html, /data-columns="2"[^>]*aria-pressed="true"/);
   assert.match(html, /data-columns="4"/);
 });
 
-test('protects sandboxed preview assets with a preview token', () => {
+test('protects sandboxed preview assets with a signed preview token', () => {
   const server = fs.readFileSync(path.join(__dirname, '../src/server.js'), 'utf8');
-  assert.match(server, /req\.query\.sl_preview === PREVIEW_COOKIE/);
+  assert.match(server, /verifyPreviewToken\(req\.query\.sl_preview\)/);
+  assert.match(server, /crypto\.createHmac\('sha256', PREVIEW_TOKEN_SECRET\)/);
   assert.match(server, /function tokenizePreviewAssets\(/);
-  assert.match(server, /previewAssetToken\(src\)/);
+  assert.match(server, /previewAssetToken\(src, previewToken\)/);
 });

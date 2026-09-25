@@ -117,7 +117,7 @@ body {
   padding: 4.5px 12px; border-radius: 6px; cursor: pointer; color: var(--ink-2);
 }
 .segmented button.active { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
-.grid { display: grid; grid-template-columns: repeat(var(--columns, 4), minmax(0, 1fr)); gap: 14px; }
+.grid { display: grid; grid-template-columns: repeat(var(--columns, 2), minmax(0, 1fr)); gap: 14px; }
 .load-more { display: block; margin: 22px auto 0; }
 .load-more[hidden] { display: none; }
 .toggle.light { color: var(--ink-2); }

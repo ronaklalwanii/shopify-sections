@@ -12,9 +12,33 @@ const DEMO_IMAGE = '/assets/demo-image.jpg';
 const DEMO_ICON = '/assets/star.svg';
 const DEMO_ICON_MARKUP = `<img src="${DEMO_ICON}" alt="" aria-hidden="true" width="16" height="16">`;
 const PH = (seed, w, h, kind = 'image') => kind === 'icon' ? DEMO_ICON : DEMO_IMAGE;
+const ICON_NAME_RE = /(?:icon|pictogram|logo|favicon|symbol|badge|arrow|chevron|caret|cart|search|account|user|menu|close|check|plus|minus|social|payment|star|heart|filter|share|flag)/i;
+
+function isIconName(value) {
+  return ICON_NAME_RE.test(String(value || '').replace(/[-_]/g, ' '));
+}
 
 function imageMock(seed, alt = 'Sample image', aspect = 1.5, kind = 'image') {
-  return { __mock: 'image', seed: String(seed || 'sample'), alt, aspect, kind };
+  const normalizedSeed = String(seed || 'sample');
+  const width = kind === 'icon' ? 64 : 1000;
+  const height = kind === 'icon' ? 64 : Math.round(width / aspect);
+  return {
+    __mock: 'image', id: `img-${normalizedSeed}`, seed: normalizedSeed,
+    alt: kind === 'icon' ? '' : alt, aspect, aspect_ratio: aspect,
+    width, height, media_type: 'image', kind,
+    src: kind === 'icon' ? DEMO_ICON : DEMO_IMAGE,
+  };
+}
+
+function videoMock(seed, alt = 'Sample video') {
+  const normalizedSeed = String(seed || 'video');
+  return {
+    __mock: 'video', id: `vid-${normalizedSeed}`, seed: normalizedSeed,
+    media_type: 'video', host: 'local', external_id: null,
+    width: 1280, height: 720, sources: [],
+    preview_image: imageMock(`${normalizedSeed}-poster`, alt, 16 / 9),
+    poster: DEMO_IMAGE,
+  };
 }
 
 // Deterministic seed from arbitrary strings (used for per-setting images).
@@ -23,13 +47,19 @@ function seedFor(...parts) {
 }
 
 function parseFontHandle(handle) {
-  // e.g. "assistant_n4" -> family Assistant, normal 400; "work_sans_i7" -> italic 700
+  // e.g. "assistant_n4" → family Assistant, normal 400; "work_sans_i7" → italic 700
   if (typeof handle !== 'string' || !handle) return null;
   const m = handle.match(/^(.*)_([ni])(\d)$/);
-  if (!m) return { family: 'System', weight: 400, style: 'normal', fallback: 'sans-serif' };
+  if (!m) return fontMock('System', 400, 'normal', 'sans-serif');
   const family = m[1].replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   const weight = ({ 3: 300, 4: 400, 5: 500, 6: 600, 7: 700 })[m[3]] || 400;
-  return { family, weight, style: m[2] === 'i' ? 'italic' : 'normal', fallback: 'sans-serif' };
+  return fontMock(family, weight, m[2] === 'i' ? 'italic' : 'normal', 'sans-serif');
+}
+
+function fontMock(family, weight = 400, style = 'normal', fallback = 'sans-serif') {
+  const font = { family, weight, style, fallback };
+  Object.defineProperty(font, 'toString', { value() { return this.family; }, enumerable: false });
+  return font;
 }
 
 function looksLikeImage(v) {
@@ -119,8 +149,18 @@ const addressMock = {
   country_code: 'US', zip: '97205', phone: '+1 555 0100', name: 'Alex Morgan', id: 1, formatted: '12 Sample Street, Portland OR 97205',
 };
 
-const availableCountries = ['United States|US|USD|$', 'Canada|CA|CAD|$', 'United Kingdom|GB|GBP|£', 'Germany|DE|EUR|€', 'Australia|AU|AUD|$']
-  .map((s) => { const [name, iso, cur, sym] = s.split('|'); return { name, iso_code: iso, currency: { iso_code: cur, symbol: sym, name: cur }, phone: '+1' }; });
+const availableCountries = [
+  ['United States', 'US', 'USD', '$'],
+  ['Canada', 'CA', 'CAD', '$'],
+  ['United Kingdom', 'GB', 'GBP', '£'],
+  ['Germany', 'DE', 'EUR', '€'],
+  ['Australia', 'AU', 'AUD', '$'],
+].map(([name, iso, currency, symbol], index) => ({
+  name, iso_code: iso, currency: { iso_code: currency, symbol, name: currency }, phone: '+1',
+  languages: ['en'], 'popular?': index < 2,
+  image: imageMock(`country-${iso.toLowerCase()}`, name, 1.5, 'icon'),
+  flag: imageMock(`flag-${iso.toLowerCase()}`, name, 1.5, 'icon'),
+}));
 
 function linkListMock(handle = 'main-menu') {
   const link = (title, children = []) => ({ title, url: '#', links: children, object: { type: 'http' }, active: false, current: false, levels: children.length ? 2 : 1, type: 'link' });
@@ -165,7 +205,7 @@ function settingDefault(s, ctx) {
     case 'checkbox': return def != null ? !!def : true;
     case 'range': return def != null ? def : (s.min != null ? Math.round(((+s.min) + (+s.max)) / 2) : 0);
     case 'video': case 'video_url':
-      return type === 'video' ? { __mock: 'video', seed: seedFor(ctx.seedBase, id) }
+      return type === 'video' ? videoMock(seedFor(ctx.seedBase, id))
         : (def || 'https://www.youtube.com/watch?v=dQw4w9WgXcQ');
     case 'font_picker': return parseFontHandle(def) || { family: 'System', weight: 400, style: 'normal', fallback: 'sans-serif' };
     case 'link_list': return linkListMock(def && typeof def === 'string' ? def : 'main-menu');
@@ -364,21 +404,47 @@ function money(v, format) {
 }
 
 function imageInputInfo(input) {
-  // Returns {seed,w,h,alt,src} for mock image objects, legacy image URLs, or placeholder URLs.
   if (input && input.__mock === 'image') {
-    const h = Math.round(1000 / (input.aspect || 1.5));
-    return { seed: input.seed, w: 1000, h, alt: input.alt || '', src: null, kind: input.kind || 'image' };
+    return {
+      seed: input.seed, w: input.width || 1000, h: input.height || Math.round((input.width || 1000) / (input.aspect || 1.5)),
+      alt: input.alt || '', src: input.src || null, kind: input.kind || (isIconName(input.alt) ? 'icon' : 'image'),
+    };
   }
+  if (input && input.__mock === 'video') return imageInputInfo(input.preview_image);
   if (typeof input === 'string') {
+    if (input === DEMO_IMAGE || input === DEMO_ICON) return { seed: input, w: 1000, h: input === DEMO_ICON ? 1000 : 667, alt: '', src: input, kind: input === DEMO_ICON ? 'icon' : 'image' };
     const pm = input.match(/^https:\/\/picsum\.photos\/seed\/([^/]+)\/(\d+)\/(\d+)$/);
-    if (pm) return { seed: decodeURIComponent(pm[1]), w: +pm[2], h: +pm[3], alt: '', src: null };
+    if (pm) return { seed: decodeURIComponent(pm[1]), w: +pm[2], h: +pm[3], alt: '', src: null, kind: isIconName(input) ? 'icon' : 'image' };
     const m = input.match(/^\/ph\/([^/]+)\/(\d+)x(\d+)\.svg$/);
-    if (m) return { seed: m[1], w: +m[2], h: +m[3], alt: '', src: null };
-    if (/\.(png|jpe?g|gif|webp|svg)$/i.test(input)) return { seed: input, w: 1000, h: 667, alt: '', src: input };
+    if (m) return { seed: m[1], w: +m[2], h: +m[3], alt: '', src: null, kind: isIconName(input) ? 'icon' : 'image' };
+    if (/\.(png|jpe?g|gif|webp|svg)(?:[?#].*)?$/i.test(input) || /^https?:\/\//i.test(input) || input.startsWith('//')) {
+      return { seed: input, w: 1000, h: 667, alt: '', src: null, kind: isIconName(input) ? 'icon' : 'image' };
+    }
   }
-  if (input && typeof input === 'object' && (input.src || input.preview_image)) return imageInputInfo(input.src || input.preview_image);
+  if (input && typeof input === 'object') {
+    for (const key of ['preview_image', 'image', 'src', 'flag']) {
+      if (input[key] && input[key] !== input) {
+        const nested = imageInputInfo(input[key]);
+        if (nested) return nested;
+      }
+    }
+    return { seed: 'sample', w: 1000, h: 667, alt: '', src: null, kind: 'image' };
+  }
   return null;
 }
+
+function filterOptions(rest) {
+  const opts = {};
+  for (const value of rest || []) {
+    if (Array.isArray(value) && value.length >= 2 && typeof value[0] === 'string') {
+      if (value[1] && typeof value[1] === 'object' && !Array.isArray(value[1]) && !Object.keys(value[1]).length) continue;
+      opts[value[0]] = value[1];
+    } else if (value && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length) Object.assign(opts, value);
+  }
+  return opts;
+}
+
+const escapeAttr = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 
 // Theme typography: map the store's font families to Google Fonts so local
 // previews render with the real typefaces instead of system fonts.
@@ -399,49 +465,55 @@ function buildFilters(storeName) {
     return `/assets/${encodeURIComponent(storeName)}/${normalized.split('/').map((part) => encodeURIComponent(part)).join('/')}`;
   };
   return {
-    image_url(input, opts = {}) {
+    image_url(input, ...rest) {
+      const opts = filterOptions(rest);
       const info = imageInputInfo(input);
-      if (!info) return input;
-      if (info.src) return /^https?:\/\//.test(info.src) || info.src.startsWith('/') ? info.src : assetUrl(info.src);
+      if (!info) return DEMO_IMAGE;
+      if (info.src && (info.src === DEMO_IMAGE || info.src === DEMO_ICON)) return info.src;
       const w = Math.min(+opts.width || info.w || 1000, 2400);
       const h = Math.round(w * (info.h / info.w));
       return PH(info.seed, w, h, info.kind);
     },
-    img_url(input, size = '1000x') {
+    img_url(input, ...rest) {
+      const opts = filterOptions(rest);
       const info = imageInputInfo(input);
-      if (!info) return input;
-      if (info.src) return /^https?:\/\//.test(info.src) || info.src.startsWith('/') ? info.src : assetUrl(info.src);
+      if (!info) return DEMO_IMAGE;
+      if (info.src && (info.src === DEMO_IMAGE || info.src === DEMO_ICON)) return info.src;
+      const size = rest.find((value) => typeof value === 'string' || typeof value === 'number') || opts.size || '1000x';
       const m = String(size).match(/^(\d*)x?(\d*)/);
       const w = +m[1] || info.w, h = +m[2] || Math.round(w / (info.w / info.h));
       return PH(info.seed, w, h, info.kind);
     },
     image_tag(input, ...rest) {
-      // Merge hash args defensively; liquidjs can degrade complex hashes to positional args.
-      const opts = Object.assign({}, ...rest.filter((r) => r && typeof r === 'object' && !Array.isArray(r)));
-      const info = imageInputInfo(input);
-      if (!info) return '';
-      const src = info.src || (() => { const w = Math.min(+(opts.width || info.w || 1000), 2400); return PH(info.seed, w, Math.round(w * (info.h / info.w)), info.kind); })();
-      const alt = opts.alt != null ? opts.alt : (info.alt || 'Sample image');
-      const excluded = new Set(['width', 'height', 'widths', 'sizes', 'alt', 'loading', 'class']);
+      const opts = filterOptions(rest);
+      const info = imageInputInfo(input) || { seed: 'sample', w: 1000, h: 667, alt: '', kind: 'image' };
+      const isIcon = info.kind === 'icon';
+      const width = Math.min(+opts.width || info.w || 1000, 2400);
+      const height = +opts.height || Math.round(width * (info.h / info.w));
+      const src = info.src && (info.src === DEMO_IMAGE || info.src === DEMO_ICON) ? info.src : PH(info.seed, width, height, info.kind);
+      const alt = opts.alt != null ? opts.alt : (info.alt || (isIcon ? '' : 'Sample image'));
+      const excluded = new Set(['width', 'height', 'widths', 'sizes', 'srcset', 'alt', 'loading', 'class', 'style', 'fetchpriority', 'preload', 'role']);
       const attrs = Object.entries(opts)
-        .filter(([k, v]) => v != null && !/^\d+$/.test(k) && !excluded.has(k) && typeof v !== 'object')
-        .map(([k, v]) => `${k}="${String(v).replace(/"/g, '&quot;')}"`).join(' ');
-      const w = opts.width || info.w || 1000;
-      return `<img src="${src}" alt="${String(alt).replace(/"/g, '&quot;')}" width="${w}" height="${opts.height || Math.round(w * (info.h / info.w))}" loading="${opts.loading || 'lazy'}"${opts.class ? ` class="${opts.class}"` : ''}${opts.sizes ? ` sizes="${opts.sizes}"` : ''}${attrs ? ' ' + attrs : ''}>`;
+        .filter(([key, value]) => value != null && !/^\d+$/.test(key) && !excluded.has(key) && typeof value !== 'object')
+        .map(([key, value]) => `${key}="${escapeAttr(value)}"`).join(' ');
+      const srcset = opts.srcset || (opts.widths ? String(opts.widths).split(',').map((value) => `${src} ${String(value).trim()}w`).join(', ') : '');
+      return `<img src="${escapeAttr(src)}" alt="${escapeAttr(alt)}" width="${width}" height="${height}" loading="${escapeAttr(opts.loading || 'lazy')}"${opts.class ? ` class="${escapeAttr(opts.class)}"` : ''}${opts.sizes ? ` sizes="${escapeAttr(opts.sizes)}"` : ''}${srcset ? ` srcset="${escapeAttr(srcset)}"` : ''}${attrs ? ' ' + attrs : ''}>`;
     },
     placeholder_svg_tag(name = 'image', cls = '') {
       const label = String(name).replace(/[-_]/g, ' ');
-      const src = /icon|pictogram|logo/i.test(label) ? DEMO_ICON : DEMO_IMAGE;
-      return `<img class="placeholder-svg ${cls}" src="${src}" alt="${label.replace(/"/g, '&quot;')}" loading="lazy">`;
+      const src = isIconName(label) ? DEMO_ICON : DEMO_IMAGE;
+      return `<img class="placeholder-svg ${escapeAttr(cls)}" src="${src}" alt="${escapeAttr(label)}" loading="lazy">`;
     },
     money, money_with_currency: (v, f) => money(v, f || '${{amount}} USD'),
     money_without_currency: (v) => (Number(v) / 100).toFixed(2),
     money_without_trailing_zeros: (v) => String(Number((Number(v) / 100).toFixed(2)).toString()),
     asset_url: assetUrl, shopify_asset_url: (f) => assetUrl(f),
-    stylesheet_tag: (href, opts = {}) => `<link rel="stylesheet" href="${assetUrl(href)}"${opts.media ? ` media="${opts.media}"` : ''}>`,
-    script_tag: (src, opts = {}) => {
-      // ESM bundles must load as modules — a classic <script> would throw
-      // "Cannot use import statement outside a module" in the preview.
+    stylesheet_tag: (href, ...rest) => {
+      const opts = filterOptions(rest);
+      return `<link rel="stylesheet" href="${assetUrl(href)}"${opts.media ? ` media="${escapeAttr(opts.media)}"` : ''}>`;
+    },
+    script_tag: (src, ...rest) => {
+      const opts = filterOptions(rest);
       let esm = false;
       try {
         const sp = findStore(storeName);
@@ -457,17 +529,23 @@ function buildFilters(storeName) {
         return readAsset(sp, file) || '';
       } catch { return ''; }
     },
-    preload_tag: (file, opts = {}) => `<link rel="preload" href="${assetUrl(file)}" as="${opts.as || 'style'}">`,
-    font_face(font, opts = {}) {
+    preload_tag: (file, ...rest) => {
+      const opts = filterOptions(rest);
+      const as = opts.as || (/\.(?:png|jpe?g|gif|webp|avif|svg)(?:[?#]|$)/i.test(String(file)) ? 'image' : 'style');
+      const href = as === 'image' ? (isIconName(file) ? DEMO_ICON : DEMO_IMAGE) : assetUrl(file);
+      return `<link rel="preload" href="${href}" as="${escapeAttr(as)}">`;
+    },
+    font_face(font) {
       if (!font || !font.family) return '';
       const w = font.weight || 400, st = font.style || 'normal';
-      return `@font-face{font-family:'${font.family}';font-weight:${w};font-style:${st};font-display:swap;src:local('${font.family}')}`;
+      return `@font-face{font-family:'${escapeAttr(font.family)}';font-weight:${w};font-style:${st};font-display:swap;src:local('${escapeAttr(font.family)}')}`;
     },
     font_modify(font, key, val) {
       if (!font) return null;
       const f = { ...font };
       if (key === 'weight') f.weight = { bold: 700, normal: 400, 'bolditalic': 700, black: 900, lighter: 300 }[val] ?? parseInt(val) ?? f.weight;
       if (key === 'style') f.style = val;
+      Object.defineProperty(f, 'toString', { value() { return this.family; }, enumerable: false });
       return f;
     },
     hex_to_rgba(hex, a = 1) {
@@ -533,10 +611,38 @@ function buildFilters(storeName) {
       if (!addr) return '';
       return [addr.address1, addr.address2, [addr.city, addr.province, addr.zip].filter(Boolean).join(' '), addr.country].filter(Boolean).join(', ');
     },
-    video_tag(video, opts = {}) {
-      const seed = video?.seed || 'video';
-      const w = opts.image_size ? parseInt(opts.image_size) || 1280 : 1280;
-      return `<video ${opts.controls ? 'controls ' : ''}muted playsinline loop poster="${PH(seed, w, Math.round(w * 0.5625))}"></video>`;
+    video_tag(video, ...rest) {
+      const opts = filterOptions(rest);
+      const info = imageInputInfo(video?.preview_image || video?.poster || video) || { seed: video?.seed || 'video', w: 1280, h: 720, kind: 'image' };
+      const width = opts.image_size ? parseInt(opts.image_size) || 1280 : (video?.width || info.w || 1280);
+      const poster = video?.poster || PH(info.seed, width, Math.round(width * 0.5625), info.kind);
+      return `<video ${opts.controls ? 'controls ' : ''}${opts.autoplay ? 'autoplay ' : ''}${opts.muted === false ? '' : 'muted '}${opts.loop === false ? '' : 'loop '}playsinline preload="metadata" poster="${escapeAttr(poster)}"${opts.class ? ` class="${escapeAttr(opts.class)}"` : ''}></video>`;
+    },
+    external_video_url: (value) => typeof value === 'string' ? value : '',
+    external_video_tag: (value, ...rest) => {
+      const opts = filterOptions(rest);
+      return `<div class="external-video-placeholder"${opts.class ? ` class="${escapeAttr(opts.class)}"` : ''}><img src="${DEMO_IMAGE}" alt="Sample video" loading="lazy"></div>`;
+    },
+    model_viewer_tag: (value, ...rest) => {
+      const opts = filterOptions(rest);
+      return `<div class="model-viewer-placeholder"${opts.class ? ` class="${escapeAttr(opts.class)}"` : ''}><img src="${DEMO_IMAGE}" alt="Sample 3D model" loading="lazy"></div>`;
+    },
+    payment_type_svg_tag: () => `<img class="payment-type-icon" src="${DEMO_ICON}" alt="Payment type" loading="lazy">`,
+    font_url: (font) => (typeof font === 'string' ? font : (font?.url || font?.src || '')),
+    file_img_url: () => DEMO_IMAGE,
+    media_tag: (media, ...rest) => {
+      const opts = filterOptions(rest);
+      return `<img src="${DEMO_IMAGE}" alt="${escapeAttr(opts.alt || 'Sample media')}" loading="lazy">`;
+    },
+    payment_button: () => '<button type="submit" class="button">Checkout</button>',
+    structured_data: (value) => {
+      try { return JSON.stringify(value && typeof value === 'object' ? value : { value: String(value ?? '') }); }
+      catch { return '{}'; }
+    },
+    standard_event_data: (value, ...rest) => {
+      const opts = filterOptions(rest);
+      try { return JSON.stringify({ event: 'view', context: opts.context || null, resource: value }); }
+      catch { return '{}'; }
     },
     default_errors: () => '',
     time_tag: (date, opts = {}) => `<time datetime="${date instanceof Date ? date.toISOString() : date}">${opts.format ? '' : date}</time>`,
@@ -566,6 +672,37 @@ function splitArgs(s) {
   }
   if (cur.trim()) out.push(cur.trim());
   return out;
+}
+
+function previewIconMarkup(args = {}) {
+  const imageValue = args.image ?? args.icon_image ?? args.image_picker ?? args.src;
+  const hasImage = imageValue != null && imageValue !== '' && imageValue !== false;
+  const info = hasImage ? imageInputInfo(imageValue) : null;
+  const src = hasImage && info?.kind !== 'icon' ? DEMO_IMAGE : DEMO_ICON;
+  const cls = args.class || args.classes || '';
+  const size = Number(args.size) > 0 ? Number(args.size) : (src === DEMO_ICON ? 24 : 0);
+  const alt = args.alt != null ? args.alt : (src === DEMO_ICON ? '' : 'Sample image');
+  return `<img src="${src}" alt="${escapeAttr(alt)}"${src === DEMO_ICON ? ' aria-hidden="true"' : ''}${size ? ` width="${size}" height="${size}"` : ''}${cls ? ` class="${escapeAttr(cls)}"` : ''} loading="lazy">`;
+}
+
+function installPreviewMediaTags(liquid) {
+  for (const tagName of ['render', 'include']) {
+    const NativeTag = liquid.tags[tagName];
+    if (!NativeTag) continue;
+    class PreviewMediaTag extends NativeTag {
+      *render(ctx, emitter) {
+        const match = String(this.token?.args || '').match(/^\s*(['"])([\w-]+)\1/);
+        const name = match?.[2] || '';
+        if (/icon|pictogram|logo/i.test(name)) {
+          const args = this.hash ? yield this.hash.render(ctx) : {};
+          emitter.write(previewIconMarkup(args));
+          return;
+        }
+        yield* super.render(ctx, emitter);
+      }
+    }
+    liquid.registerTag(tagName, PreviewMediaTag);
+  }
 }
 
 function makeTags(liquid) {
@@ -661,7 +798,7 @@ function themeSettings(storePath) {
       for (const s of group.settings) {
         if (!s || !s.id) continue;
         if (s.type === 'font_picker') settings[s.id] = parseFontHandle(s.default);
-        else if (s.type === 'image_picker') settings[s.id] = null;
+        else if (s.type === 'image_picker') settings[s.id] = imageMock(seedFor('theme', s.id), s.id, 1.5, isIconName(s.id) ? 'icon' : 'image');
         else settings[s.id] = s.default != null ? s.default : null;
       }
     }
@@ -733,6 +870,7 @@ function getEngine(storeName, storePath) {
   });
   for (const [name, Tag] of Object.entries(makeTags(liquid))) liquid.registerTag(name, Tag);
   for (const [name, fn] of Object.entries(buildFilters(storeName))) liquid.registerFilter(name, fn);
+  installPreviewMediaTags(liquid);
   liquid.registerFilter('t', tFilter(locale));
   liquid.registerFilter('translate', tFilter(locale));
 
@@ -745,6 +883,10 @@ function getEngine(storeName, storePath) {
 function baseGlobals(engine, opts = {}) {
   const storeName = engine.storeName;
   const prettyStore = storeName.charAt(0).toUpperCase() + storeName.slice(1);
+  const templateMock = new String('index');
+  templateMock.name = 'index';
+  templateMock.suffix = null;
+  templateMock.directory = '';
   return {
     settings: engine.theme,
     shop: {
@@ -761,7 +903,7 @@ function baseGlobals(engine, opts = {}) {
       collections_url: '/collections', all_products_collection_url: '/collections/all',
     },
     request: { origin: 'http://localhost', page_type: opts.pageType || 'index', path: '/', locale: '', host: 'localhost', design: { mode: 'development' }, page: {} },
-    template: { name: 'index', suffix: null, directory: '' },
+    template: templateMock,
     product: productMock(),
     collection: collectionMock('sample-collection', 'Sample Collection', 8),
     collections: new Proxy({ all: collectionMock('all', 'All products', 8), featured: collectionMock('featured', 'Featured', 6), frontpage: collectionMock('frontpage', 'Frontpage', 6) }, {
