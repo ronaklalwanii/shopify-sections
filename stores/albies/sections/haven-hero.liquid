@@ -1,0 +1,197 @@
+{%- comment -%}
+  Haven Hero — full-bleed nature image, serif statement title, and a
+  circular label ring with a centered play/book circle on the right.
+  Self-contained. Scoped styles. Responsive (ring hides on small screens).
+{%- endcomment -%}
+
+<section id="HavenHero-{{ section.id }}" class="hh {% if section.settings.allow_transparent_header %}allow-transparent-header{% endif %}">
+  {%- style -%}
+    #HavenHero-{{ section.id }} {
+      --hh-bg: {{ section.settings.bg_color }};
+      --hh-min-h: {{ section.settings.min_height }}px;
+      --hh-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+      --hh-title-s: {{ section.settings.title_size }}px;
+      --hh-title-c: {{ section.settings.title_color }};
+      --hh-text-c: {{ section.settings.text_color }};
+      --hh-btn-bg: {{ section.settings.btn_bg }};
+      --hh-btn-c: {{ section.settings.btn_text_color }};
+      --hh-ring-c: {{ section.settings.ring_text_color }};
+      --hh-ring-border: {{ section.settings.ring_border_color }};
+      --hh-center-bg: {{ section.settings.center_bg }};
+      --hh-center-icon: {{ section.settings.center_icon_color }};
+      position: relative;
+      background: var(--hh-bg);
+      overflow-x: clip;
+    }
+    #HavenHero-{{ section.id }} .hh__media {
+      position: absolute; inset: 0; overflow: hidden;
+    }
+    #HavenHero-{{ section.id }} .hh__media img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    #HavenHero-{{ section.id }} .hh__scrim {
+      position: absolute; inset: 0;
+      background: linear-gradient(100deg, rgba(20,24,18,var(--hh-overlay)) 0%, rgba(20,24,18,calc(var(--hh-overlay) * .45)) 55%, rgba(20,24,18,.18) 100%);
+    }
+    #HavenHero-{{ section.id }} .hh__inner {
+      position: relative; z-index: 2;
+      min-height: var(--hh-min-h);
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+      align-items: center;
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 96px 40px;
+    }
+    #HavenHero-{{ section.id }} .hh__title {
+      margin: 0 0 22px;
+      font-family: var(--ul-heading-font-family, Georgia, serif);
+      font-weight: 400;
+      font-size: var(--hh-title-s);
+      line-height: 1.06;
+      letter-spacing: -.01em;
+      color: var(--hh-title-c);
+      white-space: pre-line;
+    }
+    #HavenHero-{{ section.id }} .hh__text {
+      margin: 0 0 34px;
+      max-width: 38ch;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--hh-text-c);
+      white-space: pre-line;
+    }
+    #HavenHero-{{ section.id }} .hh__btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 15px 28px; border-radius: 999px;
+      background: var(--hh-btn-bg); color: var(--hh-btn-c);
+      font-size: 12.5px; font-weight: 600; letter-spacing: .04em;
+      text-decoration: none; transition: opacity 200ms ease;
+    }
+    #HavenHero-{{ section.id }} .hh__btn:hover { opacity: .88; }
+    #HavenHero-{{ section.id }} .hh__btn::after { content: "→"; }
+    #HavenHero-{{ section.id }} .hh__stage {
+      position: relative; display: grid; place-items: center;
+      min-height: 380px;
+    }
+    #HavenHero-{{ section.id }} .hh__ring {
+      width: min(360px, 34vw); aspect-ratio: 1; border-radius: 50%;
+      border: 1px solid var(--hh-ring-border);
+      position: relative;
+    }
+    #HavenHero-{{ section.id }} .hh__ring i {
+      position: absolute; width: 5px; height: 5px; border-radius: 50%;
+      background: var(--hh-ring-c); opacity: .8;
+    }
+    #HavenHero-{{ section.id }} .hh__ring i:nth-child(1) { top: -3px; left: 50%; transform: translateX(-50%); }
+    #HavenHero-{{ section.id }} .hh__ring i.r2 { right: -3px; top: 50%; transform: translateY(-50%); }
+    #HavenHero-{{ section.id }} .hh__ring i.r3 { bottom: -3px; left: 50%; transform: translateX(-50%); }
+    #HavenHero-{{ section.id }} .hh__ring i.r4 { left: -3px; top: 50%; transform: translateY(-50%); }
+    #HavenHero-{{ section.id }} .hh__ring-label {
+      position: absolute;
+      font-size: 11.5px; letter-spacing: .04em; line-height: 1.45;
+      color: var(--hh-ring-c); text-align: center; max-width: 130px;
+    }
+    #HavenHero-{{ section.id }} .hh__ring-label.l1 { bottom: calc(100% + 14px); left: 50%; transform: translateX(-50%); }
+    #HavenHero-{{ section.id }} .hh__ring-label.l2 { left: calc(100% + 16px); top: 50%; transform: translateY(-50%); text-align: left; }
+    #HavenHero-{{ section.id }} .hh__ring-label.l3 { top: calc(100% + 14px); left: 50%; transform: translateX(-50%); }
+    #HavenHero-{{ section.id }} .hh__ring-label.l4 { right: calc(100% + 16px); top: 50%; transform: translateY(-50%); text-align: right; }
+    #HavenHero-{{ section.id }} .hh__play {
+      width: 84px; height: 84px; border-radius: 50%;
+      background: var(--hh-center-bg);
+      display: grid; place-items: center;
+      box-shadow: 0 18px 44px rgba(0,0,0,.35);
+      transition: transform 250ms ease;
+    }
+    #HavenHero-{{ section.id }} .hh__play:hover { transform: scale(1.05); }
+    #HavenHero-{{ section.id }} .hh__play svg {
+      width: 20px; height: 20px; fill: var(--hh-center-icon); stroke: none; margin-left: 3px;
+    }
+    @media (max-width: 1100px) {
+      #HavenHero-{{ section.id }} .hh__stage { display: none; }
+      #HavenHero-{{ section.id }} .hh__inner { grid-template-columns: 1fr; padding: 80px 24px; }
+    }
+    @media (max-width: 640px) {
+      #AuraHero-{{ section.id }}, #HavenHero-{{ section.id }} .hh__inner { min-height: 520px; }
+      #HavenHero-{{ section.id }} .hh__title { font-size: calc(var(--hh-title-s) * .58); }
+    }
+  {%- endstyle -%}
+
+  <div class="hh__media">
+    {%- if section.settings.image != blank -%}
+      <img src="{{ section.settings.image | image_url: width: 2000 }}" alt="{{ section.settings.image.alt | default: shop.name | escape }}" loading="eager" width="2000" height="1200" fetchpriority="high">
+    {%- else -%}
+      {{- 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' -}}
+    {%- endif -%}
+  </div>
+  <div class="hh__scrim"></div>
+
+  <div class="hh__inner">
+    <div class="hh__copy">
+      {%- if section.settings.title != blank -%}
+        <h1 class="hh__title">{{ section.settings.title | newline_to_br }}</h1>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <p class="hh__text">{{ section.settings.text | newline_to_br }}</p>
+      {%- endif -%}
+      {%- if section.settings.btn_label != blank -%}
+        <a class="hh__btn" href="{{ section.settings.btn_link | default: routes.root_url }}">{{ section.settings.btn_label }}</a>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_ring -%}
+      <div class="hh__stage">
+        <div class="hh__ring">
+          <i></i><i class="r2"></i><i class="r3"></i><i class="r4"></i>
+          {%- if section.settings.ring_label_1 != blank -%}<span class="hh__ring-label l1">{{ section.settings.ring_label_1 }}</span>{%- endif -%}
+          {%- if section.settings.ring_label_2 != blank -%}<span class="hh__ring-label l2">{{ section.settings.ring_label_2 }}</span>{%- endif -%}
+          {%- if section.settings.ring_label_3 != blank -%}<span class="hh__ring-label l3">{{ section.settings.ring_label_3 }}</span>{%- endif -%}
+          {%- if section.settings.ring_label_4 != blank -%}<span class="hh__ring-label l4">{{ section.settings.ring_label_4 }}</span>{%- endif -%}
+        </div>
+        <a class="hh__play" href="{{ section.settings.center_link | default: section.settings.btn_link | default: routes.root_url }}" aria-label="Play">
+          <svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg>
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Haven Hero",
+  "tag": "section",
+  "settings": [
+    { "type": "checkbox", "id": "allow_transparent_header", "label": "Allow transparent header", "default": true },
+    { "type": "header", "content": "Media" },
+    { "type": "image_picker", "id": "image", "label": "Background image" },
+    { "type": "color", "id": "bg_color", "label": "Fallback background", "default": "#2A2D26" },
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay strength", "min": 0, "max": 90, "step": 5, "default": 45, "unit": "%" },
+    { "type": "range", "id": "min_height", "label": "Minimum height", "min": 420, "max": 900, "step": 20, "default": 660, "unit": "px" },
+    { "type": "header", "content": "Content" },
+    { "type": "textarea", "id": "title", "label": "Title", "default": "Nature.\nComfort.\nYou." },
+    { "type": "range", "id": "title_size", "label": "Title size", "min": 32, "max": 96, "step": 2, "default": 64, "unit": "px" },
+    { "type": "color", "id": "title_color", "label": "Title color", "default": "#FFFFFF" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "A serene retreat inspired by nature,\ndesigned for rest, renewal and\nunforgettable moments." },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#FFFFFF" },
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Book Your Escape" },
+    { "type": "url", "id": "btn_link", "label": "Button link" },
+    { "type": "color", "id": "btn_bg", "label": "Button background", "default": "#44543F" },
+    { "type": "color", "id": "btn_text_color", "label": "Button text", "default": "#FFFFFF" },
+    { "type": "header", "content": "Circular ring" },
+    { "type": "checkbox", "id": "show_ring", "label": "Show circular label ring", "default": true },
+    { "type": "text", "id": "ring_label_1", "label": "Ring label (top)", "default": "Inspired by Nature" },
+    { "type": "text", "id": "ring_label_2", "label": "Ring label (right)", "default": "Pure Comfort" },
+    { "type": "text", "id": "ring_label_3", "label": "Ring label (bottom)", "default": "Total Escape" },
+    { "type": "text", "id": "ring_label_4", "label": "Ring label (left)", "default": "Mindful Living" },
+    { "type": "color", "id": "ring_text_color", "label": "Ring text color", "default": "#FFFFFF" },
+    { "type": "color", "id": "ring_border_color", "label": "Ring border color", "default": "#FFFFFF66" },
+    { "type": "url", "id": "center_link", "label": "Center circle link" },
+    { "type": "color", "id": "center_bg", "label": "Center circle background", "default": "#FFFFFF" },
+    { "type": "color", "id": "center_icon_color", "label": "Center icon color", "default": "#1F1D1A" }
+  ],
+  "presets": [
+    { "name": "Haven Hero" }
+  ]
+}
+{% endschema %}

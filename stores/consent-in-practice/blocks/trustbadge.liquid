@@ -1,0 +1,439 @@
+{% doc %}
+  @prompt
+    Generate me a trust badge section with the background colour as 5569dc and text in white.
+    
+    Give me an option of uploading custom logo images.
+    
+    The trust badges need to be:
+    
+    Tailored for Organisations
+    Customised training aligned to your workplace context
+    
+    Delivered by a Specialist
+    Led by an MSc-trained researcher in consent and digital harm
+    
+    Accredited Completion Certificates
+    Recognition provided upon course completion
+    
+    Confidential & Professional
+    Handled with discretion and organisational sensitivity, Give it a little effects while hovering on it. Not much just a hint.
+    
+    In phone mode, make it 2 x 2 stacked
+    , Give me control to make the titles bold or not. 
+    Give me control  to change the font everywhere.
+    
+    Give me control over the size of icons, Give me control over the icon size in phone as well
+    
+    Give me option to control the height of the section in computer and in phone
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-trust-badges-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.section_height_desktop }}px 20px;
+    width: 100%;
+    display: block;
+  }
+
+  .ai-trust-badges-container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ai-trust-badges-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+  }
+
+  .ai-trust-badge-item-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+    transition: transform 0.2s ease;
+  }
+
+  .ai-trust-badge-item-{{ ai_gen_id }}:hover {
+    transform: translateY(-3px);
+  }
+
+  .ai-trust-badge-icon-wrapper-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size_desktop }}px;
+    height: {{ block.settings.icon_size_desktop }}px;
+    flex-shrink: 0;
+  }
+
+  .ai-trust-badge-icon-wrapper-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .ai-trust-badge-icon-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-trust-badge-icon-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-trust-badge-content-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-trust-badge-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.font_family.family }}, {{ block.settings.font_family.fallback_families }};
+    font-weight: {{ block.settings.font_family.weight }};
+    font-style: {{ block.settings.font_family.style }};
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    line-height: 1.3;
+    {% if block.settings.title_bold %}
+      font-weight: 700;
+    {% endif %}
+  }
+
+  .ai-trust-badge-description-{{ ai_gen_id }} {
+    font-family: {{ block.settings.font_family.family }}, {{ block.settings.font_family.fallback_families }};
+    font-weight: {{ block.settings.font_family.weight }};
+    font-style: {{ block.settings.font_family.style }};
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    opacity: 0.9;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-trust-badges-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_height_mobile }}px 20px;
+    }
+
+    .ai-trust-badges-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .ai-trust-badge-icon-wrapper-{{ ai_gen_id }} {
+      width: {{ block.settings.icon_size_mobile }}px;
+      height: {{ block.settings.icon_size_mobile }}px;
+    }
+
+    .ai-trust-badge-title-{{ ai_gen_id }} {
+      font-size: 16px;
+    }
+
+    .ai-trust-badge-description-{{ ai_gen_id }} {
+      font-size: 13px;
+    }
+  }
+{% endstyle %}
+
+<trust-badges-{{ ai_gen_id }} class="ai-trust-badges-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-trust-badges-container-{{ ai_gen_id }}">
+    <div class="ai-trust-badges-grid-{{ ai_gen_id }}">
+      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
+        <div class="ai-trust-badge-icon-wrapper-{{ ai_gen_id }}">
+          {% if block.settings.badge_1_icon %}
+            <img
+              src="{{ block.settings.badge_1_icon | image_url: width: 200 }}"
+              alt="{{ block.settings.badge_1_title | escape }}"
+              loading="lazy"
+              width="200"
+              height="200"
+            >
+          {% else %}
+            <div class="ai-trust-badge-icon-placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+        </div>
+        <div class="ai-trust-badge-content-{{ ai_gen_id }}">
+          {% if block.settings.badge_1_title != blank %}
+            <h3 class="ai-trust-badge-title-{{ ai_gen_id }}">{{ block.settings.badge_1_title }}</h3>
+          {% endif %}
+          {% if block.settings.badge_1_description != blank %}
+            <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.badge_1_description }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
+        <div class="ai-trust-badge-icon-wrapper-{{ ai_gen_id }}">
+          {% if block.settings.badge_2_icon %}
+            <img
+              src="{{ block.settings.badge_2_icon | image_url: width: 200 }}"
+              alt="{{ block.settings.badge_2_title | escape }}"
+              loading="lazy"
+              width="200"
+              height="200"
+            >
+          {% else %}
+            <div class="ai-trust-badge-icon-placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+        </div>
+        <div class="ai-trust-badge-content-{{ ai_gen_id }}">
+          {% if block.settings.badge_2_title != blank %}
+            <h3 class="ai-trust-badge-title-{{ ai_gen_id }}">{{ block.settings.badge_2_title }}</h3>
+          {% endif %}
+          {% if block.settings.badge_2_description != blank %}
+            <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.badge_2_description }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
+        <div class="ai-trust-badge-icon-wrapper-{{ ai_gen_id }}">
+          {% if block.settings.badge_3_icon %}
+            <img
+              src="{{ block.settings.badge_3_icon | image_url: width: 200 }}"
+              alt="{{ block.settings.badge_3_title | escape }}"
+              loading="lazy"
+              width="200"
+              height="200"
+            >
+          {% else %}
+            <div class="ai-trust-badge-icon-placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+        </div>
+        <div class="ai-trust-badge-content-{{ ai_gen_id }}">
+          {% if block.settings.badge_3_title != blank %}
+            <h3 class="ai-trust-badge-title-{{ ai_gen_id }}">{{ block.settings.badge_3_title }}</h3>
+          {% endif %}
+          {% if block.settings.badge_3_description != blank %}
+            <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.badge_3_description }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="ai-trust-badge-item-{{ ai_gen_id }}">
+        <div class="ai-trust-badge-icon-wrapper-{{ ai_gen_id }}">
+          {% if block.settings.badge_4_icon %}
+            <img
+              src="{{ block.settings.badge_4_icon | image_url: width: 200 }}"
+              alt="{{ block.settings.badge_4_title | escape }}"
+              loading="lazy"
+              width="200"
+              height="200"
+            >
+          {% else %}
+            <div class="ai-trust-badge-icon-placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+        </div>
+        <div class="ai-trust-badge-content-{{ ai_gen_id }}">
+          {% if block.settings.badge_4_title != blank %}
+            <h3 class="ai-trust-badge-title-{{ ai_gen_id }}">{{ block.settings.badge_4_title }}</h3>
+          {% endif %}
+          {% if block.settings.badge_4_description != blank %}
+            <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.badge_4_description }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</trust-badges-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class TrustBadges{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+      }
+    }
+
+    customElements.define('trust-badges-{{ ai_gen_id }}', TrustBadges{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Trust badges",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#5569dc"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "section_height_desktop",
+      "label": "Section height (desktop)",
+      "min": 40,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_height_mobile",
+      "label": "Section height (mobile)",
+      "min": 40,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "font_family",
+      "label": "Font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "checkbox",
+      "id": "title_bold",
+      "label": "Bold titles",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Icon settings"
+    },
+    {
+      "type": "range",
+      "id": "icon_size_desktop",
+      "label": "Icon size (desktop)",
+      "min": 40,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "icon_size_mobile",
+      "label": "Icon size (mobile)",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Badge 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_1_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "badge_1_title",
+      "label": "Title",
+      "default": "Tailored for Organisations"
+    },
+    {
+      "type": "textarea",
+      "id": "badge_1_description",
+      "label": "Description",
+      "default": "Customised training aligned to your workplace context"
+    },
+    {
+      "type": "header",
+      "content": "Badge 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_2_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "badge_2_title",
+      "label": "Title",
+      "default": "Delivered by a Specialist"
+    },
+    {
+      "type": "textarea",
+      "id": "badge_2_description",
+      "label": "Description",
+      "default": "Led by an MSc-trained researcher in consent and digital harm"
+    },
+    {
+      "type": "header",
+      "content": "Badge 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_3_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "badge_3_title",
+      "label": "Title",
+      "default": "Accredited Completion Certificates"
+    },
+    {
+      "type": "textarea",
+      "id": "badge_3_description",
+      "label": "Description",
+      "default": "Recognition provided upon course completion"
+    },
+    {
+      "type": "header",
+      "content": "Badge 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_4_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "badge_4_title",
+      "label": "Title",
+      "default": "Confidential & Professional"
+    },
+    {
+      "type": "textarea",
+      "id": "badge_4_description",
+      "label": "Description",
+      "default": "Handled with discretion and organisational sensitivity"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust badges"
+    }
+  ]
+}
+{% endschema %}

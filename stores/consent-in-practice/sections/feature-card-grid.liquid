@@ -1,0 +1,640 @@
+<style>
+    #shopify-section-{{ section.id }} {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+  .fc-section-{{ section.id }} {
+    /* Layout Variables */
+    --fc-bg: {{ section.settings.fc_section_bg }};
+    --fc-padding-top: {{ section.settings.fc_padding_top }}px;
+    --fc-padding-bottom: {{ section.settings.fc_padding_bottom }}px;
+    --fc-max-width: {{ section.settings.fc_max_width }}px;
+    --fc-gap: {{ section.settings.fc_grid_gap }}px;
+    
+    /* Grid Columns */
+    --fc-cols-desktop: {{ section.settings.fc_cols_desktop }};
+    --fc-cols-tablet: {{ section.settings.fc_cols_tablet }};
+    --fc-cols-mobile: {{ section.settings.fc_cols_mobile }};
+
+    /* Card Variables */
+    --fc-card-bg: {{ section.settings.fc_card_bg }};
+    --fc-card-border: {{ section.settings.fc_card_border_color }};
+    --fc-card-border-width: {{ section.settings.fc_card_border_width }}px;
+    --fc-card-radius: {{ section.settings.fc_card_radius }}px;
+    --fc-card-padding: {{ section.settings.fc_card_padding }}px;
+
+    /* Typography Variables */
+    --fc-eyebrow-color: {{ section.settings.fc_eyebrow_color }};
+    --fc-eyebrow-size: {{ section.settings.fc_eyebrow_size }}px;
+    
+    --fc-heading-color: {{ section.settings.fc_heading_color }};
+    --fc-heading-size: {{ section.settings.fc_heading_size }}px;
+    --fc-heading-weight: {{ section.settings.fc_headding_weight }};
+    
+    --fc-footer-color: {{ section.settings.fc_footer_color }};
+    --fc-footer-size: {{ section.settings.fc_footer_size }}px;
+
+    --fc-title-color: {{ section.settings.fc_title_color }};
+    --fc-title-size: {{ section.settings.fc_title_size }}px;
+    --fc-title-weight: {{ section.settings.fc_title_weight }};
+
+    --fc-desc-color: {{ section.settings.fc_desc_color }};
+    --fc-desc-size: {{ section.settings.fc_desc_size }}px;
+
+    --fc-link-color: {{ section.settings.fc_link_color }};
+    --fc-link-size: {{ section.settings.fc_link_size }}px;
+    --fc-link-weight: {{ section.settings.fc_link_weight }};
+
+    background-color: var(--fc-bg);
+    padding-top: var(--fc-padding-top);
+    padding-bottom: var(--fc-padding-bottom);
+  }
+
+  .fc-section-{{ section.id }} .fc-container {
+    max-width: var(--fc-max-width);
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .fc-section-{{ section.id }} .fc-header {
+    text-align: center;
+    margin-bottom: 50px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .fc-section-{{ section.id }} .fc-eyebrow {
+    color: var(--fc-eyebrow-color);
+    font-size: var(--fc-eyebrow-size);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .fc-section-{{ section.id }} .fc-heading {
+    color: var(--fc-heading-color);
+    font-size: var(--fc-heading-size);
+    font-weight: var(--fc-heading-weight);
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .fc-section-{{ section.id }} .fc-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--fc-cols-desktop), 1fr);
+    gap: var(--fc-gap);
+    margin-bottom: 40px;
+  }
+
+  .fc-section-{{ section.id }} .fc-card {
+    background-color: var(--fc-card-bg);
+    border: var(--fc-card-border-width) solid var(--fc-card-border);
+    border-radius: var(--fc-card-radius);
+    padding: var(--fc-card-padding);
+    display: flex;
+    flex-direction: row; /* Horizontal layout */
+    align-items: flex-start;
+    gap: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%; /* Ensure equal height in grid */
+    box-sizing: border-box;
+  }
+
+  .fc-section-{{ section.id }} .fc-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  }
+
+  .fc-section-{{ section.id }} .fc-icon-wrapper {
+    flex-shrink: 0;
+    width: 60px; /* Fixed width for icon column */
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .fc-section-{{ section.id }} .fc-icon {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .fc-section-{{ section.id }} .fc-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    text-align: left;
+  }
+
+  .fc-section-{{ section.id }} .fc-title {
+    color: var(--fc-title-color);
+    font-size: var(--fc-title-size);
+    font-weight: var(--fc-title-weight);
+    margin-bottom: 12px;
+    line-height: 1.3;
+    margin-top: 0;
+  }
+
+  .fc-section-{{ section.id }} .fc-desc {
+    color: var(--fc-desc-color);
+    font-size: var(--fc-desc-size);
+    line-height: 1.5;
+    margin: 0 0 20px 0;
+    flex-grow: 1; /* Pushes link to bottom if content varies */
+  }
+
+  .fc-section-{{ section.id }} .fc-link {
+    color: var(--fc-link-color);
+    font-size: var(--fc-link-size);
+    font-weight: var(--fc-link-weight);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto; /* Pushes link to bottom of card */
+    transition: gap 0.3s ease;
+  }
+
+  .fc-section-{{ section.id }} .fc-link:hover {
+    gap: 12px; /* Arrow animation */
+  }
+
+  .fc-section-{{ section.id }} .fc-footer {
+    text-align: center;
+    color: var(--fc-footer-color);
+    font-size: var(--fc-footer-size);
+    font-weight: 500;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  /* Responsive */
+  @media (max-width: 990px) {
+    .fc-section-{{ section.id }} .fc-grid {
+      grid-template-columns: repeat(var(--fc-cols-tablet), 1fr);
+    }
+  }
+/* --- MOD START --- */
+  @media (max-width: 749px) {
+    /* Horizontal Scroll Setup */
+    .fc-section-{{ section.id }} .fc-grid {
+      display: flex;
+      overflow-x: auto;
+      overflow-y: visible; /* Prevents scroll hijacking */
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none;  /* IE 10+ */
+      padding-bottom: 10px; /* Visual breathing room at bottom */
+    }
+    
+    /* Hide Scrollbar for Chrome/Safari/Opera */
+    .fc-section-{{ section.id }} .fc-grid::-webkit-scrollbar { 
+      display: none; 
+    }
+
+    /* Card Sizing for Peek Effect */
+    .fc-section-{{ section.id }} .fc-card {
+      flex: 0 0 85%; /* 85% width leaves 15% of next card visible */
+      scroll-snap-align: start;
+      /* Stack card content on mobile */
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .fc-section-{{ section.id }} .fc-heading {
+      font-size: calc(var(--fc-heading-size) * 0.8);
+    }
+    .fc-section-{{ section.id }} .fc-content {
+      align-items: center;
+    }
+    .fc-section-{{ section.id }} .fc-link {
+      margin-top: 20px;
+    }
+  }
+/* --- MOD END --- */
+</style>
+
+<section class="fc-section-{{ section.id }}">
+  <div class="fc-container">
+    
+    <div class="fc-header">
+      {% if section.settings.fc_eyebrow_text != blank %}
+        <span class="fc-eyebrow">{{ section.settings.fc_eyebrow_text }}</span>
+      {% endif %}
+      {% if section.settings.fc_heading_text != blank %}
+        <h2 class="fc-heading">{{ section.settings.fc_heading_text }}</h2>
+      {% endif %}
+    </div>
+
+    <div class="fc-grid">
+      {% for block in section.blocks %}
+        <article class="fc-card" {{ block.shopify_attributes }}>
+          {% if block.settings.fc_card_icon != blank %}
+            <div class="fc-icon-wrapper">
+              {{ block.settings.fc_card_icon | image_url: width: 100 | image_tag: class: 'fc-icon', loading: 'lazy', widths: '50, 100, 150' }}
+            </div>
+          {% endif %}
+          
+          <div class="fc-content">
+            {% if block.settings.fc_card_title != blank %}
+              <h3 class="fc-title">{{ block.settings.fc_card_title }}</h3>
+            {% endif %}
+            
+            {% if block.settings.fc_card_desc != blank %}
+              <p class="fc-desc">{{ block.settings.fc_card_desc }}</p>
+            {% endif %}
+
+            {% if block.settings.fc_card_link_text != blank and block.settings.fc_card_link_url != blank %}
+              <a href="{{ block.settings.fc_card_link_url }}" class="fc-link">
+                {{ block.settings.fc_card_link_text }}
+                <span aria-hidden="true">→</span>
+              </a>
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.fc_footer_text != blank %}
+      <p class="fc-footer">{{ section.settings.fc_footer_text }}</p>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Feature Cards",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "fc_eyebrow_text",
+      "label": "Eyebrow Text",
+      "default": "WHO WE HELP"
+    },
+    {
+      "type": "text",
+      "id": "fc_heading_text",
+      "label": "Heading",
+      "default": "Practical training for the people who shape workplace culture"
+    },
+    {
+      "type": "text",
+      "id": "fc_footer_text",
+      "label": "Footer Text",
+      "default": "Training can be delivered for teams, managers, organisations or individuals — online or in person."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "fc_max_width",
+      "min": 1000,
+      "max": 1800,
+      "step": 50,
+      "unit": "px",
+      "label": "Container Max Width",
+      "default": 1200
+    },
+    {
+      "type": "select",
+      "id": "fc_cols_desktop",
+      "label": "Columns (Desktop)",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "fc_cols_tablet",
+      "label": "Columns (Tablet)",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "select",
+      "id": "fc_cols_mobile",
+      "label": "Columns (Mobile)",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "fc_grid_gap",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Grid Gap",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "fc_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "fc_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Card Style"
+    },
+    {
+      "type": "color",
+      "id": "fc_section_bg",
+      "label": "Section Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "fc_card_bg",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "fc_card_border_color",
+      "label": "Card Border Color",
+      "default": "#e2e8f0"
+    },
+    {
+      "type": "range",
+      "id": "fc_card_border_width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Card Border Width",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "fc_card_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Card Border Radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "fc_card_padding",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Card Padding",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Typography: Header"
+    },
+    {
+      "type": "color",
+      "id": "fc_eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#1e3a8a"
+    },
+    {
+      "type": "range",
+      "id": "fc_eyebrow_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Eyebrow Size",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "fc_heading_color",
+      "label": "Heading Color",
+      "default": "#0f172a"
+    },
+    {
+      "type": "range",
+      "id": "fc_heading_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "fc_headding_weight",
+      "min": 400,
+      "max": 900,
+      "step": 100,
+      "label": "Heading Weight",
+      "default": 600
+    },
+    {
+      "type": "header",
+      "content": "Typography: Footer"
+    },
+    {
+      "type": "color",
+      "id": "fc_footer_color",
+      "label": "Footer Color",
+      "default": "#475569"
+    },
+    {
+      "type": "range",
+      "id": "fc_footer_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Footer Size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Typography: Card"
+    },
+    {
+      "type": "color",
+      "id": "fc_title_color",
+      "label": "Title Color",
+      "default": "#0f172a"
+    },
+    {
+      "type": "range",
+      "id": "fc_title_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Size",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "fc_title_weight",
+      "min": 400,
+      "max": 900,
+      "step": 100,
+      "label": "Title Weight",
+      "default": 700
+    },
+    {
+      "type": "color",
+      "id": "fc_desc_color",
+      "label": "Description Color",
+      "default": "#475569"
+    },
+    {
+      "type": "range",
+      "id": "fc_desc_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Description Size",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Typography: Link"
+    },
+    {
+      "type": "color",
+      "id": "fc_link_color",
+      "label": "Link Color",
+      "default": "#1e3a8a"
+    },
+    {
+      "type": "range",
+      "id": "fc_link_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Link Size",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "fc_link_weight",
+      "min": 400,
+      "max": 900,
+      "step": 100,
+      "label": "Link Weight",
+      "default": 600
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Feature Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "fc_card_icon",
+          "label": "Icon Image"
+        },
+        {
+          "type": "text",
+          "id": "fc_card_title",
+          "label": "Title",
+          "default": "Card Title"
+        },
+        {
+          "type": "textarea",
+          "id": "fc_card_desc",
+          "label": "Description",
+          "default": "Card description goes here."
+        },
+        {
+          "type": "text",
+          "id": "fc_card_link_text",
+          "label": "Link Text",
+          "default": "Explore ->"
+        },
+        {
+          "type": "url",
+          "id": "fc_card_link_url",
+          "label": "Link URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Feature Card Grid",
+      "blocks": [
+        { 
+          "type": "card", 
+          "settings": { 
+            "fc_card_title": "HR & People Teams", 
+            "fc_card_desc": "Support for complaints, disclosures, workplace culture, safeguarding and manager confidence.",
+            "fc_card_link_text": "Explore HR Support",
+            "fc_card_link_url": "#"
+          } 
+        },
+        { 
+          "type": "card", 
+          "settings": { 
+            "fc_card_title": "Leaders & Organisations", 
+            "fc_card_desc": "Risk prevention, leadership capability and creating safe, respectful environments.",
+            "fc_card_link_text": "Explore Organisational Training",
+            "fc_card_link_url": "#"
+          } 
+        },
+        { 
+          "type": "card", 
+          "settings": { 
+            "fc_card_title": "Universities & Education", 
+            "fc_card_desc": "Consent, safeguarding, digital harm and prevention programmes for higher education.",
+            "fc_card_link_text": "Explore University Programmes",
+            "fc_card_link_url": "#"
+          } 
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

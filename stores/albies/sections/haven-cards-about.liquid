@@ -1,0 +1,210 @@
+{%- comment -%}
+  Haven Cards + About — asymmetric row: numbered image cards on the left,
+  "about" column (eyebrow, copy, avatars, rating) on the right.
+  Self-contained. Scoped styles. Responsive (stacks below 980px).
+{%- endcomment -%}
+
+<section id="HavenCards-{{ section.id }}" class="hca">
+  {%- style -%}
+    #HavenCards-{{ section.id }} {
+      --hca-bg: {{ section.settings.bg_color }};
+      --hca-gap: {{ section.settings.gap }}px;
+      --hca-radius: {{ section.settings.card_radius }}px;
+      --hca-card-h: {{ section.settings.card_min_height }}px;
+      --hca-num-c: {{ section.settings.number_color }};
+      --hca-title-c: {{ section.settings.card_title_color }};
+      --hca-title-s: {{ section.settings.card_title_size }}px;
+      --hca-cards-share: {{ section.settings.cards_share }};
+      background: var(--hca-bg);
+      padding: {{ section.settings.padding_top }}px 40px {{ section.settings.padding_bottom }}px;
+    }
+    #HavenCards-{{ section.id }} .hca__wrap {
+      max-width: 1400px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, calc(var(--hca-cards-share) * 1%)) minmax(0, 1fr);
+      gap: 48px;
+      align-items: center;
+    }
+    #HavenCards-{{ section.id }} .hca__cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--hca-gap);
+    }
+    #HavenCards-{{ section.id }} .hca__card {
+      position: relative;
+      border-radius: var(--hca-radius);
+      overflow: hidden;
+      min-height: var(--hca-card-h);
+      display: flex;
+      align-items: flex-end;
+    }
+    #HavenCards-{{ section.id }} .hca__card img,
+    #HavenCards-{{ section.id }} .hca__card .hca__ph {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    #HavenCards-{{ section.id }} .hca__card::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(15,18,14,0) 35%, rgba(15,18,14,.62) 100%);
+    }
+    #HavenCards-{{ section.id }} .hca__meta {
+      position: relative; z-index: 1; padding: 16px 16px 14px; width: 100%;
+    }
+    #HavenCards-{{ section.id }} .hca__num {
+      display: block; font-size: 11px; letter-spacing: .14em;
+      color: var(--hca-num-c); margin-bottom: 4px; font-weight: 500;
+    }
+    #HavenCards-{{ section.id }} .hca__title {
+      font-size: var(--hca-title-s); font-weight: 500;
+      color: var(--hca-title-c); line-height: 1.35; margin: 0;
+    }
+    #HavenCards-{{ section.id }} .hca__about { padding-left: 8px; }
+    #HavenCards-{{ section.id }} .hca__leaf {
+      display: inline-flex; margin-bottom: 12px; color: #8A9078;
+    }
+    #HavenCards-{{ section.id }} .hca__leaf svg {
+      width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.4;
+    }
+    #HavenCards-{{ section.id }} .hca__about-eyebrow {
+      margin: 0 0 14px;
+      display: inline-flex; align-items: center; gap: 9px;
+      font-size: 12px; color: #77806E;
+    }
+    #HavenCards-{{ section.id }} .hca__about-eyebrow svg {
+      width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.4;
+    }
+    #HavenCards-{{ section.id }} .hca__about-text {
+      margin: 0 0 24px; font-size: 14.5px; line-height: 1.7;
+      color: {{ section.settings.about_text_color }};
+      max-width: 40ch;
+    }
+    #HavenCards-{{ section.id }} .hca__trust-row {
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    #HavenCards-{{ section.id }} .hca__avatars { display: flex; }
+    #HavenCards-{{ section.id }} .hca__avatars img,
+    #HavenCards-{{ section.id }} .hca__avatars .hca__avatar-fallback {
+      width: 38px; height: 38px; border-radius: 50%; object-fit: cover;
+      border: 2px solid var(--hca-bg); margin-left: -10px;
+    }
+    #HavenCards-{{ section.id }} .hca__avatars :first-child { margin-left: 0; }
+    #HavenCards-{{ section.id }} .hca__trust b {
+      display: block; font-size: 12.5px; font-weight: 600; color: #2E332B;
+    }
+    #HavenCards-{{ section.id }} .hca__trust small { font-size: 11.5px; color: #77806E; }
+    #HavenCards-{{ section.id }} .hca__rating { display: flex; align-items: center; gap: 8px; }
+    #HavenCards-{{ section.id }} .hca__stars { color: #C9A961; font-size: 13px; letter-spacing: 2px; }
+    #HavenCards-{{ section.id }} .hca__rating b { font-size: 13px; }
+    @media (max-width: 980px) {
+      #HavenCards-{{ section.id }} .hca__wrap { grid-template-columns: 1fr; gap: 40px; }
+      #HavenCards-{{ section.id }} .hca__cards { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      #HavenCards-{{ section.id }} .hca__card { min-height: 220px; }
+    }
+    @media (max-width: 640px) {
+      #HavenCards-{{ section.id }} .hca__cards { grid-template-columns: 1fr; }
+      #HavenCards-{{ section.id }} .hca__card { min-height: 240px; }
+    }
+  {%- endstyle -%}
+
+  <div class="hca__wrap">
+    <div class="hca__cards">
+      {%- for block in section.blocks -%}
+        <div class="hca__card" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            <img src="{{ block.settings.image | image_url: width: 700 }}" alt="{{ block.settings.image.alt | default: block.settings.title | escape }}" loading="lazy" width="700" height="800">
+          {%- else -%}
+            {{- 'lifestyle-2' | placeholder_svg_tag: 'hca__ph' -}}
+          {%- endif -%}
+          <div class="hca__meta">
+            {%- if block.settings.number != blank -%}
+              <span class="hca__num">{{ block.settings.number }}</span>
+            {%- endif -%}
+            {%- if block.settings.title != blank -%}
+              <p class="hca__title">{{ block.settings.title }}</p>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <div class="hca__about">
+      {%- if section.settings.about_eyebrow != blank -%}
+        <p class="hca__about-eyebrow">
+          <svg viewBox="0 0 24 24"><path d="M12 21c-5-3-7.5-6.5-7.5-10.5C4.5 6 8 3.5 12 3c4 .5 7.5 3 7.5 7.5 0 4-2.5 7.5-7.5 10.5z"/></svg>
+          {{ section.settings.about_eyebrow }}
+        </p>
+      {%- endif -%}
+      {%- if section.settings.about_text != blank -%}
+        <p class="hca__about-text">{{ section.settings.about_text }}</p>
+      {%- endif -%}
+      <div class="hca__trust-row">
+        <div class="hca__avatars">
+          {%- if section.settings.avatar_1 != blank -%}<img src="{{ section.settings.avatar_1 | image_url: width: 76 }}" alt="">{%- endif -%}
+          {%- if section.settings.avatar_2 != blank -%}<img src="{{ section.settings.avatar_2 | image_url: width: 76 }}" alt="">{%- endif -%}
+          {%- if section.settings.avatar_3 != blank -%}<img src="{{ section.settings.avatar_3 | image_url: width: 76 }}" alt="">{%- endif -%}
+        </div>
+        {%- if section.settings.trusted_text != blank -%}
+          <div class="hca__trust"><b>{{ section.settings.trusted_text }}</b></div>
+        {%- endif -%}
+        <div class="hca__rating">
+          <span class="hca__stars">★★★★★</span>
+          <div class="hca__trust">
+            <b>{{ section.settings.rating_text }}</b>
+            <small>{{ section.settings.reviews_text }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Haven Cards + About",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#FFFFFF" },
+    { "type": "range", "id": "cards_share", "label": "Cards column share", "min": 40, "max": 70, "step": 1, "default": 58, "unit": "%" },
+    { "type": "range", "id": "gap", "label": "Gap", "min": 8, "max": 48, "step": 2, "default": 16, "unit": "px" },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 120, "step": 4, "default": 56, "unit": "px" },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 120, "step": 4, "default": 56, "unit": "px" },
+    { "type": "header", "content": "Cards" },
+    { "type": "range", "id": "card_radius", "label": "Card radius", "min": 0, "max": 32, "step": 2, "default": 8, "unit": "px" },
+    { "type": "range", "id": "card_min_height", "label": "Card min height", "min": 240, "max": 460, "step": 20, "default": 300, "unit": "px" },
+    { "type": "color", "id": "number_color", "label": "Number color", "default": "#FFFFFF" },
+    { "type": "color", "id": "card_title_color", "label": "Card title color", "default": "#FFFFFF" },
+    { "type": "range", "id": "card_title_size", "label": "Card title size", "min": 10, "max": 18, "step": 1, "default": 12, "unit": "px" },
+    { "type": "header", "content": "About column" },
+    { "type": "text", "id": "about_eyebrow", "label": "Eyebrow", "default": "about haven" },
+    { "type": "textarea", "id": "about_text", "label": "Text", "default": "Haven Retreats offer a unique blend of natural beauty, and thoughtful design. Every detail is created to help you slow down and reconnect with what truly matters." },
+    { "type": "color", "id": "about_text_color", "label": "Text color", "default": "#5B6152" },
+    { "type": "image_picker", "id": "avatar_1", "label": "Guest avatar 1" },
+    { "type": "image_picker", "id": "avatar_2", "label": "Guest avatar 2" },
+    { "type": "image_picker", "id": "avatar_3", "label": "Guest avatar 3" },
+    { "type": "text", "id": "trusted_text", "label": "Trusted text", "default": "Trusted by 2K+ guests" },
+    { "type": "text", "id": "rating_text", "label": "Rating", "default": "4.9" },
+    { "type": "text", "id": "reviews_text", "label": "Reviews text", "default": "380+ reviews" }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Photo card",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "number", "label": "Number", "default": "01" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Seamless with Nature" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Haven Cards + About",
+      "blocks": [
+        { "type": "card", "settings": { "number": "01", "title": "Seamless with Nature" } },
+        { "type": "card", "settings": { "number": "02", "title": "Timeless Design" } },
+        { "type": "card", "settings": { "number": "03", "title": "Peaceful Interiors" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

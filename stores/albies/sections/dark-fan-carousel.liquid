@@ -1,0 +1,227 @@
+{%- comment -%}
+  ==========================================================================
+  DARK FAN CAROUSEL — self-contained Shopify section
+  "Feel Better Every Day" pattern: black stage, eyebrow + headline, a fanned
+  arc of portrait cards cycling through the enlarged center position, each
+  with a name and tag chip. Dots pagination, autoplay, swipe.
+  Single file, no dependencies. Horizon-era settings only.
+  ==========================================================================
+{%- endcomment -%}
+{%- assign sid = section.id -%}
+
+<section class="dfc dfc-{{ section.id }}" id="dfc-{{ section.id }}"
+  style="--dfc-bg: {{ section.settings.background_color }}; --dfc-ink: {{ section.settings.text_color }}; --dfc-accent: {{ section.settings.accent_color }}; --dfc-radius: {{ section.settings.card_radius }}px;"
+>
+  <div class="dfc__head">
+    {%- if section.settings.eyebrow != blank -%}<p class="dfc__eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+    {%- if section.settings.heading != blank -%}<h2 class="dfc__heading">{{ section.settings.heading | escape }}</h2>{%- endif -%}
+  </div>
+
+  <div class="dfc__stage" data-dfc-stage>
+    {%- for block in section.blocks -%}
+      <div class="dfc__card" data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          {{ block.settings.image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '400, 600, 800', alt: block.settings.name }}
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'dfc__placeholder' }}
+        {%- endif -%}
+        <div class="dfc__card-top">
+          <p class="dfc__card-name">{{ block.settings.name | escape }}</p>
+          {%- if block.settings.tag != blank -%}<span class="dfc__card-tag" style="--tag-bg: {{ block.settings.tag_color }};">{{ block.settings.tag | escape }}</span>{%- endif -%}
+        </div>
+        {%- if block.settings.sub != blank -%}<p class="dfc__card-sub">{{ block.settings.sub | escape }}</p>{%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+
+  <div class="dfc__dots" role="tablist" aria-label="Cards">
+    {%- for block in section.blocks -%}
+      <button type="button" class="dfc__dot" data-goto="{{ forloop.index0 }}" aria-label="Card {{ forloop.index }}"></button>
+    {%- endfor -%}
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('dfc-{{ section.id }}');
+    if (!root || root.dataset.dfcInit) return;
+    root.dataset.dfcInit = '1';
+    var cards = Array.prototype.slice.call(root.querySelectorAll('.dfc__card'));
+    var dots = root.querySelectorAll('.dfc__dot');
+    var idx = 0, timer = null, busy = false;
+    var AUTO = {{ section.settings.autoplay_seconds | times: 1000 }};
+    var SPREAD = {{ section.settings.fan_angle }};
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function pad(n) { return (n + 1 < 10 ? '0' : '') + (n + 1); }
+
+    function layout() {
+      var n = cards.length;
+      cards.forEach(function (card, k) {
+        var pos = ((k - idx) % n + n) % n;
+        if (pos > n / 2) pos -= n;
+        var abs = Math.abs(pos);
+        var show = abs <= {{ section.settings.fan_cards }};
+        card.style.display = show ? '' : 'none';
+        card.style.zIndex = String(60 - abs * 10);
+        var x = pos * {{ section.settings.spread_x }};
+        var r = pos * SPREAD;
+        var y = abs * {{ section.settings.fan_y }};
+        var scale = 1 - abs * {{ section.settings.scale_step | divided_by: 100.0 }};
+        card.style.transform = 'translateX(calc(-50% + ' + x + 'px)) translateY(' + y + 'px) rotate(' + r + 'deg) scale(' + Math.max(scale, 0.6) + ')';
+        card.style.opacity = show ? '1' : '0';
+        card.classList.toggle('is-active', abs === 0);
+      });
+      dots.forEach(function (d, k) { d.classList.toggle('is-active', k === idx); });
+    }
+    function go(step) { if (busy) return; idx = (idx + step + cards.length) % cards.length; layout(); }
+    function play() { stop(); if (AUTO > 0 && cards.length > 1 && !reduce) timer = setInterval(function () { go(1); }, AUTO); }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+    dots.forEach(function (d) {
+      d.addEventListener('click', function () { stop(); idx = parseInt(d.dataset.goto, 10); layout(); play(); });
+    });
+    var sx = null;
+    root.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    root.addEventListener('touchend', function (e) {
+      if (sx === null) return;
+      var dx = e.changedTouches[0].clientX - sx;
+      if (Math.abs(dx) > 40) { stop(); go(dx < 0 ? 1 : -1); play(); }
+      sx = null;
+    }, { passive: true });
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', play);
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { layout(); play(); } else { stop(); } });
+    }, { threshold: 0.3 });
+    io.observe(root);
+
+    cards.forEach(function (c) {
+      c.addEventListener('click', function () { if (!c.classList.contains('is-active')) { stop(); idx = parseInt(c.dataset.index, 10); layout(); play(); } });
+    });
+    layout(); play();
+  })();
+</script>
+
+{% style %}
+  #dfc-{{ sid }} {
+    background: var(--dfc-bg); color: var(--dfc-ink);
+    font-family: {{ section.settings.font_stack }};
+    padding-block: clamp(3rem, 8vh, 5.5rem) clamp(2rem, 5vh, 3.5rem);
+    overflow: hidden;
+  }
+  #dfc-{{ sid }} *, #dfc-{{ sid }} *::before, #dfc-{{ sid }} *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  #dfc-{{ sid }} a { color: inherit; text-decoration: none; }
+
+  #dfc-{{ sid }} .dfc__head { text-align: center; margin-bottom: clamp(1.4rem, 4vh, 2.6rem); }
+  #dfc-{{ sid }} .dfc__eyebrow {
+    font-size: 0.62rem; font-weight: 700; letter-spacing: 0.26em; text-transform: uppercase;
+    color: var(--dfc-accent); margin-bottom: 0.8rem;
+  }
+  #dfc-{{ sid }} .dfc__heading { font-size: clamp(1.4rem, 2.6vw, 2.1rem); font-weight: 700; letter-spacing: -0.01em; }
+
+  #dfc-{{ sid }} .dfc__stage {
+    position: relative;
+    height: clamp(320px, {{ section.settings.stage_height }}vw, {{ section.settings.stage_height_max }}px);
+    margin-bottom: clamp(1.2rem, 3vh, 2rem);
+  }
+  #dfc-{{ sid }} .dfc__card {
+    position: absolute; left: 50%; top: 50%;
+    width: min({{ section.settings.card_width }}vw, {{ section.settings.card_width_max }}px);
+    aspect-ratio: {{ section.settings.card_ratio }};
+    border-radius: var(--dfc-radius);
+    overflow: hidden;
+    transform-origin: center bottom;
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease;
+    cursor: pointer;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+  }
+  #dfc-{{ sid }} .dfc__card img, #dfc-{{ sid }} .dfc__placeholder { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #dfc-{{ sid }} .dfc__placeholder { background: #2a2a2a; }
+  #dfc-{{ sid }} .dfc__card-top { position: absolute; top: 0.9rem; left: 0.9rem; right: 0.9rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 0.6rem; }
+  #dfc-{{ sid }} .dfc__card-name { font-size: clamp(0.85rem, 1.5vw, 1.1rem); font-weight: 700; color: #fff; text-shadow: 0 1px 10px rgba(0,0,0,0.45); }
+  #dfc-{{ sid }} .dfc__card-sub { position: absolute; left: 0.9rem; bottom: 0.8rem; font-size: 0.62rem; color: rgba(255,255,255,0.85); }
+  #dfc-{{ sid }} .dfc__card-tag {
+    display: inline-block;
+    background: var(--tag-bg, rgba(255,255,255,0.9)); color: #1c1e22;
+    font-size: 0.56rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.28rem 0.6rem; border-radius: 999px;
+  }
+  #dfc-{{ sid }} .dfc__card.is-active .dfc__card-sub { display: block; }
+
+  #dfc-{{ sid }} .dfc__dots { display: flex; justify-content: center; gap: 0.4rem; }
+  #dfc-{{ sid }} .dfc__dot {
+    width: 0.38rem; height: 0.38rem; border-radius: 50%;
+    background: var(--dfc-ink); opacity: 0.3; border: 0; cursor: pointer;
+    transition: width 0.25s ease, opacity 0.25s ease;
+  }
+  #dfc-{{ sid }} .dfc__dot.is-active { opacity: 1; width: 1.5rem; border-radius: 999px; }
+
+  @media (prefers-reduced-motion: reduce) { #dfc-{{ sid }} .dfc__card { transition: none; } }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Dark Fan Carousel",
+  "tag": "section",
+  "max_blocks": 9,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Daily Energy" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Feel Better Every Day" },
+    { "type": "range", "id": "autoplay_seconds", "label": "Autoplay every", "min": 0, "max": 12, "step": 1, "unit": "s", "info": "0 = manual only", "default": 4 },
+    { "type": "range", "id": "fan_angle", "label": "Fan angle per card", "min": 0, "max": 20, "step": 1, "unit": "°", "default": 9 },
+    { "type": "range", "id": "fan_cards", "label": "Fanned cards each side", "min": 1, "max": 4, "step": 1, "default": 2 },
+    { "type": "range", "id": "spread_x", "label": "Card spacing", "min": 60, "max": 220, "step": 5, "unit": "px", "default": 150 },
+    { "type": "range", "id": "fan_y", "label": "Arc dip per card", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 10 },
+    { "type": "range", "id": "scale_step", "label": "Depth scale step", "min": 5, "max": 25, "step": 1, "unit": "%", "default": 8 },
+    { "type": "range", "id": "card_width", "label": "Active card width", "min": 18, "max": 40, "step": 1, "unit": "vw", "default": 26 },
+    { "type": "range", "id": "card_width_max", "label": "Active card max width", "min": 240, "max": 520, "step": 10, "unit": "px", "default": 360 },
+    {
+      "type": "select", "id": "card_ratio", "label": "Card ratio",
+      "options": [
+        { "value": "3 / 4", "label": "Tall (3:4)" },
+        { "value": "2 / 3", "label": "Editorial (2:3)" },
+        { "value": "4 / 5", "label": "Portrait (4:5)" }
+      ],
+      "default": "3 / 4"
+    },
+    { "type": "range", "id": "stage_height", "label": "Stage height", "min": 30, "max": 60, "step": 1, "unit": "vw", "default": 40 },
+    { "type": "range", "id": "stage_height_max", "label": "Stage max height", "min": 400, "max": 900, "step": 10, "unit": "px", "default": 640 },
+    { "type": "range", "id": "card_radius", "label": "Card corner radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 18 },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#0c0c0c" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#ffffff" },
+    { "type": "color", "id": "accent_color", "label": "Accent (eyebrow)", "default": "#e0a45e" },
+    {
+      "type": "select", "id": "font_stack", "label": "Typeface",
+      "options": [
+        { "value": "system-ui, sans-serif", "label": "System" },
+        { "value": "'Helvetica Neue', Helvetica, Arial, sans-serif", "label": "Grotesque" },
+        { "value": "Georgia, 'Times New Roman', serif", "label": "Serif" }
+      ],
+      "default": "system-ui, sans-serif"
+    }
+  ],
+  "blocks": [
+    { "type": "card", "name": "Card", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Image" },
+      { "type": "text", "id": "name", "label": "Name", "default": "Mind Reset" },
+      { "type": "text", "id": "sub", "label": "Sub-line" },
+      { "type": "text", "id": "tag", "label": "Tag", "default": "Energy" },
+      { "type": "color", "id": "tag_color", "label": "Tag color", "default": "#eaf4ff" },
+      { "type": "url", "id": "link", "label": "Link" }
+    ] }
+  ],
+  "presets": [
+    { "name": "Dark Fan Carousel", "blocks": [
+      { "type": "card", "settings": { "name": "Mind Reset", "sub": "A moment for your senses", "tag": "Calm", "tag_color": "#eaf4ff" } },
+      { "type": "card", "settings": { "name": "Heart Rhythm", "sub": "Move with intention", "tag": "Health", "tag_color": "#ffe9ec" } },
+      { "type": "card", "settings": { "name": "Morning Flow", "sub": "Start the day right", "tag": "Focus", "tag_color": "#fff7e2" } },
+      { "type": "card", "settings": { "name": "Active Day", "sub": "Movement as meditation", "tag": "Movement", "tag_color": "#ffe4e1" } },
+      { "type": "card", "settings": { "name": "Body Ready", "sub": "Fuel your instincts", "tag": "Progress", "tag_color": "#e8ffe4" } },
+      { "type": "card", "settings": { "name": "Sleep Sanity", "sub": "Recover fully", "tag": "Rest", "tag_color": "#f0e8ff" } }
+    ] }
+  ]
+}
+{% endschema %}

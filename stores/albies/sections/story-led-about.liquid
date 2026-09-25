@@ -1,0 +1,639 @@
+{%- comment -%}
+  Story-Led About - block-based narrative page matching the editorial reference:
+  hero (full-bleed image + left content + script note + tagline row),
+  split chapters (inset rounded image either side + script overlay + optional
+  icon feature line), principles row (header split + 3 image cards),
+  and a gradient-fade CTA banner. All colors self-contained.
+{%- endcomment -%}
+
+{%- liquid
+  assign script_family = " 'Segoe Script', 'Brush Script MT', 'Lucida Handwriting', cursive"
+  if section.settings.script_font != blank
+    assign script_family = section.settings.script_font.family | prepend: ' ' | prepend: section.settings.script_font.fallback_families | split: 'zzz' | first | default: script_family
+    assign script_family = section.settings.script_font.family | append: ', ' | append: section.settings.script_font.fallback_families
+  endif
+-%}
+<section
+  id="StoryLedAbout-{{ section.id }}"
+  class="sla{% if section.settings.enable_animation %} sla-animated{% endif %}"
+  style="
+    --sla-hero-h: {{ section.settings.hero_height }}px;
+    --sla-banner-h: {{ section.settings.banner_height }}px;
+    --sla-pad: {{ section.settings.content_padding }}px;
+    --sla-max-w: {{ section.settings.content_max_width }}rem;
+    --sla-radius: {{ section.settings.image_radius }}px;
+    --sla-card-bg: {{ section.settings.card_bg }};
+    --sla-eyebrow: {{ section.settings.eyebrow_size }}px;
+    --sla-heading: {{ section.settings.heading_size }}px;
+    --sla-body: {{ section.settings.body_size }}px;
+    --sla-tagline: {{ section.settings.tagline_size }}px;
+    --sla-tagline-sep: '{{ section.settings.tagline_separator }}';
+    --sla-script: {{ section.settings.script_size }}px;
+    --sla-script-family: {{ script_family }};
+    --sla-btn-bg: {{ section.settings.button_bg }};
+    --sla-btn-fg: {{ section.settings.button_text }};
+    --sla-btn-radius: {{ section.settings.button_radius }}px;
+    --sla-scrim: {{ section.settings.hero_scrim | divided_by: 100.0 }};
+    --sla-light-bg: {{ section.settings.light_bg }};
+    --sla-light-text: {{ section.settings.light_text }};
+    --sla-light-muted: {{ section.settings.light_muted }};
+    --sla-dark-bg: {{ section.settings.dark_bg }};
+    --sla-dark-text: {{ section.settings.dark_text }};
+    --sla-dark-muted: {{ section.settings.dark_muted }};
+    --sla-anim: {{ section.settings.animation_speed }}ms;
+  "
+>
+  {%- style -%}
+    #shopify-section-{{ section.id }} { padding: 0 !important; margin: 0 !important; }
+    #StoryLedAbout-{{ section.id }} { display: flex; flex-direction: column; }
+
+    /* tones */
+    #StoryLedAbout-{{ section.id }} .sla-block { position: relative; color: var(--block-fg); background: var(--block-bg); }
+    #StoryLedAbout-{{ section.id }} .sla-block--light { --block-bg: var(--sla-light-bg); --block-fg: var(--sla-light-text); --block-muted: var(--sla-light-muted); }
+    #StoryLedAbout-{{ section.id }} .sla-block--dark { --block-bg: var(--sla-dark-bg); --block-fg: var(--sla-dark-text); --block-muted: var(--sla-dark-muted); }
+
+    /* shared type */
+    #StoryLedAbout-{{ section.id }} .sla-eyebrow {
+      display: block;
+      font-size: var(--sla-eyebrow);
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--block-muted);
+    }
+    #StoryLedAbout-{{ section.id }} .sla-heading {
+      margin: 1.1rem 0 0;
+      font-family: var(--font-heading-family, Georgia, serif);
+      font-weight: 500;
+      font-size: var(--sla-heading);
+      line-height: 1.12;
+      letter-spacing: -0.01em;
+      color: var(--block-fg);
+    }
+    #StoryLedAbout-{{ section.id }} .sla-body {
+      margin: 1.4rem 0 0;
+      font-size: var(--sla-body);
+      line-height: 1.7;
+      color: var(--block-muted);
+      max-width: 34rem;
+    }
+    #StoryLedAbout-{{ section.id }} .sla-body p { margin: 0 0 1rem; }
+    #StoryLedAbout-{{ section.id }} .sla-body p:last-child { margin-bottom: 0; }
+
+    /* button */
+    #StoryLedAbout-{{ section.id }} .sla-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-top: 2rem;
+      padding: 0.9rem 1.5rem;
+      background: var(--btn-bg, var(--sla-btn-bg));
+      color: var(--btn-fg, var(--sla-btn-fg));
+      border-radius: var(--sla-btn-radius);
+      text-decoration: none;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      line-height: 1;
+      transition: filter 0.2s ease;
+    }
+    #StoryLedAbout-{{ section.id }} .sla-btn:hover { filter: brightness(0.94); }
+    #StoryLedAbout-{{ section.id }} .sla-btn svg { width: 1em; height: 1em; flex: 0 0 auto; }
+
+    /* tagline row: rule + dot-separated words */
+    #StoryLedAbout-{{ section.id }} .sla-tagline {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      margin-top: 2.2rem;
+      font-size: var(--sla-tagline);
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--block-fg);
+    }
+    #StoryLedAbout-{{ section.id }} .sla-tagline__rule {
+      width: 56px;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.5;
+    }
+    #StoryLedAbout-{{ section.id }} .sla-tagline__sep { opacity: 0.55; }
+
+    /* script annotation */
+    #StoryLedAbout-{{ section.id }} .sla-script {
+      position: absolute;
+      z-index: 3;
+      max-width: 13rem;
+      font-family: var(--sla-script-family);
+      font-size: var(--sla-script);
+      line-height: 1.4;
+      color: var(--block-fg);
+      opacity: 0.95;
+      pointer-events: none;
+    }
+    #StoryLedAbout-{{ section.id }} .sla-script--top-right { top: 12%; right: 6%; }
+    #StoryLedAbout-{{ section.id }} .sla-script--mid-right { top: 34%; right: 5%; }
+    #StoryLedAbout-{{ section.id }} .sla-script--bottom-left { bottom: 12%; left: 6%; }
+    #StoryLedAbout-{{ section.id }} .sla-script--bottom-right { bottom: 10%; right: 6%; }
+
+    /* ---- hero ---- */
+    #StoryLedAbout-{{ section.id }} .sla-hero { min-height: var(--sla-hero-h); display: flex; align-items: center; overflow: hidden; }
+    #StoryLedAbout-{{ section.id }} .sla-hero__media { position: absolute; inset: 0; }
+    #StoryLedAbout-{{ section.id }} .sla-hero__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #StoryLedAbout-{{ section.id }} .sla-hero__media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(0, 0, 0, var(--sla-scrim)) 0%, rgba(0, 0, 0, calc(var(--sla-scrim) * 0.4)) 45%, transparent 70%);
+    }
+    #StoryLedAbout-{{ section.id }} .sla-hero__content { position: relative; z-index: 2; padding: var(--sla-pad); max-width: var(--sla-max-w); }
+
+    /* ---- split ---- */
+    #StoryLedAbout-{{ section.id }} .sla-split { display: grid; grid-template-columns: 1fr 1fr; }
+    #StoryLedAbout-{{ section.id }} .sla-split--img-right .sla-split__media { order: 2; }
+    #StoryLedAbout-{{ section.id }} .sla-split--img-right .sla-split__content { order: 1; }
+    #StoryLedAbout-{{ section.id }} .sla-split__content { display: flex; flex-direction: column; justify-content: center; padding: var(--sla-pad); }
+    #StoryLedAbout-{{ section.id }} .sla-split__media { position: relative; padding: var(--sla-pad); }
+    #StoryLedAbout-{{ section.id }} .sla-split__frame { position: relative; overflow: hidden; border-radius: var(--sla-radius); height: 100%; min-height: 24rem; }
+    #StoryLedAbout-{{ section.id }} .sla-split__frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* icon feature line (mission row) */
+    #StoryLedAbout-{{ section.id }} .sla-feature { display: flex; align-items: center; gap: 0.9rem; margin-top: 2rem; font-size: var(--sla-body); color: var(--block-fg); }
+    #StoryLedAbout-{{ section.id }} .sla-feature__icon {
+      flex: 0 0 auto;
+      width: 30px;
+      height: 30px;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+    }
+    #StoryLedAbout-{{ section.id }} .sla-feature__icon img { width: 14px; height: 14px; object-fit: contain; }
+
+    /* ---- principles ---- */
+    #StoryLedAbout-{{ section.id }} .sla-principles { padding: var(--sla-pad); }
+    #StoryLedAbout-{{ section.id }} .sla-principles__head {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 3rem;
+      align-items: end;
+      margin-bottom: 3rem;
+    }
+    #StoryLedAbout-{{ section.id }} .sla-principles__intro { margin: 0; font-size: var(--sla-body); line-height: 1.6; color: var(--block-muted); }
+    #StoryLedAbout-{{ section.id }} .sla-principles__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    #StoryLedAbout-{{ section.id }} .sla-card__media { position: relative; aspect-ratio: 1 / 1; overflow: hidden; border-radius: var(--sla-radius) var(--sla-radius) 0 0; }
+    #StoryLedAbout-{{ section.id }} .sla-card__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    #StoryLedAbout-{{ section.id }} .sla-card__panel { background: var(--sla-card-bg); padding: 1.6rem 1.5rem 1.8rem; border-radius: 0 0 var(--sla-radius) var(--sla-radius); }
+    #StoryLedAbout-{{ section.id }} .sla-card__titleRow { display: flex; align-items: center; gap: 1.1rem; }
+    #StoryLedAbout-{{ section.id }} .sla-card__title {
+      margin: 0;
+      font-family: var(--font-heading-family, Georgia, serif);
+      font-weight: 500;
+      font-size: calc(var(--sla-heading) * 0.55);
+      color: var(--block-fg);
+    }
+    #StoryLedAbout-{{ section.id }} .sla-card__rule { width: 44px; height: 1px; background: var(--block-fg); opacity: 0.5; }
+    #StoryLedAbout-{{ section.id }} .sla-card__lead { margin: 0.9rem 0 0; font-size: var(--sla-body); color: var(--block-fg); }
+    #StoryLedAbout-{{ section.id }} .sla-card__text { margin: 0.7rem 0 0; font-size: calc(var(--sla-body) - 1px); line-height: 1.6; color: var(--block-muted); }
+
+    /* ---- banner (gradient fade CTA) ---- */
+    #StoryLedAbout-{{ section.id }} .sla-banner { position: relative; min-height: var(--sla-banner-h); display: flex; align-items: center; overflow: hidden; }
+    #StoryLedAbout-{{ section.id }} .sla-banner__media { position: absolute; inset: 0; }
+    #StoryLedAbout-{{ section.id }} .sla-banner__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #StoryLedAbout-{{ section.id }} .sla-banner--img-right .sla-banner__media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, var(--block-bg) 0%, var(--block-bg) 28%, transparent 62%);
+    }
+    #StoryLedAbout-{{ section.id }} .sla-banner--img-left .sla-banner__media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(270deg, var(--block-bg) 0%, var(--block-bg) 28%, transparent 62%);
+    }
+    #StoryLedAbout-{{ section.id }} .sla-banner__content { position: relative; z-index: 2; padding: var(--sla-pad); max-width: var(--sla-max-w); }
+    #StoryLedAbout-{{ section.id }} .sla-banner--img-left .sla-banner__content { margin-left: auto; }
+
+    /* entrance */
+    #StoryLedAbout-{{ section.id }}.sla-animated .sla-block { opacity: 0; transform: translateY(26px); transition: opacity var(--sla-anim) ease, transform var(--sla-anim) ease; }
+    #StoryLedAbout-{{ section.id }}.sla-animated .sla-block.is-in-view { opacity: 1; transform: none; }
+
+    /* responsive */
+    @media (max-width: 989px) {
+      #StoryLedAbout-{{ section.id }} .sla-split { grid-template-columns: 1fr; }
+      #StoryLedAbout-{{ section.id }} .sla-split__media { order: -1; padding: var(--sla-pad) var(--sla-pad) 0; }
+      #StoryLedAbout-{{ section.id }} .sla-split__frame { min-height: 62vw; }
+      #StoryLedAbout-{{ section.id }} .sla-split__content { padding: 2.5rem var(--sla-pad) var(--sla-pad); }
+      #StoryLedAbout-{{ section.id }} .sla-principles__head { grid-template-columns: 1fr; gap: 1.25rem; align-items: start; }
+      #StoryLedAbout-{{ section.id }} .sla-principles__grid { grid-template-columns: 1fr; }
+      #StoryLedAbout-{{ section.id }} .sla-banner--img-left .sla-banner__content { margin-left: 0; }
+    }
+    @media (max-width: 749px) {
+      #StoryLedAbout-{{ section.id }} .sla-hero__content,
+      #StoryLedAbout-{{ section.id }} .sla-banner__content { padding: 3.5rem 1.5rem; }
+      #StoryLedAbout-{{ section.id }} .sla-principles { padding: 3.5rem 1.5rem; }
+      #StoryLedAbout-{{ section.id }} .sla-heading { font-size: calc(var(--sla-heading) * 0.82); }
+      #StoryLedAbout-{{ section.id }} .sla-script { font-size: calc(var(--sla-script) * 0.85); max-width: 10rem; }
+      #StoryLedAbout-{{ section.id }} .sla-script--mid-right { top: auto; bottom: 8%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #StoryLedAbout-{{ section.id }}.sla-animated .sla-block { transition: none; opacity: 1; transform: none; }
+    }
+  {%- endstyle -%}
+
+  {%- for block in section.blocks -%}
+    {%- assign btn_url = block.settings.button_link -%}
+    {%- if btn_url == blank -%}{%- assign btn_url = '#' -%}{%- endif -%}
+
+    {%- if block.type == 'hero' -%}
+      <article class="sla-block sla-block--{{ block.settings.tone }} sla-hero" {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          <div class="sla-hero__media">
+            <img
+              src="{{ block.settings.image | image_url: width: 1920 }}"
+              srcset="
+                {{ block.settings.image | image_url: width: 800 }} 800w,
+                {{ block.settings.image | image_url: width: 1200 }} 1200w,
+                {{ block.settings.image | image_url: width: 1920 }} 1920w
+              "
+              sizes="100vw"
+              width="1920"
+              height="{{ 1920 | divided_by: block.settings.image.aspect_ratio | round }}"
+              alt="{{ block.settings.image.alt | default: block.settings.heading | escape }}"
+              loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+              style="object-position: {{ block.settings.image.presentation.focal_point | default: 'center' }};"
+            >
+          </div>
+        {%- endif -%}
+        <div class="sla-hero__content">
+          {%- if block.settings.eyebrow != blank -%}<span class="sla-eyebrow">{{ block.settings.eyebrow | escape }}</span>{%- endif -%}
+          {%- if block.settings.heading != blank -%}<h2 class="sla-heading">{{ block.settings.heading | escape | newline_to_br }}</h2>{%- endif -%}
+          {%- if block.settings.body != blank -%}<div class="sla-body rte">{{ block.settings.body }}</div>{%- endif -%}
+          {%- if block.settings.button_label != blank -%}
+            <a class="sla-btn" href="{{ btn_url }}" style="{% if block.settings.button_bg != blank %}--btn-bg: {{ block.settings.button_bg }};{% endif %}{% if block.settings.button_text != blank %}--btn-fg: {{ block.settings.button_text }};{% endif %}">
+              {{ block.settings.button_label | escape }}
+              {%- if block.settings.button_arrow -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="M13 6l6 6-6 6"/></svg>
+              {%- endif -%}
+            </a>
+          {%- endif -%}
+          {%- if block.settings.tagline != blank -%}
+            {%- assign words = block.settings.tagline | split: ',' -%}
+            <div class="sla-tagline">
+              {%- if block.settings.show_tagline_rule -%}<span class="sla-tagline__rule" aria-hidden="true"></span>{%- endif -%}
+              {%- for word in words -%}
+                <span>{{ word | strip | escape }}</span>
+                {%- unless forloop.last -%}<span class="sla-tagline__sep" aria-hidden="true">{{ section.settings.tagline_separator }}</span>{%- endunless -%}
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+        {%- if block.settings.script_text != blank -%}
+          <span class="sla-script sla-script--{{ block.settings.script_position }}">{{ block.settings.script_text | escape | newline_to_br }}</span>
+        {%- endif -%}
+      </article>
+
+    {%- elsif block.type == 'split' -%}
+      <article class="sla-block sla-block--{{ block.settings.tone }} sla-split sla-split--img-{{ block.settings.image_side }}" {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          <div class="sla-split__media">
+            <div class="sla-split__frame">
+              <img
+                src="{{ block.settings.image | image_url: width: 1400 }}"
+                srcset="
+                  {{ block.settings.image | image_url: width: 700 }} 700w,
+                  {{ block.settings.image | image_url: width: 1000 }} 1000w,
+                  {{ block.settings.image | image_url: width: 1400 }} 1400w
+                "
+                sizes="(max-width: 989px) 100vw, 50vw"
+                width="1400"
+                height="{{ 1400 | divided_by: block.settings.image.aspect_ratio | round }}"
+                alt="{{ block.settings.image.alt | default: block.settings.heading | escape }}"
+                loading="lazy"
+                style="object-position: {{ block.settings.image.presentation.focal_point | default: 'center' }};"
+              >
+              {%- if block.settings.script_text != blank -%}
+                <span class="sla-script sla-script--{{ block.settings.script_position }}">{{ block.settings.script_text | escape | newline_to_br }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+        <div class="sla-split__content">
+          {%- if block.settings.eyebrow != blank -%}<span class="sla-eyebrow">{{ block.settings.eyebrow | escape }}</span>{%- endif -%}
+          {%- if block.settings.heading != blank -%}<h2 class="sla-heading">{{ block.settings.heading | escape | newline_to_br }}</h2>{%- endif -%}
+          {%- if block.settings.body != blank -%}<div class="sla-body rte">{{ block.settings.body }}</div>{%- endif -%}
+          {%- if block.settings.feature_text != blank -%}
+            <div class="sla-feature">
+              <span class="sla-feature__icon" aria-hidden="true">
+                {%- if block.settings.feature_icon != blank -%}
+                  <img src="{{ block.settings.feature_icon | image_url: width: 60 }}" alt="" width="60" loading="lazy">
+                {%- endif -%}
+              </span>
+              <span>{{ block.settings.feature_text | escape }}</span>
+            </div>
+          {%- endif -%}
+          {%- if block.settings.button_label != blank -%}
+            <a class="sla-btn" href="{{ btn_url }}" style="{% if block.settings.button_bg != blank %}--btn-bg: {{ block.settings.button_bg }};{% endif %}{% if block.settings.button_text != blank %}--btn-fg: {{ block.settings.button_text }};{% endif %}">
+              {{ block.settings.button_label | escape }}
+              {%- if block.settings.button_arrow -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="M13 6l6 6-6 6"/></svg>
+              {%- endif -%}
+            </a>
+          {%- endif -%}
+          {%- if block.settings.tagline != blank -%}
+            {%- assign words = block.settings.tagline | split: ',' -%}
+            <div class="sla-tagline">
+              {%- if block.settings.show_tagline_rule -%}<span class="sla-tagline__rule" aria-hidden="true"></span>{%- endif -%}
+              {%- for word in words -%}
+                <span>{{ word | strip | escape }}</span>
+                {%- unless forloop.last -%}<span class="sla-tagline__sep" aria-hidden="true">{{ section.settings.tagline_separator }}</span>{%- endunless -%}
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+      </article>
+
+    {%- elsif block.type == 'principles' -%}
+      <article class="sla-block sla-block--{{ block.settings.tone }} sla-principles" {{ block.shopify_attributes }}>
+        <div class="sla-principles__head">
+          <div>
+            {%- if block.settings.eyebrow != blank -%}<span class="sla-eyebrow">{{ block.settings.eyebrow | escape }}</span>{%- endif -%}
+            {%- if block.settings.heading != blank -%}<h2 class="sla-heading">{{ block.settings.heading | escape }}</h2>{%- endif -%}
+          </div>
+          {%- if block.settings.intro != blank -%}<p class="sla-principles__intro">{{ block.settings.intro | escape }}</p>{%- endif -%}
+        </div>
+        <div class="sla-principles__grid">
+          {%- for i in (1..3) -%}
+            {%- case i -%}
+              {%- when 1 -%}
+                {%- assign card_image = block.settings.card_1_image -%}
+                {%- assign card_title = block.settings.card_1_title -%}
+                {%- assign card_lead = block.settings.card_1_lead -%}
+                {%- assign card_text = block.settings.card_1_text -%}
+              {%- when 2 -%}
+                {%- assign card_image = block.settings.card_2_image -%}
+                {%- assign card_title = block.settings.card_2_title -%}
+                {%- assign card_lead = block.settings.card_2_lead -%}
+                {%- assign card_text = block.settings.card_2_text -%}
+              {%- when 3 -%}
+                {%- assign card_image = block.settings.card_3_image -%}
+                {%- assign card_title = block.settings.card_3_title -%}
+                {%- assign card_lead = block.settings.card_3_lead -%}
+                {%- assign card_text = block.settings.card_3_text -%}
+            {%- endcase -%}
+            {%- if card_title != blank or card_image != blank -%}
+              <div class="sla-card">
+                {%- if card_image != blank -%}
+                  <div class="sla-card__media">
+                    <img src="{{ card_image | image_url: width: 800 }}" alt="{{ card_title | escape }}" width="800" height="{{ 800 | divided_by: card_image.aspect_ratio | round }}" loading="lazy">
+                  </div>
+                {%- endif -%}
+                <div class="sla-card__panel">
+                  <div class="sla-card__titleRow">
+                    {%- if card_title != blank -%}<h3 class="sla-card__title">{{ card_title | escape }}</h3>{%- endif -%}
+                    <span class="sla-card__rule" aria-hidden="true"></span>
+                  </div>
+                  {%- if card_lead != blank -%}<p class="sla-card__lead">{{ card_lead | escape }}</p>{%- endif -%}
+                  {%- if card_text != blank -%}<p class="sla-card__text">{{ card_text | escape }}</p>{%- endif -%}
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </article>
+
+    {%- elsif block.type == 'banner' -%}
+      <article class="sla-block sla-block--{{ block.settings.tone }} sla-banner sla-banner--img-{{ block.settings.image_side }}" {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          <div class="sla-banner__media">
+            <img
+              src="{{ block.settings.image | image_url: width: 1920 }}"
+              srcset="
+                {{ block.settings.image | image_url: width: 800 }} 800w,
+                {{ block.settings.image | image_url: width: 1200 }} 1200w,
+                {{ block.settings.image | image_url: width: 1920 }} 1920w
+              "
+              sizes="100vw"
+              width="1920"
+              height="{{ 1920 | divided_by: block.settings.image.aspect_ratio | round }}"
+              alt="{{ block.settings.image.alt | default: block.settings.heading | escape }}"
+              loading="lazy"
+              style="object-position: {{ block.settings.image.presentation.focal_point | default: 'center' }};"
+            >
+          </div>
+        {%- endif -%}
+        <div class="sla-banner__content">
+          {%- if block.settings.eyebrow != blank -%}<span class="sla-eyebrow">{{ block.settings.eyebrow | escape }}</span>{%- endif -%}
+          {%- if block.settings.heading != blank -%}<h2 class="sla-heading">{{ block.settings.heading | escape | newline_to_br }}</h2>{%- endif -%}
+          {%- if block.settings.body != blank -%}<div class="sla-body rte">{{ block.settings.body }}</div>{%- endif -%}
+          {%- if block.settings.button_label != blank -%}
+            <a class="sla-btn" href="{{ btn_url }}" style="{% if block.settings.button_bg != blank %}--btn-bg: {{ block.settings.button_bg }};{% endif %}{% if block.settings.button_text != blank %}--btn-fg: {{ block.settings.button_text }};{% endif %}">
+              {{ block.settings.button_label | escape }}
+              {%- if block.settings.button_arrow -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="M13 6l6 6-6 6"/></svg>
+              {%- endif -%}
+            </a>
+          {%- endif -%}
+          {%- if block.settings.tagline != blank -%}
+            {%- assign words = block.settings.tagline | split: ',' -%}
+            <div class="sla-tagline">
+              {%- if block.settings.show_tagline_rule -%}<span class="sla-tagline__rule" aria-hidden="true"></span>{%- endif -%}
+              {%- for word in words -%}
+                <span>{{ word | strip | escape }}</span>
+                {%- unless forloop.last -%}<span class="sla-tagline__sep" aria-hidden="true">{{ section.settings.tagline_separator }}</span>{%- endunless -%}
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+      </article>
+    {%- endif -%}
+  {%- endfor -%}
+
+  <script>
+    (function () {
+      var root = document.getElementById('StoryLedAbout-{{ section.id }}');
+      if (!root || !root.classList.contains('sla-animated')) return;
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var blocks = Array.prototype.slice.call(root.querySelectorAll('.sla-block'));
+      if (reduced || !('IntersectionObserver' in window)) {
+        blocks.forEach(function (b) { b.classList.add('is-in-view'); });
+        return;
+      }
+      var obs = new IntersectionObserver(function (entries, o) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) {
+            en.target.classList.add('is-in-view');
+            o.unobserve(en.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      blocks.forEach(function (b) { obs.observe(b); });
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Story-Led About",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "hero_height", "label": "Hero min height", "min": 400, "max": 900, "step": 20, "unit": "px", "default": 640 },
+    { "type": "range", "id": "banner_height", "label": "Banner min height", "min": 320, "max": 720, "step": 20, "unit": "px", "default": 480 },
+    { "type": "range", "id": "content_padding", "label": "Content padding", "min": 32, "max": 120, "step": 2, "unit": "px", "default": 72 },
+    { "type": "range", "id": "content_max_width", "label": "Content max width", "min": 20, "max": 60, "step": 2, "unit": "rem", "default": 40 },
+    { "type": "range", "id": "image_radius", "label": "Image corner radius", "min": 0, "max": 32, "step": 2, "unit": "px", "default": 12 },
+    { "type": "color", "id": "card_bg", "label": "Principle card panel background", "default": "#F6F3EC" },
+    { "type": "range", "id": "hero_scrim", "label": "Hero left scrim", "min": 0, "max": 80, "step": 2, "unit": "%", "default": 34 },
+
+    { "type": "header", "content": "Typography" },
+    { "type": "range", "id": "eyebrow_size", "label": "Eyebrow size", "min": 10, "max": 16, "step": 2, "unit": "px", "default": 10 },
+    { "type": "range", "id": "heading_size", "label": "Heading size", "min": 28, "max": 72, "step": 2, "unit": "px", "default": 44 },
+    { "type": "range", "id": "body_size", "label": "Body size", "min": 12, "max": 22, "step": 2, "unit": "px", "default": 14 },
+    { "type": "range", "id": "tagline_size", "label": "Tagline size", "min": 10, "max": 16, "step": 2, "unit": "px", "default": 10 },
+    { "type": "text", "id": "tagline_separator", "label": "Tagline separator", "default": "·" },
+    { "type": "range", "id": "script_size", "label": "Script note size", "min": 16, "max": 40, "step": 2, "unit": "px", "default": 24 },
+    { "type": "font_picker", "id": "script_font", "label": "Script font", "info": "Optional. Leave unset to use the built-in handwriting stack.", "default": "inter_n4" },
+
+    { "type": "header", "content": "Button" },
+    { "type": "color", "id": "button_bg", "label": "Button background", "default": "#9DB095" },
+    { "type": "color", "id": "button_text", "label": "Button text", "default": "#FFFFFF" },
+    { "type": "range", "id": "button_radius", "label": "Button radius", "min": 0, "max": 24, "step": 2, "unit": "px", "default": 4 },
+
+    { "type": "header", "content": "Tone colors" },
+    { "type": "color", "id": "light_bg", "label": "Light block background", "default": "#ECE8E1" },
+    { "type": "color", "id": "light_text", "label": "Light block text", "default": "#232920" },
+    { "type": "color", "id": "light_muted", "label": "Light block muted", "default": "#5A6055" },
+    { "type": "color", "id": "dark_bg", "label": "Dark block background", "default": "#2F3B33" },
+    { "type": "color", "id": "dark_text", "label": "Dark block text", "default": "#F3F1EA" },
+    { "type": "color", "id": "dark_muted", "label": "Dark block muted", "default": "#C0C6BA" },
+
+    { "type": "header", "content": "Motion" },
+    { "type": "checkbox", "id": "enable_animation", "label": "Enable block entrance", "default": true },
+    { "type": "range", "id": "animation_speed", "label": "Entrance speed", "min": 250, "max": 1200, "step": 50, "unit": "ms", "default": 700 }
+  ],
+  "blocks": [
+    {
+      "type": "hero",
+      "name": "Hero intro",
+      "limit": 1,
+      "settings": [
+        { "type": "select", "id": "tone", "label": "Tone", "default": "dark", "options": [ { "value": "dark", "label": "Dark text scheme" }, { "value": "light", "label": "Light text scheme" } ] },
+        { "type": "image_picker", "id": "image", "label": "Full-bleed image" },
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "About Albies" },
+        { "type": "textarea", "id": "heading", "label": "Heading", "default": "More than\njust a pet." },
+        { "type": "richtext", "id": "body", "label": "Body", "default": "<p>At Albies Pet Supplies, we believe dogs are cherished members of the family. We create practical, dependable gear to make everyday life together happier, healthier and more enjoyable.</p>" },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop the collection" },
+        { "type": "url", "id": "button_link", "label": "Button link" },
+        { "type": "checkbox", "id": "button_arrow", "label": "Show arrow icon", "default": true },
+        { "type": "color", "id": "button_bg", "label": "Button background override" },
+        { "type": "color", "id": "button_text", "label": "Button text override" },
+        { "type": "text", "id": "tagline", "label": "Tagline words (comma separated)", "default": "Walk, Run, Explore" },
+        { "type": "checkbox", "id": "show_tagline_rule", "label": "Show rule before tagline", "default": false },
+        { "type": "textarea", "id": "script_text", "label": "Script note", "default": "A better\nlife together." },
+        { "type": "select", "id": "script_position", "label": "Script note position", "default": "top-right", "options": [ { "value": "top-right", "label": "Top right" }, { "value": "mid-right", "label": "Middle right" }, { "value": "bottom-left", "label": "Bottom left" }, { "value": "bottom-right", "label": "Bottom right" } ] }
+      ]
+    },
+    {
+      "type": "split",
+      "name": "Split chapter",
+      "settings": [
+        { "type": "select", "id": "tone", "label": "Tone", "default": "light", "options": [ { "value": "dark", "label": "Dark" }, { "value": "light", "label": "Light" } ] },
+        { "type": "select", "id": "image_side", "label": "Image side", "default": "right", "options": [ { "value": "left", "label": "Left" }, { "value": "right", "label": "Right" } ] },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Why we exist" },
+        { "type": "textarea", "id": "heading", "label": "Heading", "default": "Life with a dog doesn't always go to plan." },
+        { "type": "richtext", "id": "body", "label": "Body", "default": "<p>Pulling on the lead. Muddy walks. Early mornings. Late nights. Weekend adventures. The unexpected moments in between.</p><p>We wanted to make those everyday experiences easier with gear that feels dependable when you need it most.</p>" },
+        { "type": "image_picker", "id": "feature_icon", "label": "Feature icon (circle line)", "info": "Small icon shown inside an outlined circle." },
+        { "type": "text", "id": "feature_text", "label": "Feature text", "info": "Optional line with circled icon, like the mission row." },
+        { "type": "text", "id": "button_label", "label": "Button label" },
+        { "type": "url", "id": "button_link", "label": "Button link" },
+        { "type": "checkbox", "id": "button_arrow", "label": "Show arrow icon", "default": true },
+        { "type": "color", "id": "button_bg", "label": "Button background override" },
+        { "type": "color", "id": "button_text", "label": "Button text override" },
+        { "type": "text", "id": "tagline", "label": "Tagline words (comma separated)", "default": "Walk, Run, Explore" },
+        { "type": "checkbox", "id": "show_tagline_rule", "label": "Show rule before tagline", "default": true },
+        { "type": "textarea", "id": "script_text", "label": "Script note over image", "default": "Same mess.\nHappier dogs." },
+        { "type": "select", "id": "script_position", "label": "Script note position", "default": "mid-right", "options": [ { "value": "top-right", "label": "Top right" }, { "value": "mid-right", "label": "Middle right" }, { "value": "bottom-left", "label": "Bottom left" }, { "value": "bottom-right", "label": "Bottom right" } ] }
+      ]
+    },
+    {
+      "type": "principles",
+      "name": "Principles row",
+      "settings": [
+        { "type": "select", "id": "tone", "label": "Tone", "default": "light", "options": [ { "value": "dark", "label": "Dark" }, { "value": "light", "label": "Light" } ] },
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Albies approach" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Built around real life with dogs." },
+        { "type": "text", "id": "intro", "label": "Right-side intro line", "default": "Three simple principles guide everything we do - because every dog, every walk and every adventure is different." },
+        { "type": "image_picker", "id": "card_1_image", "label": "Card 1 image" },
+        { "type": "text", "id": "card_1_title", "label": "Card 1 title", "default": "Control" },
+        { "type": "text", "id": "card_1_lead", "label": "Card 1 lead", "default": "Confidence when strength matters." },
+        { "type": "textarea", "id": "card_1_text", "label": "Card 1 text", "default": "Gear designed for powerful dogs and those moments when you need a little more control." },
+        { "type": "image_picker", "id": "card_2_image", "label": "Card 2 image" },
+        { "type": "text", "id": "card_2_title", "label": "Card 2 title", "default": "Freedom" },
+        { "type": "text", "id": "card_2_lead", "label": "Card 2 lead", "default": "More freedom to move." },
+        { "type": "textarea", "id": "card_2_text", "label": "Card 2 text", "default": "Hands-free and adventure-ready essentials for running, hiking and longer walks." },
+        { "type": "image_picker", "id": "card_3_image", "label": "Card 3 image" },
+        { "type": "text", "id": "card_3_title", "label": "Card 3 title", "default": "Safety" },
+        { "type": "text", "id": "card_3_lead", "label": "Card 3 lead", "default": "Peace of mind, day or night." },
+        { "type": "textarea", "id": "card_3_text", "label": "Card 3 text", "default": "Visibility-focused gear to help keep dogs seen when the light starts to fade." }
+      ]
+    },
+    {
+      "type": "banner",
+      "name": "CTA banner",
+      "settings": [
+        { "type": "select", "id": "tone", "label": "Tone", "default": "light", "options": [ { "value": "dark", "label": "Dark" }, { "value": "light", "label": "Light" } ] },
+        { "type": "select", "id": "image_side", "label": "Image side", "default": "right", "options": [ { "value": "left", "label": "Left" }, { "value": "right", "label": "Right" } ] },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Get out there" },
+        { "type": "textarea", "id": "heading", "label": "Heading", "default": "Made for life together." },
+        { "type": "richtext", "id": "body", "label": "One-liner", "default": "<p>Gear for stronger walks, longer adventures and safer nights.</p>" },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop Albies" },
+        { "type": "url", "id": "button_link", "label": "Button link" },
+        { "type": "checkbox", "id": "button_arrow", "label": "Show arrow icon", "default": true },
+        { "type": "color", "id": "button_bg", "label": "Button background override" },
+        { "type": "color", "id": "button_text", "label": "Button text override" },
+        { "type": "text", "id": "tagline", "label": "Tagline words (comma separated)", "default": "Walk, Run, Explore" },
+        { "type": "checkbox", "id": "show_tagline_rule", "label": "Show rule before tagline", "default": false }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Story-Led About",
+      "blocks": [
+        { "type": "hero" },
+        { "type": "split" },
+        {
+          "type": "principles",
+          "settings": {
+            "eyebrow": "The Albies approach",
+            "heading": "Built around real life with dogs."
+          }
+        },
+        {
+          "type": "split",
+          "settings": {
+            "tone": "dark",
+            "image_side": "left",
+            "eyebrow": "Our mission",
+            "heading": "Better lives for pets.\nBetter lives together.",
+            "body": "<p>We believe pets deserve the same thought and care we give the people we love.</p><p>That's why we focus on high-quality supplies that support a happy, healthy and vibrant life together - from everyday walks around the neighbourhood to adventures further afield.</p><p>And because not every dog has found their forever home, we proudly dedicate a portion of our proceeds to supporting local animal shelters and rescues.</p>",
+            "feature_text": "A purchase that helps a little further.",
+            "script_text": "Better lives for\nbrighter tomorrows.",
+            "script_position": "bottom-left",
+            "tagline": ""
+          }
+        },
+        { "type": "banner" }
+      ]
+    }
+  ]
+}
+{% endschema %}

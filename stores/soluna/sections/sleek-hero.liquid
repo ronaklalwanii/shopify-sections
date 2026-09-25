@@ -1,0 +1,1236 @@
+{%- liquid
+  assign slide_height = section.settings.slide_height
+  assign text_alignment_mobile = section.settings.text_alignment_mobile
+  assign show_text_below = section.settings.show_text_below
+  assign show_dots = section.settings.show_dots
+  assign slider_layout = section.settings.layout
+
+  assign first_block = section.blocks.first
+  if first_block.type == 'video'
+    assign aspect_ratio = first_block.settings.video.aspect_ratio | default: '16/9'
+    assign aspect_ratio_mobile = aspect_ratio
+  else
+    assign aspect_ratio = first_block.settings.background.aspect_ratio | default: 2.333
+    assign aspect_ratio_mobile = first_block.settings.background_mobile.aspect_ratio | default: 1.778
+  endif
+
+  assign autoplay = 0
+  if section.settings.autoplay
+    assign autoplay = section.settings.autoplay_delay | times: 1000
+  endif
+-%}
+{%- comment -%}
+  Participates in Change's section padding-collapsing chain. Without this the
+  section directly below the hero never receives --ul-previous-section-background-hash
+  and always applies full top padding.
+{%- endcomment -%}
+{%- render 'section-spacing-collapsing' -%}
+{%- if section.settings.enable_custom_font -%}
+  <style>{{ section.settings.font_family | font_face: font_display: 'swap' }}</style>
+{%- endif -%}
+
+{{ 'sleek-hero.css' | asset_url | stylesheet_tag }}
+<script>
+  (function () {
+    // document.write() only runs safely during the browser's initial
+    // synchronous HTML parse (document.readyState === 'loading') — called
+    // any later, e.g. when this inline script re-runs on a Shopify
+    // theme-editor / theme-dev hot-reload re-render of this section, it
+    // implicitly calls document.open() and wipes the whole DOM mid-session.
+    // Confirmed live: that was throwing "motionEl.preInitialize is not a
+    // function" on every hot-reload cycle. Guarding on readyState is what
+    // makes it safe in both cases — genuine first load still gets exact
+    // static-script-tag parse-order timing (needed: core.js/slideshow.js
+    // query this section's own slide markup, which sits *after* these tags
+    // in the source, so they must not run before the parser reaches it —
+    // an earlier version of this fix swapped to dynamically-created
+    // async=false scripts instead, which preserve order relative to each
+    // other but not "wait for the rest of the document to parse", and that
+    // regression showed up live as "Cannot read properties of undefined
+    // (reading 'dataset')" in slideshow.js). On a hot-reload re-run
+    // (readyState no longer 'loading') this just skips: the vendor bundle
+    // and the slideshow-component/motion-element custom elements are
+    // already defined from the real first load, and custom elements
+    // reconnect on their own when hot-reload swaps in new markup — nothing
+    // here needs to run again.
+    if (document.readyState !== 'loading') return;
+
+    // sleek-hero-vendor.js registers a customElements.define('image-lazy', ...)
+    // as a side effect, which throws if the script body runs twice. Mega
+    // header also needs this bundle (for Swiper, when a "products carousel"
+    // block is configured) and can render on the same page as this section,
+    // so both script inclusions share this flag — whichever renders first
+    // (mega header always does, it's structurally earlier) wins, the other
+    // skips its own copy. The string is split so "</scri" + "pt>" never
+    // appears contiguously in the source — Shopify's theme-check parser
+    // flags that as an unclosed script tag even correctly backslash-escaped;
+    // browsers have no such issue either way.
+    if (!window.__mhVendorRequested) {
+      window.__mhVendorRequested = true;
+      document.write('<scri' + 'pt src="{{ "sleek-hero-vendor.js" | asset_url }}" defer><' + '/scri' + 'pt>');
+    }
+  })();
+</script>
+<script src="{{ 'sleek-hero-core.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'sleek-hero-slideshow.js' | asset_url }}" defer="defer"></script>
+<div class="sleek-hero-scope">
+{%- comment -%}
+  The wrapper class is `sleek-hero-section`, not `section`: Change styles a bare
+  `.section` unscoped with its own container gutters and block padding, which
+  would inset this full-bleed hero.
+{%- endcomment -%}
+<div
+  class="sleek-hero-section sleek-hero-section-{{ section.id }} sleek-hero-section--slideshow{% if section.settings.container != 'full' %} page-width{% endif %}{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }}{% endif %}"
+  data-id="{{ section.id }}"
+  role="region"
+  aria-roledescription="Carousel"
+  aria-label="{{ section.settings.accessibility_info | escape }}"
+  {% if section.settings.allow_transparent_header %}
+    allow-transparent-header
+  {% endif %}
+>
+  <slideshow-component
+    class="swiper slideshow-wrapper slideshow-layout--{{ slider_layout }} slideshow-height--{{ slide_height }}{% if show_text_below %} slideshow-content-mobile--below{% endif %}{% if show_dots %} slideshow-controls-visible--yes slideshow-controls-position--{{ section.settings.controls_position }}{% endif %}{% if section.settings.container != 'full' and slider_layout != 'centered' %} blocks-radius{% endif %}"
+    aria-live="polite"
+    aria-atomic="true"
+    {% if autoplay > 0 %}
+      data-autoplay="{{ autoplay }}"
+    {% endif %}
+    data-media-loading
+    data-layout="{{ slider_layout }}"
+    data-items="{{ section.blocks.size }}"
+    data-section-id="{{ section.id }}"
+    style="{% if autoplay > 0 %}--swiper-autoplay-delay: {{ autoplay | plus: 1000 }}ms;{% endif %}{% if section.settings.background_color != blank %}background-color: {{ section.settings.background_color }};{% endif %}{% if section.settings.enable_custom_font %}--sleek-hero-font-family: {{ section.settings.font_family.family }}, {{ section.settings.font_family.fallback_families }};{% endif %}"
+  >
+    <div class="swiper-wrapper">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign loading = 'lazy'
+          assign fetchpriority = 'low'
+          if forloop.index == 1 and section.index < 2
+            assign loading = 'eager'
+            assign fetchpriority = 'high'
+          endif
+          assign color_scheme_default = 'scheme-1'
+          assign color_scheme_inherit = false
+          if block.settings.color_scheme == color_scheme_default
+            assign color_scheme_inherit = true
+          endif
+        -%}
+        <div
+          class="swiper-slide"
+          id="sleek-hero-slide-{{ block.id }}"
+          role="group"
+          data-index="{{ forloop.index0 }}"
+          aria-roledescription="Slide"
+          data-type="{{ block.type }}"
+          aria-label="{{ forloop.index }} of {{ forloop.length }}"
+          tabindex="-1"
+          data-color-scheme="color-{{ block.settings.color_scheme }}"
+          {{ block.shopify_attributes }}
+        >
+          <div
+            class="slideshow__item-wrap"
+            {% if slide_height == 'adapt' and slider_layout != 'split' %}
+              style="--aspect-ratio: {{ aspect_ratio }};--aspect-ratio-mobile: {{ aspect_ratio_mobile }};"
+            {% endif %}
+          >
+            <div
+              class="slideshow__bg bg-image overflow-hidden{% if slider_layout == 'centered' %} blocks-radius{% endif %}"
+              style="--aspect-ratio: {{ aspect_ratio }};--aspect-ratio-mobile: {{ aspect_ratio_mobile }};"
+            >
+              {%- case block.type -%}
+                {%- when 'video' -%}
+                  <motion-element
+                    hold
+                    data-motion="zoom-out"
+                    class="block media {% if slide_height == 'adapt' %} absolute inset-full{% else %} w-full h-full{% endif %}"
+                    {% if slide_height == 'adapt' %}
+                      style="--media-ratio: {{ aspect_ratio }}; --media-ratio-mobile: {{ aspect_ratio_mobile }};"
+                    {% endif %}
+                  >
+                    {%- render 'sleek-hero-video',
+                      sizes: '100vw',
+                      loading: loading,
+                      fetchpriority: fetchpriority,
+                      video: block.settings.video,
+                      video_url: block.settings.video_url,
+                      muted: true,
+                      autoplay: false,
+                      loop: true,
+                      description: block.settings.video_description,
+                      cover_image: block.settings.cover_image,
+                      show_play_button: false
+                    -%}
+                  </motion-element>
+                {%- else -%}
+                  {%- liquid
+                    assign background_default = block.settings.background
+                    assign background_mobile = block.settings.background_mobile
+                  -%}
+                  <div class="slideshow__slide-bg absolute inset-full">
+                    {%- if background_default == blank -%}
+                      <motion-element
+                        data-motion="zoom-out"
+                        hold
+                        class="slideshow__slide-placeholder h-full{% if background_mobile != blank %} hidden md:block{% else %} block{% endif %}"
+                      >
+                        {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+                        {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg w-full h-full' }}
+                      </motion-element>
+                    {%- endif -%}
+                    {%- if background_default != blank or background_mobile != blank -%}
+                      {%- capture sizes -%}
+                        {%- if section.settings.container == 'full' -%}{%- if section.settings.layout == 'centered' -%}70vw{%- else -%}100vw{%- endif -%}{%- else -%}min(1410px, 100vw){%- endif -%}
+                      {%- endcapture -%}
+                      <motion-element
+                        class="w-full h-full block{% if background_default == blank %} md:hidden{% endif %}"
+                        data-motion="zoom-out"
+                        hold
+                      >
+                        <picture class="media media--height media-wrapper block w-full h-full relative overflow-hidden">
+                          {%- if background_default != blank and background_mobile != blank -%}
+                            <source
+                              media="(max-width: 767px)"
+                              srcset="{{ background_mobile | image_url: width: '400x' }} 400w, {{ background_mobile | image_url: width: '600x' }} 600w, {{ background_mobile | image_url: width: '800x' }} 800w, {{ background_mobile | image_url: width: '1000x' }} 1000w"
+                              width="{{ background_mobile.width }}"
+                              height="{{ background_mobile.height }}"
+                            >
+                          {%- endif -%}
+                          {%- liquid
+                            if background_default == blank
+                              assign background_default = background_mobile
+                            endif
+
+                            assign background_default_height = background_default.width | divided_by: background_default.aspect_ratio
+                            assign background_default_alt = background_default.alt | default: shop.name | escape
+                          -%}
+                          {{-
+                            background_default
+                            | image_url: width: 1500
+                            | image_tag:
+                              loading: loading,
+                              width: background_default.width,
+                              height: background_default_height,
+                              alt: background_default_alt,
+                              fetchpriority: fetchpriority,
+                              sizes: sizes,
+                              widths: '300,400,500,600,700,800,900,1000,1200,1300,1400,1600,1800,2000,2200,2400,2600,2800,3000,3200',
+                              is: 'image-lazy'
+                          -}}
+                        </picture>
+                      </motion-element>
+                    {%- endif -%}
+                  </div>
+              {%- endcase -%}
+              {%- if block.settings.image_overlay_opacity > 0 -%}
+                <div
+                  class="slideshow__overlay bg-overlay"
+                  style="--color-overlay-alpha: {{ block.settings.image_overlay_opacity }}"
+                ></div>
+              {%- endif -%}
+            </div>
+            {%- liquid
+              assign text_alignment = block.settings.text_alignment
+              assign description_size = block.settings.description_size
+              assign animate_delay = 250
+
+              assign ov_text = block.settings.text_color
+              assign ov_btn_bg = block.settings.button_background
+              assign ov_btn_fg = block.settings.button_text_color
+            -%}
+            {%- comment -%}
+              Per-slide colour and button-radius overrides. Emitted as inline custom
+              properties on the element that carries the .color-scheme-* class, so the
+              inline declaration beats the class while the rest of the scheme (borders,
+              secondary buttons, fields) still comes through. Colours here are stored as
+              "r,g,b" triplets and read via rgb()/rgba(), matching Sleek's
+              css-variables.liquid — except --color-button-before, which is consumed as a
+              whole colour value.
+            {%- endcomment -%}
+            {%- capture slide_overrides -%}
+              {%- if ov_text != blank -%}
+                --color-foreground: {{ ov_text.red }},{{ ov_text.green }},{{ ov_text.blue }};
+                --color-text-heading: {{ ov_text.red }},{{ ov_text.green }},{{ ov_text.blue }};
+                --color-link: {{ ov_text.red }},{{ ov_text.green }},{{ ov_text.blue }};
+                --color-link-hover: {{ ov_text.red }},{{ ov_text.green }},{{ ov_text.blue }};
+              {%- endif -%}
+              {%- if ov_btn_bg != blank -%}
+                {%- assign ov_btn_hover = ov_btn_bg | color_darken: 12 -%}
+                --color-button: {{ ov_btn_bg.red }},{{ ov_btn_bg.green }},{{ ov_btn_bg.blue }};
+                --color-button-hover-background: {{ ov_btn_hover | color_extract: 'red' }},{{ ov_btn_hover | color_extract: 'green' }},{{ ov_btn_hover | color_extract: 'blue' }};
+                --color-button-before: {{ ov_btn_bg | color_darken: 20 }};
+              {%- endif -%}
+              {%- if ov_btn_fg != blank -%}
+                --color-button-text: {{ ov_btn_fg.red }},{{ ov_btn_fg.green }},{{ ov_btn_fg.blue }};
+                --color-button-hover-text: {{ ov_btn_fg.red }},{{ ov_btn_fg.green }},{{ ov_btn_fg.blue }};
+              {%- endif -%}
+              --buttons-radius: {{ block.settings.button_radius }}px;
+            {%- endcapture -%}
+            {%- assign slide_overrides = slide_overrides | strip_newlines | replace: '  ', '' | strip -%}
+                        {%- unless block.settings.text_color_mobile == blank -%}
+              <style>
+                @media (max-width: 767px) {
+                  #sleek-hero-slide-{{ block.id }} .slideshow__content {
+  --color-foreground: {{ block.settings.text_color_mobile.red }},{{ block.settings.text_color_mobile.green }},{{ block.settings.text_color_mobile.blue }} !important;
+  --color-text-heading: {{ block.settings.text_color_mobile.red }},{{ block.settings.text_color_mobile.green }},{{ block.settings.text_color_mobile.blue }} !important;
+  --color-link: {{ block.settings.text_color_mobile.red }},{{ block.settings.text_color_mobile.green }},{{ block.settings.text_color_mobile.blue }} !important;
+  --color-link-hover: {{ block.settings.text_color_mobile.red }},{{ block.settings.text_color_mobile.green }},{{ block.settings.text_color_mobile.blue }} !important;
+}
+                }
+              </style>
+            {%- endunless -%}
+            <div
+              class="slideshow__content content-overlay--{{ block.settings.content_position_mobile }} md:content-overlay--{{ block.settings.content_position }} flex flex-col page-width focus-none color-{{ block.settings.color_scheme }}{% if show_text_below and slider_layout != 'split' %} mobile-color-scheme-1{% endif %}{% if color_scheme_inherit %} color-scheme-inherit{% endif %}{% if block.settings.show_content_in_container %} slideshow__content--in-container{% endif %}"
+              tabindex="-1"
+              style="{{ slide_overrides }}"
+            >
+              {%- comment -%}
+                `sleek-hero-rich-text`, not `rich-text`: Change styles a bare
+                `.rich-text` as `display: flex`, which would lay the subheading,
+                heading, description and button out in a horizontal row.
+              {%- endcomment -%}
+              <div class="slideshow__text sleek-hero-rich-text text-{{ text_alignment_mobile }} md:text-{{ text_alignment }}">
+                {%- unless block.settings.subheading == blank -%}
+                  <div class="slideshow__subtitle rich-text__subheading text-subheading">
+                    <motion-element
+                      data-motion="fade-up"
+                      data-motion-delay="{{ animate_delay }}"
+                      data-text
+                      hold
+                      class="block"
+                    >
+                      {{- block.settings.subheading -}}
+                    </motion-element>
+                  </div>
+                  {%- assign animate_delay = animate_delay | plus: 100 -%}
+                {%- endunless -%}
+                {%- unless block.settings.title == blank -%}
+                  <{{ block.settings.heading_tag }} class="slideshow__title {{ block.settings.heading_size }} rich-text__heading">
+                    <motion-element
+                      data-motion="fade-up"
+                      data-motion-delay="{{ animate_delay }}"
+                      data-text
+                      hold
+                      class="block"
+                    >
+                      {{- block.settings.title -}}
+                    </motion-element>
+                  </{{ block.settings.heading_tag }}>
+                  {%- assign animate_delay = animate_delay | plus: 100 -%}
+                {%- endunless -%}
+                {%- unless block.settings.description == blank -%}
+                  <motion-element
+                    class="block slideshow__description {{ description_size }} rich-text__text rte"
+                    data-motion="fade-up"
+                    data-motion-delay="{{ animate_delay }}"
+                    data-text
+                    hold
+                  >
+                    {{- block.settings.description -}}
+                  </motion-element>
+                  {%- assign animate_delay = animate_delay | plus: 100 -%}
+                {%- endunless -%}
+                {%- unless block.settings.button_label == blank -%}
+                  <div class="slideshow__buttons rich-text__button">
+                    <motion-element
+                      data-motion="fade-up"
+                      data-motion-delay="{{ animate_delay }}"
+                      data-text
+                      hold
+                      class="block"
+                    >
+                      <a
+                        {% if block.settings.button_link != blank %}
+                          href="{{ block.settings.button_link }}"
+                        {% else %}
+                          aria-disabled="true"
+                          disabled
+                        {% endif %}
+                        class="btn {{ block.settings.button_style }}"
+                      >
+                        {{- block.settings.button_label -}}
+                      </a>
+                    </motion-element>
+                  </div>
+                  {%- assign animate_delay = animate_delay | plus: 100 -%}
+                {%- endunless -%}
+              </div>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+    {%- if show_dots -%}
+      {%- comment -%}
+        No inline override here: sleek-hero-slideshow.js swaps this element's
+        color-scheme-* class to match the active slide, so the dots keep following
+        the slide's scheme. A fixed inline colour would freeze them on one slide's.
+      {%- endcomment -%}
+      <div class="swiper-controls bg-none color-{{ section.blocks.first.settings.color_scheme }}">
+        <div class="swiper-pagination swiper-pagination-bullets-animate"></div>
+      </div>
+    {%- endif -%}
+  </slideshow-component>
+</div>
+</div>
+
+{% schema %}
+{
+  "name": "Sleek hero",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  },
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "checkbox",
+      "id": "allow_transparent_header",
+      "label": "Allow transparent header",
+      "info": "This setting only applies when this section is the first one.",
+      "default": true
+    },
+    {
+     "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "info": "Shows in the gaps around slides (e.g. Centered layout) and briefly while images load."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_font",
+      "label": "Override font",
+      "info": "Uses this font instead of the theme's fonts, for this section only.",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "font_family",
+      "label": "Font family",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "select",
+      "id": "container",
+      "options": [
+        {
+          "value": "full",
+          "label": "Full width"
+        },
+        {
+          "value": "fixed",
+          "label": "Fixed width"
+        }
+      ],
+      "default": "full",
+      "label": "Container"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "standard",
+          "label": "Standard"
+        },
+        {
+          "value": "centered",
+          "label": "Centered"
+        },
+        {
+          "value": "split",
+          "label": "Split"
+        }
+      ],
+      "default": "standard",
+      "label": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "slide_height",
+      "label": "Slide height",
+      "default": "large",
+      "options": [
+        {
+          "label": "Adapt to first image",
+          "value": "adapt"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show pagination",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto-rotate content",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "label": "Change slides every",
+      "max": 10,
+      "min": 2,
+      "step": 1,
+      "unit": "s",
+      "default": 3,
+      "visible_if": "{{ section.settings.autoplay }}"
+    },
+    {
+      "type": "select",
+      "id": "controls_position",
+      "label": "Controls position",
+      "options": [
+        {
+          "value": "bottom",
+          "label": "Inside"
+        },
+        {
+          "value": "below",
+          "label": "Outside"
+        }
+      ],
+      "default": "bottom",
+      "visible_if": "{{ section.settings.show_dots }}"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_text_below",
+      "label": "Show content below images on mobile",
+      "default": false,
+      "visible_if": "{{ section.settings.layout != 'split' }}"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment_mobile",
+      "label": "Mobile content alignment",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Accessibility"
+    },
+    {
+      "type": "text",
+      "id": "accessibility_info",
+      "label": "Slideshow description",
+      "info": "Describe the slideshow for customers using screen readers.",
+      "default": "Slideshow about our brand"
+    },
+    {
+      "type": "header",
+      "content": "Custom attributes"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom classes"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Image slide",
+      "settings": [
+        {
+          "type": "select",
+          "id": "color_scheme",
+          "label": "Color scheme",
+          "default": "scheme-1",
+          "options": [
+            {
+              "value": "scheme-1",
+              "label": "Scheme 1"
+            },
+            {
+              "value": "scheme-2",
+              "label": "Scheme 2"
+            },
+            {
+              "value": "scheme-3",
+              "label": "Scheme 3"
+            },
+            {
+              "value": "scheme-4",
+              "label": "Scheme 4"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "background",
+          "label": "Desktop image",
+          "info": "1920 x 900px recommended"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_mobile",
+          "label": "Mobile image",
+          "info": "600 x 480px recommended"
+        },
+        {
+          "type": "range",
+          "id": "image_overlay_opacity",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "label": "Image overlay opacity",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Content settings"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_content_in_container",
+          "label": "Show content in container",
+          "default": true,
+          "visible_if": "{{ section.settings.layout == 'standard' }}"
+        },
+        {
+          "type": "select",
+          "id": "content_position",
+          "label": "Desktop content position",
+          "default": "middle-center",
+          "options": [
+            {
+              "label": "Top Left",
+              "value": "top-left"
+            },
+            {
+              "label": "Top Center",
+              "value": "top-center"
+            },
+            {
+              "label": "Top Right",
+              "value": "top-right"
+            },
+            {
+              "label": "Middle Left",
+              "value": "middle-left"
+            },
+            {
+              "label": "Middle Center",
+              "value": "middle-center"
+            },
+            {
+              "label": "Middle Right",
+              "value": "middle-right"
+            },
+            {
+              "label": "Bottom Left",
+              "value": "bottom-left"
+            },
+            {
+              "label": "Bottom Center",
+              "value": "bottom-center"
+            },
+            {
+              "label": "Bottom Right",
+              "value": "bottom-right"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "content_position_mobile",
+          "label": "Mobile content position",
+          "default": "middle-center",
+          "options": [
+            {
+              "label": "Top Center",
+              "value": "top-center"
+            },
+            {
+              "label": "Middle Center",
+              "value": "middle-center"
+            },
+            {
+              "label": "Bottom Center",
+              "value": "bottom-center"
+            }
+          ],
+          "visible_if": "{{ section.settings.show_text_below == false }}"
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "label": "Desktop content alignment",
+          "default": "center",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Heading",
+          "default": "Image slide"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "label": "Heading size",
+          "info": "Uses the theme's own heading scale, so it follows your Typography settings.",
+          "default": "h0",
+          "options": [
+            {
+              "value": "h6",
+              "label": "Heading xs"
+            },
+            {
+              "value": "h5",
+              "label": "Heading sm"
+            },
+            {
+              "value": "h4",
+              "label": "Heading md"
+            },
+            {
+              "value": "h3",
+              "label": "Heading lg"
+            },
+            {
+              "value": "h2",
+              "label": "Heading xl"
+            },
+            {
+              "value": "h1",
+              "label": "Heading 2xl"
+            },
+            {
+              "value": "h0",
+              "label": "Display"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "Heading tag",
+          "default": "h2",
+          "options": [
+            {
+              "value": "h1",
+              "label": "H1"
+            },
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+            {
+              "value": "h4",
+              "label": "H4"
+            },
+            {
+              "value": "h5",
+              "label": "H5"
+            },
+            {
+              "value": "h6",
+              "label": "H6"
+            }
+          ],
+          "info": "Specify heading code types for SEO and search engines for crawling purposes."
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subheading"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Tell your brand's story through images</p>"
+        },
+        {
+          "type": "select",
+          "id": "description_size",
+          "label": "Description size",
+          "default": "text-base",
+          "options": [
+            {
+              "value": "text-sm",
+              "label": "Small"
+            },
+            {
+              "value": "text-base",
+              "label": "Base size"
+            },
+            {
+              "value": "text-lg",
+              "label": "Large"
+            },
+            {
+              "value": "text-inherit",
+              "label": "Inherit"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button style",
+          "options": [
+            {
+              "value": "btn--primary",
+              "label": "Primary button"
+            },
+            {
+              "value": "btn--secondary",
+              "label": "Secondary button"
+            },
+            {
+              "value": "btn--underline",
+              "label": "Underline button"
+            }
+          ],
+          "default": "btn--primary"        },
+        {
+          "type": "header",
+          "content": "Colors & button"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "info": "Leave empty to use this slide's colour scheme."
+        },
+        {
+          "type": "color",
+          "id": "text_color_mobile",
+          "label": "Text color (mobile)",
+          "info": "Optional. Overrides \"Text color\" below 768px."
+        },        
+        {
+          "type": "color",
+          "id": "button_background",
+          "label": "Button background"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Button label"
+        },
+        {
+          "type": "range",
+          "id": "button_radius",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "px",
+          "label": "Button corner radius",
+          "default": 24
+        }
+      ]
+    },
+    {
+      "type": "video",
+      "name": "Video slide",
+      "settings": [
+        {
+          "type": "select",
+          "id": "color_scheme",
+          "label": "Color scheme",
+          "default": "scheme-1",
+          "options": [
+            {
+              "value": "scheme-1",
+              "label": "Scheme 1"
+            },
+            {
+              "value": "scheme-2",
+              "label": "Scheme 2"
+            },
+            {
+              "value": "scheme-3",
+              "label": "Scheme 3"
+            },
+            {
+              "value": "scheme-4",
+              "label": "Scheme 4"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Shopify-hosted video"
+        },
+        {
+          "type": "video",
+          "label": "Video",
+          "id": "video"
+        },
+        {
+          "type": "header",
+          "content": "Or embed video from URL",
+          "info": "Shows when no Shopify-hosted video is selected."
+        },
+        {
+          "type": "video_url",
+          "id": "video_url",
+          "accept": [
+            "vimeo",
+            "youtube"
+          ],
+          "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+          "label": "URL",
+          "info": "Use a YouTube or Vimeo URL"
+        },
+        {
+          "type": "image_picker",
+          "id": "cover_image",
+          "label": "Cover image"
+        },
+        {
+          "type": "text",
+          "id": "video_description",
+          "label": "Video alt text",
+          "info": "Describe the video for customers using screen readers. [Learn more](https://help.shopify.com/manual/online-store/themes/theme-structure/theme-features#video)"
+        },
+        {
+          "type": "range",
+          "id": "image_overlay_opacity",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "label": "Image overlay opacity",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Content settings"
+        },
+        {
+          "type": "select",
+          "id": "content_position",
+          "label": "Desktop content position",
+          "default": "middle-center",
+          "options": [
+            {
+              "label": "Top Left",
+              "value": "top-left"
+            },
+            {
+              "label": "Top Center",
+              "value": "top-center"
+            },
+            {
+              "label": "Top Right",
+              "value": "top-right"
+            },
+            {
+              "label": "Middle Left",
+              "value": "middle-left"
+            },
+            {
+              "label": "Middle Center",
+              "value": "middle-center"
+            },
+            {
+              "label": "Middle Right",
+              "value": "middle-right"
+            },
+            {
+              "label": "Bottom Left",
+              "value": "bottom-left"
+            },
+            {
+              "label": "Bottom Center",
+              "value": "bottom-center"
+            },
+            {
+              "label": "Bottom Right",
+              "value": "bottom-right"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "label": "Desktop content alignment",
+          "default": "center",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Heading",
+          "default": "Video slide"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "label": "Heading size",
+          "info": "Uses the theme's own heading scale, so it follows your Typography settings.",
+          "default": "h0",
+          "options": [
+            {
+              "value": "h6",
+              "label": "Heading xs"
+            },
+            {
+              "value": "h5",
+              "label": "Heading sm"
+            },
+            {
+              "value": "h4",
+              "label": "Heading md"
+            },
+            {
+              "value": "h3",
+              "label": "Heading lg"
+            },
+            {
+              "value": "h2",
+              "label": "Heading xl"
+            },
+            {
+              "value": "h1",
+              "label": "Heading 2xl"
+            },
+            {
+              "value": "h0",
+              "label": "Display"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "Heading tag",
+          "default": "h2",
+          "options": [
+            {
+              "value": "h1",
+              "label": "H1"
+            },
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+            {
+              "value": "h4",
+              "label": "H4"
+            },
+            {
+              "value": "h5",
+              "label": "H5"
+            },
+            {
+              "value": "h6",
+              "label": "H6"
+            }
+          ],
+          "info": "Specify heading code types for SEO and search engines for crawling purposes."
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subheading"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Tell your brand's story through images</p>"
+        },
+        {
+          "type": "select",
+          "id": "description_size",
+          "label": "Description size",
+          "default": "text-base",
+          "options": [
+            {
+              "value": "text-sm",
+              "label": "Small"
+            },
+            {
+              "value": "text-base",
+              "label": "Base size"
+            },
+            {
+              "value": "text-lg",
+              "label": "Large"
+            },
+            {
+              "value": "text-inherit",
+              "label": "Inherit"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button style",
+          "options": [
+            {
+              "value": "btn--primary",
+              "label": "Primary button"
+            },
+            {
+              "value": "btn--secondary",
+              "label": "Secondary button"
+            },
+            {
+              "value": "btn--underline",
+              "label": "Underline button"
+            }
+          ],
+          "default": "btn--primary"        },
+        {
+          "type": "header",
+          "content": "Colors & button"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "info": "Leave empty to use this slide's colour scheme."
+        },
+        {
+          "type": "color",
+          "id": "text_color_mobile",
+          "label": "Text color (mobile)",
+          "info": "Optional. Overrides \"Text color\" below 768px."
+        },
+        {
+          "type": "color",
+          "id": "button_background",
+          "label": "Button background"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Button label"
+        },
+        {
+          "type": "range",
+          "id": "button_radius",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "px",
+          "label": "Button corner radius",
+          "default": 24
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sleek hero",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

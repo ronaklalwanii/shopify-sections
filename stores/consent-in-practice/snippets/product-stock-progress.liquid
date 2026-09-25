@@ -1,0 +1,18 @@
+<div class='custom-progress-bar__info {% if text_alignment == 'center' %}justify-items-center{% endif %}'>
+	{% assign sold_quantity = current_variant.metafields.inventory.initial_stock.value
+		| minus: current_variant.inventory_quantity
+	%}
+	{% assign initial_stock = current_variant.metafields.inventory.initial_stock.value
+		| default: current_variant.inventory_quantity
+		| times: 1.0
+	%}
+	{% assign percentage_sold = sold_quantity | divided_by: initial_stock | times: 100 | round %}
+
+	<span
+		><strong>{{ percentage_sold | default: 0 | abs }}%</strong> sold</span
+	>
+
+	<div class='custom-progress-bar'>
+		<div class='progress-bar-line' style='width:{{ percentage_sold | default: 0 | abs }}%'></div>
+	</div>
+</div>

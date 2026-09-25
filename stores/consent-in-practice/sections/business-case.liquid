@@ -1,0 +1,751 @@
+<style>
+  /* Theme Override */
+  #shopify-section-{{ section.id }} {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .bc-section-{{ section.id }} {
+    --bc-bg: {{ section.settings.bc_bg_color }};
+    --bc-text: {{ section.settings.bc_text_color }};
+    --bc-primary: {{ section.settings.bc_primary_color }};
+    --bc-icon-bg: {{ section.settings.bc_icon_bg_color }};
+    --bc-icon-color: {{ section.settings.bc_icon_color }};
+    --bc-icon-size: {{ section.settings.bc_icon_size }}px;
+    --bc-box-bg: {{ section.settings.bc_box_bg_color }};
+    --bc-padding-y: {{ section.settings.bc_padding_y }}px;
+
+    --bc-eyebrow-size: {{ section.settings.bc_eyebrow_size }}px;
+    --bc-eyebrow-weight: {{ section.settings.bc_eyebrow_weight }};
+    --bc-heading-size: {{ section.settings.bc_heading_size }}px;
+    --bc-heading-weight: {{ section.settings.bc_heading_weight }};
+    --bc-desc-size: {{ section.settings.bc_desc_size }}px;
+    --bc-step-title-size: {{ section.settings.bc_step_title_size }}px;
+    --bc-step-desc-size: {{ section.settings.bc_step_desc_size }}px;
+
+    background-color: var(--bc-bg);
+    color: var(--bc-text);
+    padding-top: var(--bc-padding-y);
+    padding-bottom: var(--bc-padding-y);
+    width: 100%;
+  }
+
+  .bc-section-{{ section.id }} .bc-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+
+  /* Header */
+  .bc-section-{{ section.id }} .bc-header {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto 60px;
+  }
+
+  .bc-section-{{ section.id }} .bc-eyebrow {
+    font-size: var(--bc-eyebrow-size);
+    font-weight: var(--bc-eyebrow-weight);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--bc-primary);
+    margin: 0 0 20px;
+  }
+
+  .bc-section-{{ section.id }} .bc-heading {
+    font-size: var(--bc-heading-size);
+    font-weight: var(--bc-heading-weight);
+    line-height: 1.2;
+    margin: 0 0 24px;
+    color: var(--bc-text);
+  }
+
+  .bc-section-{{ section.id }} .bc-desc {
+    font-size: var(--bc-desc-size);
+    line-height: 1.6;
+    margin: 0;
+    color: var(--bc-text);
+    opacity: 0.8;
+  }
+
+  /* Desktop Steps - Horizontal Grid */
+  .bc-section-{{ section.id }} .bc-steps {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 20px;
+    margin-bottom: 60px;
+    position: relative;
+  }
+
+  .bc-section-{{ section.id }} .bc-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+  }
+
+  .bc-section-{{ section.id }} .bc-step-icon {
+    width: var(--bc-icon-size);
+    height: var(--bc-icon-size);
+    border-radius: 50%;
+    background-color: var(--bc-icon-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+    color: var(--bc-icon-color);
+    overflow: hidden;
+  }
+
+  .bc-section-{{ section.id }} .bc-step-icon img {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+  }
+
+  .bc-section-{{ section.id }} .bc-step-icon svg {
+    width: 50%;
+    height: 50%;
+    stroke: currentColor;
+    fill: none;
+  }
+
+  .bc-section-{{ section.id }} .bc-step-arrow {
+    position: absolute;
+    right: -14px;
+    top: 40px;
+    color: var(--bc-primary);
+    opacity: 0.4;
+    z-index: 1;
+  }
+
+  .bc-section-{{ section.id }} .bc-step-arrow svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .bc-section-{{ section.id }} .bc-step:last-child .bc-step-arrow {
+    display: none;
+  }
+
+  .bc-section-{{ section.id }} .bc-step-title {
+    font-size: var(--bc-step-title-size);
+    font-weight: 700;
+    margin: 0 0 12px;
+    color: var(--bc-text);
+    line-height: 1.3;
+  }
+
+  .bc-section-{{ section.id }} .bc-step-desc {
+    font-size: var(--bc-step-desc-size);
+    line-height: 1.5;
+    margin: 0;
+    color: var(--bc-text);
+    opacity: 0.7;
+  }
+
+  /* Bottom Box */
+  .bc-section-{{ section.id }} .bc-box {
+    background-color: var(--bc-box-bg);
+    border-radius: 16px;
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .bc-section-{{ section.id }} .bc-box-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .bc-section-{{ section.id }} .bc-box-icon {
+    width: var(--bc-icon-size);
+    height: var(--bc-icon-size);
+    border-radius: 50%;
+    background-color: var(--bc-icon-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--bc-icon-color);
+    overflow: hidden;
+  }
+
+  .bc-section-{{ section.id }} .bc-box-icon img {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+  }
+
+  .bc-section-{{ section.id }} .bc-box-icon svg {
+    width: 50%;
+    height: 50%;
+    stroke: currentColor;
+    fill: none;
+  }
+
+  .bc-section-{{ section.id }} .bc-box-heading {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0 0 8px;
+    color: var(--bc-text);
+  }
+
+  .bc-section-{{ section.id }} .bc-box-desc {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    color: var(--bc-text);
+    opacity: 0.8;
+  }
+
+  .bc-section-{{ section.id }} .bc-box-right {
+    padding-left: 40px;
+    border-left: 1px solid rgba(85, 104, 202, 0.2);
+  }
+
+  .bc-section-{{ section.id }} .bc-box-subheading {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--bc-primary);
+    margin: 0 0 20px;
+  }
+
+  .bc-section-{{ section.id }} .bc-checklist {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 24px;
+  }
+
+  .bc-section-{{ section.id }} .bc-check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--bc-text);
+  }
+
+  .bc-section-{{ section.id }} .bc-check-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--bc-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .bc-section-{{ section.id }} .bc-check-icon svg {
+    width: 12px;
+    height: 12px;
+    color: #fff;
+  }
+
+  /* Mobile - Vertical Timeline */
+  @media (max-width: 990px) {
+    .bc-section-{{ section.id }} .bc-container {
+      padding: 0 40px;
+    }
+
+    .bc-section-{{ section.id }} .bc-steps {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .bc-section-{{ section.id }} .bc-step {
+      flex-direction: row;
+      align-items: flex-start;
+      text-align: left;
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(85, 104, 202, 0.15);
+      position: relative;
+    }
+
+    .bc-section-{{ section.id }} .bc-step:last-child {
+      border-bottom: none;
+    }
+
+    .bc-section-{{ section.id }} .bc-step-icon {
+      width: calc(var(--bc-icon-size) * 0.8);
+      height: calc(var(--bc-icon-size) * 0.8);
+      margin-bottom: 0;
+      margin-right: 20px;
+      flex-shrink: 0;
+    }
+
+    .bc-section-{{ section.id }} .bc-step-arrow {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.4;
+    }
+
+    .bc-section-{{ section.id }} .bc-step-content {
+      flex: 1;
+      padding-right: 30px;
+    }
+
+    .bc-section-{{ section.id }} .bc-step-title {
+      margin-bottom: 8px;
+    }
+
+    .bc-section-{{ section.id }} .bc-box {
+      grid-template-columns: 1fr;
+      gap: 30px;
+      padding: 30px;
+    }
+
+    .bc-section-{{ section.id }} .bc-box-left {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .bc-section-{{ section.id }} .bc-box-right {
+      padding-left: 0;
+      border-left: none;
+      padding-top: 30px;
+      border-top: 1px solid rgba(85, 104, 202, 0.2);
+    }
+
+    .bc-section-{{ section.id }} .bc-checklist {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .bc-section-{{ section.id }} .bc-container {
+      padding: 0 20px;
+    }
+
+    .bc-section-{{ section.id }} .bc-heading {
+      font-size: calc(var(--bc-heading-size) * 0.75);
+    }
+
+    .bc-section-{{ section.id }} .bc-step {
+      padding: 20px 0;
+    }
+
+    .bc-section-{{ section.id }} .bc-step-icon {
+      width: calc(var(--bc-icon-size) * 0.7);
+      height: calc(var(--bc-icon-size) * 0.7);
+      margin-right: 16px;
+    }
+
+    .bc-section-{{ section.id }} .bc-step-content {
+      padding-right: 24px;
+    }
+
+    .bc-section-{{ section.id }} .bc-step-arrow svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .bc-section-{{ section.id }} .bc-box {
+      padding: 24px;
+    }
+  }
+</style>
+
+<section class="bc-section-{{ section.id }}">
+  <div class="bc-container">
+    
+    <!-- Header -->
+    <div class="bc-header">
+      {% if section.settings.bc_eyebrow != blank %}
+        <p class="bc-eyebrow">{{ section.settings.bc_eyebrow }}</p>
+      {% endif %}
+      {% if section.settings.bc_heading != blank %}
+        <h2 class="bc-heading">{{ section.settings.bc_heading }}</h2>
+      {% endif %}
+      {% if section.settings.bc_desc != blank %}
+        <p class="bc-desc">{{ section.settings.bc_desc }}</p>
+      {% endif %}
+    </div>
+
+    <!-- Steps -->
+    <div class="bc-steps">
+      {% for block in section.blocks %}
+        {% if block.type == 'step' %}
+          <div class="bc-step" {{ block.shopify_attributes }}>
+            <div class="bc-step-icon">
+              {% if block.settings.bc_step_icon != blank %}
+                {{ block.settings.bc_step_icon | image_url: width: 200 | image_tag: loading: 'lazy', widths: '50, 100, 150, 200', alt: block.settings.bc_step_title }}
+              {% else %}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              {% endif %}
+            </div>
+            <div class="bc-step-content">
+              {% if block.settings.bc_step_title != blank %}
+                <h3 class="bc-step-title">{{ block.settings.bc_step_title }}</h3>
+              {% endif %}
+              {% if block.settings.bc_step_desc != blank %}
+                <p class="bc-step-desc">{{ block.settings.bc_step_desc }}</p>
+              {% endif %}
+            </div>
+            {% unless forloop.last %}
+              <div class="bc-step-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+              </div>
+            {% endunless %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <!-- Bottom Box -->
+    {% assign box_blocks = section.blocks | where: 'type', 'box' %}
+    {% if box_blocks.size > 0 %}
+      {% assign box_block = box_blocks.first %}
+      <div class="bc-box" {{ box_block.shopify_attributes }}>
+        <div class="bc-box-left">
+          <div class="bc-box-icon">
+            {% if box_block.settings.bc_box_icon != blank %}
+              {{ box_block.settings.bc_box_icon | image_url: width: 200 | image_tag: loading: 'lazy', widths: '50, 100, 150, 200', alt: box_block.settings.bc_box_heading }}
+            {% else %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+                <polyline points="22 4 18 8 14 4"></polyline>
+              </svg>
+            {% endif %}
+          </div>
+          <div>
+            {% if box_block.settings.bc_box_heading != blank %}
+              <h3 class="bc-box-heading">{{ box_block.settings.bc_box_heading }}</h3>
+            {% endif %}
+            {% if box_block.settings.bc_box_desc != blank %}
+              <p class="bc-box-desc">{{ box_block.settings.bc_box_desc }}</p>
+            {% endif %}
+          </div>
+        </div>
+        <div class="bc-box-right">
+          {% if box_block.settings.bc_box_subheading != blank %}
+            <h4 class="bc-box-subheading">{{ box_block.settings.bc_box_subheading }}</h4>
+          {% endif %}
+          <div class="bc-checklist">
+            {% for i in (1..6) %}
+              {% assign check_key = 'bc_check_' | append: i %}
+              {% assign check_text = box_block.settings[check_key] %}
+              {% if check_text != blank %}
+                <div class="bc-check-item">
+                  <div class="bc-check-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                  <span>{{ check_text }}</span>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Business Case",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 7,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bc_bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "bc_text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "bc_primary_color",
+      "label": "Primary Color",
+      "default": "#5568CA"
+    },
+    {
+      "type": "color",
+      "id": "bc_icon_bg_color",
+      "label": "Icon Background Color",
+      "default": "#F0F2FF"
+    },
+    {
+      "type": "color",
+      "id": "bc_icon_color",
+      "label": "Icon Color (for SVGs)",
+      "default": "#5568CA"
+    },
+    {
+      "type": "color",
+      "id": "bc_box_bg_color",
+      "label": "Box Background Color",
+      "default": "#F6F7FE"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "bc_padding_y",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "bc_eyebrow_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Eyebrow Size",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "bc_eyebrow_weight",
+      "label": "Eyebrow Font Weight",
+      "options": [
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "500", "label": "Medium (500)" },
+        { "value": "600", "label": "Semi Bold (600)" },
+        { "value": "700", "label": "Bold (700)" },
+        { "value": "800", "label": "Extra Bold (800)" },
+        { "value": "900", "label": "Black (900)" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "bc_heading_size",
+      "min": 24,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "bc_heading_weight",
+      "label": "Heading Font Weight",
+      "options": [
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "500", "label": "Medium (500)" },
+        { "value": "600", "label": "Semi Bold (600)" },
+        { "value": "700", "label": "Bold (700)" },
+        { "value": "800", "label": "Extra Bold (800)" },
+        { "value": "900", "label": "Black (900)" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "bc_desc_size",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Description Size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "bc_step_title_size",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Step Title Size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "bc_step_desc_size",
+      "min": 12,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Step Description Size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
+      "type": "range",
+      "id": "bc_icon_size",
+      "min": 40,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Icon Size",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Header Content"
+    },
+    {
+      "type": "text",
+      "id": "bc_eyebrow",
+      "label": "Eyebrow Text",
+      "default": "THE BUSINESS CASE"
+    },
+    {
+      "type": "text",
+      "id": "bc_heading",
+      "label": "Heading",
+      "default": "Invest in prevention. Drive better outcomes. Protect your people and your business."
+    },
+    {
+      "type": "textarea",
+      "id": "bc_desc",
+      "label": "Description",
+      "default": "When you build the right knowledge and confidence across your organisation, you prevent problems before they start — and create lasting impact."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Process Step",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "bc_step_icon",
+          "label": "Icon Image (SVG or PNG)"
+        },
+        {
+          "type": "text",
+          "id": "bc_step_title",
+          "label": "Title",
+          "default": "Step Title"
+        },
+        {
+          "type": "textarea",
+          "id": "bc_step_desc",
+          "label": "Description",
+          "default": "Step description goes here."
+        }
+      ]
+    },
+    {
+      "type": "box",
+      "name": "Bottom Box",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "bc_box_icon",
+          "label": "Box Icon Image (SVG or PNG)"
+        },
+        {
+          "type": "text",
+          "id": "bc_box_heading",
+          "label": "Box Heading",
+          "default": "Stronger culture. Lower risk. Better business."
+        },
+        {
+          "type": "textarea",
+          "id": "bc_box_desc",
+          "label": "Box Description",
+          "default": "Prevention isn't just the right thing to do. It's a smart investment in your future."
+        },
+        {
+          "type": "text",
+          "id": "bc_box_subheading",
+          "label": "Checklist Heading",
+          "default": "The return on prevention:"
+        },
+        {
+          "type": "text",
+          "id": "bc_check_1",
+          "label": "Check Item 1",
+          "default": "Fewer incidents and complaints"
+        },
+        {
+          "type": "text",
+          "id": "bc_check_2",
+          "label": "Check Item 2",
+          "default": "Lower costs and less downtime"
+        },
+        {
+          "type": "text",
+          "id": "bc_check_3",
+          "label": "Check Item 3",
+          "default": "Stronger reputation and stakeholder trust"
+        },
+        {
+          "type": "text",
+          "id": "bc_check_4",
+          "label": "Check Item 4",
+          "default": "Higher engagement and wellbeing"
+        },
+        {
+          "type": "text",
+          "id": "bc_check_5",
+          "label": "Check Item 5",
+          "default": "Better retention and performance"
+        },
+        {
+          "type": "text",
+          "id": "bc_check_6",
+          "label": "Check Item 6",
+          "default": "A culture people are proud to be part of"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Business Case",
+      "blocks": [
+        { "type": "step", "settings": { "bc_step_title": "Fewer Incidents", "bc_step_desc": "Stronger awareness and skills help prevent issues before they happen." } },
+        { "type": "step", "settings": { "bc_step_title": "Less Escalation", "bc_step_desc": "Early, confident responses stop problems from escalating." } },
+        { "type": "step", "settings": { "bc_step_title": "Less Disruption", "bc_step_desc": "Less time spent managing issues means less disruption to your people and operations." } },
+        { "type": "step", "settings": { "bc_step_title": "Healthier Culture", "bc_step_desc": "Safe, respectful workplaces build trust, engagement and stronger teams." } },
+        { "type": "step", "settings": { "bc_step_title": "Better Retention", "bc_step_desc": "People feel valued, supported and safe — so they stay and thrive." } },
+        { "type": "step", "settings": { "bc_step_title": "Reduced Risk", "bc_step_desc": "Lower legal, financial and reputational risk protects your organisation." } },
+        { "type": "box" }
+      ]
+    }
+  ]
+}
+{% endschema %}

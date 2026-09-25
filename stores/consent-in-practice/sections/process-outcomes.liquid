@@ -1,0 +1,634 @@
+<style>
+  /* Theme Override */
+  #shopify-section-{{ section.id }} {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .po-section-{{ section.id }} {
+    --po-bg: {{ section.settings.po_bg_color }};
+    --po-text: {{ section.settings.po_text_color }};
+    --po-primary: {{ section.settings.po_primary_color }};
+    --po-card-bg: {{ section.settings.po_card_bg }};
+    --po-arrow-color: {{ section.settings.po_arrow_color }};
+    --po-padding-y: {{ section.settings.po_padding_y }}px;
+    --po-gap: {{ section.settings.po_gap }}px;
+
+    --po-eyebrow-size: {{ section.settings.po_eyebrow_size }}px;
+    --po-heading-size: {{ section.settings.po_heading_size }}px;
+    --po-step-title-size: {{ section.settings.po_step_title_size }}px;
+    --po-step-desc-size: {{ section.settings.po_step_desc_size }}px;
+    --po-outcome-size: {{ section.settings.po_outcome_size }}px;
+
+    background-color: var(--po-bg);
+    color: var(--po-text);
+    padding-top: var(--po-padding-y);
+    padding-bottom: var(--po-padding-y);
+    width: 100%;
+  }
+
+  .po-section-{{ section.id }} .po-container {
+    max-width: none;
+    margin: 0;
+    padding: 0 60px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: var(--po-gap);
+    position: relative;
+  }
+
+  /* Vertical Divider */
+  .po-section-{{ section.id }} .po-container::after {
+    content: '';
+    position: absolute;
+    left: 54%;
+    top: 5%;
+    bottom: 5%;
+    width: 1px;
+    background-color: rgba(85, 104, 202, 0.2);
+  }
+
+  .po-section-{{ section.id }} .po-column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .po-section-{{ section.id }} .po-eyebrow {
+    color: var(--po-primary);
+    font-size: var(--po-eyebrow-size);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 16px;
+  }
+
+  .po-section-{{ section.id }} .po-heading {
+    font-size: var(--po-heading-size);
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 40px;
+    color: var(--po-text);
+  }
+
+  /* Desktop Steps - Horizontal */
+  .po-section-{{ section.id }} .po-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    align-items: flex-start;
+  }
+
+  .po-section-{{ section.id }} .po-step {
+    flex: 0 0 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+  }
+
+  .po-section-{{ section.id }} .po-step-number {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: var(--po-primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .po-section-{{ section.id }} .po-step-arrow {
+    position: absolute;
+    right: 50%;
+    top: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--po-arrow-color);
+    flex-shrink: 0;
+    z-index: 1;
+    margin-right: -32px;
+  }
+
+  .po-section-{{ section.id }} .po-step-arrow svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .po-section-{{ section.id }} .po-step-content {
+    width: 100%;
+    padding-right: 20px;
+  }
+
+  .po-section-{{ section.id }} .po-step-title {
+    font-size: var(--po-step-title-size);
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: var(--po-text);
+    line-height: 1.3;
+    width: 100%;
+  }
+
+  .po-section-{{ section.id }} .po-step-desc {
+    font-size: var(--po-step-desc-size);
+    line-height: 1.5;
+    margin: 0;
+    color: var(--po-text);
+    opacity: 0.8;
+    width: 100%;
+  }
+
+  .po-section-{{ section.id }} .po-step-down-arrow {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--po-arrow-color);
+    display: none; /* Hidden on desktop */
+  }
+
+  /* Outcomes List */
+  .po-section-{{ section.id }} .po-outcomes {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .po-section-{{ section.id }} .po-outcome {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .po-section-{{ section.id }} .po-check-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--po-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .po-section-{{ section.id }} .po-check-icon svg {
+    width: 14px;
+    height: 14px;
+    color: #fff;
+  }
+
+  .po-section-{{ section.id }} .po-outcome-text {
+    font-size: var(--po-outcome-size);
+    line-height: 1.5;
+    margin: 0;
+    color: var(--po-text);
+  }
+
+  /* Tablet - Stack columns but keep horizontal steps */
+  @media (max-width: 990px) {
+    .po-section-{{ section.id }} .po-container {
+      grid-template-columns: 1fr;
+      gap: 30px;
+      padding: 0 40px;
+    }
+
+    .po-section-{{ section.id }} .po-container::after {
+      display: none;
+    }
+
+    .po-section-{{ section.id }} .po-column {
+      background-color: var(--po-card-bg);
+      border-radius: 16px;
+      padding: 32px 24px;
+    }
+  }
+
+  /* Mobile - Vertical timeline layout */
+  /* --- MOD START --- */
+  @media (max-width: 749px) {
+    .po-section-{{ section.id }} .po-container {
+      padding: 0 20px;
+    }
+
+    .po-section-{{ section.id }} .po-heading {
+      font-size: calc(var(--po-heading-size) * 0.85);
+      margin-bottom: 28px;
+    }
+
+    /* Steps container - vertical stack */
+    .po-section-{{ section.id }} .po-steps {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 0 !important;
+      position: relative !important;
+      flex-wrap: nowrap !important;
+    }
+
+    /* Each step - horizontal row with 3 elements */
+    .po-section-{{ section.id }} .po-step {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 16px !important;
+      padding: 16px 0 !important;
+      border-bottom: 1px solid rgba(85, 104, 202, 0.15) !important;
+      position: relative !important;
+    }
+
+    .po-section-{{ section.id }} .po-step:last-child {
+      border-bottom: none !important;
+      padding-bottom: 0 !important;
+    }
+
+    .po-section-{{ section.id }} .po-step:first-child {
+      padding-top: 0 !important;
+    }
+
+    /* Number circle */
+    .po-section-{{ section.id }} .po-step-number {
+      position: relative !important;
+      flex: 0 0 44px !important;
+      width: 44px !important;
+      height: 44px !important;
+      min-width: 44px !important;
+      margin-bottom: 0 !important;
+      z-index: 1 !important;
+    }
+
+    /* Vertical line segment below each number */
+    .po-section-{{ section.id }} .po-step-number::after {
+      content: '' !important;
+      position: absolute !important;
+      left: 50% !important;
+      top: 100% !important;
+      transform: translateX(-50%) !important;
+      width: 2px !important;
+      height: 16px !important;
+      background-color: rgba(85, 104, 202, 0.2) !important;
+    }
+
+    .po-section-{{ section.id }} .po-step:last-child .po-step-number::after {
+      display: none !important;
+    }
+
+    /* Content - takes remaining space */
+    .po-section-{{ section.id }} .po-step-content {
+      flex: 1 1 auto !important;
+      min-width: 0 !important;
+      padding-right: 0 !important;
+      width: auto !important;
+    }
+
+    .po-section-{{ section.id }} .po-step-title {
+      margin-bottom: 4px !important;
+      font-size: var(--po-step-title-size) !important;
+      width: 100% !important;
+    }
+
+    .po-section-{{ section.id }} .po-step-desc {
+      margin: 0 !important;
+      font-size: var(--po-step-desc-size) !important;
+      width: 100% !important;
+    }
+
+    /* Hide desktop arrows completely */
+    .po-section-{{ section.id }} .po-step-arrow {
+      display: none !important;
+    }
+
+    /* Down arrow - static flex child, pushed to right */
+    .po-section-{{ section.id }} .po-step-down-arrow {
+      position: static !important;
+      flex: 0 0 20px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      transform: none !important;
+      top: auto !important;
+      right: auto !important;
+      margin-left: auto !important;
+    }
+
+    .po-section-{{ section.id }} .po-step-down-arrow svg {
+      width: 20px !important;
+      height: 20px !important;
+    }
+
+    /* Outcomes */
+    .po-section-{{ section.id }} .po-outcomes {
+      gap: 0 !important;
+    }
+
+    .po-section-{{ section.id }} .po-outcome {
+      padding: 16px 0 !important;
+      border-bottom: 1px solid rgba(85, 104, 202, 0.15) !important;
+      align-items: center !important;
+    }
+
+    .po-section-{{ section.id }} .po-outcome:last-child {
+      border-bottom: none !important;
+      padding-bottom: 0 !important;
+    }
+
+    .po-section-{{ section.id }} .po-outcome:first-child {
+      padding-top: 0 !important;
+    }
+  }
+/* --- MOD END --- */
+</style>
+
+<section class="po-section-{{ section.id }}">
+  <div class="po-container">
+
+    <!-- Left Column: Process Steps -->
+    <div class="po-column">
+      {% if section.settings.po_left_eyebrow != blank %}
+        <p class="po-eyebrow">{{ section.settings.po_left_eyebrow }}</p>
+      {% endif %}
+      {% if section.settings.po_left_heading != blank %}
+        <h2 class="po-heading">{{ section.settings.po_left_heading }}</h2>
+      {% endif %}
+
+      <div class="po-steps">
+        {% assign step_blocks = section.blocks | where: 'type', 'step' %}
+        {% for block in step_blocks %}
+          <article class="po-step" {{ block.shopify_attributes }}>
+            <div class="po-step-number">{{ block.settings.po_step_number }}</div>
+
+            {% unless forloop.last %}
+              <div class="po-step-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </div>
+            {% endunless %}
+
+            <div class="po-step-content">
+              {% if block.settings.po_step_title != blank %}
+                <h3 class="po-step-title">{{ block.settings.po_step_title }}</h3>
+              {% endif %}
+              {% if block.settings.po_step_desc != blank %}
+                <p class="po-step-desc">{{ block.settings.po_step_desc }}</p>
+              {% endif %}
+            </div>
+
+            <!-- Mobile down arrow -->
+            <div class="po-step-down-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <polyline points="19 12 12 19 5 12"></polyline>
+              </svg>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Right Column: Outcomes -->
+    <div class="po-column">
+      {% if section.settings.po_right_eyebrow != blank %}
+        <p class="po-eyebrow">{{ section.settings.po_right_eyebrow }}</p>
+      {% endif %}
+      {% if section.settings.po_right_heading != blank %}
+        <h2 class="po-heading">{{ section.settings.po_right_heading }}</h2>
+      {% endif %}
+
+      <div class="po-outcomes">
+        {% assign outcome_blocks = section.blocks | where: 'type', 'outcome' %}
+        {% for block in outcome_blocks %}
+          <div class="po-outcome" {{ block.shopify_attributes }}>
+            <div class="po-check-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            {% if block.settings.po_outcome_text != blank %}
+              <p class="po-outcome-text">{{ block.settings.po_outcome_text }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Process & Outcomes",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 20,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "po_bg_color",
+      "label": "Background Color",
+      "default": "#F6F7FE"
+    },
+    {
+      "type": "color",
+      "id": "po_text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "po_primary_color",
+      "label": "Primary Color",
+      "default": "#5568CA"
+    },
+    {
+      "type": "color",
+      "id": "po_arrow_color",
+      "label": "Arrow Color",
+      "default": "#5568CA"
+    },
+    {
+      "type": "color",
+      "id": "po_card_bg",
+      "label": "Card Background (Mobile)",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "po_padding_y",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "po_gap",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Column Gap",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "po_eyebrow_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Eyebrow Size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "po_heading_size",
+      "min": 24,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "po_step_title_size",
+      "min": 16,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Step Title Size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "po_step_desc_size",
+      "min": 12,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Step Description Size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "po_outcome_size",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Outcome Text Size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Left Column Content"
+    },
+    {
+      "type": "text",
+      "id": "po_left_eyebrow",
+      "label": "Eyebrow Text",
+      "default": "HOW WE CREATE CHANGE"
+    },
+    {
+      "type": "text",
+      "id": "po_left_heading",
+      "label": "Heading",
+      "default": "From awareness to lasting change"
+    },
+    {
+      "type": "header",
+      "content": "Right Column Content"
+    },
+    {
+      "type": "text",
+      "id": "po_right_eyebrow",
+      "label": "Eyebrow Text",
+      "default": "THE OUTCOMES"
+    },
+    {
+      "type": "text",
+      "id": "po_right_heading",
+      "label": "Heading",
+      "default": "What changes?"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Process Step",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "po_step_number",
+          "label": "Step Number",
+          "default": "1"
+        },
+        {
+          "type": "text",
+          "id": "po_step_title",
+          "label": "Title",
+          "default": "Understand"
+        },
+        {
+          "type": "textarea",
+          "id": "po_step_desc",
+          "label": "Description",
+          "default": "Build shared understanding of consent, power, boundaries and digital harm."
+        }
+      ]
+    },
+    {
+      "type": "outcome",
+      "name": "Outcome Item",
+      "limit": 15,
+      "settings": [
+        {
+          "type": "text",
+          "id": "po_outcome_text",
+          "label": "Outcome Text",
+          "default": "More confident managers and teams"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Process & Outcomes",
+      "blocks": [
+        { "type": "step", "settings": { "po_step_number": "1", "po_step_title": "Understand", "po_step_desc": "Build shared understanding of consent, power, boundaries and digital harm." } },
+        { "type": "step", "settings": { "po_step_number": "2", "po_step_title": "Practise", "po_step_desc": "Work through realistic scenarios and difficult conversations." } },
+        { "type": "step", "settings": { "po_step_number": "3", "po_step_title": "Respond", "po_step_desc": "Build confidence around complaints, disclosures and safeguarding." } },
+        { "type": "step", "settings": { "po_step_number": "4", "po_step_title": "Embed", "po_step_desc": "Turn training into everyday practice across your organisation." } },
+        { "type": "outcome", "settings": { "po_outcome_text": "More confident managers and teams" } },
+        { "type": "outcome", "settings": { "po_outcome_text": "Clearer communication and boundaries" } },
+        { "type": "outcome", "settings": { "po_outcome_text": "Earlier intervention and prevention" } },
+        { "type": "outcome", "settings": { "po_outcome_text": "Stronger safeguarding practice" } },
+        { "type": "outcome", "settings": { "po_outcome_text": "Healthier culture and better retention" } },
+        { "type": "outcome", "settings": { "po_outcome_text": "Reduced escalation and complaints" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

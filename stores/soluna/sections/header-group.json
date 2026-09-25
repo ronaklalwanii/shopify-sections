@@ -1,0 +1,284 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "message_VMJQRL": {
+          "type": "message",
+          "settings": {
+            "text": "Built for movement. Priced for real people. Shop now.",
+            "url": "shopify://collections/all"
+          }
+        },
+        "message_xARcEC": {
+          "type": "message",
+          "settings": {
+            "text": "Free UK shipping",
+            "url": ""
+          }
+        },
+        "message_f6erzh": {
+          "type": "message",
+          "settings": {
+            "text": "The range is here. Find your colourway.",
+            "url": ""
+          }
+        }
+      },
+      "block_order": [
+        "message_VMJQRL",
+        "message_xARcEC",
+        "message_f6erzh"
+      ],
+      "custom_css": [
+        ".announcement-bar {padding: 3px 0px;}"
+      ],
+      "settings": {
+        "enable_sticky": false,
+        "text_size": "text-base",
+        "navigation_mode": "scrolling",
+        "scrolling_speed": 10,
+        "background": "#1a1a1a",
+        "background_gradient": "",
+        "text_color": "#ffffff",
+        "custom_padding": false,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    },
+    "header": {
+      "type": "header",
+      "disabled": true,
+      "settings": {
+        "enable_sticky": false,
+        "hide_on_scroll": false,
+        "logo_max_width": 200,
+        "logo_mobile_max_width": 170,
+        "menu": "main-menu",
+        "nav_text_transform": "capitalize",
+        "sidebar_menu": "",
+        "secondary_menu": "",
+        "menu_open_trigger": "click",
+        "mobile_menu_visibility": "hamburger",
+        "opening_from": "bottom",
+        "layout": "drawer",
+        "show_social_media": true,
+        "show_country_selector": true,
+        "show_country_name": false,
+        "transparent_header_text_color": "#ffffff",
+        "reduce_padding": true,
+        "hide_search": true,
+        "background_opacity": 100,
+        "background_blur_radius": 0,
+        "enable_custom_padding": false,
+        "custom_padding_top": 0,
+        "custom_padding_bottom": 0,
+        "custom_padding": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
+    "1783006972055be067": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_a09cdfe_YJR4BA": {
+          "type": "ai_gen_block_a09cdfe",
+          "settings": {
+            "logo_width_desktop": 160,
+            "logo_width_mobile": 120,
+            "menu": "main-menu",
+            "menu_font": "assistant_n4",
+            "menu_font_size": 16,
+            "menu_spacing": 30,
+            "menu_text_color": "#1a1a1a",
+            "menu_hover_color": "#666666",
+            "show_loyalty_button": true,
+            "loyalty_text": "Loyalty Program",
+            "loyalty_link": "shopify://pages/loyalty-program",
+            "loyalty_text_color": "#1a1a1a",
+            "loyalty_border_color": "#1a1a1a",
+            "loyalty_border_width": 2,
+            "loyalty_border_radius": 15,
+            "loyalty_padding_vertical": 10,
+            "loyalty_padding_horizontal": 20,
+            "header_bg_color": "#ffffff",
+            "header_height_desktop": 95,
+            "header_height_mobile": 80,
+            "horizontal_padding_desktop": 40,
+            "horizontal_padding_mobile": 20,
+            "border_width": 1,
+            "border_color": "#e5e5e5",
+            "icon_color": "#1a1a1a",
+            "icon_hover_color": "#666666",
+            "icon_size": 24,
+            "icon_stroke_width": 1.5,
+            "icon_spacing": 20,
+            "show_search_desktop": true,
+            "show_cart_desktop": true,
+            "show_search_mobile": false,
+            "show_cart_mobile": true,
+            "hamburger_style": "short_middle",
+            "drawer_width": 85,
+            "drawer_bg_color": "#ffffff",
+            "drawer_text_color": "#1a1a1a",
+            "drawer_divider_color": "#e5e5e5"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_a09cdfe_YJR4BA"
+      ],
+      "disabled": true,
+      "name": "Classic Header",
+      "settings": {}
+    },
+    "1782885732503874d5": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_f362dcb_YGeLJV": {
+          "type": "ai_gen_block_f362dcb",
+          "settings": {
+            "logo_width_desktop": 150,
+            "logo_width_mobile": 100,
+            "menu": "main-menu",
+            "menu_font": "sans_serif_n4",
+            "menu_font_size": 16,
+            "menu_text_color": "#1a1a1a",
+            "drawer_menu_text_color": "#1a1a1a",
+            "loyalty_text": "Loyalty Program",
+            "loyalty_link": "",
+            "loyalty_border_radius": 24,
+            "loyalty_border_thickness": 2,
+            "loyalty_button_height": 40,
+            "loyalty_button_width": 160,
+            "loyalty_border_color": "#1a1a1a",
+            "loyalty_text_color": "#1a1a1a",
+            "desktop_layout": "logo_center_menu_left",
+            "header_height_desktop": 80,
+            "header_height_mobile": 60,
+            "header_bg_color": "#ffffff",
+            "icon_color": "#1a1a1a",
+            "icon_size": 24,
+            "hide_search_desktop": false,
+            "hide_search_mobile": true,
+            "hide_cart_desktop": false,
+            "hide_cart_mobile": false,
+            "three_lines_style": "staggered_right",
+            "hamburger_animation": "squeeze",
+            "hamburger_size": 26,
+            "hamburger_thickness": 3,
+            "hamburger_line_radius": 3,
+            "hamburger_color": "#1a1a1a",
+            "drawer_bg_color": "#ffffff"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_f362dcb_YGeLJV"
+      ],
+      "disabled": true,
+      "name": "Premium Header ",
+      "settings": {}
+    },
+    "mega_header_J76MqR": {
+      "type": "mega-header",
+      "blocks": {
+        "image_cards_fVrhV7": {
+          "type": "image_cards",
+          "settings": {
+            "menu_title": "saunas",
+            "columns": 3,
+            "image_1": "shopify://shop_images/Sauna_for_5.png",
+            "eyebrow_1": "",
+            "heading_1": "",
+            "button_label_1": "Shop Now",
+            "link_1": "",
+            "content_position_1": "top-left",
+            "light_text_1": false,
+            "image_2": "shopify://shop_images/Sauna_for_3.png",
+            "eyebrow_2": "",
+            "heading_2": "",
+            "button_label_2": "Shop Now",
+            "link_2": "",
+            "content_position_2": "top-left",
+            "light_text_2": false,
+            "image_3": "shopify://shop_images/Sauna_for_1.png",
+            "eyebrow_3": "",
+            "heading_3": "",
+            "button_label_3": "Shop Now",
+            "link_3": "",
+            "content_position_3": "top-left",
+            "light_text_3": false
+          }
+        },
+        "products_carousel_9Xk2Qz": {
+          "type": "products_carousel",
+          "settings": {
+            "menu_title": "shop",
+            "collections": [
+              "saunas",
+              "ice-baths",
+              "accessories"
+            ],
+            "heading": "Trending Now",
+            "product_list": [
+              "portable-full-size-infrared-sauna-for-home-spa-with-red-light-portable-dry-sauna-for-relaxationl-33-8-x-w-33-8-x-h-66-5",
+              "360-adjustable-support-sauna-pillow-sauna-accessory-for-stiff-neck-shoulder-pain-head-relaxation",
+              "sauna-room-hygrothermograph-thermometer-hygrometer-humidity-and-temperature-measurement-meter-for-sauna-room",
+              "with-temperature-and-humidity-tester-high-quality-precision-air-bottle-130mm-three-in-one-pressure-gauge",
+              "soluna-flow-portable-ice-bath",
+              "soluna-arco-wooden-cold-plunge"
+            ],
+            "product_columns": 3
+          }
+        }
+      },
+      "block_order": [
+        "image_cards_fVrhV7",
+        "products_carousel_9Xk2Qz"
+      ],
+      "name": "Mega header",
+      "settings": {
+        "menu": "main-menu",
+        "menu_trigger": "hover",
+        "logo": "shopify://shop_images/Soluna_Logo_White_2.png",
+        "logo_width": 130,
+        "nav_alignment": "center",
+        "height": 88,
+        "max_width": 1400,
+        "radius": 8,
+        "sticky": true,
+        "show_search": true,
+        "show_account": true,
+        "cta_label": "",
+        "cta_link": "",
+        "bg": "#ffffff",
+        "fg": "#111111",
+        "border": "#e6e6e6",
+        "panel_bg": "#ffffff",
+        "panel_fg": "#111111",
+        "accent": "#d63a2f"
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header",
+    "1783006972055be067",
+    "1782885732503874d5",
+    "mega_header_J76MqR"
+  ]
+}

@@ -1,0 +1,572 @@
+<style>
+    #shopify-section-{{ section.id }} {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin: 0 !important;
+  }
+  .hero-section-{{ section.id }} {
+    /* Dynamic Typography Variables */
+    --hero-eyebrow-color: {{ section.settings.hero_eyebrow_color }};
+    --hero-eyebrow-size: {{ section.settings.hero_eyebrow_size }}px;
+    --hero-eyebrow-weight: {{ section.settings.hero_eyebrow_weight }};
+
+    --hero-heading-color: {{ section.settings.hero_heading_color }};
+    --hero-heading-size: {{ section.settings.hero_heading_size }}px;
+    --hero-heading-weight: {{ section.settings.hero_heading_weight }};
+
+    --hero-description-color: {{ section.settings.hero_description_color }};
+    --hero-description-size: {{ section.settings.hero_description_size }}px;
+    --hero-description-weight: {{ section.settings.hero_description_weight }};
+
+    /* Dynamic Button Variables */
+    --hero-primary-bg: {{ section.settings.hero_primary_btn_bg_color }};
+    --hero-primary-text: {{ section.settings.hero_primary_btn_text_color }};
+    --hero-primary-hover-bg: {{ section.settings.hero_primary_btn_hover_bg_color }};
+    --hero-primary-hover-text: {{ section.settings.hero_primary_btn_hover_text_color }};
+    --hero-primary-radius: {{ section.settings.hero_primary_btn_border_radius }}px;
+
+    --hero-secondary-bg: {{ section.settings.hero_secondary_btn_bg_color }};
+    --hero-secondary-text: {{ section.settings.hero_secondary_btn_text_color }};
+    --hero-secondary-hover-bg: {{ section.settings.hero_secondary_btn_hover_bg_color }};
+    --hero-secondary-hover-text: {{ section.settings.hero_secondary_btn_hover_text_color }};
+    --hero-secondary-radius: {{ section.settings.hero_secondary_btn_border_radius }}px;
+
+    /* Dynamic Image Variable */
+    --hero-image-radius: {{ section.settings.hero_image_border_radius }}px;
+
+    /* Dynamic Layout Variables */
+    {% if section.settings.hero_content_ratio == '40_60' %}
+      --hero-text-width: 40%;
+      --hero-img-width: 60%;
+    {% elsif section.settings.hero_content_ratio == '60_40' %}
+      --hero-text-width: 60%;
+      --hero-img-width: 40%;
+    {% else %}
+      --hero-text-width: 50%;
+      --hero-img-width: 50%;
+    {% endif %}
+
+    padding-top: calc(var(--section-padding-top, 60px) * var(--section-padding-multiplier, 1));
+    padding-bottom: calc(var(--section-padding-bottom, 60px) * var(--section-padding-multiplier, 1));
+  }
+
+  .hero-section-{{ section.id }} .hero-grid {
+    display: flex;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .hero-section-{{ section.id }} .hero-grid--reversed {
+    flex-direction: row-reverse;
+  }
+
+  .hero-section-{{ section.id }} .hero-content {
+    width: var(--hero-text-width);
+    max-width: 100%;
+  }
+
+  .hero-section-{{ section.id }} .hero-eyebrow {
+    font-size: var(--hero-eyebrow-size);
+    font-weight: var(--hero-eyebrow-weight);
+    color: var(--hero-eyebrow-color);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+  }
+
+  .hero-section-{{ section.id }} .hero-heading {
+    font-size: var(--hero-heading-size);
+    font-weight: var(--hero-heading-weight);
+    color: var(--hero-heading-color);
+    line-height: 1.2;
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-section-{{ section.id }} .hero-description {
+    font-size: var(--hero-description-size);
+    font-weight: var(--hero-description-weight);
+    color: var(--hero-description-color);
+    line-height: 1.6;
+    margin-bottom: 40px;
+    max-width: 540px;
+  }
+
+  .hero-section-{{ section.id }} .hero-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .hero-section-{{ section.id }} .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+  }
+
+  .hero-section-{{ section.id }} .button--primary {
+    background-color: var(--hero-primary-bg);
+    color: var(--hero-primary-text);
+    border-radius: var(--hero-primary-radius);
+    border-color: var(--hero-primary-bg);
+  }
+
+  .hero-section-{{ section.id }} .button--primary:hover {
+    background-color: var(--hero-primary-hover-bg);
+    color: var(--hero-primary-hover-text);
+    border-color: var(--hero-primary-hover-bg);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .hero-section-{{ section.id }} .button--secondary {
+    background-color: var(--hero-secondary-bg);
+    color: var(--hero-secondary-text);
+    border-radius: var(--hero-secondary-radius);
+    border-color: var(--hero-secondary-text);
+  }
+
+  .hero-section-{{ section.id }} .button--secondary:hover {
+    background-color: var(--hero-secondary-hover-bg);
+    color: var(--hero-secondary-hover-text);
+    border-color: var(--hero-secondary-hover-bg);
+    transform: translateY(-2px);
+  }
+
+  .hero-section-{{ section.id }} .button-arrow {
+    transition: transform 0.3s ease;
+  }
+
+  .hero-section-{{ section.id }} .button:hover .button-arrow {
+    transform: translateX(4px);
+  }
+
+  .hero-section-{{ section.id }} .hero-media {
+    position: relative;
+    width: var(--hero-img-width);
+    min-height: 500px;
+  }
+
+  .hero-section-{{ section.id }} .hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--hero-image-radius);
+  }
+
+  .hero-section-{{ section.id }} .hero-placeholder {
+    width: 100%;
+    height: 500px;
+    background-color: rgba(0, 0, 0, 0.03);
+    border: 2px dashed rgba(0, 0, 0, 0.2);
+    border-radius: var(--hero-image-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #121212;
+    opacity: 0.5;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 990px) {
+    .hero-section-{{ section.id }} .hero-grid {
+      gap: 40px;
+    }
+    .hero-section-{{ section.id }} .hero-heading {
+      font-size: calc(var(--hero-heading-size) * 0.85);
+    }
+  }
+
+
+@media (max-width: 749px) {
+  .hero-section-{{ section.id }} .hero-grid,
+  .hero-section-{{ section.id }} .hero-grid--reversed {
+    flex-direction: column;
+    gap: 40px;
+  }
+  .hero-section-{{ section.id }} .hero-content,
+  .hero-section-{{ section.id }} .hero-media {
+    width: 100%;
+  }
+  .hero-section-{{ section.id }} .hero-content {
+    text-align: center;
+  }
+  .hero-section-{{ section.id }} .hero-description {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero-section-{{ section.id }} .hero-buttons {
+    justify-content: center;
+  }
+  .hero-section-{{ section.id }} .hero-heading {
+    font-size: calc(var(--hero-heading-size) * 0.7);
+  }
+  .hero-section-{{ section.id }} .hero-description {
+    font-size: calc(var(--hero-description-size) * 0.9);
+  }
+  .hero-section-{{ section.id }} .button {
+    width: 100%;
+  }
+  .hero-section-{{ section.id }} .hero-media {
+    min-height: auto;
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+  .hero-section-{{ section.id }} .hero-image {
+    height: 100%;
+    object-fit: cover;
+  }
+  .hero-section-{{ section.id }} .hero-placeholder {
+    height: 100%;
+  }
+  
+  /* Remove bottom padding to eliminate white space below image */
+  .hero-section-{{ section.id }} {
+    padding-bottom: 0;
+  }
+}
+</style>
+
+<div class="hero-section-{{ section.id }} color-{{ section.settings.color_scheme }}">
+  <div class="page-width">
+    <div class="hero-grid {% if section.settings.hero_layout_direction == 'image_left' %}hero-grid--reversed{% endif %}">
+      <div class="hero-content">
+        {% if section.settings.eyebrow_text != blank %}
+          <p class="hero-eyebrow">{{ section.settings.eyebrow_text }}</p>
+        {% endif %}
+        
+        {% if section.settings.heading != blank %}
+          <h1 class="hero-heading">{{ section.settings.heading }}</h1>
+        {% endif %}
+        
+        {% if section.settings.description != blank %}
+          <p class="hero-description">{{ section.settings.description }}</p>
+        {% endif %}
+        
+        <div class="hero-buttons">
+          {% if section.settings.button_primary_text != blank and section.settings.button_primary_link != blank %}
+            <a href="{{ section.settings.button_primary_link }}" class="button button--primary">
+              {{ section.settings.button_primary_text }}
+              <span class="button-arrow">→</span>
+            </a>
+          {% endif %}
+          
+          {% if section.settings.button_secondary_text != blank and section.settings.button_secondary_link != blank %}
+            <a href="{{ section.settings.button_secondary_link }}" class="button button--secondary">
+              {{ section.settings.button_secondary_text }}
+              <span class="button-arrow">→</span>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+      
+      <div class="hero-media">
+        {% if section.settings.image != blank %}
+          {{ section.settings.image | image_url: width: 1200 | image_tag:
+            loading: 'eager',
+            sizes: '(max-width: 749px) 100vw, 50vw',
+            widths: '400,600,800,1000,1200',
+            class: 'hero-image'
+          }}
+        {% else %}
+          <div class="hero-placeholder">
+            <span>Hero Content Placeholder</span>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Hero Section",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Eyebrow Text",
+      "default": "UK SPECIALIST CONSULTANCY"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Build Safer Workplaces Through Practical Training"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Research-led workshops that help organisations reduce risk, strengthen safeguarding, and build healthier workplace cultures."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero Image"
+    },
+    {
+      "type": "range",
+      "id": "hero_image_border_radius",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Image Border Radius",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Typography: Eyebrow"
+    },
+    {
+      "type": "color",
+      "id": "hero_eyebrow_color",
+      "label": "Color",
+      "default": "#121212"
+    },
+    {
+      "type": "range",
+      "id": "hero_eyebrow_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "hero_eyebrow_weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Weight",
+      "default": 600
+    },
+    {
+      "type": "header",
+      "content": "Typography: Heading"
+    },
+    {
+      "type": "color",
+      "id": "hero_heading_color",
+      "label": "Color",
+      "default": "#121212"
+    },
+    {
+      "type": "range",
+      "id": "hero_heading_size",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "hero_heading_weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Weight",
+      "default": 700
+    },
+    {
+      "type": "header",
+      "content": "Typography: Description"
+    },
+    {
+      "type": "color",
+      "id": "hero_description_color",
+      "label": "Color",
+      "default": "#121212"
+    },
+    {
+      "type": "range",
+      "id": "hero_description_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "hero_description_weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Weight",
+      "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Primary Button"
+    },
+    {
+      "type": "text",
+      "id": "button_primary_text",
+      "label": "Button Text",
+      "default": "Book a Consultation"
+    },
+    {
+      "type": "url",
+      "id": "button_primary_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "hero_primary_btn_bg_color",
+      "label": "Background Color",
+      "default": "#00badb"
+    },
+    {
+      "type": "color",
+      "id": "hero_primary_btn_text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "hero_primary_btn_hover_bg_color",
+      "label": "Hover Background Color",
+      "default": "#009bb5"
+    },
+    {
+      "type": "color",
+      "id": "hero_primary_btn_hover_text_color",
+      "label": "Hover Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "hero_primary_btn_border_radius",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Border Radius",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Secondary Button"
+    },
+    {
+      "type": "text",
+      "id": "button_secondary_text",
+      "label": "Button Text",
+      "default": "Explore Programmes"
+    },
+    {
+      "type": "url",
+      "id": "button_secondary_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "hero_secondary_btn_bg_color",
+      "label": "Background Color",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "hero_secondary_btn_text_color",
+      "label": "Text Color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "hero_secondary_btn_hover_bg_color",
+      "label": "Hover Background Color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "hero_secondary_btn_hover_text_color",
+      "label": "Hover Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "hero_secondary_btn_border_radius",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Border Radius",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "hero_content_ratio",
+      "label": "Content to Image Ratio",
+      "options": [
+        { "value": "50_50", "label": "50% Text / 50% Image" },
+        { "value": "40_60", "label": "40% Text / 60% Image" },
+        { "value": "60_40", "label": "60% Text / 40% Image" }
+      ],
+      "default": "50_50"
+    },
+    {
+      "type": "select",
+      "id": "hero_layout_direction",
+      "label": "Layout Direction",
+      "options": [
+        { "value": "text_left", "label": "Text Left, Image Right" },
+        { "value": "image_left", "label": "Image Left, Text Right" }
+      ],
+      "default": "text_left"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Section 2"
+    }
+  ]
+}
+{% endschema %}

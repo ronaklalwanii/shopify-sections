@@ -1,0 +1,824 @@
+{% doc %}
+  @prompt
+    Create a professional “About / Capability” homepage section for a consulting and training business called Consent in Practice.
+    
+    Layout Requirements:
+    
+    Two-column layout
+    Left side: 2 stacked images (grayscale or muted tone, corporate/workplace setting, diverse professionals in discussion or training environment)
+    Right side: headline, paragraph text, and 3 horizontal progress/indicator bars
+    
+    Content Requirements:
+    
+    Headline:
+    Building Safer, More Ethical Workplaces Through Clarity & Communication
+    
+    Body Text:
+    Consent in Practice provides research-led education on informed consent, power dynamics, and digital harm. Our work supports organisations in moving beyond compliance toward practical understanding, ethical decision-making, and prevention-focused culture.
+    
+    We translate complex research into clear, real-world tools that help teams communicate boundaries effectively, navigate power responsibly, and reduce risk before harm occurs.
+    
+    Progress / Indicator Bars (Replace “skills” with positioning metrics):
+    
+    Ethical Leadership & Accountability — 95%
+    Boundary Communication & Clarity — 90%
+    Digital Awareness & Risk Prevention — 92%, Give m,e option to control the font for every section.
+    Give me option to control the height and width of both the images.
+    In mobile version, make everything center aligned and properly fit in the screen.
+    
+    Give me option to control the colour of indicators. 
+    Give me option to control the colour of text around indicators.
+    
+    
+    
+    , Give me option to have individual height and width of each image in computer mode.
+    
+    Make it fit properly in mobile version leave some edges on each side keeping everything centered.
+    , Make the progress bars more professional and interesting, Add a heading for this section that reads:
+    
+    Our Approach
+    
+    This should be at the center on top above boh the subsections
+    
+    , Keep the bars as it is.
+    
+    Add a heading for this section that reads:
+    
+    Our Approach
+    
+    This should be at the center on top above boh the subsections
+    
+    , Give me control over the radius of images.
+    
+    Make the our approach more editable with size, colour, font etc., the main heading - make it subtle.. smaller and light font, Give me an option to add a little space above "our approach", Give it some space in mobile version too above the our approach section., give me an option to add a logo just before our approach title so that the section had a small logo as well.
+    
+    Give more room at both the seides in section in computer mode, make the headline part out and just below the Our Approach. Keep the content and the bars in right section only. , Give me option to control the width of eachimage individually in computer mode , the logo needs to be by the side of "our approach" both logo and text need to align, Give me an option to control the space at either side in computer,  for the body text, give it ability to have a new line or space entered as it's in the text box, give me control to have seperate text size of headline in phone. 
+    
+    Make the logo and title in same line in mobile mode as well., Keep the font assistant for heading.
+    The heading size should be 48 for desktop and 26 for mobile.
+    The heading font colour should be: 5569DC
+    
+    Give me an option to turn off the indicators.
+    
+    Keep the section title as "What We Do" with desktop size 24px and mobile size 18px
+    , For logo Give me option to select seperate width for mobile and computer and keep the defaults as 60 px for computer and 40 for mobiles
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-about-capability-{{ ai_gen_id }} {
+    width: 100%;
+    display: block;
+    background-color: {{ block.settings.section_background }};
+    padding: {{ block.settings.section_padding_top }}px {{ block.settings.section_padding_horizontal }}px {{ block.settings.section_padding_bottom }}px;
+  }
+
+  .ai-about-capability__container-{{ ai_gen_id }} {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .ai-about-capability__logo-title-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: {{ block.settings.approach_spacing }}px;
+  }
+
+  .ai-about-capability__logo-{{ ai_gen_id }} {
+    flex-shrink: 0;
+  }
+
+  .ai-about-capability__logo-{{ ai_gen_id }} img {
+    display: block;
+    width: {{ block.settings.logo_width_desktop }}px;
+    height: auto;
+  }
+
+  .ai-about-capability__approach-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.approach_font.family }}, {{ block.settings.approach_font.fallback_families }};
+    font-weight: {{ block.settings.approach_font.weight }};
+    font-size: {{ block.settings.approach_font_size_desktop }}px;
+    color: {{ block.settings.approach_color }};
+    margin: 0;
+    text-align: center;
+  }
+
+  .ai-about-capability__headline-{{ ai_gen_id }} {
+    font-family: {{ block.settings.headline_font.family }}, {{ block.settings.headline_font.fallback_families }};
+    font-weight: {{ block.settings.headline_font.weight }};
+    font-size: {{ block.settings.headline_font_size }}px;
+    color: {{ block.settings.headline_color }};
+    margin: 0 0 {{ block.settings.headline_spacing }}px 0;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .ai-about-capability__content-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .ai-about-capability__images-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .ai-about-capability__image-wrapper-{{ ai_gen_id }} {
+    overflow: hidden;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-about-capability__image-wrapper-{{ ai_gen_id }}--1 {
+    width: {{ block.settings.image_1_width }}%;
+    height: {{ block.settings.image_1_height }}px;
+  }
+
+  .ai-about-capability__image-wrapper-{{ ai_gen_id }}--2 {
+    width: {{ block.settings.image_2_width }}%;
+    height: {{ block.settings.image_2_height }}px;
+  }
+
+  .ai-about-capability__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-about-capability__text-content-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .ai-about-capability__body-{{ ai_gen_id }} {
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-weight: {{ block.settings.body_font.weight }};
+    font-size: {{ block.settings.body_font_size }}px;
+    color: {{ block.settings.body_color }};
+    line-height: 1.6;
+    margin: 0;
+    white-space: pre-line;
+  }
+
+  .ai-about-capability__indicators-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .ai-about-capability__indicator-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ai-about-capability__indicator-label-{{ ai_gen_id }} {
+    font-family: {{ block.settings.indicator_label_font.family }}, {{ block.settings.indicator_label_font.fallback_families }};
+    font-weight: {{ block.settings.indicator_label_font.weight }};
+    font-size: {{ block.settings.indicator_label_font_size }}px;
+    color: {{ block.settings.indicator_label_color }};
+    margin: 0;
+  }
+
+  .ai-about-capability__indicator-bar-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: 12px;
+    background-color: {{ block.settings.indicator_background }};
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .ai-about-capability__indicator-bar-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: {{ block.settings.indicator_color }};
+    border-radius: 6px;
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ai-about-capability__indicator-bar-{{ ai_gen_id }}::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: ai-shimmer-{{ ai_gen_id }} 2s infinite;
+  }
+
+  @keyframes ai-shimmer-{{ ai_gen_id }} {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-about-capability-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_top_mobile }}px 20px {{ block.settings.section_padding_bottom }}px;
+    }
+
+    .ai-about-capability__logo-{{ ai_gen_id }} img {
+      width: {{ block.settings.logo_width_mobile }}px;
+    }
+
+    .ai-about-capability__approach-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.approach_font_size_mobile }}px;
+    }
+
+    .ai-about-capability__headline-{{ ai_gen_id }} {
+      font-size: {{ block.settings.headline_font_size_mobile }}px;
+      margin-bottom: 30px;
+    }
+
+    .ai-about-capability__content-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .ai-about-capability__images-{{ ai_gen_id }},
+    .ai-about-capability__text-content-{{ ai_gen_id }} {
+      text-align: center;
+      align-items: center;
+    }
+
+    .ai-about-capability__image-wrapper-{{ ai_gen_id }}--1,
+    .ai-about-capability__image-wrapper-{{ ai_gen_id }}--2 {
+      width: 100%;
+      height: 250px;
+    }
+
+    .ai-about-capability__body-{{ ai_gen_id }} {
+      text-align: center;
+    }
+
+    .ai-about-capability__indicators-{{ ai_gen_id }} {
+      width: 100%;
+    }
+  }
+{% endstyle %}
+
+<about-capability-{{ ai_gen_id }} class="ai-about-capability-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-about-capability__container-{{ ai_gen_id }}">
+    <div class="ai-about-capability__logo-title-wrapper-{{ ai_gen_id }}">
+      {% if block.settings.logo != blank %}
+        <div class="ai-about-capability__logo-{{ ai_gen_id }}">
+          <img
+            src="{{ block.settings.logo | image_url: width: 200 }}"
+            alt="{{ block.settings.logo.alt | escape }}"
+            loading="lazy"
+            width="{{ block.settings.logo_width_desktop }}"
+            height="auto"
+          >
+        </div>
+      {% endif %}
+      {% if block.settings.approach_title != blank %}
+        <h2 class="ai-about-capability__approach-title-{{ ai_gen_id }}">{{ block.settings.approach_title }}</h2>
+      {% endif %}
+    </div>
+
+    {% if block.settings.headline != blank %}
+      <h3 class="ai-about-capability__headline-{{ ai_gen_id }}">{{ block.settings.headline }}</h3>
+    {% endif %}
+
+    <div class="ai-about-capability__content-{{ ai_gen_id }}">
+      <div class="ai-about-capability__images-{{ ai_gen_id }}">
+        {% if block.settings.image_1 != blank %}
+          <div class="ai-about-capability__image-wrapper-{{ ai_gen_id }} ai-about-capability__image-wrapper-{{ ai_gen_id }}--1">
+            <img
+              src="{{ block.settings.image_1 | image_url: width: 800 }}"
+              alt="{{ block.settings.image_1.alt | escape }}"
+              loading="lazy"
+              class="ai-about-capability__image-{{ ai_gen_id }}"
+              width="{{ block.settings.image_1.width }}"
+              height="{{ block.settings.image_1.height }}"
+            >
+          </div>
+        {% endif %}
+
+        {% if block.settings.image_2 != blank %}
+          <div class="ai-about-capability__image-wrapper-{{ ai_gen_id }} ai-about-capability__image-wrapper-{{ ai_gen_id }}--2">
+            <img
+              src="{{ block.settings.image_2 | image_url: width: 800 }}"
+              alt="{{ block.settings.image_2.alt | escape }}"
+              loading="lazy"
+              class="ai-about-capability__image-{{ ai_gen_id }}"
+              width="{{ block.settings.image_2.width }}"
+              height="{{ block.settings.image_2.height }}"
+            >
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="ai-about-capability__text-content-{{ ai_gen_id }}">
+        {% if block.settings.body_text != blank %}
+          <p class="ai-about-capability__body-{{ ai_gen_id }}">{{ block.settings.body_text }}</p>
+        {% endif %}
+
+        {% if block.settings.show_indicators %}
+          <div class="ai-about-capability__indicators-{{ ai_gen_id }}">
+            {% if block.settings.indicator_1_label != blank %}
+              <div class="ai-about-capability__indicator-{{ ai_gen_id }}">
+                <p class="ai-about-capability__indicator-label-{{ ai_gen_id }}">
+                  {{ block.settings.indicator_1_label }}
+                </p>
+                <div class="ai-about-capability__indicator-bar-wrapper-{{ ai_gen_id }}">
+                  <div
+                    class="ai-about-capability__indicator-bar-{{ ai_gen_id }}"
+                    data-percentage="{{ block.settings.indicator_1_value }}"
+                    style="width: 0%;"
+                  ></div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if block.settings.indicator_2_label != blank %}
+              <div class="ai-about-capability__indicator-{{ ai_gen_id }}">
+                <p class="ai-about-capability__indicator-label-{{ ai_gen_id }}">
+                  {{ block.settings.indicator_2_label }}
+                </p>
+                <div class="ai-about-capability__indicator-bar-wrapper-{{ ai_gen_id }}">
+                  <div
+                    class="ai-about-capability__indicator-bar-{{ ai_gen_id }}"
+                    data-percentage="{{ block.settings.indicator_2_value }}"
+                    style="width: 0%;"
+                  ></div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if block.settings.indicator_3_label != blank %}
+              <div class="ai-about-capability__indicator-{{ ai_gen_id }}">
+                <p class="ai-about-capability__indicator-label-{{ ai_gen_id }}">
+                  {{ block.settings.indicator_3_label }}
+                </p>
+                <div class="ai-about-capability__indicator-bar-wrapper-{{ ai_gen_id }}">
+                  <div
+                    class="ai-about-capability__indicator-bar-{{ ai_gen_id }}"
+                    data-percentage="{{ block.settings.indicator_3_value }}"
+                    style="width: 0%;"
+                  ></div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</about-capability-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class AboutCapability{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.animated = false;
+      }
+
+      connectedCallback() {
+        this.setupIntersectionObserver();
+      }
+
+      setupIntersectionObserver() {
+        const options = {
+          root: null,
+          rootMargin: '0px',
+          threshold: 0.3
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !this.animated) {
+              this.animateBars();
+              this.animated = true;
+            }
+          });
+        }, options);
+
+        observer.observe(this);
+      }
+
+      animateBars() {
+        const bars = this.querySelectorAll('.ai-about-capability__indicator-bar-{{ ai_gen_id }}');
+        bars.forEach((bar, index) => {
+          const percentage = bar.getAttribute('data-percentage');
+          setTimeout(() => {
+            bar.style.width = percentage + '%';
+          }, index * 200);
+        });
+      }
+    }
+
+    customElements.define('about-capability-{{ ai_gen_id }}', AboutCapability{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "About capability",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section title"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width_desktop",
+      "label": "Logo width (desktop)",
+      "min": 20,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "label": "Logo width (mobile)",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "text",
+      "id": "approach_title",
+      "label": "Section title",
+      "default": "What We Do"
+    },
+    {
+      "type": "font_picker",
+      "id": "approach_font",
+      "label": "Section title font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "approach_font_size_desktop",
+      "label": "Section title size (desktop)",
+      "min": 12,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "approach_font_size_mobile",
+      "label": "Section title size (mobile)",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "approach_color",
+      "label": "Section title color",
+      "default": "#999999"
+    },
+    {
+      "type": "range",
+      "id": "approach_spacing",
+      "label": "Space below section title",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Headline"
+    },
+    {
+      "type": "textarea",
+      "id": "headline",
+      "label": "Headline",
+      "default": "Building Safer, More Ethical Workplaces Through Clarity & Communication"
+    },
+    {
+      "type": "font_picker",
+      "id": "headline_font",
+      "label": "Headline font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "headline_font_size",
+      "label": "Headline size (desktop)",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "headline_font_size_mobile",
+      "label": "Headline size (mobile)",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "color",
+      "id": "headline_color",
+      "label": "Headline color",
+      "default": "#5569DC"
+    },
+    {
+      "type": "range",
+      "id": "headline_spacing",
+      "label": "Space below headline",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "range",
+      "id": "image_1_width",
+      "label": "Image 1 width (desktop)",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "image_1_height",
+      "label": "Image 1 height (desktop)",
+      "min": 150,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "default": 300
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "range",
+      "id": "image_2_width",
+      "label": "Image 2 width (desktop)",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "image_2_height",
+      "label": "Image 2 height (desktop)",
+      "min": 150,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "default": 300
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Image corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Body text"
+    },
+    {
+      "type": "textarea",
+      "id": "body_text",
+      "label": "Body text",
+      "default": "Consent in Practice provides research-led education on informed consent, power dynamics, and digital harm. Our work supports organisations in moving beyond compliance toward practical understanding, ethical decision-making, and prevention-focused culture.\n\nWe translate complex research into clear, real-world tools that help teams communicate boundaries effectively, navigate power responsibly, and reduce risk before harm occurs."
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "montserrat_n4"
+    },
+    {
+      "type": "range",
+      "id": "body_font_size",
+      "label": "Body text size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Body text color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Indicators"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_indicators",
+      "label": "Show indicators",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Indicator 1"
+    },
+    {
+      "type": "text",
+      "id": "indicator_1_label",
+      "label": "Label",
+      "default": "Ethical Leadership & Accountability"
+    },
+    {
+      "type": "range",
+      "id": "indicator_1_value",
+      "label": "Value",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 95
+    },
+    {
+      "type": "header",
+      "content": "Indicator 2"
+    },
+    {
+      "type": "text",
+      "id": "indicator_2_label",
+      "label": "Label",
+      "default": "Boundary Communication & Clarity"
+    },
+    {
+      "type": "range",
+      "id": "indicator_2_value",
+      "label": "Value",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 90
+    },
+    {
+      "type": "header",
+      "content": "Indicator 3"
+    },
+    {
+      "type": "text",
+      "id": "indicator_3_label",
+      "label": "Label",
+      "default": "Digital Awareness & Risk Prevention"
+    },
+    {
+      "type": "range",
+      "id": "indicator_3_value",
+      "label": "Value",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 92
+    },
+    {
+      "type": "header",
+      "content": "Indicator style"
+    },
+    {
+      "type": "font_picker",
+      "id": "indicator_label_font",
+      "label": "Label font",
+      "default": "montserrat_n4"
+    },
+    {
+      "type": "range",
+      "id": "indicator_label_font_size",
+      "label": "Label size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "indicator_label_color",
+      "label": "Label color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "indicator_color",
+      "label": "Bar color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "indicator_background",
+      "label": "Bar background color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "header",
+      "content": "Section style"
+    },
+    {
+      "type": "color",
+      "id": "section_background",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_horizontal",
+      "label": "Horizontal padding (desktop)",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Top padding (desktop)",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_mobile",
+      "label": "Top padding (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "About capability"
+    }
+  ]
+}
+{% endschema %}

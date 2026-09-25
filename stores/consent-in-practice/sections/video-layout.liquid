@@ -1,0 +1,813 @@
+<style>
+  /* Theme Override: Remove default section spacing */
+  #shopify-section-{{ section.id }} {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .vl-section-{{ section.id }} {
+    /* Colors */
+    --vl-bg: {{ section.settings.vl_bg_color }};
+    --vl-text: {{ section.settings.vl_text_color }};
+    --vl-primary: {{ section.settings.vl_primary_color }};
+
+    /* Layout */
+    --vl-padding-y: {{ section.settings.vl_padding_y }}px;
+    --vl-gap: {{ section.settings.vl_gap }}px;
+
+    /* Button Variables */
+    --vl-btn-bg: {{ section.settings.vl_btn_bg }};
+    --vl-btn-text: {{ section.settings.vl_btn_text_color }};
+    --vl-btn-border: {{ section.settings.vl_btn_border_color }};
+    --vl-btn-hover-bg: {{ section.settings.vl_btn_hover_bg }};
+    --vl-btn-hover-text: {{ section.settings.vl_btn_hover_text }};
+    --vl-btn-hover-border: {{ section.settings.vl_btn_hover_border_color }};
+    --vl-btn-radius: {{ section.settings.vl_btn_radius }}px;
+
+    /* Dynamic Layout Variables */
+    {% if section.settings.vl_ratio == '40_60' %}
+      --vl-content-width: 40%;
+      --vl-video-width: 60%;
+    {% elsif section.settings.vl_ratio == '60_40' %}
+      --vl-content-width: 60%;
+      --vl-video-width: 40%;
+    {% else %}
+      --vl-content-width: 50%;
+      --vl-video-width: 50%;
+    {% endif %}
+
+    background-color: var(--vl-bg);
+    color: var(--vl-text);
+    padding-top: var(--vl-padding-y);
+    padding-bottom: var(--vl-padding-y);
+    width: 100%;
+  }
+
+  .vl-section-{{ section.id }} .vl-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 {{ section.settings.vl_padding_x }}px;
+    display: flex;
+    gap: var(--vl-gap);
+    align-items: center;
+  }
+
+  .vl-section-{{ section.id }} .vl-container--reversed {
+    flex-direction: row-reverse;
+  }
+
+  .vl-section-{{ section.id }} .vl-video-col {
+    width: var(--vl-video-width);
+  }
+
+  .vl-section-{{ section.id }} .vl-content-col {
+    width: var(--vl-content-width);
+  }
+
+  /* Video Column & Inline Player */
+  .vl-section-{{ section.id }} .vl-video-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background-color: rgba(85, 104, 202, 0.05);
+    border: 2px dashed rgba(85, 104, 202, 0.3);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .vl-section-{{ section.id }} .vl-play-trigger {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+  }
+
+  .vl-section-{{ section.id }} .vl-video-player {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .vl-section-{{ section.id }} .vl-video-player iframe,
+  .vl-section-{{ section.id }} .vl-video-player video {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  .vl-section-{{ section.id }} .vl-video-player video {
+    object-fit: cover;
+  }
+
+  .vl-section-{{ section.id }} .vl-video-placeholder-text {
+    color: var(--vl-primary);
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .vl-section-{{ section.id }} .vl-play-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--vl-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--vl-primary);
+    background: transparent;
+    transition: all 0.3s ease;
+  }
+
+  .vl-section-{{ section.id }} .vl-play-trigger:hover .vl-play-button {
+    background: var(--vl-primary);
+    color: #fff;
+    transform: scale(1.1);
+  }
+
+  .vl-section-{{ section.id }} .vl-play-button svg {
+    width: 24px;
+    height: 24px;
+    margin-left: 4px;
+  }
+
+  /* Content Column */
+  .vl-section-{{ section.id }} .vl-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .vl-section-{{ section.id }} .vl-eyebrow {
+    color: var(--vl-primary);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0;
+  }
+
+  .vl-section-{{ section.id }} .vl-heading {
+    font-size: 32px;
+    line-height: 1.2;
+    font-weight: 600;
+    margin: 0;
+    color: var(--vl-text);
+  }
+
+  .vl-section-{{ section.id }} .vl-desc-main {
+    font-size: 18px;
+    line-height: 1.5;
+    margin: 0;
+    opacity: 0.9;
+  }
+
+  /* Tags */
+  .vl-section-{{ section.id }} .vl-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 10px 0;
+  }
+
+  .vl-section-{{ section.id }} .vl-tag {
+    border: 1px solid rgba(85, 104, 202, 0.3);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--vl-text);
+    background: rgba(255,255,255,0.5);
+  }
+
+  /* Links Nav */
+  .vl-section-{{ section.id }} .vl-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    margin: 10px 0;
+    border-bottom: 1px solid rgba(85, 104, 202, 0.2);
+    padding-bottom: 20px;
+  }
+
+  .vl-section-{{ section.id }} .vl-link-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .vl-section-{{ section.id }} .vl-link-item a {
+    color: var(--vl-primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 0 16px;
+    transition: opacity 0.2s;
+  }
+
+  .vl-section-{{ section.id }} .vl-link-item a:hover {
+    opacity: 0.7;
+  }
+
+  .vl-section-{{ section.id }} .vl-link-divider {
+    color: rgba(85, 104, 202, 0.3);
+    font-size: 14px;
+  }
+
+  /* Bottom Row */
+  .vl-section-{{ section.id }} .vl-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    margin-top: 10px;
+  }
+
+  .vl-section-{{ section.id }} .vl-bottom-text {
+    font-size: 15px;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 60%;
+    font-weight: 500;
+  }
+
+  .vl-section-{{ section.id }} .vl-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background-color: var(--vl-btn-bg);
+    color: var(--vl-btn-text);
+    border: 1px solid var(--vl-btn-border);
+    border-radius: var(--vl-btn-radius);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .vl-section-{{ section.id }} .vl-btn:hover {
+    background-color: var(--vl-btn-hover-bg);
+    color: var(--vl-btn-hover-text);
+    border-color: var(--vl-btn-hover-border);
+  }
+
+  .vl-section-{{ section.id }} .vl-btn-arrow {
+    transition: transform 0.3s ease;
+  }
+
+  .vl-section-{{ section.id }} .vl-btn:hover .vl-btn-arrow {
+    transform: translateX(4px);
+  }
+
+  /* Responsive */
+  @media (max-width: 990px) {
+    .vl-section-{{ section.id }} .vl-container,
+    .vl-section-{{ section.id }} .vl-container--reversed {
+      flex-direction: column;
+      gap: 40px;
+    }
+    .vl-section-{{ section.id }} .vl-video-col,
+    .vl-section-{{ section.id }} .vl-content-col {
+      width: 100%;
+    }
+    .vl-section-{{ section.id }} .vl-video-wrapper {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .vl-section-{{ section.id }} .vl-container {
+      padding: 0 {{ section.settings.vl_padding_x }}px;
+    }
+    .vl-section-{{ section.id }} .vl-heading {
+      font-size: 26px;
+    }
+    .vl-section-{{ section.id }} .vl-links {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      border-bottom: none;
+    }
+    .vl-section-{{ section.id }} .vl-link-divider {
+      display: none;
+    }
+    .vl-section-{{ section.id }} .vl-link-item a {
+      padding: 0;
+    }
+    .vl-section-{{ section.id }} .vl-bottom-row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .vl-section-{{ section.id }} .vl-bottom-text {
+      max-width: 100%;
+      margin-bottom: 20px;
+    }
+    .vl-section-{{ section.id }} .vl-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  
+  .vl-section-{{ section.id }} .vl-video-thumbnail {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-size: cover;
+    background-position: center;
+    background-color: rgba(85, 104, 202, 0.05);
+    transition: transform 0.5s ease;
+    z-index: 1;
+  }
+
+  .vl-section-{{ section.id }} .vl-play-trigger:hover .vl-video-thumbnail {
+    transform: scale(1.05);
+  }
+
+  .vl-section-{{ section.id }} .vl-video-thumbnail::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 2;
+  }
+
+  .vl-section-{{ section.id }} .vl-play-button {
+    position: relative;
+    z-index: 3;
+  }
+</style>
+
+<section class="vl-section-{{ section.id }}">
+  <div class="vl-container {% if section.settings.vl_direction == 'content_left' %}vl-container--reversed{% endif %}">
+    
+    <!-- Video Column -->
+ <div class="vl-video-col">
+      <div class="vl-video-wrapper" id="vl-video-wrapper-{{ section.id }}">
+        {% if section.settings.vl_video_file != blank or section.settings.vl_video_url != blank %}
+          <button class="vl-play-trigger" aria-label="Play video" data-vl-play>
+            <div class="vl-video-thumbnail" id="vl-thumbnail-{{ section.id }}" {% if section.settings.vl_video_file != blank %}style="background-image: url('{{ section.settings.vl_video_file.preview_image | image_url: width: 800 }}');"{% endif %}></div>
+            <div class="vl-play-button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+            </div>
+          </button>
+        {% else %}
+          <div class="vl-video-thumbnail"></div>
+          <div class="vl-play-button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Content Column -->
+    <div class="vl-content-col">
+      <div class="vl-content">
+        {% if section.settings.vl_eyebrow != blank %}
+          <p class="vl-eyebrow">{{ section.settings.vl_eyebrow }}</p>
+        {% endif %}
+
+        {% if section.settings.vl_heading != blank %}
+          <h2 class="vl-heading">{{ section.settings.vl_heading }}</h2>
+        {% endif %}
+
+        {% if section.settings.vl_desc_main != blank %}
+          <p class="vl-desc-main">{{ section.settings.vl_desc_main }}</p>
+        {% endif %}
+
+        <!-- Tags -->
+        <div class="vl-tags">
+          {% if section.settings.tag_1 != blank %}<span class="vl-tag">{{ section.settings.tag_1 }}</span>{% endif %}
+          {% if section.settings.tag_2 != blank %}<span class="vl-tag">{{ section.settings.tag_2 }}</span>{% endif %}
+          {% if section.settings.tag_3 != blank %}<span class="vl-tag">{{ section.settings.tag_3 }}</span>{% endif %}
+          {% if section.settings.tag_4 != blank %}<span class="vl-tag">{{ section.settings.tag_4 }}</span>{% endif %}
+        </div>
+
+        <!-- Links -->
+        <div class="vl-links">
+          {% if section.settings.link_1_text != blank %}
+            <div class="vl-link-item"><a href="{{ section.settings.link_1_url }}">{{ section.settings.link_1_text }}</a></div>
+            <span class="vl-link-divider">|</span>
+          {% endif %}
+          {% if section.settings.link_2_text != blank %}
+            <div class="vl-link-item"><a href="{{ section.settings.link_2_url }}">{{ section.settings.link_2_text }}</a></div>
+            <span class="vl-link-divider">|</span>
+          {% endif %}
+          {% if section.settings.link_3_text != blank %}
+            <div class="vl-link-item"><a href="{{ section.settings.link_3_url }}">{{ section.settings.link_3_text }}</a></div>
+            <span class="vl-link-divider">|</span>
+          {% endif %}
+          {% if section.settings.link_4_text != blank %}
+            <div class="vl-link-item"><a href="{{ section.settings.link_4_url }}">{{ section.settings.link_4_text }}</a></div>
+            <span class="vl-link-divider">|</span>
+          {% endif %}
+          {% if section.settings.link_5_text != blank %}
+            <div class="vl-link-item"><a href="{{ section.settings.link_5_url }}">{{ section.settings.link_5_text }}</a></div>
+            <span class="vl-link-divider">|</span>
+          {% endif %}
+          {% if section.settings.link_6_text != blank %}
+            <div class="vl-link-item"><a href="{{ section.settings.link_6_url }}">{{ section.settings.link_6_text }}</a></div>
+          {% endif %}
+        </div>
+
+        <!-- Bottom Row -->
+        <div class="vl-bottom-row">
+          {% if section.settings.vl_bottom_text != blank %}
+            <p class="vl-bottom-text">{{ section.settings.vl_bottom_text }}</p>
+          {% endif %}
+          
+          {% if section.settings.vl_btn_text != blank %}
+            <a href="{{ section.settings.vl_btn_link }}" class="vl-btn">
+              {{ section.settings.vl_btn_text }}
+              <span class="vl-btn-arrow" aria-hidden="true">→</span>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<script>
+  (function() {
+    const section = document.querySelector('.vl-section-{{ section.id }}');
+    if (!section) return;
+
+    const playTrigger = section.querySelector('[data-vl-play]');
+    const videoWrapper = document.getElementById('vl-video-wrapper-{{ section.id }}');
+    const thumbnailContainer = document.getElementById('vl-thumbnail-{{ section.id }}');
+    
+    if (!playTrigger || !videoWrapper) return;
+
+    const videoUrl = '{{ section.settings.vl_video_url }}';
+    const videoFile = '{{ section.settings.vl_video_file }}';
+    
+    // Fetch thumbnails for external URLs
+    if (videoUrl && thumbnailContainer) {
+      const ytMatch = videoUrl.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+      if (ytMatch) {
+        thumbnailContainer.style.backgroundImage = `url('https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg')`;
+      } else {
+        const vimeoMatch = videoUrl.match(/vimeo\.com\/(\d+)/);
+        if (vimeoMatch) {
+          fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(videoUrl)}`)
+            .then(response => response.json())
+            .then(data => {
+              if (data.thumbnail_url) {
+                thumbnailContainer.style.backgroundImage = `url('${data.thumbnail_url}')`;
+              }
+            });
+        }
+      }
+    }
+
+    function getVideoEmbedUrl(url) {
+      if (!url) return '';
+      const youtubeMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+      if (youtubeMatch) return 'https://www.youtube.com/embed/' + youtubeMatch[1] + '?autoplay=1&rel=0&modestbranding=1';
+      const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+      if (vimeoMatch) return 'https://player.vimeo.com/video/' + vimeoMatch[1] + '?autoplay=1';
+      return url;
+    }
+
+    function loadVideo() {
+      if (!videoWrapper) return;
+      let playerHTML = '';
+      
+      if (videoFile) {
+        playerHTML = '{{ section.settings.vl_video_file | video_tag: controls: true, autoplay: true, loop: false, muted: false, playsinline: true, image_size: "800x" }}';
+      } else if (videoUrl) {
+        const embedUrl = getVideoEmbedUrl(videoUrl);
+        if (embedUrl) playerHTML = '<iframe src="' + embedUrl + '" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>';
+      }
+      
+      if (playerHTML) videoWrapper.innerHTML = '<div class="vl-video-player">' + playerHTML + '</div>';
+    }
+
+    playTrigger.addEventListener('click', function(e) {
+      e.preventDefault();
+      loadVideo();
+    });
+  })();
+</script>
+
+
+{% schema %}
+{
+  "name": "Video Layout",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "vl_bg_color",
+      "label": "Background Color",
+      "default": "#F6F7FE"
+    },
+    {
+      "type": "color",
+      "id": "vl_text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "vl_primary_color",
+      "label": "Primary Color",
+      "default": "#5568CA"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "vl_ratio",
+      "label": "Content to Video Ratio",
+      "options": [
+        { "value": "50_50", "label": "50% Content / 50% Video" },
+        { "value": "40_60", "label": "40% Content / 60% Video" },
+        { "value": "60_40", "label": "60% Content / 40% Video" }
+      ],
+      "default": "50_50"
+    },
+    {
+      "type": "range",
+      "id": "vl_padding_x",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Horizontal Padding",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "vl_direction",
+      "label": "Layout Direction",
+      "options": [
+        { "value": "video_left", "label": "Video Left, Content Right" },
+        { "value": "content_left", "label": "Content Left, Video Right" }
+      ],
+      "default": "video_left"
+    },
+    {
+      "type": "range",
+      "id": "vl_padding_y",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "vl_gap",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Column Gap",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Main Content"
+    },
+    {
+      "type": "text",
+      "id": "vl_eyebrow",
+      "label": "Eyebrow Text",
+      "default": "MEET HOLLY KENT"
+    },
+    {
+      "type": "text",
+      "id": "vl_heading",
+      "label": "Heading",
+      "default": "Consent Researcher. Workplace Culture Specialist. Digital Harm Educator."
+    },
+    {
+      "type": "textarea",
+      "id": "vl_desc_main",
+      "label": "Main Description",
+      "default": "Helping organisations prevent harm before it happens through evidence-based education."
+    },
+    {
+      "type": "header",
+      "content": "Video"
+    },
+    {
+      "type": "video",
+      "id": "vl_video_file",
+      "label": "Upload Video File",
+      "info": "Overrides the video URL if selected."
+    },
+    {
+      "type": "url",
+      "id": "vl_video_url",
+      "label": "Video URL",
+      "info": "YouTube, Vimeo, or external video link"
+    },
+    {
+      "type": "header",
+      "content": "Tags"
+    },
+    {
+      "type": "text",
+      "id": "tag_1",
+      "label": "Tag 1",
+      "default": "MSc Researcher"
+    },
+    {
+      "type": "text",
+      "id": "tag_2",
+      "label": "Tag 2",
+      "default": "Workplace Culture Specialist"
+    },
+    {
+      "type": "text",
+      "id": "tag_3",
+      "label": "Tag 3",
+      "default": "Digital Harm Educator"
+    },
+    {
+      "type": "text",
+      "id": "tag_4",
+      "label": "Tag 4",
+      "default": "Safeguarding Expert"
+    },
+    {
+      "type": "header",
+      "content": "Links"
+    },
+    {
+      "type": "text",
+      "id": "link_1_text",
+      "label": "Link 1 Text",
+      "default": "Research"
+    },
+    {
+      "type": "url",
+      "id": "link_1_url",
+      "label": "Link 1 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_2_text",
+      "label": "Link 2 Text",
+      "default": "Speaking"
+    },
+    {
+      "type": "url",
+      "id": "link_2_url",
+      "label": "Link 2 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_3_text",
+      "label": "Link 3 Text",
+      "default": "Universities"
+    },
+    {
+      "type": "url",
+      "id": "link_3_url",
+      "label": "Link 3 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_4_text",
+      "label": "Link 4 Text",
+      "default": "Media"
+    },
+    {
+      "type": "url",
+      "id": "link_4_url",
+      "label": "Link 4 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_5_text",
+      "label": "Link 5 Text",
+      "default": "Podcasts"
+    },
+    {
+      "type": "url",
+      "id": "link_5_url",
+      "label": "Link 5 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_6_text",
+      "label": "Link 6 Text",
+      "default": "Qualifications"
+    },
+    {
+      "type": "url",
+      "id": "link_6_url",
+      "label": "Link 6 URL"
+    },
+    {
+      "type": "header",
+      "content": "Bottom Area & Button"
+    },
+    {
+      "type": "textarea",
+      "id": "vl_bottom_text",
+      "label": "Bottom Text",
+      "default": "Bringing academic rigour and real-world expertise to help organisations prevent harm before it happens."
+    },
+    {
+      "type": "text",
+      "id": "vl_btn_text",
+      "label": "Button Text",
+      "default": "More About Holly"
+    },
+    {
+      "type": "url",
+      "id": "vl_btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "vl_btn_bg",
+      "label": "Button Background",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "vl_btn_text_color",
+      "label": "Button Text Color",
+      "default": "#5568CA"
+    },
+    {
+      "type": "color",
+      "id": "vl_btn_hover_bg",
+      "label": "Button Hover Background",
+      "default": "#5568CA"
+    },
+    {
+      "type": "color",
+      "id": "vl_btn_hover_text",
+      "label": "Button Hover Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "vl_btn_border_color",
+      "label": "Button Border Color",
+      "default": "#5568CA"
+    },
+    {
+      "type": "color",
+      "id": "vl_btn_hover_border_color",
+      "label": "Button Hover Border Color",
+      "default": "#5568CA"
+    },
+    {
+      "type": "range",
+      "id": "vl_btn_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Button Border Radius",
+      "default": 6
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Layout"
+    }
+  ]
+}
+{% endschema %}

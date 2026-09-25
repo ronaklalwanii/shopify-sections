@@ -1,0 +1,593 @@
+<style>
+  /* Theme Override: Remove default section spacing */
+  #shopify-section-{{ section.id }} {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .pg-section-{{ section.id }} {
+    /* Colors */
+    --pg-bg: {{ section.settings.pg_bg_color }};
+    --pg-text: {{ section.settings.pg_text_color }};
+    --pg-primary: {{ section.settings.pg_primary_color }};
+
+    /* Layout */
+    --pg-padding-y: {{ section.settings.pg_padding_y }}px;
+    --pg-gap: {{ section.settings.pg_gap }}px;
+    --pg-cols-desktop: {{ section.settings.pg_cols_desktop }};
+    --pg-cols-tablet: {{ section.settings.pg_cols_tablet }};
+    --pg-cols-mobile: {{ section.settings.pg_cols_mobile }};
+
+    /* Card Style */
+    --pg-card-bg: {{ section.settings.pg_card_bg }};
+    --pg-card-border: {{ section.settings.pg_card_border_color }};
+    --pg-card-border-width: {{ section.settings.pg_card_border_width }}px;
+    --pg-card-radius: {{ section.settings.pg_card_radius }}px;
+    --pg-card-padding: {{ section.settings.pg_card_padding }}px;
+
+    /* Typography */
+    --pg-eyebrow-size: {{ section.settings.pg_eyebrow_size }}px;
+    --pg-heading-size: {{ section.settings.pg_heading_size }}px;
+    --pg-title-size: {{ section.settings.pg_title_size }}px;
+    --pg-duration-size: {{ section.settings.pg_duration_size }}px;
+    --pg-desc-size: {{ section.settings.pg_desc_size }}px;
+    --pg-label-size: {{ section.settings.pg_label_size }}px;
+
+    /* Button Variables */
+    --pg-btn-bg: {{ section.settings.pg_btn_bg }};
+    --pg-btn-text: {{ section.settings.pg_btn_text_color }};
+    --pg-btn-border: {{ section.settings.pg_btn_border_color }};
+    --pg-btn-hover-bg: {{ section.settings.pg_btn_hover_bg }};
+    --pg-btn-hover-text: {{ section.settings.pg_btn_hover_text }};
+    --pg-btn-hover-border: {{ section.settings.pg_btn_hover_border_color }};
+    --pg-btn-radius: {{ section.settings.pg_btn_radius }}px;
+
+    background-color: var(--pg-bg);
+    color: var(--pg-text);
+    padding-top: var(--pg-padding-y);
+    padding-bottom: var(--pg-padding-y);
+    width: 100%;
+  }
+
+  .pg-section-{{ section.id }} .pg-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+    text-align: center;
+  }
+
+  .pg-section-{{ section.id }} .pg-header {
+    margin-bottom: 50px;
+  }
+
+  .pg-section-{{ section.id }} .pg-eyebrow {
+    color: var(--pg-primary);
+    font-size: var(--pg-eyebrow-size);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 16px;
+  }
+
+  .pg-section-{{ section.id }} .pg-heading {
+    font-size: var(--pg-heading-size);
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0;
+    color: var(--pg-text);
+  }
+
+  .pg-section-{{ section.id }} .pg-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--pg-cols-desktop), 1fr);
+    gap: var(--pg-gap);
+    margin-bottom: 50px;
+    text-align: left;
+  }
+
+  .pg-section-{{ section.id }} .pg-card {
+    background-color: var(--pg-card-bg);
+    border: var(--pg-card-border-width) solid var(--pg-card-border);
+    border-radius: var(--pg-card-radius);
+    padding: var(--pg-card-padding);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .pg-section-{{ section.id }} .pg-icon {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 20px;
+    color: var(--pg-primary);
+  }
+
+  .pg-section-{{ section.id }} .pg-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .pg-section-{{ section.id }} .pg-title {
+    font-size: var(--pg-title-size);
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: var(--pg-text);
+    line-height: 1.3;
+  }
+
+  .pg-section-{{ section.id }} .pg-duration {
+    font-size: var(--pg-duration-size);
+    font-weight: 500;
+    margin: 0 0 16px;
+    color: var(--pg-text);
+    opacity: 0.7;
+  }
+
+  .pg-section-{{ section.id }} .pg-desc {
+    font-size: var(--pg-desc-size);
+    line-height: 1.5;
+    margin: 0 0 24px;
+    color: var(--pg-text);
+    opacity: 0.8;
+    flex-grow: 1;
+  }
+
+  .pg-section-{{ section.id }} .pg-label {
+    font-size: var(--pg-label-size);
+    font-weight: 600;
+    color: var(--pg-primary);
+    margin: 0;
+  }
+
+  .pg-section-{{ section.id }} .pg-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    background-color: var(--pg-btn-bg);
+    color: var(--pg-btn-text);
+    border: 1px solid var(--pg-btn-border);
+    border-radius: var(--pg-btn-radius);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .pg-section-{{ section.id }} .pg-btn:hover {
+    background-color: var(--pg-btn-hover-bg);
+    color: var(--pg-btn-hover-text);
+    border-color: var(--pg-btn-hover-border);
+  }
+
+  .pg-section-{{ section.id }} .pg-btn-arrow {
+    transition: transform 0.3s ease;
+  }
+
+  .pg-section-{{ section.id }} .pg-btn:hover .pg-btn-arrow {
+    transform: translateX(4px);
+  }
+
+  /* Responsive */
+  @media (max-width: 990px) {
+    .pg-section-{{ section.id }} .pg-grid {
+      grid-template-columns: repeat(var(--pg-cols-tablet), 1fr);
+    }
+  }
+
+  
+  @media (max-width: 749px) {
+    .pg-section-{{ section.id }} .pg-container {
+      padding: 0 20px;
+    }
+    
+    /* Horizontal Scroll Setup */
+    .pg-section-{{ section.id }} .pg-grid {
+      display: flex;
+      overflow-x: auto;
+      overflow-y: visible; /* Allows vertical page scroll to pass through */
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none;  /* IE 10+ */
+      padding-bottom: 10px; /* Visual breathing room at bottom */
+    }
+    
+    /* Hide Scrollbar for Chrome/Safari/Opera */
+    .pg-section-{{ section.id }} .pg-grid::-webkit-scrollbar { 
+      display: none; 
+    }
+
+    /* Card Sizing for Peek Effect */
+    .pg-section-{{ section.id }} .pg-card {
+      flex: 0 0 85%; /* 85% width leaves 15% of next card visible */
+      scroll-snap-align: start;
+    }
+
+    .pg-section-{{ section.id }} .pg-heading {
+      font-size: calc(var(--pg-heading-size) * 0.8);
+    }
+    .pg-section-{{ section.id }} .pg-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+</style>
+
+<section class="pg-section-{{ section.id }}">
+  <div class="pg-container">
+    
+    <div class="pg-header">
+      {% if section.settings.pg_eyebrow != blank %}
+        <p class="pg-eyebrow">{{ section.settings.pg_eyebrow }}</p>
+      {% endif %}
+      {% if section.settings.pg_heading != blank %}
+        <h2 class="pg-heading">{{ section.settings.pg_heading }}</h2>
+      {% endif %}
+    </div>
+
+    <div class="pg-grid">
+      {% for block in section.blocks %}
+        <article class="pg-card" {{ block.shopify_attributes }}>
+          {% if block.settings.pg_icon != blank %}
+            <div class="pg-icon">
+              {{ block.settings.pg_icon | image_url: width: 64 | image_tag: loading: 'lazy', widths: '32, 64, 96' }}
+            </div>
+          {% endif %}
+          
+          {% if block.settings.pg_title != blank %}
+            <h3 class="pg-title">{{ block.settings.pg_title }}</h3>
+          {% endif %}
+
+          {% if block.settings.pg_duration != blank %}
+            <p class="pg-duration">{{ block.settings.pg_duration }}</p>
+          {% endif %}
+          
+          {% if block.settings.pg_desc != blank %}
+            <p class="pg-desc">{{ block.settings.pg_desc }}</p>
+          {% endif %}
+
+          {% if block.settings.pg_label != blank %}
+            <p class="pg-label">{{ block.settings.pg_label }}</p>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.pg_btn_text != blank %}
+      <a href="{{ section.settings.pg_btn_link }}" class="pg-btn">
+        {{ section.settings.pg_btn_text }}
+        <span class="pg-btn-arrow" aria-hidden="true">→</span>
+      </a>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Programmes Grid",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "pg_bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "pg_text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "pg_primary_color",
+      "label": "Primary Color",
+      "default": "#5568CA"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "pg_padding_y",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "pg_gap",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Grid Gap",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "pg_cols_desktop",
+      "label": "Columns (Desktop)",
+      "options": [
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" },
+        { "value": "5", "label": "5" }
+      ],
+      "default": "5"
+    },
+    {
+      "type": "select",
+      "id": "pg_cols_tablet",
+      "label": "Columns (Tablet)",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "pg_cols_mobile",
+      "label": "Columns (Mobile)",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "header",
+      "content": "Card Style"
+    },
+    {
+      "type": "color",
+      "id": "pg_card_bg",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "pg_card_border_color",
+      "label": "Card Border Color",
+      "default": "#e2e8f0"
+    },
+    {
+      "type": "range",
+      "id": "pg_card_border_width",
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "unit": "px",
+      "label": "Card Border Width",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "pg_card_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Card Border Radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "pg_card_padding",
+      "min": 20,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Card Padding",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "pg_eyebrow_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Eyebrow Size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "pg_heading_size",
+      "min": 24,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "pg_title_size",
+      "min": 16,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "pg_duration_size",
+      "min": 12,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Duration Size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "pg_desc_size",
+      "min": 12,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Description Size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "pg_label_size",
+      "min": 12,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom Label Size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "pg_eyebrow",
+      "label": "Eyebrow Text",
+      "default": "OUR PROGRAMMES"
+    },
+    {
+      "type": "text",
+      "id": "pg_heading",
+      "label": "Heading",
+      "default": "Training designed around your organisation"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "pg_btn_text",
+      "label": "Button Text",
+      "default": "View All Programmes"
+    },
+    {
+      "type": "url",
+      "id": "pg_btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "pg_btn_bg",
+      "label": "Button Background",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "pg_btn_text_color",
+      "label": "Button Text Color",
+      "default": "#5568CA"
+    },
+    {
+      "type": "color",
+      "id": "pg_btn_border_color",
+      "label": "Button Border Color",
+      "default": "#5568CA"
+    },
+    {
+      "type": "color",
+      "id": "pg_btn_hover_bg",
+      "label": "Button Hover Background",
+      "default": "#5568CA"
+    },
+    {
+      "type": "color",
+      "id": "pg_btn_hover_text",
+      "label": "Button Hover Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "pg_btn_hover_border_color",
+      "label": "Button Hover Border Color",
+      "default": "#5568CA"
+    },
+    {
+      "type": "range",
+      "id": "pg_btn_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Button Border Radius",
+      "default": 6
+    }
+  ],
+  "blocks": [
+    {
+      "type": "programme",
+      "name": "Programme Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "pg_icon",
+          "label": "Icon Image"
+        },
+        {
+          "type": "text",
+          "id": "pg_title",
+          "label": "Title",
+          "default": "Programme Title"
+        },
+        {
+          "type": "text",
+          "id": "pg_duration",
+          "label": "Duration",
+          "default": "90 minutes"
+        },
+        {
+          "type": "textarea",
+          "id": "pg_desc",
+          "label": "Description",
+          "default": "Description of the programme."
+        },
+        {
+          "type": "text",
+          "id": "pg_label",
+          "label": "Bottom Label",
+          "default": "Perfect for teams"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Programmes Grid",
+      "blocks": [
+        { "type": "programme", "settings": { "pg_title": "Workplace Essentials", "pg_duration": "90 minutes", "pg_desc": "Practical foundations in consent, boundaries and respectful communication.", "pg_label": "Perfect for teams & SMEs" } },
+        { "type": "programme", "settings": { "pg_title": "Leadership Programme", "pg_duration": "Half day", "pg_desc": "For managers responsible for culture, behaviour and difficult conversations.", "pg_label": "Managers only" } },
+        { "type": "programme", "settings": { "pg_title": "HR & Safeguarding Intensive", "pg_duration": "Full day", "pg_desc": "Complaints, disclosures, power dynamics and investigations.", "pg_label": "For HR / Safeguarding" } },
+        { "type": "programme", "settings": { "pg_title": "University Programme", "pg_duration": "Designed for higher education", "pg_desc": "Consent, safeguarding, digital harm and bystander intervention.", "pg_label": "For universities" } },
+        { "type": "programme", "settings": { "pg_title": "Annual Partnership", "pg_duration": "Ongoing support", "pg_desc": "Quarterly workshops, policy reviews, staff refreshers and email support.", "pg_label": "For ongoing impact" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

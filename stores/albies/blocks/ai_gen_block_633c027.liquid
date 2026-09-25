@@ -1,0 +1,1291 @@
+{% doc %}
+  @prompt
+    Create a premium, minimalist **FAQ section for Soluna**, inspired closely by the attached desktop and mobile reference screenshots.
+    
+    IMPORTANT: This must be a **single Shopify section** with a clean, responsive three-part layout. Do not create separate sections.
+    
+    ### DESKTOP LAYOUT
+    
+    Create a three-column layout:
+    
+    **LEFT COLUMN: Intro Content**
+    
+    Include editable fields for:
+    
+    * Small subheading
+    * Main heading
+    * Supporting paragraph
+    * Button text
+    * Button link
+    
+    The content should be vertically balanced within the section and aligned towards the left.
+    
+    The button should have an elegant, premium appearance with adjustable border radius, padding and colours.
+    
+    ---
+    
+    **CENTRE COLUMN: Image**
+    
+    Add an editable Shopify image picker.
+    
+    The image should sit prominently between the introduction and FAQ area.
+    
+    Allow the merchant to:
+    
+    * Upload/change the image
+    * Adjust image width
+    * Adjust image height
+    * Choose image fit: Cover or Contain
+    * Adjust border radius
+    
+    The image should maintain its proportions and look clean and intentional rather than appearing like a standard product card.
+    
+    ---
+    
+    **RIGHT COLUMN: FAQ ACCORDION**
+    
+    Create up to **4 editable FAQ items**.
+    
+    Each FAQ item should contain:
+    
+    * Question
+    * Answer
+    
+    The FAQ questions should appear as clean horizontal rows.
+    
+    Each question must have a **plus (+) icon** when collapsed.
+    
+    When opened, the icon should smoothly rotate or change into a minus (−) icon.
+    
+    The answer should smoothly expand and collapse underneath the question.
+    
+    Use a fast, subtle animation with no harsh movement.
+    
+    ### IMPORTANT FAQ STYLING
+    
+    When an FAQ is **collapsed**, it must have a **transparent background** so that the section background remains visible.
+    
+    When an FAQ is **expanded**, allow the merchant to choose a separate background colour for the expanded FAQ.
+    
+    Add Theme Editor settings for:
+    
+    * FAQ collapsed background
+    * FAQ expanded background
+    * FAQ border colour
+    * FAQ text colour
+    * FAQ answer colour
+    * FAQ border radius
+    * FAQ spacing
+    * FAQ padding
+    * Plus/minus icon colour
+    
+    The collapsed FAQ items should have a subtle border so they remain clearly visible without looking like heavy cards.
+    
+    The expanded FAQ should feel visually connected to the collapsed items rather than appearing as a completely separate component.
+    
+    ### SECTION CUSTOMISATION
+    
+    Add Theme Editor controls for:
+    
+    * Section background colour
+    * Section text colour
+    * Section width
+    * Desktop section height
+    * Top padding
+    * Bottom padding
+    * Column spacing
+    * Left column width
+    * Centre image width
+    * FAQ column width
+    * Heading size
+    * Subheading size
+    * Body text size
+    * Button background colour
+    * Button text colour
+    * Button border radius
+    * Button padding
+    * Image border radius
+    
+    All text, colours, spacing and content must be editable through the Shopify Theme Editor.
+    
+    ### MOBILE LAYOUT
+    
+    IMPORTANT: The mobile layout must stack the three areas in this exact order:
+    
+    **1. Intro text and button**
+    
+    **2. Image**
+    
+    **3. FAQ accordion**
+    
+    Do not place the image beside the text on mobile.
+    
+    Do not place the FAQ beside the image on mobile.
+    
+    Everything must stack vertically and fit comfortably within the viewport.
+    
+    The mobile image should automatically resize to the available screen width while maintaining its aspect ratio.
+    
+    The FAQ accordion should span almost the full available mobile width with sensible side margins.
+    
+    FAQ questions must wrap naturally if they are long. Do not allow text or icons to overflow horizontally.
+    
+    Reduce padding, typography and spacing appropriately for mobile while keeping the premium appearance.
+    
+    ### RESPONSIVE BEHAVIOUR
+    
+    On desktop, maintain the three-column composition shown in the reference.
+    
+    On tablet, intelligently reduce column spacing and typography while preserving the three-part structure where possible.
+    
+    On mobile, switch completely to the stacked layout:
+    
+    INTRO → IMAGE → FAQ
+    
+    The transition between layouts should be smooth and there should be no horizontal scrolling.
+    
+    ### ANIMATION
+    
+    Keep all interactions clean and swift.
+    
+    FAQ opening and closing should use a smooth height/opacity transition.
+    
+    The plus icon should smoothly rotate when an FAQ is opened.
+    
+    Avoid excessive animations or distracting effects.
+    
+    The overall experience should feel refined, fast and premium.
+    
+    ### DESIGN DIRECTION
+    
+    The section should feel appropriate for a high-end wellness brand such as Soluna.
+    
+    Use generous spacing, strong typography, subtle borders and restrained visual styling.
+    
+    Do not make the FAQ cards look like generic ecommerce boxes.
+    
+    The final result should feel editorial, sophisticated and calm, while remaining highly functional.
+    
+    ### TECHNICAL REQUIREMENTS
+    
+    * Use Shopify Liquid, HTML, CSS and vanilla JavaScript only.
+    * Do not use external libraries.
+    * Make every setting editable through the Shopify Theme Editor.
+    * Make the section fully responsive.
+    * Ensure the FAQ accordion works independently for each question.
+    * Allow multiple FAQs to be open at the same time.
+    * Do not reload the page when opening or closing FAQs.
+    * Use accessible buttons , Make everything center aligned in mobile mode as default.
+    
+    Give me option to have different colour  for question when collapsed and expanded, Make the defaul background for the section as black
+    Make the default text as white
+    Collapsed text as white and expanded text as black
+    Make the plus icon white when collapsed and black when expanded.
+    
+    Make it so only one FAQ card can stay open at a time
+    , Give me option to change the font everywhere , Make it so that the section is adaptable to the screen size and has enough padding on both ends for even small sccreen, Can you give me access to change the thickness for FAQ border, For button, Give me access to change the height and width seperately for computer and mobile mode, Make sure that the paragraph and the title is adaptable to the space and enter added in the text.
+    New line in the text box should show in section , Give me separate settings for text size in computer and mobile., Can you make the image a little up towards the top and also remove the space from below making the section more compact. Expanding  the section whenever required if there is an FAQ expanded
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-faq-section-{{ ai_gen_id }} {
+    display: block;
+    background-color: {{ block.settings.section_background }};
+    color: {{ block.settings.section_text_color }};
+    padding-top: {{ block.settings.padding_top }}px;
+    padding-bottom: {{ block.settings.padding_bottom }}px;
+    width: 100%;
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-weight: {{ block.settings.body_font.weight }};
+    font-style: {{ block.settings.body_font.style }};
+  }
+
+  .ai-faq-container-{{ ai_gen_id }} {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: {{ block.settings.section_width }}px;
+    margin: 0 auto;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .ai-faq-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: {{ block.settings.left_column_width }}fr {{ block.settings.center_image_width }}fr {{ block.settings.faq_column_width }}fr;
+    gap: {{ block.settings.column_spacing }}px;
+    align-items: start;
+  }
+
+  .ai-faq-intro-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 20px;
+    padding-top: 40px;
+    min-width: 0;
+  }
+
+  .ai-faq-subheading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subheading_size_desktop }}px;
+    margin: 0;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    font-family: {{ block.settings.subheading_font.family }}, {{ block.settings.subheading_font.fallback_families }};
+    font-weight: {{ block.settings.subheading_font.weight }};
+    font-style: {{ block.settings.subheading_font.style }};
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .ai-faq-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size_desktop }}px;
+    margin: 0;
+    font-weight: 700;
+    line-height: 1.2;
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-style: {{ block.settings.heading_font.style }};
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .ai-faq-paragraph-{{ ai_gen_id }} {
+    font-size: {{ block.settings.body_text_size_desktop }}px;
+    margin: 0;
+    line-height: 1.6;
+    opacity: 0.85;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .ai-faq-button-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: {{ block.settings.button_width_desktop }}px;
+    max-width: 100%;
+    height: {{ block.settings.button_height_desktop }}px;
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    border-radius: {{ block.settings.button_border_radius }}px;
+    text-decoration: none;
+    font-size: {{ block.settings.button_text_size_desktop }}px;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+    border: 1px solid {{ block.settings.button_background }};
+    font-family: {{ block.settings.button_font.family }}, {{ block.settings.button_font.fallback_families }};
+    font-weight: {{ block.settings.button_font.weight }};
+    font-style: {{ block.settings.button_font.style }};
+  }
+
+  .ai-faq-button-{{ ai_gen_id }}:hover {
+    opacity: 0.8;
+  }
+
+  .ai-faq-image-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    padding-top: 0;
+  }
+
+  .ai-faq-image-{{ ai_gen_id }} {
+    width: {{ block.settings.image_width }}%;
+    max-width: 100%;
+    height: {{ block.settings.image_height }}px;
+    object-fit: {{ block.settings.image_fit }};
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-faq-image-placeholder-{{ ai_gen_id }} {
+    width: {{ block.settings.image_width }}%;
+    max-width: 100%;
+    height: {{ block.settings.image_height }}px;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    position: relative;
+  }
+
+  .ai-faq-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 200px;
+    max-height: 200px;
+    opacity: 0.3;
+  }
+
+  .ai-faq-accordion-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.faq_spacing }}px;
+    min-width: 0;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }} {
+    border: {{ block.settings.faq_border_thickness }}px solid {{ block.settings.faq_border_color }};
+    border-radius: {{ block.settings.faq_border_radius }}px;
+    overflow: hidden;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.collapsed {
+    background-color: {{ block.settings.faq_collapsed_background }};
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.expanded {
+    background-color: {{ block.settings.faq_expanded_background }};
+  }
+
+  .ai-faq-question-{{ ai_gen_id }} {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: {{ block.settings.faq_padding }}px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-size: {{ block.settings.faq_question_size_desktop }}px;
+    font-weight: 500;
+    gap: 16px;
+    transition: color 0.3s ease;
+    font-family: {{ block.settings.faq_question_font.family }}, {{ block.settings.faq_question_font.fallback_families }};
+    font-weight: {{ block.settings.faq_question_font.weight }};
+    font-style: {{ block.settings.faq_question_font.style }};
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.collapsed .ai-faq-question-{{ ai_gen_id }} {
+    color: {{ block.settings.faq_question_collapsed_color }};
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.expanded .ai-faq-question-{{ ai_gen_id }} {
+    color: {{ block.settings.faq_question_expanded_color }};
+  }
+
+  .ai-faq-question-text-{{ ai_gen_id }} {
+    flex: 1;
+    min-width: 0;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .ai-faq-icon-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.collapsed .ai-faq-icon-{{ ai_gen_id }} {
+    color: {{ block.settings.faq_icon_collapsed_color }};
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.expanded .ai-faq-icon-{{ ai_gen_id }} {
+    color: {{ block.settings.faq_icon_expanded_color }};
+  }
+
+  .ai-faq-icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.expanded .ai-faq-icon-{{ ai_gen_id }} {
+    transform: rotate(45deg);
+  }
+
+  .ai-faq-answer-wrapper-{{ ai_gen_id }} {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    opacity: 0;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.expanded .ai-faq-answer-wrapper-{{ ai_gen_id }} {
+    max-height: 1000px;
+    opacity: 1;
+  }
+
+  .ai-faq-answer-{{ ai_gen_id }} {
+    padding: 0 {{ block.settings.faq_padding }}px {{ block.settings.faq_padding }}px {{ block.settings.faq_padding }}px;
+    font-size: {{ block.settings.faq_answer_size_desktop }}px;
+    line-height: 1.7;
+    color: {{ block.settings.faq_answer_color }};
+    font-family: {{ block.settings.faq_answer_font.family }}, {{ block.settings.faq_answer_font.fallback_families }};
+    font-weight: {{ block.settings.faq_answer_font.weight }};
+    font-style: {{ block.settings.faq_answer_font.style }};
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  @media screen and (max-width: 1200px) {
+    .ai-faq-container-{{ ai_gen_id }} {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+
+    .ai-faq-grid-{{ ai_gen_id }} {
+      gap: {{ block.settings.column_spacing | times: 0.8 }}px;
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-faq-container-{{ ai_gen_id }} {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    .ai-faq-section-{{ ai_gen_id }} {
+      padding-top: {{ block.settings.padding_top | times: 0.7 }}px;
+      padding-bottom: {{ block.settings.padding_bottom | times: 0.7 }}px;
+    }
+
+    .ai-faq-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .ai-faq-intro-{{ ai_gen_id }} {
+      gap: 16px;
+      text-align: center;
+      align-items: center;
+      padding-top: 0;
+    }
+
+    .ai-faq-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size_mobile }}px;
+    }
+
+    .ai-faq-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size_mobile }}px;
+    }
+
+    .ai-faq-paragraph-{{ ai_gen_id }} {
+      font-size: {{ block.settings.body_text_size_mobile }}px;
+    }
+
+    .ai-faq-button-{{ ai_gen_id }} {
+      width: {{ block.settings.button_width_mobile }}px;
+      height: {{ block.settings.button_height_mobile }}px;
+      font-size: {{ block.settings.button_text_size_mobile }}px;
+    }
+
+    .ai-faq-image-{{ ai_gen_id }},
+    .ai-faq-image-placeholder-{{ ai_gen_id }} {
+      width: 100%;
+      height: auto;
+      min-height: 300px;
+    }
+
+    .ai-faq-question-{{ ai_gen_id }} {
+      font-size: {{ block.settings.faq_question_size_mobile }}px;
+      padding: {{ block.settings.faq_padding | times: 0.85 }}px;
+    }
+
+    .ai-faq-answer-{{ ai_gen_id }} {
+      font-size: {{ block.settings.faq_answer_size_mobile }}px;
+      padding: 0 {{ block.settings.faq_padding | times: 0.85 }}px {{ block.settings.faq_padding | times: 0.85 }}px {{ block.settings.faq_padding | times: 0.85 }}px;
+    }
+
+    .ai-faq-accordion-{{ ai_gen_id }} {
+      gap: {{ block.settings.faq_spacing | times: 0.8 }}px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-faq-container-{{ ai_gen_id }} {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .ai-faq-section-{{ ai_gen_id }} {
+      padding-top: {{ block.settings.padding_top | times: 0.5 }}px;
+      padding-bottom: {{ block.settings.padding_bottom | times: 0.5 }}px;
+    }
+
+    .ai-faq-grid-{{ ai_gen_id }} {
+      gap: 32px;
+    }
+
+    .ai-faq-intro-{{ ai_gen_id }} {
+      gap: 12px;
+    }
+
+    .ai-faq-image-{{ ai_gen_id }},
+    .ai-faq-image-placeholder-{{ ai_gen_id }} {
+      min-height: 250px;
+    }
+
+    .ai-faq-question-{{ ai_gen_id }} {
+      padding: {{ block.settings.faq_padding | times: 0.75 }}px;
+      gap: 12px;
+    }
+
+    .ai-faq-answer-{{ ai_gen_id }} {
+      padding: 0 {{ block.settings.faq_padding | times: 0.75 }}px {{ block.settings.faq_padding | times: 0.75 }}px {{ block.settings.faq_padding | times: 0.75 }}px;
+    }
+
+    .ai-faq-accordion-{{ ai_gen_id }} {
+      gap: {{ block.settings.faq_spacing | times: 0.7 }}px;
+    }
+
+    .ai-faq-icon-{{ ai_gen_id }} {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .ai-faq-container-{{ ai_gen_id }} {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    .ai-faq-section-{{ ai_gen_id }} {
+      padding-top: {{ block.settings.padding_top | times: 0.4 }}px;
+      padding-bottom: {{ block.settings.padding_bottom | times: 0.4 }}px;
+    }
+
+    .ai-faq-grid-{{ ai_gen_id }} {
+      gap: 28px;
+    }
+
+    .ai-faq-image-{{ ai_gen_id }},
+    .ai-faq-image-placeholder-{{ ai_gen_id }} {
+      min-height: 200px;
+    }
+  }
+{% endstyle %}
+
+<soluna-faq-{{ ai_gen_id }} class="ai-faq-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-faq-container-{{ ai_gen_id }}">
+    <div class="ai-faq-grid-{{ ai_gen_id }}">
+      <div class="ai-faq-intro-{{ ai_gen_id }}">
+        {% if block.settings.subheading != blank %}
+          <p class="ai-faq-subheading-{{ ai_gen_id }}">{{ block.settings.subheading }}</p>
+        {% endif %}
+
+        {% if block.settings.heading != blank %}
+          <h2 class="ai-faq-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+        {% endif %}
+
+        {% if block.settings.paragraph != blank %}
+          <p class="ai-faq-paragraph-{{ ai_gen_id }}">{{ block.settings.paragraph }}</p>
+        {% endif %}
+
+        {% if block.settings.button_text != blank %}
+          <a href="{{ block.settings.button_link }}" class="ai-faq-button-{{ ai_gen_id }}">
+            {{ block.settings.button_text }}
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="ai-faq-image-wrapper-{{ ai_gen_id }}">
+        {% if block.settings.image %}
+          <img
+            src="{{ block.settings.image | image_url: width: 1000 }}"
+            alt="{{ block.settings.image.alt | escape }}"
+            loading="lazy"
+            width="{{ block.settings.image.width }}"
+            height="{{ block.settings.image.height }}"
+            class="ai-faq-image-{{ ai_gen_id }}"
+          >
+        {% else %}
+          <div class="ai-faq-image-placeholder-{{ ai_gen_id }}">
+            {{ 'image' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="ai-faq-accordion-{{ ai_gen_id }}">
+        {% for i in (1..4) %}
+          {% assign question_key = 'faq_question_' | append: i %}
+          {% assign answer_key = 'faq_answer_' | append: i %}
+          {% assign question = block.settings[question_key] %}
+          {% assign answer = block.settings[answer_key] %}
+
+          {% if question != blank and answer != blank %}
+            <div class="ai-faq-item-{{ ai_gen_id }} collapsed" data-faq-item>
+              <button
+                class="ai-faq-question-{{ ai_gen_id }}"
+                aria-expanded="false"
+                data-faq-button
+              >
+                <span class="ai-faq-question-text-{{ ai_gen_id }}">{{ question }}</span>
+                <span class="ai-faq-icon-{{ ai_gen_id }}">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                </span>
+              </button>
+              <div class="ai-faq-answer-wrapper-{{ ai_gen_id }}" data-faq-answer>
+                <div class="ai-faq-answer-{{ ai_gen_id }}">{{ answer }}</div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</soluna-faq-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class SolunaFaq{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.faqItems = this.querySelectorAll('[data-faq-item]');
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.faqItems.forEach((item) => {
+          const button = item.querySelector('[data-faq-button]');
+          
+          button.addEventListener('click', () => {
+            const isExpanded = item.classList.contains('expanded');
+            
+            if (isExpanded) {
+              item.classList.remove('expanded');
+              item.classList.add('collapsed');
+              button.setAttribute('aria-expanded', 'false');
+            } else {
+              this.faqItems.forEach((otherItem) => {
+                if (otherItem !== item) {
+                  otherItem.classList.remove('expanded');
+                  otherItem.classList.add('collapsed');
+                  otherItem.querySelector('[data-faq-button]').setAttribute('aria-expanded', 'false');
+                }
+              });
+              
+              item.classList.remove('collapsed');
+              item.classList.add('expanded');
+              button.setAttribute('aria-expanded', 'true');
+            }
+          });
+        });
+      }
+    }
+
+    customElements.define('soluna-faq-{{ ai_gen_id }}', SolunaFaq{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "FAQ section",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "color",
+      "id": "section_background",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "section_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "section_width",
+      "min": 1000,
+      "max": 1800,
+      "step": 50,
+      "unit": "px",
+      "label": "Section width",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "column_spacing",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Column spacing",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "left_column_width",
+      "min": 20,
+      "max": 40,
+      "step": 5,
+      "unit": "%",
+      "label": "Left column width",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "center_image_width",
+      "min": 20,
+      "max": 40,
+      "step": 5,
+      "unit": "%",
+      "label": "Center image width",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "faq_column_width",
+      "min": 30,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "FAQ column width",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Intro content"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Questions & Answers"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "textarea",
+      "id": "paragraph",
+      "label": "Paragraph",
+      "default": "Find answers to common questions about our wellness products and practices."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Contact us"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "helvetica_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "subheading_font",
+      "label": "Subheading font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "header",
+      "content": "Text size (desktop)"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "subheading_size_desktop",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "body_text_size_desktop",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Body text",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Text size (mobile)"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 20,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "subheading_size_mobile",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "body_text_size_mobile",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Body text",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "font_picker",
+      "id": "button_font",
+      "label": "Button font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Button size (desktop)"
+    },
+    {
+      "type": "range",
+      "id": "button_width_desktop",
+      "min": 100,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "label": "Width",
+      "default": 200
+    },
+    {
+      "type": "range",
+      "id": "button_height_desktop",
+      "min": 40,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Height",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "button_text_size_desktop",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Button size (mobile)"
+    },
+    {
+      "type": "range",
+      "id": "button_width_mobile",
+      "min": 100,
+      "max": 350,
+      "step": 10,
+      "unit": "px",
+      "label": "Width",
+      "default": 180
+    },
+    {
+      "type": "range",
+      "id": "button_height_mobile",
+      "min": 40,
+      "max": 70,
+      "step": 5,
+      "unit": "px",
+      "label": "Height",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "button_text_size_mobile",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Image width",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "min": 300,
+      "max": 700,
+      "step": 50,
+      "unit": "px",
+      "label": "Image height",
+      "default": 500
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image fit",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover"
+        },
+        {
+          "value": "contain",
+          "label": "Contain"
+        }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "FAQ 1"
+    },
+    {
+      "type": "textarea",
+      "id": "faq_question_1",
+      "label": "Question",
+      "default": "What are your shipping options?"
+    },
+    {
+      "type": "textarea",
+      "id": "faq_answer_1",
+      "label": "Answer",
+      "default": "We offer standard and express shipping options. Standard delivery takes 3-5 business days, while express delivery arrives within 1-2 business days."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 2"
+    },
+    {
+      "type": "textarea",
+      "id": "faq_question_2",
+      "label": "Question",
+      "default": "What is your return policy?"
+    },
+    {
+      "type": "textarea",
+      "id": "faq_answer_2",
+      "label": "Answer",
+      "default": "We accept returns within 30 days of purchase. Items must be unused and in their original packaging. Please contact our customer service team to initiate a return."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 3"
+    },
+    {
+      "type": "textarea",
+      "id": "faq_question_3",
+      "label": "Question",
+      "default": "Are your products organic?"
+    },
+    {
+      "type": "textarea",
+      "id": "faq_answer_3",
+      "label": "Answer",
+      "default": "Yes, all our wellness products are certified organic and sourced from sustainable suppliers. We prioritize natural ingredients and ethical production methods."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 4"
+    },
+    {
+      "type": "textarea",
+      "id": "faq_question_4",
+      "label": "Question",
+      "default": "How do I track my order?"
+    },
+    {
+      "type": "textarea",
+      "id": "faq_answer_4",
+      "label": "Answer",
+      "default": "Once your order ships, you'll receive a tracking number via email. You can use this number to track your package on our website or the carrier's tracking page."
+    },
+    {
+      "type": "header",
+      "content": "FAQ style"
+    },
+    {
+      "type": "font_picker",
+      "id": "faq_question_font",
+      "label": "Question font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "faq_answer_font",
+      "label": "Answer font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "color",
+      "id": "faq_collapsed_background",
+      "label": "Collapsed background",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "color",
+      "id": "faq_expanded_background",
+      "label": "Expanded background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "faq_border_color",
+      "label": "Border color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "faq_border_thickness",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Border thickness",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "faq_question_collapsed_color",
+      "label": "Question collapsed color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "faq_question_expanded_color",
+      "label": "Question expanded color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "faq_answer_color",
+      "label": "Answer text color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "faq_icon_collapsed_color",
+      "label": "Icon collapsed color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "faq_icon_expanded_color",
+      "label": "Icon expanded color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "faq_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "faq_spacing",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Spacing between items",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "faq_padding",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "FAQ text size (desktop)"
+    },
+    {
+      "type": "range",
+      "id": "faq_question_size_desktop",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Question",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "faq_answer_size_desktop",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Answer",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "FAQ text size (mobile)"
+    },
+    {
+      "type": "range",
+      "id": "faq_question_size_mobile",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Question",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "faq_answer_size_mobile",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Answer",
+      "default": 14
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ section"
+    }
+  ]
+}
+{% endschema %}

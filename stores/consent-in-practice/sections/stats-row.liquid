@@ -1,0 +1,282 @@
+<style>
+  /* Theme Override */
+  #shopify-section-{{ section.id }} {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .stats-section-{{ section.id }} {
+    --stats-bg: {{ section.settings.stats_bg_color }};
+    --stats-text: {{ section.settings.stats_text_color }};
+    --stats-primary: {{ section.settings.stats_primary_color }};
+    --stats-divider: {{ section.settings.stats_divider_color }};
+    --stats-padding-y: {{ section.settings.stats_padding_y }}px;
+    --stats-number-size: {{ section.settings.stats_number_size }}px;
+    --stats-desc-size: {{ section.settings.stats_desc_size }}px;
+    --stats-heading-size: {{ section.settings.stats_heading_size }}px;
+
+    background-color: var(--stats-bg);
+    color: var(--stats-text);
+    padding-top: var(--stats-padding-y);
+    padding-bottom: var(--stats-padding-y);
+    width: 100%;
+  }
+
+  .stats-section-{{ section.id }} .stats-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 60px;
+    text-align: center;
+  }
+
+  .stats-section-{{ section.id }} .stats-heading {
+    font-size: var(--stats-heading-size);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--stats-primary);
+    margin: 0 0 50px;
+  }
+
+  .stats-section-{{ section.id }} .stats-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .stats-section-{{ section.id }} .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .stats-section-{{ section.id }} .stat-item:not(:last-child) {
+    padding-right: 40px;
+    border-right: 1px solid var(--stats-divider);
+  }
+
+  .stats-section-{{ section.id }} .stat-number {
+    font-size: var(--stats-number-size);
+    font-weight: 700;
+    color: var(--stats-primary);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .stats-section-{{ section.id }} .stat-desc {
+    font-size: var(--stats-desc-size);
+    line-height: 1.5;
+    color: var(--stats-text);
+    opacity: 0.8;
+    max-width: 150px;
+  }
+
+  /* Mobile */
+  @media (max-width: 990px) {
+    .stats-section-{{ section.id }} .stats-container {
+      padding: 0 40px;
+    }
+
+    .stats-section-{{ section.id }} .stats-grid {
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    .stats-section-{{ section.id }} .stat-item {
+      flex: 0 0 calc(50% - 20px);
+    }
+
+    .stats-section-{{ section.id }} .stat-item:nth-child(odd) {
+      padding-right: 20px;
+      border-right: 1px solid var(--stats-divider);
+    }
+
+    .stats-section-{{ section.id }} .stat-item:nth-child(even) {
+      padding-right: 0;
+      border-right: none;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .stats-section-{{ section.id }} .stats-container {
+      padding: 0 20px;
+    }
+
+    .stats-section-{{ section.id }} .stats-heading {
+      font-size: calc(var(--stats-heading-size) * 0.8);
+      margin-bottom: 40px;
+    }
+
+    .stats-section-{{ section.id }} .stats-grid {
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .stats-section-{{ section.id }} .stat-item {
+      flex: 0 0 100%;
+      width: 100%;
+      padding-right: 0 !important;
+      border-right: none !important;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--stats-divider);
+    }
+
+    .stats-section-{{ section.id }} .stat-item:last-child {
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+  }
+</style>
+
+<section class="stats-section-{{ section.id }}">
+  <div class="stats-container">
+    
+    {% if section.settings.stats_heading != blank %}
+      <h2 class="stats-heading">{{ section.settings.stats_heading }}</h2>
+    {% endif %}
+
+    <div class="stats-grid">
+      {% for block in section.blocks %}
+        <div class="stat-item" {{ block.shopify_attributes }}>
+          {% if block.settings.stat_number != blank %}
+            <div class="stat-number">{{ block.settings.stat_number }}</div>
+          {% endif %}
+          {% if block.settings.stat_desc != blank %}
+            <p class="stat-desc">{{ block.settings.stat_desc }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Stats Row",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "stats_bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "stats_text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "stats_primary_color",
+      "label": "Primary Color (Numbers)",
+      "default": "#5568CA"
+    },
+    {
+      "type": "color",
+      "id": "stats_divider_color",
+      "label": "Divider Color",
+      "default": "#d1d5db"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "stats_padding_y",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "stats_heading_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "stats_number_size",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Number Size",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "stats_desc_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Description Size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "stats_heading",
+      "label": "Heading",
+      "default": "EVIDENCE THAT BUILDS CONFIDENCE"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Statistic",
+      "settings": [
+        {
+          "type": "text",
+          "id": "stat_number",
+          "label": "Number/Value",
+          "default": "250+"
+        },
+        {
+          "type": "text",
+          "id": "stat_desc",
+          "label": "Description",
+          "default": "Organisations supported"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stats Row",
+      "blocks": [
+        { "type": "stat", "settings": { "stat_number": "250+", "stat_desc": "Organisations supported" } },
+        { "type": "stat", "settings": { "stat_number": "15,000+", "stat_desc": "Professionals trained" } },
+        { "type": "stat", "settings": { "stat_number": "10+", "stat_desc": "Years of experience" } },
+        { "type": "stat", "settings": { "stat_number": "Across UK", "stat_desc": "And international reach" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

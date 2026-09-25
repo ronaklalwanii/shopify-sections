@@ -1,0 +1,221 @@
+{%- comment -%}
+  ==========================================================================
+  CARD STACK CAROUSEL — self-contained Shopify section
+  Coverflow of rounded photo cards; the active card enlarges to center with
+  overlay title / description / button. Autoplay, dots, swipe support.
+  Single file, no dependencies. Horizon-era settings only.
+  ==========================================================================
+{%- endcomment -%}
+{%- assign sid = section.id -%}
+
+<section class="csc csc-{{ section.id }}" id="csc-{{ section.id }}"
+  style="--csc-bg: {{ section.settings.background_color }}; --csc-ink: {{ section.settings.text_color }}; --csc-accent: {{ section.settings.accent_color }}; --csc-radius: {{ section.settings.card_radius }}px;"
+>
+  <div class="csc__track">
+    {%- for block in section.blocks -%}
+      {%- liquid
+      -%}
+      <div class="csc__card" data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '450, 700, 900', alt: block.settings.title }}
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'csc__placeholder' }}
+        {%- endif -%}
+        <div class="csc__overlay">
+          <p class="csc__title">{{ block.settings.title | escape }}</p>
+          {%- if block.settings.text != blank -%}<p class="csc__text">{{ block.settings.text | escape }}</p>{%- endif -%}
+          {%- if block.settings.button_label != blank -%}
+            <span class="csc__btn">{{ block.settings.button_label | escape }}</span>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+  <div class="csc__dots" role="tablist" aria-label="Slides">
+    {%- for block in section.blocks -%}
+      <button type="button" class="csc__dot" data-goto="{{ forloop.index0 }}" aria-label="Slide {{ forloop.index }}"></button>
+    {%- endfor -%}
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('csc-{{ section.id }}');
+    if (!root || root.dataset.cscInit) return;
+    root.dataset.cscInit = '1';
+    var cards = Array.prototype.slice.call(root.querySelectorAll('.csc__card'));
+    var dots = root.querySelectorAll('.csc__dot');
+    var idx = 0, timer = null;
+    var AUTO = {{ section.settings.autoplay_seconds | times: 1000 }};
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function layout() {
+      var n = cards.length;
+      cards.forEach(function (card, k) {
+        var pos = ((k - idx) % n + n) % n; /* 0 = active, 1 = next, n-1 = prev */
+        if (pos > n / 2) pos -= n; /* wrap to negative for cards before active */
+        var abs = Math.abs(pos);
+        var show = abs <= {{ section.settings.peek_cards }};
+        card.style.display = show ? '' : 'none';
+        card.style.zIndex = String(100 - abs);
+        card.style.transform =
+          'translateX(calc(-50% + ' + (pos * {{ section.settings.card_offset }}) + 'px))' +
+          ' scale(' + Math.max(1 - abs * {{ section.settings.scale_step | divided_by: 100.0 }}, 0.7) + ')';
+        card.style.opacity = abs === 0 ? '1' : (show ? '0.85' : '0');
+        card.classList.toggle('is-active', abs === 0);
+      });
+      dots.forEach(function (d, k) { d.classList.toggle('is-active', k === idx); });
+    }
+
+    function go(step) { idx = (idx + step + cards.length) % cards.length; layout(); }
+    function play() { stop(); if (AUTO > 0 && cards.length > 1 && !reduce) timer = setInterval(function () { go(1); }, AUTO); }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+    dots.forEach(function (d) {
+      d.addEventListener('click', function () { stop(); idx = parseInt(d.dataset.goto, 10); layout(); play(); });
+    });
+
+    /* swipe */
+    var startX = null;
+    root.addEventListener('touchstart', function (e) { startX = e.touches[0].clientX; }, { passive: true });
+    root.addEventListener('touchend', function (e) {
+      if (startX === null) return;
+      var dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 40) { stop(); go(dx < 0 ? 1 : -1); play(); }
+      startX = null;
+    }, { passive: true });
+
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', play);
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { layout(); play(); } else { stop(); } });
+    }, { threshold: 0.3 });
+    io.observe(root);
+
+    cards.forEach(function (c) { c.addEventListener('click', function () { if (!c.classList.contains('is-active')) { stop(); idx = parseInt(c.dataset.index, 10); layout(); play(); } }); });
+    layout(); play();
+  })();
+</script>
+
+{% style %}
+  #csc-{{ sid }} {
+    background: var(--csc-bg); color: var(--csc-ink);
+    font-family: {{ section.settings.font_stack }};
+    padding-block: clamp(3rem, 9vh, 6rem);
+    overflow: hidden;
+  }
+  #csc-{{ sid }} *, #csc-{{ sid }} *::before, #csc-{{ sid }} *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  #csc-{{ sid }} a { color: inherit; text-decoration: none; }
+
+  #csc-{{ sid }} .csc__track {
+    position: relative;
+    height: clamp(320px, {{ section.settings.stage_height }}vw, {{ section.settings.stage_height_max }}px);
+    display: flex; align-items: center; justify-content: center;
+  }
+  #csc-{{ sid }} .csc__card {
+    position: absolute; left: 50%;
+    width: min({{ section.settings.card_width }}vw, {{ section.settings.card_width_max }}px);
+    aspect-ratio: {{ section.settings.card_ratio }};
+    border-radius: var(--csc-radius);
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.16);
+    transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease;
+    cursor: pointer;
+  }
+  #csc-{{ sid }} .csc__card img, #csc-{{ sid }} .csc__placeholder { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #csc-{{ sid }} .csc__placeholder { background: #e6e2d8; }
+
+  #csc-{{ sid }} .csc__overlay {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start; gap: 0.5rem;
+    padding: clamp(1rem, 2.4vw, 1.8rem);
+    background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.55));
+    color: #fff; text-align: left;
+    opacity: 0; transition: opacity 0.4s ease 0.15s;
+  }
+  #csc-{{ sid }} .csc__card.is-active .csc__overlay { opacity: 1; }
+  #csc-{{ sid }} .csc__title { font-size: clamp(1.05rem, 1.8vw, 1.5rem); font-weight: 700; letter-spacing: 0.01em; }
+  #csc-{{ sid }} .csc__text { font-size: 0.78rem; opacity: 0.85; line-height: 1.5; }
+  #csc-{{ sid }} .csc__btn {
+    margin-top: 0.5rem;
+    display: inline-block;
+    background: #fff; color: #1c1e22;
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+    padding: 0.55rem 1.2rem; border-radius: 999px;
+  }
+
+  #csc-{{ sid }} .csc__dots { display: flex; justify-content: center; gap: 0.45rem; margin-top: 1.4rem; }
+  #csc-{{ sid }} .csc__dot {
+    width: 0.42rem; height: 0.42rem; border-radius: 50%;
+    background: var(--csc-ink); opacity: 0.25; border: 0; cursor: pointer;
+    transition: opacity 0.2s ease, width 0.2s ease;
+  }
+  #csc-{{ sid }} .csc__dot.is-active { opacity: 1; width: 1.4rem; border-radius: 999px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #csc-{{ sid }} .csc__card { transition: none; }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Card Stack Carousel",
+  "tag": "section",
+  "max_blocks": 10,
+  "settings": [
+    { "type": "range", "id": "autoplay_seconds", "label": "Autoplay every", "min": 0, "max": 12, "step": 1, "unit": "s", "info": "0 = manual only", "default": 4 },
+    { "type": "range", "id": "card_width", "label": "Active card width", "min": 20, "max": 50, "step": 1, "unit": "vw", "default": 30 },
+    { "type": "range", "id": "card_width_max", "label": "Active card max width", "min": 280, "max": 640, "step": 10, "unit": "px", "default": 430 },
+    {
+      "type": "select", "id": "card_ratio", "label": "Card ratio",
+      "options": [
+        { "value": "4 / 5", "label": "Portrait (4:5)" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "3 / 4", "label": "Tall (3:4)" }
+      ],
+      "default": "4 / 5"
+    },
+    { "type": "range", "id": "stage_height", "label": "Stage height", "min": 30, "max": 60, "step": 1, "unit": "vw", "default": 40 },
+    { "type": "range", "id": "stage_height_max", "label": "Stage max height", "min": 400, "max": 900, "step": 10, "unit": "px", "default": 620 },
+    { "type": "range", "id": "card_offset", "label": "Card spacing", "min": 60, "max": 220, "step": 5, "unit": "px", "default": 150 },
+    { "type": "range", "id": "scale_step", "label": "Depth scale step", "min": 5, "max": 25, "step": 1, "unit": "%", "default": 10 },
+    { "type": "range", "id": "peek_cards", "label": "Peek cards each side", "min": 1, "max": 3, "step": 1, "default": 2 },
+    { "type": "range", "id": "card_radius", "label": "Card corner radius", "min": 0, "max": 48, "step": 2, "unit": "px", "default": 24 },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#f2f2f0" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#1c1e22" },
+    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#1c1e22" },
+    {
+      "type": "select", "id": "font_stack", "label": "Typeface",
+      "options": [
+        { "value": "system-ui, sans-serif", "label": "System" },
+        { "value": "'Helvetica Neue', Helvetica, Arial, sans-serif", "label": "Grotesque" },
+        { "value": "Georgia, 'Times New Roman', serif", "label": "Serif" }
+      ],
+      "default": "system-ui, sans-serif"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card", "name": "Card",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Innovation" },
+        { "type": "textarea", "id": "text", "label": "Description", "default": "Break creative limits with one clear visual concept." },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Discover" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Card Stack Carousel", "blocks": [
+      { "type": "card", "settings": { "title": "Innovation", "text": "Break creative limits with one clear visual concept.", "button_label": "Discover" } },
+      { "type": "card", "settings": { "title": "Performance", "text": "Look and feel your absolute best on every frame.", "button_label": "Discover" } },
+      { "type": "card", "settings": { "title": "Precision", "text": "Create focused images with a clear visual direction.", "button_label": "Discover" } },
+      { "type": "card", "settings": { "title": "Premium Quality", "text": "Built with premium materials and refined details.", "button_label": "Learn more" } },
+      { "type": "card", "settings": { "title": "Craft", "text": "Every detail considered, every frame earned.", "button_label": "Discover" } }
+    ] }
+  ]
+}
+{% endschema %}

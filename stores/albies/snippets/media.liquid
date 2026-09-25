@@ -1,0 +1,87 @@
+{%- if preload -%}
+	{%- assign loading = 'eager' -%}
+	{%- assign fetchpriority = 'high' -%}
+{%- else -%}
+	{%- assign loading = 'lazy' -%}
+	{%- assign fetchpriority = 'auto' -%}
+{%- endif -%}
+
+{%- case media.media_type -%}
+	{%- when 'image' -%}
+		{{-
+			media
+			| image_url: width: media.preview_image.width
+			| image_tag:
+				loading: loading,
+				fetchpriority: fetchpriority,
+				sizes: sizes,
+				widths: '200,300,400,500,600,700,800,1000,1200,1400,1600,1800,2000,2200,2400,2600,2800,3000,3200',
+				class: 'rounded'
+		-}}
+
+	{%- when 'video', 'external_video' -%}
+		<video-media
+			{% if media.host %}
+				host='{{ media.host }}'
+			{% endif -%}
+			{% unless show_play_button %}
+				show-play-button
+			{% endunless %}
+			{% if group != blank %}
+				group='{{ group | escape }}'
+			{% endif -%}
+			style='--ul-aspect-ratio: {{ media.aspect_ratio }}'
+		>
+			{{-
+				media
+				| image_url: width: media.preview_image.width
+				| image_tag:
+					loading: loading,
+					fetchpriority: fetchpriority,
+					sizes: sizes,
+					widths: '200,300,400,500,600,700,800,1000,1200,1400,1600,1800,2000,2200,2400,2600,2800,3000,3200',
+					class: 'rounded'
+			-}}
+
+			{%- if media.media_type == 'video' -%}
+				{{-
+					media
+					| video_tag: controls: true, playsinline: true, muted: autoplay, loop: loop, preload: 'metadata'
+				-}}
+			{%- else -%}
+				<template>
+					{%- if media.host == 'youtube' -%}
+						{{-
+							media
+							| external_video_url: enablejsapi: true, loop: loop, mute: autoplay, autoplay: true
+							| external_video_tag
+						-}}
+					{%- elsif media.host == 'vimeo' -%}
+						{{-
+							media
+							| external_video_url:
+								autopause: true,
+								loop: loop,
+								background: autoplay,
+								muted: autoplay,
+								autoplay: true
+							| external_video_tag
+						-}}
+					{%- else -%}
+						{{- media | external_video_tag: image_size: '2048x' -}}
+					{%- endif -%}
+				</template>
+			{%- endif -%}
+		</video-media>
+
+	{%- when 'model' -%}
+		<model-media
+			{% if group != blank %}
+				group='{{ group | escape }}'
+			{% endif -%}
+			handle='{{ product.handle }}'
+			style='aspect-ratio: {{ media.preview_image.aspect_ratio }}'
+		>
+			{{- media | model_viewer_tag: image_size: '2048x', reveal: 'interaction', toggleable: true -}}
+		</model-media>
+{%- endcase -%}

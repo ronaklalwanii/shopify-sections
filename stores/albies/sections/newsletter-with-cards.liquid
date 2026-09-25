@@ -1,0 +1,616 @@
+{%- comment -%}
+  Newsletter Trust Card Section
+  Reference-matched: left heading, icon+title row, card links, checkerboard accents,
+  transparent form column with outlined inputs, pill button + side privacy note.
+{%- endcomment -%}
+
+<style>
+  /* Reset theme-injected default section spacing */
+  #shopify-section-{{ section.id }} {
+    padding: 0 !important;
+    margin: 0 !important;
+    --ul-section-outer-spacing-block: 0;
+    --ul-section-outer-spacing-inline: 0;
+  }
+
+  #shopify-section-{{ section.id }} {
+    --ntc-bg: {{ section.settings.section_bg }};
+    --ntc-text: {{ section.settings.section_text }};
+    --ntc-card-bg: {{ section.settings.card_bg }};
+    --ntc-accent: {{ section.settings.card_accent }};
+    --ntc-card-text: {{ section.settings.card_text }};
+    --ntc-radius: {{ section.settings.border_radius }}px;
+    --ntc-pad-x: {{ section.settings.padding_x }}px;
+    --ntc-max-width: {{ section.settings.max_width }}px;
+    --ntc-mobile-cards: {{ section.settings.mobile_cards_per_row }};
+    --ntc-desktop-cards: {{ section.settings.desktop_cards_per_row }};
+    --ntc-form-width: {{ section.settings.form_column_width }}%;
+    --ntc-icon-size: {{ section.settings.icon_size }}px;
+    --ntc-button-radius: {{ section.settings.button_radius }}px;
+  }
+
+  .ntc {
+    background: var(--ntc-bg);
+    color: var(--ntc-text);
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+    width: 100%;
+  }
+
+  .ntc__wrapper {
+    width: 100%;
+    max-width: var(--ntc-max-width);
+    margin: 0 auto;
+    padding: 0 var(--ntc-pad-x);
+    box-sizing: border-box;
+  }
+
+  /* ---------- Header ---------- */
+  .ntc__header {
+    margin-bottom: 40px;
+    text-align: {{ section.settings.title_alignment }};
+  }
+
+  .ntc__title {
+    margin: 0;
+    font-size: {{ section.settings.title_size }}px;
+    font-weight: {{ section.settings.title_weight }};
+    color: var(--ntc-text);
+    {% if section.settings.title_font != blank %}
+      font-family: {{ section.settings.title_font.family }}, {{ section.settings.title_font.fallback_families }};
+    {% endif %}
+  }
+
+  .ntc__subtitle {
+    margin: 12px 0 0;
+    font-size: {{ section.settings.subtitle_size }}px;
+    opacity: 0.75;
+    max-width: 600px;
+    {% if section.settings.title_alignment == 'center' %}
+      margin-inline: auto;
+    {% elsif section.settings.title_alignment == 'right' %}
+      margin-left: auto;
+    {% endif %}
+  }
+
+  /* ---------- Layout ---------- */
+  .ntc__layout {
+    display: grid;
+    gap: 48px;
+    align-items: start;
+  }
+
+  .ntc__layout > * { min-width: 0; }
+
+  @media (min-width: 1024px) {
+    .ntc__layout--has-form {
+      grid-template-columns: minmax(0, 1fr) minmax(280px, var(--ntc-form-width));
+      gap: 56px;
+    }
+  }
+
+  /* ---------- Cards grid ---------- */
+  .ntc__grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(var(--ntc-mobile-cards), minmax(0, 1fr));
+  }
+
+  .ntc__grid > * { min-width: 0; }
+
+  @media (min-width: 1024px) {
+    .ntc__grid {
+      grid-template-columns: repeat(var(--ntc-desktop-cards), minmax(0, 1fr));
+    }
+  }
+
+  .ntc__card {
+    display: flex;
+    flex-direction: column;
+    background: var(--ntc-card-bg);
+    border-radius: var(--ntc-radius);
+    padding: 28px;
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 230px;
+    opacity: 0;
+    transform: translateY(16px);
+    animation: ntcFadeUp 0.6s ease forwards;
+  }
+
+  .ntc__card:nth-child(1) { animation-delay: 0.05s; }
+  .ntc__card:nth-child(2) { animation-delay: 0.15s; }
+  .ntc__card:nth-child(3) { animation-delay: 0.25s; }
+  .ntc__card:nth-child(4) { animation-delay: 0.35s; }
+  .ntc__card:nth-child(5) { animation-delay: 0.45s; }
+  .ntc__card:nth-child(6) { animation-delay: 0.55s; }
+
+  /* Icon + title on the same row (wraps gracefully when narrow) */
+  .ntc__card-head {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    margin-bottom: 18px;
+    min-width: 0;
+  }
+
+  .ntc__card-icon {
+    width: var(--ntc-icon-size);
+    height: var(--ntc-icon-size);
+    flex: none;
+    color: var(--ntc-accent);
+  }
+
+  .ntc__card-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .ntc__card-icon--img {
+    background-color: var(--ntc-accent);
+    -webkit-mask-image: var(--ntc-icon-url);
+            mask-image: var(--ntc-icon-url);
+    -webkit-mask-size: contain;
+            mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+            mask-position: center;
+  }
+  .ntc__card--accent .ntc__card-icon--img {
+    background-color: #ffffff;
+  }
+
+  .ntc__card-title {
+    margin: 0;
+    font-size: {{ section.settings.card_title_size }}px;
+    font-weight: {{ section.settings.card_title_weight }};
+    color: var(--ntc-accent);
+    line-height: 1.2;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .ntc__card-text {
+    margin: 0 0 24px;
+    font-size: {{ section.settings.card_text_size }}px;
+    line-height: 1.55;
+    color: var(--ntc-card-text);
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+
+  .ntc__card-text p { margin: 0; }
+
+  .ntc__card-link {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-self: flex-start;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ntc-accent);
+    text-decoration: none;
+    min-width: 0;
+  }
+
+  .ntc__card-link svg {
+    width: 12px;
+    height: 12px;
+    flex: none;
+  }
+
+  .ntc__card-link:hover { text-decoration: underline; }
+
+  /* Accent (filled) card */
+  .ntc__card--accent { background: var(--ntc-accent); }
+  .ntc__card--accent .ntc__card-icon,
+  .ntc__card--accent .ntc__card-title,
+  .ntc__card--accent .ntc__card-link { color: #ffffff; }
+  .ntc__card--accent .ntc__card-text { color: rgba(255, 255, 255, 0.92); }
+
+  /* ---------- Form column (sits on section bg, no box) ---------- */
+  .ntc__form-title {
+    margin: 0 0 22px;
+    font-size: {{ section.settings.form_title_size }}px;
+    font-weight: {{ section.settings.form_title_weight }};
+    line-height: 1.4;
+    color: var(--ntc-text);
+  }
+
+  .ntc__form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+  }
+
+  .ntc__input,
+  .ntc__textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background: transparent;
+    border: 1px solid var(--ntc-accent);
+    border-radius: 10px;
+    padding: 13px 16px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--ntc-text);
+    transition: box-shadow 0.2s ease;
+  }
+
+  .ntc__input::placeholder,
+  .ntc__textarea::placeholder {
+    color: var(--ntc-accent);
+    opacity: 0.75;
+  }
+
+  .ntc__input:focus,
+  .ntc__textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px var(--ntc-accent);
+  }
+
+  .ntc__textarea {
+    min-height: 96px;
+    resize: vertical;
+  }
+
+  /* Pill button + privacy note side by side */
+  .ntc__form-footer {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .ntc__button {
+    border: 0;
+    background: var(--ntc-accent);
+    color: #ffffff;
+    border-radius: var(--ntc-button-radius);
+    padding: 15px 32px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .ntc__button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  .ntc__note {
+    margin: 0;
+    max-width: 190px;
+    font-size: 10.5px;
+    line-height: 1.5;
+    color: #8E8C99;
+  }
+
+  .ntc__msg { margin: 0 0 4px; font-size: 13px; line-height: 1.5; }
+  .ntc__msg--ok  { color: #1f7a4d; }
+  .ntc__msg--err { color: #c0392b; }
+  .ntc__msg--err p { margin: 0; }
+
+  /* ---------- Small screen refinements (2-per-row safe) ---------- */
+  @media (max-width: 767px) {
+    .ntc__grid { gap: 16px; }
+    .ntc__card {
+      padding: 20px;
+      min-height: 0;
+    }
+    .ntc__card-head { margin-bottom: 14px; }
+    .ntc__card-text { margin-bottom: 18px; }
+    .ntc__form-footer { gap: 14px; }
+    .ntc__note { max-width: 100%; }
+  }
+
+  @keyframes ntcFadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ntc__card { animation: none; opacity: 1; transform: none; }
+  }
+</style>
+
+<section class="ntc" id="newsletter-trust-card-{{ section.id }}">
+  <div class="ntc__wrapper">
+    {%- if section.settings.title != blank or section.settings.subtitle != blank -%}
+      <div class="ntc__header">
+        {%- if section.settings.title != blank -%}
+          <h2 class="ntc__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subtitle != blank -%}
+          <p class="ntc__subtitle">{{ section.settings.subtitle }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="ntc__layout {% if section.settings.show_newsletter %}ntc__layout--has-form{% endif %}">
+      <div class="ntc__grid">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'trust_card' -%}
+            <div class="ntc__card {% if block.settings.accent_color %}ntc__card--accent{% endif %}" {{ block.shopify_attributes }}>
+              <div class="ntc__card-head">
+                {%- if block.settings.icon != blank -%}
+                  <span
+                    class="ntc__card-icon ntc__card-icon--img"
+                    style="--ntc-icon-url: url('{{ block.settings.icon | image_url: width: 128 }}');"
+                    aria-hidden="true"
+                  ></span>
+                {%- else -%}
+                  <span class="ntc__card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/></svg>
+                  </span>
+                {%- endif -%}
+                {%- if block.settings.title != blank -%}
+                  <h3 class="ntc__card-title">{{ block.settings.title }}</h3>
+                {%- endif -%}
+              </div>
+
+              {%- if block.settings.text != blank -%}
+                <div class="ntc__card-text">{{ block.settings.text }}</div>
+              {%- endif -%}
+
+              {%- if block.settings.link_text != blank -%}
+                <a class="ntc__card-link" href="{{ block.settings.link_url | default: '#' }}">
+                  {{ block.settings.link_text }}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+                </a>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      {%- if section.settings.show_newsletter -%}
+        <div class="ntc__form-col">
+          {%- if section.settings.form_title != blank -%}
+            <h3 class="ntc__form-title">{{ section.settings.form_title }}</h3>
+          {%- endif -%}
+
+          {%- form 'customer', class: 'ntc__form' -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+
+            {%- if form.posted_successfully? -%}
+              <p class="ntc__msg ntc__msg--ok" tabindex="-1" autofocus>{{ section.settings.success_text | default: "Thanks — you're on the list." }}</p>
+            {%- elsif form.errors -%}
+              <div class="ntc__msg ntc__msg--err" role="alert">{{ form.errors | default_errors }}</div>
+            {%- endif -%}
+
+            {%- assign has_email = false -%}
+            {%- for i in (1..section.settings.form_fields_count) -%}
+              {%- assign type_key = 'field_' | append: i | append: '_type' -%}
+              {%- assign label_key = 'field_' | append: i | append: '_label' -%}
+              {%- assign placeholder_key = 'field_' | append: i | append: '_placeholder' -%}
+              {%- assign required_key = 'field_' | append: i | append: '_required' -%}
+
+              {%- assign field_type = section.settings[type_key] -%}
+              {%- assign field_label = section.settings[label_key] -%}
+              {%- assign field_placeholder = section.settings[placeholder_key] -%}
+              {%- assign field_required = section.settings[required_key] -%}
+
+              {%- case field_type -%}
+                {%- when 'email' -%}
+                  {%- assign has_email = true -%}
+                  <input type="email" name="contact[email]" class="ntc__input"
+                         aria-label="{{ field_label | default: 'Email' }}"
+                         placeholder="{{ field_placeholder }}" {% if field_required %}required{% endif %}>
+                {%- when 'first_name' -%}
+                  <input type="text" name="contact[first_name]" class="ntc__input"
+                         aria-label="{{ field_label | default: 'First name' }}"
+                         placeholder="{{ field_placeholder }}" {% if field_required %}required{% endif %}>
+                {%- when 'last_name' -%}
+                  <input type="text" name="contact[last_name]" class="ntc__input"
+                         aria-label="{{ field_label | default: 'Last name' }}"
+                         placeholder="{{ field_placeholder }}" {% if field_required %}required{% endif %}>
+                {%- when 'tel' -%}
+                  <input type="tel" name="contact[phone]" class="ntc__input"
+                         aria-label="{{ field_label | default: 'Phone' }}"
+                         placeholder="{{ field_placeholder }}" {% if field_required %}required{% endif %}>
+                {%- when 'textarea' -%}
+                  <textarea name="contact[note]" class="ntc__textarea" rows="3"
+                         aria-label="{{ field_label | default: 'Message' }}"
+                         placeholder="{{ field_placeholder }}" {% if field_required %}required{% endif %}></textarea>
+              {%- endcase -%}
+            {%- endfor -%}
+
+            {%- unless has_email -%}
+              <input type="email" name="contact[email]" class="ntc__input" aria-label="Email" placeholder="Email" required>
+            {%- endunless -%}
+
+            <div class="ntc__form-footer">
+              <button type="submit" class="ntc__button">{{ section.settings.button_text | default: 'Subscribe' }}</button>
+              {%- if section.settings.privacy_text != blank -%}
+                <p class="ntc__note">{{ section.settings.privacy_text }}</p>
+              {%- endif -%}
+            </div>
+          {%- endform -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter Trust Card",
+  "tag": "section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "header", "content": "Section Settings" },
+    { "type": "color", "id": "section_bg", "label": "Section background", "default": "#F1F1FA" },
+    { "type": "color", "id": "section_text", "label": "Section text color", "default": "#17161D" },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 120, "step": 10, "default": 60, "unit": "px" },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 120, "step": 10, "default": 80, "unit": "px" },
+    { "type": "range", "id": "padding_x", "label": "Side padding", "min": 0, "max": 120, "step": 2, "default": 48, "unit": "px" },
+    { "type": "range", "id": "max_width", "label": "Max width", "min": 800, "max": 1800, "step": 20, "default": 1200, "unit": "px", "info": "Caps the section content width and centers it." },
+
+    { "type": "header", "content": "Header" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Everything you need" },
+    {
+      "type": "select",
+      "id": "title_alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    { "type": "font_picker", "id": "title_font", "label": "Title font", "default": "poppins_n4" },
+    { "type": "range", "id": "title_size", "label": "Title size", "min": 20, "max": 56, "step": 2, "default": 28, "unit": "px" },
+    { "type": "range", "id": "title_weight", "label": "Title weight", "min": 400, "max": 900, "step": 100, "default": 700 },
+    { "type": "textarea", "id": "subtitle", "label": "Subtitle"},
+    { "type": "range", "id": "subtitle_size", "label": "Subtitle size", "min": 14, "max": 24, "step": 1, "default": 16, "unit": "px" },
+
+    { "type": "header", "content": "Card Settings" },
+    { "type": "color", "id": "card_bg", "label": "Card background", "default": "#FBFBFD" },
+    { "type": "color", "id": "card_accent", "label": "Accent color", "default": "#F5A100" },
+    { "type": "color", "id": "card_text", "label": "Card text color", "default": "#3D3D3D" },
+    { "type": "range", "id": "border_radius", "label": "Border radius", "min": 0, "max": 32, "step": 2, "default": 12, "unit": "px" },
+    { "type": "range", "id": "icon_size", "label": "Icon size", "min": 16, "max": 64, "step": 2, "default": 28, "unit": "px" },
+    { "type": "range", "id": "card_title_size", "label": "Card title size", "min": 14, "max": 28, "step": 1, "default": 16, "unit": "px" },
+    { "type": "range", "id": "card_title_weight", "label": "Card title weight", "min": 400, "max": 900, "step": 100, "default": 600 },
+    { "type": "range", "id": "card_text_size", "label": "Card text size", "min": 12, "max": 20, "step": 1, "default": 13, "unit": "px" },
+
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select",
+      "id": "mobile_cards_per_row",
+      "label": "Mobile cards per row",
+      "options": [
+        { "value": "1", "label": "1 card" },
+        { "value": "2", "label": "2 cards" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "select",
+      "id": "desktop_cards_per_row",
+      "label": "Desktop cards per row",
+      "options": [
+        { "value": "2", "label": "2 cards" },
+        { "value": "3", "label": "3 cards" },
+        { "value": "4", "label": "4 cards" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "form_column_width",
+      "label": "Form column width",
+      "min": 25,
+      "max": 50,
+      "step": 1,
+      "default": 34,
+      "unit": "%",
+      "visible_if": "{{ section.settings.show_newsletter }}"
+    },
+
+    { "type": "header", "content": "Newsletter Form", "visible_if": "{{ section.settings.show_newsletter }}" },
+    { "type": "checkbox", "id": "show_newsletter", "label": "Show newsletter form", "default": true },
+    { "type": "text", "id": "form_title", "label": "Form title", "default": "If you have any questions, you can ask them below", "visible_if": "{{ section.settings.show_newsletter }}" },
+    { "type": "range", "id": "form_title_size", "label": "Form title size", "min": 14, "max": 32, "step": 1, "default": 16, "unit": "px", "visible_if": "{{ section.settings.show_newsletter }}" },
+    { "type": "range", "id": "form_title_weight", "label": "Form title weight", "min": 400, "max": 900, "step": 100, "default": 700, "visible_if": "{{ section.settings.show_newsletter }}" },
+    { "type": "range", "id": "form_fields_count", "label": "Number of form fields", "min": 1, "max": 3, "step": 1, "default": 3, "visible_if": "{{ section.settings.show_newsletter }}" },
+
+    { "type": "header", "content": "Field 1", "visible_if": "{{ section.settings.show_newsletter }}" },
+    {
+      "type": "select",
+      "id": "field_1_type",
+      "label": "Field 1 type",
+      "options": [
+        { "value": "first_name", "label": "First name" },
+        { "value": "last_name",  "label": "Last name" },
+        { "value": "email",      "label": "Email" },
+        { "value": "tel",        "label": "Phone" },
+        { "value": "textarea",   "label": "Message (note)" }
+      ],
+      "default": "email",
+      "visible_if": "{{ section.settings.show_newsletter }}"
+    },
+    { "type": "text", "id": "field_1_label", "label": "Field 1 label", "default": "Name", "visible_if": "{{ section.settings.show_newsletter }}" },
+    { "type": "text", "id": "field_1_placeholder", "label": "Field 1 placeholder", "default": "Your name", "visible_if": "{{ section.settings.show_newsletter }}" },
+    { "type": "checkbox", "id": "field_1_required", "label": "Field 1 required", "default": false, "visible_if": "{{ section.settings.show_newsletter }}" },
+
+    { "type": "header", "content": "Field 2", "visible_if": "{{ section.settings.show_newsletter and section.settings.form_fields_count >= 2 }}" },
+    {
+      "type": "select",
+      "id": "field_2_type",
+      "label": "Field 2 type",
+      "options": [
+        { "value": "first_name", "label": "First name" },
+        { "value": "last_name",  "label": "Last name" },
+        { "value": "email",      "label": "Email" },
+        { "value": "tel",        "label": "Phone" },
+        { "value": "textarea",   "label": "Message (note)" }
+      ],
+      "default": "email",
+      "visible_if": "{{ section.settings.show_newsletter and section.settings.form_fields_count >= 2 }}"
+    },
+    { "type": "text", "id": "field_2_label", "label": "Field 2 label", "default": "Email", "visible_if": "{{ section.settings.show_newsletter and section.settings.form_fields_count >= 2 }}" },
+    { "type": "text", "id": "field_2_placeholder", "label": "Field 2 placeholder", "default": "Your email", "visible_if": "{{ section.settings.show_newsletter and section.settings.form_fields_count >= 2 }}" },
+    { "type": "checkbox", "id": "field_2_required", "label": "Field 2 required", "default": true, "visible_if": "{{ section.settings.show_newsletter and section.settings.form_fields_count >= 2 }}" },
+
+    { "type": "header", "content": "Field 3", "visible_if": "{{ section.settings.show_newsletter and section.settings.form_fields_count >= 3 }}" },
+    {
+      "type": "select",
+      "id": "field_3_type",
+      "label": "Field 3 type",
+      "options": [
+        { "value": "first_name", "label": "First name" },
+        { "value": "last_name",  "label": "Last name" },
+        { "value": "email",      "label": "Email" },
+        { "value": "tel",        "label": "Phone" },
+        { "value": "textarea",   "label": "Message (note)" }
+      ],
+      "default": "textarea",
+      "visible_if": "{{ section.settings.show_newsletter and section.settings.form_fields_count >= 3 }}"
+    },
+    { "type": "text", "id": "field_3_label", "label": "Field 3 label", "default": "Message", "visible_if": "{{ section.settings.show_newsletter and section.settings.form_fields_count >= 3 }}" },
+    { "type": "text", "id": "field_3_placeholder", "label": "Field 3 placeholder", "default": "Message with your question", "visible_if": "{{ section.settings.show_newsletter and section.settings.form_fields_count >= 3 }}" },
+    { "type": "checkbox", "id": "field_3_required", "label": "Field 3 required", "default": false, "visible_if": "{{ section.settings.show_newsletter and section.settings.form_fields_count >= 3 }}" },
+
+    { "type": "header", "content": "Button", "visible_if": "{{ section.settings.show_newsletter }}" },
+    { "type": "text", "id": "button_text", "label": "Button text", "default": "Ask a question", "visible_if": "{{ section.settings.show_newsletter }}" },
+    { "type": "range", "id": "button_radius", "label": "Button radius", "min": 0, "max": 40, "step": 1, "default": 40, "unit": "px", "info": "40 = full pill (current look). Lower for less rounding, 0 = sharp corners.", "visible_if": "{{ section.settings.show_newsletter }}" },
+    { "type": "textarea", "id": "privacy_text", "label": "Privacy text (next to button)", "default": "By clicking the button, you accept the Privacy Policy", "visible_if": "{{ section.settings.show_newsletter }}" }
+  ],
+  "blocks": [
+    {
+      "type": "trust_card",
+      "name": "Trust Card",
+      "settings": [
+        { "type": "image_picker", "id": "icon", "label": "Icon image", "info": "Upload a transparent PNG or SVG silhouette (glyph only, no background). It is auto‑tinted to the accent color, and to white on accent cards. Leave blank for the default circle." },
+        { "type": "text", "id": "title", "label": "Title", "default": "Premium food" },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Purina Pro Plan takes care of your pet's proper nutrition throughout their life.</p>" },
+        { "type": "text", "id": "link_text", "label": "Link text", "default": "View catalog" },
+        { "type": "url", "id": "link_url", "label": "Link URL" },
+        { "type": "checkbox", "id": "accent_color", "label": "Use accent background", "default": false }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter Trust Card",
+      "blocks": [
+        { "type": "trust_card", "settings": { "title": "Premium food", "text": "<p>Purina Pro Plan takes care of your pet's proper nutrition throughout their life.</p>", "link_text": "View catalog", "accent_color": false } },
+        { "type": "trust_card", "settings": { "title": "Vitamins", "text": "<p>Purina Pro Plan takes care of your pet's proper nutrition throughout their life.</p>", "link_text": "View catalog", "accent_color": true } },
+        { "type": "trust_card", "settings": { "title": "Bowls", "text": "<p>Purina Pro Plan takes care of your pet's proper nutrition throughout their life.</p>", "link_text": "View catalog", "accent_color": true } },
+        { "type": "trust_card", "settings": { "title": "Treats", "text": "<p>Purina Pro Plan takes care of your pet's proper nutrition throughout their life.</p>", "link_text": "View catalog", "accent_color": false } }
+      ]
+    }
+  ]
+}
+{% endschema %}

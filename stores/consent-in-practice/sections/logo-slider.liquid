@@ -1,0 +1,278 @@
+<style>
+  /* Theme Override */
+  #shopify-section-{{ section.id }} {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .logo-grid-section-{{ section.id }} {
+    --logo-grid-bg: {{ section.settings.logo_grid_bg }};
+    --logo-grid-heading-color: {{ section.settings.logo_grid_heading_color }};
+    --logo-grid-link-color: {{ section.settings.logo_grid_link_color }};
+    --logo-grid-padding-y: {{ section.settings.logo_grid_padding_y }}px;
+
+    background-color: var(--logo-grid-bg);
+    padding-top: var(--logo-grid-padding-y);
+    padding-bottom: var(--logo-grid-padding-y);
+    width: 100%;
+  }
+
+  .logo-grid-section-{{ section.id }} .logo-grid-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+
+  .logo-grid-section-{{ section.id }} .logo-grid-heading {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--logo-grid-heading-color);
+    margin: 0 0 40px;
+  }
+
+  /* Desktop Grid Layout */
+  .logo-grid-section-{{ section.id }} .logo-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 40px;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+
+  .logo-grid-section-{{ section.id }} .logo-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 80px;
+  }
+
+  .logo-grid-section-{{ section.id }} .logo-item img {
+    max-width: 100%;
+    max-height: 80px;
+    width: auto;
+    object-fit: contain;
+    transition: opacity 0.3s ease;
+  }
+
+  .logo-grid-section-{{ section.id }} .logo-item a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .logo-grid-section-{{ section.id }} .logo-item a:hover img {
+    opacity: 0.7;
+  }
+
+  /* Link styling */
+  .logo-grid-section-{{ section.id }} .check-more-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--logo-grid-link-color);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: gap 0.3s ease;
+  }
+
+  .logo-grid-section-{{ section.id }} .check-more-link:hover {
+    gap: 12px;
+  }
+
+  .logo-grid-section-{{ section.id }} .check-more-link svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  .logo-grid-section-{{ section.id }} .check-more-link:hover svg {
+    transform: translateX(4px);
+  }
+
+  /* Mobile - Horizontal Scroll */
+  @media (max-width: 749px) {
+    .logo-grid-section-{{ section.id }} .logo-grid-container {
+      padding: 0 20px;
+    }
+
+    .logo-grid-section-{{ section.id }} .logo-grid {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding: 0 20px;
+      margin: 0 -20px 30px -20px;
+      margin-bottom: 30px;
+    }
+
+    .logo-grid-section-{{ section.id }} .logo-grid::-webkit-scrollbar {
+      display: none;
+    }
+
+    .logo-grid-section-{{ section.id }} .logo-item {
+      flex: 0 0 calc(50% - 10px);
+      min-height: 60px;
+      scroll-snap-align: start;
+      padding: 10px 0;
+    }
+
+    .logo-grid-section-{{ section.id }} .logo-item img {
+      max-height: 60px;
+    }
+  }
+</style>
+
+<section class="logo-grid-section-{{ section.id }}">
+  <div class="logo-grid-container">
+    {% if section.settings.logo_grid_heading != blank %}
+      <h2 class="logo-grid-heading">{{ section.settings.logo_grid_heading }}</h2>
+    {% endif %}
+
+    <div class="logo-grid">
+      {% for block in section.blocks %}
+        <div class="logo-item" {{ block.shopify_attributes }}>
+          {% if block.settings.logo_image != blank %}
+            {% if block.settings.logo_link != blank %}
+              <a href="{{ block.settings.logo_link }}" aria-label="{{ block.settings.logo_alt | default: 'Logo link' }}">
+            {% endif %}
+            
+            {{ block.settings.logo_image | image_url: width: 400 | image_tag:
+              loading: 'lazy',
+              widths: '100, 200, 300, 400',
+              alt: block.settings.logo_alt | default: block.settings.logo_image.alt
+            }}
+            
+            {% if block.settings.logo_link != blank %}
+              </a>
+            {% endif %}
+          {% else %}
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.check_more_text != blank and section.settings.check_more_link != blank %}
+      <a href="{{ section.settings.check_more_link }}" class="check-more-link">
+        {{ section.settings.check_more_text }}
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Logo Grid",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "logo_grid_heading",
+      "label": "Heading",
+      "default": "TRUSTED BY"
+    },
+    {
+      "type": "text",
+      "id": "check_more_text",
+      "label": "Link Text",
+      "default": "Check more organisations"
+    },
+    {
+      "type": "url",
+      "id": "check_more_link",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "logo_grid_bg",
+      "label": "Background Color",
+      "default": "#F6F7FE"
+    },
+    {
+      "type": "color",
+      "id": "logo_grid_heading_color",
+      "label": "Heading Color",
+      "default": "#5568CA"
+    },
+    {
+      "type": "color",
+      "id": "logo_grid_link_color",
+      "label": "Link Color",
+      "default": "#5568CA"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "logo_grid_padding_y",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo_image",
+          "label": "Logo Image"
+        },
+        {
+          "type": "text",
+          "id": "logo_alt",
+          "label": "Alt Text",
+          "default": "Company logo"
+        },
+        {
+          "type": "url",
+          "id": "logo_link",
+          "label": "Logo Link (Optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Logo Grid",
+      "blocks": [
+        { "type": "logo" },
+        { "type": "logo" },
+        { "type": "logo" },
+        { "type": "logo" },
+        { "type": "logo" },
+        { "type": "logo" }
+      ]
+    }
+  ]
+}
+{% endschema %}

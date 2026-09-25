@@ -1,0 +1,1064 @@
+{% doc %}
+  @prompt
+    Create me a hero section with 70 and 30 split with left side with 70% of image o\with text overlay and right side with an option of adding a quick profile picture and just below that give me option to add name and below that some text . Below that give me icons for instagram, facebook, twitter and linkedin with an oiption to disabel any of these if required. Below that would be a button that reads "contact now".
+    
+    The content oin right would be:
+    
+    Name: Remi Foster.
+    
+    Text below: BS in International Business & Marketing. Boston, Massachusetts
+    
+    Email below: info@mysite.com
+    
+    Phone: (123)-456-7890, Give me a button below the text that reads "Explore".
+    
+    Give me option to change the fonts everywhere. 
+    Give me option to change the background colour and font colour in right section, Give me a button on right side instead of left , Make the button square.
+    
+    Give me control over size of icons. 
+    Make the icons direct and without the circle.
+    
+    Give me control over the text and image side ratio, Update the twitter logo to the newer X logo.
+    
+    In left section, give me control over the position of text. 
+    In left section give me control of selecting font.
+    In left section add an option to add pre-heading text as well
+    , In the left section, remove the box and make the text overlay on image directly, Remove the border from the profile picture, Give me an option add image that fits mobile version.
+    Adjust the section in mobile version based on size of the image, Give me control of size of profile picture in mobile.
+    Give me control of right section height in mobile, Give me option to control height and width of button in mobile and in computer, for description, new line should showin section too as entered in text box, Give an option to add overlay to the image and select colour of that overlay, Decrease the height of right side in mobile mode. 
+    Make everything a little smaller and reduce thje height
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-hero-split-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-hero-split__container-{{ ai_gen_id }} {
+    display: flex;
+    width: 100%;
+    min-height: {{ block.settings.section_height }}px;
+  }
+
+  .ai-hero-split__left-{{ ai_gen_id }} {
+    position: relative;
+    width: {{ block.settings.image_width }}%;
+    overflow: hidden;
+  }
+
+  .ai-hero-split__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-hero-split__mobile-image-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  .ai-hero-split__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-hero-split__image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    max-height: 500px;
+  }
+
+  .ai-hero-split__image-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: {{ block.settings.overlay_color }};
+    opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};
+    pointer-events: none;
+  }
+
+  .ai-hero-split__overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: {{ block.settings.overlay_top_position }}%;
+    left: {{ block.settings.overlay_left_position }}%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 600px;
+    padding: 20px;
+    z-index: 1;
+  }
+
+  .ai-hero-split__text-content-{{ ai_gen_id }} {
+    text-align: {{ block.settings.text_alignment }};
+  }
+
+  .ai-hero-split__preheading-{{ ai_gen_id }} {
+    color: {{ block.settings.overlay_preheading_color }};
+    font-size: {{ block.settings.preheading_size }}px;
+    margin: 0 0 12px 0;
+    line-height: 1.3;
+    font-family: {{ block.settings.overlay_preheading_font.family }}, {{ block.settings.overlay_preheading_font.fallback_families }};
+    font-weight: {{ block.settings.overlay_preheading_font.weight }};
+    font-style: {{ block.settings.overlay_preheading_font.style }};
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .ai-hero-split__heading-{{ ai_gen_id }} {
+    color: {{ block.settings.overlay_heading_color }};
+    font-size: {{ block.settings.heading_size }}px;
+    margin: 0 0 16px 0;
+    line-height: 1.2;
+    font-family: {{ block.settings.overlay_heading_font.family }}, {{ block.settings.overlay_heading_font.fallback_families }};
+    font-weight: {{ block.settings.overlay_heading_font.weight }};
+    font-style: {{ block.settings.overlay_heading_font.style }};
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .ai-hero-split__subtext-{{ ai_gen_id }} {
+    color: {{ block.settings.overlay_text_color }};
+    font-size: {{ block.settings.text_size }}px;
+    margin: 0;
+    line-height: 1.5;
+    font-family: {{ block.settings.overlay_text_font.family }}, {{ block.settings.overlay_text_font.fallback_families }};
+    font-weight: {{ block.settings.overlay_text_font.weight }};
+    font-style: {{ block.settings.overlay_text_font.style }};
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .ai-hero-split__right-{{ ai_gen_id }} {
+    width: {{ 100 | minus: block.settings.image_width }}%;
+    background-color: {{ block.settings.profile_background_color }};
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 30px;
+  }
+
+  .ai-hero-split__profile-image-wrapper-{{ ai_gen_id }} {
+    width: {{ block.settings.profile_image_size }}px;
+    height: {{ block.settings.profile_image_size }}px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .ai-hero-split__profile-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-hero-split__profile-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-hero-split__profile-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+  }
+
+  .ai-hero-split__name-{{ ai_gen_id }} {
+    color: {{ block.settings.profile_text_color }};
+    font-size: {{ block.settings.name_size }}px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    text-align: center;
+    font-family: {{ block.settings.profile_name_font.family }}, {{ block.settings.profile_name_font.fallback_families }};
+    font-weight: {{ block.settings.profile_name_font.weight }};
+    font-style: {{ block.settings.profile_name_font.style }};
+  }
+
+  .ai-hero-split__description-{{ ai_gen_id }} {
+    color: {{ block.settings.profile_text_color }};
+    font-size: {{ block.settings.description_size }}px;
+    margin: 0 0 16px 0;
+    text-align: center;
+    line-height: 1.5;
+    font-family: {{ block.settings.profile_description_font.family }}, {{ block.settings.profile_description_font.fallback_families }};
+    font-weight: {{ block.settings.profile_description_font.weight }};
+    font-style: {{ block.settings.profile_description_font.style }};
+    white-space: pre-line;
+  }
+
+  .ai-hero-split__contact-info-{{ ai_gen_id }} {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .ai-hero-split__contact-item-{{ ai_gen_id }} {
+    color: {{ block.settings.profile_text_color }};
+    font-size: {{ block.settings.contact_size }}px;
+    margin: 0 0 6px 0;
+    text-align: center;
+    word-break: break-word;
+    font-family: {{ block.settings.profile_contact_font.family }}, {{ block.settings.profile_contact_font.fallback_families }};
+    font-weight: {{ block.settings.profile_contact_font.weight }};
+    font-style: {{ block.settings.profile_contact_font.style }};
+  }
+
+  .ai-hero-split__social-icons-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.icon_spacing }}px;
+    margin-bottom: 20px;
+    justify-content: center;
+  }
+
+  .ai-hero-split__social-link-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+    text-decoration: none;
+  }
+
+  .ai-hero-split__social-link-{{ ai_gen_id }}:hover {
+    opacity: 0.7;
+  }
+
+  .ai-hero-split__social-link-{{ ai_gen_id }} svg {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    fill: {{ block.settings.icon_color }};
+  }
+
+  .ai-hero-split__social-link-{{ ai_gen_id }}:hover svg {
+    fill: {{ block.settings.icon_hover_color }};
+  }
+
+  .ai-hero-split__button-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: {{ block.settings.button_width }}px;
+    height: {{ block.settings.button_height }}px;
+    background-color: {{ block.settings.button_background_color }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_text_size }}px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-family: {{ block.settings.profile_button_font.family }}, {{ block.settings.profile_button_font.fallback_families }};
+  }
+
+  .ai-hero-split__button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_background_color }};
+    color: {{ block.settings.button_hover_text_color }};
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-hero-split__container-{{ ai_gen_id }} {
+      flex-direction: column;
+    }
+
+    .ai-hero-split__left-{{ ai_gen_id }},
+    .ai-hero-split__right-{{ ai_gen_id }} {
+      width: 100%;
+    }
+
+    .ai-hero-split__left-{{ ai_gen_id }} {
+      {% if block.settings.mobile_image %}
+        min-height: auto;
+      {% else %}
+        min-height: 400px;
+      {% endif %}
+    }
+
+    .ai-hero-split__right-{{ ai_gen_id }} {
+      min-height: {{ block.settings.mobile_section_height }}px;
+      padding: 30px 20px;
+    }
+
+    .ai-hero-split__image-{{ ai_gen_id }} {
+      {% if block.settings.mobile_image %}
+        display: none;
+      {% endif %}
+    }
+
+    .ai-hero-split__mobile-image-{{ ai_gen_id }} {
+      {% if block.settings.mobile_image %}
+        display: block;
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+      {% endif %}
+    }
+
+    .ai-hero-split__profile-image-wrapper-{{ ai_gen_id }} {
+      width: {{ block.settings.mobile_profile_image_size }}px;
+      height: {{ block.settings.mobile_profile_image_size }}px;
+      margin-bottom: 16px;
+    }
+
+    .ai-hero-split__name-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.name_size }}px * 0.85);
+      margin-bottom: 8px;
+    }
+
+    .ai-hero-split__description-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.description_size }}px * 0.9);
+      margin-bottom: 12px;
+    }
+
+    .ai-hero-split__contact-info-{{ ai_gen_id }} {
+      margin-bottom: 16px;
+    }
+
+    .ai-hero-split__contact-item-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.contact_size }}px * 0.9);
+      margin-bottom: 4px;
+    }
+
+    .ai-hero-split__social-icons-{{ ai_gen_id }} {
+      gap: calc({{ block.settings.icon_spacing }}px * 0.8);
+      margin-bottom: 16px;
+    }
+
+    .ai-hero-split__social-link-{{ ai_gen_id }} svg {
+      width: calc({{ block.settings.icon_size }}px * 0.85);
+      height: calc({{ block.settings.icon_size }}px * 0.85);
+    }
+
+    .ai-hero-split__button-{{ ai_gen_id }} {
+      width: {{ block.settings.mobile_button_width }}px;
+      height: {{ block.settings.mobile_button_height }}px;
+      font-size: calc({{ block.settings.button_text_size }}px * 0.9);
+    }
+
+    .ai-hero-split__overlay-{{ ai_gen_id }} {
+      padding: 20px;
+    }
+
+    .ai-hero-split__preheading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.preheading_size }}px * 0.9);
+    }
+
+    .ai-hero-split__heading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.8);
+    }
+
+    .ai-hero-split__subtext-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.text_size }}px * 0.9);
+    }
+  }
+{% endstyle %}
+
+<div class="ai-hero-split-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-hero-split__container-{{ ai_gen_id }}">
+    <div class="ai-hero-split__left-{{ ai_gen_id }}">
+      {% if block.settings.hero_image %}
+        <img
+          src="{{ block.settings.hero_image | image_url: width: 2000 }}"
+          alt="{{ block.settings.hero_image.alt | escape }}"
+          loading="lazy"
+          width="{{ block.settings.hero_image.width }}"
+          height="{{ block.settings.hero_image.height }}"
+          class="ai-hero-split__image-{{ ai_gen_id }}"
+        >
+      {% else %}
+        <div class="ai-hero-split__image-placeholder-{{ ai_gen_id }}">
+          {{ 'hero-apparel-1' | placeholder_svg_tag }}
+        </div>
+      {% endif %}
+
+      {% if block.settings.mobile_image %}
+        <img
+          src="{{ block.settings.mobile_image | image_url: width: 1000 }}"
+          alt="{{ block.settings.mobile_image.alt | escape }}"
+          loading="lazy"
+          width="{{ block.settings.mobile_image.width }}"
+          height="{{ block.settings.mobile_image.height }}"
+          class="ai-hero-split__mobile-image-{{ ai_gen_id }}"
+        >
+      {% endif %}
+
+      {% if block.settings.show_image_overlay %}
+        <div class="ai-hero-split__image-overlay-{{ ai_gen_id }}"></div>
+      {% endif %}
+
+      {% if block.settings.show_overlay_text %}
+        <div class="ai-hero-split__overlay-{{ ai_gen_id }}">
+          <div class="ai-hero-split__text-content-{{ ai_gen_id }}">
+            {% if block.settings.overlay_preheading != blank %}
+              <div class="ai-hero-split__preheading-{{ ai_gen_id }}">{{ block.settings.overlay_preheading }}</div>
+            {% endif %}
+            {% if block.settings.overlay_heading != blank %}
+              <h1 class="ai-hero-split__heading-{{ ai_gen_id }}">{{ block.settings.overlay_heading }}</h1>
+            {% endif %}
+            {% if block.settings.overlay_text != blank %}
+              <div class="ai-hero-split__subtext-{{ ai_gen_id }}">{{ block.settings.overlay_text }}</div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="ai-hero-split__right-{{ ai_gen_id }}">
+      <div class="ai-hero-split__profile-image-wrapper-{{ ai_gen_id }}">
+        {% if block.settings.profile_image %}
+          <img
+            src="{{ block.settings.profile_image | image_url: width: 400 }}"
+            alt="{{ block.settings.profile_name | escape }}"
+            loading="lazy"
+            width="400"
+            height="400"
+            class="ai-hero-split__profile-image-{{ ai_gen_id }}"
+          >
+        {% else %}
+          <div class="ai-hero-split__profile-placeholder-{{ ai_gen_id }}">
+            {{ 'image' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+      </div>
+
+      {% if block.settings.profile_name != blank %}
+        <h2 class="ai-hero-split__name-{{ ai_gen_id }}">{{ block.settings.profile_name }}</h2>
+      {% endif %}
+
+      {% if block.settings.profile_description != blank %}
+        <div class="ai-hero-split__description-{{ ai_gen_id }}">{{ block.settings.profile_description }}</div>
+      {% endif %}
+
+      <div class="ai-hero-split__contact-info-{{ ai_gen_id }}">
+        {% if block.settings.profile_email != blank %}
+          <p class="ai-hero-split__contact-item-{{ ai_gen_id }}">{{ block.settings.profile_email }}</p>
+        {% endif %}
+        {% if block.settings.profile_phone != blank %}
+          <p class="ai-hero-split__contact-item-{{ ai_gen_id }}">{{ block.settings.profile_phone }}</p>
+        {% endif %}
+      </div>
+
+      <div class="ai-hero-split__social-icons-{{ ai_gen_id }}">
+        {% if block.settings.show_instagram and block.settings.instagram_url != blank %}
+          <a
+            href="{{ block.settings.instagram_url }}"
+            class="ai-hero-split__social-link-{{ ai_gen_id }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </a>
+        {% endif %}
+
+        {% if block.settings.show_facebook and block.settings.facebook_url != blank %}
+          <a
+            href="{{ block.settings.facebook_url }}"
+            class="ai-hero-split__social-link-{{ ai_gen_id }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+          </a>
+        {% endif %}
+
+        {% if block.settings.show_twitter and block.settings.twitter_url != blank %}
+          <a
+            href="{{ block.settings.twitter_url }}"
+            class="ai-hero-split__social-link-{{ ai_gen_id }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="X (Twitter)"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </a>
+        {% endif %}
+
+        {% if block.settings.show_linkedin and block.settings.linkedin_url != blank %}
+          <a
+            href="{{ block.settings.linkedin_url }}"
+            class="ai-hero-split__social-link-{{ ai_gen_id }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+          </a>
+        {% endif %}
+      </div>
+
+      {% if block.settings.button_url != blank %}
+        <a
+          href="{{ block.settings.button_url }}"
+          class="ai-hero-split__button-{{ ai_gen_id }}"
+        >
+          {{ block.settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Hero split profile",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "label": "Minimum height",
+      "min": 400,
+      "max": 900,
+      "step": 50,
+      "unit": "px",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "label": "Image side width",
+      "min": 50,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 70
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Left side image"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image",
+      "info": "Optional. If added, this image will be used on mobile devices and will adjust the section height automatically."
+    },
+    {
+      "type": "header",
+      "content": "Image overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image_overlay",
+      "label": "Show image overlay",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Text overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay_text",
+      "label": "Show text overlay",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Overlay text position"
+    },
+    {
+      "type": "range",
+      "id": "overlay_top_position",
+      "label": "Vertical position",
+      "min": 10,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "overlay_left_position",
+      "label": "Horizontal position",
+      "min": 10,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Overlay pre-heading"
+    },
+    {
+      "type": "text",
+      "id": "overlay_preheading",
+      "label": "Pre-heading text"
+    },
+    {
+      "type": "font_picker",
+      "id": "overlay_preheading_font",
+      "label": "Pre-heading font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "preheading_size",
+      "label": "Pre-heading size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "overlay_preheading_color",
+      "label": "Pre-heading color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Overlay heading"
+    },
+    {
+      "type": "text",
+      "id": "overlay_heading",
+      "label": "Heading text",
+      "default": "Welcome"
+    },
+    {
+      "type": "font_picker",
+      "id": "overlay_heading_font",
+      "label": "Heading font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 24,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "color",
+      "id": "overlay_heading_color",
+      "label": "Heading color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Overlay text"
+    },
+    {
+      "type": "textarea",
+      "id": "overlay_text",
+      "label": "Text",
+      "default": "Discover our story and what we stand for"
+    },
+    {
+      "type": "font_picker",
+      "id": "overlay_text_font",
+      "label": "Text font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 14,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "overlay_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Right side profile"
+    },
+    {
+      "type": "color",
+      "id": "profile_background_color",
+      "label": "Background color",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "color",
+      "id": "profile_text_color",
+      "label": "Text color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "image_picker",
+      "id": "profile_image",
+      "label": "Profile picture"
+    },
+    {
+      "type": "range",
+      "id": "profile_image_size",
+      "label": "Profile picture size",
+      "min": 80,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 150
+    },
+    {
+      "type": "range",
+      "id": "mobile_profile_image_size",
+      "label": "Mobile profile picture size",
+      "min": 60,
+      "max": 180,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "mobile_section_height",
+      "label": "Mobile section height",
+      "min": 300,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "text",
+      "id": "profile_name",
+      "label": "Name",
+      "default": "Remi Foster"
+    },
+    {
+      "type": "font_picker",
+      "id": "profile_name_font",
+      "label": "Name font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "name_size",
+      "label": "Name size",
+      "min": 18,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "textarea",
+      "id": "profile_description",
+      "label": "Description",
+      "default": "BS in International Business & Marketing. Boston, Massachusetts"
+    },
+    {
+      "type": "font_picker",
+      "id": "profile_description_font",
+      "label": "Description font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Contact information"
+    },
+    {
+      "type": "text",
+      "id": "profile_email",
+      "label": "Email",
+      "default": "info@mysite.com"
+    },
+    {
+      "type": "text",
+      "id": "profile_phone",
+      "label": "Phone",
+      "default": "(123)-456-7890"
+    },
+    {
+      "type": "font_picker",
+      "id": "profile_contact_font",
+      "label": "Contact font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "contact_size",
+      "label": "Contact info size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "header",
+      "content": "Social media"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "icon_spacing",
+      "label": "Icon spacing",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "icon_hover_color",
+      "label": "Hover icon color",
+      "default": "#666666"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_instagram",
+      "label": "Show Instagram",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_facebook",
+      "label": "Show Facebook",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_twitter",
+      "label": "Show X (Twitter)",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "twitter_url",
+      "label": "X (Twitter) URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_linkedin",
+      "label": "Show LinkedIn",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "linkedin_url",
+      "label": "LinkedIn URL"
+    },
+    {
+      "type": "header",
+      "content": "Profile button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Explore"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button link"
+    },
+    {
+      "type": "font_picker",
+      "id": "profile_button_font",
+      "label": "Button font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "label": "Button text size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "button_width",
+      "label": "Desktop button width",
+      "min": 100,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "default": 180
+    },
+    {
+      "type": "range",
+      "id": "button_height",
+      "label": "Desktop button height",
+      "min": 40,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "mobile_button_width",
+      "label": "Mobile button width",
+      "min": 100,
+      "max": 350,
+      "step": 10,
+      "unit": "px",
+      "default": 160
+    },
+    {
+      "type": "range",
+      "id": "mobile_button_height",
+      "label": "Mobile button height",
+      "min": 40,
+      "max": 70,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Button border radius",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Background color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background_color",
+      "label": "Hover background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero split profile"
+    }
+  ]
+}
+{% endschema %}

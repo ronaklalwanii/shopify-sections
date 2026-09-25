@@ -1,0 +1,396 @@
+/* =============================================================
+   Ritual Accessories — editorial banner + product card row
+   (Elqorin). Banner: serif heading + blended lifestyle image.
+   Cards: product image, uppercase title, price, quick-add.
+   Tunable values arrive as --ra-* custom properties from the
+   section's Liquid schema (see sections/ritual-accessories.liquid).
+   ============================================================= */
+
+.ra,
+.ra * {
+  box-sizing: border-box;
+}
+
+.ra {
+  background: var(--ra-bg, #ece6dc);
+  padding-top: var(--ra-pad-top, 0px);
+  padding-bottom: var(--ra-pad-bottom, 56px);
+  color: var(--ra-title-color, #1c1a17);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Banner ---------- */
+
+.ra__banner {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  min-height: var(--ra-banner-h, 500px);
+  overflow: hidden;
+}
+
+.ra__banner--left {
+  flex-direction: row-reverse;
+}
+
+.ra__banner-text {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 var(--ra-banner-text-w, 40%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 56px 32px 56px var(--ra-banner-pad, 84px);
+}
+
+.ra__eyebrow {
+  margin: 0 0 var(--ra-eyebrow-gap, 18px);
+  font-size: var(--ra-eyebrow-size, 13px);
+  letter-spacing: var(--ra-eyebrow-tracking, 0.16em);
+  text-transform: uppercase;
+  color: var(--ra-eyebrow-color, #a38b69);
+}
+
+.ra__heading {
+  margin: 0;
+  font-family: var(--ra-font-serif, var(--ra-serif-fallback, Georgia, 'Times New Roman', serif));
+  font-size: clamp(30px, 3.4vw, var(--ra-title-size, 48px));
+  line-height: var(--ra-title-lh, 1.16);
+  letter-spacing: var(--ra-title-tracking, -0.01em);
+  font-weight: 400;
+  color: var(--ra-title-color, #1c1a17);
+  text-wrap: balance;
+}
+
+.ra__heading-line {
+  display: block;
+}
+
+.ra__desc {
+  margin: 22px 0 0;
+  max-width: 24em;
+  font-size: var(--ra-desc-size, 16px);
+  line-height: 1.6;
+  color: var(--ra-desc-color, #6b675f);
+}
+
+.ra__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 34px;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ra-link-color, #1c1a17);
+  border: 1px solid currentColor;
+  padding: 0 20px;
+  min-height: 52px;
+  cursor: pointer;
+}
+
+.ra__link:hover{
+  background-color: #fff;
+  color: #1c1a17;
+}
+
+.ra__arrow {
+  transition: transform 450ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.ra__link:hover .ra__arrow,
+.ra-card__add:hover .ra__arrow {
+  transform: translateX(4px);
+}
+
+.ra__banner-media {
+  position: relative;
+  flex: 1 1 auto;
+  align-self: stretch;
+}
+
+.ra__banner-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* fades the photo's inner edge into the banner background */
+.ra__banner-media::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    90deg,
+    var(--ra-bg, #ece6dc) 0%,
+    rgb(0 0 0 / 0%) 32%
+  );
+}
+
+.ra__banner--left .ra__banner-media::before {
+  background: linear-gradient(
+    270deg,
+    var(--ra-bg, #ece6dc) 0%,
+    rgb(0 0 0 / 0%) 32%
+  );
+}
+
+/* ---------- Product cards ---------- */
+
+.ra__grid-wrap {
+  max-width: var(--ra-max-w, 1800px);
+  margin-inline: auto;
+  padding-inline: var(--ra-side-pad, 28px);
+  margin-top: clamp(8px, 1vw, 16px);
+}
+
+.ra__grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(calc(100% / var(--ra-cols, 5) - var(--ra-card-gap, 10px)), 100%), 1fr)
+  );
+  gap: var(--ra-card-gap, 10px);
+}
+
+/* ---------- Card ---------- */
+
+.ra-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--ra-card-bg, #e5ded3);
+}
+
+.ra-card__media {
+  position: relative;
+  aspect-ratio: var(--ra-card-aspect, 1 / 1);
+  overflow: hidden;
+}
+
+.ra-card__media-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ra-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.ra-card__media--zoom:hover .ra-card__img {
+  transform: scale(1.045);
+}
+
+.ra-card__img--placeholder {
+  background: rgb(255 255 255 / 30%);
+}
+
+.ra-card__info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1 1 auto;
+  padding: var(--ra-card-pad, 20px);
+}
+
+.ra-card__title {
+  margin: 0;
+  font-size: var(--ra-card-title-size, 13px);
+  letter-spacing: var(--ra-card-title-tracking, 0.08em);
+  text-transform: uppercase;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ra-card-text-color, #1c1a17);
+}
+
+.ra-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ra-card__desc {
+  margin: 8px 0 0;
+  font-size: var(--ra-card-desc-size, 14px);
+  line-height: 1.5;
+  color: var(--ra-card-desc-color, #6b675f);
+}
+
+.ra-card__price {
+  margin: 14px 0 0;
+  font-size: var(--ra-card-price-size, 16px);
+  font-weight: 500;
+  color: var(--ra-card-text-color, #1c1a17);
+}
+
+/* ---------- Add button (underlined text link style) ---------- */
+
+.ra-card__add-form {
+  margin: 18px 0 0;
+}
+
+.ra-card__add {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ra-add-color, #1c1a17);
+}
+
+a.ra-card__add .ra-card__add-label,
+button.ra-card__add .ra-card__add-label {
+  padding-bottom: 4px;
+  border-bottom: 1px solid currentColor;
+}
+
+.ra-card__add--static {
+  cursor: default;
+}
+
+.ra-card__add.is-added .ra-card__add-label {
+  border-bottom-color: transparent;
+}
+
+/* ---------- Scroll reveal (JS adds data-ra-reveal-ready) ---------- */
+
+.ra[data-ra-reveal-ready] [data-ra-reveal] {
+  transition:
+    opacity 0.8s ease var(--ra-delay, 0ms),
+    transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) var(--ra-delay, 0ms);
+}
+
+.ra[data-ra-reveal-ready] [data-ra-reveal]:not(.ra-is-visible) {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+/* ---------- Tablet ---------- */
+
+@media (max-width: 1279px) {
+  .ra__grid {
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(min(calc(100% / 3 - var(--ra-card-gap, 10px)), 100%), 1fr)
+    );
+  }
+
+  .ra__banner-text {
+    flex-basis: 46%;
+    padding: 48px 28px 48px var(--ra-banner-pad, 84px);
+  }
+}
+
+@media (max-width: 900px) {
+  .ra__grid {
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(min(calc(100% / 2 - var(--ra-card-gap, 10px)), 100%), 1fr)
+    );
+  }
+}
+
+/* ---------- Mobile: banner stacks, cards snap-carousel ---------- */
+
+@media (max-width: 767px) {
+  .ra__banner {
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 0;
+  }
+
+  .ra__banner--left {
+    flex-direction: column;
+  }
+
+  .ra__banner-text {
+    flex: none;
+    width: 100%;
+    padding: 44px 22px 40px;
+  }
+
+  .ra__banner--image-first .ra__banner-media {
+    order: -1;
+  }
+
+  .ra__banner-media {
+    flex: none;
+    height: 300px;
+  }
+
+  .ra__banner-media::before {
+    background: linear-gradient(
+      180deg,
+      var(--ra-bg, #ece6dc) 0%,
+      rgb(0 0 0 / 0%) 26%
+    );
+  }
+
+  .ra__banner--left .ra__banner-media::before {
+    background: linear-gradient(
+      180deg,
+      var(--ra-bg, #ece6dc) 0%,
+      rgb(0 0 0 / 0%) 26%
+    );
+  }
+
+  .ra__grid-wrap {
+    padding-inline: 16px;
+  }
+
+  .ra__grid {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    margin-inline: -16px;
+    padding-inline: 16px;
+    padding-bottom: 6px;
+  }
+
+  .ra__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ra-card {
+    flex: 0 0 min(66%, 300px);
+    scroll-snap-align: center;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .ra-card__img,
+  .ra__arrow {
+    transition: none !important;
+  }
+
+  .ra[data-ra-reveal-ready] [data-ra-reveal] {
+    transition: none;
+  }
+
+  .ra[data-ra-reveal-ready] [data-ra-reveal]:not(.ra-is-visible) {
+    opacity: 1;
+    transform: none;
+  }
+}

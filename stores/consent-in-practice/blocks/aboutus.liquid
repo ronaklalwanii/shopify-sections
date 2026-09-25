@@ -1,0 +1,982 @@
+{% doc %}
+  @prompt
+    Create a “About Preview” homepage section for a consulting and training business called Consent in Practice.
+    
+    Layout Requirements:
+    Two-column layout
+    Left side:
+    Small label (eyebrow text)
+    Large headline
+    Short paragraph
+    CTA button
+    Right side:
+    4 cards in a 2x2 grid
+    Each card includes:
+    Small icon (optional)
+    Title
+    Short description
+    Content:
+    
+    Eyebrow:
+    Our Approach
+    
+    Headline:
+    Why Our Work Stands Apart
+    
+    Paragraph:
+    At Consent in Practice, we approach consent not as a rule to follow, but as a practice shaped by communication, context, and responsibility.
+    
+    Our work is grounded in academic research and designed to translate complex ideas into clear, practical tools—supporting organisations and individuals in building ethical, informed, and sustainable ways of working and relating.
+    
+    Cards:
+    
+    Card 1:
+    Title: Research-Led Foundation
+    Text: Grounded in academic research on consent, power, and digital harm.
+    
+    Card 2:
+    Title: Practical Application
+    Text: Real-world tools, language, and scenarios for everyday use.
+    
+    Card 3:
+    Title: Prevention-Focused
+    Text: Designed to reduce harm before it occurs.
+    
+    Card 4:
+    Title: Ethical Approach
+    Text: Non-judgemental, clear, and responsibly delivered.
+    
+    CTA Button:
+    
+    Learn More About Our Approach →, Make the opur approach above both the sections and add an option to add logo just beside it. Make it so thatthe logo and our approach both center align.
+    
+    
+    Make the Why our work stands just below the our approach and have it 48 px in computer and 26 px in mobile.
+    
+    In left side add an option to add images. give 2 image blocks with vertical long images to be added. Give me an option to ocntrol the height and width of images.
+    
+    Make the cards combined in computer mode. give ability to choose colour for individual card side. For the icon in card, make it so that it has a circle and with an option to add small image if required., Make the button just below the cards.
+    Make the our approach and title above both the sections.
+    
+    Left side needs to bne only subtext and images., make all the sides inn card equal in size at all times. 
+    make the button just below the cards.
+    Make the eyebrow text not only captalised
+    , Make the eyebrow text 24 in computer and 20 in mobile. Not bold.
+    
+    Make the headline also not bold and colour 5569DC.
+    
+    Keep all the text at 17 pixels 
+    
+    Give me an option to control the radious of card and also the radious of images. 
+    Give me option to control both the image height and width individually, In mobile mode, keep our approach above everything.. In mobile mode keep the images square and the text center aligned, Make the images bigger in mobile version and stacked. 
+    
+    Make the card one in mobile version too but stacked, Make sure all the card height is same in computer mode, In computer mode, give it some space in left and right side, Keep the button text "Learn More" and more centered to the blocks.
+    
+    Also combile the blocks like attached to each other and parts of a bigf card please. , Now the cards data needs to be as below:
+    
+    Consent & Healthy Digital Culture 
+    • Understanding consent in online and offline spaces 
+    • Navigating boundaries in professional and social environments 
+    • Creating respectful communication cultures 
+    Digital-Based Harassment 
+    • Recognising online harassment, abuse, and stalking 
+    • Responding safely and appropriately 
+    • Supporting staff, students, and communities affected by digital harm 
+    Gender-Based Violence Awareness 
+    • Understanding power, gender, and intersectionality 
+    • Bystander intervention skills 
+    • Supporting survivors with confidence and care 
+    Leadership & Safeguarding 
+    • Building a culture of accountability 
+    • Managing disclosures and complaints 
+    • Legal and ethical responsibilities 
+    
+    Give the dividers a clean white colour please, Now give the card parts alternate colours one by one from below 2 colours:
+    
+    7787E4
+    5569DC
+    
+    
+    
+    Make the pointers a little less in text size., In mobile mode, can you try and mix the colours so that there are no 2 same colours in the line please, Give me option to edit logo width in px. Keep 60 for computer as default and 40 px for mobile as default.
+    , Make the subtext adapt to the style it's added in the box.
+    
+    Also the headline will be: Training That Creates Real Change.
+    
+    Eyebrow text will be in brand's blue colour, Give the button an arrow and some effect when hovered on. 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-about-preview-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: 60px 40px;
+  }
+
+  .ai-about-preview-container-{{ ai_gen_id }} {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .ai-about-preview-header-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .ai-about-preview-logo-{{ ai_gen_id }} {
+    flex-shrink: 0;
+  }
+
+  .ai-about-preview-logo-{{ ai_gen_id }} img {
+    display: block;
+    width: {{ block.settings.logo_width_desktop }}px;
+    height: auto;
+  }
+
+  .ai-about-preview-eyebrow-{{ ai_gen_id }} {
+    font-size: 24px;
+    color: #5569DC;
+    margin: 0;
+  }
+
+  .ai-about-preview-headline-{{ ai_gen_id }} {
+    font-size: 48px;
+    color: #5569DC;
+    font-weight: 400;
+    margin: 0 0 40px;
+    text-align: center;
+  }
+
+  .ai-about-preview-content-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .ai-about-preview-left-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .ai-about-preview-subtext-{{ ai_gen_id }} {
+    font-size: 17px;
+    color: {{ block.settings.text_color }};
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .ai-about-preview-subtext-{{ ai_gen_id }} p {
+    margin: 0 0 16px;
+  }
+
+  .ai-about-preview-subtext-{{ ai_gen_id }} p:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-about-preview-images-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .ai-about-preview-image-wrapper-{{ ai_gen_id }} {
+    overflow: hidden;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-about-preview-image-wrapper-{{ ai_gen_id }} img {
+    width: {{ block.settings.image_width }}%;
+    height: {{ block.settings.image_height }}px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-about-preview-image-placeholder-{{ ai_gen_id }} {
+    width: {{ block.settings.image_width }}%;
+    height: {{ block.settings.image_height }}px;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-about-preview-image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+  }
+
+  .ai-about-preview-right-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .ai-about-preview-cards-wrapper-{{ ai_gen_id }} {
+    background-color: {{ block.settings.cards_wrapper_background }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    padding: {{ block.settings.cards_wrapper_padding }}px;
+    width: 100%;
+  }
+
+  .ai-about-preview-cards-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .ai-about-preview-card-{{ ai_gen_id }} {
+    background-color: {{ block.settings.card_background }};
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 100%;
+    border: 1px solid #ffffff;
+  }
+
+  .ai-about-preview-card-{{ ai_gen_id }}.card-1 {
+    background-color: #7787E4;
+    border-top-left-radius: {{ block.settings.card_border_radius }}px;
+    border-right: 0.5px solid #ffffff;
+    border-bottom: 0.5px solid #ffffff;
+  }
+
+  .ai-about-preview-card-{{ ai_gen_id }}.card-2 {
+    background-color: #5569DC;
+    border-top-right-radius: {{ block.settings.card_border_radius }}px;
+    border-left: 0.5px solid #ffffff;
+    border-bottom: 0.5px solid #ffffff;
+  }
+
+  .ai-about-preview-card-{{ ai_gen_id }}.card-3 {
+    background-color: #5569DC;
+    border-bottom-left-radius: {{ block.settings.card_border_radius }}px;
+    border-right: 0.5px solid #ffffff;
+    border-top: 0.5px solid #ffffff;
+  }
+
+  .ai-about-preview-card-{{ ai_gen_id }}.card-4 {
+    background-color: #7787E4;
+    border-bottom-right-radius: {{ block.settings.card_border_radius }}px;
+    border-left: 0.5px solid #ffffff;
+    border-top: 0.5px solid #ffffff;
+  }
+
+  .ai-about-preview-card-icon-{{ ai_gen_id }} {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: {{ block.settings.icon_circle_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .ai-about-preview-card-icon-{{ ai_gen_id }} img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+
+  .ai-about-preview-card-icon-placeholder-{{ ai_gen_id }} {
+    width: 24px;
+    height: 24px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+  }
+
+  .ai-about-preview-card-title-{{ ai_gen_id }} {
+    font-size: 17px;
+    color: {{ block.settings.card_text_color }};
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .ai-about-preview-card-text-{{ ai_gen_id }} {
+    font-size: 15px;
+    color: {{ block.settings.card_text_color }};
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .ai-about-preview-card-text-{{ ai_gen_id }} ul {
+    margin: 0;
+    padding-left: 20px;
+    list-style-type: disc;
+  }
+
+  .ai-about-preview-card-text-{{ ai_gen_id }} li {
+    margin-bottom: 8px;
+  }
+
+  .ai-about-preview-card-text-{{ ai_gen_id }} li:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-about-preview-button-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 32px;
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: 17px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-about-preview-button-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: {{ block.settings.button_hover_background }};
+    transition: left 0.3s ease;
+    z-index: 0;
+  }
+
+  .ai-about-preview-button-{{ ai_gen_id }}:hover::before {
+    left: 0;
+  }
+
+  .ai-about-preview-button-text-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 1;
+  }
+
+  .ai-about-preview-button-arrow-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-about-preview-button-{{ ai_gen_id }}:hover .ai-about-preview-button-arrow-{{ ai_gen_id }} {
+    transform: translateX(4px);
+  }
+
+  .ai-about-preview-button-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.button_hover_text_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-about-preview-{{ ai_gen_id }} {
+      padding: 40px 20px;
+    }
+
+    .ai-about-preview-header-{{ ai_gen_id }} {
+      flex-direction: column;
+      margin-bottom: 24px;
+    }
+
+    .ai-about-preview-logo-{{ ai_gen_id }} img {
+      width: {{ block.settings.logo_width_mobile }}px;
+    }
+
+    .ai-about-preview-eyebrow-{{ ai_gen_id }} {
+      font-size: 20px;
+    }
+
+    .ai-about-preview-headline-{{ ai_gen_id }} {
+      font-size: 26px;
+      margin-bottom: 24px;
+    }
+
+    .ai-about-preview-content-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    .ai-about-preview-left-{{ ai_gen_id }} {
+      order: 2;
+    }
+
+    .ai-about-preview-right-{{ ai_gen_id }} {
+      order: 3;
+    }
+
+    .ai-about-preview-subtext-{{ ai_gen_id }} {
+      text-align: center;
+    }
+
+    .ai-about-preview-images-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .ai-about-preview-image-wrapper-{{ ai_gen_id }} img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1 / 1;
+    }
+
+    .ai-about-preview-image-placeholder-{{ ai_gen_id }} {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1 / 1;
+    }
+
+    .ai-about-preview-cards-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+    }
+
+    .ai-about-preview-card-{{ ai_gen_id }}.card-1 {
+      background-color: #7787E4;
+      border-top-left-radius: {{ block.settings.card_border_radius }}px;
+      border-top-right-radius: {{ block.settings.card_border_radius }}px;
+      border-bottom-left-radius: 0;
+      border-right: 1px solid #ffffff;
+      border-bottom: 0.5px solid #ffffff;
+      border-left: 1px solid #ffffff;
+      border-top: 1px solid #ffffff;
+    }
+
+    .ai-about-preview-card-{{ ai_gen_id }}.card-2 {
+      background-color: #5569DC;
+      border-radius: 0;
+      border-top-right-radius: 0;
+      border-right: 1px solid #ffffff;
+      border-left: 1px solid #ffffff;
+      border-top: 0.5px solid #ffffff;
+      border-bottom: 0.5px solid #ffffff;
+    }
+
+    .ai-about-preview-card-{{ ai_gen_id }}.card-3 {
+      background-color: #7787E4;
+      border-radius: 0;
+      border-bottom-left-radius: 0;
+      border-right: 1px solid #ffffff;
+      border-left: 1px solid #ffffff;
+      border-top: 0.5px solid #ffffff;
+      border-bottom: 0.5px solid #ffffff;
+    }
+
+    .ai-about-preview-card-{{ ai_gen_id }}.card-4 {
+      background-color: #5569DC;
+      border-bottom-left-radius: {{ block.settings.card_border_radius }}px;
+      border-bottom-right-radius: {{ block.settings.card_border_radius }}px;
+      border-top-right-radius: 0;
+      border-right: 1px solid #ffffff;
+      border-left: 1px solid #ffffff;
+      border-top: 0.5px solid #ffffff;
+      border-bottom: 1px solid #ffffff;
+    }
+  }
+{% endstyle %}
+
+<about-preview-{{ ai_gen_id }} class="ai-about-preview-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-about-preview-container-{{ ai_gen_id }}">
+    <div class="ai-about-preview-header-{{ ai_gen_id }}">
+      {% if block.settings.logo != blank %}
+        <div class="ai-about-preview-logo-{{ ai_gen_id }}">
+          <img
+            src="{{ block.settings.logo | image_url: width: 400 }}"
+            alt="{{ block.settings.logo.alt | escape }}"
+            loading="lazy"
+            width="{{ block.settings.logo_width_desktop }}"
+            height="auto"
+          >
+        </div>
+      {% endif %}
+      {% if block.settings.eyebrow != blank %}
+        <h3 class="ai-about-preview-eyebrow-{{ ai_gen_id }}">{{ block.settings.eyebrow }}</h3>
+      {% endif %}
+    </div>
+
+    {% if block.settings.headline != blank %}
+      <h2 class="ai-about-preview-headline-{{ ai_gen_id }}">{{ block.settings.headline }}</h2>
+    {% endif %}
+
+    <div class="ai-about-preview-content-{{ ai_gen_id }}">
+      <div class="ai-about-preview-left-{{ ai_gen_id }}">
+        {% if block.settings.subtext != blank %}
+          <div class="ai-about-preview-subtext-{{ ai_gen_id }}">{{ block.settings.subtext }}</div>
+        {% endif %}
+
+        <div class="ai-about-preview-images-{{ ai_gen_id }}">
+          <div class="ai-about-preview-image-wrapper-{{ ai_gen_id }}">
+            {% if block.settings.image_1 != blank %}
+              <img
+                src="{{ block.settings.image_1 | image_url: width: 800 }}"
+                alt="{{ block.settings.image_1.alt | escape }}"
+                loading="lazy"
+                width="{{ block.settings.image_1.width }}"
+                height="{{ block.settings.image_1.height }}"
+              >
+            {% else %}
+              <div class="ai-about-preview-image-placeholder-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="ai-about-preview-image-wrapper-{{ ai_gen_id }}">
+            {% if block.settings.image_2 != blank %}
+              <img
+                src="{{ block.settings.image_2 | image_url: width: 800 }}"
+                alt="{{ block.settings.image_2.alt | escape }}"
+                loading="lazy"
+                width="{{ block.settings.image_2.width }}"
+                height="{{ block.settings.image_2.height }}"
+              >
+            {% else %}
+              <div class="ai-about-preview-image-placeholder-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-about-preview-right-{{ ai_gen_id }}">
+        <div class="ai-about-preview-cards-wrapper-{{ ai_gen_id }}">
+          <div class="ai-about-preview-cards-{{ ai_gen_id }}">
+            <div class="ai-about-preview-card-{{ ai_gen_id }} card-1">
+              <div class="ai-about-preview-card-icon-{{ ai_gen_id }}">
+                {% if block.settings.card_1_icon != blank %}
+                  <img
+                    src="{{ block.settings.card_1_icon | image_url: width: 48 }}"
+                    alt="{{ block.settings.card_1_icon.alt | escape }}"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="ai-about-preview-card-icon-placeholder-{{ ai_gen_id }}"></div>
+                {% endif %}
+              </div>
+              <h4 class="ai-about-preview-card-title-{{ ai_gen_id }}">{{ block.settings.card_1_title }}</h4>
+              <div class="ai-about-preview-card-text-{{ ai_gen_id }}">
+                {{ block.settings.card_1_text }}
+              </div>
+            </div>
+
+            <div class="ai-about-preview-card-{{ ai_gen_id }} card-2">
+              <div class="ai-about-preview-card-icon-{{ ai_gen_id }}">
+                {% if block.settings.card_2_icon != blank %}
+                  <img
+                    src="{{ block.settings.card_2_icon | image_url: width: 48 }}"
+                    alt="{{ block.settings.card_2_icon.alt | escape }}"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="ai-about-preview-card-icon-placeholder-{{ ai_gen_id }}"></div>
+                {% endif %}
+              </div>
+              <h4 class="ai-about-preview-card-title-{{ ai_gen_id }}">{{ block.settings.card_2_title }}</h4>
+              <div class="ai-about-preview-card-text-{{ ai_gen_id }}">
+                {{ block.settings.card_2_text }}
+              </div>
+            </div>
+
+            <div class="ai-about-preview-card-{{ ai_gen_id }} card-3">
+              <div class="ai-about-preview-card-icon-{{ ai_gen_id }}">
+                {% if block.settings.card_3_icon != blank %}
+                  <img
+                    src="{{ block.settings.card_3_icon | image_url: width: 48 }}"
+                    alt="{{ block.settings.card_3_icon.alt | escape }}"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="ai-about-preview-card-icon-placeholder-{{ ai_gen_id }}"></div>
+                {% endif %}
+              </div>
+              <h4 class="ai-about-preview-card-title-{{ ai_gen_id }}">{{ block.settings.card_3_title }}</h4>
+              <div class="ai-about-preview-card-text-{{ ai_gen_id }}">
+                {{ block.settings.card_3_text }}
+              </div>
+            </div>
+
+            <div class="ai-about-preview-card-{{ ai_gen_id }} card-4">
+              <div class="ai-about-preview-card-icon-{{ ai_gen_id }}">
+                {% if block.settings.card_4_icon != blank %}
+                  <img
+                    src="{{ block.settings.card_4_icon | image_url: width: 48 }}"
+                    alt="{{ block.settings.card_4_icon.alt | escape }}"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="ai-about-preview-card-icon-placeholder-{{ ai_gen_id }}"></div>
+                {% endif %}
+              </div>
+              <h4 class="ai-about-preview-card-title-{{ ai_gen_id }}">{{ block.settings.card_4_title }}</h4>
+              <div class="ai-about-preview-card-text-{{ ai_gen_id }}">
+                {{ block.settings.card_4_text }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% if block.settings.button_text != blank %}
+          <a href="{{ block.settings.button_link }}" class="ai-about-preview-button-{{ ai_gen_id }}">
+            <span class="ai-about-preview-button-text-{{ ai_gen_id }}">{{ block.settings.button_text }}</span>
+            <span class="ai-about-preview-button-arrow-{{ ai_gen_id }}">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</about-preview-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class AboutPreview{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.equalizeCardHeights();
+        window.addEventListener('resize', () => this.equalizeCardHeights());
+      }
+
+      equalizeCardHeights() {
+        if (window.innerWidth > 749) {
+          const cards = this.querySelectorAll('.ai-about-preview-card-{{ ai_gen_id }}');
+          let maxHeight = 0;
+          
+          cards.forEach(card => {
+            card.style.height = 'auto';
+          });
+          
+          cards.forEach(card => {
+            const height = card.offsetHeight;
+            if (height > maxHeight) {
+              maxHeight = height;
+            }
+          });
+          
+          cards.forEach(card => {
+            card.style.height = maxHeight + 'px';
+          });
+        } else {
+          const cards = this.querySelectorAll('.ai-about-preview-card-{{ ai_gen_id }}');
+          cards.forEach(card => {
+            card.style.height = 'auto';
+          });
+        }
+      }
+    }
+
+    customElements.define('about-preview-{{ ai_gen_id }}', AboutPreview{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "About preview",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width_desktop",
+      "label": "Logo width (desktop)",
+      "min": 20,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "label": "Logo width (mobile)",
+      "min": 20,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Our Approach"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "Training That Creates Real Change"
+    },
+    {
+      "type": "header",
+      "content": "Left side"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "<p>At Consent in Practice, we approach consent not as a rule to follow, but as a practice shaped by communication, context, and responsibility.</p><p>Our work is grounded in academic research and designed to translate complex ideas into clear, practical tools—supporting organisations and individuals in building ethical, informed, and sustainable ways of working and relating.</p>"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "label": "Image width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "label": "Image height",
+      "min": 200,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Image border radius",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Card 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_1_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "card_1_title",
+      "label": "Title",
+      "default": "Consent & Healthy Digital Culture"
+    },
+    {
+      "type": "richtext",
+      "id": "card_1_text",
+      "label": "Text",
+      "default": "<ul><li>Understanding consent in online and offline spaces</li><li>Navigating boundaries in professional and social environments</li><li>Creating respectful communication cultures</li></ul>"
+    },
+    {
+      "type": "header",
+      "content": "Card 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_2_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "card_2_title",
+      "label": "Title",
+      "default": "Digital-Based Harassment"
+    },
+    {
+      "type": "richtext",
+      "id": "card_2_text",
+      "label": "Text",
+      "default": "<ul><li>Recognising online harassment, abuse, and stalking</li><li>Responding safely and appropriately</li><li>Supporting staff, students, and communities affected by digital harm</li></ul>"
+    },
+    {
+      "type": "header",
+      "content": "Card 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_3_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "card_3_title",
+      "label": "Title",
+      "default": "Gender-Based Violence Awareness"
+    },
+    {
+      "type": "richtext",
+      "id": "card_3_text",
+      "label": "Text",
+      "default": "<ul><li>Understanding power, gender, and intersectionality</li><li>Bystander intervention skills</li><li>Supporting survivors with confidence and care</li></ul>"
+    },
+    {
+      "type": "header",
+      "content": "Card 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_4_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "card_4_title",
+      "label": "Title",
+      "default": "Leadership & Safeguarding"
+    },
+    {
+      "type": "richtext",
+      "id": "card_4_text",
+      "label": "Text",
+      "default": "<ul><li>Building a culture of accountability</li><li>Managing disclosures and complaints</li><li>Legal and ethical responsibilities</li></ul>"
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Default card background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Card border radius",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "cards_wrapper_background",
+      "label": "Cards wrapper background",
+      "default": "transparent"
+    },
+    {
+      "type": "range",
+      "id": "cards_wrapper_padding",
+      "label": "Cards wrapper padding",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "icon_circle_color",
+      "label": "Icon circle color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Button hover background",
+      "default": "#5569DC"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Button hover text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Button border radius",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "About preview"
+    }
+  ]
+}
+{% endschema %}

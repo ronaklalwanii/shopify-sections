@@ -1,0 +1,296 @@
+{% doc %}
+  @prompt
+    A heading with an animated glowing effect
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-glow-heading-{{ ai_gen_id }} {
+    text-align: {{ block.settings.text_alignment }};
+    padding: {{ block.settings.padding_top }}px {{ block.settings.padding_horizontal }}px {{ block.settings.padding_bottom }}px;
+    margin: 0;
+  }
+
+  .ai-glow-heading-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.font_size }}px;
+    font-weight: {{ block.settings.font_weight }};
+    color: {{ block.settings.text_color }};
+    text-transform: {{ block.settings.text_transform }};
+    letter-spacing: {{ block.settings.letter_spacing }}px;
+    line-height: 1.2;
+    margin: 0;
+    position: relative;
+    display: inline-block;
+    text-shadow: 
+      0 0 {{ block.settings.glow_blur }}px {{ block.settings.glow_color }},
+      0 0 {{ block.settings.glow_blur | times: 1.5 }}px {{ block.settings.glow_color }},
+      0 0 {{ block.settings.glow_blur | times: 2 }}px {{ block.settings.glow_color }};
+    animation: ai-glow-pulse-{{ ai_gen_id }} {{ block.settings.animation_duration }}s ease-in-out infinite alternate;
+  }
+
+  @keyframes ai-glow-pulse-{{ ai_gen_id }} {
+    0% {
+      text-shadow: 
+        0 0 {{ block.settings.glow_blur }}px {{ block.settings.glow_color }},
+        0 0 {{ block.settings.glow_blur | times: 1.5 }}px {{ block.settings.glow_color }},
+        0 0 {{ block.settings.glow_blur | times: 2 }}px {{ block.settings.glow_color }};
+    }
+    100% {
+      text-shadow: 
+        0 0 {{ block.settings.glow_blur | times: 1.5 }}px {{ block.settings.glow_color }},
+        0 0 {{ block.settings.glow_blur | times: 2.5 }}px {{ block.settings.glow_color }},
+        0 0 {{ block.settings.glow_blur | times: 3.5 }}px {{ block.settings.glow_color }};
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-glow-heading-text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.font_size | times: 0.8 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-glow-heading-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.heading_tag == 'h1' %}
+    <h1 class="ai-glow-heading-text-{{ ai_gen_id }}">{{ block.settings.heading_text }}</h1>
+  {% elsif block.settings.heading_tag == 'h2' %}
+    <h2 class="ai-glow-heading-text-{{ ai_gen_id }}">{{ block.settings.heading_text }}</h2>
+  {% elsif block.settings.heading_tag == 'h3' %}
+    <h3 class="ai-glow-heading-text-{{ ai_gen_id }}">{{ block.settings.heading_text }}</h3>
+  {% elsif block.settings.heading_tag == 'h4' %}
+    <h4 class="ai-glow-heading-text-{{ ai_gen_id }}">{{ block.settings.heading_text }}</h4>
+  {% elsif block.settings.heading_tag == 'h5' %}
+    <h5 class="ai-glow-heading-text-{{ ai_gen_id }}">{{ block.settings.heading_text }}</h5>
+  {% else %}
+    <h6 class="ai-glow-heading-text-{{ ai_gen_id }}">{{ block.settings.heading_text }}</h6>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Glowing heading",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading_text",
+      "label": "Heading text",
+      "default": "Glowing Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 16,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "label": "Font size",
+      "default": 48
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        },
+        {
+          "value": "800",
+          "label": "Extra bold"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "select",
+      "id": "text_transform",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalize"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "min": -2,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "glow_color",
+      "label": "Glow color",
+      "default": "#00badb"
+    },
+    {
+      "type": "header",
+      "content": "Glow effect"
+    },
+    {
+      "type": "range",
+      "id": "glow_blur",
+      "min": 5,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Glow intensity",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "min": 1,
+      "max": 5,
+      "step": 0.5,
+      "unit": "s",
+      "label": "Animation speed",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "Glowing heading"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,975 @@
+<style>
+  #shopify-section-{{ section.id }} {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .about-section-{{ section.id }} {
+    --about-bg: {{ section.settings.about_bg_color }};
+    --about-text: {{ section.settings.about_text_color }};
+    --about-primary: {{ section.settings.about_primary_color }};
+    --about-heading-weight: {{ section.settings.about_heading_weight }};
+    --about-heading-size: {{ section.settings.about_heading_size }}px;
+    --about-eyebrow-size: {{ section.settings.about_eyebrow_size }}px;
+    --about-desc-size: {{ section.settings.about_desc_size }}px;
+    --about-card-bg: {{ section.settings.about_card_bg }};
+    --about-icon-bg: {{ section.settings.about_icon_bg }};
+    --about-icon-color: {{ section.settings.about_icon_color }};
+    --about-padding-y: {{ section.settings.about_padding_y }}px;
+
+    background-color: var(--about-bg);
+    color: var(--about-text);
+    padding-top: var(--about-padding-y);
+    padding-bottom: var(--about-padding-y);
+    width: 100%;
+  }
+
+  .about-section-{{ section.id }} .about-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+
+  /* Header Block */
+  .about-section-{{ section.id }} .about-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    margin-bottom: 60px;
+  }
+
+  .about-section-{{ section.id }} .about-eyebrow {
+    font-size: var(--about-eyebrow-size);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--about-primary);
+    margin: 0 0 20px;
+  }
+
+  .about-section-{{ section.id }} .about-heading {
+    font-size: var(--about-heading-size);
+    font-weight: var(--about-heading-weight);
+    line-height: 1.2;
+    margin: 0 0 24px;
+    color: var(--about-text);
+  }
+
+  .about-section-{{ section.id }} .about-desc {
+    font-size: var(--about-desc-size);
+    line-height: 1.6;
+    margin: 0;
+    color: var(--about-text);
+    opacity: 0.8;
+  }
+
+  .about-section-{{ section.id }} .about-header-image {
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .about-section-{{ section.id }} .about-header-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Features Grid */
+  .about-section-{{ section.id }} .about-features {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin-bottom: 80px;
+  }
+
+  .about-section-{{ section.id }} .about-feature {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .about-section-{{ section.id }} .about-feature-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--about-icon-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    color: var(--about-icon-color);
+  }
+
+  .about-section-{{ section.id }} .about-feature-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .about-section-{{ section.id }} .about-feature-icon img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+  }
+
+  .about-section-{{ section.id }} .about-feature-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--about-text);
+  }
+
+  .about-section-{{ section.id }} .about-feature-desc {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    color: var(--about-text);
+    opacity: 0.7;
+  }
+
+  /* Mission & Approach */
+  .about-section-{{ section.id }} .about-mission-approach {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 80px;
+    padding: 60px;
+    background-color: var(--about-card-bg);
+    border-radius: 16px;
+  }
+
+  .about-section-{{ section.id }} .about-mission-heading {
+    font-size: calc(var(--about-heading-size) * 0.85);
+    font-weight: var(--about-heading-weight);
+    line-height: 1.2;
+    margin: 0 0 24px;
+    color: var(--about-text);
+  }
+
+  .about-section-{{ section.id }} .about-checklist {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0 0;
+  }
+
+  .about-section-{{ section.id }} .about-check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .about-section-{{ section.id }} .about-check-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--about-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .about-section-{{ section.id }} .about-check-icon svg {
+    width: 14px;
+    height: 14px;
+    color: #fff;
+  }
+
+  .about-section-{{ section.id }} .about-check-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    color: var(--about-text);
+  }
+
+  .about-section-{{ section.id }} .about-check-desc {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    color: var(--about-text);
+    opacity: 0.7;
+  }
+
+  /* Meet Holly */
+  .about-section-{{ section.id }} .about-holly {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 60px;
+    align-items: center;
+    margin-bottom: 80px;
+  }
+
+  .about-section-{{ section.id }} .about-holly-image {
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .about-section-{{ section.id }} .about-holly-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .about-section-{{ section.id }} .about-holly-name {
+    font-size: calc(var(--about-heading-size) * 0.9);
+    font-weight: var(--about-heading-weight);
+    margin: 0 0 12px;
+    color: var(--about-text);
+  }
+
+  .about-section-{{ section.id }} .about-holly-roles {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--about-primary);
+    margin: 0 0 20px;
+  }
+
+  .about-section-{{ section.id }} .about-holly-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0;
+  }
+
+  .about-section-{{ section.id }} .about-holly-tag {
+    padding: 8px 16px;
+    border: 1px solid var(--about-primary);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--about-primary);
+    background: transparent;
+  }
+
+  .about-section-{{ section.id }} .about-holly-signature {
+    margin-top: 20px;
+    max-width: 120px;
+  }
+
+  .about-section-{{ section.id }} .about-holly-signature img {
+    width: 100%;
+    height: auto;
+  }
+
+  /* Our Story Timeline */
+  .about-section-{{ section.id }} .about-story {
+    margin-bottom: 80px;
+  }
+
+  .about-section-{{ section.id }} .about-story-timeline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    position: relative;
+    margin-top: 40px;
+  }
+
+  .about-section-{{ section.id }} .about-story-timeline::before {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--about-primary);
+    opacity: 0.3;
+  }
+
+  .about-section-{{ section.id }} .about-story-item {
+    position: relative;
+  }
+
+  .about-section-{{ section.id }} .about-story-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--about-primary);
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .about-section-{{ section.id }} .about-story-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 12px;
+    color: var(--about-text);
+  }
+
+  .about-section-{{ section.id }} .about-story-desc {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    color: var(--about-text);
+    opacity: 0.7;
+  }
+
+  /* Trusted By */
+  .about-section-{{ section.id }} .about-trusted {
+    text-align: center;
+    padding: 40px;
+    background-color: var(--about-card-bg);
+    border-radius: 16px;
+  }
+
+  .about-section-{{ section.id }} .about-trusted-heading {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--about-primary);
+    margin: 0 0 30px;
+  }
+
+  .about-section-{{ section.id }} .about-trusted-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .about-section-{{ section.id }} .about-trusted-logo {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--about-text);
+    opacity: 0.6;
+  }
+
+  /* Mobile */
+  @media (max-width: 990px) {
+    .about-section-{{ section.id }} .about-container {
+      padding: 0 40px;
+    }
+
+    .about-section-{{ section.id }} .about-header {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .about-section-{{ section.id }} .about-features {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .about-section-{{ section.id }} .about-mission-approach {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding: 40px;
+    }
+
+    .about-section-{{ section.id }} .about-holly {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .about-section-{{ section.id }} .about-story-timeline {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .about-section-{{ section.id }} .about-story-timeline::before {
+      display: none;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .about-section-{{ section.id }} .about-container {
+      padding: 0 20px;
+    }
+
+    .about-section-{{ section.id }} .about-heading {
+      font-size: calc(var(--about-heading-size) * 0.7);
+    }
+
+    .about-section-{{ section.id }} .about-features {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .about-section-{{ section.id }} .about-feature {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(85, 104, 202, 0.15);
+    }
+
+    .about-section-{{ section.id }} .about-feature:last-child {
+      border-bottom: none;
+    }
+
+    .about-section-{{ section.id }} .about-feature-icon {
+      margin-bottom: 0;
+      flex-shrink: 0;
+    }
+
+    .about-section-{{ section.id }} .about-mission-approach {
+      padding: 24px;
+    }
+
+    .about-section-{{ section.id }} .about-story-timeline {
+      grid-template-columns: 1fr;
+    }
+
+    .about-section-{{ section.id }} .about-trusted-logos {
+      gap: 20px;
+    }
+  }
+</style>
+
+<section class="about-section-{{ section.id }}">
+  <div class="about-container">
+
+    {% for block in section.blocks %}
+      {% case block.type %}
+
+        {% when 'header' %}
+          <div class="about-header" {{ block.shopify_attributes }}>
+            <div>
+              {% if block.settings.about_eyebrow != blank %}
+                <p class="about-eyebrow">{{ block.settings.about_eyebrow }}</p>
+              {% endif %}
+              {% if block.settings.about_heading != blank %}
+                <h2 class="about-heading">{{ block.settings.about_heading }}</h2>
+              {% endif %}
+              {% if block.settings.about_desc != blank %}
+                <p class="about-desc">{{ block.settings.about_desc }}</p>
+              {% endif %}
+            </div>
+            {% if block.settings.about_image != blank %}
+              <div class="about-header-image">
+                {{ block.settings.about_image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '400, 600, 800', alt: block.settings.about_image.alt }}
+              </div>
+            {% endif %}
+          </div>
+
+       {% when 'mission' %}
+          <div class="about-mission-approach" {{ block.shopify_attributes }}>
+            <div>
+              {% if block.settings.mission_eyebrow != blank %}
+                <p class="about-eyebrow">{{ block.settings.mission_eyebrow }}</p>
+              {% endif %}
+              {% if block.settings.mission_heading != blank %}
+                <h2 class="about-mission-heading">{{ block.settings.mission_heading }}</h2>
+              {% endif %}
+              {% if block.settings.mission_desc != blank %}
+                <p class="about-desc">{{ block.settings.mission_desc }}</p>
+              {% endif %}
+            </div>
+            <div>
+              {% if block.settings.approach_eyebrow != blank %}
+                <p class="about-eyebrow">{{ block.settings.approach_eyebrow }}</p>
+              {% endif %}
+              {% if block.settings.approach_intro != blank %}
+                <p class="about-desc">{{ block.settings.approach_intro }}</p>
+              {% endif %}
+                <ul class="about-checklist">
+                {% for i in (1..4) %}
+                  {% assign title_key = 'check_title_' | append: i %}
+                  {% assign desc_key = 'check_desc_' | append: i %}
+                  {% assign check_title = block.settings[title_key] %}
+                  {% assign check_desc = block.settings[desc_key] %}
+                  {% if check_title != blank %}
+                    <li class="about-check-item">
+                      <div class="about-check-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 class="about-check-title">{{ check_title }}</h4>
+                        {% if check_desc != blank %}
+                          <p class="about-check-desc">{{ check_desc }}</p>
+                        {% endif %}
+                      </div>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+
+        {% when 'holly' %}
+          <div class="about-holly" {{ block.shopify_attributes }}>
+            {% if block.settings.holly_image != blank %}
+              <div class="about-holly-image">
+                {{ block.settings.holly_image | image_url: width: 600 | image_tag: loading: 'lazy', widths: '300, 450, 600', alt: block.settings.holly_name }}
+              </div>
+            {% endif %}
+            <div>
+              {% if block.settings.holly_eyebrow != blank %}
+                <p class="about-eyebrow">{{ block.settings.holly_eyebrow }}</p>
+              {% endif %}
+              {% if block.settings.holly_name != blank %}
+                <h2 class="about-holly-name">{{ block.settings.holly_name }}</h2>
+              {% endif %}
+              {% if block.settings.holly_roles != blank %}
+                <p class="about-holly-roles">{{ block.settings.holly_roles }}</p>
+              {% endif %}
+              {% if block.settings.holly_desc != blank %}
+                <p class="about-desc">{{ block.settings.holly_desc }}</p>
+              {% endif %}
+              {% if block.settings.holly_tags != blank %}
+                <div class="about-holly-tags">
+                  {% assign tags = block.settings.holly_tags | split: ',' %}
+                  {% for tag in tags %}
+                    <span class="about-holly-tag">{{ tag | strip }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              {% if block.settings.holly_signature != blank %}
+                <div class="about-holly-signature">
+                  {{ block.settings.holly_signature | image_url: width: 200 | image_tag: loading: 'lazy', widths: '100, 200', alt: 'Signature' }}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+
+        {% when 'story' %}
+          <div class="about-story" {{ block.shopify_attributes }}>
+            {% if block.settings.story_eyebrow != blank %}
+              <p class="about-eyebrow">{{ block.settings.story_eyebrow }}</p>
+            {% endif %}
+             <div class="about-story-timeline">
+              {% for i in (1..4) %}
+                {% assign title_key = 'story_title_' | append: i %}
+                {% assign desc_key = 'story_desc_' | append: i %}
+                {% assign story_title = block.settings[title_key] %}
+                {% assign story_desc = block.settings[desc_key] %}
+                {% if story_title != blank %}
+                  <div class="about-story-item">
+                    <div class="about-story-dot"></div>
+                    <h3 class="about-story-title">{{ story_title }}</h3>
+                    {% if story_desc != blank %}
+                      <p class="about-story-desc">{{ story_desc }}</p>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+        {% when 'trusted' %}
+          <div class="about-trusted" {{ block.shopify_attributes }}>
+            {% if block.settings.trusted_heading != blank %}
+              <h3 class="about-trusted-heading">{{ block.settings.trusted_heading }}</h3>
+            {% endif %}
+            <div class="about-trusted-logos">
+              {% for i in (1..6) %}
+                {% assign logo_key = 'logo_text_' | append: i %}
+                {% assign logo_text = block.settings[logo_key] %}
+                {% if logo_text != blank %}
+                  <span class="about-trusted-logo">{{ logo_text }}</span>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+      {% endcase %}
+    {% endfor %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About Us",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 10,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Global Colors"
+    },
+    {
+      "type": "color",
+      "id": "about_bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "about_text_color",
+      "label": "Text Color",
+      "default": "#0a0a2e"
+    },
+    {
+      "type": "color",
+      "id": "about_primary_color",
+      "label": "Primary Color",
+      "default": "#5568CA"
+    },
+    {
+      "type": "color",
+      "id": "about_card_bg",
+      "label": "Card Background Color",
+      "default": "#F6F7FE"
+    },
+    {
+      "type": "color",
+      "id": "about_icon_bg",
+      "label": "Icon Background Color",
+      "default": "#F0F2FF"
+    },
+    {
+      "type": "color",
+      "id": "about_icon_color",
+      "label": "Icon Color",
+      "default": "#5568CA"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "about_heading_size",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 48
+    },
+    {
+      "type": "select",
+      "id": "about_heading_weight",
+      "label": "Heading Font Weight",
+      "options": [
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "500", "label": "Medium (500)" },
+        { "value": "600", "label": "Semi Bold (600)" },
+        { "value": "700", "label": "Bold (700)" },
+        { "value": "800", "label": "Extra Bold (800)" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "range",
+      "id": "about_eyebrow_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Eyebrow Size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "about_desc_size",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Description Size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "about_padding_y",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "header",
+      "name": "Header Block",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "about_eyebrow",
+          "label": "Eyebrow Text",
+          "default": "ABOUT US"
+        },
+        {
+          "type": "text",
+          "id": "about_heading",
+          "label": "Heading",
+          "default": "Evidence-based education. Real-world impact."
+        },
+        {
+          "type": "textarea",
+          "id": "about_desc",
+          "label": "Description",
+          "default": "We help organisations build safer, more respectful workplace cultures through research-informed training and practical tools. Our work is grounded in academic research and shaped by frontline experience."
+        },
+        {
+          "type": "image_picker",
+          "id": "about_image",
+          "label": "Header Image"
+        }
+      ]
+    },
+    {
+      "type": "mission",
+      "name": "Mission & Approach",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "mission_eyebrow",
+          "label": "Mission Eyebrow",
+          "default": "OUR MISSION"
+        },
+        {
+          "type": "text",
+          "id": "mission_heading",
+          "label": "Mission Heading",
+          "default": "Prevent harm. Promote respect. Build better workplaces."
+        },
+        {
+          "type": "textarea",
+          "id": "mission_desc",
+          "label": "Mission Description",
+          "default": "Our mission is to equip organisations and individuals with the knowledge, tools and confidence to prevent harm before it happens — and to respond to concerns with clarity and care."
+        },
+        {
+          "type": "text",
+          "id": "approach_eyebrow",
+          "label": "Approach Eyebrow",
+          "default": "OUR APPROACH"
+        },
+        {
+          "type": "textarea",
+          "id": "approach_intro",
+          "label": "Approach Intro",
+          "default": "We combine academic rigour with real-world experience to deliver education that is:"
+        },
+        {
+          "type": "text",
+          "id": "check_title_1",
+          "label": "Check Item 1 Title",
+          "default": "Research-informed"
+        },
+        {
+          "type": "text",
+          "id": "check_desc_1",
+          "label": "Check Item 1 Description",
+          "default": "Grounded in the latest evidence and data."
+        },
+        {
+          "type": "text",
+          "id": "check_title_2",
+          "label": "Check Item 2 Title",
+          "default": "Contextual"
+        },
+        {
+          "type": "text",
+          "id": "check_desc_2",
+          "label": "Check Item 2 Description",
+          "default": "Tailored to the unique needs of your organisation."
+        },
+        {
+          "type": "text",
+          "id": "check_title_3",
+          "label": "Check Item 3 Title",
+          "default": "Practical"
+        },
+        {
+          "type": "text",
+          "id": "check_desc_3",
+          "label": "Check Item 3 Description",
+          "default": "Focused on real scenarios and actionable skills."
+        },
+        {
+          "type": "text",
+          "id": "check_title_4",
+          "label": "Check Item 4 Title",
+          "default": "Inclusive"
+        },
+        {
+          "type": "text",
+          "id": "check_desc_4",
+          "label": "Check Item 4 Description",
+          "default": "Designed to create respectful, safe environments for all."
+        }
+      ]
+    },
+    {
+      "type": "holly",
+      "name": "Meet Holly Block",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "holly_eyebrow",
+          "label": "Eyebrow Text",
+          "default": "MEET HOLLY"
+        },
+        {
+          "type": "text",
+          "id": "holly_name",
+          "label": "Name",
+          "default": "Holly Kent"
+        },
+        {
+          "type": "text",
+          "id": "holly_roles",
+          "label": "Roles (separated by dots)",
+          "default": "CONSENT RESEARCHER · WORKPLACE CULTURE SPECIALIST · DIGITAL HARM EDUCATOR"
+        },
+        {
+          "type": "textarea",
+          "id": "holly_desc",
+          "label": "Description",
+          "default": "With years of interdisciplinary research and frontline experience, Holly equips leaders and teams with the knowledge, skills and confidence to prevent harm, respond to concerns and create cultures of respect and trust."
+        },
+        {
+          "type": "text",
+          "id": "holly_tags",
+          "label": "Tags (comma separated)",
+          "default": "MSc Researcher, Workplace Culture Specialist, Digital Harm Educator, Safeguarding Expert"
+        },
+        {
+          "type": "image_picker",
+          "id": "holly_image",
+          "label": "Holly Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "holly_signature",
+          "label": "Signature Image"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "name": "Our Story Timeline",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "story_eyebrow",
+          "label": "Eyebrow Text",
+          "default": "OUR STORY"
+        },
+        {
+          "type": "text",
+          "id": "story_title_1",
+          "label": "Story 1 Title",
+          "default": "The Beginning"
+        },
+        {
+          "type": "textarea",
+          "id": "story_desc_1",
+          "label": "Story 1 Description",
+          "default": "Our work began with a simple belief: prevention starts with education. We set out to make evidence-based knowledge accessible and practical for every organisation."
+        },
+        {
+          "type": "text",
+          "id": "story_title_2",
+          "label": "Story 2 Title",
+          "default": "Research-Led Growth"
+        },
+        {
+          "type": "textarea",
+          "id": "story_desc_2",
+          "label": "Story 2 Description",
+          "default": "Through academic research and collaboration, we deepened our understanding of what creates safer workplace cultures — and what drives meaningful change."
+        },
+        {
+          "type": "text",
+          "id": "story_title_3",
+          "label": "Story 3 Title",
+          "default": "Real-World Impact"
+        },
+        {
+          "type": "textarea",
+          "id": "story_desc_3",
+          "label": "Story 3 Description",
+          "default": "Working alongside organisations across industries, we developed training and resources that help leaders and teams prevent harm and build trusted environments."
+        },
+        {
+          "type": "text",
+          "id": "story_title_4",
+          "label": "Story 4 Title",
+          "default": "Looking Ahead"
+        },
+        {
+          "type": "textarea",
+          "id": "story_desc_4",
+          "label": "Story 4 Description",
+          "default": "We continue to evolve, learn and innovate — ensuring our education remains relevant, evidence-based and impactful for the future."
+        }
+      ]
+    },
+    {
+      "type": "trusted",
+      "name": "Trusted By Block",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "trusted_heading",
+          "label": "Heading",
+          "default": "TRUSTED BY ORGANISATIONS NATIONWIDE"
+        },
+        {
+          "type": "text",
+          "id": "logo_text_1",
+          "label": "Logo 1 Text",
+          "default": "LOGO"
+        },
+        {
+          "type": "text",
+          "id": "logo_text_2",
+          "label": "Logo 2 Text",
+          "default": "LOGO"
+        },
+        {
+          "type": "text",
+          "id": "logo_text_3",
+          "label": "Logo 3 Text",
+          "default": "LOGO"
+        },
+        {
+          "type": "text",
+          "id": "logo_text_4",
+          "label": "Logo 4 Text",
+          "default": "LOGO"
+        },
+        {
+          "type": "text",
+          "id": "logo_text_5",
+          "label": "Logo 5 Text",
+          "default": "LOGO"
+        },
+        {
+          "type": "text",
+          "id": "logo_text_6",
+          "label": "Logo 6 Text",
+          "default": "LOGO"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About CIP",
+      "blocks": [
+        { "type": "header" },
+        { "type": "mission" },
+        { "type": "holly" },
+        { "type": "story" },
+        { "type": "trusted" }
+      ]
+    }
+  ]
+}
+{% endschema %}

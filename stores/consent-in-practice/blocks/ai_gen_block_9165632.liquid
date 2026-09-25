@@ -1,0 +1,179 @@
+{% doc %}
+  @prompt
+    Create a clean, premium **trust badge strip section for Soluna**, inspired by the attached reference image.
+    
+    IMPORTANT: Create this as **one single Shopify section**.
+    
+    ## DESIGN
+    
+    Create a horizontal row of compact trust badges/pills centred within the section.
+    
+    Each badge should contain:
+    
+    **Circular check icon + short text**
+    
+    For example:
+    
+    ✓ Premium Craftsmanship
+    ✓ Secure Checkout
+    ✓ Flexible Payment
+    ✓ Manufacturer Warranty
+    ✓ Traditional & Infrared Heating
+    
+    The badges should have:
+    
+    * White or customisable background
+    * Very subtle light border
+    * Circular light-grey icon background
+    * Black/dark text
+    * Clean modern typography
+    * Generous but compact spacing
+    * Fully rounded pill shape by default
+    
+    The overall appearance should be minimal, refined and premium, suitable for a luxury wellness brand.
+    
+    ## BADGE SETTINGS
+    
+    Allow up to **8 individual badge blocks**.
+    
+    Each badge should have:
+    
+    * Editable text
+    * Enable/disable toggle
+    * Optional custom icon
+    * Icon colour
+    * Icon background colour
+    * Text colour
+    * Badge background colour
+    * Badge border colour
+    * Badge border width
+    * Badge border radius
+    * Badge padding
+    * Icon size
+    * Text size
+    
+    By default, use a simple checkmark icon inside a small circular background.
+    
+    ## DESKTOP
+    
+    Display the badges horizontally in a single row.
+    
+    Centre the complete badge group within the section.
+    
+    Maintain consistent spacing between badges.
+    
+    The badges should automatically adjust their width according to the text length.
+    
+    Do not stretch every badge to the same width.
+    
+    Each badge should be only as wide as necessary to contain its icon and text.
+    
+    ## MOBILE
+    
+    IMPORTANT: Convert the badge row into a **horizontal swipe/scrolling strip** on mobile.
+    
+    Do not stack all badges vertically.
+    
+    Display approximately **2 badges at a time**, with a portion of the next badge visible to indicate that more badges are available.
+    
+    Allow users to swipe horizontally through the badges.
+    
+    Use smooth native scrolling and scroll snapping.
+    
+    Do not display navigation arrows or pagination dots on mobile.
+    
+    The horizontal scrolling must be contained within the badge strip and must NOT cause the entire webpage to scroll horizontally.
+    
+    ## MOBILE BADGE DESIGN
+    
+    Make the badges slightly more compact on mobile.
+    
+    Reduce:
+    
+    * Horizontal padding
+    * Icon size
+    * Text size
+    * Gap between badges
+    
+    Keep the badges readable and easy to tap/see.
+    
+    ## SECTION SETTINGS
+    
+    Add Theme Editor settings for:
+    
+    * Section background colour
+    * Section top padding
+    * Section bottom padding
+    * Desktop badge gap
+    * Mobile badge gap
+    * Badge height
+    * Badge border radius
+    * Badge border
+    * Badge background
+    * Text colour
+    * Icon background
+    * Icon colour
+    * Desktop text size
+    * Mobile text size
+    
+    ## RESPONSIVE BEHAVIOUR
+    
+    Desktop:
+    
+    Single centred horizontal row.
+    
+    Tablet:
+    
+    Reduce spacing slightly while keeping badges in a horizontal layout where possible.
+    
+    Mobile:
+    
+    Horizontal swipeable badge carousel.
+    
+    Approximately 2 badges visible at once with part of the next badge visible.
+    
+    ## ANIMATION
+    
+    Keep animations subtle.
+    
+    Add a gentle hover effect on desktop, such as a slight background or border transition.
+    
+    Do not add excessive movement.
+    
+    The section should feel fast, understated and premium.
+    
+    ## SOLUNA DEFAULT BADGES
+    
+    Use these as the default badge content:
+    
+    1. Premium Craftsmanship
+    2. Secure Checkout
+    3. Flexible Payment
+    4. Manufacturer Warranty
+    5. Traditional & Infrared Heating
+    
+    Make all five editable through the Theme Editor.
+    
+    ## TECHNICAL REQUIREMENTS
+    
+    * Use Shopify Liquid, HTML, CSS and vanilla JavaScript only.
+    * No external libraries.
+    * Fully responsive.
+    * Compatible with Shopify Theme Editor.
+    * Allow badges to be reordered.
+    * Allow badges to be enabled or disabled.
+    * Prevent horizontal overflow on the overall webpage.
+    * Keep horizontal scrolling limited to the badge container on mobile.
+    * Use accessible markup.
+    * Scope all CSS and JavaScript specifically to this section.
+    * Do not interfere with other Shopify sections.
+    * Optimise for fast loading.
+    
+    The final result should closely resemble the supplied reference: **thin, elegant, understated trust pills with circular check icons**, rather than large ecommerce cards or traditional trust badges.
+    , Change the tick style to a plain one and not curved.
+    
+    Giv eme options for different ticks
+    , Give me differemnt style of check. Give me a straight and minimal pone please, Give me ioption to control hover background and hover colours as well, Give me a neat check please not a broklen one, In mobile mode, make it an option to just grab and swipe through the badges, Give me control over top and bottom padding, Give me option to control the height and size of the badges, I dont need the slide in mobile mode, Make it just so that I can grab and scroll the badges., Give me option to have changes in hover colour and text, Giveme option to have different styels of check marks.
+    Also make the check mark in a small circle
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}{% style %}.ai-checks-{{ ai_gen_id }}{display:block;width:100%;padding:{{ block.settings.top_padding }}px 16px {{ block.settings.bottom_padding }}px;background:{{ block.settings.background }};overflow:hidden}.ai-checks-{{ ai_gen_id }}__row{display:flex;justify-content:center;gap:{{ block.settings.gap }}px;overflow-x:auto;scrollbar-width:none}.ai-checks-{{ ai_gen_id }}__row::-webkit-scrollbar{display:none}.ai-checks-{{ ai_gen_id }}__badge{display:flex;align-items:center;gap:8px;flex:0 0 auto;min-height:{{ block.settings.badge_height }}px;padding:0 {{ block.settings.badge_padding }}px;border:1px solid {{ block.settings.border }};border-radius:{{ block.settings.radius }}px;background:{{ block.settings.badge_background }};color:{{ block.settings.text_color }};font-size:{{ block.settings.text_size }}px;white-space:nowrap;transition:.2s}.ai-checks-{{ ai_gen_id }}__badge:hover{background:{{ block.settings.hover_background }};color:{{ block.settings.hover_text }}}.ai-checks-{{ ai_gen_id }}__icon{display:inline-flex;align-items:center;justify-content:center;width:{{ block.settings.icon_size }}px;height:{{ block.settings.icon_size }}px;flex:0 0 {{ block.settings.icon_size }}px;border-radius:50%;background:{{ block.settings.icon_background }};color:{{ block.settings.icon_color }};font-size:{{ block.settings.icon_size | times: 0.65 }}px;font-weight:700;line-height:1}.ai-checks-{{ ai_gen_id }}__icon--tick{font-family:Arial,sans-serif}.ai-checks-{{ ai_gen_id }}__icon--check{font-family:Arial,sans-serif}.ai-checks-{{ ai_gen_id }}__icon--mark{font-family:Arial,sans-serif}@media(max-width:749px){.ai-checks-{{ ai_gen_id }}__row{justify-content:flex-start;gap:8px}.ai-checks-{{ ai_gen_id }}__badge{min-height:{{ block.settings.mobile_height }}px;padding:0 {{ block.settings.mobile_padding }}px;font-size:{{ block.settings.mobile_text_size }}px}.ai-checks-{{ ai_gen_id }}__icon{width:{{ block.settings.mobile_icon_size }}px;height:{{ block.settings.mobile_icon_size }}px;flex-basis:{{ block.settings.mobile_icon_size }}px;font-size:{{ block.settings.mobile_icon_size | times: 0.65 }}px}}{% endstyle %}<div class="ai-checks-{{ ai_gen_id }}" {{ block.shopify_attributes }}><div class="ai-checks-{{ ai_gen_id }}__row" role="list" aria-label="Customer benefits">{% for i in (1..5) %}{% assign enabled_key = 'badge_' | append: i | append: '_enabled' %}{% assign text_key = 'badge_' | append: i | append: '_text' %}{% if block.settings[enabled_key] %}<div class="ai-checks-{{ ai_gen_id }}__badge" role="listitem"><span class="ai-checks-{{ ai_gen_id }}__icon ai-checks-{{ ai_gen_id }}__icon--{{ block.settings.check_style }}" aria-hidden="true">{% case block.settings.check_style %}{% when 'tick' %}✓{% when 'check' %}✔{% when 'mark' %}☑{% endcase %}</span>{{ block.settings[text_key] | escape }}</div>{% endif %}{% endfor %}</div></div>{% schema %}{"name":"Trust badge strip","settings":[{"type":"select","id":"check_style","label":"Check style","options":[{"value":"tick","label":"Plain tick"},{"value":"check","label":"Bold check"},{"value":"mark","label":"Boxed check"}],"default":"tick"},{"type":"range","id":"icon_size","label":"Icon size","min":14,"max":32,"step":2,"unit":"px","default":20},{"type":"range","id":"mobile_icon_size","label":"Mobile icon size","min":12,"max":26,"step":2,"unit":"px","default":18},{"type":"range","id":"badge_height","label":"Badge height","min":24,"max":72,"step":4,"unit":"px","default":40},{"type":"range","id":"mobile_height","label":"Mobile height","min":22,"max":56,"step":2,"unit":"px","default":36},{"type":"range","id":"badge_padding","label":"Badge padding","min":4,"max":32,"step":4,"unit":"px","default":12},{"type":"range","id":"mobile_padding","label":"Mobile padding","min":4,"max":24,"step":2,"unit":"px","default":10},{"type":"range","id":"text_size","label":"Text size","min":11,"max":20,"step":1,"unit":"px","default":14},{"type":"range","id":"mobile_text_size","label":"Mobile text size","min":10,"max":18,"step":1,"unit":"px","default":13},{"type":"range","id":"gap","label":"Badge gap","min":4,"max":40,"step":4,"unit":"px","default":16},{"type":"range","id":"radius","label":"Badge radius","min":0,"max":40,"step":4,"unit":"px","default":24},{"type":"range","id":"top_padding","label":"Top padding","min":0,"max":80,"step":4,"unit":"px","default":20},{"type":"range","id":"bottom_padding","label":"Bottom padding","min":0,"max":80,"step":4,"unit":"px","default":20},{"type":"color","id":"background","label":"Section background","default":"#ffffff"},{"type":"color","id":"badge_background","label":"Badge background","default":"#ffffff"},{"type":"color","id":"border","label":"Border","default":"#e5e5e2"},{"type":"color","id":"text_color","label":"Text","default":"#1a1a1a"},{"type":"color","id":"hover_background","label":"Hover background","default":"#1a1a1a"},{"type":"color","id":"hover_text","label":"Hover text","default":"#ffffff"},{"type":"color","id":"icon_background","label":"Icon background","default":"#eeeeeb"},{"type":"color","id":"icon_color","label":"Icon colour","default":"#1a1a1a"},{"type":"checkbox","id":"badge_1_enabled","label":"Enable badge 1","default":true},{"type":"text","id":"badge_1_text","label":"Badge 1 text","default":"Premium Craftsmanship"},{"type":"checkbox","id":"badge_2_enabled","label":"Enable badge 2","default":true},{"type":"text","id":"badge_2_text","label":"Badge 2 text","default":"Secure Checkout"},{"type":"checkbox","id":"badge_3_enabled","label":"Enable badge 3","default":true},{"type":"text","id":"badge_3_text","label":"Badge 3 text","default":"Flexible Payment"},{"type":"checkbox","id":"badge_4_enabled","label":"Enable badge 4","default":true},{"type":"text","id":"badge_4_text","label":"Badge 4 text","default":"Manufacturer Warranty"},{"type":"checkbox","id":"badge_5_enabled","label":"Enable badge 5","default":true},{"type":"text","id":"badge_5_text","label":"Badge 5 text","default":"Traditional & Infrared Heating"}],"presets":[{"name":"Trust badge strip"}],"tag":null,"class":"trust-badge-strip"}{% endschema %}

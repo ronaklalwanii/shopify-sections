@@ -1,0 +1,195 @@
+{% doc %}
+  @prompt
+    a utility margin block that has margin top, right, bottom and left selector with no content
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-utility-margin-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    height: 0;
+    margin-top: {{ block.settings.margin_top }}px;
+    margin-right: {{ block.settings.margin_right }}px;
+    margin-bottom: {{ block.settings.margin_bottom }}px;
+    margin-left: {{ block.settings.margin_left }}px;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-utility-margin-{{ ai_gen_id }} {
+      margin-top: {{ block.settings.mobile_margin_top }}px;
+      margin-right: {{ block.settings.mobile_margin_right }}px;
+      margin-bottom: {{ block.settings.mobile_margin_bottom }}px;
+      margin-left: {{ block.settings.mobile_margin_left }}px;
+    }
+  }
+{% endstyle %}
+
+<utility-margin-{{ ai_gen_id }}
+  class="ai-utility-margin-{{ ai_gen_id }}"
+  aria-hidden="true"
+  {{ block.shopify_attributes }}
+></utility-margin-{{ ai_gen_id }}>
+
+{% schema %}
+{
+  "name": "Utility margin",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Desktop margins"
+    },
+    {
+      "type": "select",
+      "id": "margin_top",
+      "label": "Top",
+      "options": [
+        { "value": "0", "label": "0 px" },
+        { "value": "8", "label": "8 px" },
+        { "value": "16", "label": "16 px" },
+        { "value": "24", "label": "24 px" },
+        { "value": "32", "label": "32 px" },
+        { "value": "48", "label": "48 px" },
+        { "value": "64", "label": "64 px" },
+        { "value": "80", "label": "80 px" }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "select",
+      "id": "margin_right",
+      "label": "Right",
+      "options": [
+        { "value": "0", "label": "0 px" },
+        { "value": "8", "label": "8 px" },
+        { "value": "16", "label": "16 px" },
+        { "value": "24", "label": "24 px" },
+        { "value": "32", "label": "32 px" },
+        { "value": "48", "label": "48 px" },
+        { "value": "64", "label": "64 px" },
+        { "value": "80", "label": "80 px" }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "select",
+      "id": "margin_bottom",
+      "label": "Bottom",
+      "options": [
+        { "value": "0", "label": "0 px" },
+        { "value": "8", "label": "8 px" },
+        { "value": "16", "label": "16 px" },
+        { "value": "24", "label": "24 px" },
+        { "value": "32", "label": "32 px" },
+        { "value": "48", "label": "48 px" },
+        { "value": "64", "label": "64 px" },
+        { "value": "80", "label": "80 px" }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "select",
+      "id": "margin_left",
+      "label": "Left",
+      "options": [
+        { "value": "0", "label": "0 px" },
+        { "value": "8", "label": "8 px" },
+        { "value": "16", "label": "16 px" },
+        { "value": "24", "label": "24 px" },
+        { "value": "32", "label": "32 px" },
+        { "value": "48", "label": "48 px" },
+        { "value": "64", "label": "64 px" },
+        { "value": "80", "label": "80 px" }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Mobile margins"
+    },
+    {
+      "type": "select",
+      "id": "mobile_margin_top",
+      "label": "Top",
+      "options": [
+        { "value": "0", "label": "0 px" },
+        { "value": "8", "label": "8 px" },
+        { "value": "16", "label": "16 px" },
+        { "value": "24", "label": "24 px" },
+        { "value": "32", "label": "32 px" },
+        { "value": "48", "label": "48 px" },
+        { "value": "64", "label": "64 px" },
+        { "value": "80", "label": "80 px" }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "select",
+      "id": "mobile_margin_right",
+      "label": "Right",
+      "options": [
+        { "value": "0", "label": "0 px" },
+        { "value": "8", "label": "8 px" },
+        { "value": "16", "label": "16 px" },
+        { "value": "24", "label": "24 px" },
+        { "value": "32", "label": "32 px" },
+        { "value": "48", "label": "48 px" },
+        { "value": "64", "label": "64 px" },
+        { "value": "80", "label": "80 px" }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "select",
+      "id": "mobile_margin_bottom",
+      "label": "Bottom",
+      "options": [
+        { "value": "0", "label": "0 px" },
+        { "value": "8", "label": "8 px" },
+        { "value": "16", "label": "16 px" },
+        { "value": "24", "label": "24 px" },
+        { "value": "32", "label": "32 px" },
+        { "value": "48", "label": "48 px" },
+        { "value": "64", "label": "64 px" },
+        { "value": "80", "label": "80 px" }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "select",
+      "id": "mobile_margin_left",
+      "label": "Left",
+      "options": [
+        { "value": "0", "label": "0 px" },
+        { "value": "8", "label": "8 px" },
+        { "value": "16", "label": "16 px" },
+        { "value": "24", "label": "24 px" },
+        { "value": "32", "label": "32 px" },
+        { "value": "48", "label": "48 px" },
+        { "value": "64", "label": "64 px" },
+        { "value": "80", "label": "80 px" }
+      ],
+      "default": "0"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Utility margin"
+    }
+  ],
+  "tag": null,
+  "class": "utility-margin-block"
+}
+{% endschema %}

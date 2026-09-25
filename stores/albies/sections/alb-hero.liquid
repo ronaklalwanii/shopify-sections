@@ -1,0 +1,609 @@
+{%- comment -%}
+  ALB Hero — self-contained static hero
+  Two columns (text + image) with a configurable width split. The section breaks
+  out of the theme's centered/max-width wrapper to span the full viewport; with
+  Full-bleed on, the image cancels the text gutter on its own side and reaches
+  the screen edge. Image fit modes: Cover (crop), Contain (letterbox),
+  Fill-horizontal (image sets the height — no stretch, no crop).
+  Mobile: optional independent padding on all four sides (bleed-aware).
+  Bottom: feature cards with offsets.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+<section
+  id="phero-{{ section.id }}"
+  class="phero phero--img-{{ s.image_side }}{% if s.image_full_bleed %} phero--bleed{% endif %}{% if s.image_fit == 'fill' %} phero--fit-fill{% endif %}"
+  style="
+    --ph-bg: {{ s.background_color }};
+    --ph-pad-top: {{ s.padding_top }}px;
+    --ph-pad-bottom: {{ s.padding_bottom }}px;
+    --ph-pad-x: {{ s.side_padding }}px;
+    --ph-m-pad-t: {{ s.mobile_padding_top }}px;
+    --ph-m-pad-r: {{ s.mobile_padding_right }}px;
+    --ph-m-pad-b: {{ s.mobile_padding_bottom }}px;
+    --ph-m-pad-l: {{ s.mobile_padding_left }}px;
+    --ph-col-gap: {{ s.column_gap }}px;
+    --ph-text-col: {{ s.text_column_width }}%;
+    --ph-media-h: {{ s.media_height }}px;
+    --ph-media-h-mob: {{ s.mobile_media_height }}px;
+
+    --ph-eyebrow-size: {{ s.eyebrow_size }}px;
+    --ph-eyebrow-color: {{ s.eyebrow_color }};
+    --ph-eyebrow-weight: {{ s.eyebrow_weight }};
+    --ph-eyebrow-spacing: {{ s.eyebrow_spacing }}px;
+
+    --ph-heading-font: {{ s.heading_font.family }}, {{ s.heading_font.fallback_families }};
+    --ph-heading-size: {{ s.heading_size }}px;
+    --ph-heading-size-mob: {{ s.heading_size_mobile }}px;
+    --ph-heading-weight: {{ s.heading_weight }};
+    --ph-heading-lh: {{ s.heading_line_height | divided_by: 100.0 }};
+    --ph-heading-color: {{ s.heading_color }};
+    --ph-heading-spacing: {{ s.heading_spacing }}px;
+
+    --ph-body-font: {{ s.body_font.family }}, {{ s.body_font.fallback_families }};
+    --ph-desc-size: {{ s.description_size }}px;
+    --ph-desc-color: {{ s.description_color }};
+    --ph-desc-lh: {{ s.description_line_height | divided_by: 100.0 }};
+    --ph-desc-maxw: {{ s.description_max_width }}px;
+    --ph-desc-spacing: {{ s.description_spacing }}px;
+
+    --ph-btn-bg: {{ s.button_bg }};
+    --ph-btn-color: {{ s.button_text_color }};
+    --ph-btn-hover-bg: {{ s.button_hover_bg }};
+    --ph-btn-size: {{ s.button_size }}px;
+    --ph-btn-weight: {{ s.button_weight }};
+    --ph-btn-spacing: {{ s.button_letter_spacing }}px;
+    --ph-btn-transform: {{ s.button_transform }};
+    --ph-btn-radius: {{ s.button_radius }}px;
+    --ph-btn-pad-x: {{ s.button_padding_x }}px;
+    --ph-btn-pad-y: {{ s.button_padding_y }}px;
+
+    --ph-img-fit: {{ s.image_fit }};
+    --ph-img-pos: {{ s.image_position }};
+    --ph-img-scale: {{ s.image_scale | divided_by: 100.0 }};
+    --ph-img-x: {{ s.image_offset_x }}px;
+    --ph-img-y: {{ s.image_offset_y }}px;
+    --ph-img-radius: {{ s.image_radius }}px;
+
+    --ph-feat-x: {{ s.features_offset_x }}px;
+    --ph-feat-y: {{ s.features_offset_y }}px;
+    --ph-feat-maxw: {{ s.features_max_width }}px;
+    --ph-card-gap: {{ s.card_gap }}px;
+    --ph-card-bg: {{ s.card_bg }};
+    --ph-card-radius: {{ s.card_radius }}px;
+    --ph-card-pad: {{ s.card_padding }}px;
+    --ph-icon-size: {{ s.icon_size }}px;
+    --ph-icon-color: {{ s.icon_color }};
+    --ph-title-size: {{ s.title_size }}px;
+    --ph-title-color: {{ s.title_color }};
+    --ph-title-weight: {{ s.title_weight }};
+    --ph-carddesc-size: {{ s.card_desc_size }}px;
+    --ph-carddesc-color: {{ s.card_desc_color }};
+    --ph-connector-color: {{ s.connector_color }};
+  "
+>
+  {%- style -%}
+    {{ s.heading_font | font_face: font_display: 'swap' }}
+    {{ s.body_font | font_face: font_display: 'swap' }}
+
+    /* Break the section out of the theme's centered / max-width wrapper so the
+       image can reach the true viewport edge. */
+    #shopify-section-{{ section.id }} {
+      width: 100vw;
+      max-width: 100vw;
+      margin-left: calc(50% - 50vw);
+      margin-right: calc(50% - 50vw);
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    #phero-{{ section.id }} {
+      width: 100%;
+      background: var(--ph-bg);
+      padding: var(--ph-pad-top) var(--ph-pad-x) var(--ph-pad-bottom);
+      overflow: hidden;
+    }
+
+    /* Bleed amounts: default to the side padding; mobile custom padding can
+       override them per side (see mobile block below). */
+    #phero-{{ section.id }} {
+      --ph-bleed-l: var(--ph-pad-x);
+      --ph-bleed-r: var(--ph-pad-x);
+    }
+
+    #phero-{{ section.id }} .phero__inner {
+      width: 100%;
+      position: relative;
+    }
+
+    /* ---------- Grid: configurable text/image split ---------- */
+    #phero-{{ section.id }} .phero__grid {
+      display: grid;
+      grid-template-columns: var(--ph-text-col) calc(100% - var(--ph-text-col));
+      gap: var(--ph-col-gap);
+      align-items: center;
+    }
+    /* image on the left → swap visual order, text stays in DOM order for a11y */
+    #phero-{{ section.id }}.phero--img-left .phero__text { order: 2; }
+    #phero-{{ section.id }}.phero--img-left .phero__media { order: 1; }
+
+    /* ---------- Text column (keeps its gutter) ---------- */
+    #phero-{{ section.id }} .phero__text {
+      position: relative;
+      z-index: 2;
+      min-width: 0;
+    }
+
+    #phero-{{ section.id }} .phero__eyebrow {
+      font-family: var(--ph-body-font);
+      font-size: var(--ph-eyebrow-size);
+      font-weight: var(--ph-eyebrow-weight);
+      letter-spacing: var(--ph-eyebrow-spacing);
+      text-transform: uppercase;
+      color: var(--ph-eyebrow-color);
+      margin: 0 0 14px;
+    }
+
+    #phero-{{ section.id }} .phero__heading {
+      font-family: var(--ph-heading-font);
+      font-size: var(--ph-heading-size);
+      font-weight: var(--ph-heading-weight);
+      line-height: var(--ph-heading-lh);
+      color: var(--ph-heading-color);
+      margin: 0 0 var(--ph-heading-spacing);
+    }
+
+    #phero-{{ section.id }} .phero__desc {
+      font-family: var(--ph-body-font);
+      font-size: var(--ph-desc-size);
+      line-height: var(--ph-desc-lh);
+      color: var(--ph-desc-color);
+      max-width: var(--ph-desc-maxw);
+      margin: 0 0 var(--ph-desc-spacing);
+    }
+
+    #phero-{{ section.id }} .phero__btn {
+      display: inline-block;
+      font-family: var(--ph-body-font);
+      font-size: var(--ph-btn-size);
+      font-weight: var(--ph-btn-weight);
+      letter-spacing: var(--ph-btn-spacing);
+      text-transform: var(--ph-btn-transform);
+      color: var(--ph-btn-color);
+      background: var(--ph-btn-bg);
+      padding: var(--ph-btn-pad-y) var(--ph-btn-pad-x);
+      border-radius: var(--ph-btn-radius);
+      text-decoration: none;
+      transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+      {% if s.button_shadow %}box-shadow: 0 8px 20px rgba(0,0,0,0.15);{% endif %}
+    }
+
+    #phero-{{ section.id }} .phero__btn:hover {
+      background: var(--ph-btn-hover-bg);
+      transform: translateY(-2px);
+    }
+
+    /* ---------- Media column: fixed height ----------
+       Full-bleed ON  → drop the gutter on the image's side so it reaches the edge.
+       Full-bleed OFF → keep the gutter (inset / rounded look). */
+    #phero-{{ section.id }} .phero__media {
+      position: relative;
+      height: var(--ph-media-h);
+      z-index: 1;
+      overflow: hidden;
+      border-radius: var(--ph-img-radius);
+      min-width: 0;
+    }
+    #phero-{{ section.id }}.phero--bleed.phero--img-right .phero__media { margin-right: calc(-1 * var(--ph-bleed-r)); }
+    #phero-{{ section.id }}.phero--bleed.phero--img-left  .phero__media { margin-left:  calc(-1 * var(--ph-bleed-l)); }
+
+    #phero-{{ section.id }} .phero__image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: var(--ph-img-fit);
+      object-position: var(--ph-img-pos);
+      transform: translate(var(--ph-img-x), var(--ph-img-y)) scale(var(--ph-img-scale));
+      transform-origin: center bottom;
+    }
+
+    /* ---------- Feature cards (trust badges) ---------- */
+    #phero-{{ section.id }} .phero__features {
+      display: flex;
+      align-items: stretch;
+      gap: var(--ph-card-gap);
+      margin-top: var(--ph-feat-y);
+      transform: translateX(var(--ph-feat-x));
+      position: relative;
+      z-index: 3;
+    }
+
+    @media (min-width: 901px) {
+      #phero-{{ section.id }} .phero__features {
+        max-width: var(--ph-feat-maxw);
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    #phero-{{ section.id }} .phero__card {
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--ph-card-bg);
+      border-radius: var(--ph-card-radius);
+      padding: var(--ph-card-pad);
+      {% if s.card_shadow %}box-shadow: 0 10px 30px rgba(0,0,0,0.08);{% endif %}
+    }
+
+    #phero-{{ section.id }} .phero__card-icon {
+      flex: 0 0 auto;
+      width: var(--ph-icon-size);
+      height: var(--ph-icon-size);
+      color: var(--ph-icon-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #phero-{{ section.id }} .phero__card-icon svg,
+    #phero-{{ section.id }} .phero__card-icon img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    #phero-{{ section.id }} .phero__card-icon img { object-fit: contain; }
+
+    #phero-{{ section.id }} .phero__card-body { min-width: 0; }
+
+    #phero-{{ section.id }} .phero__card-title {
+      font-family: var(--ph-body-font);
+      font-size: var(--ph-title-size);
+      font-weight: var(--ph-title-weight);
+      color: var(--ph-title-color);
+      margin: 0 0 6px;
+    }
+
+    #phero-{{ section.id }} .phero__card-desc {
+      font-family: var(--ph-body-font);
+      font-size: var(--ph-carddesc-size);
+      line-height: 1.45;
+      color: var(--ph-carddesc-color);
+      margin: 0;
+    }
+
+    /* Dotted connector */
+    #phero-{{ section.id }} .phero__connector {
+      flex: 0 0 48px;
+      align-self: center;
+      height: 8px;
+      position: relative;
+      background-image: radial-gradient(circle, var(--ph-connector-color) 1.5px, transparent 2.2px);
+      background-size: 9px 8px;
+      background-repeat: repeat-x;
+      background-position: center left;
+    }
+
+    #phero-{{ section.id }} .phero__connector::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--ph-connector-color);
+      transform: translate(-50%, -50%);
+    }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 900px) {
+      #phero-{{ section.id }} .phero__grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      #phero-{{ section.id }} .phero__text {
+        text-align: {{ s.mobile_text_align }};
+        order: 1;
+      }
+
+      /* mobile: image below the text; bleeds both sides only when full-bleed is on */
+      #phero-{{ section.id }}.phero--bleed .phero__media {
+        order: 2;
+        height: var(--ph-media-h-mob);
+        margin-left: calc(-1 * var(--ph-bleed-l));
+        margin-right: calc(-1 * var(--ph-bleed-r));
+      }
+      #phero-{{ section.id }}:not(.phero--bleed) .phero__media {
+        order: 2;
+        height: var(--ph-media-h-mob);
+      }
+
+      #phero-{{ section.id }} .phero__desc {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      #phero-{{ section.id }} .phero__heading {
+        font-size: var(--ph-heading-size-mob);
+      }
+
+      #phero-{{ section.id }} .phero__features {
+        flex-direction: column;
+        transform: none;
+        margin-top: 32px;
+      }
+
+      #phero-{{ section.id }} .phero__connector {
+        display: none;
+      }
+
+      #phero-{{ section.id }} .phero__card {
+        width: 100%;
+      }
+    }
+
+    /* ---- Optional independent mobile padding (all four sides) ----
+       Overrides the section padding below 900px and re-points the bleed
+       amounts so a full-bleed image still cancels exactly the mobile
+       left/right values and stays flush to the edges. */
+    {%- if s.mobile_custom_padding -%}
+      @media (max-width: 900px) {
+        #phero-{{ section.id }} {
+          padding: var(--ph-m-pad-t) var(--ph-m-pad-r) var(--ph-m-pad-b) var(--ph-m-pad-l);
+          --ph-bleed-l: var(--ph-m-pad-l);
+          --ph-bleed-r: var(--ph-m-pad-r);
+        }
+      }
+    {%- endif -%}
+
+    /* ---- Fill (horizontally): the image sets the row height ----
+       No object-fit stretch, no crop: the asset renders at 100% width with its
+       intrinsic ratio and the media box hugs it. Badges still overlap via their
+       offset; full-bleed still reaches the edge. Overrides the fixed heights. */
+    #phero-{{ section.id }}.phero--fit-fill .phero__media {
+      height: auto !important;
+      min-height: 0 !important;
+    }
+    #phero-{{ section.id }}.phero--fit-fill .phero__image {
+      position: relative;
+      inset: auto;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+  {%- endstyle -%}
+
+  <div class="phero__inner">
+    <div class="phero__grid">
+
+      <!-- Text -->
+      <div class="phero__text">
+        {%- if s.eyebrow != blank -%}
+          <p class="phero__eyebrow">{{ s.eyebrow }}</p>
+        {%- endif -%}
+
+        {%- if s.heading != blank -%}
+          <h1 class="phero__heading">{{ s.heading }}</h1>
+        {%- endif -%}
+
+        {%- if s.description != blank -%}
+          <p class="phero__desc">{{ s.description }}</p>
+        {%- endif -%}
+
+        {%- if s.button_label != blank -%}
+          <a class="phero__btn" href="{{ s.button_url | default: '#' }}">{{ s.button_label }}</a>
+        {%- endif -%}
+      </div>
+
+      <!-- Media (fixed height, bleeds on its own side when full-bleed is on) -->
+      <div class="phero__media">
+        {%- if s.image != blank -%}
+          {{
+            s.image
+            | image_url: width: 1400
+            | image_tag:
+              loading: 'eager',
+              class: 'phero__image',
+              widths: '400,600,800,1000,1200,1400',
+              sizes: '(max-width: 900px) 100vw, 55vw',
+              alt: s.image.alt | default: s.heading | escape
+          }}
+        {%- else -%}
+          {{ 'lifestyle-2' | placeholder_svg_tag: 'phero__image' }}
+        {%- endif -%}
+      </div>
+
+    </div>
+
+    <!-- Feature cards / trust badges -->
+    {%- if s.show_features and section.blocks.size > 0 -%}
+      <div class="phero__features">
+        {%- for block in section.blocks -%}
+          {%- assign b = block.settings -%}
+          <div class="phero__card" {{ block.shopify_attributes }}>
+            <span class="phero__card-icon">
+              {%- if b.icon == 'custom' and b.custom_icon != blank -%}
+                {{ b.custom_icon | image_url: width: 120 | image_tag: loading: 'lazy', widths: '60,120' }}
+              {%- else -%}
+                {%- case b.icon -%}
+                  {%- when 'truck' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 8h13v9H1z"/><path d="M14 11h4l3 3v3h-7"/><circle cx="6" cy="18.5" r="1.8"/><circle cx="17.5" cy="18.5" r="1.8"/></svg>
+                  {%- when 'gift' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="18" height="10" rx="1"/><path d="M3 10h18"/><path d="M12 10v10"/><path d="M8.5 7a2.5 2.5 0 0 1 0-5C11 2 12 5 12 7"/><path d="M15.5 7a2.5 2.5 0 0 0 0-5C13 2 12 5 12 7"/></svg>
+                  {%- when 'bag' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+                  {%- when 'star' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.7 5.6 6.3.9-4.5 4.4 1 6.1-5.5-2.9-5.5 2.9 1-6.1L3 9.5l6.3-.9L12 3z"/></svg>
+                  {%- when 'shield' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg>
+                  {%- when 'heart' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1L12 21.2l7.7-7.8 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+                  {%- when 'paw' -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="9" r="1.8"/><circle cx="12" cy="7" r="1.8"/><circle cx="17.5" cy="9" r="1.8"/><path d="M12 12.5c-3 0-6 2.6-6 5 0 1.6 1.3 2.6 3 2.6 1.2 0 2-.5 3-.5s1.8.5 3 .5c1.7 0 3-1 3-2.6 0-2.4-3-5-6-5z"/></svg>
+                {%- endcase -%}
+              {%- endif -%}
+            </span>
+            <div class="phero__card-body">
+              {%- if b.title != blank -%}
+                <h3 class="phero__card-title">{{ b.title }}</h3>
+              {%- endif -%}
+              {%- if b.text != blank -%}
+                <p class="phero__card-desc">{{ b.text }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+
+          {%- if s.show_connectors and forloop.last != true -%}
+            <div class="phero__connector" aria-hidden="true"></div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Pet hero",
+  "tag": "section",
+  "class": "section-pet-hero",
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#F4F4F6" },
+    { "type": "select", "id": "image_side", "label": "Image side", "options": [ { "value": "right", "label": "Right" }, { "value": "left", "label": "Left" } ], "default": "right", "info": "The image bleeds to the screen edge on this side; the text keeps its gutter on the other." },
+    { "type": "checkbox", "id": "image_full_bleed", "label": "Full-bleed image to screen edge", "default": true, "info": "Breaks the section out of the page container so the image reaches the viewport edge on its side. Uncheck to keep the image inset with the text gutter (good with a corner radius)." },
+    { "type": "range", "id": "text_column_width", "label": "Text column width", "info": "Text takes this % of the row; the image takes the rest. e.g. 60 = 60% text / 40% image.", "min": 30, "max": 70, "step": 2, "unit": "%", "default": 50 },
+    { "type": "range", "id": "side_padding", "label": "Side padding", "info": "Gutter for the text column. With full-bleed on, the image drops this padding on its own side to reach the edge.", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 24 },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 100 },
+    { "type": "range", "id": "column_gap", "label": "Column gap", "min": 20, "max": 120, "step": 4, "unit": "px", "default": 60 },
+    { "type": "range", "id": "media_height", "label": "Media height (desktop)", "min": 300, "max": 800, "step": 10, "unit": "px", "default": 520 },
+    { "type": "range", "id": "mobile_media_height", "label": "Media height (mobile)", "min": 220, "max": 600, "step": 10, "unit": "px", "default": 340 },
+    { "type": "select", "id": "mobile_text_align", "label": "Mobile text alignment", "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" } ], "default": "center" },
+
+    { "type": "header", "content": "Mobile padding" },
+    { "type": "checkbox", "id": "mobile_custom_padding", "label": "Custom mobile padding", "default": false, "info": "Enable to set separate top / right / bottom / left padding on screens under 900px. Off = mobile uses the desktop padding values." },
+    { "type": "range", "id": "mobile_padding_top", "label": "Mobile padding — top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64, "visible_if": "{{ section.settings.mobile_custom_padding == true }}" },
+    { "type": "range", "id": "mobile_padding_right", "label": "Mobile padding — right", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 24, "visible_if": "{{ section.settings.mobile_custom_padding == true }}" },
+    { "type": "range", "id": "mobile_padding_bottom", "label": "Mobile padding — bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 100, "visible_if": "{{ section.settings.mobile_custom_padding == true }}" },
+    { "type": "range", "id": "mobile_padding_left", "label": "Mobile padding — left", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 24, "visible_if": "{{ section.settings.mobile_custom_padding == true }}" },
+
+    { "type": "header", "content": "Eyebrow" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow text"},
+    { "type": "range", "id": "eyebrow_size", "label": "Eyebrow size", "min": 10, "max": 20, "step": 1, "unit": "px", "default": 13 },
+    { "type": "select", "id": "eyebrow_weight", "label": "Eyebrow weight", "options": [ { "value": "400", "label": "Regular" }, { "value": "500", "label": "Medium" }, { "value": "600", "label": "Semibold" }, { "value": "700", "label": "Bold" } ], "default": "600" },
+    { "type": "range", "id": "eyebrow_spacing", "label": "Eyebrow letter spacing", "min": 0, "max": 6, "step": 0.5, "unit": "px", "default": 1.5 },
+    { "type": "color", "id": "eyebrow_color", "label": "Eyebrow color", "default": "#F59E0B" },
+
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Pet supplies direct from the manufacturer" },
+    { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "assistant_n7" },
+    { "type": "range", "id": "heading_size", "label": "Heading size (desktop)", "min": 26, "max": 68, "step": 2, "unit": "px", "default": 40 },
+    { "type": "range", "id": "heading_size_mobile", "label": "Heading size (mobile)", "min": 22, "max": 46, "step": 2, "unit": "px", "default": 30 },
+    { "type": "select", "id": "heading_weight", "label": "Heading weight", "options": [ { "value": "400", "label": "Regular" }, { "value": "500", "label": "Medium" }, { "value": "600", "label": "Semibold" }, { "value": "700", "label": "Bold" }, { "value": "800", "label": "Extra bold" } ], "default": "700" },
+    { "type": "range", "id": "heading_line_height", "label": "Heading line height", "min": 90, "max": 160, "step": 5, "unit": "%", "default": 115 },
+    { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#1A1A1A" },
+    { "type": "range", "id": "heading_spacing", "label": "Space below heading", "min": 0, "max": 48, "step": 2, "unit": "px", "default": 18 },
+
+    { "type": "header", "content": "Description" },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "A network of pet supply stores with delivery nationwide. Direct shipments from manufacturers." },
+    { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "assistant_n4" },
+    { "type": "range", "id": "description_size", "label": "Description size", "min": 12, "max": 22, "step": 1, "unit": "px", "default": 15 },
+    { "type": "range", "id": "description_line_height", "label": "Description line height", "min": 120, "max": 200, "step": 5, "unit": "%", "default": 160 },
+    { "type": "range", "id": "description_max_width", "label": "Description max width", "min": 200, "max": 600, "step": 10, "unit": "px", "default": 380 },
+    { "type": "range", "id": "description_spacing", "label": "Space below description", "min": 0, "max": 60, "step": 2, "unit": "px", "default": 28 },
+    { "type": "color", "id": "description_color", "label": "Description color", "default": "#6B7280" },
+
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Browse catalog" },
+    { "type": "url", "id": "button_url", "label": "Button link" },
+    { "type": "color", "id": "button_bg", "label": "Button background", "default": "#F59E0B" },
+    { "type": "color", "id": "button_text_color", "label": "Button text", "default": "#FFFFFF" },
+    { "type": "color", "id": "button_hover_bg", "label": "Button hover background", "default": "#D97706" },
+    { "type": "range", "id": "button_size", "label": "Button text size", "min": 12, "max": 22, "step": 1, "unit": "px", "default": 15 },
+    { "type": "select", "id": "button_weight", "label": "Button weight", "options": [ { "value": "400", "label": "Regular" }, { "value": "500", "label": "Medium" }, { "value": "600", "label": "Semibold" }, { "value": "700", "label": "Bold" } ], "default": "600" },
+    { "type": "range", "id": "button_letter_spacing", "label": "Button letter spacing", "min": 0, "max": 4, "step": 0.5, "unit": "px", "default": 0.5 },
+    { "type": "select", "id": "button_transform", "label": "Button transform", "options": [ { "value": "none", "label": "None" }, { "value": "uppercase", "label": "Uppercase" }, { "value": "capitalize", "label": "Capitalize" } ], "default": "none" },
+    { "type": "range", "id": "button_radius", "label": "Button radius", "min": 0, "max": 50, "step": 2, "unit": "px", "default": 50 },
+    { "type": "range", "id": "button_padding_x", "label": "Button horizontal padding", "min": 12, "max": 64, "step": 2, "unit": "px", "default": 34 },
+    { "type": "range", "id": "button_padding_y", "label": "Button vertical padding", "min": 8, "max": 32, "step": 2, "unit": "px", "default": 16 },
+    { "type": "checkbox", "id": "button_shadow", "label": "Button shadow", "default": true },
+
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "select", "id": "image_fit", "label": "Image fit", "options": [ { "value": "fill", "label": "Fill (horizontally)" }, { "value": "cover", "label": "Cover (crop)" }, { "value": "contain", "label": "Contain (full image)" } ], "default": "cover", "info": "Fill (horizontally) = image at 100% width with its own height (no stretch, no crop); the media box hugs it." },
+    { "type": "select", "id": "image_position", "label": "Image position", "options": [ { "value": "center", "label": "Center" }, { "value": "left center", "label": "Left" }, { "value": "right center", "label": "Right" }, { "value": "center top", "label": "Top" }, { "value": "center bottom", "label": "Bottom" } ], "default": "center" },
+    { "type": "range", "id": "image_scale", "label": "Image scale", "min": 60, "max": 180, "step": 5, "unit": "%", "default": 100 },
+    { "type": "range", "id": "image_offset_x", "label": "Image offset X", "min": -200, "max": 200, "step": 5, "unit": "px", "default": 0 },
+    { "type": "range", "id": "image_offset_y", "label": "Image offset Y", "min": -200, "max": 200, "step": 5, "unit": "px", "default": 0 },
+    { "type": "range", "id": "image_radius", "label": "Image corner radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 0 },
+
+    { "type": "header", "content": "Trust badges" },
+    { "type": "checkbox", "id": "show_features", "label": "Show trust badges", "default": true },
+    { "type": "range", "id": "features_offset_y", "label": "Badges vertical offset", "info": "Negative values pull the badges up into the hero.", "min": -200, "max": 200, "step": 5, "unit": "px", "default": -80 },
+    { "type": "range", "id": "features_offset_x", "label": "Badges horizontal offset", "min": -200, "max": 200, "step": 5, "unit": "px", "default": 0 },
+    { "type": "range", "id": "features_max_width", "label": "Badges max width", "info": "Desktop only. Caps the badges row width and keeps it centered. Set high to span full width.", "min": 400, "max": 2000, "step": 20, "unit": "px", "default": 1200 },
+    { "type": "range", "id": "card_gap", "label": "Gap between cards", "min": 8, "max": 60, "step": 2, "unit": "px", "default": 24 },
+    { "type": "color", "id": "card_bg", "label": "Card background", "default": "#FFFFFF" },
+    { "type": "range", "id": "card_radius", "label": "Card radius", "min": 0, "max": 32, "step": 2, "unit": "px", "default": 12 },
+    { "type": "checkbox", "id": "card_shadow", "label": "Card shadow", "default": true },
+    { "type": "range", "id": "card_padding", "label": "Card padding", "min": 12, "max": 48, "step": 2, "unit": "px", "default": 24 },
+    { "type": "range", "id": "icon_size", "label": "Icon size", "min": 24, "max": 72, "step": 2, "unit": "px", "default": 42 },
+    { "type": "color", "id": "icon_color", "label": "Icon color", "default": "#F59E0B" },
+    { "type": "range", "id": "title_size", "label": "Card title size", "min": 12, "max": 24, "step": 1, "unit": "px", "default": 15 },
+    { "type": "select", "id": "title_weight", "label": "Card title weight", "options": [ { "value": "400", "label": "Regular" }, { "value": "500", "label": "Medium" }, { "value": "600", "label": "Semibold" }, { "value": "700", "label": "Bold" } ], "default": "700" },
+    { "type": "color", "id": "title_color", "label": "Card title color", "default": "#F59E0B" },
+    { "type": "range", "id": "card_desc_size", "label": "Card text size", "min": 11, "max": 18, "step": 1, "unit": "px", "default": 13 },
+    { "type": "color", "id": "card_desc_color", "label": "Card text color", "default": "#6B7280" },
+    { "type": "checkbox", "id": "show_connectors", "label": "Show dotted connectors", "default": true },
+    { "type": "color", "id": "connector_color", "label": "Connector color", "default": "#F59E0B" }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Trust badge",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "truck", "label": "Delivery truck" },
+            { "value": "gift", "label": "Gift" },
+            { "value": "bag", "label": "Shopping bag" },
+            { "value": "star", "label": "Star" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "paw", "label": "Paw" },
+            { "value": "custom", "label": "Custom image" }
+          ],
+          "default": "truck"
+        },
+        { "type": "image_picker", "id": "custom_icon", "label": "Custom icon image", "info": "Used when icon = Custom image." },
+        { "type": "text", "id": "title", "label": "Title", "default": "Free delivery" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "On orders over $50 within the local area." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "ALB hero",
+      "blocks": [
+        { "type": "feature", "settings": { "icon": "truck", "title": "Free delivery", "text": "On orders over $50 within the local area." } },
+        { "type": "feature", "settings": { "icon": "gift", "title": "Bonus program", "text": "Earn bonuses on purchases and pay with them." } },
+        { "type": "feature", "settings": { "icon": "bag", "title": "Promos & discounts", "text": "Sales on collections and wholesale pricing." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

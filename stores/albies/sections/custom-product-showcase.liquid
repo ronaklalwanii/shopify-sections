@@ -1,0 +1,502 @@
+{%- assign header_align_items = 'center' -%}
+{%- if section.settings.header_alignment == 'left' -%}
+  {%- assign header_align_items = 'flex-start' -%}
+{%- elsif section.settings.header_alignment == 'right' -%}
+  {%- assign header_align_items = 'flex-end' -%}
+{%- endif -%}
+
+{%- style -%}
+  /* Load Fonts from Font Picker */
+  {%- if section.settings.eyebrow_font_family != blank -%}
+    {{ section.settings.eyebrow_font_family | font_face: font_display: 'swap' }}
+  {%- endif -%}
+  {%- if section.settings.heading_font_family != blank -%}
+    {{ section.settings.heading_font_family | font_face: font_display: 'swap' }}
+  {%- endif -%}
+
+  #shopify-section-{{ section.id }},
+  #shopify-section-{{ section.id }}.section {
+    padding-block-start: 0 !important;
+    padding-block-end: 0 !important;
+    --ul-content-section-spacing-block-start: 0 !important;
+    --ul-content-section-spacing-block-end: 0 !important;
+    --ul-section-outer-spacing-block: 0 !important;
+    margin: 0 !important;
+  }
+  
+  .section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding: 80px 20px;
+  }
+
+  .cps-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .cps-header {
+    text-align: {{ section.settings.header_alignment }};
+    margin-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: {{ header_align_items }};
+  }
+
+  .cps-eyebrow {
+    {%- if section.settings.eyebrow_font_family != blank -%}
+      font-family: {{ section.settings.eyebrow_font_family.family }}, {{ section.settings.eyebrow_font_family.fallback_families }};
+    {%- else -%}
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    {%- endif -%}
+    color: {{ section.settings.eyebrow_color }};
+    font-size: {{ section.settings.eyebrow_font_size }}px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: {{ section.settings.eyebrow_font_weight }};
+    margin-bottom: 15px;
+    display: block;
+  }
+
+  .cps-title {
+    {%- if section.settings.heading_font_family != blank -%}
+      font-family: {{ section.settings.heading_font_family.family }}, {{ section.settings.heading_font_family.fallback_families }};
+    {%- else -%}
+      font-family: Georgia, 'Times New Roman', serif;
+    {%- endif -%}
+    font-size: {{ section.settings.heading_font_size }}px;
+    color: {{ section.settings.heading_color }};
+    margin: 0;
+    font-weight: {{ section.settings.heading_font_weight }};
+    line-height: 1.2;
+  }
+
+  .cps-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+
+  .cps-card {
+    background: #fff;
+    border: 1px solid #eaeaea;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s ease;
+    height: 100%;
+  }
+
+  .cps-card:hover {
+    box-shadow: 0 15px 30px rgba(0,0,0,0.04);
+    border-color: #dcdcdc;
+  }
+
+  .cps-card-inner {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+  }
+
+  .cps-card-inner.cps-layout-right {
+    flex-direction: row-reverse;
+  }
+
+  .cps-image-col {
+    flex: 0 0 40%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    min-height: 400px;
+  }
+
+  .cps-image-col img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    max-height: 350px;
+  }
+
+  .cps-content-col {
+    flex: 1;
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .cps-product-title {
+    {%- if section.settings.heading_font_family != blank -%}
+      font-family: {{ section.settings.heading_font_family.family }}, {{ section.settings.heading_font_family.fallback_families }};
+    {%- else -%}
+      font-family: Georgia, 'Times New Roman', serif;
+    {%- endif -%}
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 15px 0;
+    color: {{ section.settings.text_color }};
+    line-height: 1.3;
+  }
+
+  .cps-description {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 25px;
+  }
+
+  .cps-price {
+    font-size: 28px;
+    font-weight: 700;
+    color: {{ section.settings.price_color }};
+    margin-bottom: 25px;
+    font-family: 'Helvetica Neue', sans-serif;
+  }
+
+  .cps-btn {
+    display: inline-block;
+    background-color: {{ section.settings.btn_color }};
+    color: {{ section.settings.btn_text_color }};
+    text-decoration: none;
+    padding: 14px 28px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 2px;
+    transition: opacity 0.3s;
+    align-self: flex-start;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 30px;
+  }
+
+  .cps-btn:hover {
+    opacity: 0.9;
+  }
+
+  .cps-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: auto;
+  }
+
+  .cps-tag {
+    font-size: 11px;
+    color: #555;
+    background: #fff;
+    border: 1px solid #eee;
+    padding: 6px 12px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+  }
+  
+  .cps-tag::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: {{ section.settings.eyebrow_color }};
+    border-radius: 50%;
+    opacity: 0.5;
+  }
+
+  @media (max-width: 900px) {
+    .cps-grid {
+      grid-template-columns: 1fr;
+    }
+    .cps-card-inner, .cps-card-inner.cps-layout-right {
+      flex-direction: column;
+    }
+    .cps-image-col {
+      flex: none;
+      min-height: 300px;
+      width: 100%;
+    }
+    .cps-content-col {
+      align-items: center;
+      text-align: center;
+    }
+    .cps-btn {
+      align-self: center;
+    }
+    .cps-tags {
+      justify-content: center;
+    }
+  }
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}">
+  <div class="cps-container">
+    
+    <div class="cps-header">
+      <span class="cps-eyebrow">{{ section.settings.eyebrow_text }}</span>
+      <h2 class="cps-title">{{ section.settings.heading }}</h2>
+    </div>
+
+    <div class="cps-grid">
+      {%- for block in section.blocks -%}
+        <div class="cps-card" {{ block.shopify_attributes }}>
+          <div class="cps-card-inner {% if block.settings.image_position == 'right' %}cps-layout-right{% endif %}">
+            
+            <div class="cps-image-col">
+              {%- if block.settings.product != blank -%}
+                {%- assign card_product = block.settings.product -%}
+                <a href="{{ card_product.url }}">
+                  <img src="{{ card_product.featured_image | image_url: width: 600 }}" alt="{{ card_product.title | escape }}" loading="lazy">
+                </a>
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </div>
+
+            <div class="cps-content-col">
+              {%- if block.settings.product != blank -%}
+                {%- assign card_product = block.settings.product -%}
+                
+                <h3 class="cps-product-title">
+                  {%- if block.settings.custom_title != blank -%}
+                    {{ block.settings.custom_title }}
+                  {%- else -%}
+                    {{ card_product.title }}
+                  {%- endif -%}
+                </h3>
+                
+                <p class="cps-description">
+                  {%- if block.settings.custom_desc != blank -%}
+                    {{ block.settings.custom_desc }}
+                  {%- else -%}
+                    {{ card_product.description | strip_html | truncate: 100 }}
+                  {%- endif -%}
+                </p>
+
+                <div class="cps-price">
+                  {{ card_product.price | money }}
+                </div>
+
+                <a href="{{ card_product.url }}" class="cps-btn">
+                  {{ section.settings.button_text }}
+                </a>
+
+                {%- if card_product.tags.size > 0 -%}
+                  <div class="cps-tags">
+                    {%- for tag in card_product.tags -%}
+                      <span class="cps-tag">{{ tag | replace: '-', ' ' | replace: '_', ' ' | capitalize }}</span>
+                    {%- endfor -%}
+                  </div>
+                {%- endif -%}
+              {%- else -%}
+                <h3 class="cps-product-title">Select a product</h3>
+                <p class="cps-description">Please select a product from the block settings to display it here.</p>
+              {%- endif -%}
+            </div>
+
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product Showcase",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Eyebrow Text",
+      "default": "OUR COLLECTION"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Beauty technology. Visible results."
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Header Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "eyebrow_font_family",
+      "label": "Eyebrow Font",
+      "default": "assistant_n6"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_font_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Eyebrow Font Size",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#8c7b70"
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_font_weight",
+      "label": "Eyebrow Font Weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Normal" },
+        { "value": "600", "label": "Semi Bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font_family",
+      "label": "Heading Font",
+      "default": "playfair_display_n4"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "min": 20,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading Font Size",
+      "default": 36
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_weight",
+      "label": "Heading Font Weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Normal" },
+        { "value": "600", "label": "Semi Bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "header",
+      "content": "Global Settings"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Price Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "btn_color",
+      "label": "Button Background",
+      "default": "#8c7b70"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Product Card",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "Image Position",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "text",
+          "id": "custom_title",
+          "label": "Custom Title (Optional)",
+          "info": "Leave blank to use product title"
+        },
+        {
+          "type": "textarea",
+          "id": "custom_desc",
+          "label": "Custom Description",
+          "info": "Leave blank to use product description"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Product Showcase",
+      "blocks": [
+        { "type": "product_card" },
+        { "type": "product_card" }
+      ]
+    }
+  ]
+}
+{% endschema %}

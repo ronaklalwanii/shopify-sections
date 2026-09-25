@@ -1,0 +1,519 @@
+<style>
+  #shopify-section-{{ section.id }} {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .cg-section-{{ section.id }} {
+    /* Layout Variables */
+    --cg-bg: {{ section.settings.cg_section_bg }};
+    --cg-padding-top: {{ section.settings.cg_padding_top }}px;
+    --cg-padding-bottom: {{ section.settings.cg_padding_bottom }}px;
+    --cg-max-width: {{ section.settings.cg_max_width }}px;
+    --cg-gap: {{ section.settings.cg_grid_gap }}px;
+    
+    /* Grid Columns */
+    --cg-cols-desktop: {{ section.settings.cg_cols_desktop }};
+    --cg-cols-tablet: {{ section.settings.cg_cols_tablet }};
+    --cg-cols-mobile: {{ section.settings.cg_cols_mobile }};
+
+    /* Card Variables */
+    --cg-card-bg: {{ section.settings.cg_card_bg }};
+    --cg-card-radius: {{ section.settings.cg_card_radius }}px;
+    --cg-card-padding: {{ section.settings.cg_card_padding }}px;
+
+    /* Typography Variables */
+    --cg-eyebrow-color: {{ section.settings.cg_eyebrow_color }};
+    --cg-eyebrow-size: {{ section.settings.cg_eyebrow_size }}px;
+    
+    --cg-heading-color: {{ section.settings.cg_heading_color }};
+    --cg-heading-size: {{ section.settings.cg_heading_size }}px;
+    --cg-heading-weight: {{ section.settings.cg_headding_weight }};
+    
+    --cg-footer-color: {{ section.settings.cg_footer_color }};
+    --cg-footer-size: {{ section.settings.cg_footer_size }}px;
+
+    --cg-title-color: {{ section.settings.cg_title_color }};
+    --cg-title-size: {{ section.settings.cg_title_size }}px;
+    --cg-title-weight: {{ section.settings.cg_title_weight }};
+
+    --cg-desc-color: {{ section.settings.cg_desc_color }};
+    --cg-desc-size: {{ section.settings.cg_desc_size }}px;
+
+    background-color: var(--cg-bg);
+    padding-top: var(--cg-padding-top);
+    padding-bottom: var(--cg-padding-bottom);
+  }
+
+  .cg-section-{{ section.id }} .cg-container {
+    max-width: var(--cg-max-width);
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .cg-section-{{ section.id }} .cg-header {
+    text-align: center;
+    margin-bottom: 40px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cg-section-{{ section.id }} .cg-eyebrow {
+    color: var(--cg-eyebrow-color);
+    font-size: var(--cg-eyebrow-size);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .cg-section-{{ section.id }} .cg-heading {
+    color: var(--cg-heading-color);
+    font-size: var(--cg-heading-size);
+    font-weight: var(--cg-heading-weight);
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .cg-section-{{ section.id }} .cg-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--cg-cols-desktop), 1fr);
+    gap: var(--cg-gap);
+    margin-bottom: 40px;
+  }
+
+  .cg-section-{{ section.id }} .cg-card {
+    background-color: var(--cg-card-bg);
+    border-radius: var(--cg-card-radius);
+    padding: var(--cg-card-padding);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+
+  .cg-section-{{ section.id }} .cg-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .cg-section-{{ section.id }} .cg-icon-wrapper {
+    margin-bottom: 20px;
+    height: {{ section.settings.cg_icon_size }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cg-section-{{ section.id }} .cg-icon {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .cg-section-{{ section.id }} .cg-title {
+    color: var(--cg-title-color);
+    font-size: var(--cg-title-size);
+    font-weight: var(--cg-title-weight);
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .cg-section-{{ section.id }} .cg-desc {
+    color: var(--cg-desc-color);
+    font-size: var(--cg-desc-size);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .cg-section-{{ section.id }} .cg-footer {
+    text-align: center;
+    color: var(--cg-footer-color);
+    font-size: var(--cg-footer-size);
+    font-weight: 600;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Responsive */
+  @media (max-width: 990px) {
+    .cg-section-{{ section.id }} .cg-grid {
+      grid-template-columns: repeat(var(--cg-cols-tablet), 1fr);
+    }
+  }
+
+
+  @media (max-width: 749px) {
+    /* Horizontal Scroll Setup */
+    .cg-section-{{ section.id }} .cg-grid {
+      display: flex;
+      overflow-x: auto;
+      overflow-y: visible; /* Prevents scroll hijacking */
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none;  /* IE 10+ */
+      padding-bottom: 10px; /* Visual breathing room at bottom */
+    }
+    
+    /* Hide Scrollbar for Chrome/Safari/Opera */
+    .cg-section-{{ section.id }} .cg-grid::-webkit-scrollbar { 
+      display: none; 
+    }
+
+    /* Card Sizing for Peek Effect */
+    .cg-section-{{ section.id }} .cg-card {
+      flex: 0 0 75%; /* 85% width leaves 15% of next card visible */
+      scroll-snap-align: start;
+    }
+
+    .cg-section-{{ section.id }} .cg-heading {
+      font-size: calc(var(--cg-heading-size) * 0.8);
+    }
+  }
+
+</style>
+
+<section class="cg-section-{{ section.id }}">
+  <div class="cg-container">
+    
+    <div class="cg-header">
+      {% if section.settings.cg_eyebrow_text != blank %}
+        <span class="cg-eyebrow">{{ section.settings.cg_eyebrow_text }}</span>
+      {% endif %}
+      {% if section.settings.cg_heading_text != blank %}
+        <h2 class="cg-heading">{{ section.settings.cg_heading_text }}</h2>
+      {% endif %}
+    </div>
+
+    <div class="cg-grid">
+      {% for block in section.blocks %}
+        <article class="cg-card" {{ block.shopify_attributes }}>
+          {% if block.settings.cg_card_icon != blank %}
+            <div class="cg-icon-wrapper">
+              {{ block.settings.cg_card_icon | image_url: width: 100 | image_tag: class: 'cg-icon', loading: 'lazy', widths: '50, 100, 150' }}
+            </div>
+          {% endif %}
+          
+          {% if block.settings.cg_card_title != blank %}
+            <h3 class="cg-title">{{ block.settings.cg_card_title }}</h3>
+          {% endif %}
+          
+          {% if block.settings.cg_card_desc != blank %}
+            <p class="cg-desc">{{ block.settings.cg_card_desc }}</p>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.cg_footer_text != blank %}
+      <p class="cg-footer">{{ section.settings.cg_footer_text }}</p>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Card Grid",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "cg_eyebrow_text",
+      "label": "Eyebrow Text",
+      "default": "THE PROBLEMS WE HELP ORGANISATIONS PREVENT"
+    },
+    {
+      "type": "text",
+      "id": "cg_heading_text",
+      "label": "Heading",
+      "default": "When workplace problems escalate, the impact goes far beyond the original incident."
+    },
+    {
+      "type": "text",
+      "id": "cg_footer_text",
+      "label": "Footer Text",
+      "default": "Prevention isn't just compliance. It's about protecting people, culture and trust."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "cg_max_width",
+      "min": 1000,
+      "max": 1800,
+      "step": 50,
+      "unit": "px",
+      "label": "Container Max Width",
+      "default": 1400
+    },
+    {
+      "type": "select",
+      "id": "cg_cols_desktop",
+      "label": "Columns (Desktop)",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" },
+        { "value": "6", "label": "6" }
+      ],
+      "default": "6"
+    },
+    {
+      "type": "select",
+      "id": "cg_cols_tablet",
+      "label": "Columns (Tablet)",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "cg_cols_mobile",
+      "label": "Columns (Mobile)",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "cg_grid_gap",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Grid Gap",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "cg_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "cg_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Card Style"
+    },
+    {
+      "type": "color",
+      "id": "cg_section_bg",
+      "label": "Section Background",
+      "default": "#f4f7fa"
+    },
+    {
+      "type": "color",
+      "id": "cg_card_bg",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "cg_card_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Card Border Radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "cg_card_padding",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Card Padding",
+      "default": 30
+    },
+{
+  "type": "range",
+  "id": "cg_icon_size",
+  "min": 20,
+  "max": 100,
+  "step": 5,
+  "unit": "px",
+  "label": "Icon Size",
+  "default": 50
+},
+
+    {
+      "type": "header",
+      "content": "Typography: Header"
+    },
+    {
+      "type": "color",
+      "id": "cg_eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#1e3a8a"
+    },
+    {
+      "type": "range",
+      "id": "cg_eyebrow_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Eyebrow Size",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "cg_heading_color",
+      "label": "Heading Color",
+      "default": "#0f172a"
+    },
+    {
+      "type": "range",
+      "id": "cg_heading_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "cg_headding_weight",
+      "min": 400,
+      "max": 900,
+      "step": 100,
+      "label": "Heading Weight",
+      "default": 600
+    },
+    {
+      "type": "header",
+      "content": "Typography: Footer"
+    },
+    {
+      "type": "color",
+      "id": "cg_footer_color",
+      "label": "Footer Color",
+      "default": "#1e3a8a"
+    },
+    {
+      "type": "range",
+      "id": "cg_footer_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Footer Size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Typography: Card"
+    },
+    {
+      "type": "color",
+      "id": "cg_title_color",
+      "label": "Title Color",
+      "default": "#0f172a"
+    },
+    {
+      "type": "range",
+      "id": "cg_title_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "cg_title_weight",
+      "min": 400,
+      "max": 900,
+      "step": 100,
+      "label": "Title Weight",
+      "default": 700
+    },
+    {
+      "type": "color",
+      "id": "cg_desc_color",
+      "label": "Description Color",
+      "default": "#475569"
+    },
+    {
+      "type": "range",
+      "id": "cg_desc_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Description Size",
+      "default": 14
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "cg_card_icon",
+          "label": "Icon Image"
+        },
+        {
+          "type": "text",
+          "id": "cg_card_title",
+          "label": "Title",
+          "default": "Card Title"
+        },
+        {
+          "type": "textarea",
+          "id": "cg_card_desc",
+          "label": "Description",
+          "default": "Card description goes here."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Card Grid",
+      "blocks": [
+        { "type": "card", "settings": { "cg_card_title": "Protect Your People", "cg_card_desc": "Unsafe environments damage wellbeing, trust and retention." } },
+        { "type": "card", "settings": { "cg_card_title": "Reduce Organisational Risk", "cg_card_desc": "Strengthen prevention and response before issues escalate." } },
+        { "type": "card", "settings": { "cg_card_title": "Reduce Preventable Complaints", "cg_card_desc": "Clear expectations and confident managers prevent escalation." } },
+        { "type": "card", "settings": { "cg_card_title": "Meet Safeguarding Obligations", "cg_card_desc": "Understand responsibilities and respond to concerns appropriately." } },
+        { "type": "card", "settings": { "cg_card_title": "Improve Retention & Employee Wellbeing", "cg_card_desc": "Healthy cultures help people feel valued, respected and safe." } },
+        { "type": "card", "settings": { "cg_card_title": "Protect Your Reputation", "cg_card_desc": "Poorly handled issues can lead to bad press, loss of trust and legal action." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

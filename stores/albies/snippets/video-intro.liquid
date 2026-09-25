@@ -1,0 +1,496 @@
+<!-- Shopioso Video Intro Start -->
+{% comment %}theme-check-disable{% endcomment %}
+{% if settings.intro_desktop_video != blank or settings.intro_mobile_video != blank %}
+<div id="shopi_video_intro" style="position: relative;">
+<div id="just-black" style="display: none;"></div>
+{% if settings.intro_skip != blank and settings.intro_desktop_video != blank or settings.intro_mobile_video != blank %}
+<button type="button" class="skip-button" onclick="skipVideoIntro()" aria-label="{{ settings.intro_skip }}" {% if settings.intro_autoplay %}style="display: none;"{% endif %}>{{ settings.intro_skip }}</button>
+{% endif %}
+{% if settings.intro_autoplay and settings.intro_audio_file != blank and settings.click_for_sound != blank %}
+<div class="sound-popup" id="sound-popup">{{settings.click_for_sound}}</div>
+{% endif %}
+<div class="vi-intro-window">
+{% if settings.intro_audio_file != blank %}
+<audio id="enter-sound">
+  <source src="{{ settings.intro_audio_file }}">
+</audio>
+{% endif %}
+<div id="package3" class="vi-animation-container vi-animation">
+  {% if settings.intro_desktop_video != blank %}
+  <video style='opacity:0;' class="vi-desktop-only vid" id="animation-desktop" muted="" playsinline="" webkit-playsinline="" onended="removeIntroWindow()" preload="auto">
+    <source src="{{ settings.intro_desktop_video }}">
+  </video>
+  {% endif %}
+  {% if settings.intro_mobile_video != blank %}
+  <video style='opacity:0;' class="vi-mobile-only vid" id="animation-mobile" muted="" playsinline="" webkit-playsinline="" onended="removeIntroWindow()" preload="auto">
+    <source src="{{ settings.intro_mobile_video }}">
+  </video>
+  {% endif %}
+</div>
+</div>
+</div>
+<style>
+#shopi_video_intro {
+  position: relative;
+  z-index: 9997;
+}
+ #just-black {
+  position: fixed;
+  background: black;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9998;
+}
+.vi-desktop-only {
+  display: block;
+}
+.vi-mobile-only {
+  display: none;
+}
+.vi-intro-window {
+  display: none;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  overflow: hidden;
+}
+.vi-intro-window.show {
+  display: block;
+}
+.vi-intro-window.fade-out {
+  opacity: 0;
+  transition: opacity .5s linear;
+}
+/* Hide scrollbar when video is showing */
+body.vi-video-active {
+  overflow: hidden;
+}
+.vi-animation-container {
+  width: 100%;
+  height: 100%;
+  z-index: 80;
+  position: relative;
+}
+.vi-animation-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+@media (max-width: 768px) {
+  .vi-desktop-only {
+    display: none !important;
+  }
+  .vi-mobile-only {
+    display: block;
+  }
+}
+.skip-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  color: {{ settings.skip_color | default: '#ffffff' }};
+  border: 1px solid {{ settings.skip_color | default: '#ffffff' }};
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 10001;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  pointer-events: auto;
+  display: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  opacity: 0;
+  visibility: hidden;
+}
+.skip-button.show {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+}
+.skip-button.hidden {
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.skip-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+@media (max-width: 768px) {
+  .skip-button {
+    top: 12px;
+    right: 12px;
+    padding: 6px 12px;
+    font-size: 13px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid {{ settings.skip_color | default: '#ffffff' }};
+    min-width: auto;
+    text-align: center;
+    box-shadow: none;
+    letter-spacing: 0.5px;
+    font-weight: 300;
+    opacity: 0.8;
+  }
+ 
+  .skip-button:active {
+    background: rgba(255, 255, 255, 0.2);
+    opacity: 1;
+  }
+}
+ .sound-popup {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 20px;
+  font-size: 14px;
+  z-index: 10002;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}
+ .sound-popup.show {
+  opacity: 1;
+  visibility: visible;
+}
+ @media (max-width: 768px) {
+  .sound-popup {
+    top: 15px;
+    padding: 8px 15px;
+    font-size: 12px;
+    border-radius: 18px;
+  }
+}
+
+</style>
+<script>
+const justBlack = document.querySelector("#just-black");
+const enterSound = document.querySelector("#enter-sound");
+const introWindow = document.querySelector(".vi-intro-window");
+const animationVideoContainer = document.querySelector(".vi-animation");
+const animationVideo = document.querySelectorAll(".vi-animation video");
+const skipButton = document.querySelector(".skip-button");
+const soundPopup = document.querySelector("#sound-popup");
+const volumeIntro = {{settings.volume_intro}};
+const autoplayEnabled = {{settings.intro_autoplay}};
+let videoEnded = false;
+let videosLoaded = false;
+let hasSkipButton = !!skipButton;
+let hasAudio = !!enterSound;
+let isAudioEnabled = false;
+
+function hasVideoForCurrentDevice() {
+  const isMobile = window.innerWidth <= 768;
+  const desktopVideo = document.querySelector('.vi-desktop-only');
+  const mobileVideo = document.querySelector('.vi-mobile-only');
+ 
+  if (isMobile) {
+    return !!mobileVideo;
+  } else {
+    return !!desktopVideo;
+  }
+}
+
+function checkConnectionSpeed() {
+  if ('connection' in navigator) {
+    const connection = navigator.connection;
+    // Skip video if connection is slower than 4G (less than 10 Mbps)
+    if (connection.effectiveType === '3g' ||
+        connection.effectiveType === '2g' ||
+        connection.downlink < 10) {
+      sessionStorage.setItem("videoPlayed", true);
+      return true;
+    }
+    return false;
+  } else {
+    return false;
+  }
+}
+
+function preloadVideos() {
+  const videos = document.querySelectorAll('.vid');
+  if (videos.length === 0 || !hasVideoForCurrentDevice()) {
+    removeIntroWindow();
+    return;
+  }
+  let loadedCount = 0;
+  videos.forEach(video => {
+    video.addEventListener('loadeddata', () => {
+      loadedCount++;
+      if (loadedCount === videos.length) {
+        videosLoaded = true;
+        // Auto-start video if autoplay is enabled and intro window is already shown
+        if (autoplayEnabled && introWindow.classList.contains('show')) {
+          startVideoPlayback();
+        }
+      }
+    });
+    video.addEventListener('error', () => {
+      removeIntroWindow();
+    });
+    video.load();
+  });
+}
+
+function initializeVideoIntro() {
+  if (sessionStorage.getItem("videoPlayed") || !hasVideoForCurrentDevice()) {
+    if (hasSkipButton) {
+      skipButton.classList.remove('show');
+      skipButton.classList.add('hidden');
+    }
+    return;
+  }
+  if (!checkConnectionSpeed()) {
+    justBlack.style.display = 'block';
+    const videoLoadTimeout = setTimeout(() => {
+      removeIntroWindow();
+    }, 30000);
+    requestAnimationFrame(() => {
+      introWindow.style.display = 'block';
+      introWindow.classList.add('show');
+      if (hasSkipButton) {
+        skipButton.classList.add('show');
+        skipButton.classList.remove('hidden');
+      }
+      document.querySelectorAll('.vid').forEach(vid => {
+        vid.style.opacity = '1';
+        vid.addEventListener('error', () => {
+          clearTimeout(videoLoadTimeout);
+          removeIntroWindow();
+        });
+      });
+      document.body.classList.add('vi-video-active');
+     
+      // Auto-start video if autoplay is enabled and videos are already loaded
+      if (autoplayEnabled && videosLoaded) {
+        startVideoPlayback();
+      }
+    });
+  } else {
+    sessionStorage.setItem("videoPlayed", true);
+    if (hasSkipButton) {
+      skipButton.classList.remove('show');
+      skipButton.classList.add('hidden');
+    }
+  }
+}
+
+function removeIntroWindow() {
+  introWindow.classList.add("fade-out");
+  sessionStorage.setItem("videoPlayed", true);
+  document.body.classList.remove('vi-video-active');
+  justBlack.style.display = "none";
+  videoEnded = true;
+  // Hide skip button when video section is removed
+  if (hasSkipButton) {
+    skipButton.classList.add('hidden');
+  }
+  // Remove the entire video intro section after fade out
+  setTimeout(() => {
+    const videoIntro = document.getElementById('shopi_video_intro');
+    if (videoIntro) {
+      videoIntro.remove();
+    }
+  }, 500);
+}
+
+function hideSkipButton() {
+  if (hasSkipButton) {
+    skipButton.classList.remove('show');
+    skipButton.classList.add('hidden');
+  }
+}
+
+function showSkipButton() {
+  if (hasSkipButton) {
+    skipButton.classList.add('show');
+    skipButton.classList.remove('hidden');
+  }
+}
+
+function showSoundPopupWithFade() {
+  if (!soundPopup) return;
+ 
+  // First fade in
+  soundPopup.classList.add('show');
+ 
+  // First fade out after 0.8 seconds
+  setTimeout(() => {
+    soundPopup.classList.remove('show');
+   
+    // Second fade in after 0.2 seconds
+    setTimeout(() => {
+      soundPopup.classList.add('show');
+     
+      // Second fade out after 0.8 seconds
+      setTimeout(() => {
+        soundPopup.classList.remove('show');
+      }, 800);
+    }, 200);
+  }, 800);
+}
+
+
+
+function startVideoPlayback() {
+  if (!videosLoaded || videoEnded) return;
+ 
+  // Play videos muted for reliable autoplay across all browsers
+  animationVideo.forEach((vid) => {
+    vid.muted = true;
+    vid.play();
+  });
+ 
+  // Hide skip button when video starts playing
+  if (hasSkipButton) {
+    hideSkipButton();
+  }
+ 
+  // Show sound popup if autoplay is enabled
+  if (autoplayEnabled && soundPopup) {
+    showSoundPopupWithFade();
+  }
+ 
+
+ 
+  // Note: Audio autoplay is disabled for maximum browser compatibility
+  // Users can click the video to enable audio if needed
+}
+
+function skipVideoIntro() {
+  // Stop all videos
+  animationVideo.forEach(vid => {
+    vid.pause();
+    vid.currentTime = 0;
+  });
+ 
+  // Stop audio if playing
+  if (hasAudio && enterSound) {
+    enterSound.pause();
+    enterSound.currentTime = 0;
+  }
+ 
+  // Remove intro immediately
+  removeIntroWindow();
+  sessionStorage.setItem("videoPlayed", true);
+}
+
+setTimeout(() => {
+  preloadVideos();
+  initializeVideoIntro();
+}, 0);
+
+animationVideoContainer.addEventListener("click", () => {
+  if (checkConnectionSpeed() || videoEnded) return;
+  if (!videosLoaded) {
+    return;
+  }
+  // Only allow click to start video if autoplay is disabled
+  if (!autoplayEnabled) {
+    // For manual click (autoplay disabled), play with audio
+    animationVideo.forEach((vid) => {
+      vid.muted = false;
+      vid.volume = volumeIntro / 100;
+      vid.play();
+    });
+   
+    if (hasAudio && enterSound) {
+      enterSound.volume = volumeIntro / 100;
+      enterSound.play();
+    }
+   
+    if (hasSkipButton) {
+      hideSkipButton();
+    }
+  } else {
+    // If autoplay is enabled, clicking toggles audio on/off
+    isAudioEnabled = !isAudioEnabled;
+   
+    if (isAudioEnabled) {
+      // Enable audio
+      const currentVideo = document.querySelector('.vi-desktop-only') || document.querySelector('.vi-mobile-only');
+      const currentTime = currentVideo ? currentVideo.currentTime : 0;
+     
+      animationVideo.forEach((vid) => {
+        vid.muted = false;
+        vid.volume = volumeIntro / 100;
+      });
+     
+      if (hasAudio && enterSound) {
+        enterSound.volume = volumeIntro / 100;
+        enterSound.currentTime = currentTime;
+        enterSound.play();
+      }
+     
+      // Hide sound popup when user clicks for audio
+      if (soundPopup) {
+        soundPopup.classList.remove('show');
+      }
+    } else {
+      // Disable audio (mute)
+      animationVideo.forEach((vid) => {
+        vid.muted = true;
+      });
+     
+      if (hasAudio && enterSound) {
+        enterSound.pause();
+      }
+    }
+   
+    if (hasSkipButton) {
+      hideSkipButton();
+    }
+  }
+});
+
+document.querySelectorAll('.vid').forEach(video => {
+  video.addEventListener('ended', () => {
+    introWindow.classList.add('fade-out');
+    justBlack.style.display = "none";
+    videoEnded = true;
+    setTimeout(() => {
+      introWindow.style.display = 'none';
+      sessionStorage.setItem('videoPlayed', true);
+    }, 1000);
+  });
+  video.addEventListener('error', () => {
+    showSkipButton();
+  });
+});
+</script>
+{% else %}
+<!-- In order for the video intro to work you need to add at least one video (desktop or mobile) -->
+{% endif %}
+{% comment %}theme-check-enable{% endcomment %}
+<!-- Shopioso Video Intro End -->{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% if settings.intro_skip != blank and (settings.intro_desktop_video != blank
+    or settings.intro_mobile_video != blank) %}"
+  to: "{% if settings.intro_skip != blank and settings.intro_desktop_video != blank
+    or settings.intro_mobile_video != blank %}"
+  position: 280..399
+{%- endcomment -%}

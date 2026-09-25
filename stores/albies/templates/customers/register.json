@@ -1,0 +1,23 @@
+{
+	"sections": {
+		"main": {
+			"type": "main-customers-register",
+			"blocks": {
+				"fields": {
+					"type": "fields",
+					"settings": { "show_email_consent": false }
+				}
+			},
+			"block_order": ["fields"],
+			"settings": {
+				"background": "#ffffff",
+				"background_gradient": "",
+				"text_color": "",
+				"heading_gradient": "",
+				"button_background": "",
+				"button_text_color": ""
+			}
+		}
+	},
+	"order": ["main"]
+}

@@ -1,0 +1,814 @@
+{% doc %}
+  @prompt
+    Generate me an image with text overlay section.
+    
+    Give me option to upload seperate images for mobile vs computer.
+    
+    Have a button that reads Explore Now.
+    The button needs to be link style and when hovered over, the underline forms and the text enlarges by 1 px.
+    
+    Give me the option to add heading and subheading.
+    
+    Give me ability to choose the alignment for heading, subheading and button seperately for mobile and computer.
+    
+    Make the Heading read: Elite Magic. Now Available.
+    Keep the subheading empty for now.
+    
+    Have the heading and button at the bottom of the section as default., Give me option to change the font everywhere.
+    
+    Also make all the content centered horizontally by default.
+    
+    The height of the section adjusted by the size of image or give me an option to have manual height as well., Give me option to adjust the space below both, the heading, subheading and the button.
+    
+    Also give me ability to adjust the padding below for the heading and button to be able to move it towards the lower part of the image. THis needs to be seperately in mobile and computer, Give me the option to adjust the spacing between heading and button as well
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-image-text-overlay-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    display: block;
+    overflow: hidden;
+  }
+
+  .ai-image-text-overlay__image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    {% if block.settings.height_mode == 'auto' %}
+      height: auto;
+    {% else %}
+      height: {{ block.settings.manual_height_mobile }}px;
+    {% endif %}
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-image-text-overlay__image-wrapper-{{ ai_gen_id }} {
+      {% if block.settings.height_mode == 'auto' %}
+        height: auto;
+      {% else %}
+        height: {{ block.settings.manual_height_desktop }}px;
+      {% endif %}
+    }
+  }
+
+  .ai-image-text-overlay__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-image-text-overlay__placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-image-text-overlay__placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    max-height: 500px;
+  }
+
+  .ai-image-text-overlay__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .ai-image-text-overlay__content-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 20px;
+    padding-bottom: {{ block.settings.content_padding_bottom_mobile }}px;
+    box-sizing: border-box;
+    justify-content: {{ block.settings.vertical_alignment_mobile }};
+    align-items: {{ block.settings.horizontal_alignment_mobile }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-image-text-overlay__content-{{ ai_gen_id }} {
+      padding: 60px 40px;
+      padding-bottom: {{ block.settings.content_padding_bottom_desktop }}px;
+      justify-content: {{ block.settings.vertical_alignment_desktop }};
+      align-items: {{ block.settings.horizontal_alignment_desktop }};
+    }
+  }
+
+  .ai-image-text-overlay__text-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    width: 100%;
+    gap: {{ block.settings.heading_to_button_spacing_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-image-text-overlay__text-wrapper-{{ ai_gen_id }} {
+      gap: {{ block.settings.heading_to_button_spacing_desktop }}px;
+    }
+  }
+
+  .ai-image-text-overlay__heading-{{ ai_gen_id }} {
+    margin: 0;
+    margin-bottom: {{ block.settings.heading_spacing_mobile }}px;
+    color: {{ block.settings.heading_color }};
+    font-size: {{ block.settings.heading_size_mobile }}px;
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-style: {{ block.settings.heading_font.style }};
+    text-align: {{ block.settings.heading_alignment_mobile }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-image-text-overlay__heading-{{ ai_gen_id }} {
+      margin-bottom: {{ block.settings.heading_spacing_desktop }}px;
+      font-size: {{ block.settings.heading_size_desktop }}px;
+      text-align: {{ block.settings.heading_alignment_desktop }};
+    }
+  }
+
+  .ai-image-text-overlay__subheading-{{ ai_gen_id }} {
+    margin: 0;
+    margin-bottom: {{ block.settings.subheading_spacing_mobile }}px;
+    color: {{ block.settings.subheading_color }};
+    font-size: {{ block.settings.subheading_size_mobile }}px;
+    font-family: {{ block.settings.subheading_font.family }}, {{ block.settings.subheading_font.fallback_families }};
+    font-weight: {{ block.settings.subheading_font.weight }};
+    font-style: {{ block.settings.subheading_font.style }};
+    text-align: {{ block.settings.subheading_alignment_mobile }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-image-text-overlay__subheading-{{ ai_gen_id }} {
+      margin-bottom: {{ block.settings.subheading_spacing_desktop }}px;
+      font-size: {{ block.settings.subheading_size_desktop }}px;
+      text-align: {{ block.settings.subheading_alignment_desktop }};
+    }
+  }
+
+  .ai-image-text-overlay__button-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    margin-bottom: {{ block.settings.button_spacing_mobile }}px;
+    text-align: {{ block.settings.button_alignment_mobile }};
+    justify-content: {{ block.settings.button_alignment_mobile }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-image-text-overlay__button-wrapper-{{ ai_gen_id }} {
+      margin-bottom: {{ block.settings.button_spacing_desktop }}px;
+      text-align: {{ block.settings.button_alignment_desktop }};
+      justify-content: {{ block.settings.button_alignment_desktop }};
+    }
+  }
+
+  .ai-image-text-overlay__button-{{ ai_gen_id }} {
+    display: inline-block;
+    color: {{ block.settings.button_color }};
+    font-size: {{ block.settings.button_size_mobile }}px;
+    font-family: {{ block.settings.button_font.family }}, {{ block.settings.button_font.fallback_families }};
+    font-weight: {{ block.settings.button_font.weight }};
+    font-style: {{ block.settings.button_font.style }};
+    text-decoration: none;
+    position: relative;
+    transition: font-size 0.3s ease;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-image-text-overlay__button-{{ ai_gen_id }} {
+      font-size: {{ block.settings.button_size_desktop }}px;
+    }
+  }
+
+  .ai-image-text-overlay__button-{{ ai_gen_id }}::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: {{ block.settings.button_color }};
+    transition: width 0.3s ease;
+  }
+
+  .ai-image-text-overlay__button-{{ ai_gen_id }}:hover {
+    font-size: calc({{ block.settings.button_size_mobile }}px + 1px);
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-image-text-overlay__button-{{ ai_gen_id }}:hover {
+      font-size: calc({{ block.settings.button_size_desktop }}px + 1px);
+    }
+  }
+
+  .ai-image-text-overlay__button-{{ ai_gen_id }}:hover::after {
+    width: 100%;
+  }
+
+  .ai-image-text-overlay__mobile-image-{{ ai_gen_id }} {
+    display: block;
+  }
+
+  .ai-image-text-overlay__desktop-image-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-image-text-overlay__mobile-image-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-image-text-overlay__desktop-image-{{ ai_gen_id }} {
+      display: block;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-image-text-overlay-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-image-text-overlay__image-wrapper-{{ ai_gen_id }}">
+    {% if block.settings.mobile_image or block.settings.desktop_image %}
+      {% if block.settings.mobile_image %}
+        <img
+          src="{{ block.settings.mobile_image | image_url: width: 1500 }}"
+          alt="{{ block.settings.mobile_image.alt | escape }}"
+          loading="lazy"
+          width="{{ block.settings.mobile_image.width }}"
+          height="{{ block.settings.mobile_image.height }}"
+          class="ai-image-text-overlay__image-{{ ai_gen_id }} ai-image-text-overlay__mobile-image-{{ ai_gen_id }}"
+        >
+      {% endif %}
+
+      {% if block.settings.desktop_image %}
+        <img
+          src="{{ block.settings.desktop_image | image_url: width: 2000 }}"
+          alt="{{ block.settings.desktop_image.alt | escape }}"
+          loading="lazy"
+          width="{{ block.settings.desktop_image.width }}"
+          height="{{ block.settings.desktop_image.height }}"
+          class="ai-image-text-overlay__image-{{ ai_gen_id }} ai-image-text-overlay__desktop-image-{{ ai_gen_id }}"
+        >
+      {% endif %}
+    {% else %}
+      <div class="ai-image-text-overlay__placeholder-{{ ai_gen_id }}">
+        {{ 'hero-apparel-1' | placeholder_svg_tag }}
+        <div class="ai-image-text-overlay__empty-state-{{ ai_gen_id }}">
+          Next, add images for mobile and desktop
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="ai-image-text-overlay__content-{{ ai_gen_id }}">
+      <div class="ai-image-text-overlay__text-wrapper-{{ ai_gen_id }}">
+        {% if block.settings.heading != blank %}
+          <h2 class="ai-image-text-overlay__heading-{{ ai_gen_id }}">
+            {{ block.settings.heading }}
+          </h2>
+        {% endif %}
+
+        {% if block.settings.subheading != blank %}
+          <p class="ai-image-text-overlay__subheading-{{ ai_gen_id }}">
+            {{ block.settings.subheading }}
+          </p>
+        {% endif %}
+
+        {% if block.settings.button_text != blank %}
+          <div class="ai-image-text-overlay__button-wrapper-{{ ai_gen_id }}">
+            <a
+              href="{{ block.settings.button_link }}"
+              class="ai-image-text-overlay__button-{{ ai_gen_id }}"
+            >
+              {{ block.settings.button_text }}
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image with text overlay",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "header",
+      "content": "Section height"
+    },
+    {
+      "type": "select",
+      "id": "height_mode",
+      "label": "Height mode",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Auto (image size)"
+        },
+        {
+          "value": "manual",
+          "label": "Manual"
+        }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "range",
+      "id": "manual_height_mobile",
+      "label": "Mobile height",
+      "min": 200,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "manual_height_desktop",
+      "label": "Desktop height",
+      "min": 300,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "default": 600
+    },
+    {
+      "type": "header",
+      "content": "Content positioning"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment_mobile",
+      "label": "Vertical alignment (mobile)",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom"
+        }
+      ],
+      "default": "flex-end"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment_desktop",
+      "label": "Vertical alignment (desktop)",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom"
+        }
+      ],
+      "default": "flex-end"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment_mobile",
+      "label": "Horizontal alignment (mobile)",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment_desktop",
+      "label": "Horizontal alignment (desktop)",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "content_padding_bottom_mobile",
+      "label": "Bottom padding (mobile)",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "content_padding_bottom_desktop",
+      "label": "Bottom padding (desktop)",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Content spacing"
+    },
+    {
+      "type": "range",
+      "id": "heading_to_button_spacing_mobile",
+      "label": "Heading to button gap (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "heading_to_button_spacing_desktop",
+      "label": "Heading to button gap (desktop)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Elite Magic. Now Available."
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "label": "Size (mobile)",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "label": "Size (desktop)",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment_mobile",
+      "label": "Alignment (mobile)",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment_desktop",
+      "label": "Alignment (desktop)",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing_mobile",
+      "label": "Space below (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing_desktop",
+      "label": "Space below (desktop)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Subheading"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "font_picker",
+      "id": "subheading_font",
+      "label": "Font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size_mobile",
+      "label": "Size (mobile)",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "subheading_size_desktop",
+      "label": "Size (desktop)",
+      "min": 14,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "subheading_alignment_mobile",
+      "label": "Alignment (mobile)",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "subheading_alignment_desktop",
+      "label": "Alignment (desktop)",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "subheading_spacing_mobile",
+      "label": "Space below (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "subheading_spacing_desktop",
+      "label": "Space below (desktop)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Explore Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "font_picker",
+      "id": "button_font",
+      "label": "Font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "button_size_mobile",
+      "label": "Size (mobile)",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_size_desktop",
+      "label": "Size (desktop)",
+      "min": 14,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "button_alignment_mobile",
+      "label": "Alignment (mobile)",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "button_alignment_desktop",
+      "label": "Alignment (desktop)",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "button_spacing_mobile",
+      "label": "Space below (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "button_spacing_desktop",
+      "label": "Space below (desktop)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with text overlay"
+    }
+  ],
+  "tag": null
+}
+{% endschema %}

@@ -1,0 +1,691 @@
+{% doc %}
+  @prompt
+    Create a modern “Our Services” homepage section.
+    
+    Layout Requirements:
+    Three-column card layout (3 large cards side by side on desktop, stacked on mobile)
+    Each card should include:
+    Image (top or background)
+    Title
+    Short description
+    CTA link (“Learn More” or “Explore”)
+    Section should feel spacious, premium, and minimal
+    
+    Section Header:
+    
+    Title:
+    Who We Work With
+    
+    Subtitle:
+    Our training is tailored for workplaces and organisations along with individual trainings
+    
+    Card 1: Organisations
+    
+    Title:
+    For Organisations
+    
+    Description:
+    We partner with organisations that want to create safer, more respectful environments and take meaningful action against harassment and gender-based violence. 
+    
+    Whether you’re starting from scratch or strengthening existing work, we meet you where you are..
+    
+    CTA:
+    Learn More →
+    
+    Card 2: Individuals
+    
+    Title:
+    For Individuals
+    
+    Description:
+    We support individuals who want to build healthier communication, clearer boundaries, and a more confident understanding of consent in everyday relationships and digital spaces.
+    
+    Whether you’re seeking clarity, rebuilding confidence, or simply wanting to communicate more ethically, we meet you where you are.
+    
+    CTA:
+    Learn More →Card 3: Educational Settings
+    
+    Description: This space is for educational settings. More details to be shared soon on this.
+    CTA:
+    Learn More →
+    
+    
+    Additional Notes:
+    Tone must be calm, professional, and non-activist
+    Avoid aggressive or overly emotional language
+    Focus on clarity, credibility, and trust
+    Cards should feel balanced—not sales-heavy
+    Ensure spacing and typography feel premium and readable, For our services title, make it subtle like the previous section and add an option of adding logo beside it. Make it so that the logo and title center align properly.
+    
+    Make the background of this section fill with #5569dc.
+    
+    Give both the cards a link button that reads Learn More and can be linked to products or collections. The Learn More needs to be a written link and not a button. add an arrow after learn more.
+    
+    For the text section in cards, give me a boundary around it.
+    
+    Give me control over the radius of the whole card.
+    
+    Inside the card, give it space all four sides so that the image also looks added in the card.
+    
+    Make the cards compact and smaller. 
+    
+    
+    
+    Make the our services adaptable and not only in capital.
+    
+    Give me control over the card colour
+    
+    Give me control over the border in card colour
+    
+    Make the photos also clickable and takes to same page the learn more button leads to, Make the card text section hollow to match the background of card's colour, Give me control over title size in mobile and subtitle size in computer and mobile, The Subtitle, make it as heading and give it size of 48 px in computer and 26 px in mobile. , Make it so that the subtitle is not bold, Make the subtitle little more spread through the screen in computer mode, give me a line divider between the card title and card content., Make the card adjust based on how much text is in it.
+    
+    Maintain the height of boththe cards same
+    , Subtitle needs to be in E8EBF7 colour.
+    
+    In cards, The title and description all need to be in white colour.
+    
+    In CTA, corect the arrow to a better one, While hovered on a card, make it very slightly elevate.
+    
+    Give me option to add seperate colour inside the card.
+    
+    In cards, for the text part, give it a white border and give me option to set the thickness and border radius for the same.
+    
+    For the images inside the card, give me option to set the corner radius, Make the inside of the card same colour: 8090E9. Even in the text area make it 8090E9.
+    
+    The arrow for Learn more button needs to be a different style and make it align with the words , Make the images and the title of the card clickable too that should lead to the same link as the button in that card, For Logo give me option to control height and space. Keep the default size of logo at 35 px and also do the same with section title that reads Who we work with at 35 Px. The space between them should be 15 px, Give subtitle more width over the screen please. , give a little bit more padding inside the cards. Not too much just a little bit
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-services-section-{{ ai_gen_id }} {
+    background-color: {{ block.settings.section_background }};
+    padding: 60px 20px;
+    width: 100%;
+  }
+
+  .ai-services-container-{{ ai_gen_id }} {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .ai-services-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .ai-services-title-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: {{ block.settings.logo_title_spacing }}px;
+    margin-bottom: 20px;
+  }
+
+  .ai-services-logo-{{ ai_gen_id }} {
+    width: auto;
+    height: {{ block.settings.logo_height }}px;
+    object-fit: contain;
+  }
+
+  .ai-services-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size_desktop }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
+
+  .ai-services-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size_desktop }}px;
+    color: {{ block.settings.subtitle_color }};
+    margin: 0 auto;
+    font-weight: 400;
+    line-height: 1.4;
+    max-width: 1100px;
+  }
+
+  .ai-services-cards-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+
+  .ai-services-card-{{ ai_gen_id }} {
+    background-color: #8090E9;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    padding: {{ block.settings.card_padding }}px;
+  }
+
+  .ai-services-card-{{ ai_gen_id }}:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .ai-services-card-image-wrapper-{{ ai_gen_id }} {
+    border-radius: {{ block.settings.image_border_radius }}px;
+    overflow: hidden;
+    margin-bottom: {{ block.settings.card_padding }}px;
+    display: block;
+    text-decoration: none;
+  }
+
+  .ai-services-card-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  .ai-services-card-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-services-card-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-services-card-content-{{ ai_gen_id }} {
+    background-color: #8090E9;
+    border: {{ block.settings.card_border_thickness }}px solid {{ block.settings.card_border_color }};
+    border-radius: {{ block.settings.card_content_border_radius }}px;
+    padding: 28px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ai-services-card-title-link-{{ ai_gen_id }} {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .ai-services-card-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_title_size }}px;
+    color: {{ block.settings.card_text_color }};
+    margin: 0 0 16px 0;
+    font-weight: 600;
+  }
+
+  .ai-services-card-divider-{{ ai_gen_id }} {
+    width: 100%;
+    height: 1px;
+    background-color: {{ block.settings.card_text_color }};
+    opacity: 0.2;
+    margin-bottom: 16px;
+  }
+
+  .ai-services-card-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_description_size }}px;
+    color: {{ block.settings.card_text_color }};
+    line-height: 1.6;
+    margin: 0 0 20px 0;
+    flex-grow: 1;
+  }
+
+  .ai-services-card-cta-{{ ai_gen_id }} {
+    color: {{ block.settings.card_text_color }};
+    text-decoration: none;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: gap 0.3s ease;
+  }
+
+  .ai-services-card-cta-{{ ai_gen_id }}:hover {
+    gap: 12px;
+  }
+
+  .ai-services-card-cta-arrow-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-services-card-cta-{{ ai_gen_id }}:hover .ai-services-card-cta-arrow-{{ ai_gen_id }} {
+    transform: translateX(4px);
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-services-cards-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .ai-services-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size_mobile }}px;
+    }
+
+    .ai-services-subtitle-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subtitle_size_mobile }}px;
+    }
+
+    .ai-services-section-{{ ai_gen_id }} {
+      padding: 40px 16px;
+    }
+
+    .ai-services-header-{{ ai_gen_id }} {
+      margin-bottom: 40px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-services-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-services-container-{{ ai_gen_id }}">
+    <div class="ai-services-header-{{ ai_gen_id }}">
+      <div class="ai-services-title-wrapper-{{ ai_gen_id }}">
+        {% if block.settings.logo %}
+          <img
+            src="{{ block.settings.logo | image_url: width: 400 }}"
+            alt="{{ block.settings.logo.alt | escape }}"
+            class="ai-services-logo-{{ ai_gen_id }}"
+            loading="lazy"
+            height="{{ block.settings.logo_height }}"
+          >
+        {% endif %}
+        {% if block.settings.title != blank %}
+          <h2 class="ai-services-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+        {% endif %}
+      </div>
+      {% if block.settings.subtitle != blank %}
+        <h3 class="ai-services-subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</h3>
+      {% endif %}
+    </div>
+
+    <div class="ai-services-cards-{{ ai_gen_id }}">
+      {% for i in (1..3) %}
+        {% liquid
+          assign card_enabled_key = 'card_' | append: i | append: '_enabled'
+          assign card_image_key = 'card_' | append: i | append: '_image'
+          assign card_title_key = 'card_' | append: i | append: '_title'
+          assign card_description_key = 'card_' | append: i | append: '_description'
+          assign card_link_key = 'card_' | append: i | append: '_link'
+
+          assign card_enabled = block.settings[card_enabled_key]
+          assign card_image = block.settings[card_image_key]
+          assign card_title = block.settings[card_title_key]
+          assign card_description = block.settings[card_description_key]
+          assign card_link = block.settings[card_link_key]
+        %}
+
+        {% if card_enabled %}
+          <div class="ai-services-card-{{ ai_gen_id }}">
+            {% if card_link != blank %}
+              <a href="{{ card_link }}" class="ai-services-card-image-wrapper-{{ ai_gen_id }}">
+            {% else %}
+              <div class="ai-services-card-image-wrapper-{{ ai_gen_id }}">
+            {% endif %}
+              {% if card_image %}
+                <img
+                  src="{{ card_image | image_url: width: 800 }}"
+                  alt="{{ card_image.alt | escape }}"
+                  class="ai-services-card-image-{{ ai_gen_id }}"
+                  loading="lazy"
+                  width="{{ card_image.width }}"
+                  height="{{ card_image.height }}"
+                >
+              {% else %}
+                <div class="ai-services-card-image-placeholder-{{ ai_gen_id }}">
+                  {{ 'image' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+            {% if card_link != blank %}
+              </a>
+            {% else %}
+              </div>
+            {% endif %}
+
+            <div class="ai-services-card-content-{{ ai_gen_id }}">
+              {% if card_title != blank %}
+                {% if card_link != blank %}
+                  <a href="{{ card_link }}" class="ai-services-card-title-link-{{ ai_gen_id }}">
+                    <h3 class="ai-services-card-title-{{ ai_gen_id }}">{{ card_title }}</h3>
+                  </a>
+                {% else %}
+                  <h3 class="ai-services-card-title-{{ ai_gen_id }}">{{ card_title }}</h3>
+                {% endif %}
+              {% endif %}
+
+              <div class="ai-services-card-divider-{{ ai_gen_id }}"></div>
+
+              {% if card_description != blank %}
+                <div class="ai-services-card-description-{{ ai_gen_id }}">{{ card_description }}</div>
+              {% endif %}
+
+              {% if card_link != blank %}
+                <a href="{{ card_link }}" class="ai-services-card-cta-{{ ai_gen_id }}">
+                  {{ block.settings.cta_text }}
+                  <span class="ai-services-card-cta-arrow-{{ ai_gen_id }}">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Our services",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "color",
+      "id": "section_background",
+      "label": "Background color",
+      "default": "#5569dc"
+    },
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Logo height",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 35
+    },
+    {
+      "type": "range",
+      "id": "logo_title_spacing",
+      "label": "Space between logo and title",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Who We Work With"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Title size (desktop)",
+      "min": 16,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 35
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Title size (mobile)",
+      "min": 14,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Our training is tailored for workplaces and organisations along with individual trainings"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#E8EBF7"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_desktop",
+      "label": "Subtitle size (desktop)",
+      "min": 16,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_mobile",
+      "label": "Subtitle size (mobile)",
+      "min": 14,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_border_thickness",
+      "label": "Card border thickness",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Card border radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "card_content_border_radius",
+      "label": "Card content border radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "label": "Card padding",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Image border radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "label": "Card title size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "card_description_size",
+      "label": "Card description size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "CTA"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA text",
+      "default": "Learn More"
+    },
+    {
+      "type": "header",
+      "content": "Card 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_1_enabled",
+      "label": "Enable card 1",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "card_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "card_1_title",
+      "label": "Title",
+      "default": "For Organisations"
+    },
+    {
+      "type": "textarea",
+      "id": "card_1_description",
+      "label": "Description",
+      "default": "We partner with organisations that want to create safer, more respectful environments and take meaningful action against harassment and gender-based violence. Whether you're starting from scratch or strengthening existing work, we meet you where you are."
+    },
+    {
+      "type": "url",
+      "id": "card_1_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Card 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_2_enabled",
+      "label": "Enable card 2",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "card_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "card_2_title",
+      "label": "Title",
+      "default": "For Individuals"
+    },
+    {
+      "type": "textarea",
+      "id": "card_2_description",
+      "label": "Description",
+      "default": "We support individuals who want to build healthier communication, clearer boundaries, and a more confident understanding of consent in everyday relationships and digital spaces. Whether you're seeking clarity, rebuilding confidence, or simply wanting to communicate more ethically, we meet you where you are."
+    },
+    {
+      "type": "url",
+      "id": "card_2_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Card 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_3_enabled",
+      "label": "Enable card 3",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "card_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "card_3_title",
+      "label": "Title",
+      "default": "Educational Settings"
+    },
+    {
+      "type": "textarea",
+      "id": "card_3_description",
+      "label": "Description",
+      "default": "This space is for educational settings. More details to be shared soon on this."
+    },
+    {
+      "type": "url",
+      "id": "card_3_link",
+      "label": "Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Our services"
+    }
+  ]
+}
+{% endschema %}

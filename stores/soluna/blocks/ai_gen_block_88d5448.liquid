@@ -1,0 +1,745 @@
+{% doc %}
+  @prompt
+    Create a visually unique FAQ section with 5 expandable question slots that stands out from traditional FAQ designs. The section should feature creative styling such as card-based layouts, interesting hover effects, smooth animations, and modern visual elements like icons or numbers. Make it highly interactive and user-friendly with clear visual feedback when questions are clicked. Include customization options for colors, spacing, and text. The design should be modern, engaging, and different from standard accordion FAQs while remaining intuitive to use., When a section is clicked on, can the section flip over to the answer and then flip back under once the section is closed
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-faq-container-{{ ai_gen_id }} {
+    display: block;
+    container-type: inline-size;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: {{ block.settings.section_padding }}px 0;
+    overflow-x: clip;
+  }
+
+  .ai-faq-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: {{ block.settings.items_spacing }}px;
+  }
+
+  .ai-faq-title-{{ ai_gen_id }} {
+    color: {{ block.settings.title_color }};
+    font-size: {{ block.settings.title_size }}px;
+    margin: 0 0 16px;
+    font-weight: 700;
+    overflow-wrap: break-word;
+  }
+
+  .ai-faq-subtitle-{{ ai_gen_id }} {
+    color: {{ block.settings.subtitle_color }};
+    font-size: {{ block.settings.subtitle_size }}px;
+    margin: 0;
+    opacity: 0.8;
+    overflow-wrap: break-word;
+  }
+
+  .ai-faq-grid-{{ ai_gen_id }} {
+    display: grid;
+    gap: {{ block.settings.card_spacing }}px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  }
+
+  .ai-faq-card-{{ ai_gen_id }} {
+    perspective: 1000px;
+    min-width: 0;
+    cursor: pointer;
+  }
+
+  .ai-faq-card-inner-{{ ai_gen_id }} {
+    display: grid;
+    min-height: 120px;
+    text-align: left;
+    transition: transform {{ block.settings.flip_duration | divided_by: 1000.0 }}s;
+    transform-style: preserve-3d;
+  }
+
+  .ai-faq-card-{{ ai_gen_id }}.flipped .ai-faq-card-inner-{{ ai_gen_id }} {
+    transform: rotateY(180deg);
+  }
+
+  .ai-faq-card-front-{{ ai_gen_id }},
+  .ai-faq-card-back-{{ ai_gen_id }} {
+    grid-area: 1 / 1;
+    box-sizing: border-box;
+    min-width: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    border: 2px solid {{ block.settings.card_border_color }};
+    box-shadow: 0 4px 20px rgba(0, 0, 0, {{ block.settings.card_shadow_opacity | divided_by: 100.0 }});
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+
+  .ai-faq-card-front-{{ ai_gen_id }} {
+    background: {{ block.settings.card_background }};
+  }
+
+  .ai-faq-card-back-{{ ai_gen_id }} {
+    background: {{ block.settings.answer_background }};
+    transform: rotateY(180deg);
+    border-color: {{ block.settings.card_active_border_color }};
+  }
+
+  .ai-faq-card-{{ ai_gen_id }}:hover .ai-faq-card-front-{{ ai_gen_id }} {
+    transform: translateY(-{{ block.settings.hover_lift }}px);
+    border-color: {{ block.settings.card_hover_border_color }};
+    box-shadow: 0 8px 30px rgba(0, 0, 0, {{ block.settings.card_shadow_opacity | times: 1.5 | divided_by: 100.0 }});
+  }
+
+  .ai-faq-question-wrapper-{{ ai_gen_id }} {
+    box-sizing: border-box;
+    padding: {{ block.settings.card_padding }}px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    height: 100%;
+    min-width: 0;
+  }
+
+  .ai-faq-number-{{ ai_gen_id }} {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: {{ block.settings.number_background }};
+    color: {{ block.settings.number_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+  }
+
+  .ai-faq-question-{{ ai_gen_id }} {
+    color: {{ block.settings.question_color }};
+    font-size: {{ block.settings.question_size }}px;
+    font-weight: 600;
+    margin: 0;
+    flex-grow: 1;
+    min-width: 0;
+    overflow-wrap: break-word;
+    line-height: 1.4;
+  }
+
+  .ai-faq-icon-{{ ai_gen_id }} {
+    width: 24px;
+    height: 24px;
+    color: {{ block.settings.icon_color }};
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .ai-faq-answer-wrapper-{{ ai_gen_id }} {
+    box-sizing: border-box;
+    padding: {{ block.settings.card_padding }}px;
+    padding-right: calc({{ block.settings.card_padding }}px + 44px);
+    padding-bottom: calc({{ block.settings.card_padding }}px + 36px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    min-width: 0;
+    position: relative;
+  }
+
+  .ai-faq-answer-content-{{ ai_gen_id }} {
+    color: {{ block.settings.answer_color }};
+    font-size: {{ block.settings.answer_size }}px;
+    line-height: 1.6;
+    margin: 0;
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+
+  .ai-faq-back-number-{{ ai_gen_id }} {
+    position: absolute;
+    top: {{ block.settings.card_padding }}px;
+    right: {{ block.settings.card_padding }}px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: {{ block.settings.number_active_background }};
+    color: {{ block.settings.number_active_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .ai-faq-close-icon-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: {{ block.settings.card_padding }}px;
+    right: {{ block.settings.card_padding }}px;
+    width: 24px;
+    height: 24px;
+    color: {{ block.settings.icon_active_color }};
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ai-faq-close-icon-{{ ai_gen_id }}:hover {
+    transform: scale(1.1);
+    color: {{ block.settings.accent_color }};
+  }
+
+  .ai-faq-decorative-line-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, {{ block.settings.accent_color }}, transparent);
+    width: 0;
+    transition: width 0.3s ease;
+  }
+
+  .ai-faq-card-{{ ai_gen_id }}:hover .ai-faq-decorative-line-{{ ai_gen_id }} {
+    width: 100%;
+  }
+
+  .ai-faq-card-back-{{ ai_gen_id }} .ai-faq-decorative-line-{{ ai_gen_id }} {
+    width: 100%;
+    background: {{ block.settings.accent_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-faq-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: {{ block.settings.card_spacing | times: 0.75 }}px;
+    }
+
+    .ai-faq-question-wrapper-{{ ai_gen_id }} {
+      padding: {{ block.settings.card_padding | times: 0.8 }}px;
+    }
+
+    .ai-faq-answer-wrapper-{{ ai_gen_id }} {
+      padding: {{ block.settings.card_padding | times: 0.8 }}px;
+      padding-right: calc({{ block.settings.card_padding | times: 0.8 }}px + 44px);
+      padding-bottom: calc({{ block.settings.card_padding | times: 0.8 }}px + 36px);
+    }
+
+    .ai-faq-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.8 }}px;
+    }
+
+    .ai-faq-question-{{ ai_gen_id }} {
+      font-size: {{ block.settings.question_size | times: 0.9 }}px;
+    }
+
+    .ai-faq-card-inner-{{ ai_gen_id }} {
+      transition: transform {{ block.settings.flip_duration | times: 1.2 | divided_by: 1000.0 }}s;
+    }
+  }
+{% endstyle %}
+
+<faq-flip-cards-{{ ai_gen_id }}
+  class="ai-faq-container-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  {% if block.settings.title != blank or block.settings.subtitle != blank %}
+    <div class="ai-faq-header-{{ ai_gen_id }}">
+      {% if block.settings.title != blank %}
+        <h2 class="ai-faq-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+      {% endif %}
+      {% if block.settings.subtitle != blank %}
+        <p class="ai-faq-subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</p>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="ai-faq-grid-{{ ai_gen_id }}">
+    {% for i in (1..5) %}
+      {% liquid
+        assign question_key = 'question_' | append: i
+        assign answer_key = 'answer_' | append: i
+        assign question = block.settings[question_key]
+        assign answer = block.settings[answer_key]
+      %}
+
+      {% if question != blank %}
+        <div
+          class="ai-faq-card-{{ ai_gen_id }}"
+          data-faq-item="{{ i }}"
+          role="button"
+          tabindex="0"
+          aria-expanded="false"
+          aria-label="FAQ item {{ i }}: {{ question | escape }}"
+        >
+          <div class="ai-faq-card-inner-{{ ai_gen_id }}">
+            <div class="ai-faq-card-front-{{ ai_gen_id }}">
+              <div class="ai-faq-question-wrapper-{{ ai_gen_id }}">
+                <div class="ai-faq-number-{{ ai_gen_id }}">{{ i }}</div>
+                <h3 class="ai-faq-question-{{ ai_gen_id }}">{{ question }}</h3>
+                <svg
+                  class="ai-faq-icon-{{ ai_gen_id }}"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </div>
+              <div class="ai-faq-decorative-line-{{ ai_gen_id }}"></div>
+            </div>
+
+            <div class="ai-faq-card-back-{{ ai_gen_id }}">
+              <div class="ai-faq-answer-wrapper-{{ ai_gen_id }}">
+                <div class="ai-faq-back-number-{{ ai_gen_id }}">{{ i }}</div>
+                {% if answer != blank %}
+                  <div class="ai-faq-answer-content-{{ ai_gen_id }}">
+                    {{ answer }}
+                  </div>
+                {% else %}
+                  <div class="ai-faq-answer-content-{{ ai_gen_id }}">
+                    <em>Add your answer content for question {{ i }}</em>
+                  </div>
+                {% endif %}
+                <svg
+                  class="ai-faq-close-icon-{{ ai_gen_id }}"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-label="Close answer"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </div>
+              <div class="ai-faq-decorative-line-{{ ai_gen_id }}"></div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</faq-flip-cards-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class FaqFlipCards{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.activeCard = null;
+        this.flipTimeout = null;
+      }
+
+      connectedCallback() {
+        this.cards = this.querySelectorAll('.ai-faq-card-{{ ai_gen_id }}');
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.cards.forEach((card) => {
+          const closeIcon = card.querySelector('.ai-faq-close-icon-{{ ai_gen_id }}');
+
+          card.addEventListener('click', (e) => {
+            if (!e.target.closest('.ai-faq-close-icon-{{ ai_gen_id }}')) {
+              this.toggleCard(card);
+            }
+          });
+
+          card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              this.toggleCard(card);
+            }
+          });
+
+          if (closeIcon) {
+            closeIcon.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.closeCard(card);
+            });
+          }
+        });
+      }
+
+      toggleCard(card) {
+        const isFlipped = card.classList.contains('flipped');
+
+        if (this.activeCard && this.activeCard !== card) {
+          this.closeCard(this.activeCard);
+        }
+
+        if (isFlipped) {
+          this.closeCard(card);
+        } else {
+          this.openCard(card);
+        }
+      }
+
+      openCard(card) {
+        if (this.flipTimeout) {
+          clearTimeout(this.flipTimeout);
+        }
+
+        card.classList.add('flipped');
+        card.setAttribute('aria-expanded', 'true');
+        this.activeCard = card;
+
+        this.flipTimeout = setTimeout(() => {
+          card.focus();
+        }, {{ block.settings.flip_duration | divided_by: 2 }});
+      }
+
+      closeCard(card) {
+        if (this.flipTimeout) {
+          clearTimeout(this.flipTimeout);
+        }
+
+        card.classList.remove('flipped');
+        card.setAttribute('aria-expanded', 'false');
+
+        if (this.activeCard === card) {
+          this.activeCard = null;
+        }
+      }
+    }
+
+    customElements.define('faq-flip-cards-{{ ai_gen_id }}', FaqFlipCards{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "FAQ flip cards",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Click any card to flip and reveal the answer"
+    },
+    {
+      "type": "header",
+      "content": "Questions"
+    },
+    {
+      "type": "text",
+      "id": "question_1",
+      "label": "Question 1",
+      "default": "What is your return policy?"
+    },
+    {
+      "type": "richtext",
+      "id": "answer_1",
+      "label": "Answer 1",
+      "default": "<p>We offer a 30-day return policy for all unused items in their original packaging. Simply contact our customer service team to initiate a return.</p>"
+    },
+    {
+      "type": "text",
+      "id": "question_2",
+      "label": "Question 2",
+      "default": "How long does shipping take?"
+    },
+    {
+      "type": "richtext",
+      "id": "answer_2",
+      "label": "Answer 2",
+      "default": "<p>Standard shipping typically takes 3-5 business days. Express shipping options are available for faster delivery within 1-2 business days.</p>"
+    },
+    {
+      "type": "text",
+      "id": "question_3",
+      "label": "Question 3",
+      "default": "Do you offer international shipping?"
+    },
+    {
+      "type": "richtext",
+      "id": "answer_3",
+      "label": "Answer 3",
+      "default": "<p>Yes, we ship to most countries worldwide. International shipping times vary by location, typically 7-14 business days.</p>"
+    },
+    {
+      "type": "text",
+      "id": "question_4",
+      "label": "Question 4",
+      "default": "How can I track my order?"
+    },
+    {
+      "type": "richtext",
+      "id": "answer_4",
+      "label": "Answer 4",
+      "default": "<p>Once your order ships, you'll receive a tracking number via email. You can use this to monitor your package's progress on our website or the carrier's site.</p>"
+    },
+    {
+      "type": "text",
+      "id": "question_5",
+      "label": "Question 5",
+      "default": "What payment methods do you accept?"
+    },
+    {
+      "type": "richtext",
+      "id": "answer_5",
+      "label": "Answer 5",
+      "default": "<p>We accept all major credit cards, PayPal, Apple Pay, Google Pay, and Shop Pay for your convenience and security.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "items_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Header spacing",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "card_spacing",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Card spacing",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 15,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Card padding",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "range",
+      "id": "flip_duration",
+      "min": 300,
+      "max": 1000,
+      "step": 50,
+      "unit": "ms",
+      "label": "Flip animation speed",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "hover_lift",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Hover lift effect",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 20,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "question_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Question size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "answer_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Answer size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card front background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "answer_background",
+      "label": "Card back background",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "color",
+      "id": "card_hover_border_color",
+      "label": "Card hover border",
+      "default": "#cccccc"
+    },
+    {
+      "type": "color",
+      "id": "card_active_border_color",
+      "label": "Card back border",
+      "default": "#007acc"
+    },
+    {
+      "type": "color",
+      "id": "question_color",
+      "label": "Question color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "answer_color",
+      "label": "Answer color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "number_background",
+      "label": "Number background",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "number_color",
+      "label": "Number color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "number_active_background",
+      "label": "Number active background",
+      "default": "#007acc"
+    },
+    {
+      "type": "color",
+      "id": "number_active_color",
+      "label": "Number active color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "icon_active_color",
+      "label": "Close icon color",
+      "default": "#007acc"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#007acc"
+    },
+    {
+      "type": "header",
+      "content": "Effects"
+    },
+    {
+      "type": "range",
+      "id": "card_shadow_opacity",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "%",
+      "label": "Card shadow opacity",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ flip cards"
+    }
+  ]
+}
+{% endschema %}
