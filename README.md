@@ -25,7 +25,7 @@ Use **Add to pack** on any section card, reorder the selection, then choose one
 of two one-time exports:
 
 - **Ready-to-upload theme ZIP** — a `base` theme with the selected sections,
-  namespaced dependencies, source CSS/JS, and `page.section-pack.json`.
+  namespaced dependencies, source CSS/JS, and ordered `templates/index.json` plus `page.section-pack.json`.
 - **Lightweight section pack ZIP** — selected sections and their dependencies
   for merging into an existing theme, with an import manifest.
 

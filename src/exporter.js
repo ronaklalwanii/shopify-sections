@@ -58,6 +58,28 @@ function listFiles(dir, prefix = '') {
   return out;
 }
 
+function sanitizeBaseTemplates(outDir, availableTypes) {
+  const templatesDir = path.join(outDir, 'templates');
+  for (const file of listFiles(templatesDir)) {
+    if (!file.rel.endsWith('.json') || file.rel === 'templates/index.json') continue;
+    let data;
+    try { data = JSON.parse(fs.readFileSync(file.full, 'utf8')); } catch { fs.rmSync(file.full, { force: true }); continue; }
+    if (!data || typeof data !== 'object' || !data.sections || typeof data.sections !== 'object') continue;
+    const sections = {};
+    for (const [id, section] of Object.entries(data.sections)) {
+      if (section && typeof section === 'object' && availableTypes.has(section.type)) sections[id] = section;
+    }
+    const order = (Array.isArray(data.order) ? data.order : Object.keys(sections)).filter((id) => sections[id]);
+    if (!order.length) {
+      fs.rmSync(file.full, { force: true });
+      continue;
+    }
+    data.sections = sections;
+    data.order = order;
+    fs.writeFileSync(file.full, JSON.stringify(data, null, 2));
+  }
+}
+
 function zipDirectory(dir) {
   const entries = {};
   for (const file of listFiles(dir)) entries[file.rel] = new Uint8Array(fs.readFileSync(file.full));
@@ -239,7 +261,7 @@ class ExportBuilder {
 
   finalizeAssets() {
     for (const file of this.assetFiles) {
-      if (!/\.(css|mjs?js|liquid)$/i.test(file.name)) continue;
+      if (!/\.(css|m?js|liquid)$/i.test(file.name)) continue;
       const text = fs.readFileSync(file.destination, 'utf8');
       fs.writeFileSync(file.destination, this.rewriteAssetText(text, file.store, file.name));
     }
@@ -277,6 +299,7 @@ class ExportBuilder {
 
   validate() {
     const snippets = new Set(fs.existsSync(path.join(this.outDir, 'snippets')) ? fs.readdirSync(path.join(this.outDir, 'snippets')).filter((f) => f.endsWith('.liquid')).map((f) => f.replace(/\.liquid$/, '')) : []);
+    const sections = new Set(fs.existsSync(path.join(this.outDir, 'sections')) ? fs.readdirSync(path.join(this.outDir, 'sections')).filter((f) => f.endsWith('.liquid')).map((f) => f.replace(/\.liquid$/, '')) : []);
     const blocks = new Set(fs.existsSync(path.join(this.outDir, 'blocks')) ? fs.readdirSync(path.join(this.outDir, 'blocks')).filter((f) => f.endsWith('.liquid')).map((f) => f.replace(/\.liquid$/, '')) : []);
     const assets = new Set(fs.existsSync(path.join(this.outDir, 'assets')) ? listFiles(path.join(this.outDir, 'assets')).map((f) => f.rel) : []);
     const errors = [...this.missing.map((item) => `Missing ${item.kind}: ${item.name}`)];
@@ -294,6 +317,14 @@ class ExportBuilder {
     check('sections', fs.existsSync(path.join(this.outDir, 'sections')) ? fs.readdirSync(path.join(this.outDir, 'sections')) : []);
     check('snippets', fs.existsSync(path.join(this.outDir, 'snippets')) ? fs.readdirSync(path.join(this.outDir, 'snippets')) : []);
     check('blocks', fs.existsSync(path.join(this.outDir, 'blocks')) ? fs.readdirSync(path.join(this.outDir, 'blocks')) : []);
+    for (const file of listFiles(path.join(this.outDir, 'templates'))) {
+      if (!file.rel.endsWith('.json')) continue;
+      let template;
+      try { template = JSON.parse(fs.readFileSync(file.full, 'utf8')); } catch { errors.push(`Invalid template JSON: ${file.rel}`); continue; }
+      for (const section of Object.values(template.sections || {})) {
+        if (section && !sections.has(section.type)) errors.push(`Template references missing section: ${section.type}`);
+      }
+    }
     return [...new Set(errors)];
   }
 }
@@ -342,7 +373,7 @@ function manifestFor({ mode, baseStore, name, items, exported, warnings, sourceC
 }
 
 function readmeFor(mode, manifest) {
-  if (mode === 'theme') return `# ${manifest.name}\n\nUpload this ZIP in Shopify Admin > Themes > Add theme > Upload zip file.\n\nAssign the \`page.section-pack\` template to a page to preview the selected section order.\n`;
+  if (mode === 'theme') return `# ${manifest.name}\n\nUpload this ZIP in Shopify Admin > Themes > Add theme > Upload zip file.\n\nThe generated \`templates/index.json\` already uses the selected section order. A matching \`page.section-pack\` template is included for previewing the pack on a page.\n`;
   return `# ${manifest.name}\n\nThis lightweight pack contains selected section files and their required dependencies.\n\nCopy the contents into an existing Shopify theme, preserving the folder structure. Review INSTALL notes and warnings in section-pack.json before publishing.\n`;
 }
 
@@ -356,7 +387,6 @@ function buildExport({ items, mode = 'theme', baseStore = BASE_STORE, name = 'se
     if (mode === 'theme') {
       copyTheme(findStore(resolvedBase), outDir);
       clearDirectory(path.join(outDir, 'sections'));
-      clearDirectory(path.join(outDir, 'templates'));
     } else {
       for (const dir of ['sections', 'snippets', 'assets', 'blocks']) fs.mkdirSync(path.join(outDir, dir), { recursive: true });
     }
@@ -377,7 +407,10 @@ function buildExport({ items, mode = 'theme', baseStore = BASE_STORE, name = 'se
         templateSections[id] = body;
         order.push(id);
       });
-      fs.writeFileSync(path.join(outDir, 'templates', 'page.section-pack.json'), JSON.stringify({ sections: templateSections, order }, null, 2));
+      const template = { sections: templateSections, order };
+      fs.writeFileSync(path.join(outDir, 'templates', 'index.json'), JSON.stringify(template, null, 2));
+      fs.writeFileSync(path.join(outDir, 'templates', 'page.section-pack.json'), JSON.stringify(template, null, 2));
+      sanitizeBaseTemplates(outDir, new Set(exported));
     }
     builder.finalizeAssets();
     const errors = builder.validate();

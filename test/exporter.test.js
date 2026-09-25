@@ -24,7 +24,9 @@ test('builds a ready-to-upload base theme with ordered namespaced sections', () 
   assert.ok(files['sections/azura--collection-list.liquid']);
   assert.equal(files['sections/hero.liquid'], undefined);
   const template = JSON.parse(strFromU8(files['templates/page.section-pack.json']));
+  const indexTemplate = JSON.parse(strFromU8(files['templates/index.json']));
   assert.deepEqual(template.order, ['pack_01_announcement-bar', 'pack_02_collection-list']);
+  assert.deepEqual(indexTemplate.order, template.order);
   assert.equal(template.sections[template.order[0]].type, 'azura--announcement-bar');
   const manifest = JSON.parse(strFromU8(files['section-pack.json']));
   assert.equal(manifest.mode, 'theme');
