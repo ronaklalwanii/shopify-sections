@@ -37,9 +37,27 @@ function storeHasGlobalCss(store) {
   return has;
 }
 
+function visibleContentIssues(html) {
+  const markup = String(html || '').replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<!--[\s\S]*?-->/g, '');
+  const text = markup.replace(/<[^>]+>/g, ' ').replace(/&(?:nbsp|amp|lt|gt|quot|#39);/gi, ' ').replace(/\s+/g, ' ').trim();
+  const hasMedia = /<(?:img|svg|video|picture|source|hr|input)\b/i.test(html) || /url\(/i.test(html) || /class=["'][^"']*\bdivider(?:__|--|\b)/i.test(html);
+  return text || hasMedia ? [] : ['no visible content'];
+}
+
+function hardIssue(issue) {
+  if (/^functional wrapper/i.test(issue)) return false;
+  return /empty output|no visible content|unrendered|liquid error|render error|http [45]|network|aborted/i.test(issue);
+}
+
 function checkLocalHtml(html, meta) {
   const issues = [];
-  if (!html || html.trim().length < 40) issues.push('empty output');
+  const noVisible = visibleContentIssues(html);
+  if (meta.usesContentFor && noVisible.length) issues.push('needs Shopify block context');
+  else {
+    if (!html || html.trim().length < 40) issues.push(meta.functional ? 'functional wrapper has no standalone output' : 'empty output');
+    if (meta.functional) issues.push(...noVisible.map((issue) => `functional wrapper: ${issue}`));
+    else issues.push(...noVisible);
+  }
   // Leak checks ignore script/style bodies: JS money formatters legitimately
   // contain {{amount}}, and CSS can hold template-looking text. Money-format
   // placeholders in data attributes (e.g. data-money-format="${{amount}}")
@@ -73,7 +91,7 @@ async function localPass() {
     } catch (e) {
       entry = { store: s.store, file: s.file, name: s.name, status: 'fail', issues: [String(e.message || e).slice(0, 160)] };
     }
-    if (entry.issues.length) entry.status = entry.issues.some((i) => i.startsWith('render error')) ? 'fail' : 'warn';
+    if (entry.issues.length) entry.status = entry.issues.some(hardIssue) ? 'fail' : 'warn';
     results.push(entry);
     done++;
     if (done % 100 === 0) console.log(`  local: ${done}/${unique.length}`);
@@ -91,15 +109,18 @@ async function fetchOne(store, file) {
   try {
     const r = await fetch(`${BASE}/preview/${encodeURIComponent(store)}/${encodeURIComponent(file)}`, { signal: ctl.signal });
     const html = await r.text();
-    const issues = [];
+    const previewPath = r.headers.get('x-preview-path') || 'unknown';
+    const issues = visibleContentIssues(html).filter((issue) => previewPath !== 'local-context' || issue !== 'no visible content');
     if (r.status !== 200) issues.push(`http ${r.status}`);
     // Password templates legitimately contain password copy — only flag it
     // when the section itself isn't a password page.
     if (!/password/i.test(file) && /password/i.test(html.slice(0, 3000)) && r.status === 200 && html.length < 5000) issues.push('password page');
     if (/Liquid error[^<]{0,120}/i.test(html)) issues.push((html.match(/Liquid error[^<]{0,120}/i) || [])[0]);
-    if (r.status === 200 && html.length < 1200) issues.push(`suspiciously small (${html.length}b)`);
+    if (r.status === 200 && previewPath !== 'local-context' && html.length < 1200) issues.push(`suspiciously small (${html.length}b)`);
     if (!/shopify-section|<section|<style|asset_url|cdn\.shopify/.test(html)) issues.push('no section markup detected');
-    return { store, file, status: issues.length ? 'warn' : 'ok', issues };
+    if (previewPath === 'local') issues.push('local fallback');
+    if (previewPath === 'local-context') issues.push('needs Shopify block context');
+    return { store, file, previewPath, status: issues.some(hardIssue) ? 'fail' : issues.length ? 'warn' : 'ok', issues };
   } catch (e) {
     return { store, file, status: 'fail', issues: [String(e.message || e).slice(0, 120)] };
   } finally { clearTimeout(t); }
@@ -128,12 +149,13 @@ async function livePass() {
 
 /* ----------------------------------- main ------------------------------------- */
 
-(async () => {
+async function main() {
   console.log(`QA: ${unique.length} unique sections, ${Object.keys(manifest).length} gallery entries`);
   console.log('— local mock pass —');
   const local = await localPass();
-  console.log('— live store pass (also warms cache) —');
-  const live = await livePass();
+  const runLive = process.env.QA_SKIP_LIVE !== '1';
+  console.log(runLive ? '— live store pass (also warms cache) —' : '— live store pass skipped —');
+  const live = runLive ? await livePass() : [];
 
   const summarize = (rows) => ({
     ok: rows.filter((r) => r.status === 'ok').length,
@@ -142,6 +164,7 @@ async function livePass() {
   });
   const report = {
     generatedAt: new Date().toISOString(),
+    mode: runLive ? 'server-render' : 'local-render',
     local: { summary: summarize(local), results: local },
     live: { summary: summarize(live), results: live },
   };
@@ -153,4 +176,8 @@ async function livePass() {
   for (const r of local.filter((r) => r.status === 'fail').slice(0, 15)) console.log(`  ${r.store}/${r.file}: ${r.issues[0]}`);
   console.log('— worst offenders (live) —');
   for (const r of live.filter((r) => r.status !== 'ok').slice(0, 20)) console.log(`  ${r.store}/${r.file}: ${r.issues.join(' | ')}`);
-})();
+  if (local.some((row) => row.status === 'fail') || live.some((row) => row.status === 'fail')) process.exitCode = 1;
+}
+
+if (require.main === module) main();
+module.exports = { checkLocalHtml, visibleContentIssues, hardIssue, localPass, fetchOne };

@@ -6,49 +6,16 @@
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
-const { toLiquidHtmlAST } = require('@shopify/liquid-html-parser');
-
 const { findStore } = require('./roots');
+const { extractSchema, extractSnippetRefs, scanRenderEdits } = require('./section-meta');
 const OUT = path.resolve(__dirname, '../gallery-theme');
 const HOST = process.env.HOST_STORE || 'base'; // provides layout, config, locales skeleton
 
 const ASSET_EXT = /\.(css|mjs|js|woff2?|png|jpe?g|svg|gif|webp|avif|eot|ttf|otf)(\?.*)?$/i;
 
-// Use Shopify's liquid-html-parser to find every render/include snippet reference
-// with exact source positions (covers {% render %} tags AND lines inside
-// {% liquid %} blocks). Returns null when a file doesn't parse.
-function scanRenderEdits(source) {
-  let ast;
-  try { ast = toLiquidHtmlAST(source); } catch { return null; }
-  const edits = [];
-  (function walk(node) {
-    if (!node || typeof node !== 'object') return;
-    if (node.type === 'LiquidTag' && (node.name === 'render' || node.name === 'include')) {
-      const raw = source.slice(node.position.start, node.position.end);
-      const m = raw.match(/\b(?:render|include)\s+(')([\w-]+)(')/);
-      if (m) {
-        const nameStart = node.position.start + m.index + m[0].indexOf(`${m[2]}`);
-        edits.push({ start: nameStart, end: nameStart + m[2].length, name: m[2] });
-      }
-    }
-    for (const key of Object.keys(node)) {
-      const v = node[key];
-      if (Array.isArray(v)) v.forEach(walk);
-      else if (v && typeof v === 'object' && v.type) walk(v);
-    }
-  })(ast);
-  return edits;
-}
-
 // Names only — used by lint.
 function scanRenderNames(source) {
-  const edits = scanRenderEdits(source);
-  if (edits) return edits.map((e) => e.name);
-  const names = [];
-  let m;
-  const re = /{%-?\s*(?:render|include)\s+'([\w-]+)'/g;
-  while ((m = re.exec(source))) names.push(m[1]);
-  return names;
+  return extractSnippetRefs(source);
 }
 
 const prefixFor = (store) => (store === HOST ? '' : store.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '--');
@@ -63,10 +30,9 @@ function readStoreLayoutDeps(store) {
     let m;
     const cssRe = /['"]([\w./-]+\.css)['"]\s*\|\s*asset_url/g;
     while ((m = cssRe.exec(text))) if (!css.includes(m[1])) css.push(m[1]);
-    const jsRe = /['"]([\w./-]+\.js)['"]\s*\|\s*asset_url/g;
+    const jsRe = /['"]([\w./-]+\.m?js)['"]\s*\|\s*asset_url/g;
     while ((m = jsRe.exec(text))) if (!js.includes(m[1])) js.push(m[1]);
-    const snipRe = /{%-?\s*render\s+'([\w-]+)'/g;
-    while ((m = snipRe.exec(text))) if (!snippets.includes(m[1])) snippets.push(m[1]);
+    for (const name of extractSnippetRefs(text)) if (!snippets.includes(name)) snippets.push(name);
   };
   let layout = '';
   try { layout = fs.readFileSync(path.join(storePath, 'layout/theme.liquid'), 'utf8'); } catch { return { css, js, snippets, styleBlocks }; }
@@ -188,10 +154,13 @@ function sectionSettingsFor(schema) {
   return { settings, preset };
 }
 
-function parseSchemaLoose(body) {
-  // Shopify tolerates trailing commas in {% schema %}; JSON.parse doesn't.
-  try { return JSON.parse(body); } catch {}
-  try { return JSON.parse(body.replace(/,(\s*[}\]])/g, '$1')); } catch { return null; }
+function presetBlockList(preset) {
+  if (Array.isArray(preset?.blocks)) return preset.blocks.filter(Boolean);
+  if (!preset?.blocks || typeof preset.blocks !== 'object') return [];
+  const ordered = Array.isArray(preset.block_order)
+    ? preset.block_order.map((id) => preset.blocks[id]).filter(Boolean)
+    : Object.values(preset.blocks);
+  return ordered.filter(Boolean);
 }
 
 function templateSectionBody(schema) {
@@ -222,8 +191,9 @@ function templateSectionBody(schema) {
     blocks[id] = { type, settings: blockSettings(type, from) };
     order.push(id);
   };
-  if (preset?.blocks?.length) {
-    for (const b of preset.blocks.slice(0, 20)) addBlock(b.type, b);
+  const configuredBlocks = presetBlockList(preset);
+  if (configuredBlocks.length) {
+    for (const b of configuredBlocks.slice(0, 20)) addBlock(b.type, b);
   } else {
     for (const def of blockDefs.slice(0, 8)) {
       if (def.type === '@app') continue;
@@ -252,8 +222,7 @@ function main() {
     const deps = readStoreLayoutDeps(store);
     const copier = new Copier(store);
 
-    // copy global css/js of the store so its sections can load them
-    for (const f of deps.css) copier.enqueue('asset', f);
+    for (const f of [...deps.css, ...deps.js]) copier.enqueue('asset', f);
     // design tokens: prefer the css-variables-style snippet; else the layout's
     // inline {% style %} blocks (some themes define :root vars in the layout).
     let tokensSnippet = null;
@@ -267,6 +236,11 @@ function main() {
       const name = `${prefixFor(store)}layout-tokens`;
       fs.writeFileSync(path.join(gallerySnippets, `${name}.liquid`), `<style>\n${copier.rewrite(deps.styleBlocks.join('\n'))}\n</style>`);
       tokensRender = `{% render '${name}' %}`;
+    }
+    let scriptsRender = null;
+    if (deps.snippets.includes('scripts')) {
+      copier.enqueue('snippet', 'scripts');
+      scriptsRender = `{% render '${prefixFor(store)}scripts' %}`;
     }
 
     const sectionsDir = path.join(findStore(store), 'sections');
@@ -285,6 +259,8 @@ function main() {
         const head = [];
         for (const c of deps.css) head.push(`{{ '${prefixFor(store)}${c}' | asset_url | stylesheet_tag }}`);
         if (tokensRender) head.push(tokensRender);
+        if (scriptsRender) head.push(scriptsRender);
+        else for (const script of deps.js) head.push(`{{ '${prefixFor(store)}${script}' | asset_url | script_tag }}`);
         src = `{%- comment -%} Section Library: injected global assets for store "${store}" {%- endcomment -%}\n${head.join('\n')}\n${src}`;
       }
 
@@ -294,8 +270,7 @@ function main() {
       // template name: keep readable, hash if too long for Shopify's filename limits
       let tpl = `page.lib-${slugify(store)}-${slugify(file.replace(/\.liquid$/, ''))}`.slice(0, 60);
       if (tpl.length > 48) tpl = `page.lib-${require('crypto').createHash('md5').update(`${store}/${file}`).digest('hex').slice(0, 12)}`;
-      const schemaMatch = src.match(/{%\s*schema\s*%}([\s\S]*?){%\s*endschema\s*%}/);
-      const body = templateSectionBody(schemaMatch ? parseSchemaLoose(schemaMatch[1]) : null);
+      const body = templateSectionBody(extractSchema(src));
       body.type = prefixedName;
       fs.writeFileSync(path.join(OUT, 'templates', `${tpl}.json`), JSON.stringify({ sections: { library: body }, order: ['library'] }, null, 2));
       manifest[`${store}/${file}`] = { template: tpl.replace(/^page\./, ''), url: `/pages/section-library?view=${tpl.replace(/^page\./, '')}` };
@@ -388,14 +363,16 @@ function lint() {
         if (!assets.has(m[1])) { missingAssets++; if (missingAssets <= 8) console.log(`  missing asset: ${m[1]} (used in ${dir}/${f})`); }
       }
       if (dir === 'sections') {
-        const sm = src.match(/{%\s*schema\s*%}([\s\S]*?){%\s*endschema\s*%}/);
-        if (sm && !parseSchemaLoose(sm[1])) console.log(`  BAD SCHEMA JSON in ${f}`);
+        const hasSchema = /{%-?\s*schema\s*-?%}/i.test(src);
+        if (hasSchema && !extractSchema(src)) console.log(`  BAD SCHEMA JSON in ${f}`);
       }
     }
   };
   checkDir('sections', sections);
   checkDir('snippets', snippets);
   console.log(`Lint: ${missingSnips} missing snippet refs, ${missingAssets} missing asset refs`);
+  if (missingSnips || missingAssets) throw new Error('Gallery dependency lint failed');
+  return { missingSnips, missingAssets };
 }
 
 function zip() {
@@ -406,5 +383,8 @@ function zip() {
   console.log(`Zipped → gallery-theme.zip (${mb} MB)`);
 }
 
-main();
-if (process.argv.includes('--zip')) zip();
+if (require.main === module) {
+  main();
+  if (process.argv.includes('--zip')) zip();
+}
+module.exports = { main, lint, templateSectionBody, presetBlockList };

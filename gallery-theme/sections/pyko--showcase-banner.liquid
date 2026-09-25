@@ -2,6 +2,8 @@
 {{ 'pyko--base.css' | asset_url | stylesheet_tag }}
 {{ 'pyko--components.css' | asset_url | stylesheet_tag }}
 {% render 'pyko--layout-tokens' %}
+{{ 'pyko--global.js' | asset_url | script_tag }}
+{{ 'pyko--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Product showcase banner — full-bleed image with heading top-left, pill CTA
   top-right, mini product carousel bottom-left and benefit links bottom-right

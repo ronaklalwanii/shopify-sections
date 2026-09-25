@@ -2,6 +2,8 @@
 {{ 'milo--base.css' | asset_url | stylesheet_tag }}
 {{ 'milo--components.css' | asset_url | stylesheet_tag }}
 {% render 'milo--layout-tokens' %}
+{{ 'milo--global.js' | asset_url | script_tag }}
+{{ 'milo--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Hero image banner. Three layouts:
   - card: rounded image card, content overlaid left, optional floating product mini-card

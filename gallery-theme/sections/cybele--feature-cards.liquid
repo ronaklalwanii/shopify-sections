@@ -2,6 +2,8 @@
 {{ 'cybele--base.css' | asset_url | stylesheet_tag }}
 {{ 'cybele--components.css' | asset_url | stylesheet_tag }}
 {% render 'cybele--layout-tokens' %}
+{{ 'cybele--global.js' | asset_url | script_tag }}
+{{ 'cybele--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Feature cards — filled value-prop cards with arrow links (noir design).
 {%- endcomment -%}

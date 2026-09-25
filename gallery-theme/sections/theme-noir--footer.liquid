@@ -2,6 +2,8 @@
 {{ 'theme-noir--base.css' | asset_url | stylesheet_tag }}
 {{ 'theme-noir--components.css' | asset_url | stylesheet_tag }}
 {% render 'theme-noir--layout-tokens' %}
+{{ 'theme-noir--global.js' | asset_url | script_tag }}
+{{ 'theme-noir--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Site footer. Brand column + menu blocks + optional newsletter column.
 {%- endcomment -%}

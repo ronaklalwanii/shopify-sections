@@ -2,6 +2,7 @@
 {{ 'horizon--overflow-list.css' | asset_url | stylesheet_tag }}
 {{ 'horizon--base.css' | asset_url | stylesheet_tag }}
 {% render 'horizon--theme-styles-variables' %}
+{% render 'horizon--scripts' %}
 {% liquid
   assign has_mobile_image = false
   if section.settings.custom_mobile_image and section.settings.image_mobile != blank

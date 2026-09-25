@@ -2,6 +2,8 @@
 {{ 'milo--base.css' | asset_url | stylesheet_tag }}
 {{ 'milo--components.css' | asset_url | stylesheet_tag }}
 {% render 'milo--layout-tokens' %}
+{{ 'milo--global.js' | asset_url | script_tag }}
+{{ 'milo--wishlist.js' | asset_url | script_tag }}
 {%- comment -%} Giant text band — oversized display statement, optional supporting
   collage (small copy left, image center overlapping the text, small copy right).
   Horizon-safe. {%- endcomment -%}

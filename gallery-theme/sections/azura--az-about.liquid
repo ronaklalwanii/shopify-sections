@@ -2,6 +2,8 @@
 {{ 'azura--base.css' | asset_url | stylesheet_tag }}
 {{ 'azura--components.css' | asset_url | stylesheet_tag }}
 {% render 'azura--layout-tokens' %}
+{{ 'azura--global.js' | asset_url | script_tag }}
+{{ 'azura--wishlist.js' | asset_url | script_tag }}
 {%- comment -%} Azura about card — rounded beige card, text + 3 mini features + pool image. {%- endcomment -%}
 {%- assign azabicon = section.settings.icon_size | default: 22 -%}
 <section class="azab azab-{{ section.id }}" style="--azab-bg: {{ section.settings.background_color | default: '#f6f2ea' }}; --azab-icon: {{ azabicon }}px;">

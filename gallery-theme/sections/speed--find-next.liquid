@@ -2,6 +2,8 @@
 {{ 'speed--base.css' | asset_url | stylesheet_tag }}
 {{ 'speed--components.css' | asset_url | stylesheet_tag }}
 {% render 'speed--layout-tokens' %}
+{{ 'speed--global.js' | asset_url | script_tag }}
+{{ 'speed--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Find next — two-column discovery band: heading + fanned deck + text + pill
   button on the left, rounded video/image card on the right (SPEED pattern).

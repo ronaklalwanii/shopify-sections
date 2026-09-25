@@ -19,11 +19,16 @@
         "bl-2": {
           "type": "_layered-slide",
           "settings": {}
+        },
+        "bl-3": {
+          "type": "_layered-slide",
+          "settings": {}
         }
       },
       "block_order": [
         "bl-1",
-        "bl-2"
+        "bl-2",
+        "bl-3"
       ]
     }
   },

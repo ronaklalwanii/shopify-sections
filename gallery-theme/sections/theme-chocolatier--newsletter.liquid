@@ -2,6 +2,8 @@
 {{ 'theme-chocolatier--base.css' | asset_url | stylesheet_tag }}
 {{ 'theme-chocolatier--components.css' | asset_url | stylesheet_tag }}
 {% render 'theme-chocolatier--layout-tokens' %}
+{{ 'theme-chocolatier--global.js' | asset_url | script_tag }}
+{{ 'theme-chocolatier--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Newsletter band — full-width signup strip (homeware / chocolatier).
 {%- endcomment -%}

@@ -2,6 +2,8 @@
 {{ 'suncare--base.css' | asset_url | stylesheet_tag }}
 {{ 'suncare--components.css' | asset_url | stylesheet_tag }}
 {% render 'suncare--layout-tokens' %}
+{{ 'suncare--global.js' | asset_url | script_tag }}
+{{ 'suncare--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Site header. Layouts: logo-left (nav center), logo-center (nav left, Cocobella),
   minimal (nav right, noir). Optional pill nav, sticky, CTA button, icons.

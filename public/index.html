@@ -20,7 +20,7 @@
     <button class="btn btn-primary" id="addBtn">+ Add section</button>
 
     <div class="side-search">
-      <input type="search" id="search" placeholder="Search sections…" autocomplete="off">
+      <input type="search" id="search" placeholder="Search sections…" aria-label="Search sections" autocomplete="off">
     </div>
 
     <nav class="side-group" id="storeGroup">
@@ -55,6 +55,7 @@
       </label>
     </div>
     <div class="grid" id="grid"></div>
+    <button type="button" class="btn btn-ghost load-more" id="loadMore" hidden>Load more</button>
     <div class="empty" id="empty" hidden>
       <div class="empty-title">No sections match</div>
       <div class="empty-sub">Try clearing the search or picking another store.</div>
@@ -64,16 +65,15 @@
 
 <!-- detail modal -->
 <div class="overlay" id="detailOverlay" hidden>
-  <div class="modal modal-detail">
+  <div class="modal modal-detail" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
     <header class="modal-head">
       <div class="modal-head-info">
         <div class="modal-kicker" id="detailKicker"></div>
         <h2 id="detailTitle"></h2>
       </div>
       <div class="modal-actions">
-        <button class="btn btn-ghost" id="detailOpenTab">Open in tab</button>
         <button class="btn btn-ghost" id="detailCopy">Copy Liquid</button>
-        <button class="btn btn-ghost" id="detailDownload">Download .liquid</button>
+        <button class="btn btn-ghost" id="detailDownload">Download source</button>
         <button class="btn btn-ghost danger" id="detailEdit" hidden>Edit</button>
         <button class="btn btn-ghost danger" id="detailDelete" hidden>Delete</button>
         <button class="btn btn-ghost" id="detailClose">✕</button>
@@ -97,6 +97,7 @@
       <section class="detail-code">
         <div class="code-tabs">
           <button class="code-tab active" data-tab="liquid">Liquid</button>
+          <button class="code-tab" data-tab="dependencies">Dependencies</button>
           <button class="code-tab" data-tab="settings">Settings</button>
           <button class="code-tab" data-tab="css">CSS</button>
           <button class="code-tab" data-tab="js">JS</button>
@@ -114,7 +115,7 @@
 
 <!-- editor modal -->
 <div class="overlay" id="editorOverlay" hidden>
-  <div class="modal modal-editor">
+  <div class="modal modal-editor" role="dialog" aria-modal="true" aria-labelledby="editorTitle">
     <header class="modal-head">
       <div class="modal-head-info">
         <div class="modal-kicker" id="editorKicker">New section</div>
@@ -173,7 +174,7 @@
   </div>
 </div>
 
-<div class="toast" id="toast" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <script src="/app.js"></script>
 </body>
 </html>

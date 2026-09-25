@@ -1,0 +1,10 @@
+.git
+.gitignore
+node_modules
+npm-debug.log*
+data/store-config.json
+data/preview-cache
+custom-sections
+stores/**/.DS_Store
+stores/**/*.log
+gallery-theme.zip

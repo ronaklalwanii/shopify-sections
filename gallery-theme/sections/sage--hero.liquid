@@ -2,6 +2,8 @@
 {{ 'sage--base.css' | asset_url | stylesheet_tag }}
 {{ 'sage--components.css' | asset_url | stylesheet_tag }}
 {% render 'sage--layout-tokens' %}
+{{ 'sage--global.js' | asset_url | script_tag }}
+{{ 'sage--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Hero image banner. Two layouts:
   - split: content on one side, image on the other (boutique look)

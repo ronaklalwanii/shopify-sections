@@ -19,24 +19,43 @@ jobs:
       - run: npm install
       - name: Extract dropped zips into stores/
         run: |
+          set -euo pipefail
           shopt -s nullglob
           for z in new-themes/*.zip; do
             name="$(basename "$z" .zip)"
-            echo "Extracting $name"
-            rm -rf "stores/$name"
-            mkdir -p "stores/$name/.x"
-            unzip -q "$z" -d "stores/$name/.x"
-            found="$(find "stores/$name/.x" -type d -name sections | head -1)"
-            if [ -z "$found" ]; then
-              echo "!! $z has no sections/ folder — skipping"
-              rm -rf "stores/$name"
-              rm "$z"
-              continue
+            size="$(stat -c%s "$z")"
+            [ "$size" -le 104857600 ] || { echo "Zip is larger than 100 MB: $z"; exit 1; }
+            entries="$(unzip -Z1 "$z")"
+            count="$(printf '%s\n' "$entries" | wc -l | tr -d ' ')"
+            [ "$count" -le 5000 ] || { echo "Zip has too many entries: $z"; exit 1; }
+            if printf '%s\n' "$entries" | grep -Eq '(^/|(^|/)\.\.(/|$))'; then
+              echo "Zip contains an unsafe path: $z"
+              exit 1
             fi
-            mv "$(dirname "$found")"/* "stores/$name/"
-            rm -rf "stores/$name/.x"
+            staging="stores/.$name-staging"
+            target="stores/$name"
+            backup="stores/.$name-backup"
+            rm -rf "$staging" "$backup"
+            mkdir -p "$staging"
+            unzip -q "$z" -d "$staging"
+            found="$(find "$staging" -type d -name sections -print -quit)"
+            [ -n "$found" ] || { echo "Zip has no sections/ folder: $z"; rm -rf "$staging"; exit 1; }
+            theme_root="$(dirname "$found")"
+            mkdir -p "$staging/theme"
+            (cd "$theme_root" && shopt -s dotglob && mv -- * "$staging/theme/")
+            [ -d "$staging/theme/sections" ] || { echo "Theme validation failed: $z"; rm -rf "$staging"; exit 1; }
+            if [ -e "$target" ]; then mv "$target" "$backup"; fi
+            if mv "$staging/theme" "$target"; then
+              rm -rf "$staging" "$backup"
+            else
+              [ ! -e "$backup" ] || mv "$backup" "$target"
+              rm -rf "$staging"
+              exit 1
+            fi
             rm "$z"
+            echo "Extracted $name"
           done
+
       - run: node src/ingest.js
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:

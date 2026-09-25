@@ -1,0 +1,310 @@
+{% doc %}
+  Renders all global scripts, module preloads, and importmaps for the theme.
+
+  @param {object} [product] - The product object, available on product pages.
+{% enddoc %}
+
+<script type="importmap">
+  {
+    "imports": {
+      "@theme/overflow-list": "{{ 'horizon--overflow-list.js' | asset_url }}",
+      "@theme/component": "{{ 'horizon--component.js' | asset_url }}",
+      "@theme/dialog": "{{ 'horizon--dialog.js' | asset_url }}",
+      "@theme/events": "{{ 'horizon--events.js' | asset_url }}",
+      "@shopify/events": "https://cdn.shopify.com/storefront/standard-events.js",
+      "@theme/view-event-elements": "{{ 'horizon--view-event-elements.js' | asset_url }}",
+      "@theme/focus": "{{ 'horizon--focus.js' | asset_url }}",
+      "@theme/morph": "{{ 'horizon--morph.js' | asset_url }}",
+      "@theme/paginated-list": "{{ 'horizon--paginated-list.js' | asset_url }}",
+      "@theme/performance": "{{ 'horizon--performance.js' | asset_url }}",
+      "@theme/product-form": "{{ 'horizon--product-form.js' | asset_url }}",
+      "@theme/recently-viewed-products": "{{ 'horizon--recently-viewed-products.js' | asset_url }}",
+      "@theme/scrolling": "{{ 'horizon--scrolling.js' | asset_url }}",
+      "@theme/section-renderer": "{{ 'horizon--section-renderer.js' | asset_url }}",
+      "@theme/section-hydration": "{{ 'horizon--section-hydration.js' | asset_url }}",
+      "@theme/money-formatting": "{{ 'horizon--money-formatting.js' | asset_url }}",
+      "@theme/utilities": "{{ 'horizon--utilities.js' | asset_url }}",
+      "@theme/variant-picker": "{{ 'horizon--variant-picker.js' | asset_url }}",
+      "@theme/variant-resolution": "{{ 'horizon--variant-resolution.js' | asset_url }}",
+      "@theme/media-gallery": "{{ 'horizon--media-gallery.js' | asset_url }}",
+      "@theme/quick-add": "{{ 'horizon--quick-add.js' | asset_url }}",
+      "@theme/paginated-list-aspect-ratio": "{{ 'horizon--paginated-list-aspect-ratio.js' | asset_url }}",
+      "@theme/component-quantity-selector": "{{ 'horizon--component-quantity-selector.js' | asset_url }}",
+      "@theme/comparison-slider": "{{ 'horizon--comparison-slider.js' | asset_url }}",
+      "@theme/sticky-add-to-cart": "{{ 'horizon--sticky-add-to-cart.js' | asset_url }}",
+      "@theme/fly-to-cart": "{{ 'horizon--fly-to-cart.js' | asset_url }}",
+      "@theme/scroll-container": "{{ 'horizon--scroll-container.js' | asset_url }}",
+      "@theme/theme-drawer": "{{ 'horizon--theme-drawer.js' | asset_url }}"
+    }
+  }
+</script>
+
+{%- comment -%}
+  Registers Horizon's cart-drawer behaviour against the standard-actions
+  bundle (loaded separately into <head>). Module scripts execute in
+  document order, so this runs after the bundle regardless of where it
+  lands in <head>.
+{%- endcomment -%}
+<script
+  src="{{ 'horizon--standard-actions-override.js' | asset_url }}"
+  type="module"
+></script>
+
+<script
+  src="{{ 'horizon--page-view-event.js' | asset_url }}"
+  type="module"
+  defer
+></script>
+
+{% if settings.transition_to_main_product or settings.page_transition_enabled %}
+  {%- comment -%}
+    Inlined to avoid a network round trip for a render blocking asset.
+  {%- endcomment -%}
+  <script>
+    {{- 'view-transitions.js' | inline_asset_content -}}
+  </script>
+{% endif %}
+
+<link
+  rel="modulepreload"
+  href="{{ 'horizon--utilities.js' | asset_url }}"
+  fetchpriority="low"
+>
+<link
+  rel="modulepreload"
+  href="{{ 'horizon--component.js' | asset_url }}"
+  fetchpriority="low"
+>
+<link
+  rel="modulepreload"
+  href="{{ 'horizon--section-renderer.js' | asset_url }}"
+  fetchpriority="low"
+>
+<link
+  rel="modulepreload"
+  href="{{ 'horizon--section-hydration.js' | asset_url }}"
+  fetchpriority="low"
+>
+<link
+  rel="modulepreload"
+  href="{{ 'horizon--morph.js' | asset_url }}"
+  fetchpriority="low"
+>
+
+{% if template.name == 'collection' or template.name == 'search' %}
+  <link
+    rel="modulepreload"
+    href="{{ 'horizon--paginated-list-aspect-ratio.js' | asset_url }}"
+    fetchpriority="low"
+  >
+  <link
+    rel="modulepreload"
+    href="{{ 'horizon--paginated-list.js' | asset_url }}"
+    fetchpriority="low"
+  >
+{% endif %}
+
+<link
+  rel="modulepreload"
+  href="{{ 'horizon--focus.js' | asset_url }}"
+  fetchpriority="low"
+>
+<link
+  rel="modulepreload"
+  href="{{ 'horizon--recently-viewed-products.js' | asset_url }}"
+  fetchpriority="low"
+>
+<link
+  rel="modulepreload"
+  href="{{ 'horizon--scrolling.js' | asset_url }}"
+  fetchpriority="low"
+>
+<link
+  rel="modulepreload"
+  href="{{ 'horizon--events.js' | asset_url }}"
+  fetchpriority="low"
+>
+<script
+  src="{{ 'horizon--overflow-list.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--quick-add.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+{% if settings.show_add_discount_code %}
+  <script
+    src="{{ 'horizon--cart-discount.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
+
+<script
+  src="{{ 'horizon--dialog.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--variant-picker.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--product-card.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--product-form.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--fly-to-cart.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--accordion-custom.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--media.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--product-price.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--product-sku.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--product-inventory.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--show-more.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--slideshow.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--layered-slideshow.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--anchored-popover.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--floating-panel.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--video-background.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--component-quantity-selector.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--media-gallery.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--rte-formatter.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--volume-pricing.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--price-per-item.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+<script
+  src="{{ 'horizon--volume-pricing-info.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+
+{% if localization.available_countries.size > 1 or localization.available_languages.size > 1 %}
+  <script
+    src="{{ 'horizon--localization.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
+
+{% if template == 'product' or template.name == 'product' or request.page_type == 'product' %}
+  <script
+    src="{{ 'horizon--sticky-add-to-cart.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+  <script type="module">
+    import { RecentlyViewed } from '@theme/recently-viewed-products';
+    RecentlyViewed.addProduct('{{ product.id }}');
+  </script>
+{% endif %}
+
+<script
+  src="{{ 'horizon--auto-close-details.js' | asset_url }}"
+  defer="defer"
+></script>
+
+<script>
+  const supportsNativePopover = 'popover' in HTMLElement.prototype;
+  const Theme = {
+    supportsNativePopover,
+    popoverPolyfillReady: supportsNativePopover
+      ? Promise.resolve()
+      : import("{{ 'horizon--popover-polyfill.js' | asset_url }}").then(() => {}),
+    translations: {
+      placeholder_image: `{{ 'content.placeholder_image' | t }}`,
+      added: `{{ 'actions.added' | t }}`,
+      recipient_form_fields_visible: `{{ 'content.recipient_form_fields_visible' | t }}`,
+      recipient_form_fields_hidden: `{{ 'content.recipient_form_fields_hidden' | t }}`,
+      recipient_form_error: `{{ 'content.recipient_form_error' | t }}`,
+      items_added_to_cart_one: `{{ 'content.items_added_to_cart.one' | t }}`,
+      items_added_to_cart_other: `{{ 'content.items_added_to_cart.other' | t }}`,
+      cart_count: `{{ 'accessibility.cart_count' | t }}`,
+    },
+    routes: {
+      cart_add_url: '{{ routes.cart_add_url | append: '.js' }}',
+      cart_change_url: '{{ routes.cart_change_url }}',
+      cart_update_url: '{{ routes.cart_update_url }}',
+      cart_url: '{{ routes.cart_url }}',
+      predictive_search_url: '{{ routes.predictive_search_url }}',
+      search_url: '{{ routes.search_url }}',
+    },
+    template: {
+      name: '{{ template }}',
+    },
+  };
+</script>

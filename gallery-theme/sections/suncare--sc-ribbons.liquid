@@ -2,6 +2,8 @@
 {{ 'suncare--base.css' | asset_url | stylesheet_tag }}
 {{ 'suncare--components.css' | asset_url | stylesheet_tag }}
 {% render 'suncare--layout-tokens' %}
+{{ 'suncare--global.js' | asset_url | script_tag }}
+{{ 'suncare--wishlist.js' | asset_url | script_tag }}
 {%- comment -%} Suncare crossed ribbons — two gently tilted marquee bands, dark band in front. {%- endcomment -%}
 <section class="scr scr-{{ section.id }}" style="--scr-h: {{ section.settings.height }}px;">
   <div class="scr__band scr__band--b" style="transform: rotate({{ section.settings.angle }}deg); background: {{ section.settings.band_b_bg }}; color: {{ section.settings.band_b_ink }};">

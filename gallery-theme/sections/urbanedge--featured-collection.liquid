@@ -2,6 +2,8 @@
 {{ 'urbanedge--base.css' | asset_url | stylesheet_tag }}
 {{ 'urbanedge--components.css' | asset_url | stylesheet_tag }}
 {% render 'urbanedge--layout-tokens' %}
+{{ 'urbanedge--global.js' | asset_url | script_tag }}
+{{ 'urbanedge--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Featured collection — product grid or carousel ("New This Season", "Bestsellers").
 {%- endcomment -%}

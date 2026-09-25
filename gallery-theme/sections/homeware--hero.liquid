@@ -2,6 +2,8 @@
 {{ 'homeware--base.css' | asset_url | stylesheet_tag }}
 {{ 'homeware--components.css' | asset_url | stylesheet_tag }}
 {% render 'homeware--layout-tokens' %}
+{{ 'homeware--global.js' | asset_url | script_tag }}
+{{ 'homeware--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Hero image banner. Two layouts:
   - split: content on one side, image on the other (boutique look)

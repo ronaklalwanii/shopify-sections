@@ -2,6 +2,8 @@
 {{ 'azura--base.css' | asset_url | stylesheet_tag }}
 {{ 'azura--components.css' | asset_url | stylesheet_tag }}
 {% render 'azura--layout-tokens' %}
+{{ 'azura--global.js' | asset_url | script_tag }}
+{{ 'azura--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Site header. Layouts: logo-left (nav center), logo-center (nav left, Cocobella),
   minimal (nav right, noir). Optional pill nav, sticky, CTA button, icons.

@@ -2,6 +2,8 @@
 {{ 'azura--base.css' | asset_url | stylesheet_tag }}
 {{ 'azura--components.css' | asset_url | stylesheet_tag }}
 {% render 'azura--layout-tokens' %}
+{{ 'azura--global.js' | asset_url | script_tag }}
+{{ 'azura--wishlist.js' | asset_url | script_tag }}
 {%- comment -%} Azura consult split — terrace photo card + navy request form card. {%- endcomment -%}
 <section class="azcon azcon-{{ section.id }}">
   <div class="page-width azcon__grid">

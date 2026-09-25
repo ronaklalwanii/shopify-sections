@@ -32,87 +32,33 @@
       },
       "blocks": {
         "bl-1": {
-          "type": "@theme",
-          "settings": {}
+          "type": "text",
+          "settings": {
+            "text": "t:html_defaults.new_arrivals_h2",
+            "type_preset": "h1",
+            "max_width": "narrow"
+          }
         },
         "bl-2": {
-          "type": "@theme",
-          "settings": {}
+          "type": "text",
+          "settings": {
+            "text": "t:html_defaults.made_with_care",
+            "max_width": "narrow",
+            "padding-block-end": 32
+          }
         },
         "bl-3": {
-          "type": "text",
-          "settings": {}
-        },
-        "bl-4": {
-          "type": "text",
-          "settings": {}
-        },
-        "bl-5": {
           "type": "button",
-          "settings": {}
-        },
-        "bl-6": {
-          "type": "button",
-          "settings": {}
-        },
-        "bl-7": {
-          "type": "logo",
-          "settings": {}
-        },
-        "bl-8": {
-          "type": "logo",
-          "settings": {}
-        },
-        "bl-9": {
-          "type": "jumbo-text",
-          "settings": {}
-        },
-        "bl-10": {
-          "type": "jumbo-text",
-          "settings": {}
-        },
-        "bl-11": {
-          "type": "spacer",
-          "settings": {}
-        },
-        "bl-12": {
-          "type": "spacer",
-          "settings": {}
-        },
-        "bl-13": {
-          "type": "group",
-          "settings": {}
-        },
-        "bl-14": {
-          "type": "group",
-          "settings": {}
-        },
-        "bl-15": {
-          "type": "_marquee",
-          "settings": {}
-        },
-        "bl-16": {
-          "type": "_marquee",
-          "settings": {}
+          "settings": {
+            "label": "t:text_defaults.shop_now_button_label",
+            "link": "shopify://collections/all"
+          }
         }
       },
       "block_order": [
         "bl-1",
         "bl-2",
-        "bl-3",
-        "bl-4",
-        "bl-5",
-        "bl-6",
-        "bl-7",
-        "bl-8",
-        "bl-9",
-        "bl-10",
-        "bl-11",
-        "bl-12",
-        "bl-13",
-        "bl-14",
-        "bl-15",
-        "bl-16"
+        "bl-3"
       ]
     }
   },

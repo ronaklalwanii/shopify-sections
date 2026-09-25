@@ -2,6 +2,8 @@
 {{ 'urbanedge--base.css' | asset_url | stylesheet_tag }}
 {{ 'urbanedge--components.css' | asset_url | stylesheet_tag }}
 {% render 'urbanedge--layout-tokens' %}
+{{ 'urbanedge--global.js' | asset_url | script_tag }}
+{{ 'urbanedge--wishlist.js' | asset_url | script_tag }}
 {%- comment -%} Marquee ribbon — infinite scrolling ticker of items. Optional diagonal rotation (Suncare style). Horizon-safe settings only. {%- endcomment -%}
 <section class="mrq mrq-{{ section.id }} mrq--r{{ section.settings.rotation }}" style="--mrq-speed: {{ section.settings.speed | default: 30 }}s; --mrq-angle: {{ section.settings.rotation }}deg;">
   <div class="mrq__track">

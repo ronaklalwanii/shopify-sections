@@ -2,6 +2,8 @@
 {{ 'speed--base.css' | asset_url | stylesheet_tag }}
 {{ 'speed--components.css' | asset_url | stylesheet_tag }}
 {% render 'speed--layout-tokens' %}
+{{ 'speed--global.js' | asset_url | script_tag }}
+{{ 'speed--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Hero image banner. Two layouts:
   - split: content on one side, image on the other (boutique look)

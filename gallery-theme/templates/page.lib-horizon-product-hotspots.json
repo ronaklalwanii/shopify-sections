@@ -19,11 +19,17 @@
       "blocks": {
         "bl-1": {
           "type": "_hotspot-product",
-          "settings": {}
+          "settings": {
+            "x-position": 40,
+            "y-position": 40
+          }
         },
         "bl-2": {
           "type": "_hotspot-product",
-          "settings": {}
+          "settings": {
+            "x-position": 60,
+            "y-position": 60
+          }
         }
       },
       "block_order": [

@@ -2,6 +2,9 @@
 {{ 'nocturne-store--theme.css' | asset_url | stylesheet_tag }}
 {{ 'nocturne-store--product.css' | asset_url | stylesheet_tag }}
 {% render 'nocturne-store--css-variables' %}
+{{ 'nocturne-store--theme.js' | asset_url | script_tag }}
+{{ 'nocturne-store--sections.js' | asset_url | script_tag }}
+{{ 'nocturne-store--sleek-hero-editor.js' | asset_url | script_tag }}
 {%- if section.settings.show_country_selector and localization.available_countries.size > 1 -%}
 	{%- assign will_show_country_selector = true -%}
 {%- endif -%}

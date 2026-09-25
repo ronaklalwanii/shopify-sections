@@ -1,0 +1,63 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const { extractSchema, extractSnippetRefs, extractAssetRefs, collectSectionDependencies, parseJsonLoose } = require('../src/section-meta');
+const { assertCustomSlug, customFilePath } = require('../src/path-safety');
+const { renderSectionSource } = require('../src/renderer');
+const { visibleContentIssues, hardIssue } = require('../src/qa');
+
+test('parses Shopify-style loose JSON', () => {
+  assert.deepEqual(parseJsonLoose('{"a": 1, "b": [2,],} // trailing comment'), { a: 1, b: [2] });
+  assert.deepEqual(extractSchema('{% schema %}{"name":"Demo",}{% endschema %}'), { name: 'Demo' });
+  assert.equal(extractSchema('{% schema %}{"name":}{% endschema %}'), null);
+});
+
+test('finds snippet and asset dependencies', () => {
+  const source = `{% render 'card' %}{% include 'footer' %}{% liquid echo 'x' %}{% render 'card' %}{% endliquid %}{{ 'theme.js' | asset_url }}{{ 'local.css' | stylesheet_tag }}`;
+  assert.deepEqual(extractSnippetRefs(source).sort(), ['card', 'footer']);
+  assert.deepEqual(extractAssetRefs(source).sort(), ['local.css', 'theme.js']);
+});
+
+test('collects transitive dependencies and missing files', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'section-library-test-'));
+  fs.mkdirSync(path.join(root, 'snippets'), { recursive: true });
+  fs.mkdirSync(path.join(root, 'assets'), { recursive: true });
+  fs.writeFileSync(path.join(root, 'snippets', 'card.liquid'), `{% render 'icon' %}{{ 'card.css' | asset_url }}`);
+  fs.writeFileSync(path.join(root, 'snippets', 'icon.liquid'), `{{ 'icon.js' | asset_url }}`);
+  fs.writeFileSync(path.join(root, 'assets', 'card.css'), '');
+  fs.writeFileSync(path.join(root, 'assets', 'icon.js'), '');
+  const result = collectSectionDependencies(root, `{% render 'card' %}{{ 'missing.js' | asset_url }}`);
+  assert.deepEqual(result.snippets, ['card', 'icon']);
+  assert.deepEqual(result.assets, ['card.css', 'icon.js', 'missing.js']);
+  assert.deepEqual(result.missingSnippets, []);
+  assert.deepEqual(result.missingAssets, ['missing.js']);
+  fs.rmSync(root, { recursive: true, force: true });
+});
+
+test('rejects path traversal and malformed custom slugs', () => {
+  assert.throws(() => assertCustomSlug('../package'), /Invalid section slug/);
+  assert.throws(() => customFilePath('/tmp/custom', '../package', 'json'), /Invalid section slug/);
+  assert.equal(customFilePath('/tmp/custom', 'hero-banner', 'json'), path.resolve('/tmp/custom/hero-banner.json'));
+});
+
+test('renders object-form Shopify presets', async () => {
+  const source = `{% schema %}{"blocks":[{"type":"item","settings":[{"id":"title","type":"text","default":"Hello from preset"}]}],"presets":[{"blocks":{"one":{"type":"item"}}}]}{% endschema %}<h1>{{ section.blocks[0].settings.title }}</h1>`;
+  const result = await renderSectionSource('custom', source, { sectionId: 'preset-test' });
+  assert.equal(result.error, null);
+  assert.match(result.html, /Hello from preset/);
+});
+
+test('uses local SVG placeholders for mocked images', async () => {
+  const source = `{% schema %}{"settings":[{"id":"image","type":"image_picker"}]}{% endschema %}{{ section.settings.image | image_url }}`;
+  const result = await renderSectionSource('custom', source, { sectionId: 'image-test' });
+  assert.equal(result.error, null);
+  assert.match(result.html, /\/ph\//);
+});
+
+test('does not call blank rendered output healthy', () => {
+  assert.deepEqual(visibleContentIssues('<style>.x{color:red}</style>'), ['no visible content']);
+  assert.equal(hardIssue('no visible content'), true);
+  assert.equal(hardIssue('needs Shopify block context'), false);
+});

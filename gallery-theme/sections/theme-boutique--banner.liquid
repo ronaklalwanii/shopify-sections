@@ -2,6 +2,8 @@
 {{ 'theme-boutique--base.css' | asset_url | stylesheet_tag }}
 {{ 'theme-boutique--components.css' | asset_url | stylesheet_tag }}
 {% render 'theme-boutique--layout-tokens' %}
+{{ 'theme-boutique--global.js' | asset_url | script_tag }}
+{{ 'theme-boutique--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Full-width banner — promo / sale / CTA over an image.
 {%- endcomment -%}

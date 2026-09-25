@@ -2,7 +2,7 @@ name: Publish gallery theme to Shopify
 on:
   push:
     branches: [main]
-    paths: ['stores/**', 'src/merge.js', 'src/ingest.js']
+    paths: ['stores/**', 'src/merge.js', 'src/ingest.js', 'src/section-meta.js', 'package.json', 'package-lock.json']
   workflow_dispatch:
 
 permissions:
@@ -24,7 +24,21 @@ jobs:
         with:
           node-version: 22
 
-      - run: npm install
+      - name: Check that Shopify can fetch the release asset
+        run: |
+          VISIBILITY=$(gh api "repos/${GITHUB_REPOSITORY}" --jq .visibility)
+          if [ "$VISIBILITY" != "public" ]; then
+            echo "::error::Private GitHub release assets cannot be fetched by Shopify. Configure public artifact storage before publishing."
+            exit 1
+          fi
+          test -n "${SHOPIFY_DEV_STORE:-}" || { echo "::error::SHOPIFY_DEV_STORE is not configured"; exit 1; }
+          test -n "${SHOPIFY_ADMIN_TOKEN:-}" || { echo "::error::SHOPIFY_ADMIN_TOKEN is not configured"; exit 1; }
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHOPIFY_DEV_STORE: ${{ vars.SHOPIFY_DEV_STORE }}
+          SHOPIFY_ADMIN_TOKEN: ${{ secrets.SHOPIFY_ADMIN_TOKEN }}
+
+      - run: npm ci
 
       - name: Build gallery theme
         run: |
@@ -42,7 +56,7 @@ jobs:
       - name: Create theme on Shopify from zip
         run: |
           THEME_JSON=$(curl -s -X POST \
-            "https://${SHOPIFY_DEV_STORE}.myshopify.com/admin/api/2024-04/themes.json" \
+            "https://${SHOPIFY_DEV_STORE}.myshopify.com/admin/api/2026-07/themes.json" \
             -H "X-Shopify-Access-Token: ${SHOPIFY_ADMIN_TOKEN}" \
             -H "Content-Type: application/json" \
             -d "{\"theme\":{\"name\":\"gallery-theme (auto)\",\"src\":\"${ZIP_URL}\",\"role\":\"main\"}}")
@@ -55,14 +69,16 @@ jobs:
 
       - name: Wait for Shopify to finish importing
         run: |
+          READY=0
           for i in $(seq 1 60); do
-            STATUS=$(curl -s "https://${SHOPIFY_DEV_STORE}.myshopify.com/admin/api/2024-04/themes/${THEME_ID}.json" \
+            STATUS=$(curl -s "https://${SHOPIFY_DEV_STORE}.myshopify.com/admin/api/2026-07/themes/${THEME_ID}.json" \
               -H "X-Shopify-Access-Token: ${SHOPIFY_ADMIN_TOKEN}" \
               | python3 -c "import json,sys; t=json.load(sys.stdin)['theme']; print(t.get('processing','false'), t.get('previewable','false'))")
             echo "poll $i: $STATUS"
-            [ "$STATUS" = "False True" ] || [ "$STATUS" = "false true" ] && break
+            if [ "$STATUS" = "False True" ] || [ "$STATUS" = "false true" ]; then READY=1; break; fi
             sleep 10
           done
+          [ "$READY" = "1" ] || { echo "Theme did not become previewable; keeping the previous theme"; exit 1; }
         env:
           SHOPIFY_DEV_STORE: ${{ vars.SHOPIFY_DEV_STORE }}
           SHOPIFY_ADMIN_TOKEN: ${{ secrets.SHOPIFY_ADMIN_TOKEN }}
@@ -75,7 +91,7 @@ jobs:
           store = os.environ['SHOPIFY_DEV_STORE']
           token = os.environ['SHOPIFY_ADMIN_TOKEN']
           new_id = os.environ['THEME_ID']
-          base = f'https://{store}.myshopify.com/admin/api/2024-04'
+          base = f'https://{store}.myshopify.com/admin/api/2026-07'
 
           def req(path, method='GET'):
               r = urllib.request.Request(f'{base}/{path}', method=method,

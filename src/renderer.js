@@ -4,10 +4,11 @@ const fs = require('fs');
 const path = require('path');
 const { Liquid, Tag: LiquidTag } = require('liquidjs');
 const { findStore } = require('./roots');
+const { extractSchema, parseJsonLoose } = require('./section-meta');
 
 /* ---------------------------------- mocks ---------------------------------- */
 
-const PH = (seed, w, h) => `https://picsum.photos/seed/${encodeURIComponent(seed)}/${Math.round(w)}/${Math.round(h)}`;
+const PH = (seed, w, h) => `/ph/${encodeURIComponent(seed)}/${Math.round(w)}x${Math.round(h)}.svg`;
 
 function imageMock(seed, alt = 'Sample image', aspect = 1.5) {
   return { __mock: 'image', seed: String(seed || 'sample'), alt, aspect };
@@ -199,10 +200,19 @@ function blockMock(schemaBlocks, presetBlock, ctx) {
     }
   }
   if (presetBlock?.blocks) {
-    // nested blocks (rare)
-    return { id: `bl-${seedFor(ctx.seedBase, type)}`, type, settings, shopify_attributes: '', blocks: presetBlock.blocks.map((b) => blockMock(schemaBlocks, b, ctx)), block_count: presetBlock.blocks.length };
+    const nested = presetBlockList(presetBlock);
+    return { id: `bl-${seedFor(ctx.seedBase, type)}`, type, settings, shopify_attributes: '', blocks: nested.map((block) => blockMock(schemaBlocks, block, ctx)), block_count: nested.length };
   }
   return { id: `bl-${seedFor(ctx.seedBase, type)}`, type, settings, shopify_attributes: '' };
+}
+
+function presetBlockList(preset) {
+  if (Array.isArray(preset?.blocks)) return preset.blocks.filter(Boolean);
+  if (!preset?.blocks || typeof preset.blocks !== 'object') return [];
+  const ordered = Array.isArray(preset.block_order)
+    ? preset.block_order.map((id) => preset.blocks[id]).filter(Boolean)
+    : Object.values(preset.blocks);
+  return ordered.filter(Boolean);
 }
 
 function sectionMock(schema, sectionId, theme = {}) {
@@ -220,8 +230,9 @@ function sectionMock(schema, sectionId, theme = {}) {
     }
   }
   let blocks = [];
-  if (preset?.blocks?.length) {
-    blocks = preset.blocks.map((b) => blockMock(schema?.blocks, b, ctx));
+  const configuredBlocks = presetBlockList(preset);
+  if (configuredBlocks.length) {
+    blocks = configuredBlocks.map((block) => blockMock(schema?.blocks, block, ctx));
   } else if (schema?.blocks?.length) {
     for (const bd of schema.blocks) {
       if (bd.type === '@app') continue;
@@ -328,8 +339,10 @@ function readAsset(storePath, file) {
   if (assetContentCache.has(key)) return assetContentCache.get(key);
   let out = null;
   try {
-    const full = path.join(storePath, 'assets', path.normalize(file).replace(/^(\.\.[/\\])+/, ''));
-    if (full.startsWith(storePath)) out = fs.readFileSync(full, 'utf8');
+    const assetsRoot = path.join(storePath, 'assets');
+    const full = path.resolve(assetsRoot, file);
+    const relative = path.relative(assetsRoot, full);
+    if (!relative.startsWith('..') && !path.isAbsolute(relative)) out = fs.readFileSync(full, 'utf8');
   } catch { out = null; }
   assetContentCache.set(key, out);
   return out;
@@ -346,7 +359,7 @@ function money(v, format) {
 }
 
 function imageInputInfo(input) {
-  // Returns {seed,w,h,alt,src} for mock image objects, picsum URLs or placeholder URLs.
+  // Returns {seed,w,h,alt,src} for mock image objects, legacy image URLs, or placeholder URLs.
   if (input && input.__mock === 'image') {
     const h = Math.round(1000 / (input.aspect || 1.5));
     return { seed: input.seed, w: 1000, h, alt: input.alt || '', src: null };
@@ -356,7 +369,7 @@ function imageInputInfo(input) {
     if (pm) return { seed: decodeURIComponent(pm[1]), w: +pm[2], h: +pm[3], alt: '', src: null };
     const m = input.match(/^\/ph\/([^/]+)\/(\d+)x(\d+)\.svg$/);
     if (m) return { seed: m[1], w: +m[2], h: +m[3], alt: '', src: null };
-    if (/\.(png|jpe?g|gif|webp|svg)$/i.test(input)) return { seed: input, w: 1000, h: 667, alt: '', src: `/assets/__store__/${input}` };
+    if (/\.(png|jpe?g|gif|webp|svg)$/i.test(input)) return { seed: input, w: 1000, h: 667, alt: '', src: input };
   }
   if (input && typeof input === 'object' && (input.src || input.preview_image)) return imageInputInfo(input.src || input.preview_image);
   return null;
@@ -380,7 +393,7 @@ function buildFilters(storeName) {
     image_url(input, opts = {}) {
       const info = imageInputInfo(input);
       if (!info) return input;
-      if (info.src) return info.src; // real file within the theme
+      if (info.src) return /^https?:\/\//.test(info.src) || info.src.startsWith('/') ? info.src : `/assets/${storeName}/${info.src}`;
       const w = Math.min(+opts.width || info.w || 1000, 2400);
       const h = Math.round(w * (info.h / info.w));
       return PH(info.seed, w, h);
@@ -388,7 +401,7 @@ function buildFilters(storeName) {
     img_url(input, size = '1000x') {
       const info = imageInputInfo(input);
       if (!info) return input;
-      if (info.src) return info.src;
+      if (info.src) return /^https?:\/\//.test(info.src) || info.src.startsWith('/') ? info.src : `/assets/${storeName}/${info.src}`;
       const m = String(size).match(/^(\d*)x?(\d*)/);
       const w = +m[1] || info.w, h = +m[2] || Math.round(w / (info.w / info.h));
       return PH(info.seed, w, h);
@@ -486,7 +499,7 @@ function buildFilters(storeName) {
     color_brightness(color) {
       const c = parseCssColor(color);
       if (!c) return 0;
-      return Math.round((c.r * 0.299 + c.g * 0.587 + c.b * 0.114) / 255 * 100);
+      return Math.round(c.r * 0.299 + c.g * 0.587 + c.b * 0.114);
     },
     color_extract(color, prop) {
       const c = parseCssColor(color);
@@ -628,27 +641,6 @@ function makeTags(liquid) {
 }
 
 /* --------------------------------- engine ---------------------------------- */
-
-// JSON with Shopify leniency: /* comments */, // comments, trailing commas.
-function parseJsonLoose(text) {
-  try { return JSON.parse(text); } catch {}
-  let out = '', inStr = false, esc = false;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i], n = text[i + 1];
-    if (inStr) {
-      out += c;
-      if (esc) esc = false;
-      else if (c === '\\') esc = true;
-      else if (c === '"') inStr = false;
-      continue;
-    }
-    if (c === '"') { inStr = true; out += c; continue; }
-    if (c === '/' && n === '*') { const end = text.indexOf('*/', i + 2); i = end === -1 ? text.length : end + 1; continue; }
-    if (c === '/' && n === '/') { const end = text.indexOf('\n', i + 2); i = end === -1 ? text.length : end - 1; continue; }
-    out += c;
-  }
-  try { return JSON.parse(out.replace(/,(\s*[}\]])/g, '$1')); } catch { return null; }
-}
 
 function themeSettings(storePath) {
   const settings = {};
@@ -809,10 +801,8 @@ function extractTagBlocks(src, tag) {
 async function renderLiquid(engine, source, { sectionId = 'preview', extraGlobals = {}, customer = false } = {}) {
   // Strip schema before the engine: schema JSON can contain `{{ ... }}` (visible_if)
   // that defeats the tokenizer; we parse it separately for defaults.
-  const schemaMatch = source.match(/{%\s*schema\s*%}([\s\S]*?){%\s*endschema\s*%}/);
-  source = source.replace(/{%\s*schema\s*%}[\s\S]*?{%\s*endschema\s*%}/g, '');
-  let schema = null;
-  if (schemaMatch) { try { schema = JSON.parse(schemaMatch[1]); } catch {} }
+  const schema = extractSchema(source);
+  source = source.replace(/{%-?\s*schema\s*-?%}[\s\S]*?{%-?\s*endschema\s*-?%}/gi, '');
   const sec = sectionMock(schema, sectionId, engine.theme);
   const scope = { ...baseGlobals(engine, { customer }), ...extraGlobals, section: sec, block: (sec.blocks || [])[0] };
   let out = await engine.liquid.parseAndRender(source, scope);

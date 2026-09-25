@@ -2,6 +2,8 @@
 {{ 'kuafi--base.css' | asset_url | stylesheet_tag }}
 {{ 'kuafi--components.css' | asset_url | stylesheet_tag }}
 {% render 'kuafi--layout-tokens' %}
+{{ 'kuafi--global.js' | asset_url | script_tag }}
+{{ 'kuafi--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Kuafi duo — one tall image left spanning two stacked text cells right
   (COFFEE CAN over COFFEE POUCH). Flush, hairline dividers.

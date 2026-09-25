@@ -2,6 +2,8 @@
 {{ 'nexora--base.css' | asset_url | stylesheet_tag }}
 {{ 'nexora--components.css' | asset_url | stylesheet_tag }}
 {% render 'nexora--layout-tokens' %}
+{{ 'nexora--global.js' | asset_url | script_tag }}
+{{ 'nexora--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Process steps — intro left (chip, heading, copy, button), numbered step list
   center, rounded photo right ("От идеи до ключей"). Horizon-safe.

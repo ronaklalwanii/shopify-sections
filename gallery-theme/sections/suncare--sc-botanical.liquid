@@ -2,6 +2,8 @@
 {{ 'suncare--base.css' | asset_url | stylesheet_tag }}
 {{ 'suncare--components.css' | asset_url | stylesheet_tag }}
 {% render 'suncare--layout-tokens' %}
+{{ 'suncare--global.js' | asset_url | script_tag }}
+{{ 'suncare--wishlist.js' | asset_url | script_tag }}
 {%- comment -%} Suncare botanical — heading + text + stat pills left, circle image right. {%- endcomment -%}
 <section class="scb scb-{{ section.id }}" style="--scb-accent: {{ section.settings.accent_color }};">
   <div class="page-width scb__row">

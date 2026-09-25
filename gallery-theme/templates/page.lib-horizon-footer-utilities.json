@@ -5,7 +5,6 @@
       "settings": {
         "section_width": "page-width",
         "gap": 24,
-        "background_color": "{{ settings.color_palette.foreground }}",
         "divider_thickness": 1,
         "padding-block-start": 20,
         "padding-block-end": 20
@@ -16,22 +15,10 @@
           "settings": {}
         },
         "bl-2": {
-          "type": "footer-copyright",
+          "type": "footer-policy-list",
           "settings": {}
         },
         "bl-3": {
-          "type": "footer-policy-list",
-          "settings": {}
-        },
-        "bl-4": {
-          "type": "footer-policy-list",
-          "settings": {}
-        },
-        "bl-5": {
-          "type": "social-links",
-          "settings": {}
-        },
-        "bl-6": {
           "type": "social-links",
           "settings": {}
         }
@@ -39,10 +26,7 @@
       "block_order": [
         "bl-1",
         "bl-2",
-        "bl-3",
-        "bl-4",
-        "bl-5",
-        "bl-6"
+        "bl-3"
       ]
     }
   },

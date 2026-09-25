@@ -2,6 +2,8 @@
 {{ 'suncare--base.css' | asset_url | stylesheet_tag }}
 {{ 'suncare--components.css' | asset_url | stylesheet_tag }}
 {% render 'suncare--layout-tokens' %}
+{{ 'suncare--global.js' | asset_url | script_tag }}
+{{ 'suncare--wishlist.js' | asset_url | script_tag }}
 {%- comment -%} Suncare hero — face circle / floating bottle / price row on sage. {%- endcomment -%}
 <section class="sch sch-{{ section.id }}" style="--sch-bg: {{ section.settings.background_color }}; --sch-heading: {{ section.settings.heading_color }}; --sch-ink: {{ section.settings.text_color }}; --sch-accent: {{ section.settings.accent_color }};">
   <div class="page-width">

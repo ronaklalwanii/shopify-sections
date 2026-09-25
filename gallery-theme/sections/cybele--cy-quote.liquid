@@ -2,6 +2,8 @@
 {{ 'cybele--base.css' | asset_url | stylesheet_tag }}
 {{ 'cybele--components.css' | asset_url | stylesheet_tag }}
 {% render 'cybele--layout-tokens' %}
+{{ 'cybele--global.js' | asset_url | script_tag }}
+{{ 'cybele--wishlist.js' | asset_url | script_tag }}
 {%- comment -%} Cybele testimonial — black split card, rotating quotes, application photo, discount pill. {%- endcomment -%}
 <section class="cyq cyq-{{ section.id }}" style="--cyq-bg: {{ section.settings.background_color | default: '#171114' }}; --cyq-text: {{ section.settings.card_text_color }}; --cyq-accent: {{ section.settings.accent_color }}; --cyq-ink: {{ section.settings.ink_color }};">
   <div class="page-width">

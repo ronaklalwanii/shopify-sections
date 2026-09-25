@@ -2,6 +2,7 @@
 {{ 'horizon--overflow-list.css' | asset_url | stylesheet_tag }}
 {{ 'horizon--base.css' | asset_url | stylesheet_tag }}
 {% render 'horizon--theme-styles-variables' %}
+{% render 'horizon--scripts' %}
 {% # SRA target for /cart endpoints. The Section Rendering API provides the section wrapper. %}
 {% render 'horizon--cart-drawer', render_wrapper: false %}
 

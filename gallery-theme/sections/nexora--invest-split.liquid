@@ -2,6 +2,8 @@
 {{ 'nexora--base.css' | asset_url | stylesheet_tag }}
 {{ 'nexora--components.css' | asset_url | stylesheet_tag }}
 {% render 'nexora--layout-tokens' %}
+{{ 'nexora--global.js' | asset_url | script_tag }}
+{{ 'nexora--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Invest split — dark statement card (heading, copy, CTA) beside a light
   feature-list card ("Выгодные инвестиции"). Horizon-safe.

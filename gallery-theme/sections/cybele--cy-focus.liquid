@@ -2,6 +2,8 @@
 {{ 'cybele--base.css' | asset_url | stylesheet_tag }}
 {{ 'cybele--components.css' | asset_url | stylesheet_tag }}
 {% render 'cybele--layout-tokens' %}
+{{ 'cybele--global.js' | asset_url | script_tag }}
+{{ 'cybele--wishlist.js' | asset_url | script_tag }}
 {%- comment -%} Cybele focus — portrait + oval-framed product with arrow pills, name + price. {%- endcomment -%}
 <section class="cyf cyf-{{ section.id }}">
   <div class="page-width cyf__grid">

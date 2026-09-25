@@ -2,6 +2,8 @@
 {{ 'urbanedge--base.css' | asset_url | stylesheet_tag }}
 {{ 'urbanedge--components.css' | asset_url | stylesheet_tag }}
 {% render 'urbanedge--layout-tokens' %}
+{{ 'urbanedge--global.js' | asset_url | script_tag }}
+{{ 'urbanedge--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Lookbook collage — full-bleed dark band with a photo collage,
   right-aligned display heading, star accent and bottom-left CTA

@@ -2,6 +2,8 @@
 {{ 'kuafi--base.css' | asset_url | stylesheet_tag }}
 {{ 'kuafi--components.css' | asset_url | stylesheet_tag }}
 {% render 'kuafi--layout-tokens' %}
+{{ 'kuafi--global.js' | asset_url | script_tag }}
+{{ 'kuafi--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Featured collection — product grid or carousel ("New This Season", "Bestsellers").
 {%- endcomment -%}

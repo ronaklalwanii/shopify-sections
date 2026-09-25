@@ -2,6 +2,7 @@
 {{ 'salon--base.css' | asset_url | stylesheet_tag }}
 {{ 'salon--components.css' | asset_url | stylesheet_tag }}
 {% render 'salon--layout-tokens' %}
+{{ 'salon--global.js' | asset_url | script_tag }}
 {%- comment -%} Giant text band — oversized display statement (outline / solid), optional image. Horizon-safe. {%- endcomment -%}
 <section class="gtx gtx-{{ section.id }} gtx--{{ section.settings.layout }}" style="background: {{ section.settings.background_color }};">
   <div class="page-width gtx__inner">

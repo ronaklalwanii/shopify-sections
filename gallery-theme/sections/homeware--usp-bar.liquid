@@ -2,6 +2,8 @@
 {{ 'homeware--base.css' | asset_url | stylesheet_tag }}
 {{ 'homeware--components.css' | asset_url | stylesheet_tag }}
 {% render 'homeware--layout-tokens' %}
+{{ 'homeware--global.js' | asset_url | script_tag }}
+{{ 'homeware--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   USP bar — icon + title + text items. Two styles:
   - bar: compact strip with dividers (boutique / chocolatier / homeware)

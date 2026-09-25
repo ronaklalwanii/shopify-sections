@@ -2,6 +2,8 @@
 {{ 'azura--base.css' | asset_url | stylesheet_tag }}
 {{ 'azura--components.css' | asset_url | stylesheet_tag }}
 {% render 'azura--layout-tokens' %}
+{{ 'azura--global.js' | asset_url | script_tag }}
+{{ 'azura--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Image with text — story sections ("Fashion with Purpose", "Crafted with
   Passion"). Optional feature blocks render as a third column.

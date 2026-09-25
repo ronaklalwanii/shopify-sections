@@ -5,6 +5,8 @@ const crypto = require('crypto');
 const { execFileSync } = require('child_process');
 const express = require('express');
 const { renderStoreSection, renderSectionSource, renderSnippet, renderLayoutTokens, layoutTokensFallback, isEsmJs, findStore, getEngine, googleFontsLink } = require('./renderer');
+const { extractSchema, collectSectionDependencies, extractAssetRefs, extractSnippetRefs } = require('./section-meta');
+const { CUSTOM_SLUG, assertCustomSlug, customFilePath } = require('./path-safety');
 
 const ROOT = path.resolve(__dirname, '..');
 const IS_SERVERLESS = !!process.env.VERCEL;
@@ -49,24 +51,30 @@ function gitInit() {
     }
   } catch (e) { console.warn('git init skipped:', e.message.split('\n')[0]); }
 }
-function gitCommit(msg) {
+function gitCommit(msg, { requireRemote = false } = {}) {
   try {
-    // custom sections are intentionally gitignored at the repo root (they may hold
-    // proprietary theme code); they live in their own nested repo.
     if (!fs.existsSync(path.join(CUSTOM_DIR, '.git'))) {
       execFileSync('git', ['-c', 'user.name=section-library', '-c', 'user.email=library@local', 'init'], { cwd: CUSTOM_DIR });
     }
     execFileSync('git', ['-c', 'user.name=section-library', '-c', 'user.email=library@local', 'add', '-A'], { cwd: CUSTOM_DIR });
-    const committed = execFileSync('git', ['-c', 'user.name=section-library', '-c', 'user.email=library@local',
-      'commit', '-m', msg], { cwd: CUSTOM_DIR, stdio: ['ignore', 'pipe', 'ignore'] });
-    // On ephemeral hosts the repo persists via a GitHub data repo (env-configured).
+    try {
+      execFileSync('git', ['-c', 'user.name=section-library', '-c', 'user.email=library@local', 'commit', '-m', msg], {
+        cwd: CUSTOM_DIR, stdio: ['ignore', 'ignore', 'pipe'],
+      });
+    } catch (error) {
+      if (!/nothing to commit/i.test(String(error.stderr || error.message))) throw error;
+    }
     if (process.env.DATA_REPO && process.env.DATA_TOKEN) {
       const url = `https://x-access-token:${process.env.DATA_TOKEN}@${process.env.DATA_REPO}.git`;
       try { execFileSync('git', ['remote', 'add', 'origin', url], { cwd: CUSTOM_DIR, stdio: 'ignore' }); } catch {}
       execFileSync('git', ['push', '-u', 'origin', 'HEAD'], { cwd: CUSTOM_DIR, stdio: 'ignore' });
     }
-    return committed.status === 0;
-  } catch { return false; } // nothing to commit
+    return true;
+  } catch (error) {
+    if (requireRemote) throw error;
+    console.warn('Custom section git commit failed:', String(error.message || error).split('\n')[0]);
+    return false;
+  }
 }
 
 // On serverless, persist saved sections through the GitHub Contents API
@@ -89,47 +97,50 @@ async function ghReq(path, opts = {}) {
 
 async function ghRestore() {
   if (!GH_DATA) return;
-  try {
-    const r = await ghReq('custom-sections');
-    if (!r.ok) { console.warn('gh restore: listing failed', r.status); return; }
-    const items = await r.json();
-    for (const item of items.filter((i) => i.type === 'file')) {
-      const f = await ghReq(`custom-sections/${item.name}`);
-      if (!f.ok) continue;
-      const j = await f.json();
-      fs.writeFileSync(path.join(CUSTOM_DIR, item.name), Buffer.from(j.content, 'base64'));
-    }
-    console.log(`gh restore: ${items.length} files restored`);
-  } catch (e) { console.warn('gh restore failed:', e.message); }
+  const response = await ghReq('custom-sections');
+  if (response.status === 404) return;
+  if (!response.ok) throw new Error(`GitHub restore failed (${response.status})`);
+  const items = await response.json();
+  for (const item of items.filter((entry) => entry.type === 'file')) {
+    const file = await ghReq(`custom-sections/${item.name}`);
+    if (!file.ok) throw new Error(`GitHub restore failed for ${item.name} (${file.status})`);
+    const data = await file.json();
+    const slug = item.name.replace(/\.(?:json|liquid)$/, '');
+    const extension = item.name.endsWith('.liquid') ? 'liquid' : item.name.endsWith('.json') ? 'json' : null;
+    if (extension && CUSTOM_SLUG.test(slug)) fs.writeFileSync(customPath(slug, extension), Buffer.from(data.content, 'base64'));
+  }
+  console.log(`gh restore: ${items.length} files restored`);
 }
 
 async function ghPersistFile(name, contentStr) {
-  if (!GH_DATA) return;
-  try {
-    const existing = await ghReq(`custom-sections/${name}`);
-    const sha = existing.ok ? (await existing.json()).sha : undefined;
-    await ghReq(`custom-sections/${name}`, {
-      method: 'PUT',
-      body: JSON.stringify({
-        message: `section-library: save ${name}`,
-        content: Buffer.from(contentStr, 'utf8').toString('base64'),
-        ...(sha ? { sha } : {}),
-      }),
-    });
-  } catch (e) { console.warn(`gh persist ${name} failed:`, e.message); }
+  if (!GH_DATA) return true;
+  const existing = await ghReq(`custom-sections/${name}`);
+  if (!existing.ok && existing.status !== 404) throw new Error(`GitHub lookup failed (${existing.status})`);
+  const sha = existing.ok ? (await existing.json()).sha : undefined;
+  const saved = await ghReq(`custom-sections/${name}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      message: `section-library: save ${name}`,
+      content: Buffer.from(contentStr, 'utf8').toString('base64'),
+      ...(sha ? { sha } : {}),
+    }),
+  });
+  if (!saved.ok) throw new Error(`GitHub save failed (${saved.status})`);
+  return true;
 }
 
 async function ghDeleteFile(name) {
-  if (!GH_DATA) return;
-  try {
-    const existing = await ghReq(`custom-sections/${name}`);
-    if (!existing.ok) return;
-    const sha = (await existing.json()).sha;
-    await ghReq(`custom-sections/${name}`, {
-      method: 'DELETE',
-      body: JSON.stringify({ message: `section-library: delete ${name}`, sha }),
-    });
-  } catch (e) { console.warn(`gh delete ${name} failed:`, e.message); }
+  if (!GH_DATA) return true;
+  const existing = await ghReq(`custom-sections/${name}`);
+  if (existing.status === 404) return true;
+  if (!existing.ok) throw new Error(`GitHub lookup failed (${existing.status})`);
+  const sha = (await existing.json()).sha;
+  const deleted = await ghReq(`custom-sections/${name}`, {
+    method: 'DELETE',
+    body: JSON.stringify({ message: `section-library: delete ${name}`, sha }),
+  });
+  if (!deleted.ok) throw new Error(`GitHub delete failed (${deleted.status})`);
+  return true;
 }
 
 // On boot, restore saved custom sections from the GitHub data repo if configured.
@@ -146,6 +157,18 @@ function initDataRepo() {
       execFileSync('git', ['remote', 'add', 'origin', url], { cwd: CUSTOM_DIR, stdio: 'ignore' });
       try { execFileSync('git', ['pull', 'origin', 'HEAD'], { cwd: CUSTOM_DIR, stdio: 'ignore' }); } catch {}
     }
+    const nested = path.join(CUSTOM_DIR, 'custom-sections');
+    if (fs.existsSync(nested)) {
+      let collision = false;
+      for (const entry of fs.readdirSync(nested)) {
+        if (entry === '.git') continue;
+        const source = path.join(nested, entry);
+        const destination = path.join(CUSTOM_DIR, entry);
+        if (!fs.existsSync(destination)) fs.renameSync(source, destination);
+        else collision = true;
+      }
+      if (!collision) fs.rmSync(nested, { recursive: true, force: true });
+    }
     console.log('Custom sections restored from data repo');
   } catch (e) {
     console.warn('Data repo restore skipped:', String(e.message || e).split('\n')[0]);
@@ -154,59 +177,108 @@ function initDataRepo() {
 
 /* ------------------------------ custom sections ------------------------------ */
 
-const slugify = (s) => String(s).toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'untitled';
+function customPath(slug, extension) {
+  return customFilePath(CUSTOM_DIR, slug, extension);
+}
+
+const slugify = (value) => String(value).toLowerCase().trim().replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-|-$/g, '').slice(0, 80).replace(/-+$/g, '') || 'untitled';
 
 function customSectionMeta(slug) {
-  try { return JSON.parse(fs.readFileSync(path.join(CUSTOM_DIR, `${slug}.json`), 'utf8')); } catch { return null; }
+  try { return JSON.parse(fs.readFileSync(customPath(slug, 'json'), 'utf8')); } catch { return null; }
 }
+
 function customSectionSources(slug) {
   let liquid = '', css = '', js = '';
-  try { liquid = fs.readFileSync(path.join(CUSTOM_DIR, `${slug}.liquid`), 'utf8'); } catch {}
+  try { liquid = fs.readFileSync(customPath(slug, 'liquid'), 'utf8'); } catch {}
   const meta = customSectionMeta(slug);
   if (meta) { css = meta.css || ''; js = meta.js || ''; }
   return { liquid, css, js, meta };
 }
+
+function writeCustomFiles(slug, liquid, json) {
+  const liquidPath = customPath(slug, 'liquid');
+  const jsonPath = customPath(slug, 'json');
+  const nonce = crypto.randomBytes(6).toString('hex');
+  const liquidTemp = `${liquidPath}.${nonce}.tmp`;
+  const jsonTemp = `${jsonPath}.${nonce}.tmp`;
+  try {
+    fs.writeFileSync(liquidTemp, liquid);
+    fs.writeFileSync(jsonTemp, json);
+    fs.renameSync(liquidTemp, liquidPath);
+    fs.renameSync(jsonTemp, jsonPath);
+  } catch (error) {
+    try { fs.unlinkSync(liquidTemp); } catch {}
+    try { fs.unlinkSync(jsonTemp); } catch {}
+    throw error;
+  }
+}
+
 function listCustomSections() {
   const out = [];
-  for (const f of fs.readdirSync(CUSTOM_DIR)) {
-    if (!f.endsWith('.json')) continue;
-    const meta = customSectionMeta(f.replace(/\.json$/, ''));
-    if (meta) out.push({ ...meta, store: 'custom', file: `${meta.slug}.liquid`, custom: true, functional: false, lines: (meta.liquid || '').split('\n').length });
+  for (const file of fs.readdirSync(CUSTOM_DIR)) {
+    if (!file.endsWith('.json')) continue;
+    const slug = file.replace(/\.json$/, '');
+    if (!CUSTOM_SLUG.test(slug)) continue;
+    const meta = customSectionMeta(slug);
+    if (!meta) continue;
+    const { liquid } = customSectionSources(slug);
+    const schema = extractSchema(liquid);
+    out.push({
+      ...meta, slug, store: 'custom', file: `${slug}.liquid`, custom: true, functional: false,
+      lines: liquid.split('\n').length, settings: schema?.settings?.length || 0, blocks: schema?.blocks?.length || 0,
+      hasSchema: !!schema, schemaStatus: schema ? 'valid' : /{%-?\s*schema\s*-?%}/i.test(liquid) ? 'invalid' : 'missing',
+      dependencies: { snippets: [], assets: [], missingSnippets: [], missingAssets: [] },
+      quality: { status: 'unverified', issues: [], checkedAt: null }, linesKnown: true,
+    });
   }
   return out;
 }
-function saveCustomSection(body, { isNew }) {
+
+function saveCustomSection(body, { isNew, previousSlug = null }) {
   const name = String(body.name || '').trim();
   if (!name) throw new Error('Name is required');
-  let slug = slugify(name);
-  if (isNew && fs.existsSync(path.join(CUSTOM_DIR, `${slug}.liquid`))) {
-    slug = `${slug}-${Date.now().toString(36)}`;
-  }
+  const slug = slugify(name);
+  if (fs.existsSync(customPath(slug, 'liquid')) && slug !== previousSlug) throw new Error('A section with this name already exists');
+  const contextStore = body.contextStore || 'custom';
+  if (contextStore !== 'custom' && !findStore(contextStore)) throw new Error('Invalid preview context');
+  const tags = (Array.isArray(body.tags) ? body.tags : String(body.tags || '').split(','))
+    .map((tag) => String(tag).trim()).filter(Boolean).slice(0, 20);
   const meta = {
     slug, name,
-    category: body.category || 'Other',
-    tags: Array.isArray(body.tags) ? body.tags : String(body.tags || '').split(',').map((t) => t.trim()).filter(Boolean),
-    contextStore: body.contextStore || 'custom',
+    category: String(body.category || 'Other').slice(0, 80),
+    tags,
+    contextStore,
     updatedAt: new Date().toISOString(),
-    css: body.css || '', js: body.js || '',
+    css: String(body.css || ''), js: String(body.js || ''),
   };
-  fs.writeFileSync(path.join(CUSTOM_DIR, `${slug}.liquid`), body.liquid || '');
-  fs.writeFileSync(path.join(CUSTOM_DIR, `${slug}.json`), JSON.stringify(meta, null, 2));
-  gitCommit(`${isNew ? 'Add' : 'Update'} section: ${name}`);
-  return meta;
+  const json = JSON.stringify(meta, null, 2);
+  writeCustomFiles(slug, String(body.liquid || ''), json);
+  if (!IS_SERVERLESS) gitCommit(`${isNew ? 'Add' : 'Update'} section: ${name}`);
+  return { meta, json };
 }
 
 /* --------------------------------- app setup --------------------------------- */
 
 const app = express();
-app.use(express.json({ limit: '4mb' }));
-app.use(express.urlencoded({ extended: false }));
+app.disable('x-powered-by');
+app.set('trust proxy', 1);
+app.use((req, res, next) => {
+  res.set('X-Content-Type-Options', 'nosniff');
+  res.set('Referrer-Policy', 'same-origin');
+  next();
+});
 
 /* ------------------------------ team access gate ------------------------------ */
 
 const ACCESS_PASSWORD = process.env.ACCESS_PASSWORD || '';
+if (process.env.NODE_ENV === 'production' && !ACCESS_PASSWORD) {
+  throw new Error('ACCESS_PASSWORD is required when NODE_ENV=production');
+}
 const authCookieValue = () =>
   crypto.createHmac('sha256', ACCESS_PASSWORD).update('section-library-access').digest('hex');
+const hasAuthCookie = (header) => String(header || '').split(';')
+  .map((part) => part.trim()).some((part) => part === `sl_auth=${authCookieValue()}`);
 
 function loginPage(msg = '') {
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Section Library — sign in</title>
@@ -223,31 +295,66 @@ ${msg ? `<div class="err">${msg}</div>` : ''}
 }
 
 app.use((req, res, next) => {
-  if (!ACCESS_PASSWORD) return next(); // local dev: no gate
+  if (!ACCESS_PASSWORD) return next();
   if (req.path === '/login') return next();
-  if ((req.headers.cookie || '').includes(`sl_auth=${authCookieValue()}`)) return next();
-  if (req.method === 'POST') return res.status(401).json({ error: 'unauthorized' });
+  if (hasAuthCookie(req.headers.cookie)) return next();
+  if (req.path.startsWith('/api/') || req.path.startsWith('/preview/')) return res.status(401).json({ error: 'unauthorized' });
   res.status(401).type('html').send(loginPage());
 });
 
-app.post('/login', (req, res) => {
+const loginAttempts = new Map();
+function loginBlocked(ip) {
+  const now = Date.now();
+  const recent = (loginAttempts.get(ip) || []).filter((time) => now - time < 15 * 60 * 1000);
+  if (recent.length >= 10) {
+    loginAttempts.set(ip, recent);
+    return true;
+  }
+  loginAttempts.set(ip, recent);
+  return false;
+}
+
+app.post('/login', express.urlencoded({ extended: false }), (req, res) => {
+  if (loginBlocked(req.ip)) return res.status(429).type('html').send(loginPage('Too many attempts. Try again later.'));
   if (req.body.password === ACCESS_PASSWORD) {
-    res.setHeader('Set-Cookie', `sl_auth=${authCookieValue()}; Path=/; HttpOnly; Max-Age=2592000; SameSite=Lax`);
+    loginAttempts.delete(req.ip);
+    const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
+    res.setHeader('Set-Cookie', `sl_auth=${authCookieValue()}; Path=/; HttpOnly; Max-Age=2592000; SameSite=Lax${secure}`);
     res.redirect('/');
   } else {
+    const attempts = loginAttempts.get(req.ip) || [];
+    attempts.push(Date.now());
+    loginAttempts.set(req.ip, attempts);
     res.status(401).type('html').send(loginPage('Wrong password — try again.'));
   }
 });
+app.use(express.json({ limit: '4mb' }));
 
 // Cold-start gate: restore persisted custom sections before the first request.
-const bootReady = IS_SERVERLESS ? ghRestore().catch(() => {}) : Promise.resolve();
-if (IS_SERVERLESS) app.use((req, res, next) => { bootReady.then(() => next()); });
+const bootReady = IS_SERVERLESS ? ghRestore() : Promise.resolve();
+if (IS_SERVERLESS) app.use((req, res, next) => {
+  bootReady.then(() => next(), (error) => {
+    console.error('Custom section restore failed:', error.message);
+    res.status(503).json({ error: 'Custom sections are temporarily unavailable' });
+  });
+});
 
 app.use(express.static(path.join(ROOT, 'public')));
 
-function loadIndex() { return JSON.parse(fs.readFileSync(DATA_INDEX, 'utf8')); }
+let indexCache = null;
+function loadIndex() {
+  if (!indexCache) indexCache = JSON.parse(fs.readFileSync(DATA_INDEX, 'utf8'));
+  return indexCache;
+}
 
-const galleryManifest = () => { try { return JSON.parse(fs.readFileSync(GALLERY_MANIFEST, 'utf8')); } catch { return {}; } };
+let galleryManifestCache = null;
+const galleryManifest = () => {
+  if (!galleryManifestCache) {
+    try { galleryManifestCache = JSON.parse(fs.readFileSync(GALLERY_MANIFEST, 'utf8')); }
+    catch { galleryManifestCache = {}; }
+  }
+  return galleryManifestCache;
+};
 
 /* ------------------------- live storefront auth/proxy ------------------------ */
 
@@ -295,6 +402,7 @@ app.get('/api/config', (req, res) => {
 });
 
 app.get('/api/index', (req, res) => {
+  res.set('Cache-Control', 'private, max-age=60, stale-while-revalidate=300');
   const idx = loadIndex();
   res.json({ ...idx, sections: [...idx.sections, ...listCustomSections()] });
 });
@@ -304,25 +412,31 @@ app.get('/api/section/:store/:file', (req, res) => {
   if (!/^[\w.-]+\.liquid$/.test(file)) return res.status(400).json({ error: 'bad file' });
   try {
     if (store === 'custom') {
-      const meta = customSectionMeta(file.replace(/\.liquid$/, ''));
-      if (!meta) return res.status(404).json({ error: 'not found' });
-      const { liquid } = customSectionSources(meta.slug);
-      return res.json({ meta: { ...meta, store: 'custom', file, custom: true }, liquid, css: meta.css || '', js: meta.js || '' });
+      const slug = file.replace(/\.liquid$/, '');
+      assertCustomSlug(slug);
+      const sources = customSectionSources(slug);
+      if (!sources.meta) return res.status(404).json({ error: 'not found' });
+      const contextPath = sources.meta.contextStore === 'custom' ? null : findStore(sources.meta.contextStore);
+      const dependencies = contextPath
+        ? collectSectionDependencies(contextPath, sources.liquid)
+        : { snippets: extractSnippetRefs(sources.liquid), assets: extractAssetRefs(sources.liquid), missingSnippets: extractSnippetRefs(sources.liquid), missingAssets: extractAssetRefs(sources.liquid) };
+      return res.json({
+        meta: { ...sources.meta, slug, store: 'custom', file, custom: true },
+        liquid: sources.liquid, css: sources.css, js: sources.js,
+        schema: extractSchema(sources.liquid), dependencies,
+      });
     }
     const storePath = findStore(store);
     if (!storePath) return res.status(404).json({ error: 'not found' });
-    const full = path.join(storePath, 'sections', file);
+    const sectionsRoot = path.join(storePath, 'sections');
+    const full = path.join(sectionsRoot, file);
+    if (path.dirname(full) !== sectionsRoot) return res.status(400).json({ error: 'bad file' });
     const liquid = fs.readFileSync(full, 'utf8');
-    const idx = loadIndex();
-    const meta = idx.sections.find((s) => s.store === store && s.file === file) || {};
-    const sm = liquid.match(/{%\s*schema\s*%}([\s\S]*?){%\s*endschema\s*%}/);
-    let schema = null;
-    if (sm) {
-      try { schema = JSON.parse(sm[1]); } catch {}
-      if (!schema) schema = require('./renderer').parseJsonLoose(sm[1]);
-    }
-    return res.json({ meta, liquid, css: '', js: '', schema });
-  } catch (e) { res.status(500).json({ error: e.message }); }
+    const meta = loadIndex().sections.find((section) => section.store === store && section.file === file) || {};
+    return res.json({ meta, liquid, css: '', js: '', schema: extractSchema(liquid), dependencies: collectSectionDependencies(storePath, liquid) });
+  } catch (error) {
+    res.status(/Invalid/.test(error.message) ? 400 : 500).json({ error: error.message });
+  }
 });
 
 /* ------------------------------- live render API ------------------------------ */
@@ -335,42 +449,54 @@ app.post('/api/render-preview', async (req, res) => {
 
 app.post('/api/custom', async (req, res) => {
   try {
-    const meta = saveCustomSection(req.body || {}, { isNew: true });
+    const { meta, json } = saveCustomSection(req.body || {}, { isNew: true });
     await ghPersistFile(`${meta.slug}.liquid`, req.body.liquid || '');
-    await ghPersistFile(`${meta.slug}.json`, JSON.stringify(meta, null, 2));
+    await ghPersistFile(`${meta.slug}.json`, json);
     res.json(meta);
-  } catch (e) { res.status(400).json({ error: e.message }); }
+  } catch (error) { res.status(400).json({ error: error.message }); }
 });
 
 app.put('/api/custom/:slug', async (req, res) => {
   try {
-    const existing = customSectionMeta(req.params.slug);
+    const previousSlug = assertCustomSlug(req.params.slug);
+    const existing = customSectionMeta(previousSlug);
     if (!existing) return res.status(404).json({ error: 'not found' });
-    const meta = saveCustomSection({ ...req.body, name: req.body.name || existing.name }, { isNew: false });
-    if (meta.slug !== req.params.slug) {
-      // renamed — remove the old files
-      for (const f of [`${req.params.slug}.liquid`, `${req.params.slug}.json`]) {
-        try { fs.unlinkSync(path.join(CUSTOM_DIR, f)); } catch {}
-        await ghDeleteFile(f);
-      }
-      gitCommit(`Rename section: ${existing.name} -> ${meta.name}`);
-    }
+    const { meta, json } = saveCustomSection(
+      { ...req.body, name: req.body.name || existing.name },
+      { isNew: false, previousSlug },
+    );
     await ghPersistFile(`${meta.slug}.liquid`, req.body.liquid || '');
-    await ghPersistFile(`${meta.slug}.json`, JSON.stringify(meta, null, 2));
+    await ghPersistFile(`${meta.slug}.json`, json);
+    if (meta.slug !== previousSlug) {
+      for (const file of [`${previousSlug}.liquid`, `${previousSlug}.json`]) {
+        const extension = file.endsWith('.liquid') ? 'liquid' : 'json';
+        try { fs.unlinkSync(customPath(previousSlug, extension)); } catch {}
+        await ghDeleteFile(file);
+      }
+      if (!IS_SERVERLESS) gitCommit(`Rename section: ${existing.name} -> ${meta.name}`);
+    }
     res.json(meta);
-  } catch (e) { res.status(400).json({ error: e.message }); }
+  } catch (error) {
+    const status = /Invalid|required|already exists|not found/i.test(error.message) ? 400 : 500;
+    res.status(status).json({ error: error.message });
+  }
 });
 
 app.delete('/api/custom/:slug', async (req, res) => {
-  const slug = req.params.slug;
-  const meta = customSectionMeta(slug);
-  if (!meta) return res.status(404).json({ error: 'not found' });
-  for (const f of [`${slug}.liquid`, `${slug}.json`]) {
-    try { fs.unlinkSync(path.join(CUSTOM_DIR, f)); } catch {}
-    await ghDeleteFile(f);
+  try {
+    const slug = assertCustomSlug(req.params.slug);
+    const meta = customSectionMeta(slug);
+    if (!meta) return res.status(404).json({ error: 'not found' });
+    for (const file of [`${slug}.liquid`, `${slug}.json`]) {
+      const extension = file.endsWith('.liquid') ? 'liquid' : 'json';
+      try { fs.unlinkSync(customPath(slug, extension)); } catch {}
+      await ghDeleteFile(file);
+    }
+    if (!IS_SERVERLESS) gitCommit(`Delete section: ${meta.name}`);
+    res.json({ ok: true });
+  } catch (error) {
+    res.status(/Invalid/.test(error.message) ? 400 : 500).json({ error: error.message });
   }
-  gitCommit(`Delete section: ${meta.name}`);
-  res.json({ ok: true });
 });
 
 /* ------------------------------- preview cache ------------------------------- */
@@ -424,28 +550,38 @@ table{border-collapse:collapse;width:100%}
 `;
 
 const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+
+function hasVisiblePreview(html) {
+  const markup = String(html || '').replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<!--[\s\S]*?-->/g, '');
+  const text = markup.replace(/<[^>]+>/g, ' ').replace(/&(?:nbsp|amp|lt|gt|quot|#39);/gi, ' ').replace(/\s+/g, ' ').trim();
+  return !!(text || /<(?:img|svg|video|picture|source|hr|input)\b/i.test(html) || /url\(/i.test(html) || /class=["'][^"']*\bdivider(?:__|--|\b)/i.test(html));
+}
 
 function previewPage({ title, html, cssLinks = [], inlineCss = '', scripts = [], error = null, headExtra = '', externalScripts = [] }) {
-  const externalTag = (s) => (typeof s === 'string' || s.esm)
-    ? `<script type="module" src="${typeof s === 'string' ? s : s.src}"></script>`
-    : `<script src="${s.src}" defer></script>`;
+  const externalTag = (script) => {
+    const src = typeof script === 'string' ? script : script.src;
+    return typeof script === 'string' || script.esm
+      ? `<script type="module" src="${escapeHtml(src)}"></script>`
+      : `<script src="${escapeHtml(src)}" defer></script>`;
+  };
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${title}</title>
+<title>${escapeHtml(title)}</title>
 ${CJS_SHIM}
 <style>${RESET_CSS}</style>
 ${headExtra}
-${cssLinks.map((h) => `<link rel="stylesheet" href="${h}">`).join('\n')}
-${inlineCss ? `<style>${inlineCss}</style>` : ''}
+${cssLinks.map((href) => `<link rel="stylesheet" href="${escapeHtml(href)}">`).join('\n')}
+${inlineCss ? `<style>${String(inlineCss).replace(/<\/style/gi, '<\\/style')}</style>` : ''}
 </head>
 <body>
 ${html}
 ${externalScripts.map(externalTag).join('\n')}
-${scripts.map((s) => `<script>${s}</script>`).join('\n')}
-${error ? `<div class="preview-error">Render error: ${String(error).replace(/</g, '&lt;')}</div>` : ''}
+${scripts.map((script) => `<script>${String(script).replace(/<\/script/gi, '<\\/script')}</script>`).join('\n')}
+${error ? `<div class="preview-error">Render error: ${escapeHtml(error)}</div>` : ''}
 </body>
 </html>`;
 }
@@ -461,17 +597,15 @@ function getLayoutDeps(store) {
   const scan = (text) => {
     let m;
     const cssRe = /['"]([\w./-]+\.css)['"]\s*\|\s*asset_url/g;
-    while ((m = cssRe.exec(text))) if (!css.includes(m[1])) css.push(m[1]);
-    const jsRe = /['"]([\w./-]+\.js)['"]\s*\|\s*asset_url/g;
-    while ((m = jsRe.exec(text))) if (!js.includes(m[1])) js.push(m[1]);
+    while ((m = cssRe.exec(text))) if (!m[1].split('/').includes('..') && !css.includes(m[1])) css.push(m[1]);
+    const jsRe = /['"]([\w./-]+\.m?js)['"]\s*\|\s*asset_url/g;
+    while ((m = jsRe.exec(text))) if (!m[1].split('/').includes('..') && !js.includes(m[1])) js.push(m[1]);
   };
   let layoutSrc = '';
   try { layoutSrc = fs.readFileSync(path.join(storePath, 'layout/theme.liquid'), 'utf8'); scan(layoutSrc); } catch {}
   // Snippets rendered by the layout may carry the global assets (e.g. 'stylesheets').
-  const snippetRe = /{%[-\s]*render\s+'([\w-]+)'/g;
-  let m2;
-  while ((m2 = snippetRe.exec(layoutSrc))) {
-    try { scan(fs.readFileSync(path.join(storePath, 'snippets', `${m2[1]}.liquid`), 'utf8')); } catch {}
+  for (const name of extractSnippetRefs(layoutSrc)) {
+    try { scan(fs.readFileSync(path.join(storePath, 'snippets', `${name}.liquid`), 'utf8')); } catch {}
   }
   const deps = { css, js };
   layoutDepsCache.set(store, deps);
@@ -509,7 +643,7 @@ async function getLayoutHeadExtra(store) {
       for (const m of scriptsSnippet.matchAll(/<script(\s[^>]*)?>([\s\S]*?)<\/script\s*>/gi)) {
         const attrs = (m[1] || '').toLowerCase();
         if (/src\s*=/.test(attrs)) continue;
-        if (/type\s*=\s*["']module["']/.test(attrs)) continue;
+        if (/type\s*=\s*["']module["']/.test(attrs) && !/type\s*=\s*["']importmap["']/.test(attrs)) continue;
         extra += m[0];
       }
     }
@@ -520,10 +654,8 @@ async function getLayoutHeadExtra(store) {
 
 app.get('/preview/:store/:file', async (req, res) => {
   const { store, file } = req.params;
-  // Previews are generated output: never let the browser cache them, or
-  // code/CSS fixes won't show up without a hard refresh. The render path
-  // (live Shopify vs local mock) rides along for debugging.
-  res.set('Cache-Control', 'no-store');
+  res.set('Cache-Control', 'private, max-age=60, stale-while-revalidate=300');
+  res.set('Content-Security-Policy', "default-src * data: blob:; script-src * 'unsafe-inline'; style-src * 'unsafe-inline'; connect-src 'none'; frame-ancestors 'self'; form-action 'none'; base-uri 'none'");
 
   // When a gallery store is configured, previews render on real Shopify,
   // proxied through this server (authenticates with the storefront password).
@@ -535,18 +667,18 @@ app.get('/preview/:store/:file', async (req, res) => {
       const params = new URLSearchParams({ view: entry.template });
       if (cfg.previewThemeId) params.set('preview_theme_id', cfg.previewThemeId);
       const target = `${cfg.storeUrl}/pages/${cfg.pageHandle}?${params}`;
-      const key = crypto.createHash('md5').update(target).digest('hex');
+      const key = crypto.createHash('md5').update(`${process.env.VERCEL_GIT_COMMIT_SHA || loadIndex().version || 'local'}:${target}`).digest('hex');
       let cached = previewCacheGet(key);
       if (cached && /Liquid error/i.test(cached)) { previewCacheDelete(key); cached = null; }
       // a missing lib-* template makes Shopify render the default page instead —
       // our preview templates always emit a "__library" section id
-      if (cached && !cached.includes('__library')) { previewCacheDelete(key); cached = null; }
+      if (cached && (!cached.includes('__library') || !hasVisiblePreview(cached))) { previewCacheDelete(key); cached = null; }
       if (cached) { res.set('X-Preview-Path', 'live-cached'); return res.type('html').send(cached); }
       const r = await shopifyGet(target);
       let html = await r.text();
       // sections that error live (missing product/blog refs etc.) render better
       // through the local mock — fall back instead of showing Shopify's error
-      if (r.status === 200 && (/Liquid error/i.test(html) || !html.includes('__library'))) {
+      if (r.status === 200 && (/Liquid error/i.test(html) || !html.includes('__library') || !hasVisiblePreview(html))) {
         const mock = await localPreview(req, res);
         return mock;
       }
@@ -565,6 +697,15 @@ app.get('/preview/:store/:file', async (req, res) => {
   return localPreview(req, res);
 });
 
+function readAssetText(storePath, asset) {
+  if (!storePath || String(asset).split(/[\\/]/).includes('..')) return '';
+  const assetsRoot = path.join(storePath, 'assets');
+  const full = path.resolve(assetsRoot, asset);
+  const relative = path.relative(assetsRoot, full);
+  if (relative.startsWith('..') || path.isAbsolute(relative)) return '';
+  try { return fs.readFileSync(full, 'utf8'); } catch { return ''; }
+}
+
 async function localPreview(req, res) {
   const { store, file } = req.params;
   res.set('X-Preview-Path', 'local');
@@ -574,25 +715,37 @@ async function localPreview(req, res) {
     if (store === 'custom') {
       if (!/^[\w.-]+(\.liquid)?$/.test(file)) return res.status(400).send('bad file');
       const slug = file.replace(/\.liquid$/, '');
+      assertCustomSlug(slug);
       const meta = customSectionMeta(slug);
       if (!meta) return res.status(404).send('not found');
       const { liquid, css, js } = customSectionSources(slug);
-      const r = await renderSectionSource(meta.contextStore === 'custom' ? 'custom' : meta.contextStore, liquid, { sectionId: slug });
-      return res.type('html').send(previewPage({ title: meta.name, html: r.html, inlineCss: css, scripts: js ? [js] : [], error: r.error }));
+      if (/{%-?\s*content_for\b/i.test(liquid)) res.set('X-Preview-Path', 'local-context');
+      const contextStore = meta.contextStore === 'custom' ? 'custom' : meta.contextStore;
+      const contextPath = contextStore === 'custom' ? null : findStore(contextStore);
+      const deps = contextPath ? getLayoutDeps(contextStore) : { css: [], js: [] };
+      const exists = contextPath ? (asset) => fs.existsSync(path.join(contextPath, 'assets', asset)) : () => false;
+      const cssLinks = [...new Set([...deps.css, ...extractAssetRefs(liquid).filter((asset) => asset.endsWith('.css'))].filter(exists))]
+        .map((asset) => `/assets/${contextStore}/${asset}`);
+      const externalScripts = deps.js.filter(exists).map((asset) => ({ src: `/assets/${contextStore}/${asset}`, esm: isEsmJs(readAssetText(contextPath, asset)) }));
+      const headExtra = contextPath ? await getLayoutHeadExtra(contextStore) : '';
+      const fontsLink = contextPath ? (() => { try { return googleFontsLink(getEngine(contextStore, contextPath)); } catch { return ''; } })() : '';
+      const rendered = await renderSectionSource(contextStore, liquid, { sectionId: slug });
+      return res.type('html').send(previewPage({
+        title: meta.name, html: rendered.html, inlineCss: css, scripts: js ? [js] : [],
+        error: rendered.error, cssLinks, externalScripts, headExtra: headExtra + fontsLink,
+      }));
     }
     if (!/^[\w.-]+\.liquid$/.test(file)) return res.status(400).send('bad file');
     const idx = loadIndex();
     const meta = idx.sections.find((s) => s.store === store && s.file === file);
+    if (meta?.usesContentFor) res.set('X-Preview-Path', 'local-context');
     const r = await renderStoreSection(store, file);
     const deps = getLayoutDeps(store);
     const exists = (a) => fs.existsSync(path.join(storePath, 'assets', a));
     const cssLinks = [...new Set([...deps.css, ...(meta?.assets || []).filter((a) => a.endsWith('.css'))].filter(exists))]
       .map((a) => `/assets/${store}/${a}`);
-    const readAssetText = (a) => {
-      try { return fs.readFileSync(path.join(storePath, 'assets', a), 'utf8'); } catch { return ''; }
-    };
-    const isModuleAsset = (a) => isEsmJs(readAssetText(a));
-    const sectionAssetJs = (meta?.assets || []).filter((a) => a.endsWith('.js') && exists(a) && !deps.js.includes(a));
+    const isModuleAsset = (asset) => isEsmJs(readAssetText(storePath, asset));
+    const sectionAssetJs = (meta?.assets || []).filter((a) => /\.m?js$/.test(a) && exists(a) && !deps.js.includes(a));
     const scripts = [...r.js ? [r.js] : []];
     const externalScripts = deps.js.filter(exists).map((a) => ({ src: `/assets/${store}/${a}`, esm: isModuleAsset(a) }));
     for (const a of sectionAssetJs) {
@@ -604,7 +757,7 @@ async function localPreview(req, res) {
       if (new RegExp(`<script[^>]*src=[^>]*${fileRe}|document\\.write\\([^)]*${fileRe}`, 'i').test(r.html)) continue;
       if (isModuleAsset(a)) externalScripts.push({ src: `/assets/${store}/${a}`, esm: true });
       // Escape script-close tags so inlined code cannot break out of its element.
-      else scripts.push(readAssetText(a).replace(/<\/script/gi, '<\\/script'));
+      else scripts.push(readAssetText(storePath, a).replace(/<\/script/gi, '<\\/script'));
     }
     const headExtra = await getLayoutHeadExtra(store);
     const fontsLink = (() => { try { return googleFontsLink(getEngine(store, storePath)); } catch { return ''; } })();
@@ -625,10 +778,10 @@ app.use('/assets', (req, res, next) => {
   const safe = path.normalize(rel).replace(/^(\.\.[/\\])+/, '');
   const storeRoot = findStore(store);
   if (!storeRoot) return res.status(404).end();
-  const full = path.join(storeRoot, 'assets', safe);
-  if (!full.startsWith(storeRoot)) return res.status(403).end();
-  // Theme assets change with the working tree — same staleness rationale as previews.
-  res.set('Cache-Control', 'no-store');
+  const assetsRoot = path.join(storeRoot, 'assets');
+  const full = path.resolve(assetsRoot, safe);
+  if (path.relative(assetsRoot, full).startsWith('..') || path.isAbsolute(path.relative(assetsRoot, full))) return res.status(403).end();
+  res.set('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
   res.sendFile(full, (e) => { if (e) res.status(404).end(); });
 });
 

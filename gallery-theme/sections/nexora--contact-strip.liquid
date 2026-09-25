@@ -2,6 +2,8 @@
 {{ 'nexora--base.css' | asset_url | stylesheet_tag }}
 {{ 'nexora--components.css' | asset_url | stylesheet_tag }}
 {% render 'nexora--layout-tokens' %}
+{{ 'nexora--global.js' | asset_url | script_tag }}
+{{ 'nexora--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Contact strip — phone disc, question prompt, heading and dark pill CTA
   ("Contact us in the way that suits you"). Horizon-safe.

@@ -10,6 +10,7 @@ const ROOTS = (process.env.STORES_ROOTS || path.resolve(__dirname, '../stores'))
   .filter((p) => fs.existsSync(p));
 
 function findStore(store) {
+  if (typeof store !== 'string' || !store || store === '.' || store === '..' || /[/\\]/.test(store)) return null;
   for (const root of ROOTS) {
     const p = path.join(root, store);
     if (fs.existsSync(path.join(p, 'sections'))) return p;

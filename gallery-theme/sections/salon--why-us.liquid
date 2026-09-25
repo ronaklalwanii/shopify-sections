@@ -2,6 +2,7 @@
 {{ 'salon--base.css' | asset_url | stylesheet_tag }}
 {{ 'salon--components.css' | asset_url | stylesheet_tag }}
 {% render 'salon--layout-tokens' %}
+{{ 'salon--global.js' | asset_url | script_tag }}
 {%- comment -%}
   Why us — four light cards around a ringed centre badge
   (salon "Why us?" composition).

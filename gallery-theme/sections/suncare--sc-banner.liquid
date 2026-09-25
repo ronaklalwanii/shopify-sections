@@ -2,6 +2,8 @@
 {{ 'suncare--base.css' | asset_url | stylesheet_tag }}
 {{ 'suncare--components.css' | asset_url | stylesheet_tag }}
 {% render 'suncare--layout-tokens' %}
+{{ 'suncare--global.js' | asset_url | script_tag }}
+{{ 'suncare--wishlist.js' | asset_url | script_tag }}
 {%- comment -%} Suncare banner — full-width image, corner serif texts. {%- endcomment -%}
 <section class="scb2 scb2-{{ section.id }}">
   <div class="scb2__media">

@@ -2,6 +2,8 @@
 {{ 'jlsport--base.css' | asset_url | stylesheet_tag }}
 {{ 'jlsport--components.css' | asset_url | stylesheet_tag }}
 {% render 'jlsport--layout-tokens' %}
+{{ 'jlsport--global.js' | asset_url | script_tag }}
+{{ 'jlsport--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Hero image banner. Two layouts:
   - split: content on one side, image on the other (boutique look)

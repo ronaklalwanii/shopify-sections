@@ -2,6 +2,8 @@
 {{ 'pyko--base.css' | asset_url | stylesheet_tag }}
 {{ 'pyko--components.css' | asset_url | stylesheet_tag }}
 {% render 'pyko--layout-tokens' %}
+{{ 'pyko--global.js' | asset_url | script_tag }}
+{{ 'pyko--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Testimonial feature — large serif quote with author, prev/next arrows and a
   reviewer card beside a rounded image (Pyko composition).

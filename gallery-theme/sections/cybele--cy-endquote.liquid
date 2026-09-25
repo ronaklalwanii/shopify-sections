@@ -2,6 +2,8 @@
 {{ 'cybele--base.css' | asset_url | stylesheet_tag }}
 {{ 'cybele--components.css' | asset_url | stylesheet_tag }}
 {% render 'cybele--layout-tokens' %}
+{{ 'cybele--global.js' | asset_url | script_tag }}
+{{ 'cybele--wishlist.js' | asset_url | script_tag }}
 {%- comment -%} Cybele closing quote — crimson band, profile, big quote, social pills. {%- endcomment -%}
 <section class="cye cye-{{ section.id }}" style="--cye-bg: {{ section.settings.background_color | default: '#a41e34' }}; --cye-text: {{ section.settings.text_color }};">
   <div class="page-width">

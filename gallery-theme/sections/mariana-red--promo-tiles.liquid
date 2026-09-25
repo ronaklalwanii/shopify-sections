@@ -2,6 +2,7 @@
 {{ 'mariana-red--base.css' | asset_url | stylesheet_tag }}
 {{ 'mariana-red--components.css' | asset_url | stylesheet_tag }}
 {% render 'mariana-red--layout-tokens' %}
+{{ 'mariana-red--global.js' | asset_url | script_tag }}
 {%- comment -%} Promo tiles — colored band of photo tiles with captions (SPEED "sports resource" pattern). Horizon-safe. {%- endcomment -%}
 <section class="ptl ptl-{{ section.id }}" style="background: {{ section.settings.background_color }};">
   <div class="page-width">

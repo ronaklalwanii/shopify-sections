@@ -2,6 +2,8 @@
 {{ 'sage--base.css' | asset_url | stylesheet_tag }}
 {{ 'sage--components.css' | asset_url | stylesheet_tag }}
 {% render 'sage--layout-tokens' %}
+{{ 'sage--global.js' | asset_url | script_tag }}
+{{ 'sage--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Image with text — story sections ("Fashion with Purpose", "Crafted with
   Passion"). Optional feature blocks render as a third column.

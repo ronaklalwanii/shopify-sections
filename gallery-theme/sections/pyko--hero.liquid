@@ -2,6 +2,8 @@
 {{ 'pyko--base.css' | asset_url | stylesheet_tag }}
 {{ 'pyko--components.css' | asset_url | stylesheet_tag }}
 {% render 'pyko--layout-tokens' %}
+{{ 'pyko--global.js' | asset_url | script_tag }}
+{{ 'pyko--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Hero image banner. Two layouts:
   - split: content on one side, image on the other (boutique look)

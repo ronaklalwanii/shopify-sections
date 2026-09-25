@@ -21,36 +21,18 @@
       "blocks": {
         "bl-1": {
           "type": "_featured-blog-posts-title",
-          "settings": {}
+          "settings": {
+            "type_preset": "rte"
+          }
         },
         "bl-2": {
-          "type": "_featured-blog-posts-title",
-          "settings": {}
-        },
-        "bl-3": {
           "type": "_featured-blog-posts-card",
-          "settings": {}
-        },
-        "bl-4": {
-          "type": "_featured-blog-posts-card",
-          "settings": {}
-        },
-        "bl-5": {
-          "type": "_featured-blog-posts-image",
-          "settings": {}
-        },
-        "bl-6": {
-          "type": "_featured-blog-posts-image",
           "settings": {}
         }
       },
       "block_order": [
         "bl-1",
-        "bl-2",
-        "bl-3",
-        "bl-4",
-        "bl-5",
-        "bl-6"
+        "bl-2"
       ]
     }
   },

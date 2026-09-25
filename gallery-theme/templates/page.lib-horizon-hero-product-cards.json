@@ -27,27 +27,12 @@
       },
       "blocks": {
         "bl-1": {
-          "type": "@theme",
-          "settings": {}
-        },
-        "bl-2": {
-          "type": "@theme",
-          "settings": {}
-        },
-        "bl-3": {
-          "type": "_hero-product-cards",
-          "settings": {}
-        },
-        "bl-4": {
           "type": "_hero-product-cards",
           "settings": {}
         }
       },
       "block_order": [
-        "bl-1",
-        "bl-2",
-        "bl-3",
-        "bl-4"
+        "bl-1"
       ]
     }
   },

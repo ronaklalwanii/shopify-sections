@@ -2,6 +2,8 @@
 {{ 'azura--base.css' | asset_url | stylesheet_tag }}
 {{ 'azura--components.css' | asset_url | stylesheet_tag }}
 {% render 'azura--layout-tokens' %}
+{{ 'azura--global.js' | asset_url | script_tag }}
+{{ 'azura--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   USP bar — icon + title + text items. Two styles:
   - bar: compact strip with dividers (boutique / chocolatier / homeware)

@@ -3,7 +3,7 @@
   --panel: #ffffff;
   --ink: #191a1c;
   --ink-2: #55575c;
-  --ink-3: #8b8d93;
+  --ink-3: #686a70;
   --line: #e4e2dd;
   --side-bg: #16171a;
   --side-ink: #c9cbd1;
@@ -16,6 +16,7 @@
 }
 
 * { box-sizing: border-box; }
+:focus-visible { outline: 3px solid #78a98a; outline-offset: 2px; }
 html, body { height: 100%; }
 body {
   margin: 0;
@@ -64,7 +65,7 @@ body {
   width: 100%; background: #222327; border: 1px solid #313338; color: #e8e9ec;
   border-radius: 8px; padding: 8px 11px; font: inherit; outline: none;
 }
-.side-search input:focus { border-color: #4a7d61; }
+.side-search input:focus { border-color: #4a7d61; box-shadow: 0 0 0 3px rgba(120,169,138,.2); }
 .side-search input::placeholder { color: var(--side-ink-dim); }
 
 .side-group { display: flex; flex-direction: column; gap: 6px; }
@@ -80,12 +81,14 @@ body {
   color: var(--side-ink); font-size: 13px; border: 0; background: none; text-align: left; width: 100%;
 }
 .side-item:hover { background: #222327; }
+.side-item:focus-visible { background: #222327; }
 .side-item.active { background: #2a2c31; color: #fff; font-weight: 600; }
 .side-item .count { font-size: 11px; color: var(--side-ink-dim); font-variant-numeric: tabular-nums; }
 .side-item.active .count { color: #a9d3ba; }
 
 .toggle { display: flex; align-items: center; gap: 9px; font-size: 12.5px; color: var(--side-ink); cursor: pointer; padding: 0 8px; user-select: none; }
-.toggle input { display: none; }
+.toggle input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.toggle input:focus-visible + .toggle-track { outline: 3px solid #78a98a; outline-offset: 2px; }
 .toggle-track {
   width: 30px; height: 17px; border-radius: 99px; background: #33353a; position: relative; flex: 0 0 30px;
   transition: background .15s;
@@ -106,6 +109,8 @@ body {
 .results-sub { color: var(--ink-3); font-size: 12.5px; margin-top: 3px; }
 
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(236px, 1fr)); gap: 14px; }
+.load-more { display: block; margin: 22px auto 0; }
+.load-more[hidden] { display: none; }
 .toggle.light { color: var(--ink-2); }
 .toggle.light .toggle-track { background: #d9d6d0; }
 .toggle.light .toggle-track::after { background: #fff; }
@@ -130,6 +135,8 @@ body {
   padding: 14px 15px 12px; cursor: pointer; position: relative;
   transition: box-shadow .15s, transform .15s, border-color .15s;
   display: flex; flex-direction: column; gap: 8px; min-height: 118px;
+  width: 100%; color: inherit; font: inherit; text-align: left;
+  content-visibility: auto; contain-intrinsic-size: 220px;
 }
 .card:hover { border-color: #cfcac1; box-shadow: 0 6px 18px -8px rgba(25,26,28,.18); transform: translateY(-1px); }
 .card .cat-dot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 8px; }
@@ -143,6 +150,7 @@ body {
 }
 .chip.store-chip { background: #e8efe9; color: #2f6f4f; }
 .chip.functional { background: #efe9f4; color: #6d4f8a; }
+.chip.warning { background: #f8e8e4; color: var(--danger); }
 .card .meta-dim { font-size: 11px; color: var(--ink-3); margin-left: auto; font-variant-numeric: tabular-nums; }
 
 .empty { text-align: center; padding: 90px 0; }
@@ -163,6 +171,7 @@ body {
 }
 .modal-detail { height: calc(100vh - 52px); max-width: 1500px; }
 .modal-editor { height: calc(100vh - 52px); max-width: 1360px; }
+.detail-preview iframe, .editor-preview iframe { min-height: 280px; }
 
 .modal-head {
   display: flex; align-items: center; justify-content: space-between; gap: 14px;
@@ -282,4 +291,19 @@ body {
   .detail-body, .editor-body { flex-direction: column; }
   .detail-code { border-left: 0; border-top: 1px solid var(--line); }
   .editor-form { border-right: 0; border-bottom: 1px solid var(--line); }
+}
+
+@media (max-width: 700px) {
+  .app { display: block; }
+  .sidebar { width: 100%; height: auto; position: static; padding: 14px; }
+  .side-group { max-height: 190px; overflow-y: auto; }
+  .main { padding: 20px 14px 40px; }
+  .topbar { align-items: flex-start; flex-direction: column; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .overlay { padding: 8px; }
+  .modal-detail, .modal-editor { height: calc(100vh - 16px); }
+  .modal-head { align-items: flex-start; flex-wrap: wrap; }
+  .modal-actions { flex-wrap: wrap; }
+  .detail-preview, .editor-preview { min-height: 42vh; }
+  .preview-stage { padding: 10px; }
 }

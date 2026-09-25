@@ -2,6 +2,7 @@
 {{ 'mariana-red--base.css' | asset_url | stylesheet_tag }}
 {{ 'mariana-red--components.css' | asset_url | stylesheet_tag }}
 {% render 'mariana-red--layout-tokens' %}
+{{ 'mariana-red--global.js' | asset_url | script_tag }}
 {%- comment -%}
   Image with text — story sections ("Fashion with Purpose", "Crafted with
   Passion"). Optional feature blocks render as a third column.

@@ -2,6 +2,8 @@
 {{ 'urbanedge--base.css' | asset_url | stylesheet_tag }}
 {{ 'urbanedge--components.css' | asset_url | stylesheet_tag }}
 {% render 'urbanedge--layout-tokens' %}
+{{ 'urbanedge--global.js' | asset_url | script_tag }}
+{{ 'urbanedge--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Lifestyle banner — inset rounded photo banner with overlaid text and
   two buttons on the right (Urban Edge "Not just clothing, but a lifestyle" design).

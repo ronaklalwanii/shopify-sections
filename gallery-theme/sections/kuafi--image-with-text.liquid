@@ -2,6 +2,8 @@
 {{ 'kuafi--base.css' | asset_url | stylesheet_tag }}
 {{ 'kuafi--components.css' | asset_url | stylesheet_tag }}
 {% render 'kuafi--layout-tokens' %}
+{{ 'kuafi--global.js' | asset_url | script_tag }}
+{{ 'kuafi--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Image with text — story sections ("Fashion with Purpose", "Crafted with
   Passion"). Optional feature blocks render as a third column.

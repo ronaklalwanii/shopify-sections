@@ -2,6 +2,8 @@
 {{ 'cybele--base.css' | asset_url | stylesheet_tag }}
 {{ 'cybele--components.css' | asset_url | stylesheet_tag }}
 {% render 'cybele--layout-tokens' %}
+{{ 'cybele--global.js' | asset_url | script_tag }}
+{{ 'cybele--wishlist.js' | asset_url | script_tag }}
 {%- comment -%} Cybele shades — taupe band, rotating badge, hand photo, 3 shade cards. {%- endcomment -%}
 {%- assign cysize = section.settings.badge_size | default: 120 -%}
 <section class="cysh cysh-{{ section.id }}" style="--cysh-bg: {{ section.settings.background_color | default: '#e8ddd0' }};">

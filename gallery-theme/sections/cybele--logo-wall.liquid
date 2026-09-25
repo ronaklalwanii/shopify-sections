@@ -2,6 +2,8 @@
 {{ 'cybele--base.css' | asset_url | stylesheet_tag }}
 {{ 'cybele--components.css' | asset_url | stylesheet_tag }}
 {% render 'cybele--layout-tokens' %}
+{{ 'cybele--global.js' | asset_url | script_tag }}
+{{ 'cybele--wishlist.js' | asset_url | script_tag }}
 {%- comment -%} Logo wall — trusted-by row of text/image logos. Horizon-safe. {%- endcomment -%}
 <section class="lgw lgw-{{ section.id }}" style="background: {{ section.settings.background_color }};">
   <div class="page-width">

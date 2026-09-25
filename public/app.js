@@ -10,11 +10,14 @@ const state = {
   q: '',
   showFunctional: false,
   showPreviews: localStorage.getItem('sl-previews') !== 'off',
+  visibleCount: 48,
   current: null,   // section open in detail modal
   code: { liquid: '', css: '', js: '' },
   schema: null,
+  dependencies: null,
   codeTab: 'liquid',
   editing: null,   // meta of section being edited (custom only)
+  lastFocus: null,
 };
 
 const CAT_COLORS = {
@@ -61,7 +64,7 @@ function counts() {
 function renderSidebar() {
   const { stores, cats } = counts();
   const mk = (label, value, count, active, color) =>
-    `<button class="side-item ${active ? 'active' : ''}" data-value="${value}">${color ? `<span class="side-dot" style="background:${color}"></span>` : ''}<span>${label}</span><span class="count">${count}</span></button>`;
+    `<button type="button" class="side-item ${active ? 'active' : ''}" data-value="${esc(value)}">${color ? `<span class="side-dot" style="background:${esc(color)}"></span>` : ''}<span>${esc(label)}</span><span class="count">${count}</span></button>`;
   const colorOf = (name) => (state.storeColors[name] || {}).color;
   $('storeList').innerHTML =
     mk('All stores', 'all', stores.all, state.store === 'all') +
@@ -79,13 +82,15 @@ function renderSidebar() {
 }
 
 function renderGrid() {
-  const list = visibleSections();
-  $('grid').innerHTML = list.map((s) => `
-    <div class="card" data-store="${s.store}" data-file="${s.file}">
-      ${state.showPreviews ? `
-      <div class="card-thumb">
-        <span class="thumb-loading">loading preview…</span>
-      </div>` : ''}
+  const all = visibleSections();
+  const list = all.slice(0, state.visibleCount);
+  $('grid').innerHTML = list.map((s) => {
+    const dependencies = s.dependencies || {};
+    const dependencyCount = (dependencies.snippets || []).length + (dependencies.assets || []).length;
+    const quality = s.quality || { status: 'unverified' };
+    const qualityText = { checked: 'render checked', review: 'needs review', failed: 'render issue', unverified: 'not checked' }[quality.status] || 'not checked';
+    return `<button type="button" class="card" data-store="${esc(s.store)}" data-file="${esc(s.file)}" aria-label="Open ${esc(s.name)}">
+      ${state.showPreviews ? `<div class="card-thumb"><span class="thumb-loading">loading preview…</span></div>` : ''}
       <div class="card-top">
         <span class="cat-dot" style="background:${catColor(s.category)}"></span>
         <div class="card-name">${esc(s.name)}</div>
@@ -93,18 +98,25 @@ function renderGrid() {
       <div class="card-file">${esc(s.file)}</div>
       <div class="card-meta">
         <span class="chip store-chip" style="${storeChipStyle(s.store === 'custom' ? null : s.store)}">${s.store === 'custom' ? 'custom' : esc(s.store)}</span>
-        ${(s.group && s.group.length > 1) ? `<span class="chip" title="also in: ${esc(s.group.filter(x => x !== s.store).join(', '))}">${s.group.length} stores</span>` : ''}
+        ${(s.group && s.group.length > 1) ? `<span class="chip" title="also in: ${esc(s.group.filter((x) => x !== s.store).join(', '))}">${s.group.length} stores</span>` : ''}
+        ${dependencyCount ? `<span class="chip" title="includes ${dependencyCount} section-owned dependencies">${dependencyCount} dep${dependencyCount === 1 ? '' : 's'}</span>` : ''}
+        ${s.schemaStatus === 'invalid' ? '<span class="chip warning">schema issue</span>' : ''}
+        <span class="chip ${quality.status === 'failed' ? 'warning' : ''}" title="${esc((quality.issues || []).join(' · '))}">${qualityText}</span>
         <span class="chip">${esc(s.category)}</span>
         ${s.functional ? '<span class="chip functional">functional</span>' : ''}
-        <span class="meta-dim">${s.settings} set · ${s.blocks} blk</span>
+        <span class="meta-dim">${s.settings || 0} set · ${s.blocks || 0} blk</span>
       </div>
-    </div>`).join('');
-  $('grid').querySelectorAll('.card').forEach((c) =>
-    c.onclick = () => openDetail(c.dataset.store, c.dataset.file));
-  $('empty').hidden = list.length > 0;
+    </button>`;
+  }).join('');
+  $('grid').querySelectorAll('.card').forEach((card) => {
+    card.onclick = () => openDetail(card.dataset.store, card.dataset.file);
+  });
+  $('empty').hidden = all.length > 0;
+  $('loadMore').hidden = all.length <= list.length;
+  $('loadMore').textContent = `Load ${Math.min(48, all.length - list.length)} more sections`;
   const scope = [state.category !== 'all' && state.category, state.store !== 'all' && (state.store === 'custom' ? 'custom sections' : `store "${state.store}"`)].filter(Boolean).join(' · ');
   $('resultsTitle').textContent = state.q ? `Results for "${state.q}"` : (scope || 'All sections');
-  $('resultsSub').textContent = `${list.length} section${list.length === 1 ? '' : 's'}${state.showFunctional ? '' : ' · functional hidden'}`;
+  $('resultsSub').textContent = `${all.length} section${all.length === 1 ? '' : 's'}${state.showFunctional ? '' : ' · functional hidden'}`;
   if (state.showPreviews) observeThumbs();
 }
 
@@ -141,27 +153,42 @@ function pumpThumbs() {
 }
 
 function loadThumb(el) {
-  if (el.dataset.loaded || !el.isConnected) { inFlight--; pumpThumbs(); return; }
+  if (!el.isConnected || el.dataset.loaded) { pumpThumbs(); return; }
   el.dataset.loaded = '1';
   inFlight++;
   const card = el.closest('.card');
   const frame = document.createElement('iframe');
-  frame.title = 'preview';
-  frame.setAttribute('sandbox', 'allow-scripts');
-  frame.src = previewUrl({ store: card.dataset.store, file: card.dataset.file });
-  frame.onload = () => {
-    el.classList.add('loaded');
+  let settled = false;
+  const finish = (failed = false) => {
+    if (settled) return;
+    settled = true;
+    clearTimeout(timeout);
+    if (failed) {
+      el.classList.add('fail');
+      const loading = el.querySelector('.thumb-loading');
+      if (loading) loading.textContent = 'preview failed';
+    } else {
+      el.classList.add('loaded');
+      requestAnimationFrame(() => { frame.style.transform = `scale(${el.clientWidth / 1200})`; });
+    }
     inFlight--;
     pumpThumbs();
-    requestAnimationFrame(() => {
-      frame.style.transform = `scale(${el.clientWidth / 1200})`;
-    });
   };
-  frame.onerror = () => { el.classList.add('fail'); el.querySelector('.thumb-loading').textContent = 'preview failed'; inFlight--; pumpThumbs(); };
+  const timeout = setTimeout(() => finish(true), 15000);
+  frame.title = 'preview';
+  frame.loading = 'lazy';
+  frame.setAttribute('sandbox', 'allow-scripts');
+  frame.src = previewUrl({ store: card.dataset.store, file: card.dataset.file });
+  frame.onload = () => finish();
+  frame.onerror = () => finish(true);
   el.appendChild(frame);
 }
 
-function refresh() { renderSidebar(); renderGrid(); }
+function refresh({ reset = true } = {}) {
+  if (reset) state.visibleCount = 48;
+  renderSidebar();
+  renderGrid();
+}
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -173,13 +200,19 @@ const storeChipStyle = (storeName) => {
 /* ---------------------------------- detail ----------------------------------- */
 
 function previewUrl(s) {
-  return s.store === 'custom' ? `/preview/custom/${s.file.replace(/\.liquid$/, '')}` : `/preview/${s.store}/${s.file}`;
+  const store = encodeURIComponent(s.store);
+  const file = encodeURIComponent(s.store === 'custom' ? s.file.replace(/\.liquid$/, '') : s.file);
+  return `/preview/${store}/${file}`;
 }
 
+let detailRequest = 0;
+let detailController = null;
 async function openDetail(store, file) {
   const s = state.sections.find((x) => x.store === store && x.file === file);
   if (!s) return;
+  const request = ++detailRequest;
   state.current = s;
+  state.dependencies = s.dependencies || null;
   const storeLabel = s.group && s.group.length > 1 ? `stores: ${s.group.join(', ')}` : (s.store === 'custom' ? 'Custom section' : `Store: ${s.store}`);
   $('detailKicker').textContent = `${storeLabel} · ${s.category}`;
   $('detailTitle').textContent = s.name;
@@ -187,16 +220,29 @@ async function openDetail(store, file) {
   $('detailDelete').hidden = !s.custom;
   setDevice('desktop');
   $('detailFrame').src = previewUrl(s);
-  const r = await fetch(`/api/section/${store}/${file}`).then((x) => x.json()).catch(() => null);
-  state.code = r ? { liquid: r.liquid || '', css: r.css || '', js: r.js || '' } : { liquid: '', css: '', js: '' };
-  state.schema = r ? r.schema : null;
-  state.codeTab = 'liquid';
-  document.querySelectorAll('.code-tab').forEach((t) => t.classList.toggle('active', t.dataset.tab === 'liquid'));
-  $('settingsView').hidden = true;
-  $('codeView').hidden = false;
-  $('codeToolbar').hidden = false;
-  renderCode();
+  state.lastFocus = state.lastFocus || document.activeElement;
   $('detailOverlay').hidden = false;
+  requestAnimationFrame(() => $('detailClose').focus());
+  detailController?.abort();
+  detailController = new AbortController();
+  try {
+    const response = await fetch(`/api/section/${encodeURIComponent(store)}/${encodeURIComponent(file)}`, { signal: detailController.signal });
+    const r = response.ok ? await response.json() : null;
+    if (request !== detailRequest) return;
+    state.code = r ? { liquid: r.liquid || '', css: r.css || '', js: r.js || '' } : { liquid: '', css: '', js: '' };
+    state.schema = r ? r.schema : null;
+    state.dependencies = r?.dependencies || s.dependencies || null;
+    state.codeTab = 'liquid';
+    document.querySelectorAll('.code-tab').forEach((t) => t.classList.toggle('active', t.dataset.tab === 'liquid'));
+    renderCode();
+  } catch (error) {
+    if (error.name !== 'AbortError' && request === detailRequest) {
+      state.code = { liquid: '', css: '', js: '' };
+      state.schema = null;
+      renderCode();
+      toast('Could not load section source', true);
+    }
+  }
 }
 
 function renderSettingsHtml(schema) {
@@ -240,13 +286,22 @@ function renderSettingsHtml(schema) {
   `;
 }
 
+function renderDependenciesHtml(dependencies) {
+  const snippets = dependencies?.snippets || [];
+  const assets = dependencies?.assets || [];
+  const missingSnippets = dependencies?.missingSnippets || [];
+  const missingAssets = dependencies?.missingAssets || [];
+  const list = (title, values, missing = []) => `<div class="settings-group"><h3>${esc(title)} <span class="count">${values.length}</span></h3>${values.length ? values.map((value) => `<div class="set-row"><span class="lbl">${esc(value)}</span><span>${missing.includes(value) ? '<span class="chip warning">missing</span>' : '<span class="chip">included</span>'}</span><span></span><span></span></div>`).join('') : '<div class="settings-empty">None detected</div>'}</div>`;
+  return `${list('Snippets', snippets, missingSnippets)}${list('Assets', assets, missingAssets)}<div class="settings-empty">These are section-owned files. Theme-wide layout CSS and scripts may also be required.</div>`;
+}
+
 function renderCode() {
   const tab = state.codeTab;
-  if (tab === 'settings') {
+  if (tab === 'settings' || tab === 'dependencies') {
     $('codeView').hidden = true;
     $('codeToolbar').hidden = true;
     $('settingsView').hidden = false;
-    $('settingsView').innerHTML = renderSettingsHtml(state.schema);
+    $('settingsView').innerHTML = tab === 'settings' ? renderSettingsHtml(state.schema) : renderDependenciesHtml(state.dependencies);
     return;
   }
   $('codeView').hidden = false;
@@ -286,11 +341,17 @@ function downloadLiquid(s) {
   a.download = s.file;
   a.click();
   URL.revokeObjectURL(a.href);
+  toast('Source downloaded — install listed dependencies separately');
 }
 
 async function deleteCustom(s) {
   if (!confirm(`Delete "${s.name}" from the library? This cannot be undone.`)) return;
-  await fetch(`/api/custom/${s.file.replace(/\.liquid$/, '')}`, { method: 'DELETE' });
+  const response = await fetch(`/api/custom/${encodeURIComponent(s.file.replace(/\.liquid$/, ''))}`, { method: 'DELETE' });
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    toast(error.error || 'Delete failed', true);
+    return;
+  }
   $('detailOverlay').hidden = true;
   toast('Section deleted');
   await load();
@@ -335,6 +396,8 @@ const STARTER = `{% comment %}
 {% endschema %}`;
 
 let editorDebounce = null;
+let editorRequest = 0;
+let editorController = null;
 
 function openEditor(existing) {
   state.editing = existing || null;
@@ -345,7 +408,7 @@ function openEditor(existing) {
   $('fContext').value = existing ? (existing.contextStore || 'custom') : 'custom';
   $('fTags').value = existing ? (existing.tags || []).join(', ') : '';
   if (existing) {
-    fetch(`/api/section/custom/${existing.file}`).then((r) => r.json()).then((d) => {
+    fetch(`/api/section/custom/${encodeURIComponent(existing.file)}`).then((r) => r.json()).then((d) => {
       $('fLiquid').value = d.liquid || '';
       $('fCss').value = d.css || '';
       $('fJs').value = d.js || '';
@@ -357,8 +420,10 @@ function openEditor(existing) {
     $('fJs').value = '';
     scheduleLivePreview(0);
   }
+  state.lastFocus = state.lastFocus || document.activeElement;
   $('editorOverlay').hidden = false;
   $('renderStatus').textContent = '';
+  requestAnimationFrame(() => $('fName').focus());
 }
 
 function scheduleLivePreview(delay = 550) {
@@ -367,6 +432,9 @@ function scheduleLivePreview(delay = 550) {
 }
 
 async function runLivePreview() {
+  const request = ++editorRequest;
+  editorController?.abort();
+  editorController = new AbortController();
   $('renderStatus').textContent = 'rendering…';
   $('renderStatus').className = 'render-status';
   try {
@@ -376,7 +444,9 @@ async function runLivePreview() {
         liquid: $('fLiquid').value, css: $('fCss').value, js: $('fJs').value,
         store: $('fContext').value === 'custom' ? 'custom' : $('fContext').value,
       }),
+      signal: editorController.signal,
     }).then((x) => x.json());
+    if (request !== editorRequest) return;
     if (r.error) {
       $('renderStatus').textContent = 'render error';
       $('renderStatus').className = 'render-status err';
@@ -386,6 +456,7 @@ async function runLivePreview() {
     }
     $('editorFrame').srcdoc = `<!DOCTYPE html><html><head><meta charset="utf-8"><script>window.exports=window.exports||{};window.module=window.module||{exports:window.exports};window.require=window.require||function(){return{}};</script><link rel="stylesheet" href="/reset.css"><style>${$('fCss').value.replace(/<\/style/g, '')}</style></head><body>${r.html || ''}${r.error ? `<div style="position:fixed;inset:auto 14px 14px 14px;background:#7f1d1d;color:#fff;padding:12px 16px;border-radius:10px;font:13px/1.5 ui-monospace,monospace;white-space:pre-wrap">${esc(r.error)}</div>` : ''}<script>${$('fJs').value.replace(/<\/script/g, '')}<\/script></body></html>`;
   } catch (e) {
+    if (e.name === 'AbortError' || request !== editorRequest) return;
     $('renderStatus').textContent = 'network error';
     $('renderStatus').className = 'render-status err';
   }
@@ -401,7 +472,7 @@ async function saveEditor() {
     css: $('fCss').value,
     js: $('fJs').value,
   };
-  const url = state.editing ? `/api/custom/${state.editing.file.replace(/\.liquid$/, '')}` : '/api/custom';
+  const url = state.editing ? `/api/custom/${encodeURIComponent(state.editing.file.replace(/\.liquid$/, ''))}` : '/api/custom';
   const res = await fetch(url, {
     method: state.editing ? 'PUT' : 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -412,7 +483,7 @@ async function saveEditor() {
     toast(e.error || 'Save failed', true);
     return;
   }
-  $('editorOverlay').hidden = true;
+  closeOverlay('editorOverlay');
   toast(state.editing ? 'Section updated & committed' : 'Section saved & committed to git');
   state.store = 'custom';
   state.category = 'all';
@@ -422,7 +493,9 @@ async function saveEditor() {
 /* ----------------------------------- boot ------------------------------------- */
 
 async function load() {
-  const idx = await fetch('/api/index').then((r) => r.json());
+  const response = await fetch('/api/index');
+  if (!response.ok) throw new Error(`Index request failed (${response.status})`);
+  const idx = await response.json();
   state.sections = idx.sections;
   state.stores = idx.stores;
   state.storeColors = Object.fromEntries(idx.stores.map((s) => [s.name, { color: s.color, textColor: s.textColor }]));
@@ -442,8 +515,32 @@ function toast(msg, isErr) {
   t._h = setTimeout(() => { t.hidden = true; }, 2600);
 }
 
+function closeOverlay(id) {
+  $(id).hidden = true;
+  if (state.lastFocus?.isConnected) state.lastFocus.focus();
+  state.lastFocus = null;
+}
+
+function trapOverlayFocus(event) {
+  if (event.key !== 'Tab') return;
+  const overlay = [...document.querySelectorAll('.overlay')].find((node) => !node.hidden);
+  if (!overlay) return;
+  const focusable = [...overlay.querySelectorAll('button, input, select, textarea, [href], [tabindex]:not([tabindex="-1"])')]
+    .filter((node) => !node.disabled && node.offsetParent !== null);
+  if (!focusable.length) return;
+  const first = focusable[0], last = focusable[focusable.length - 1];
+  if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+  else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+}
+
 /* wire up */
-$('search').addEventListener('input', (e) => { state.q = e.target.value; renderGrid(); });
+let searchTimer = null;
+$('search').addEventListener('input', (e) => {
+  state.q = e.target.value;
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => { state.visibleCount = 48; renderGrid(); }, 160);
+});
+$('loadMore').onclick = () => { state.visibleCount += 48; renderGrid(); };
 $('functionalToggle').addEventListener('change', (e) => { state.showFunctional = e.target.checked; refresh(); });
 $('previewsToggle').checked = state.showPreviews;
 $('previewsToggle').addEventListener('change', (e) => {
@@ -452,11 +549,10 @@ $('previewsToggle').addEventListener('change', (e) => {
   refresh();
 });
 $('addBtn').onclick = () => openEditor(null);
-$('detailClose').onclick = () => { $('detailOverlay').hidden = true; };
-$('detailOpenTab').onclick = () => state.current && window.open(previewUrl(state.current), '_blank');
+$('detailClose').onclick = () => closeOverlay('detailOverlay');
 $('detailCopy').onclick = () => state.current && copyText(state.code.liquid, 'Liquid copied');
 $('detailDownload').onclick = () => state.current && downloadLiquid(state.current);
-$('detailEdit').onclick = () => { $('detailOverlay').hidden = true; openEditor(state.current); };
+$('detailEdit').onclick = () => { closeOverlay('detailOverlay'); openEditor(state.current); };
 $('detailDelete').onclick = () => state.current && deleteCustom(state.current);
 $('previewReload').onclick = () => { const f = $('detailFrame'); f.src = f.src; };
 $('deviceSwitch').addEventListener('click', (e) => {
@@ -470,14 +566,22 @@ document.querySelectorAll('.code-tab').forEach((t) =>
     renderCode();
   });
 $('codeCopy').onclick = () => {
+  if (state.codeTab === 'dependencies') {
+    copyText(JSON.stringify(state.dependencies || {}, null, 2), 'Dependencies copied');
+    return;
+  }
   const labels = { liquid: 'Liquid copied', css: 'CSS copied', js: 'JS copied' };
-  copyText(state.code[state.codeTab] || '', labels[state.codeTab]);
+  copyText(state.code[state.codeTab] || '', labels[state.codeTab] || 'Copied');
 };
-$('editorCancel').onclick = () => { $('editorOverlay').hidden = true; };
+$('editorCancel').onclick = () => closeOverlay('editorOverlay');
 $('editorSave').onclick = saveEditor;
 ['fLiquid', 'fCss', 'fJs'].forEach((id) => $(id).addEventListener('input', () => scheduleLivePreview()));
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') { $('detailOverlay').hidden = true; $('editorOverlay').hidden = true; }
+  if (e.key === 'Escape') {
+    const open = [...document.querySelectorAll('.overlay')].find((node) => !node.hidden);
+    if (open) closeOverlay(open.id);
+  }
+  trapOverlayFocus(e);
 });
 
-load();
+load().catch(() => toast('Could not load the section library', true));

@@ -2,6 +2,8 @@
 {{ 'homeware--base.css' | asset_url | stylesheet_tag }}
 {{ 'homeware--components.css' | asset_url | stylesheet_tag }}
 {% render 'homeware--layout-tokens' %}
+{{ 'homeware--global.js' | asset_url | script_tag }}
+{{ 'homeware--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Collection list — photo cards with overlay labels ("Explore our collections")
   or labels below images (category tiles). Blocks pick a collection each.

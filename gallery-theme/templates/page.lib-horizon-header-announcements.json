@@ -13,15 +13,10 @@
         "bl-1": {
           "type": "_announcement",
           "settings": {}
-        },
-        "bl-2": {
-          "type": "_announcement",
-          "settings": {}
         }
       },
       "block_order": [
-        "bl-1",
-        "bl-2"
+        "bl-1"
       ]
     }
   },

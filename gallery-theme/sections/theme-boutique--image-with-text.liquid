@@ -2,6 +2,8 @@
 {{ 'theme-boutique--base.css' | asset_url | stylesheet_tag }}
 {{ 'theme-boutique--components.css' | asset_url | stylesheet_tag }}
 {% render 'theme-boutique--layout-tokens' %}
+{{ 'theme-boutique--global.js' | asset_url | script_tag }}
+{{ 'theme-boutique--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Image with text — story sections ("Fashion with Purpose", "Crafted with
   Passion"). Optional feature blocks render as a third column.

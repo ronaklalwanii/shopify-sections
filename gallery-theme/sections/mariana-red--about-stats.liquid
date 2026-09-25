@@ -2,6 +2,7 @@
 {{ 'mariana-red--base.css' | asset_url | stylesheet_tag }}
 {{ 'mariana-red--components.css' | asset_url | stylesheet_tag }}
 {% render 'mariana-red--layout-tokens' %}
+{{ 'mariana-red--global.js' | asset_url | script_tag }}
 {%- comment -%}
   About + stats — serif intro with pill CTA beside dark stat cards
   (Mariana "Strategy meets creativity").

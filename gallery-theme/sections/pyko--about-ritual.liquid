@@ -2,6 +2,8 @@
 {{ 'pyko--base.css' | asset_url | stylesheet_tag }}
 {{ 'pyko--components.css' | asset_url | stylesheet_tag }}
 {% render 'pyko--layout-tokens' %}
+{{ 'pyko--global.js' | asset_url | script_tag }}
+{{ 'pyko--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   About split — icon + serif heading + accordion beside an intro paragraph and
   rounded image (Pyko "Keep your body hydrated" composition).

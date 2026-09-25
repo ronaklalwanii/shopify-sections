@@ -1,11 +1,16 @@
 {
   "name": "section-library",
   "version": "0.1.0",
+  "private": true,
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "ingest": "node src/ingest.js",
-    "build": "node src/ingest.js"
+    "build": "node src/ingest.js",
+    "check": "node --check src/section-meta.js && node --check src/path-safety.js && node --check src/renderer.js && node --check src/ingest.js && node --check src/server.js && node --check src/merge.js && node --check src/qa.js && node --check public/app.js",
+    "test": "npm run check && node --test",
+    "qa": "node src/qa.js",
+    "qa:local": "QA_SKIP_LIVE=1 node src/qa.js"
   },
   "keywords": [],
   "author": "",

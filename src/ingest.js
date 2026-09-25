@@ -3,10 +3,11 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { ROOTS } = require('./roots');
-const { parseJsonLoose } = require('./renderer');
+const { parseJsonLoose, extractSchema, collectSectionDependencies } = require('./section-meta');
 
 const OUT_FILE = path.resolve(__dirname, '../data/index.json');
 const OVERRIDES_FILE = path.resolve(__dirname, '../data/tag-overrides.json');
+const QA_REPORT = path.resolve(__dirname, '../data/qa-report.json');
 
 function loadOverrides() {
   try { return JSON.parse(fs.readFileSync(OVERRIDES_FILE, 'utf8')); } catch { return {}; }
@@ -48,22 +49,6 @@ function classify(fileName, overrides) {
   return { category, functional };
 }
 
-function extractSchema(src) {
-  const m = src.match(/{%\s*schema\s*%}([\s\S]*?){%\s*endschema\s*%}/);
-  if (!m) return null;
-  try { return JSON.parse(m[1]); } catch { return null; }
-}
-
-// External assets referenced via asset_url/stylesheet_tag/script_tag in the Liquid.
-function extractAssetRefs(src) {
-  const refs = new Set();
-  const re = /['"]([\w./-]+\.(?:css|js))['"]\s*\|\s*(?:asset_url|shopify_asset_url|stylesheet_tag|script_tag|preload_tag)/g;
-  let m;
-  while ((m = re.exec(src))) refs.add(m[1]);
-  return [...refs];
-}
-
-// Content fingerprint for cross-store dedupe (whitespace-insensitive).
 function contentHash(src) {
   const norm = src.replace(/\r/g, '').split('\n').map((l) => l.trimEnd()).join('\n').trim();
   return crypto.createHash('sha256').update(norm).digest('hex').slice(0, 16);
@@ -117,6 +102,8 @@ function ingestStore(root, storeDir) {
     const full = path.join(sectionsDir, f);
     const src = fs.readFileSync(full, 'utf8');
     const schema = extractSchema(src);
+    const dependencies = collectSectionDependencies(storeDir, src);
+    const schemaStatus = schema ? 'valid' : /{%-?\s*schema\s*-?%}/i.test(src) ? 'invalid' : 'missing';
     sections.push({
       store: path.basename(storeDir),
       root,
@@ -127,13 +114,38 @@ function ingestStore(root, storeDir) {
       blocks: schema ? (schema.blocks || []).length : 0,
       hasPresets: !!(schema && schema.presets && schema.presets.length),
       lines: src.split('\n').length,
-      assets: extractAssetRefs(src),
+      assets: dependencies.assets,
+      dependencies,
       hasSchema: !!schema,
+      schemaStatus,
+      usesContentFor: /{%-?\s*content_for\b/i.test(src),
       empty: src.trim().length === 0,
       hash: contentHash(src),
     });
   }
   return sections;
+}
+
+function loadQaIndex() {
+  try {
+    const report = JSON.parse(fs.readFileSync(QA_REPORT, 'utf8'));
+    const mapRows = (rows = []) => new Map(rows.map((row) => [`${row.store}/${row.file}`, row]));
+    return { checkedAt: report.generatedAt || null, local: mapRows(report.local?.results), live: mapRows(report.live?.results) };
+  } catch { return { checkedAt: null, local: new Map(), live: new Map() }; }
+}
+
+function applyQuality(sections) {
+  const report = loadQaIndex();
+  const byKey = new Map(sections.map((section) => [`${section.store}/${section.file}`, section]));
+  for (const section of sections) {
+    let key = `${section.store}/${section.file}`;
+    if (!report.local.has(key) && !report.live.has(key) && section.canonical && byKey.has(section.canonical)) key = section.canonical;
+    const rows = [report.local.get(key), report.live.get(key)].filter(Boolean);
+    const issues = rows.flatMap((row) => row.issues || []);
+    const status = !rows.length ? 'unverified' : rows.some((row) => row.status === 'fail') ? 'failed'
+      : rows.some((row) => row.status === 'warn') ? 'review' : 'checked';
+    section.quality = { status, issues: [...new Set(issues)], checkedAt: rows.length ? report.checkedAt : null };
+  }
 }
 
 function main() {
@@ -146,7 +158,7 @@ function main() {
       const ingested = ingestStore(root, path.join(root, entry.name));
       if (!ingested) continue;
       const color = storeBrandColor(path.join(root, entry.name));
-      stores.push({ name: entry.name, path: path.join(root, entry.name), sectionCount: ingested.length, color, textColor: luminance(color) > 0.6 ? '#191a1c' : '#ffffff' });
+      stores.push({ name: entry.name, sectionCount: ingested.length, color, textColor: luminance(color) > 0.6 ? '#191a1c' : '#ffffff' });
       for (const s of ingested) {
         const ov = overrides[`${s.store}/${s.file}`] || {};
         const { category, functional } = classify(s.file, ov);
@@ -177,7 +189,9 @@ function main() {
   }
 
   for (const s of sections) delete s.root;
-  const index = { generatedAt: new Date().toISOString(), stores, sections };
+  const version = crypto.createHash('sha256').update(JSON.stringify({ stores, sections })).digest('hex').slice(0, 16);
+  applyQuality(sections);
+  const index = { version, stores, sections };
   fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true });
   fs.writeFileSync(OUT_FILE, JSON.stringify(index, null, 2));
   const byCat = {};

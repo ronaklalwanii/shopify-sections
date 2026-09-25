@@ -2,6 +2,8 @@
 {{ 'speed--base.css' | asset_url | stylesheet_tag }}
 {{ 'speed--components.css' | asset_url | stylesheet_tag }}
 {% render 'speed--layout-tokens' %}
+{{ 'speed--global.js' | asset_url | script_tag }}
+{{ 'speed--wishlist.js' | asset_url | script_tag }}
 {%- comment -%}
   Promo tiles — inset rounded band with radial glow, photo tiles with plain
   captions; a "featured" tile is taller and carries a white pill button (SPEED).
