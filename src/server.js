@@ -1,5 +1,6 @@
 // Section Library server: API + preview renderer + custom section storage (git-backed)
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const crypto = require('crypto');
 const { execFileSync } = require('child_process');
@@ -90,9 +91,11 @@ function gitCommit(msg, { requireRemote = false } = {}) {
 // (no git binary available): DATA_REPO="owner/repo" + DATA_TOKEN.
 const GH_DATA = (process.env.DATA_REPO && process.env.DATA_TOKEN)
   ? { repo: process.env.DATA_REPO, token: process.env.DATA_TOKEN } : null;
+// Overridable for GitHub Enterprise and for tests.
+const GH_API_BASE = (process.env.DATA_GITHUB_API || 'https://api.github.com').replace(/\/+$/, '');
 
 async function ghReq(path, opts = {}) {
-  return fetch(`https://api.github.com/repos/${GH_DATA.repo}/contents/${path}`, {
+  return fetch(`${GH_API_BASE}/repos/${GH_DATA.repo}/contents/${path}`, {
     ...opts,
     headers: {
       Authorization: `Bearer ${GH_DATA.token}`,
@@ -104,8 +107,53 @@ async function ghReq(path, opts = {}) {
   });
 }
 
+// One request for the whole data repo instead of a directory listing plus a
+// content fetch per file. Returns the number of files restored, or 0 to signal
+// that the caller should fall back to the per-file Contents API path.
+async function ghRestoreTarball() {
+  if (!GH_DATA) return 0;
+  const response = await fetch(`${GH_API_BASE}/repos/${GH_DATA.repo}/tarball`, {
+    headers: {
+      Authorization: `Bearer ${GH_DATA.token}`,
+      Accept: 'application/vnd.github+json',
+      'User-Agent': 'section-library',
+    },
+  });
+  if (!response.ok) return 0;
+  const staging = fs.mkdtempSync(path.join(os.tmpdir(), 'sl-restore-'));
+  try {
+    const archive = path.join(staging, 'repo.tar.gz');
+    fs.writeFileSync(archive, Buffer.from(await response.arrayBuffer()));
+    execFileSync('tar', ['-xzf', archive, '-C', staging, '--strip-components=1'], { stdio: 'ignore' });
+    const nested = path.join(staging, 'custom-sections');
+    const source = fs.existsSync(nested) ? nested : staging;
+    const remoteSlugs = new Set();
+    let restored = 0;
+    for (const entry of fs.readdirSync(source)) {
+      const match = entry.match(/^([\w-]+)\.(json|liquid)$/);
+      if (!match || !CUSTOM_SLUG.test(match[1])) continue;
+      fs.copyFileSync(path.join(source, entry), customPath(match[1], match[2]));
+      remoteSlugs.add(match[1]);
+      restored++;
+    }
+    // The tarball is a full snapshot, so drop local slugs the repo no longer has.
+    for (const entry of fs.readdirSync(CUSTOM_DIR)) {
+      const match = entry.match(/^([\w-]+)\.(?:json|liquid)$/);
+      if (match && !remoteSlugs.has(match[1])) removeCustomFiles(match[1]);
+    }
+    return restored;
+  } finally {
+    fs.rmSync(staging, { recursive: true, force: true });
+  }
+}
+
 async function ghRestore() {
   if (!GH_DATA) return false;
+  const viaTarball = await ghRestoreTarball().catch(() => 0);
+  if (viaTarball) {
+    console.log(`gh restore: ${viaTarball} files restored (single tarball request)`);
+    return true;
+  }
   const response = await ghReq('custom-sections');
   if (response.status === 404) return false;
   if (!response.ok) throw new Error(`GitHub restore failed (${response.status})`);
@@ -224,19 +272,34 @@ async function persistCustomSectionRemote({ meta, liquid, json }, { rollbackCrea
   }
 }
 
+// Fast-forward only: a diverged local clone must never produce a merge commit.
+// If it has diverged, fall back to hard-resetting onto the remote.
+function gitPullFastForward(dir) {
+  try {
+    execFileSync('git', ['pull', '--ff-only'], { cwd: dir, stdio: 'ignore' });
+    return true;
+  } catch {
+    try {
+      execFileSync('git', ['fetch', 'origin'], { cwd: dir, stdio: 'ignore' });
+      execFileSync('git', ['reset', '--hard', 'FETCH_HEAD'], { cwd: dir, stdio: 'ignore' });
+      return true;
+    } catch { return false; }
+  }
+}
+
 // On boot, restore saved custom sections from the GitHub data repo if configured.
 function initDataRepo() {
   if (!process.env.DATA_REPO || !process.env.DATA_TOKEN) return;
   const url = `https://x-access-token:${process.env.DATA_TOKEN}@${process.env.DATA_REPO}.git`;
   try {
     if (fs.existsSync(path.join(CUSTOM_DIR, '.git'))) {
-      execFileSync('git', ['pull'], { cwd: CUSTOM_DIR, stdio: 'ignore' });
+      gitPullFastForward(CUSTOM_DIR);
     } else if (fs.readdirSync(CUSTOM_DIR).length === 0) {
       execFileSync('git', ['clone', url, '.'], { cwd: CUSTOM_DIR, stdio: 'ignore' });
     } else {
       execFileSync('git', ['init'], { cwd: CUSTOM_DIR, stdio: 'ignore' });
       execFileSync('git', ['remote', 'add', 'origin', url], { cwd: CUSTOM_DIR, stdio: 'ignore' });
-      try { execFileSync('git', ['pull', 'origin', 'HEAD'], { cwd: CUSTOM_DIR, stdio: 'ignore' }); } catch {}
+      gitPullFastForward(CUSTOM_DIR);
     }
     const nested = path.join(CUSTOM_DIR, 'custom-sections');
     if (fs.existsSync(nested)) {
