@@ -96,9 +96,9 @@ async function ghReq(path, opts = {}) {
 }
 
 async function ghRestore() {
-  if (!GH_DATA) return;
+  if (!GH_DATA) return false;
   const response = await ghReq('custom-sections');
-  if (response.status === 404) return;
+  if (response.status === 404) return false;
   if (!response.ok) throw new Error(`GitHub restore failed (${response.status})`);
   const items = await response.json();
   for (const item of items.filter((entry) => entry.type === 'file')) {
@@ -110,6 +110,43 @@ async function ghRestore() {
     if (extension && CUSTOM_SLUG.test(slug)) fs.writeFileSync(customPath(slug, extension), Buffer.from(data.content, 'base64'));
   }
   console.log(`gh restore: ${items.length} files restored`);
+  return true;
+}
+
+let ghRestoreInFlight = null;
+let lastGhRestoreAt = 0;
+
+async function refreshCustomSections({ maxAgeMs = 0 } = {}) {
+  if (!GH_DATA) return false;
+  if (maxAgeMs && Date.now() - lastGhRestoreAt < maxAgeMs) return true;
+  if (!ghRestoreInFlight) {
+    ghRestoreInFlight = ghRestore()
+      .then((result) => { lastGhRestoreAt = Date.now(); return result; })
+      .finally(() => { ghRestoreInFlight = null; });
+  }
+  return ghRestoreInFlight;
+}
+
+async function ensureCustomSectionRemote(slug) {
+  if (!GH_DATA || !CUSTOM_SLUG.test(slug)) return false;
+  try {
+    if (fs.readFileSync(customPath(slug, 'liquid'), 'utf8').trim() && fs.existsSync(customPath(slug, 'json'))) return true;
+  } catch {}
+  try {
+    const [liquidResponse, jsonResponse] = await Promise.all([
+      ghReq(`custom-sections/${slug}.liquid`),
+      ghReq(`custom-sections/${slug}.json`),
+    ]);
+    if (!liquidResponse.ok || !jsonResponse.ok) return false;
+    const [liquidData, jsonData] = await Promise.all([liquidResponse.json(), jsonResponse.json()]);
+    const liquid = Buffer.from(liquidData.content || '', 'base64').toString('utf8');
+    const json = Buffer.from(jsonData.content || '', 'base64').toString('utf8');
+    if (!liquid.trim() || !json.trim()) return false;
+    writeCustomFiles(slug, liquid, json);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 async function ghPersistFile(name, contentStr) {
@@ -427,7 +464,7 @@ app.post('/login', express.urlencoded({ extended: false }), (req, res) => {
 app.use(express.json({ limit: '4mb' }));
 
 // Cold-start gate: restore persisted custom sections before the first request.
-const bootReady = IS_SERVERLESS ? ghRestore() : Promise.resolve();
+const bootReady = IS_SERVERLESS ? refreshCustomSections() : Promise.resolve();
 if (IS_SERVERLESS) app.use((req, res, next) => {
   bootReady.then(() => next(), (error) => {
     console.error('Custom section restore failed:', error.message);
@@ -497,19 +534,24 @@ app.get('/api/config', (req, res) => {
   });
 });
 
-app.get('/api/index', (req, res) => {
+app.get('/api/index', async (req, res) => {
+  if (IS_SERVERLESS && GH_DATA) {
+    try { await refreshCustomSections({ maxAgeMs: 15000 }); }
+    catch (error) { console.warn('Custom section refresh skipped:', error.message); }
+  }
   res.set('Cache-Control', 'private, max-age=60, stale-while-revalidate=300');
   const idx = loadIndex();
   res.json({ ...idx, sections: [...idx.sections, ...listCustomSections()] });
 });
 
-app.get('/api/section/:store/:file', (req, res) => {
+app.get('/api/section/:store/:file', async (req, res) => {
   const { store, file } = req.params;
   if (!/^[\w.-]+\.liquid$/.test(file)) return res.status(400).json({ error: 'bad file' });
   try {
     if (store === 'custom') {
       const slug = file.replace(/\.liquid$/, '');
       assertCustomSlug(slug);
+      await ensureCustomSectionRemote(slug);
       const sources = customSectionSources(slug);
       if (!sources.meta || !sources.liquid.trim()) return res.status(404).json({ error: 'not found' });
       const contextPath = sources.meta.contextStore === 'custom' ? null : findStore(sources.meta.contextStore);
@@ -975,6 +1017,7 @@ async function localPreview(req, res) {
       if (!/^[\w.-]+(\.liquid)?$/.test(file)) return res.status(400).send('bad file');
       const slug = file.replace(/\.liquid$/, '');
       assertCustomSlug(slug);
+      await ensureCustomSectionRemote(slug);
       const meta = customSectionMeta(slug);
       const { liquid, css, js } = customSectionSources(slug);
       if (!meta || !liquid.trim()) return res.status(404).send('not found');

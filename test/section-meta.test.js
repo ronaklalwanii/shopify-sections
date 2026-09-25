@@ -138,4 +138,6 @@ test('rolls back custom sections when persistence fails', () => {
   assert.match(server, /removeCustomFiles\(saved\.meta\.slug\)/);
   assert.match(server, /if \(!liquid\.trim\(\)\) continue/);
   assert.match(server, /Contents: read and write permission/);
+  assert.match(server, /async function ensureCustomSectionRemote\(/);
+  assert.match(server, /refreshCustomSections\(\{ maxAgeMs: 15000 \}\)/);
 });
