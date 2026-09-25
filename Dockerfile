@@ -6,6 +6,7 @@ RUN npm ci --omit=dev
 COPY src ./src
 COPY public ./public
 COPY api ./api
+COPY assets ./assets
 COPY stores ./stores
 COPY data/index.json data/gallery-manifest.json ./data/
 ENV NODE_ENV=production PORT=3000

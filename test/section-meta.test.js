@@ -49,11 +49,17 @@ test('renders object-form Shopify presets', async () => {
   assert.match(result.html, /Hello from preset/);
 });
 
-test('uses local SVG placeholders for mocked images', async () => {
-  const source = `{% schema %}{"settings":[{"id":"image","type":"image_picker"}]}{% endschema %}{{ section.settings.image | image_url }}`;
-  const result = await renderSectionSource('custom', source, { sectionId: 'image-test' });
-  assert.equal(result.error, null);
-  assert.match(result.html, /\/ph\//);
+test('uses the supplied demo assets for mocked images and icons', async () => {
+  const imageSource = `{% schema %}{"settings":[{"id":"image","type":"image_picker"}]}{% endschema %}{{ section.settings.image | image_url }}`;
+  const iconSource = `{% schema %}{"settings":[{"id":"icon","type":"image_picker"}]}{% endschema %}{{ section.settings.icon | image_url }}`;
+  const image = await renderSectionSource('custom', imageSource, { sectionId: 'image-test' });
+  const icon = await renderSectionSource('custom', iconSource, { sectionId: 'icon-test' });
+  assert.equal(image.error, null);
+  assert.equal(icon.error, null);
+  assert.match(image.html, /\/assets\/demo-image\.jpg/);
+  assert.match(icon.html, /\/assets\/star\.svg/);
+  const placeholder = await renderSectionSource('custom', "{{ 'icon' | placeholder_svg_tag }}", { sectionId: 'placeholder-test' });
+  assert.match(placeholder.html, /\/assets\/star\.svg/);
 });
 
 test('does not call blank rendered output healthy', () => {

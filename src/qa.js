@@ -6,6 +6,7 @@ const { renderStoreSection } = require('./renderer');
 
 const ROOT = path.resolve(__dirname, '..');
 const BASE = process.env.LIB_URL || 'http://localhost:4173';
+const LIVE_QA = process.env.QA_LIVE === '1';
 const CONCURRENCY = 6;
 
 const index = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/index.json'), 'utf8'));
@@ -107,7 +108,8 @@ async function fetchOne(store, file) {
   const ctl = new AbortController();
   const t = setTimeout(() => ctl.abort(), 45000);
   try {
-    const r = await fetch(`${BASE}/preview/${encodeURIComponent(store)}/${encodeURIComponent(file)}`, { signal: ctl.signal });
+    const liveQuery = LIVE_QA ? '?live=1' : '';
+    const r = await fetch(`${BASE}/preview/${encodeURIComponent(store)}/${encodeURIComponent(file)}${liveQuery}`, { signal: ctl.signal });
     const html = await r.text();
     const previewPath = r.headers.get('x-preview-path') || 'unknown';
     const issues = visibleContentIssues(html).filter((issue) => previewPath !== 'local-context' || issue !== 'no visible content');

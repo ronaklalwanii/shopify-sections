@@ -3,7 +3,7 @@
   "buildCommand": "node src/ingest.js",
   "functions": {
     "api/index.js": {
-      "includeFiles": "stores/**, src/**, data/index.json, data/gallery-manifest.json, public/**",
+      "includeFiles": "stores/**, src/**, data/index.json, data/gallery-manifest.json, public/**, assets/demo-image.jpg, assets/star.svg",
       "maxDuration": 30
     }
   },

@@ -550,6 +550,7 @@ $('previewsToggle').addEventListener('change', (e) => {
 });
 $('addBtn').onclick = () => openEditor(null);
 $('detailClose').onclick = () => closeOverlay('detailOverlay');
+$('detailOpenTab').onclick = () => state.current && window.open(previewUrl(state.current), '_blank', 'noopener,noreferrer');
 $('detailCopy').onclick = () => state.current && copyText(state.code.liquid, 'Liquid copied');
 $('detailDownload').onclick = () => state.current && downloadLiquid(state.current);
 $('detailEdit').onclick = () => { closeOverlay('detailOverlay'); openEditor(state.current); };

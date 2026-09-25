@@ -294,10 +294,22 @@ ${msg ? `<div class="err">${msg}</div>` : ''}
 </div></body></html>`;
 }
 
+function isPreviewAssetRequest(req) {
+  if (!req.path.startsWith('/assets/')) return false;
+  const referer = req.get('referer');
+  if (!referer) return false;
+  try {
+    const url = new URL(referer);
+    const host = req.get('x-forwarded-host') || req.get('host');
+    return url.host === host && (url.pathname.startsWith('/preview/') || url.pathname.startsWith('/assets/'));
+  } catch { return false; }
+}
+
 app.use((req, res, next) => {
   if (!ACCESS_PASSWORD) return next();
   if (req.path === '/login') return next();
   if (hasAuthCookie(req.headers.cookie)) return next();
+  if (isPreviewAssetRequest(req)) return next();
   if (req.path.startsWith('/api/') || req.path.startsWith('/preview/')) return res.status(401).json({ error: 'unauthorized' });
   res.status(401).type('html').send(loginPage());
 });
@@ -393,7 +405,7 @@ async function shopifyGet(url) {
 
 app.get('/api/config', (req, res) => {
   const cfg = storeConfig();
-  const live = !!(cfg.storeUrl && (cfg.previewThemeId || cfg.storefrontPassword));
+  const live = process.env.LIVE_PREVIEWS === '1' && !!(cfg.storeUrl && (cfg.previewThemeId || cfg.storefrontPassword));
   res.json({
     livePreviews: live,
     storeUrl: cfg.storeUrl || null,
@@ -661,7 +673,8 @@ app.get('/preview/:store/:file', async (req, res) => {
   // proxied through this server (authenticates with the storefront password).
   // Custom sections aren't in the manifest and keep the local mock renderer.
   const cfg = storeConfig();
-  if (cfg.storeUrl && (cfg.previewThemeId || cfg.storefrontPassword)) {
+  const liveRequested = process.env.LIVE_PREVIEWS === '1' || req.query.live === '1';
+  if (liveRequested && cfg.storeUrl && (cfg.previewThemeId || cfg.storefrontPassword)) {
     const entry = galleryManifest()[`${store}/${file}`];
     if (entry) {
       const params = new URLSearchParams({ view: entry.template });
@@ -772,6 +785,11 @@ app.get('/reset.css', (req, res) => { res.type('css').send(RESET_CSS); });
 /* ------------------------------ static assets/ph ------------------------------ */
 
 app.use('/assets', (req, res, next) => {
+  const rootAsset = req.path.replace(/^\//, '');
+  if (rootAsset === 'demo-image.jpg' || rootAsset === 'star.svg') {
+    res.set('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
+    return res.sendFile(path.join(ROOT, 'assets', rootAsset), (error) => { if (error) res.status(404).end(); });
+  }
   const parts = req.path.replace(/^\//, '').split('/');
   const store = decodeURIComponent(parts.shift() || '');
   const rel = parts.join('/');

@@ -8,10 +8,12 @@ const { extractSchema, parseJsonLoose } = require('./section-meta');
 
 /* ---------------------------------- mocks ---------------------------------- */
 
-const PH = (seed, w, h) => `/ph/${encodeURIComponent(seed)}/${Math.round(w)}x${Math.round(h)}.svg`;
+const DEMO_IMAGE = '/assets/demo-image.jpg';
+const DEMO_ICON = '/assets/star.svg';
+const PH = (seed, w, h, kind = 'image') => kind === 'icon' ? DEMO_ICON : DEMO_IMAGE;
 
-function imageMock(seed, alt = 'Sample image', aspect = 1.5) {
-  return { __mock: 'image', seed: String(seed || 'sample'), alt, aspect };
+function imageMock(seed, alt = 'Sample image', aspect = 1.5, kind = 'image') {
+  return { __mock: 'image', seed: String(seed || 'sample'), alt, aspect, kind };
 }
 
 // Deterministic seed from arbitrary strings (used for per-setting images).
@@ -155,7 +157,7 @@ function settingDefault(s, ctx) {
     case 'textarea': return def != null ? def : 'A short sample description that stands in for real copy in this preview.';
     case 'richtext': return def != null ? def : '<p>Sample <strong>rich text</strong> with a <a href="#">link</a> to stand in for real copy.</p>';
     case 'inline_richtext': return def != null ? def : 'Sample <strong>inline</strong> text';
-    case 'image_picker': return imageMock(seedFor(ctx.seedBase, id), id);
+    case 'image_picker': return imageMock(seedFor(ctx.seedBase, id), id, 1.5, /icon|pictogram|logo/i.test(id) ? 'icon' : 'image');
     case 'url': return def || '#';
     case 'color': return def || ''; // blank by default — sections gate on `!= blank`
     case 'checkbox': return def != null ? !!def : true;
@@ -362,7 +364,7 @@ function imageInputInfo(input) {
   // Returns {seed,w,h,alt,src} for mock image objects, legacy image URLs, or placeholder URLs.
   if (input && input.__mock === 'image') {
     const h = Math.round(1000 / (input.aspect || 1.5));
-    return { seed: input.seed, w: 1000, h, alt: input.alt || '', src: null };
+    return { seed: input.seed, w: 1000, h, alt: input.alt || '', src: null, kind: input.kind || 'image' };
   }
   if (typeof input === 'string') {
     const pm = input.match(/^https:\/\/picsum\.photos\/seed\/([^/]+)\/(\d+)\/(\d+)$/);
@@ -396,7 +398,7 @@ function buildFilters(storeName) {
       if (info.src) return /^https?:\/\//.test(info.src) || info.src.startsWith('/') ? info.src : `/assets/${storeName}/${info.src}`;
       const w = Math.min(+opts.width || info.w || 1000, 2400);
       const h = Math.round(w * (info.h / info.w));
-      return PH(info.seed, w, h);
+      return PH(info.seed, w, h, info.kind);
     },
     img_url(input, size = '1000x') {
       const info = imageInputInfo(input);
@@ -404,14 +406,14 @@ function buildFilters(storeName) {
       if (info.src) return /^https?:\/\//.test(info.src) || info.src.startsWith('/') ? info.src : `/assets/${storeName}/${info.src}`;
       const m = String(size).match(/^(\d*)x?(\d*)/);
       const w = +m[1] || info.w, h = +m[2] || Math.round(w / (info.w / info.h));
-      return PH(info.seed, w, h);
+      return PH(info.seed, w, h, info.kind);
     },
     image_tag(input, ...rest) {
       // Merge hash args defensively; liquidjs can degrade complex hashes to positional args.
       const opts = Object.assign({}, ...rest.filter((r) => r && typeof r === 'object' && !Array.isArray(r)));
       const info = imageInputInfo(input);
       if (!info) return '';
-      const src = info.src || (() => { const w = Math.min(+(opts.width || info.w || 1000), 2400); return PH(info.seed, w, Math.round(w * (info.h / info.w))); })();
+      const src = info.src || (() => { const w = Math.min(+(opts.width || info.w || 1000), 2400); return PH(info.seed, w, Math.round(w * (info.h / info.w)), info.kind); })();
       const alt = opts.alt != null ? opts.alt : (info.alt || 'Sample image');
       const excluded = new Set(['width', 'height', 'widths', 'sizes', 'alt', 'loading', 'class']);
       const attrs = Object.entries(opts)
@@ -422,7 +424,8 @@ function buildFilters(storeName) {
     },
     placeholder_svg_tag(name = 'image', cls = '') {
       const label = String(name).replace(/[-_]/g, ' ');
-      return `<svg class="placeholder-svg ${cls}" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${label}"><rect width="400" height="300" fill="#e8e6e1"/><rect x="120" y="90" width="160" height="120" rx="8" fill="#d6d2c9"/><text x="200" y="228" text-anchor="middle" font-family="system-ui,sans-serif" font-size="16" fill="#8a857b">${label}</text></svg>`;
+      const src = /icon|pictogram|logo/i.test(label) ? DEMO_ICON : DEMO_IMAGE;
+      return `<img class="placeholder-svg ${cls}" src="${src}" alt="${label.replace(/"/g, '&quot;')}" loading="lazy">`;
     },
     money, money_with_currency: (v, f) => money(v, f || '${{amount}} USD'),
     money_without_currency: (v) => (Number(v) / 100).toFixed(2),

@@ -41,7 +41,9 @@ persisted through a private GitHub "data repo" (serverless has no disk).
    `vercel.json` runs the catalog ingest during the build.
 3. Environment variables:
    - `ACCESS_PASSWORD` — your team's login password
-   - `STORE_URL`, `STOREFRONT_PASSWORD`, `PAGE_HANDLE=section-library` — live previews
+    - `STORE_URL`, `STOREFRONT_PASSWORD`, `PAGE_HANDLE=section-library` — optional live previews
+    - `LIVE_PREVIEWS=1` — opt into live Shopify previews; local previews are the default
+
    - `DATA_REPO` = `you/section-library-data`, `DATA_TOKEN` = a GitHub fine-grained
      token with **Contents: read/write** on that repo (create the empty private repo
      first). Without these, saved custom sections vanish on every function restart.
@@ -97,6 +99,7 @@ No sleeping, persistent disk, and the VM stays inside the Always Free allowance.
 | --- | --- |
 | `ACCESS_PASSWORD` | Team login gate (required when `NODE_ENV=production`; unset is open only for local development) |
 | `STORE_URL` / `STOREFRONT_PASSWORD` / `PAGE_HANDLE` | Live-preview connection to the dev store |
+| `LIVE_PREVIEWS=1` | Opt into live Shopify previews; local previews are the default |
 | `PREVIEW_THEME_ID` | Optional preview-theme bypass |
 | `DATA_REPO` / `DATA_TOKEN` | GitHub repo for custom-section persistence |
 | `STORES_ROOTS` | Where theme folders live (default `stores/`) |
@@ -123,8 +126,8 @@ No sleeping, persistent disk, and the VM stays inside the Always Free allowance.
 
 Sections are Liquid, so the server renders them at request time with
 [liquidjs](https://github.com/harttle/liquidjs) plus a mock Shopify layer:
-schema settings get defaults/preset content, images use local deterministic SVG
-placeholders, `settings_data.json` supplies the store's real theme settings,
+schema settings get defaults/preset content, images use the bundled demo image,
+icons use the bundled star asset, `settings_data.json` supplies the store's real theme settings,
 and translations come from the theme locales. Each preview loads the store's
 own CSS/JavaScript dependencies inside a sandboxed iframe, so sections look and
 behave more like they do on the real store. Sections depending on live store
