@@ -13,8 +13,9 @@ function loadOverrides() {
   try { return JSON.parse(fs.readFileSync(OVERRIDES_FILE, 'utf8')); } catch { return {}; }
 }
 
-// Page-level chrome & utilities — hidden behind "show functional" toggle.
-const FUNCTIONAL_RULES = [
+// Store plumbing every Shopify theme must ship — page templates, drawers, and
+// utilities. Hidden behind the "show core Shopify files" toggle.
+const CORE_RULES = [
   /^main-/, 'drawer', 'search-drawer', 'pickup', 'privacy', 'promo-payment',
   'recently-viewed', 'related-products', 'apps', 'custom-liquid', 'custom-html',
   'shogun', 'account', 'password', 'gift-card', 'variant-added', 'newsletter-popup',
@@ -35,18 +36,18 @@ const CATEGORY_RULES = [
 
 function classify(fileName, overrides) {
   const n = fileName.toLowerCase();
-  if (overrides.category) return { category: overrides.category, functional: overrides.functional ?? false };
-  const functional = FUNCTIONAL_RULES.some((r) => (r instanceof RegExp ? r.test(n) : n.includes(r)));
+  if (overrides.category) return { category: overrides.category, core: overrides.core ?? false };
+  const core = CORE_RULES.some((r) => (r instanceof RegExp ? r.test(n) : n.includes(r)));
   let category = 'Other';
-  if (functional) {
-    category = /^main-|search|pickup|account|password|gift-card|cart|privacy|apps/.test(n) ? 'Functional / page' : 'Header / Footer / Nav';
-    if (/drawer|search|pickup|privacy|promo-payment|recently-viewed|related|apps|custom-liquid|custom-html|shogun|newsletter-popup|variant-added/.test(n)) category = 'Functional / page';
+  if (core) {
+    category = /^main-|search|pickup|account|password|gift-card|cart|privacy|apps/.test(n) ? 'Core Shopify files' : 'Header / Footer / Nav';
+    if (/drawer|search|pickup|privacy|promo-payment|recently-viewed|related|apps|custom-liquid|custom-html|shogun|newsletter-popup|variant-added/.test(n)) category = 'Core Shopify files';
   } else {
     for (const [cat, kws] of CATEGORY_RULES) {
       if (kws.some((k) => n.includes(k))) { category = cat; break; }
     }
   }
-  return { category, functional };
+  return { category, core };
 }
 
 function contentHash(src) {
@@ -161,9 +162,9 @@ function main() {
       stores.push({ name: entry.name, sectionCount: ingested.length, color, textColor: luminance(color) > 0.6 ? '#191a1c' : '#ffffff' });
       for (const s of ingested) {
         const ov = overrides[`${s.store}/${s.file}`] || {};
-        const { category, functional } = classify(s.file, ov);
+        const { category, core } = classify(s.file, ov);
         s.category = category;
-        s.functional = functional;
+        s.core = core;
         s.custom = false;
         sections.push(s);
       }

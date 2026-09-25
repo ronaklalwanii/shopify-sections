@@ -8,7 +8,7 @@ const state = {
   store: 'all',
   category: 'all',
   q: '',
-  showFunctional: false,
+  showCore: false,
   showPreviews: localStorage.getItem('sl-previews') !== 'off',
   columns: [2, 4].includes(Number(localStorage.getItem('sl-columns'))) ? Number(localStorage.getItem('sl-columns')) : 2,
   visibleCount: 48,
@@ -27,7 +27,7 @@ const CAT_COLORS = {
   'Hero / Banner': '#c2571f', 'Product showcase': '#2f6f8f', 'Trust / Social proof': '#2f8f5b',
   'Testimonials': '#8f2f6b', 'Stats': '#b39322', 'Media': '#5b5bd6', 'CTA / Newsletter': '#c2478f',
   'Header / Footer / Nav': '#5d6b7a', 'Text / Content': '#6b7a2f', 'Other': '#8b8d93',
-  'Functional / page': '#9a7ab5',
+    'Core Shopify files': '#9a7ab5',
 };
 const catColor = (c) => CAT_COLORS[c] || '#8b8d93';
 
@@ -40,7 +40,7 @@ function visibleSections() {
     // shows that store's own files (which is what the store actually contains).
     if (state.store === 'all' ? s.duplicate : s.store !== state.store) return false;
     if (state.category !== 'all' && s.category !== state.category) return false;
-    if (s.functional && !state.showFunctional) return false;
+    if (s.core && !state.showCore) return false;
     if (q && !(`${s.name} ${s.file} ${s.store} ${s.category} ${(s.tags || []).join(' ')}`.toLowerCase().includes(q))) return false;
     return true;
   });
@@ -51,12 +51,12 @@ function counts() {
   // Store chips: own files per store (stable, scope-independent). Sharing info
   // still surfaces per-card via the "N stores" chip from the dedupe group.
   for (const s of state.sections) {
-    if (s.functional && !state.showFunctional) continue;
+    if (s.core && !state.showCore) continue;
     stores[s.store] = (stores[s.store] || 0) + 1;
   }
   // Headline + categories: current scope (store filter applied, dupes collapsed).
   for (const s of state.sections) {
-    if (s.functional && !state.showFunctional) continue;
+    if (s.core && !state.showCore) continue;
     if (state.store === 'all' ? s.duplicate : s.store !== state.store) continue;
     stores.all++;
     cats[s.category] = (cats[s.category] || 0) + 1;
@@ -109,7 +109,7 @@ function renderGrid() {
         ${s.schemaStatus === 'invalid' ? '<span class="chip warning">schema issue</span>' : ''}
         <span class="chip ${quality.status === 'failed' ? 'warning' : ''}" title="${esc((quality.issues || []).join(' · '))}">${qualityText}</span>
         <span class="chip">${esc(s.category)}</span>
-        ${s.functional ? '<span class="chip functional">functional</span>' : ''}
+        ${s.core ? '<span class="chip core">core</span>' : ''}
         <span class="meta-dim">${s.settings || 0} set · ${s.blocks || 0} blk</span>
       </div>
     </div>`;
@@ -137,7 +137,7 @@ function renderGrid() {
   $('loadMore').textContent = `Load ${Math.min(48, all.length - list.length)} more sections`;
   const scope = [state.category !== 'all' && state.category, state.store !== 'all' && (state.store === 'custom' ? 'custom sections' : `store "${state.store}"`)].filter(Boolean).join(' · ');
   $('resultsTitle').textContent = state.q ? `Results for "${state.q}"` : (scope || 'All sections');
-  $('resultsSub').textContent = `${all.length} section${all.length === 1 ? '' : 's'}${state.showFunctional ? '' : ' · functional hidden'}`;
+  $('resultsSub').textContent = `${all.length} section${all.length === 1 ? '' : 's'}${state.showCore ? '' : ' · core Shopify files hidden'}`;
   if (state.showPreviews) observeThumbs();
 }
 
@@ -698,12 +698,13 @@ $('search').addEventListener('input', (e) => {
   searchTimer = setTimeout(() => { state.visibleCount = 48; renderGrid(); }, 160);
 });
 $('loadMore').onclick = () => { state.visibleCount += 48; renderGrid(); };
-$('functionalToggle').addEventListener('change', (e) => { state.showFunctional = e.target.checked; refresh(); });
+$('coreToggle').addEventListener('change', (e) => { state.showCore = e.target.checked; refresh(); });
 syncColumnButtons();
 $('columnSwitch').addEventListener('click', (e) => {
   const button = e.target.closest('button[data-columns]');
   if (button) setColumns(button.dataset.columns);
 });
+$('coreToggle').checked = state.showCore;
 $('previewsToggle').checked = state.showPreviews;
 $('previewsToggle').addEventListener('change', (e) => {
   state.showPreviews = e.target.checked;

@@ -320,7 +320,7 @@ function listCustomSections() {
     if (!liquid.trim()) continue;
     const schema = extractSchema(liquid);
     out.push({
-      ...meta, slug, store: 'custom', file: `${slug}.liquid`, custom: true, functional: false,
+      ...meta, slug, store: 'custom', file: `${slug}.liquid`, custom: true, core: false,
       lines: liquid.split('\n').length, settings: schema?.settings?.length || 0, blocks: schema?.blocks?.length || 0,
       hasSchema: !!schema, schemaStatus: schema ? 'valid' : /{%-?\s*schema\s*-?%}/i.test(liquid) ? 'invalid' : 'missing',
       dependencies: { snippets: [], assets: [], missingSnippets: [], missingAssets: [] },

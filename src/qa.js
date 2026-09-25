@@ -72,7 +72,7 @@ function visibleContentIssues(html) {
 }
 
 function hardIssue(issue) {
-  if (/^functional wrapper/i.test(issue)) return false;
+  if (/^core file wrapper/i.test(issue)) return false;
   return /empty output|no visible content|unrendered|liquid error|render error|http [45]|network|aborted/i.test(
     issue,
   );
@@ -86,12 +86,12 @@ function checkLocalHtml(html, meta) {
   else {
     if (!html || html.trim().length < 40)
       issues.push(
-        meta.functional
-          ? "functional wrapper has no standalone output"
+        meta.core
+          ? "core file wrapper has no standalone output"
           : "empty output",
       );
-    if (meta.functional)
-      issues.push(...noVisible.map((issue) => `functional wrapper: ${issue}`));
+    if (meta.core)
+      issues.push(...noVisible.map((issue) => `core file wrapper: ${issue}`));
     else issues.push(...noVisible);
   }
   // Leak checks ignore script/style bodies: JS money formatters legitimately
