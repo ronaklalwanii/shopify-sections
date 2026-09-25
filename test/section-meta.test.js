@@ -140,4 +140,7 @@ test('rolls back custom sections when persistence fails', () => {
   assert.match(server, /Contents: read and write permission/);
   assert.match(server, /async function ensureCustomSectionRemote\(/);
   assert.match(server, /refreshCustomSections\(\{ maxAgeMs: 15000 \}\)/);
+  assert.match(server, /customSectionsRestoreError = error/);
+  assert.match(server, /Custom sections unavailable:/);
+  assert.doesNotMatch(server, /Custom sections are temporarily unavailable/);
 });

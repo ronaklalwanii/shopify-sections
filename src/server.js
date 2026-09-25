@@ -115,13 +115,15 @@ async function ghRestore() {
 
 let ghRestoreInFlight = null;
 let lastGhRestoreAt = 0;
+let customSectionsRestoreError = null;
 
 async function refreshCustomSections({ maxAgeMs = 0 } = {}) {
   if (!GH_DATA) return false;
   if (maxAgeMs && Date.now() - lastGhRestoreAt < maxAgeMs) return true;
   if (!ghRestoreInFlight) {
     ghRestoreInFlight = ghRestore()
-      .then((result) => { lastGhRestoreAt = Date.now(); return result; })
+      .then((result) => { lastGhRestoreAt = Date.now(); customSectionsRestoreError = null; return result; })
+      .catch((error) => { lastGhRestoreAt = Date.now(); throw error; })
       .finally(() => { ghRestoreInFlight = null; });
   }
   return ghRestoreInFlight;
@@ -464,12 +466,15 @@ app.post('/login', express.urlencoded({ extended: false }), (req, res) => {
 app.use(express.json({ limit: '4mb' }));
 
 // Cold-start gate: restore persisted custom sections before the first request.
-const bootReady = IS_SERVERLESS ? refreshCustomSections() : Promise.resolve();
-if (IS_SERVERLESS) app.use((req, res, next) => {
-  bootReady.then(() => next(), (error) => {
+const bootReady = IS_SERVERLESS
+  ? refreshCustomSections().catch((error) => {
+    customSectionsRestoreError = error;
     console.error('Custom section restore failed:', error.message);
-    res.status(503).json({ error: 'Custom sections are temporarily unavailable' });
-  });
+    return false;
+  })
+  : Promise.resolve();
+if (IS_SERVERLESS) app.use((req, res, next) => {
+  bootReady.then(() => next());
 });
 
 app.use(express.static(path.join(ROOT, 'public')));
@@ -537,7 +542,10 @@ app.get('/api/config', (req, res) => {
 app.get('/api/index', async (req, res) => {
   if (IS_SERVERLESS && GH_DATA) {
     try { await refreshCustomSections({ maxAgeMs: 15000 }); }
-    catch (error) { console.warn('Custom section refresh skipped:', error.message); }
+    catch (error) {
+      customSectionsRestoreError = error;
+      console.warn('Custom section refresh skipped:', error.message);
+    }
   }
   res.set('Cache-Control', 'private, max-age=60, stale-while-revalidate=300');
   const idx = loadIndex();
@@ -553,7 +561,10 @@ app.get('/api/section/:store/:file', async (req, res) => {
       assertCustomSlug(slug);
       await ensureCustomSectionRemote(slug);
       const sources = customSectionSources(slug);
-      if (!sources.meta || !sources.liquid.trim()) return res.status(404).json({ error: 'not found' });
+      if (!sources.meta || !sources.liquid.trim()) {
+        if (customSectionsRestoreError) return res.status(503).json({ error: `Custom sections unavailable: ${customSectionsRestoreError.message}` });
+        return res.status(404).json({ error: 'not found' });
+      }
       const contextPath = sources.meta.contextStore === 'custom' ? null : findStore(sources.meta.contextStore);
       const dependencies = contextPath
         ? collectSectionDependencies(contextPath, sources.liquid)
@@ -1020,7 +1031,10 @@ async function localPreview(req, res) {
       await ensureCustomSectionRemote(slug);
       const meta = customSectionMeta(slug);
       const { liquid, css, js } = customSectionSources(slug);
-      if (!meta || !liquid.trim()) return res.status(404).send('not found');
+      if (!meta || !liquid.trim()) {
+        if (customSectionsRestoreError) return res.status(503).send(`Custom sections unavailable: ${customSectionsRestoreError.message}`);
+        return res.status(404).send('not found');
+      }
       if (/{%-?\s*content_for\b/i.test(liquid)) res.set('X-Preview-Path', 'local-context');
       const contextStore = meta.contextStore === 'custom' ? 'custom' : meta.contextStore;
       const contextPath = contextStore === 'custom' ? null : findStore(contextStore);
