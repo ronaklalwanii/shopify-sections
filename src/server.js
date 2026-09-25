@@ -379,7 +379,10 @@ const PREVIEW_TOKEN_SECRET = process.env.PREVIEW_TOKEN_SECRET || ACCESS_PASSWORD
 const PREVIEW_TOKEN_TTL = 60 * 60 * 1000;
 const previewTokenSignature = (expires) => crypto.createHmac('sha256', PREVIEW_TOKEN_SECRET).update(String(expires)).digest('hex');
 function createPreviewToken() {
-  const expires = Date.now() + PREVIEW_TOKEN_TTL;
+  // Bucket the expiry so every preview in a window shares one token. A per-request
+  // timestamp made each asset URL unique, which defeated browser caching and forced
+  // every card to re-download the same multi-hundred-KB assets.
+  const expires = Math.ceil((Date.now() + 1) / PREVIEW_TOKEN_TTL) * PREVIEW_TOKEN_TTL;
   return `${expires}.${previewTokenSignature(expires)}`;
 }
 function verifyPreviewToken(token) {
@@ -393,9 +396,14 @@ function verifyPreviewToken(token) {
 const hasPreviewCookie = (header) => String(header || '').split(';')
   .map((part) => part.trim()).some((part) => part.startsWith('sl_preview=') && verifyPreviewToken(part.slice('sl_preview='.length)));
 
+// Our own placeholder assets hold no merchant content and /assets serves them
+// without a token, so they keep a stable URL and stay cacheable across sessions.
+const PUBLIC_PREVIEW_ASSET_RE = /^\/assets\/(?:demo-image\.jpg|star\.svg)(?:[?#]|$)/i;
+
 function previewAssetToken(url, token) {
   const value = String(url || '');
   if (!/^\/assets\//i.test(value)) return value;
+  if (PUBLIC_PREVIEW_ASSET_RE.test(value)) return value.replace(/[?#].*$/, '');
   try {
     const parsed = new URL(value, 'http://preview.local');
     if (parsed.searchParams.get('sl_preview') === token) return value;
@@ -441,7 +449,7 @@ app.use((req, res, next) => {
   if (!ACCESS_PASSWORD) return next();
   if (req.path === '/login') return next();
   if (hasAuthCookie(req.headers.cookie)) return next();
-  if (isPreviewAssetRequest(req) || hasPreviewAssetToken(req) || (req.path.startsWith('/assets/') && hasPreviewCookie(req.headers.cookie))) return next();
+  if (isPreviewAssetRequest(req) || hasPreviewAssetToken(req) || PUBLIC_PREVIEW_ASSET_RE.test(req.path) || (req.path.startsWith('/assets/') && hasPreviewCookie(req.headers.cookie))) return next();
   if (req.path.startsWith('/api/') || req.path.startsWith('/preview/')) return res.status(401).json({ error: 'unauthorized' });
   res.status(401).type('html').send(loginPage());
 });
