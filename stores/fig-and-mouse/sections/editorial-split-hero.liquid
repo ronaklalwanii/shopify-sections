@@ -1,0 +1,429 @@
+{% liquid
+  assign section_id = 'editorial-split-hero-' | append: section.id
+%}
+
+<section
+  id="{{ section_id }}"
+  class="editorial-split-hero editorial-split-hero--{{ section.settings.image_position }}"
+>
+  <div class="editorial-split-hero__inner">
+
+    <div class="editorial-split-hero__content">
+      {% if section.settings.eyebrow != blank %}
+        <div class="editorial-split-hero__eyebrow">
+          {% if section.settings.show_bullet %}
+            <span class="editorial-split-hero__dot"></span>
+          {% endif %}
+
+          <span>{{ section.settings.eyebrow }}</span>
+        </div>
+      {% endif %}
+
+      {% if section.settings.title != blank %}
+        <h1 class="editorial-split-hero__title">
+          {{ section.settings.title }}
+        </h1>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <div class="editorial-split-hero__description">
+          {{ section.settings.description }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a
+          href="{{ section.settings.button_link }}"
+          class="editorial-split-hero__button"
+        >
+          {{ section.settings.button_label }}
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="editorial-split-hero__media">
+      {% if section.settings.image != blank %}
+        {{
+          section.settings.image
+          | image_url: width: 2400
+          | image_tag:
+            loading: 'eager',
+            widths: '600, 900, 1200, 1600, 2000, 2400',
+            sizes: '(min-width: 990px) 50vw, 100vw',
+            class: 'editorial-split-hero__image'
+        }}
+      {% else %}
+        {{ 'lifestyle-2' | placeholder_svg_tag: 'editorial-split-hero__placeholder' }}
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  {{ section.settings.eyebrow_font | font_face: font_display: 'swap' }}
+
+  #{{ section_id }} {
+    --esh-background: {{ section.settings.background_color }};
+    --esh-text: {{ section.settings.text_color }};
+    --esh-accent: {{ section.settings.accent_color }};
+    --esh-height: {{ section.settings.height }}px;
+
+    /* Eyebrow & Bullet Variables */
+    --esh-bullet-size: {{ section.settings.bullet_size }}px;
+    --esh-bullet-radius: {{ section.settings.bullet_radius }}%;
+    --esh-bullet-color: {{ section.settings.bullet_color }};
+    --esh-eyebrow-font: {{ section.settings.eyebrow_font.family }}, {{ section.settings.eyebrow_font.fallback_families }};
+    --esh-eyebrow-size: {{ section.settings.eyebrow_size }}px;
+    --esh-eyebrow-color: {{ section.settings.eyebrow_color }};
+    --esh-eyebrow-weight: {{ section.settings.eyebrow_weight }};
+    --esh-eyebrow-spacing: {{ section.settings.eyebrow_letter_spacing }}em;
+    --esh-eyebrow-transform: {{ section.settings.eyebrow_transform }};
+
+    width: 100%;
+    background: var(--esh-background);
+    color: var(--esh-text);
+  }
+
+  #{{ section_id }} .editorial-split-hero__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: var(--esh-height);
+    width: 100%;
+  }
+
+  #{{ section_id }} .editorial-split-hero__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+
+    padding: clamp(40px, 6vw, 100px);
+    padding-left: max(clamp(40px, 6vw, 100px), 8vw);
+
+    order: 1;
+  }
+
+  #{{ section_id }} .editorial-split-hero__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+
+    /* Applied Variables */
+    font-family: var(--esh-eyebrow-font);
+    font-size: var(--esh-eyebrow-size);
+    color: var(--esh-eyebrow-color);
+    font-weight: var(--esh-eyebrow-weight);
+    letter-spacing: var(--esh-eyebrow-spacing);
+    text-transform: var(--esh-eyebrow-transform);
+    line-height: 1.2;
+  }
+
+  #{{ section_id }} .editorial-split-hero__dot {
+    flex: 0 0 var(--esh-bullet-size);
+    width: var(--esh-bullet-size);
+    height: var(--esh-bullet-size);
+    border-radius: var(--esh-bullet-radius);
+    background: var(--esh-bullet-color);
+  }
+
+  #{{ section_id }} .editorial-split-hero__title {
+    max-width: 620px;
+    margin: 0 0 20px;
+    color: inherit;
+
+    font-family: var(--font-heading-family, Georgia, serif);
+    font-size: clamp(48px, 5vw, 82px);
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
+  #{{ section_id }} .editorial-split-hero__description {
+    max-width: 430px;
+    font-family: var(--font-body-family, sans-serif);
+    font-size: 16px;
+    line-height: 1.6;
+    color: inherit;
+    opacity: 0.85;
+  }
+
+  #{{ section_id }} .editorial-split-hero__description p {
+    margin: 0;
+  }
+
+  #{{ section_id }} .editorial-split-hero__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+    padding: 14px 24px;
+    background: var(--esh-text);
+    color: var(--esh-background);
+    text-decoration: none;
+    font-family: var(--font-body-family, sans-serif);
+    font-size: 13px;
+    line-height: 1;
+    font-weight: 500;
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  #{{ section_id }} .editorial-split-hero__button:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+  }
+
+  #{{ section_id }} .editorial-split-hero__media {
+    position: relative;
+    min-width: 0;
+    min-height: var(--esh-height);
+    overflow: hidden;
+    order: 2;
+  }
+
+  #{{ section_id }} .editorial-split-hero__image,
+  #{{ section_id }} .editorial-split-hero__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  #{{ section_id }} .editorial-split-hero__placeholder {
+    background: #e8e1d2;
+  }
+
+  /* Image left */
+  #{{ section_id }}.editorial-split-hero--left .editorial-split-hero__content {
+    order: 2;
+    padding-left: clamp(40px, 6vw, 100px);
+    padding-right: max(clamp(40px, 6vw, 100px), 8vw);
+  }
+  #{{ section_id }}.editorial-split-hero--left .editorial-split-hero__media {
+    order: 1;
+  }
+
+  /* Image right */
+  #{{ section_id }}.editorial-split-hero--right .editorial-split-hero__content {
+    order: 1;
+  }
+  #{{ section_id }}.editorial-split-hero--right .editorial-split-hero__media {
+    order: 2;
+  }
+
+  @media screen and (max-width: 749px) {
+    #{{ section_id }} {
+      --esh-height: auto;
+    }
+
+    #{{ section_id }} .editorial-split-hero__inner {
+      grid-template-columns: 1fr;
+    }
+
+    #{{ section_id }} .editorial-split-hero__content,
+    #{{ section_id }}.editorial-split-hero--left .editorial-split-hero__content {
+      order: 1;
+      padding: 52px 24px 48px;
+    }
+
+    #{{ section_id }} .editorial-split-hero__media,
+    #{{ section_id }}.editorial-split-hero--left .editorial-split-hero__media {
+      order: 2;
+      min-height: 65vw;
+      max-height: 520px;
+    }
+
+    #{{ section_id }} .editorial-split-hero__title {
+      font-size: clamp(44px, 13vw, 68px);
+      line-height: 0.94;
+    }
+
+    #{{ section_id }} .editorial-split-hero__description {
+      max-width: 360px;
+      font-size: 15px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Editorial Split Hero",
+  "tag": "section",
+  "class": "section-editorial-split-hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Built by dog lovers, for dog lovers"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "our story"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Beautifully crafted, built to last, and rooted in purpose.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Eyebrow & Bullet"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bullet",
+      "label": "Show bullet",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "bullet_size",
+      "label": "Bullet size",
+      "min": 2,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "bullet_radius",
+      "label": "Bullet roundness",
+      "info": "0% is square, 50% is circle",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "bullet_color",
+      "label": "Bullet color",
+      "default": "#543325"
+    },
+    {
+      "type": "font_picker",
+      "id": "eyebrow_font",
+      "label": "Eyebrow font",
+      "default": "assistant_n6"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow color",
+      "default": "#543325"
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_weight",
+      "label": "Eyebrow weight",
+      "default": "600",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_transform",
+      "label": "Text transform",
+      "default": "uppercase",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "capitalize", "label": "Capitalize" },
+        { "value": "lowercase", "label": "Lowercase" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "right", "label": "Right" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Desktop height",
+      "min": 300,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "default": 520
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#F4F0E6"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#543325"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent (Unused if bullet color is set)",
+      "default": "#543325"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial Split Hero"
+    }
+  ]
+}
+{% endschema %}

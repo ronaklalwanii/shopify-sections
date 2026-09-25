@@ -1,0 +1,757 @@
+{%- liquid
+  assign section_id = 'faq-image-' | append: section.id
+-%}
+
+<section
+  id="{{ section_id }}"
+  class="faq-image-section"
+  style="
+    --faq-bg: {{ section.settings.background_color }};
+    --faq-text: {{ section.settings.text_color }};
+    --faq-accent: {{ section.settings.accent_color }};
+    --faq-border: {{ section.settings.divider_color }};
+    --faq-heading-font: {{ section.settings.heading_font.family }}, {{ section.settings.heading_font.fallback_families }};
+    --faq-body-font: {{ section.settings.body_font.family }}, {{ section.settings.body_font.fallback_families }};
+    --faq-eyebrow-font: {{ section.settings.eyebrow_font.family }}, {{ section.settings.eyebrow_font.fallback_families }};
+    --faq-note-font: {{ section.settings.note_font.family }}, {{ section.settings.note_font.fallback_families }};
+    --faq-padding: {{ section.settings.section_padding }}px;
+    --faq-gap: {{ section.settings.column_gap }}px;
+    --faq-image-radius: {{ section.settings.image_radius }}px;
+    --faq-image-aspect-ratio: {{ section.settings.image_aspect_ratio }};
+  "
+>
+  <div class="faq-image__inner">
+    
+    <!-- Image Column -->
+    <div class="faq-image__media">
+      {%- if section.settings.image != blank -%}
+        <div class="faq-image__image-wrapper">
+          {{
+            section.settings.image
+            | image_url: width: 1200
+            | image_tag:
+              loading: 'eager',
+              widths: '400, 600, 800, 1000, 1200',
+              sizes: '(min-width: 990px) 50vw, 100vw',
+              class: 'faq-image__image'
+          }}
+          
+          {%- if section.settings.note_text != blank -%}
+            <div class="faq-image__note" style="
+              top: {{ section.settings.note_offset_y }}px;
+              left: {{ section.settings.note_offset_x }}px;
+            ">
+              {{ section.settings.note_text }}
+              {%- if section.settings.show_note_heart -%}
+                <span class="faq-image__note-heart">♡</span>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- else -%}
+        <div class="faq-image__placeholder">
+          {{ 'image' | placeholder_svg_tag: 'faq-image__placeholder-svg' }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <!-- FAQ Column -->
+    <div class="faq-image__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <div class="faq-image__eyebrow">
+          {%- if section.settings.show_dot -%}
+            <span class="faq-image__dot"></span>
+          {%- endif -%}
+          <span>{{ section.settings.eyebrow }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="faq-image__heading">
+          {{ section.settings.heading }}
+        </h2>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <div class="faq-image__accordion">
+          {%- for block in section.blocks -%}
+            <div class="faq-image__item" {{ block.shopify_attributes }}>
+              <button 
+                class="faq-image__question"
+                aria-expanded="false"
+                aria-controls="faq-answer-{{ block.id }}"
+              >
+                <span>{{ block.settings.question }}</span>
+                <span class="faq-image__icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                    <line class="faq-icon-vertical" x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                </span>
+              </button>
+              <div 
+                class="faq-image__answer"
+                id="faq-answer-{{ block.id }}"
+                role="region"
+                aria-hidden="true"
+              >
+                <div class="faq-image__answer-inner rte">
+                  {{ block.settings.answer }}
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  {{ section.settings.heading_font | font_face: font_display: 'swap' }}
+  {{ section.settings.body_font | font_face: font_display: 'swap' }}
+  {{ section.settings.eyebrow_font | font_face: font_display: 'swap' }}
+  {{ section.settings.note_font | font_face: font_display: 'swap' }}
+
+  #{{ section_id }} {
+    width: 100%;
+    background: var(--faq-bg);
+    color: var(--faq-text);
+    padding: var(--faq-padding) 0;
+  }
+
+  #{{ section_id }} .faq-image__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--faq-gap);
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 5%;
+    align-items: start;
+  }
+
+  /* --- Image Column --- */
+  #{{ section_id }} .faq-image__media {
+    position: sticky;
+    top: 100px;
+  }
+
+  #{{ section_id }} .faq-image__image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: var(--faq-image-aspect-ratio);
+    overflow: hidden;
+    border-radius: var(--faq-image-radius);
+  }
+
+  #{{ section_id }} .faq-image__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Floating Note on Image */
+  #{{ section_id }} .faq-image__note {
+    position: absolute;
+    font-family: var(--faq-note-font);
+    font-style: italic;
+    font-size: {{ section.settings.note_size }}px;
+    color: var(--faq-text);
+    line-height: 1.4;
+    max-width: 160px;
+    z-index: 2;
+  }
+
+  #{{ section_id }} .faq-image__note-heart {
+    display: inline-block;
+    margin-left: 4px;
+    font-size: 0.9em;
+  }
+
+  #{{ section_id }} .faq-image__placeholder {
+    background: #e8e1d2;
+    width: 100%;
+    aspect-ratio: var(--faq-image-aspect-ratio);
+    border-radius: var(--faq-image-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #{{ section_id }} .faq-image__placeholder svg {
+    width: 50%;
+    height: 50%;
+    opacity: 0.5;
+  }
+
+  /* --- FAQ Column --- */
+  #{{ section_id }} .faq-image__content {
+    padding: 20px 0;
+  }
+
+  /* Eyebrow */
+  #{{ section_id }} .faq-image__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    font-family: var(--faq-eyebrow-font);
+    font-size: {{ section.settings.eyebrow_size }}px;
+    font-weight: {{ section.settings.eyebrow_weight }};
+    text-transform: {{ section.settings.eyebrow_transform }};
+    letter-spacing: 0.15em;
+    color: var(--faq-text);
+  }
+
+  #{{ section_id }} .faq-image__dot {
+    width: {{ section.settings.dot_size }}px;
+    height: {{ section.settings.dot_size }}px;
+    border-radius: {{ section.settings.dot_radius }}%;
+    background: var(--faq-accent);
+    flex-shrink: 0;
+  }
+
+  /* Heading */
+  #{{ section_id }} .faq-image__heading {
+    font-family: var(--faq-heading-font);
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: {{ section.settings.heading_weight }};
+    line-height: 1.1;
+    margin: 0 0 40px 0;
+    color: var(--faq-text);
+  }
+
+  /* Accordion */
+  #{{ section_id }} .faq-image__accordion {
+    border-top: 1px solid var(--faq-border);
+  }
+
+  #{{ section_id }} .faq-image__item {
+    border-bottom: 1px solid var(--faq-border);
+  }
+
+  #{{ section_id }} .faq-image__question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: {{ section.settings.item_padding_v }}px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-family: var(--faq-body-font);
+    font-size: {{ section.settings.question_size }}px;
+    font-weight: {{ section.settings.question_weight }};
+    color: var(--faq-text);
+    gap: 16px;
+    transition: opacity 0.2s ease;
+  }
+
+  #{{ section_id }} .faq-image__question:hover {
+    opacity: 0.7;
+  }
+
+  #{{ section_id }} .faq-image__icon {
+    flex-shrink: 0;
+    color: var(--faq-text);
+    transition: transform 0.3s ease;
+  }
+
+  #{{ section_id }} .faq-image__icon .faq-icon-vertical {
+    transition: opacity 0.3s ease;
+  }
+
+  /* Open state - Shows minus/dash instead of slash */
+  #{{ section_id }} .faq-image__item.is-open .faq-icon-vertical {
+    opacity: 0; /* Hides the vertical line */
+  }
+  
+  /* Removed rotation so it stays a horizontal dash */
+
+  /* Answer */
+  #{{ section_id }} .faq-image__answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+
+  #{{ section_id }} .faq-image__item.is-open .faq-image__answer {
+    max-height: 500px;
+  }
+
+  #{{ section_id }} .faq-image__answer-inner {
+    padding-bottom: {{ section.settings.item_padding_v }}px;
+    font-family: var(--faq-body-font);
+    font-size: {{ section.settings.answer_size }}px;
+    line-height: 1.6;
+    color: var(--faq-text);
+    opacity: 0.8;
+  }
+
+  #{{ section_id }} .faq-image__answer-inner p {
+    margin: 0 0 1em 0;
+  }
+
+  #{{ section_id }} .faq-image__answer-inner p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* --- Mobile Responsive --- */
+  @media screen and (max-width: 749px) {
+    #{{ section_id }} .faq-image__inner {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding: 0 20px;
+    }
+
+    #{{ section_id }} .faq-image__media {
+      position: relative;
+      top: 0;
+    }
+
+    #{{ section_id }} .faq-image__image-wrapper {
+      aspect-ratio: 1 / 1;
+    }
+
+    #{{ section_id }} .faq-image__note {
+      max-width: 140px;
+      font-size: calc({{ section.settings.note_size }}px * 0.9);
+    }
+
+    #{{ section_id }} .faq-image__heading {
+      font-size: calc({{ section.settings.heading_size }}px * 0.7);
+      margin-bottom: 28px;
+    }
+
+    #{{ section_id }} .faq-image__eyebrow {
+      margin-bottom: 16px;
+    }
+
+    #{{ section_id }} .faq-image__question {
+      padding: 18px 0;
+      font-size: calc({{ section.settings.question_size }}px * 0.95);
+    }
+
+    #{{ section_id }} .faq-image__answer-inner {
+      padding-bottom: 18px;
+      font-size: calc({{ section.settings.answer_size }}px * 0.95);
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    #{{ section_id }} .faq-image__answer {
+      transition: none;
+    }
+    #{{ section_id }} .faq-image__icon {
+      transition: none;
+    }
+    #{{ section_id }} .faq-image__icon .faq-icon-vertical {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const faqSection = document.getElementById('{{ section_id }}');
+    if (!faqSection) return;
+
+    const items = faqSection.querySelectorAll('.faq-image__item');
+
+    items.forEach(function(item) {
+      const button = item.querySelector('.faq-image__question');
+      
+      button.addEventListener('click', function() {
+        const isOpen = item.classList.contains('is-open');
+        
+        // Close all other items (accordion behavior)
+        items.forEach(function(otherItem) {
+          if (otherItem !== item) {
+            otherItem.classList.remove('is-open');
+            otherItem.querySelector('.faq-image__question').setAttribute('aria-expanded', 'false');
+            otherItem.querySelector('.faq-image__answer').setAttribute('aria-hidden', 'true');
+          }
+        });
+
+        // Toggle current item
+        if (isOpen) {
+          item.classList.remove('is-open');
+          button.setAttribute('aria-expanded', 'false');
+          item.querySelector('.faq-image__answer').setAttribute('aria-hidden', 'true');
+        } else {
+          item.classList.add('is-open');
+          button.setAttribute('aria-expanded', 'true');
+          item.querySelector('.faq-image__answer').setAttribute('aria-hidden', 'false');
+        }
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "FAQ with image",
+  "tag": "section",
+  "class": "section-faq-image",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "Image aspect ratio",
+      "options": [
+        { "value": "auto", "label": "Adapt to image" },
+        { "value": "1/1", "label": "Square (1:1)" },
+        { "value": "4/5", "label": "Portrait (4:5)" },
+        { "value": "3/4", "label": "Tall (3:4)" },
+        { "value": "16/9", "label": "Landscape (16:9)" }
+      ],
+      "default": "4/5"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "Image corner radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Image Note"
+    },
+    {
+      "type": "richtext",
+      "id": "note_text",
+      "label": "Note text",
+      "info": "Appears as a floating handwritten note on the image.",
+      "default": "<p>Good dogs make a brighter tomorrow.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_note_heart",
+      "label": "Show heart symbol",
+      "default": true
+    },
+    {
+      "type": "font_picker",
+      "id": "note_font",
+      "label": "Note font",
+      "default": "caveat_n4"
+    },
+    {
+      "type": "range",
+      "id": "note_size",
+      "label": "Note font size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "note_offset_x",
+      "label": "Note horizontal position",
+      "min": 10,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "note_offset_y",
+      "label": "Note vertical position",
+      "min": 10,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "FAQ Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "FAQ"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dot",
+      "label": "Show dot",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently asked"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "garamond_n7"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 32,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading weight",
+      "default": "400",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ]
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "eyebrow_font",
+      "label": "Eyebrow font",
+      "default": "assistant_n6"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_weight",
+      "label": "Eyebrow weight",
+      "default": "600",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_transform",
+      "label": "Eyebrow transform",
+      "default": "uppercase",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "question_size",
+      "label": "Question size",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "question_weight",
+      "label": "Question weight",
+      "default": "500",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "answer_size",
+      "label": "Answer size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "item_padding_v",
+      "label": "Item vertical padding",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Bullet / Dot"
+    },
+    {
+      "type": "range",
+      "id": "dot_size",
+      "label": "Dot size",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "dot_radius",
+      "label": "Dot roundness",
+      "info": "0% is square, 50% is circle",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Layout & Colors"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Column gap",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#F4EFE6"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#3E2723"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent (Dot)",
+      "default": "#3E2723"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider",
+      "default": "#D4C9B8"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How do I find the right size?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Check our size guide on each product page. If you're between sizes, we recommend sizing up for comfort.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ with image",
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How do I find the right size?",
+            "answer": "<p>Check our size guide on each product page. If you're between sizes, we recommend sizing up for comfort.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What does the 5% actually support?",
+            "answer": "<p>5% of every purchase goes directly to rescue organizations and shelters helping dogs find their forever homes.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "<p>Standard shipping takes 3-5 business days. Express shipping is available for 1-2 day delivery.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Do the collections coordinate?",
+            "answer": "<p>Yes! Each collection is designed to mix and match. Check out our styling guide for inspiration.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

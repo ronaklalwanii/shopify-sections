@@ -1,0 +1,2559 @@
+{%- liquid
+  assign menu = section.settings.menu
+  assign trigger = section.settings.menu_trigger
+  assign has_products_carousel = false
+  for block in section.blocks
+    if block.type == 'products_carousel'
+      assign has_products_carousel = true
+      break
+    endif
+  endfor
+-%}
+
+{%- if has_products_carousel -%}
+  <script>
+    
+    (function () {
+      if (document.readyState !== 'loading') return;
+      if (window.__mhVendorRequested) return;
+      window.__mhVendorRequested = true;
+      document.write('<scri' + 'pt src="{{ "sleek-hero-vendor.js" | asset_url }}" defer><' + '/scri' + 'pt>');
+    })();
+  </script>
+{%- endif -%}
+
+{%- comment -%}
+  Mega panels attach to menu items by matching handleized titles. Renaming a menu
+  item in Navigation silently detaches its panel, so surface that in the editor
+  rather than letting it fail quietly. Customizer-only — never rendered live.
+{%- endcomment -%}
+{%- if request.design_mode -%}
+  {%- assign orphaned = '' -%}
+  {%- for block in section.blocks -%}
+    {%- assign block_handle = block.settings.menu_title | handle -%}
+    {%- assign matched = false -%}
+    {%- for link in menu.links -%}
+      {%- assign link_handle_check = link.title | handle -%}
+      {%- if link_handle_check == block_handle -%}
+        {%- assign matched = true -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- unless matched -%}
+      {%- assign orphaned = orphaned | append: block.settings.menu_title | append: ', ' -%}
+    {%- endunless -%}
+  {%- endfor -%}
+  {%- if orphaned != blank -%}
+    {%- assign orphaned = orphaned | remove_last: ', ' -%}
+    <div style="padding:12px 16px;background:#fff4e5;border-bottom:1px solid #f0c987;color:#7a4b00;font:14px/1.5 sans-serif">
+      <strong>Mega header:</strong> no menu item matches
+      &ldquo;{{ orphaned | escape }}&rdquo;, so {% if orphaned contains ',' %}those panels are{% else %}that panel is{% endif %}
+      not showing. The block&rsquo;s &ldquo;Menu item&rdquo; must match a top-level item in the
+      &ldquo;{{ menu.title | escape }}&rdquo; menu exactly.
+    </div>
+  {%- endif -%}
+{%- endif -%}
+
+<mega-header
+  class="mh"
+  data-layout="{{ section.settings.layout | default: 'classic' }}"
+  data-trigger="{{ trigger }}"
+  data-nav="{{ section.settings.nav_alignment }}"
+  {% if section.settings.sticky %}data-sticky{% endif %}
+  style="
+    --mh-bg: {{ section.settings.bg }};
+    --mh-fg: {{ section.settings.fg }};
+    --mh-border: {{ section.settings.border }};
+    --mh-panel-bg: {{ section.settings.panel_bg }};
+    --mh-panel-fg: {{ section.settings.panel_fg }};
+    --mh-accent: {{ section.settings.accent }};
+    --mh-height: {{ section.settings.height }}px;
+    --mh-logo-w: {{ section.settings.logo_width }}px;
+    --mh-radius: {{ section.settings.radius }}px;
+    --mh-maxw: {{ section.settings.max_width }}px;
+  "
+>
+  <div class="mh__bar">
+    <div class="mh__inner">
+
+      <button type="button" class="mh__icon mh__burger" aria-label="Open menu" data-drawer-open>
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <a href="{{ routes.root_url }}" class="mh__logo">
+        {%- if section.settings.logo != blank -%}
+          {{ section.settings.logo | image_url: width: 600 | image_tag: alt: shop.name, loading: 'eager', class: 'mh__logo-img' }}
+        {%- else -%}
+          <span class="mh__logo-text">{{ shop.name }}</span>
+        {%- endif -%}
+      </a>
+
+      <nav class="mh__nav" aria-label="Primary">
+        <ul class="mh__nav-list" role="list">
+          {%- for link in menu.links -%}
+            {%- liquid
+              assign mega_block = null
+              assign link_handle = link.title | handle
+              for block in section.blocks
+                assign block_handle = block.settings.menu_title | handle
+                if block_handle == link_handle
+                  assign mega_block = block
+                  break
+                endif
+              endfor
+            -%}
+
+            {%- if mega_block != null -%}
+              {%- liquid
+                assign b = mega_block
+                assign promo_count = 0
+                for i in (1..3)
+                  assign key = 'image_' | append: i
+                  if b.settings[key] != blank
+                    assign promo_count = promo_count | plus: 1
+                  endif
+                endfor
+              -%}
+              <li class="mh__nav-item">
+                <details class="mh__details" data-mega {{ b.shopify_attributes }}>
+                  <summary class="mh__summary">
+                    {%- comment -%}
+                      A real <a href> rather than a span + JS window.location: gives
+                      middle-click / ctrl-click / status-bar URL, and lets crawlers
+                      follow the primary navigation.
+                    {%- endcomment -%}
+                    <a class="mh__label" href="{{ link.url }}">{{ link.title | escape }}</a>
+                    <svg class="mh__caret" viewBox="0 0 12 12" width="11" height="11" fill="none" aria-hidden="true">
+                      <path d="M9.75 4.5L6 8.25L2.25 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </summary>
+
+                  <div
+                    class="mh__panel"
+                    style="--menu-columns: {{ b.settings.menu_columns }}; --promo-width: {{ b.settings.promo_width }}%; --promo-columns: {{ b.settings.promo_columns }};"
+                  >
+                    <div class="mh__panel-inner">
+                      <div class="mh__panel-grid">
+
+                        {%- liquid
+                          assign show_collections_col = false
+                          if b.type == 'products_carousel' and b.settings.collections != blank
+                            assign show_collections_col = true
+                          endif
+                        -%}
+                        {%- if link.links != blank or show_collections_col -%}
+                          <div class="mh__cols">
+                            {%- if show_collections_col -%}
+                              <div
+                                class="mh__col"
+                                style="
+                                  --index: 1;
+                                  --mh-col-category-size: {{ b.settings.collections_font_size | default: 15 }}px;
+                                  --mh-col-category-weight: {{ b.settings.collections_font_weight | default: '600' }};
+                                  {% if b.settings.collections_color != blank %}--mh-col-category-color: {{ b.settings.collections_color }};{% endif %}
+                                "
+                              >
+                                <ul class="mh__col-list" role="list">
+                                  {%- for collection in b.settings.collections -%}
+                                    <li><a href="{{ collection.url }}" class="mh__col-category">{{ collection.title | escape }}</a></li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            {%- endif -%}
+                            {%- for child in link.links -%}
+                              <div class="mh__col" style="--index: {{ forloop.index | plus: 1 }};">
+                                <a href="{{ child.url }}" class="mh__col-title">{{ child.title | escape }}</a>
+                                {%- if child.links != blank -%}
+                                  <ul class="mh__col-list" role="list">
+                                    {%- for grandchild in child.links -%}
+                                      <li><a href="{{ grandchild.url }}" class="mh__col-link">{{ grandchild.title | escape }}</a></li>
+                                    {%- endfor -%}
+                                  </ul>
+                                {%- endif -%}
+                              </div>
+                            {%- endfor -%}
+                          </div>
+                        {%- endif -%}
+
+                        {%- case b.type -%}
+
+                          {%- when 'promos' -%}
+                            {%- if promo_count > 0 -%}
+                              <div class="mh__promos">
+                                {%- for i in (1..3) -%}
+                                  {%- liquid
+                                    assign k_img = 'image_' | append: i
+                                    assign k_head = 'heading_' | append: i
+                                    assign k_sub = 'subheading_' | append: i
+                                    assign k_link = 'link_' | append: i
+                                    assign img = b.settings[k_img]
+                                    if img == blank
+                                      continue
+                                    endif
+                                  -%}
+                                  <a
+                                    {% if b.settings[k_link] != blank %}href="{{ b.settings[k_link] }}"{% endif %}
+                                    class="mh__promo"
+                                    style="--index: {{ forloop.index | plus: 3 }};"
+                                  >
+                                    <span class="mh__promo-media">
+                                      {%- assign promo_alt = b.settings[k_head] | default: '' -%}
+                                      {{ img | image_url: width: 800 | image_tag: alt: promo_alt, loading: 'lazy', class: 'mh__promo-img' }}
+                                      <span class="mh__promo-overlay"></span>
+                                      <span class="mh__promo-text">
+                                        {%- if b.settings[k_sub] != blank -%}
+                                          <span class="mh__promo-sub">{{ b.settings[k_sub] }}</span>
+                                        {%- endif -%}
+                                        {%- if b.settings[k_head] != blank -%}
+                                          <span class="mh__promo-head">{{ b.settings[k_head] }}</span>
+                                        {%- endif -%}
+                                      </span>
+                                    </span>
+                                  </a>
+                                {%- endfor -%}
+                              </div>
+                            {%- endif -%}
+
+                          {%- when 'cards' -%}
+                            {%- if promo_count > 0 -%}
+                              <div class="mh__promos">
+                                {%- for i in (1..3) -%}
+                                  {%- liquid
+                                    assign k_img = 'image_' | append: i
+                                    assign k_head = 'heading_' | append: i
+                                    assign k_desc = 'description_' | append: i
+                                    assign k_link = 'link_' | append: i
+                                    assign img = b.settings[k_img]
+                                    if img == blank
+                                      continue
+                                    endif
+                                  -%}
+                                  <a
+                                    {% if b.settings[k_link] != blank %}href="{{ b.settings[k_link] }}"{% endif %}
+                                    class="mh__card"
+                                    style="--index: {{ forloop.index | plus: 3 }};"
+                                  >
+                                    {%- assign card_alt = b.settings[k_head] | default: '' -%}
+                                    {{ img | image_url: width: 700 | image_tag: alt: card_alt, loading: 'lazy', class: 'mh__card-img' }}
+                                    {%- if b.settings[k_head] != blank -%}
+                                      <span class="mh__card-head">{{ b.settings[k_head] }}</span>
+                                    {%- endif -%}
+                                    {%- if b.settings[k_desc] != blank -%}
+                                      <span class="mh__card-desc">{{ b.settings[k_desc] }}</span>
+                                    {%- endif -%}
+                                  </a>
+                                {%- endfor -%}
+                              </div>
+                            {%- endif -%}
+
+                          {%- when 'products' -%}
+                            {%- assign plist = b.settings.product_list -%}
+                            {%- if plist != blank -%}
+                              <div class="mh__promos">
+                                {%- if b.settings.heading != blank -%}
+                                  <p class="mh__promos-title" style="--index: 3;">{{ b.settings.heading | escape }}</p>
+                                {%- endif -%}
+                                <div class="mh__products">
+                                  {%- for product in plist limit: 6 -%}
+                                    <a href="{{ product.url }}" class="mh__product" style="--index: {{ forloop.index | plus: 3 }};">
+                                      {%- if product.featured_image -%}
+                                        {%- comment -%}
+                                          alt must be assigned first: a filter cannot be piped inside
+                                          another filter's argument list. image_tag escapes alt itself.
+                                        {%- endcomment -%}
+                                        {%- assign product_alt = product.title -%}
+                                        {{ product.featured_image | image_url: width: 500 | image_tag: alt: product_alt, loading: 'lazy', class: 'mh__product-img' }}
+                                      {%- endif -%}
+                                      <span class="mh__product-title">{{ product.title | escape }}</span>
+                                      <span class="mh__product-price">{{ product.price | money }}</span>
+                                    </a>
+                                  {%- endfor -%}
+                                </div>
+                              </div>
+                            {%- endif -%}
+
+                          {%- when 'products_carousel' -%}
+                            {%- liquid
+                              assign plist = b.settings.product_list
+                              assign pcols = b.settings.product_columns
+                              assign is_carousel = false
+                              if plist.size > pcols
+                                assign is_carousel = true
+                              endif
+                            -%}
+                            {%- if plist != blank -%}
+                              <div class="mh__procarousel">
+                                {%- if b.settings.heading != blank or is_carousel -%}
+                                  <div class="mh__procarousel-head" style="--index: 3;">
+                                    {%- if b.settings.heading != blank -%}
+                                      <p class="mh__promos-title">{{ b.settings.heading | escape }}</p>
+                                    {%- endif -%}
+                                    {%- if is_carousel -%}
+                                      <div class="mh__procarousel-nav">
+                                        <button type="button" class="swiper-button-prev mh__procarousel-btn" aria-label="Previous slide">
+                                          <svg viewBox="0 0 12 12" width="10" height="10" fill="none" aria-hidden="true">
+                                            <path d="M7.5 2.25L3.75 6L7.5 9.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                          </svg>
+                                        </button>
+                                        <div class="swiper-pagination"></div>
+                                        <button type="button" class="swiper-button-next mh__procarousel-btn" aria-label="Next slide">
+                                          <svg viewBox="0 0 12 12" width="10" height="10" fill="none" aria-hidden="true">
+                                            <path d="M4.5 2.25L8.25 6L4.5 9.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                          </svg>
+                                        </button>
+                                      </div>
+                                    {%- endif -%}
+                                  </div>
+                                {%- endif -%}
+                                <mh-carousel data-columns="{{ pcols }}"{% if is_carousel %} data-carousel{% endif %}>
+                                  {%- if is_carousel -%}<div class="swiper">{%- endif -%}
+                                  <div class="{% if is_carousel %}swiper-wrapper{% else %}mh__procarousel-grid{% endif %}" style="--procarousel-columns: {{ pcols }};">
+                                    {%- for product in plist limit: 6 -%}
+                                      <a href="{{ product.url }}" class="mh__product{% if is_carousel %} swiper-slide{% endif %}" style="--index: {{ forloop.index | plus: 3 }};">
+                                        {%- if product.featured_image -%}
+                                          {%- assign product_alt = product.title -%}
+                                          {{ product.featured_image | image_url: width: 500 | image_tag: alt: product_alt, loading: 'lazy', class: 'mh__product-img' }}
+                                        {%- endif -%}
+                                        <span class="mh__product-title">{{ product.title | escape }}</span>
+                                        <span class="mh__product-price">{{ product.price | money }}</span>
+                                      </a>
+                                    {%- endfor -%}
+                                  </div>
+                                  {%- if is_carousel -%}</div>{%- endif -%}
+                                </mh-carousel>
+                              </div>
+                            {%- endif -%}
+
+                          {%- when 'image_cards' -%}
+                            {%- if promo_count > 0 -%}
+                              <div class="mh__imgcards" style="--imgcards-columns: {{ b.settings.columns }};">
+                                {%- for i in (1..3) -%}
+                                  {%- liquid
+                                    assign k_img = 'image_' | append: i
+                                    assign k_eyebrow = 'eyebrow_' | append: i
+                                    assign k_head = 'heading_' | append: i
+                                    assign k_btn = 'button_label_' | append: i
+                                    assign k_link = 'link_' | append: i
+                                    assign k_light = 'light_text_' | append: i
+                                    assign k_pos = 'content_position_' | append: i
+                                    assign img = b.settings[k_img]
+                                    assign pos = b.settings[k_pos] | default: 'top-left'
+                                    if img == blank
+                                      continue
+                                    endif
+                                  -%}
+                                  <a
+                                    {% if b.settings[k_link] != blank %}href="{{ b.settings[k_link] }}"{% endif %}
+                                    class="mh__imgcard{% if b.settings[k_light] %} mh__imgcard--light{% endif %}"
+                                    data-pos="{{ pos }}"
+                                    style="--index: {{ forloop.index | plus: 3 }};"
+                                  >
+                                    {%- assign card_alt = b.settings[k_head] | default: '' -%}
+                                    {{ img | image_url: width: 900 | image_tag: alt: card_alt, loading: 'lazy', class: 'mh__imgcard-img' }}
+                                    <span class="mh__imgcard-content">
+                                      {%- if b.settings[k_eyebrow] != blank -%}
+                                        <span class="mh__imgcard-eyebrow">{{ b.settings[k_eyebrow] }}</span>
+                                      {%- endif -%}
+                                      {%- if b.settings[k_head] != blank -%}
+                                        <span class="mh__imgcard-heading">{{ b.settings[k_head] }}</span>
+                                      {%- endif -%}
+                                      {%- if b.settings[k_btn] != blank -%}
+                                        <span class="mh__imgcard-btn">{{ b.settings[k_btn] }}</span>
+                                      {%- endif -%}
+                                    </span>
+                                  </a>
+                                {%- endfor -%}
+                              </div>
+                            {%- endif -%}
+
+                        {%- endcase -%}
+
+                      </div>
+                    </div>
+                  </div>
+                </details>
+              </li>
+
+            {%- elsif link.links != blank -%}
+              <li class="mh__nav-item">
+                <details class="mh__details" data-dropdown>
+                  <summary class="mh__summary">
+                    {%- comment -%}
+                      A real <a href> rather than a span + JS window.location: gives
+                      middle-click / ctrl-click / status-bar URL, and lets crawlers
+                      follow the primary navigation.
+                    {%- endcomment -%}
+                    <a class="mh__label" href="{{ link.url }}">{{ link.title | escape }}</a>
+                    <svg class="mh__caret" viewBox="0 0 12 12" width="11" height="11" fill="none" aria-hidden="true">
+                      <path d="M9.75 4.5L6 8.25L2.25 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </summary>
+                  <div class="mh__dropdown">
+                    <ul class="mh__dropdown-list" role="list">
+                      {%- for child in link.links -%}
+                        <li><a href="{{ child.url }}" class="mh__col-link">{{ child.title | escape }}</a></li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </details>
+              </li>
+
+            {%- else -%}
+              <li class="mh__nav-item">
+                <a href="{{ link.url }}" class="mh__summary mh__summary--plain">
+                  <span class="mh__label">{{ link.title | escape }}</span>
+                </a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </nav>
+
+      <div class="mh__icons">
+        {%- if section.settings.show_search -%}
+          <a href="{{ routes.search_url }}" class="mh__icon" aria-label="Search">
+            <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5" stroke-linecap="round"/>
+            </svg>
+          </a>
+        {%- endif -%}
+        {%- if section.settings.show_account -%}
+          <a href="{{ routes.account_url }}" class="mh__icon mh__icon--desktop" aria-label="Account">
+            <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6" stroke-linecap="round"/>
+            </svg>
+          </a>
+        {%- endif -%}
+        {%- if section.settings.cta_label != blank -%}
+          <a
+            {% if section.settings.cta_link != blank %}href="{{ section.settings.cta_link }}"{% endif %}
+            class="mh__cta mh__icon--desktop"
+          >{{ section.settings.cta_label }}</a>
+        {%- endif -%}
+        <a href="{{ routes.cart_url }}" class="mh__icon mh__cart" aria-label="Cart">
+          <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <path d="M6 7h12l-1 13H7L6 7z" stroke-linejoin="round"/><path d="M9 7a3 3 0 016 0" stroke-linecap="round"/>
+          </svg>
+          <span class="mh__cart-count" data-cart-count{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="mh__overlay" data-overlay hidden></div>
+
+  {%- comment -%} ---------- mobile drawer ---------- {%- endcomment -%}
+  <div
+    class="mh__drawer"
+    data-drawer
+    hidden
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="mh-drawer-title-{{ section.id }}"
+  >
+    <div class="mh__drawer-head">
+      <span class="mh__drawer-title" id="mh-drawer-title-{{ section.id }}">Menu</span>
+      <button type="button" class="mh__icon" aria-label="Close menu" data-drawer-close>
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="mh__drawer-body">
+      <div class="mh__panelstack" data-panelstack>
+        <ul class="mh__dpanel" data-dpanel data-level="0" role="list">
+          {%- for link in menu.links -%}
+            {%- liquid
+              assign d_mega_block = null
+              assign d_link_handle = link.title | handle
+              for block in section.blocks
+                assign d_block_handle = block.settings.menu_title | handle
+                if d_block_handle == d_link_handle
+                  assign d_mega_block = block
+                  break
+                endif
+              endfor
+            -%}
+            {%- if link.links != blank or d_mega_block != null -%}
+              <li>
+                <button type="button" class="mh__drow" data-open-panel="p-{{ forloop.index }}">
+                  <span>{{ link.title | escape }}</span>
+                  <svg viewBox="0 0 12 12" width="12" height="12" fill="none" aria-hidden="true">
+                    <path d="M4.5 2.25L8.25 6L4.5 9.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </li>
+            {%- else -%}
+              <li><a href="{{ link.url }}" class="mh__drow">{{ link.title | escape }}</a></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+
+        {%- for link in menu.links -%}
+          {%- liquid
+            assign d_mega_block = null
+            assign d_link_handle = link.title | handle
+            for block in section.blocks
+              assign d_block_handle = block.settings.menu_title | handle
+              if d_block_handle == d_link_handle
+                assign d_mega_block = block
+                break
+              endif
+            endfor
+          -%}
+          {%- if link.links != blank or d_mega_block != null -%}
+            <ul class="mh__dpanel" data-dpanel data-panel-id="p-{{ forloop.index }}" data-level="1" role="list" hidden>
+              <li>
+                <button type="button" class="mh__dback" data-close-panel>
+                  <svg viewBox="0 0 12 12" width="12" height="12" fill="none" aria-hidden="true">
+                    <path d="M7.5 2.25L3.75 6L7.5 9.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>{{ link.title | escape }}</span>
+                </button>
+              </li>
+              <li><a href="{{ link.url }}" class="mh__drow mh__drow--all">View all</a></li>
+              {%- comment -%}
+                Matches Sleek's own menu-drawer-details.liquid order: collections
+                column first, then the menu's own child links, then the block's
+                own promo/product content — same content as desktop, just
+                stacked instead of side by side. Ported here because the mobile
+                drawer previously only ever walked link.links: any block's
+                images/collections/products were invisible on mobile entirely,
+                and a block with no child links (e.g. image_cards on "Saunas")
+                got no drawer row at all before the gate above was fixed.
+              {%- endcomment -%}
+              {%- if d_mega_block != null and d_mega_block.type == 'products_carousel' and d_mega_block.settings.collections != blank -%}
+                {%- for collection in d_mega_block.settings.collections -%}
+                  <li><a href="{{ collection.url }}" class="mh__drow">{{ collection.title | escape }}</a></li>
+                {%- endfor -%}
+              {%- endif -%}
+              {%- for child in link.links -%}
+                {%- if child.links != blank -%}
+                  <li>
+                    <button type="button" class="mh__drow" data-open-panel="p-{{ forloop.parentloop.index }}-{{ forloop.index }}">
+                      <span>{{ child.title | escape }}</span>
+                      <svg viewBox="0 0 12 12" width="12" height="12" fill="none" aria-hidden="true">
+                        <path d="M4.5 2.25L8.25 6L4.5 9.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                  </li>
+                {%- else -%}
+                  <li><a href="{{ child.url }}" class="mh__drow">{{ child.title | escape }}</a></li>
+                {%- endif -%}
+              {%- endfor -%}
+              {%- if d_mega_block != null -%}
+                <li>
+                  {%- case d_mega_block.type -%}
+                    {%- when 'image_cards' -%}
+                      <div class="mh__dimgcards">
+                        {%- for i in (1..3) -%}
+                          {%- liquid
+                            assign d_k_img = 'image_' | append: i
+                            assign d_k_head = 'heading_' | append: i
+                            assign d_k_btn = 'button_label_' | append: i
+                            assign d_k_href = 'link_' | append: i
+                            assign d_k_pos = 'content_position_' | append: i
+                            assign d_k_light = 'light_text_' | append: i
+                            assign d_img = d_mega_block.settings[d_k_img]
+                            assign d_head = d_mega_block.settings[d_k_head]
+                            assign d_btn = d_mega_block.settings[d_k_btn]
+                            assign d_href = d_mega_block.settings[d_k_href]
+                            assign d_pos = d_mega_block.settings[d_k_pos] | default: 'top-left'
+                            assign d_light = d_mega_block.settings[d_k_light]
+                            if d_img == blank
+                              continue
+                            endif
+                          -%}
+                          <a {% if d_href != blank %}href="{{ d_href }}"{% endif %} class="mh__imgcard{% if d_light %} mh__imgcard--light{% endif %}" data-pos="{{ d_pos }}">
+                            {%- assign d_alt = d_head | default: '' -%}
+                            {{ d_img | image_url: width: 700 | image_tag: alt: d_alt, loading: 'lazy', class: 'mh__imgcard-img' }}
+                            <span class="mh__imgcard-content">
+                              {%- if d_head != blank -%}<span class="mh__imgcard-heading">{{ d_head }}</span>{%- endif -%}
+                              {%- if d_btn != blank -%}<span class="mh__imgcard-btn">{{ d_btn }}</span>{%- endif -%}
+                            </span>
+                          </a>
+                        {%- endfor -%}
+                      </div>
+                    {%- when 'products_carousel' -%}
+                      {%- comment -%}
+                        Heading ("Trending Now" etc.) deliberately omitted here
+                        on mobile only — desktop keeps it (see the desktop
+                        products_carousel case above). Requested to free up
+                        vertical space in the already-tight drawer panel.
+                      {%- endcomment -%}
+                      {%- if d_mega_block.settings.product_list != blank -%}
+                        <div class="mh__dproducts">
+                          {%- for product in d_mega_block.settings.product_list limit: 6 -%}
+                            <a href="{{ product.url }}" class="mh__product">
+                              {%- if product.featured_image -%}
+                                {%- assign d_palt = product.title -%}
+                                {{ product.featured_image | image_url: width: 400 | image_tag: alt: d_palt, loading: 'lazy', class: 'mh__product-img' }}
+                              {%- endif -%}
+                              <span class="mh__product-title">{{ product.title | escape }}</span>
+                              <span class="mh__product-price">{{ product.price | money }}</span>
+                            </a>
+                          {%- endfor -%}
+                        </div>
+                      {%- endif -%}
+                  {%- endcase -%}
+                </li>
+              {%- endif -%}
+            </ul>
+
+            {%- for child in link.links -%}
+              {%- if child.links != blank -%}
+                <ul class="mh__dpanel" data-dpanel data-panel-id="p-{{ forloop.parentloop.index }}-{{ forloop.index }}" data-level="2" role="list" hidden>
+                  <li>
+                    <button type="button" class="mh__dback" data-close-panel>
+                      <svg viewBox="0 0 12 12" width="12" height="12" fill="none" aria-hidden="true">
+                        <path d="M7.5 2.25L3.75 6L7.5 9.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      <span>{{ child.title | escape }}</span>
+                    </button>
+                  </li>
+                  <li><a href="{{ child.url }}" class="mh__drow mh__drow--all">View all</a></li>
+                  {%- for grandchild in child.links -%}
+                    <li><a href="{{ grandchild.url }}" class="mh__drow">{{ grandchild.title | escape }}</a></li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- if section.settings.cta_label != blank -%}
+      <div class="mh__drawer-foot">
+        <a {% if section.settings.cta_link != blank %}href="{{ section.settings.cta_link }}"{% endif %} class="mh__cta mh__cta--block">
+          {{ section.settings.cta_label }}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</mega-header>
+
+<style>
+  
+  :root {
+    --ul-sticky-header-enabled: {% if section.settings.sticky %}1{% else %}0{% endif %};
+  }
+
+  #shopify-section-{{ section.id }} {
+    position: {% if section.settings.sticky %}sticky{% else %}relative{% endif %};
+    top: 0;
+    
+    z-index: 42;
+  }
+
+  {%- if section.settings.sticky -%}
+    
+    .shopify-section--announcement-bar ~ #shopify-section-{{ section.id }} {
+      top: calc(var(--ul-sticky-announcement-bar-enabled, 0) * var(--ul-announcement-bar-height, 0px));
+    }
+  {%- endif -%}
+
+  
+  .shopify-section--announcement-bar {
+    position: relative;
+    z-index: 35;
+  }
+
+  mega-header.mh {
+    display: block;
+    position: relative;
+    
+    z-index: 42;
+    background: var(--mh-bg);
+    color: var(--mh-fg);
+    border-bottom: 1px solid var(--mh-border);
+  }
+  .mh *, .mh *::before, .mh *::after { box-sizing: border-box; }
+
+  .mh__bar { position: relative; z-index: 2; background: var(--mh-bg); }
+  .mh__inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: var(--mh-height);
+    max-width: var(--mh-maxw);
+    margin-inline: auto;
+    padding-inline: 20px;
+  }
+
+  .mh__logo { display: flex; align-items: center; text-decoration: none; color: inherit; flex: 0 0 auto; }
+  .mh__logo-img { display: block; width: var(--mh-logo-w); height: auto; }
+  .mh__logo-text { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+
+  .mh__nav { display: none; flex: 1 1 auto; min-width: 0; }
+  .mh__nav-list { display: flex; gap: 4px; margin: 0; padding: 0; list-style: none;
+  align-items: stretch; 
+  height: 100%; }
+  .mh__nav-item { position: static; height: 100%;
+  display: flex;
+  align-items: center; }
+
+  .mh_nav-item > a,
+.mh_nav-item > details {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+  .mh__summary {
+    display: flex; align-items: center; gap: 6px;
+    padding: 10px 12px;
+    font-size: 15px; line-height: 1;
+    color: inherit; text-decoration: none;
+    cursor: pointer; list-style: none;
+    background: none; border: 0;
+  }
+  .mh__summary::-webkit-details-marker { display: none; }
+  
+  .mh__label { position: relative; color: inherit; text-decoration: none; }
+  .mh__label::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -4px;
+    height: 1px; background: currentColor;
+    transform: scaleX(0); transform-origin: right;
+    transition: transform 0.3s ease;
+  }
+  .mh__details[open] > .mh__summary .mh__label::after,
+  .mh__summary:hover .mh__label::after { transform: scaleX(1); transform-origin: left; }
+  .mh__caret { transition: transform 0.3s ease; }
+  .mh__details[open] > .mh__summary .mh__caret { transform: rotate(180deg); }
+
+  
+  .mh__panel {
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    background: var(--mh-panel-bg);
+    color: var(--mh-panel-fg);
+    border-top: 1px solid var(--mh-border);
+    overflow: hidden;
+    max-height: calc(100svh - var(--mh-height));
+    overflow-y: auto;
+    transform: translateY(-16px);
+    opacity: 0;
+    visibility: hidden;
+    
+    z-index: -1;
+  }
+  
+  .mh__panel-inner { max-width: var(--mh-maxw); margin-inline: auto; padding: 40px 20px 48px; }
+  .mh__panel-grid { display: flex; flex-wrap: wrap; gap: 40px; }
+
+  .mh__cols {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--menu-columns, 3), minmax(0, 1fr));
+    gap: 32px;
+  }
+  .mh__col-title {
+    display: block; margin-bottom: 12px;
+    font-size: 15px; font-weight: 600; letter-spacing: 0.01em;
+    color: inherit; text-decoration: none;
+  }
+  
+  .mh__col-category {
+    display: block; margin-bottom: 12px;
+    font-size: var(--mh-col-category-size, 15px);
+    font-weight: var(--mh-col-category-weight, 600);
+    letter-spacing: 0.01em;
+    color: var(--mh-col-category-color, inherit);
+    text-decoration: none;
+  }
+  .mh__col-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  .mh__col-link {
+    color: inherit; text-decoration: none; opacity: 0.72;
+    font-size: 14px; transition: opacity 0.2s ease;
+  }
+  .mh__col-link:hover { opacity: 1; }
+
+  .mh__promos { flex: 0 0 var(--promo-width, 40%); min-width: 0; }
+  .mh__promos-title { margin: 0 0 12px; font-size: 15px; font-weight: 600; }
+
+  .mh__promos > :is(.mh__promo, .mh__card),
+  .mh__promos .mh__products { display: grid; }
+  .mh__promos { display: grid; grid-template-columns: repeat(var(--promo-columns, 2), minmax(0, 1fr)); gap: 20px; align-content: start; }
+  .mh__promos-title { grid-column: 1 / -1; }
+  .mh__products { grid-column: 1 / -1; grid-template-columns: repeat(var(--promo-columns, 2), minmax(0, 1fr)); gap: 20px; }
+
+  .mh__promo { display: block; text-decoration: none; color: inherit; }
+  .mh__promo-media {
+    position: relative; display: block; overflow: hidden;
+    border-radius: var(--mh-radius); aspect-ratio: 4 / 3;
+  }
+  .mh__promo-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s cubic-bezier(0.2, 0, 0.2, 1); }
+  .mh__promo:hover .mh__promo-img { transform: scale(1.05); }
+  .mh__promo-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0) 60%); }
+  .mh__promo-text { position: absolute; inset-inline: 0; bottom: 0; padding: 16px; display: grid; gap: 2px; color: #fff; }
+  .mh__promo-sub { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.85; }
+  .mh__promo-head { font-size: 17px; font-weight: 600; }
+
+  .mh__card { display: grid; gap: 8px; text-decoration: none; color: inherit; }
+  .mh__card-img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--mh-radius); display: block; }
+  .mh__card-head { font-size: 15px; font-weight: 600; }
+  .mh__card-desc { font-size: 13px; opacity: 0.7; }
+
+  .mh__product {
+    display: grid;
+    gap: 0;
+    text-decoration: none;
+    color: inherit;
+    background: #f5f5f3;
+    border-radius: var(--mh-radius);
+    overflow: hidden;
+  }
+  .mh__product-img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+  .mh__product-title { font-size: 19px; line-height: 1.3; font-weight: 500; padding: 20px 20px 6px; }
+  .mh__product-price { font-size: 15px; opacity: 0.65; padding: 0 20px 20px; }
+
+  
+  
+  .mh__procarousel { flex: 0 1 var(--promo-width, 45%); min-width: 0; }
+  .mh__procarousel-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
+  .mh__procarousel-nav { display: flex; align-items: center; gap: 10px; }
+  .mh__procarousel-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1px solid var(--mh-border); background: none; color: inherit; cursor: pointer;
+  }
+  .mh__procarousel-btn.swiper-button-disabled { opacity: 0.35; cursor: default; }
+  .mh__procarousel-nav .swiper-pagination { font-size: 12px; opacity: 0.65; min-width: 32px; text-align: center; }
+  .mh__procarousel-grid { display: grid; grid-template-columns: repeat(var(--procarousel-columns, 3), minmax(0, 1fr)); gap: 20px; }
+
+  
+  .mh__procarousel .swiper { position: relative; z-index: 1; overflow: hidden; list-style: none; padding: 0; }
+  .mh__procarousel .swiper-wrapper {
+    position: relative; z-index: 1;
+    display: flex; box-sizing: content-box; width: 100%;
+    transition-property: transform;
+  }
+  .mh__procarousel .swiper-slide { position: relative; flex-shrink: 0; width: 100%; transition-property: transform; }
+  .mh__procarousel .swiper-pointer-events { touch-action: pan-y; }
+  .mh__procarousel .swiper-slide-invisible-blank { visibility: hidden; }
+
+  
+  .mh__imgcards {
+    flex: 1 1 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(var(--imgcards-columns, 3), minmax(0, 1fr));
+    gap: 20px;
+  }
+  .mh__imgcard {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: var(--mh-radius);
+    aspect-ratio: 3 / 2;
+    text-decoration: none;
+    color: #111;
+  }
+  .mh__imgcard-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.2, 0, 0.2, 1);
+  }
+  .mh__imgcard:hover .mh__imgcard-img { transform: scale(1.05); }
+  .mh__imgcard-content {
+    position: absolute;
+    inset: 0;
+    max-width: 80%;
+    padding: clamp(16px, 4%, 28px);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8px, 1.6%, 14px);
+  }
+  
+  .mh__imgcard[data-pos="top-left"] .mh__imgcard-content { justify-content: flex-start; align-items: flex-start; text-align: left; }
+  .mh__imgcard[data-pos="top-center"] .mh__imgcard-content { justify-content: flex-start; align-items: center; text-align: center; }
+  .mh__imgcard[data-pos="top-right"] .mh__imgcard-content { justify-content: flex-start; align-items: flex-end; text-align: right; }
+  .mh__imgcard[data-pos="middle-left"] .mh__imgcard-content { justify-content: center; align-items: flex-start; text-align: left; }
+  .mh__imgcard[data-pos="center"] .mh__imgcard-content { justify-content: center; align-items: center; text-align: center; }
+  .mh__imgcard[data-pos="middle-right"] .mh__imgcard-content { justify-content: center; align-items: flex-end; text-align: right; }
+  .mh__imgcard[data-pos="bottom-left"] .mh__imgcard-content { justify-content: flex-end; align-items: flex-start; text-align: left; }
+  .mh__imgcard[data-pos="bottom-center"] .mh__imgcard-content { justify-content: flex-end; align-items: center; text-align: center; }
+  .mh__imgcard[data-pos="bottom-right"] .mh__imgcard-content { justify-content: flex-end; align-items: flex-end; text-align: right; }
+  .mh__imgcard-eyebrow { font-size: 13px; letter-spacing: 0.02em; }
+  .mh__imgcard-heading { font-size: clamp(18px, 2.2vw, 30px); font-weight: 600; line-height: 1.15; }
+  .mh__imgcard-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: max-content;
+    padding: clamp(9px, 1.8%, 13px) clamp(18px, 3%, 26px);
+    border-radius: 999px;
+    background: #111;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.2s ease;
+  }
+  .mh__imgcard:hover .mh__imgcard-btn { background: #000; }
+  .mh__imgcard--light { color: #fff; }
+  .mh__imgcard--light .mh__imgcard-btn { background: #fff; color: #111; }
+
+  
+  .mh__panel :is(.mh__col, .mh__promo, .mh__card, .mh__product, .mh__promos-title, .mh__imgcard) {
+    opacity: 0;
+    transform: translateX(18%);
+    transition: transform 0.2s ease, opacity 0.15s ease;
+  }
+  .mh__details--revealed .mh__panel :is(.mh__col, .mh__promo, .mh__card, .mh__product, .mh__promos-title, .mh__imgcard) {
+    opacity: 1;
+    transform: translateX(0);
+    transition: transform 1.1s cubic-bezier(0.075, 0.82, 0.165, 1), opacity 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+    transition-delay: calc(0.12s + 0.06s * var(--index, 1));
+  }
+  
+  .mh__panel .mh__imgcard {
+    transform: translateX(20%);
+    transition: transform 0.2s ease, opacity 0.15s ease;
+  }
+  .mh__details--revealed .mh__panel .mh__imgcard {
+    transform: translateX(0);
+    transition: transform 1.5s cubic-bezier(0.075, 0.82, 0.165, 1), opacity 0.9s cubic-bezier(0.19, 1, 0.22, 1);
+    transition-delay: calc(0.25s + 0.1s * var(--index, 1));
+  }
+  
+  .mh__panel .swiper-slide.mh__product {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  
+   .mh__details[data-dropdown] {
+    position: relative;
+  }
+  .mh__dropdown {
+    position: absolute;
+    top: 100%;
+    left:0;
+    min-width: 220px;
+    background: var(--mh-panel-bg);
+    color: var(--mh-panel-fg);
+    border: 1px solid var(--mh-border);
+    border-radius: var(--mh-radius);
+    padding: 14px 0;
+    opacity: 0; visibility: hidden; transform: translateY(8px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+  }
+  .mh__details[open] > .mh__dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+  .mh__dropdown-list { margin: 0; padding: 0; list-style: none; display: grid; }
+  .mh__dropdown-list a { display: block; padding: 8px 20px; font-size: 14px; }
+
+  
+  .mh__icons { display: flex; align-items: center; gap: 4px; margin-inline-start: auto; flex: 0 0 auto; }
+  .mh__icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 42px; height: 42px; border-radius: 50%;
+    color: inherit; background: none; border: 0; cursor: pointer; text-decoration: none;
+    position: relative;
+  }
+  .mh__icon--desktop { display: none; }
+  .mh__cart-count {
+    position: absolute; top: 6px; right: 4px;
+    min-width: 17px; height: 17px; padding: 0 4px;
+    border-radius: 999px; background: var(--mh-accent); color: var(--mh-bg);
+    font-size: 10px; line-height: 17px; text-align: center; font-weight: 600;
+  }
+  .mh__cta {
+    display: inline-flex; align-items: center; justify-content: center;
+    height: 42px; padding-inline: 20px; margin-inline-start: 8px;
+    border: 1px solid currentColor; border-radius: 999px;
+    font-size: 14px; text-decoration: none; color: inherit;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .mh__cta:hover { background: var(--mh-fg); color: var(--mh-bg); }
+
+  
+  .mh__overlay {
+    position: fixed; inset: 0; z-index: 1;
+    background: rgba(0,0,0,0.35);
+    opacity: 0; transition: opacity 0.3s ease;
+  }
+  .mh__overlay[data-visible] { opacity: 1; }
+
+  
+  .mh__drawer {
+    position: fixed; inset-block: 0; inset-inline-start: 0;
+    width: min(88vw, 400px);
+    background: var(--mh-panel-bg); color: var(--mh-panel-fg);
+    z-index: 40;
+    display: flex; flex-direction: column;
+    transform: translateX(-100%);
+    transition: transform 0.4s cubic-bezier(0.39, 0.575, 0.565, 1);
+  }
+  .mh__drawer[data-open] { transform: translateX(0); }
+  .mh__drawer-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 12px 14px 20px;
+    border-bottom: 1px solid var(--mh-border);
+    flex: 0 0 auto;
+  }
+  .mh__drawer-title { font-size: 15px; font-weight: 600; }
+  .mh__drawer-body { position: relative; flex: 1 1 auto; overflow: hidden; }
+  .mh__panelstack { position: relative; height: 100%; }
+  .mh__dpanel {
+    position: absolute; inset: 0;
+    margin: 0; padding: 8px 0;
+    list-style: none;
+    overflow-y: auto;
+    background: var(--mh-panel-bg);
+    transform: translateX(100%);
+    transition: transform 0.32s cubic-bezier(0.39, 0.575, 0.565, 1);
+  }
+  .mh__dpanel[data-level="0"] { transform: translateX(0); }
+  .mh__dpanel[data-active] { transform: translateX(0); }
+  .mh__drow {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    width: 100%; padding: 14px 20px;
+    font-size: 16px; text-align: start;
+    color: inherit; text-decoration: none;
+    background: none; border: 0; cursor: pointer;
+  }
+  .mh__drow--all { font-size: 14px; opacity: 0.65; }
+  .mh__dback {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; padding: 12px 20px; margin-bottom: 4px;
+    font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase;
+    color: inherit; background: none; border: 0; cursor: pointer;
+    border-bottom: 1px solid var(--mh-border);
+  }
+  .mh__drawer-foot { padding: 16px 20px; border-top: 1px solid var(--mh-border); flex: 0 0 auto; }
+  .mh__cta--block { width: 100%; margin: 0; }
+
+  
+  .mh__dimgcards { display: grid; gap: 16px; padding: 16px 20px; }
+  .mh__dproducts {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline-start: 20px;
+    padding: 16px 20px 20px;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .mh__dproducts .mh__product { flex: 0 0 78%; scroll-snap-align: start; }
+
+  body.mh-locked { overflow: hidden; }
+
+  
+  
+  @media (max-width: 1023.98px) {
+  .mh__inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+  }
+  .mh__logo {
+    justify-self: center;
+  }
+  .mh__icons {
+    justify-self: end;
+    margin-inline-start: 0;
+  }
+}
+  @media (min-width: 1024px) {
+    .mh__nav { display: flex; }
+    .mh__burger { display: none; }
+    .mh__icon--desktop { display: inline-flex; }
+    .mh__inner { gap: 32px; padding-inline: 32px; }
+    .mh__panel-inner { padding-inline: 32px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mh__panel, .mh__drawer, .mh__dpanel,
+    .mh__panel :is(.mh__col, .mh__promo, .mh__card, .mh__product, .mh__promos-title, .mh__imgcard) {
+      transition: none;
+    }
+  }
+
+  
+  @media (min-width: 1024px) {
+    .mh[data-nav="center"] .mh__inner {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+    }
+    .mh[data-nav="center"] .mh__nav {
+      justify-self: center;
+      flex: 0 0 auto;
+    }
+    .mh[data-nav="center"] .mh__icons {
+      justify-self: end;
+      margin-inline-start: 0;
+    }
+  }
+
+  .mh__nav {
+  display: none;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+}
+
+.mh__nav-list {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mh__nav-item {
+  position: static;
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+
+.mh__nav-item > .mh__details {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+
+.mh__nav-item > .mh__details > .mh__summary,
+.mh__nav-item > .mh__summary {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0 20px;
+  margin: 0;
+}
+
+
+.mh__summary .mh__label {
+  display: inline-flex;
+  align-items: center;
+}
+
+
+@media (min-width: 1024px) {
+  .mh__nav {
+    display: flex;
+    height: 100%;
+  }
+
+  .mh__nav-list {
+    height: 100%;
+  }
+
+  .mh__nav-item {
+    height: 100%;
+  }
+
+  .mh__nav-item > .mh__details {
+    height: 100%;
+  }
+
+  .mh__nav-item > .mh__details > .mh__summary,
+  .mh__nav-item > .mh__summary {
+    height: 100%;
+  }
+}
+</style>
+
+<style>
+  
+  @media (min-width: 1024px) {
+    .mh[data-layout="editorial"] .mh__inner {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      gap: 24px;
+    }
+
+    .mh[data-layout="editorial"] .mh__nav {
+      grid-column: 1;
+      grid-row: 1;
+      justify-self: start;
+      flex: 0 0 auto;
+      min-width: 0;
+    }
+
+    .mh[data-layout="editorial"] .mh__logo {
+      grid-column: 2;
+      grid-row: 1;
+      justify-self: center;
+      position: relative;
+      z-index: 3;
+    }
+
+    .mh[data-layout="editorial"] .mh__icons {
+      grid-column: 3;
+      grid-row: 1;
+      justify-self: end;
+      margin-inline-start: 0;
+    }
+
+    .mh[data-layout="editorial"] .mh__nav-list {
+      gap: 10px;
+    }
+
+    .mh[data-layout="editorial"] .mh__summary {
+      padding: 10px 8px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mh[data-layout="editorial"] .mh__summary--plain {
+      letter-spacing: 0.08em;
+    }
+
+    .mh[data-layout="editorial"] .mh__caret {
+      width: 9px;
+      height: 9px;
+    }
+
+    .mh[data-layout="editorial"] .mh__icons {
+      gap: 2px;
+    }
+
+    .mh[data-layout="editorial"] .mh__icon {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  
+  @media (max-width: 1023.98px) {
+    .mh[data-layout="editorial"] .mh__inner {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+    }
+
+    .mh[data-layout="editorial"] .mh__logo {
+      grid-column: 2;
+      justify-self: center;
+    }
+
+    .mh[data-layout="editorial"] .mh__icons {
+      grid-column: 3;
+      justify-self: end;
+      margin-inline-start: 0;
+    }
+    .mh__icons .mh__icon {
+      width: 32px;
+    }
+  }
+
+</style>
+
+<script>
+  (function () {
+    if (customElements.get('mega-header')) return;
+
+    class MegaHeader extends HTMLElement {
+      connectedCallback() {
+        this.trigger = this.dataset.trigger || 'hover';
+        this.overlay = this.querySelector('[data-overlay]');
+        this.drawer = this.querySelector('[data-drawer]');
+        this.details = Array.prototype.slice.call(this.querySelectorAll('.mh__details'));
+        this.openPanels = [];
+
+        // Document-level handlers are bound here and removed in
+        // disconnectedCallback. Keeping references on the instance is what makes
+        // removal possible — anonymous handlers leaked on every section reload.
+        this.onKey = this.onKey.bind(this);
+        this.onDocClick = this.onDocClick.bind(this);
+        this.onCartChange = this.onCartChange.bind(this);
+        this.measure = this.measure.bind(this);
+
+        document.addEventListener('keydown', this.onKey);
+        document.addEventListener('click', this.onDocClick);
+        document.addEventListener('cart:change', this.onCartChange);
+
+        // Child listeners live on nodes that survive a move, so bind them once.
+        if (!this._childrenBound) {
+          this.bindMenus();
+          this.bindDrawer();
+          this._childrenBound = true;
+        }
+
+        this.measure();
+        if (window.ResizeObserver) {
+          this._ro = new ResizeObserver(this.measure);
+          this._ro.observe(this);
+        }
+        window.addEventListener('resize', this.measure);
+      }
+
+      disconnectedCallback() {
+        document.removeEventListener('keydown', this.onKey);
+        document.removeEventListener('click', this.onDocClick);
+        document.removeEventListener('cart:change', this.onCartChange);
+        window.removeEventListener('resize', this.measure);
+        if (this._ro) { this._ro.disconnect(); this._ro = null; }
+        document.body.classList.remove('mh-locked');
+      }
+
+      
+
+      // sections/header.liquid publishes --ul-header-height on <html>. Several
+      // Change rules multiply by it (transparent-header padding, boxed slideshow
+      // top padding, --ul-sticky-area-height -> scroll-padding). Replacing the
+      // stock header means this section has to publish it too, or they all
+      // collapse to 0px.
+      measure() {
+        var section = this.closest('.shopify-section') || this;
+        var h = Math.round(section.getBoundingClientRect().height);
+        if (h && h !== this._lastHeight) {
+          this._lastHeight = h;
+          document.documentElement.style.setProperty('--ul-header-height', h + 'px');
+        }
+      }
+
+      // Change broadcasts cart:change on document with detail.cart.
+      onCartChange(e) {
+        var count = e && e.detail && e.detail.cart ? e.detail.cart.item_count : null;
+        if (count === null || count === undefined) return;
+        var badge = this.querySelector('[data-cart-count]');
+        if (!badge) return;
+        badge.textContent = count;
+        if (count > 0) badge.removeAttribute('hidden');
+        else badge.setAttribute('hidden', '');
+      }
+
+      onDocClick(e) {
+        if (!this.contains(e.target)) this.closeAll();
+      }
+
+      
+      bindMenus() {
+        var self = this;
+        var isTouch = window.matchMedia('(hover: none)').matches;
+        var useHover = this.trigger === 'hover' && !isTouch;
+
+        this.details.forEach(function (d) {
+          var summary = d.querySelector('.mh__summary');
+          if (!summary) return;
+
+          summary.addEventListener('click', function (e) {
+            // In hover mode the label is a real link, so let the browser handle
+            // the click. That keeps middle-click, ctrl/cmd-click and "open in new
+            // tab" working, which the old window.location.href jump did not.
+            if (useHover && e.target.closest('a[href]')) return;
+            e.preventDefault();
+            self.toggle(d, !d.open);
+          });
+
+          if (useHover) {
+            var timer;
+            d.addEventListener('mouseenter', function () {
+              clearTimeout(timer);
+              self.closeOthers(d);
+              self.toggle(d, true);
+            });
+            d.addEventListener('mouseleave', function () {
+              timer = setTimeout(function () { self.toggle(d, false); }, 120);
+            });
+          }
+
+          // Keyboard: close when focus leaves the whole item.
+          d.addEventListener('focusout', function (e) {
+            if (!d.contains(e.relatedTarget)) self.toggle(d, false);
+          });
+        });
+        // The outside-click handler now lives in connectedCallback so it can be
+        // removed again; it used to be an anonymous listener added here and never
+        // detached, leaking one closure over the element per section reload.
+      }
+
+      // Panel slide is Web Animations API, not a CSS transition — see the
+      // comment on .mh__panel for why. Ported from Sleek's own
+      // DetailsMega.showWithTransition/hideWithTransition (assets/header.js).
+      // element.animate() plays a real animation on every call, unconditionally,
+      // so it has none of the "only replays once" behaviour a CSS
+      // transition keyed to [open] has on repeat <details> opens.
+      showPanel(d) {
+        var panel = d.querySelector('.mh__panel');
+        if (!panel) return null;
+        if (panel._anim) panel._anim.cancel();
+        panel._anim = panel.animate(
+          [
+            { transform: 'translateY(-16px)', opacity: 0, visibility: 'hidden' },
+            { transform: 'translateY(0)', opacity: 1, visibility: 'visible' }
+          ],
+          { duration: 250, easing: 'cubic-bezier(0.39, 0.575, 0.565, 1)', fill: 'forwards' }
+        );
+        return panel._anim;
+      }
+
+      hidePanel(d) {
+        var panel = d.querySelector('.mh__panel');
+        if (!panel) return null;
+        if (panel._anim) panel._anim.cancel();
+        panel._anim = panel.animate(
+          [
+            { transform: 'translateY(0)', opacity: 1, visibility: 'visible' },
+            { transform: 'translateY(-16px)', opacity: 0, visibility: 'hidden' }
+          ],
+          { duration: 250, easing: 'cubic-bezier(0.39, 0.575, 0.565, 1)', fill: 'forwards' }
+        );
+        return panel._anim;
+      }
+
+      // <details>/<summary> expose expanded state natively — setting aria-expanded
+      // by hand duplicated it and could disagree with the real state.
+      toggle(d, open) {
+        var self = this;
+        if (open) {
+          this.closeOthers(d);
+          d.open = true;
+          this.showPanel(d);
+          d.classList.remove('mh__details--revealed');
+          clearTimeout(d._revealTimer);
+          // Ported from Sleek's own details-mega (assets/header.js,
+          // DetailsDropdown.transition): it sets `open` on the <details>
+          // immediately but delays setting `open` on the content div by
+          // 100ms specifically so the class/attribute that drives the CSS
+          // reveal transition lands strictly after native <details> has
+          // actually un-hidden its content, every time — not just the first.
+          d._revealTimer = setTimeout(function () {
+            d.classList.add('mh__details--revealed');
+          }, 100);
+          this.showOverlay(true);
+        } else {
+          clearTimeout(d._revealTimer);
+          d.classList.remove('mh__details--revealed');
+          var anim = this.hidePanel(d);
+          if (anim) {
+            // Also ported from Sleek: don't remove the native `open` attribute
+            // until the close animation has actually finished, or native
+            // <details> hides the content mid-slide and cuts the animation off.
+            anim.finished
+              .then(function () {
+                if (!d.classList.contains('mh__details--revealed')) d.open = false;
+              })
+              .catch(function () {
+                
+              });
+          } else {
+            d.open = false;
+          }
+          if (!this.anyOpen()) this.showOverlay(false);
+        }
+      }
+
+      anyOpen() {
+        return this.details.some(function (d) { return d.open; });
+      }
+
+      closeOthers(except) {
+        var self = this;
+        this.details.forEach(function (d) { if (d !== except && d.open) self.toggle(d, false); });
+      }
+
+      closeAll() {
+        var self = this;
+        this.details.forEach(function (d) { if (d.open) self.toggle(d, false); });
+      }
+
+      showOverlay(show) {
+        if (!this.overlay) return;
+        if (show) {
+          this.overlay.hidden = false;
+          requestAnimationFrame(() => this.overlay.setAttribute('data-visible', ''));
+        } else {
+          this.overlay.removeAttribute('data-visible');
+          setTimeout(() => { if (!this.overlay.hasAttribute('data-visible')) this.overlay.hidden = true; }, 300);
+        }
+      }
+
+      
+      bindDrawer() {
+        var self = this;
+        var openBtn = this.querySelector('[data-drawer-open]');
+        var closeBtn = this.querySelector('[data-drawer-close]');
+        if (!this.drawer) return;
+
+        if (openBtn) openBtn.addEventListener('click', function () { self.setDrawer(true); });
+        if (closeBtn) closeBtn.addEventListener('click', function () { self.setDrawer(false); });
+        if (this.overlay) this.overlay.addEventListener('click', function () {
+          self.setDrawer(false);
+          self.closeAll();
+        });
+
+        this.querySelectorAll('[data-open-panel]').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var id = btn.getAttribute('data-open-panel');
+            var panel = self.drawer.querySelector('[data-panel-id="' + id + '"]');
+            if (!panel) return;
+            panel.hidden = false;
+            requestAnimationFrame(function () { panel.setAttribute('data-active', ''); });
+            self.openPanels.push(panel);
+          });
+        });
+
+        this.querySelectorAll('[data-close-panel]').forEach(function (btn) {
+          btn.addEventListener('click', function () { self.popPanel(); });
+        });
+      }
+
+      popPanel() {
+        var panel = this.openPanels.pop();
+        if (!panel) return;
+        panel.removeAttribute('data-active');
+        setTimeout(function () {
+          if (!panel.hasAttribute('data-active')) panel.hidden = true;
+        }, 320);
+      }
+
+      setDrawer(open) {
+        if (!this.drawer) return;
+        if (open) {
+          // Remember where focus came from so it can be handed back on close.
+          this._returnFocusTo = document.activeElement;
+          this.drawer.hidden = false;
+          requestAnimationFrame(() => {
+            this.drawer.setAttribute('data-open', '');
+            var first = this.drawer.querySelector('[data-drawer-close]') || this.focusables()[0];
+            if (first) first.focus();
+          });
+          document.body.classList.add('mh-locked');
+          this.showOverlay(true);
+        } else {
+          this.drawer.removeAttribute('data-open');
+          document.body.classList.remove('mh-locked');
+          this.showOverlay(false);
+          while (this.openPanels.length) this.popPanel();
+          setTimeout(() => { if (!this.drawer.hasAttribute('data-open')) this.drawer.hidden = true; }, 400);
+          // Only hand focus back if the opener is still rendered. The burger is
+          // display:none above the mobile breakpoint, so focusing it after a
+          // resize would be a silent no-op that strands focus inside the closed
+          // drawer; blur out of the drawer instead.
+          var back = this._returnFocusTo;
+          var backVisible = back && back.focus &&
+            (back.offsetWidth || back.offsetHeight || back.getClientRects().length);
+          if (backVisible) {
+            back.focus();
+          } else if (document.activeElement && this.drawer.contains(document.activeElement)) {
+            document.activeElement.blur();
+          }
+          this._returnFocusTo = null;
+        }
+      }
+
+      get drawerOpen() {
+        return !!(this.drawer && this.drawer.hasAttribute('data-open'));
+      }
+
+      // Visible, focusable descendants of the open drawer.
+      focusables() {
+        if (!this.drawer) return [];
+        var sel = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+        return Array.prototype.filter.call(this.drawer.querySelectorAll(sel), function (el) {
+          return el.offsetWidth || el.offsetHeight || el.getClientRects().length;
+        });
+      }
+
+      onKey(e) {
+        // Trap Tab inside the drawer while it is open, so focus can't wander
+        // into the page behind it.
+        if (e.key === 'Tab' && this.drawerOpen) {
+          var items = this.focusables();
+          if (!items.length) return;
+          var first = items[0];
+          var last = items[items.length - 1];
+          if (!this.drawer.contains(document.activeElement)) {
+            e.preventDefault();
+            first.focus();
+          } else if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+          return;
+        }
+
+        if (e.key !== 'Escape') return;
+        if (this.drawerOpen) {
+          if (this.openPanels.length) this.popPanel();
+          else this.setDrawer(false);
+          return;
+        }
+        this.closeAll();
+      }
+    }
+
+    customElements.define('mega-header', MegaHeader);
+  })();
+</script>
+
+{%- if has_products_carousel -%}
+  <script>
+    (function () {
+      if (customElements.get('mh-carousel')) return;
+
+      // Ported from Sleek's MenuProductList (assets/header.js): a thin
+      // wrapper around Swiper.js (window.FoxTheme.Swiper, from the vendor
+      // bundle loaded above) that turns a plain list of slides into a
+      // fraction-paginated carousel with prev/next buttons. Sleek's own
+      // FoxTheme.Carousel wrapper class (theme.js) isn't pulled in — it's
+      // ~15 lines of pure glue around the same Swiper constructor, inlined
+      // directly here instead of loading the rest of that (large,
+      // unrelated) file just for it.
+      class MHCarousel extends HTMLElement {
+        connectedCallback() {
+          this.init();
+        }
+
+        init() {
+          var self = this;
+          var container = this.querySelector('.swiper');
+          // Non-carousel (plain grid) mode: no .swiper container, nothing to do.
+          if (!container) return;
+
+          // The prev/next buttons and pagination live in .mh__procarousel-head,
+          // a *sibling* of <mh-carousel> (both inside .mh__procarousel), not a
+          // descendant of it — self.querySelector alone would never find them.
+          var scope = this.closest('.mh__procarousel') || this;
+
+          function start() {
+            if (self._slider) return;
+            // The vendor bundle loads with `defer`, so by the time this
+            // element's own (also deferred, later in the document) script
+            // runs, it's normally already there — this poll only matters if
+            // something delays that fetch/parse longer than usual.
+            if (!(window.FoxTheme && window.FoxTheme.Swiper && window.FoxTheme.Swiper.Swiper)) {
+              setTimeout(start, 50);
+              return;
+            }
+            var Swiper = window.FoxTheme.Swiper;
+            self._slider = new Swiper.Swiper(container, {
+              modules: [Swiper.Navigation, Swiper.Pagination],
+              spaceBetween: 20,
+              slidesPerView: parseInt(self.dataset.columns, 10) || 3,
+              loop: false,
+              pagination: {
+                el: scope.querySelector('.swiper-pagination'),
+                type: 'fraction'
+              },
+              navigation: {
+                nextEl: scope.querySelector('.swiper-button-next'),
+                prevEl: scope.querySelector('.swiper-button-prev')
+              }
+            });
+          }
+          start();
+        }
+      }
+
+      customElements.define('mh-carousel', MHCarousel);
+    })();
+  </script>
+{%- endif -%}
+
+<style>
+#shopify-section-{{ section.id }} .mh__inner { min-height: var(--mh-height); height: auto; padding-block: 12px; }
+#shopify-section-{{ section.id }} .mh__logo { min-width: 0; }
+#shopify-section-{{ section.id }} .mh__logo-img { width: {{ section.settings.logo_width }}px; max-width: 100%; height: auto; }
+@media (max-width: 1023px) {
+  #shopify-section-{{ section.id }} .mh__inner { min-height: {{ section.settings.height_mobile }}px; height: auto; grid-template-columns: 1fr auto 1fr; column-gap: 10px; padding-block: 12px; }
+  #shopify-section-{{ section.id }} .mh__logo-img { width: {{ section.settings.logo_width_mobile }}px; max-width: calc(100vw - 172px); }
+}
+</style>
+{% schema %}
+{
+  "name": "Mega header",
+  "tag": "header",
+  "class": "mh-section shopify-section--header",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Header layout",
+      "default": "classic",
+      "options": [
+        {
+          "value": "classic",
+          "label": "Classic"
+        },
+        {
+          "value": "editorial",
+          "label": "Editorial"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "select",
+      "id": "menu_trigger",
+      "label": "Open mega menu on",
+      "default": "hover",
+      "options": [
+        {
+          "value": "hover",
+          "label": "Hover"
+        },
+        {
+          "value": "click",
+          "label": "Click"
+        }
+      ],
+      "info": "Touch devices always use tap."
+    },
+    {
+      "type": "header",
+      "content": "Branding"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 60,
+      "max": 300,
+      "step": 5,
+      "unit": "px",
+      "default": 130
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "nav_alignment",
+      "label": "Navigation alignment",
+      "info": "Desktop only. Centered aligns the links to the middle of the header, not to the space left over beside the logo.",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "Next to logo"
+        },
+        {
+          "value": "center",
+          "label": "Centered"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Header height",
+      "min": 56,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Content max width",
+      "min": 1000,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Image corner radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Sticky header",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Actions"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show account",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg",
+      "label": "Header background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "fg",
+      "label": "Header text",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "border",
+      "label": "Borders",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "color",
+      "id": "panel_bg",
+      "label": "Panel background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "panel_fg",
+      "label": "Panel text",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent",
+      "label": "Accent",
+      "default": "#d63a2f"
+    },
+    {
+      "type": "header",
+      "content": "Mobile logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "label": "Logo width — mobile",
+      "min": 60,
+      "max": 240,
+      "step": 5,
+      "default": 145,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "label": "Minimum header height — mobile",
+      "min": 56,
+      "max": 120,
+      "step": 2,
+      "default": 72,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "promos",
+      "name": "Mega menu — promo images",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_title",
+          "label": "Menu item",
+          "info": "Must match a top-level menu link exactly."
+        },
+        {
+          "type": "range",
+          "id": "menu_columns",
+          "label": "Link columns",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "range",
+          "id": "promo_width",
+          "label": "Promo area width",
+          "min": 20,
+          "max": 70,
+          "step": 5,
+          "unit": "%",
+          "default": 40
+        },
+        {
+          "type": "range",
+          "id": "promo_columns",
+          "label": "Promo columns",
+          "min": 1,
+          "max": 3,
+          "step": 1,
+          "default": 2
+        },
+        {
+          "type": "header",
+          "content": "Promo 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "subheading_1",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "text",
+          "id": "heading_1",
+          "label": "Heading"
+        },
+        {
+          "type": "url",
+          "id": "link_1",
+          "label": "Link"
+        },
+        {
+          "type": "header",
+          "content": "Promo 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "subheading_2",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "text",
+          "id": "heading_2",
+          "label": "Heading"
+        },
+        {
+          "type": "url",
+          "id": "link_2",
+          "label": "Link"
+        },
+        {
+          "type": "header",
+          "content": "Promo 3"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "subheading_3",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "text",
+          "id": "heading_3",
+          "label": "Heading"
+        },
+        {
+          "type": "url",
+          "id": "link_3",
+          "label": "Link"
+        }
+      ]
+    },
+    {
+      "type": "cards",
+      "name": "Mega menu — cards",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_title",
+          "label": "Menu item",
+          "info": "Must match a top-level menu link exactly."
+        },
+        {
+          "type": "range",
+          "id": "menu_columns",
+          "label": "Link columns",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "range",
+          "id": "promo_width",
+          "label": "Card area width",
+          "min": 20,
+          "max": 70,
+          "step": 5,
+          "unit": "%",
+          "default": 40
+        },
+        {
+          "type": "range",
+          "id": "promo_columns",
+          "label": "Card columns",
+          "min": 1,
+          "max": 3,
+          "step": 1,
+          "default": 2
+        },
+        {
+          "type": "header",
+          "content": "Card 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "heading_1",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "description_1",
+          "label": "Description"
+        },
+        {
+          "type": "url",
+          "id": "link_1",
+          "label": "Link"
+        },
+        {
+          "type": "header",
+          "content": "Card 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "heading_2",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "description_2",
+          "label": "Description"
+        },
+        {
+          "type": "url",
+          "id": "link_2",
+          "label": "Link"
+        },
+        {
+          "type": "header",
+          "content": "Card 3"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "heading_3",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "description_3",
+          "label": "Description"
+        },
+        {
+          "type": "url",
+          "id": "link_3",
+          "label": "Link"
+        }
+      ]
+    },
+    {
+      "type": "products",
+      "name": "Mega menu — products",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_title",
+          "label": "Menu item",
+          "info": "Must match a top-level menu link exactly."
+        },
+        {
+          "type": "range",
+          "id": "menu_columns",
+          "label": "Link columns",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "range",
+          "id": "promo_width",
+          "label": "Product area width",
+          "min": 20,
+          "max": 70,
+          "step": 5,
+          "unit": "%",
+          "default": 45
+        },
+        {
+          "type": "range",
+          "id": "promo_columns",
+          "label": "Product columns",
+          "min": 2,
+          "max": 4,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Featured"
+        },
+        {
+          "type": "product_list",
+          "id": "product_list",
+          "label": "Products",
+          "limit": 6
+        }
+      ]
+    },
+    {
+      "type": "image_cards",
+      "name": "Mega menu — image cards",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_title",
+          "label": "Menu item",
+          "info": "Must match a top-level menu link exactly."
+        },
+        {
+          "type": "range",
+          "id": "columns",
+          "label": "Columns",
+          "min": 2,
+          "max": 4,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "header",
+          "content": "Card 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow_1",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "text",
+          "id": "heading_1",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "button_label_1",
+          "label": "Button label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "link_1",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "content_position_1",
+          "label": "Content position",
+          "default": "top-left",
+          "options": [
+            {
+              "value": "top-left",
+              "label": "Top left"
+            },
+            {
+              "value": "top-center",
+              "label": "Top center"
+            },
+            {
+              "value": "top-right",
+              "label": "Top right"
+            },
+            {
+              "value": "middle-left",
+              "label": "Middle left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "middle-right",
+              "label": "Middle right"
+            },
+            {
+              "value": "bottom-left",
+              "label": "Bottom left"
+            },
+            {
+              "value": "bottom-center",
+              "label": "Bottom center"
+            },
+            {
+              "value": "bottom-right",
+              "label": "Bottom right"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "light_text_1",
+          "label": "Light text",
+          "info": "Use for a dark image.",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Card 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow_2",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "text",
+          "id": "heading_2",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "button_label_2",
+          "label": "Button label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "link_2",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "content_position_2",
+          "label": "Content position",
+          "default": "top-left",
+          "options": [
+            {
+              "value": "top-left",
+              "label": "Top left"
+            },
+            {
+              "value": "top-center",
+              "label": "Top center"
+            },
+            {
+              "value": "top-right",
+              "label": "Top right"
+            },
+            {
+              "value": "middle-left",
+              "label": "Middle left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "middle-right",
+              "label": "Middle right"
+            },
+            {
+              "value": "bottom-left",
+              "label": "Bottom left"
+            },
+            {
+              "value": "bottom-center",
+              "label": "Bottom center"
+            },
+            {
+              "value": "bottom-right",
+              "label": "Bottom right"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "light_text_2",
+          "label": "Light text",
+          "info": "Use for a dark image.",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Card 3"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow_3",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "text",
+          "id": "heading_3",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "button_label_3",
+          "label": "Button label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "link_3",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "content_position_3",
+          "label": "Content position",
+          "default": "top-left",
+          "options": [
+            {
+              "value": "top-left",
+              "label": "Top left"
+            },
+            {
+              "value": "top-center",
+              "label": "Top center"
+            },
+            {
+              "value": "top-right",
+              "label": "Top right"
+            },
+            {
+              "value": "middle-left",
+              "label": "Middle left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "middle-right",
+              "label": "Middle right"
+            },
+            {
+              "value": "bottom-left",
+              "label": "Bottom left"
+            },
+            {
+              "value": "bottom-center",
+              "label": "Bottom center"
+            },
+            {
+              "value": "bottom-right",
+              "label": "Bottom right"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "light_text_3",
+          "label": "Light text",
+          "info": "Use for a dark image.",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "products_carousel",
+      "name": "Mega menu — carousel",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_title",
+          "label": "Menu item",
+          "info": "Must match a top-level menu link exactly."
+        },
+        {
+          "type": "range",
+          "id": "menu_columns",
+          "label": "Link columns",
+          "info": "Collections column plus the menu item's own sub-links, side by side.",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "range",
+          "id": "promo_width",
+          "label": "Products area width",
+          "min": 20,
+          "max": 70,
+          "step": 5,
+          "unit": "%",
+          "default": 45
+        },
+        {
+          "type": "collection_list",
+          "id": "collections",
+          "label": "Collections column",
+          "info": "Shown as a plain link list alongside the menu's own sub-links."
+        },
+        {
+          "type": "range",
+          "id": "collections_font_size",
+          "label": "Collections font size",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "default": 15
+        },
+        {
+          "type": "select",
+          "id": "collections_font_weight",
+          "label": "Collections font weight",
+          "default": "600",
+          "options": [
+            {
+              "value": "400",
+              "label": "Regular"
+            },
+            {
+              "value": "500",
+              "label": "Medium"
+            },
+            {
+              "value": "600",
+              "label": "Semibold"
+            },
+            {
+              "value": "700",
+              "label": "Bold"
+            }
+          ]
+        },
+        {
+          "type": "color",
+          "id": "collections_color",
+          "label": "Collections text color",
+          "info": "Leave blank to match the panel's own text color."
+        },
+        {
+          "type": "header",
+          "content": "Products"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Trending"
+        },
+        {
+          "type": "product_list",
+          "id": "product_list",
+          "label": "Products",
+          "limit": 6
+        },
+        {
+          "type": "range",
+          "id": "product_columns",
+          "label": "Visible columns",
+          "info": "Becomes a slider automatically once there are more products than this.",
+          "min": 2,
+          "max": 5,
+          "step": 1,
+          "default": 3
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mega header"
+    }
+  ]
+}
+{% endschema %}

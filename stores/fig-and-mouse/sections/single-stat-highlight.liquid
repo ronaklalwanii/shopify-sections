@@ -1,0 +1,545 @@
+{%- liquid
+  assign section_id = 'stat-highlight-' | append: section.id
+  assign number_position = section.settings.number_position
+-%}
+
+<section
+  id="{{ section_id }}"
+  class="stat-highlight stat-highlight--number-{{ number_position }}"
+  style="
+    --sh-bg: {{ section.settings.background_color }};
+    --sh-text: {{ section.settings.text_color }};
+    --sh-number: {{ section.settings.number_color }};
+    --sh-accent: {{ section.settings.accent_color }};
+    --sh-divider: {{ section.settings.divider_color }};
+    --sh-link: {{ section.settings.link_color }};
+    --sh-link-hover: {{ section.settings.link_hover_color }};
+    --sh-padding: {{ section.settings.section_padding }}px;
+    --sh-gap: {{ section.settings.column_gap }}px;
+    --sh-number-font: {{ section.settings.number_font.family }}, {{ section.settings.number_font.fallback_families }};
+    --sh-eyebrow-font: {{ section.settings.eyebrow_font.family }}, {{ section.settings.eyebrow_font.fallback_families }};
+    --sh-body-font: {{ section.settings.body_font.family }}, {{ section.settings.body_font.fallback_families }};
+    --sh-number-size: {{ section.settings.number_size }}px;
+    --sh-eyebrow-size: {{ section.settings.eyebrow_size }}px;
+    --sh-description-size: {{ section.settings.description_size }}px;
+    --sh-link-size: {{ section.settings.link_size }}px;
+  "
+>
+  <div class="stat-highlight__inner">
+    
+    <!-- Number Column -->
+    <div class="stat-highlight__number-col">
+      <div class="stat-highlight__number">
+        {{ section.settings.number_text }}
+      </div>
+    </div>
+
+    <!-- Divider -->
+    {%- if section.settings.show_divider -%}
+      <div class="stat-highlight__divider"></div>
+    {%- endif -%}
+
+    <!-- Content Column -->
+    <div class="stat-highlight__content-col">
+      {%- if section.settings.eyebrow != blank -%}
+        <div class="stat-highlight__eyebrow">
+          {{ section.settings.eyebrow }}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.description != blank -%}
+        <div class="stat-highlight__description rte">
+          {{ section.settings.description }}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.link_text != blank -%}
+        <a
+          href="{{ section.settings.link_url | default: '#' }}"
+          class="stat-highlight__link"
+        >
+          {{ section.settings.link_text }}
+        </a>
+      {%- endif -%}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  {{ section.settings.number_font | font_face: font_display: 'swap' }}
+  {{ section.settings.eyebrow_font | font_face: font_display: 'swap' }}
+  {{ section.settings.body_font | font_face: font_display: 'swap' }}
+
+  #{{ section_id }} {
+    width: 100%;
+    background: var(--sh-bg);
+    color: var(--sh-text);
+    padding: var(--sh-padding) 0;
+  }
+
+  #{{ section_id }} .stat-highlight__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sh-gap);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 5%;
+  }
+
+  /* Number Column */
+  #{{ section_id }} .stat-highlight__number-col {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #{{ section_id }} .stat-highlight__number {
+    font-family: var(--sh-number-font);
+    font-size: var(--sh-number-size);
+    font-weight: {{ section.settings.number_weight }};
+    line-height: 1;
+    color: var(--sh-number);
+    font-style: {{ section.settings.number_style }};
+  }
+
+  /* Divider */
+  #{{ section_id }} .stat-highlight__divider {
+    width: 1px;
+    height: {{ section.settings.divider_height }}px;
+    background: var(--sh-divider);
+    flex-shrink: 0;
+    align-self: center;
+  }
+
+  /* Content Column */
+  #{{ section_id }} .stat-highlight__content-col {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.content_gap }}px;
+    max-width: {{ section.settings.content_max_width }}px;
+  }
+
+  /* Eyebrow */
+  #{{ section_id }} .stat-highlight__eyebrow {
+    font-family: var(--sh-eyebrow-font);
+    font-size: var(--sh-eyebrow-size);
+    font-weight: {{ section.settings.eyebrow_weight }};
+    text-transform: {{ section.settings.eyebrow_transform }};
+    color: var(--sh-text);
+    line-height: 1.6;
+  }
+
+  /* Description */
+  #{{ section_id }} .stat-highlight__description {
+    font-family: var(--sh-body-font);
+    font-size: var(--sh-description-size);
+    line-height: 1.7;
+    color: var(--sh-text);
+    opacity: 0.85;
+  }
+
+  #{{ section_id }} .stat-highlight__description p {
+    margin: 0;
+  }
+
+  /* Link */
+  #{{ section_id }} .stat-highlight__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--sh-body-font);
+    font-size: var(--sh-link-size);
+    font-weight: {{ section.settings.link_weight }};
+    text-transform: {{ section.settings.link_transform }};
+    color: var(--sh-link);
+    text-decoration: none;
+    border-bottom: 1px solid var(--sh-link);
+    padding-bottom: 2px;
+    width: fit-content;
+    transition: color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+  }
+
+  #{{ section_id }} .stat-highlight__link:hover {
+    color: var(--sh-link-hover);
+    border-color: var(--sh-link-hover);
+    opacity: 0.8;
+  }
+
+  /* Number on right */
+  #{{ section_id }}.stat-highlight--number-right .stat-highlight__inner {
+    flex-direction: row-reverse;
+  }
+
+  /* Mobile Responsive */
+  @media screen and (max-width: 749px) {
+    #{{ section_id }} .stat-highlight__inner {
+      flex-direction: column;
+      gap: {{ section.settings.mobile_gap }}px;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    #{{ section_id }}.stat-highlight--number-right .stat-highlight__inner {
+      flex-direction: column;
+    }
+
+    #{{ section_id }} .stat-highlight__divider {
+      width: {{ section.settings.mobile_divider_width }}px;
+      height: 1px;
+    }
+
+    #{{ section_id }} .stat-highlight__number {
+      font-size: calc(var(--sh-number-size) * 0.75);
+    }
+
+    #{{ section_id }} .stat-highlight__content-col {
+      align-items: center;
+      text-align: center;
+    }
+
+    #{{ section_id }} .stat-highlight__eyebrow {
+      font-size: calc(var(--sh-eyebrow-size) * 0.9);
+    }
+
+    #{{ section_id }} .stat-highlight__description {
+      font-size: calc(var(--sh-description-size) * 0.95);
+    }
+
+    #{{ section_id }} .stat-highlight__link {
+      margin: 0 auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #{{ section_id }} .stat-highlight__link {
+      transition: none;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Stat highlight",
+  "tag": "section",
+  "class": "section-stat-highlight",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "number_position",
+      "label": "Number position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 40,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Column gap (desktop)",
+      "min": 20,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "mobile_gap",
+      "label": "Gap (mobile)",
+      "min": 16,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Number"
+    },
+    {
+      "type": "text",
+      "id": "number_text",
+      "label": "Number text",
+      "default": "5%"
+    },
+    {
+      "type": "font_picker",
+      "id": "number_font",
+      "label": "Number font",
+      "default": "garamond_n7"
+    },
+    {
+      "type": "range",
+      "id": "number_size",
+      "label": "Number size",
+      "min": 60,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "select",
+      "id": "number_weight",
+      "label": "Number weight",
+      "default": "400",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "number_style",
+      "label": "Number style",
+      "default": "normal",
+      "options": [
+        { "value": "normal", "label": "Normal" },
+        { "value": "italic", "label": "Italic" }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "number_color",
+      "label": "Number color",
+      "default": "#9B8EC4"
+    },
+    {
+      "type": "header",
+      "content": "Divider"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show divider",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "divider_height",
+      "label": "Divider height (desktop)",
+      "min": 60,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 160
+    },
+    {
+      "type": "range",
+      "id": "mobile_divider_width",
+      "label": "Divider width (mobile)",
+      "min": 40,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "#D4C9B8"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "A SMALL PERCENTAGE.\nA BIGGER PURPOSE."
+    },
+    {
+      "type": "font_picker",
+      "id": "eyebrow_font",
+      "label": "Eyebrow font",
+      "default": "assistant_n6"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_weight",
+      "label": "Eyebrow weight",
+      "default": "600",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_transform",
+      "label": "Eyebrow transform",
+      "default": "uppercase",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ]
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Rescue dogs changed our lives, so giving back is woven into everything we do. We proudly donate five percent of every sale to Pug Nation LA, helping more dogs find the loving homes they deserve.</p>"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "content_gap",
+      "label": "Content spacing",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content max width",
+      "min": 300,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "default": 440
+    },
+    {
+      "type": "header",
+      "content": "Link / Button"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link text",
+      "default": "LEARN MORE"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    },
+    {
+      "type": "range",
+      "id": "link_size",
+      "label": "Link size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "link_weight",
+      "label": "Link weight",
+      "default": "600",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "link_transform",
+      "label": "Link transform",
+      "default": "uppercase",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link color",
+      "default": "#3E2723"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_color",
+      "label": "Link hover color",
+      "default": "#3E2723"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FDFBF7"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#3E2723"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent (unused)",
+      "default": "#3E2723"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Single Stat highlight"
+    }
+  ]
+}
+{% endschema %}

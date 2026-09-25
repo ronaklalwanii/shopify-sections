@@ -1,0 +1,610 @@
+{%- liquid
+  assign section_id = 'image-text-about-' | append: section.id
+  assign content_alignment = section.settings.content_alignment
+  assign image_position_class = 'image-text-about--image-' | append: section.settings.image_position
+  assign layout_class = 'image-text-about--layout-' | append: section.settings.layout
+-%}
+
+<section
+  id="{{ section_id }}"
+  class="image-text-about {{ image_position_class }} {{ layout_class }}"
+  style="
+    --ita-bg: {{ section.settings.background_color }};
+    --ita-text: {{ section.settings.text_color }};
+    --ita-accent: {{ section.settings.accent_color }};
+    --ita-heading-font: {{ section.settings.heading_font.family }}, {{ section.settings.heading_font.fallback_families }};
+    --ita-body-font: {{ section.settings.body_font.family }}, {{ section.settings.body_font.fallback_families }};
+    --ita-eyebrow-font: {{ section.settings.eyebrow_font.family }}, {{ section.settings.eyebrow_font.fallback_families }};
+    --ita-note-font: {{ section.settings.note_font.family }}, {{ section.settings.note_font.fallback_families }};
+    --ita-padding: {{ section.settings.section_padding }}px;
+    --ita-gap: {{ section.settings.column_gap }}px;
+    --ita-image-radius: {{ section.settings.image_radius }}px;
+    --ita-image-aspect-ratio: {{ section.settings.image_aspect_ratio }};
+    --ita-note-x: {{ section.settings.note_offset_x }}px;
+    --ita-note-y: {{ section.settings.note_offset_y }}px;
+    --ita-note-gap: {{ section.settings.note_image_gap }}px;
+  "
+>
+  <div class="image-text-about__inner">
+    
+    <!-- Text Content Column -->
+    <div class="image-text-about__content image-text-about__content--{{ content_alignment }}">
+      {%- if section.settings.eyebrow != blank -%}
+        <div class="image-text-about__eyebrow">
+          {%- if section.settings.show_dot -%}
+            <span class="image-text-about__dot"></span>
+          {%- endif -%}
+          <span>{{ section.settings.eyebrow }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="image-text-about__heading">
+          {{ section.settings.heading }}
+        </h2>
+      {%- endif -%}
+
+      {%- if section.settings.description != blank -%}
+        <div class="image-text-about__description rte">
+          {{ section.settings.description }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <!-- Media Column (Note + Image) -->
+    <div class="image-text-about__media-column">
+      
+      {%- if section.settings.layout == 'with_note' and section.settings.note_text != blank -%}
+        <div class="image-text-about__note-wrapper">
+          <div class="image-text-about__note-content">
+            <div class="image-text-about__note-text rte">
+              {{ section.settings.note_text }}
+            </div>
+            {%- if section.settings.show_note_icon -%}
+              <div class="image-text-about__note-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      <div class="image-text-about__image-wrapper">
+        {%- if section.settings.image != blank -%}
+          {{
+            section.settings.image
+            | image_url: width: 1600
+            | image_tag:
+              loading: 'eager',
+              widths: '400, 600, 800, 1000, 1200, 1400, 1600',
+              sizes: '(min-width: 990px) 50vw, 100vw',
+              class: 'image-text-about__image'
+          }}
+        {%- else -%}
+          <div class="image-text-about__placeholder">
+            {{ 'image' | placeholder_svg_tag: 'image-text-about__placeholder-svg' }}
+          </div>
+        {%- endif -%}
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<style>
+  {{ section.settings.heading_font | font_face: font_display: 'swap' }}
+  {{ section.settings.body_font | font_face: font_display: 'swap' }}
+  {{ section.settings.eyebrow_font | font_face: font_display: 'swap' }}
+  {{ section.settings.note_font | font_face: font_display: 'swap' }}
+
+  #{{ section_id }} {
+    width: 100%;
+    background: var(--ita-bg);
+    color: var(--ita-text);
+    padding: var(--ita-padding) 0;
+  }
+
+  #{{ section_id }} .image-text-about__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--ita-gap);
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 5%;
+    align-items: center;
+  }
+
+  /* --- Media Column --- */
+  #{{ section_id }} .image-text-about__media-column {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+  }
+
+  /* The Note Area */
+  #{{ section_id }} .image-text-about__note-wrapper {
+    margin-bottom: var(--ita-note-gap);
+    position: relative;
+    transform: translate(var(--ita-note-x), var(--ita-note-y));
+    z-index: 2;
+  }
+
+  #{{ section_id }} .image-text-about__note-content {
+    display: inline-block; /* Shrinks to fit text width so heart centers correctly */
+  }
+
+  #{{ section_id }} .image-text-about__note-text {
+    /* Handwritten/Script Style */
+    font-family: var(--ita-note-font); 
+    font-style: italic;
+    font-size: calc({{ section.settings.description_size }}px * 1.4); /* Larger quote size */
+    line-height: 1.2;
+    color: var(--ita-text);
+    margin: 0;
+    font-weight: 400;
+    text-align: left;
+  }
+  
+  #{{ section_id }} .image-text-about__note-text p {
+    margin: 0;
+  }
+
+  #{{ section_id }} .image-text-about__note-icon {
+    color: var(--ita-text);
+    opacity: 0.8;
+    margin: 8px auto 0 auto; /* Centers the heart under the text block */
+    display: block;
+  }
+
+  /* The Image */
+  #{{ section_id }} .image-text-about__image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: var(--ita-image-aspect-ratio);
+    overflow: hidden;
+    border-radius: var(--ita-image-radius);
+    z-index: 1;
+  }
+
+  #{{ section_id }} .image-text-about__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #{{ section_id }} .image-text-about__placeholder {
+    background: #e8e1d2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* --- Text Content Column --- */
+  #{{ section_id }} .image-text-about__content {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+  }
+
+  #{{ section_id }} .image-text-about__content--left { align-items: flex-start; text-align: left; }
+  #{{ section_id }} .image-text-about__content--center { align-items: center; text-align: center; }
+  #{{ section_id }} .image-text-about__content--right { align-items: flex-end; text-align: right; }
+
+  /* Eyebrow */
+  #{{ section_id }} .image-text-about__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    font-family: var(--ita-eyebrow-font);
+    font-size: {{ section.settings.eyebrow_size }}px;
+    font-weight: {{ section.settings.eyebrow_weight }};
+    text-transform: {{ section.settings.eyebrow_transform }};
+    color: var(--ita-text);
+    letter-spacing: 0.05em;
+  }
+
+  #{{ section_id }} .image-text-about__dot {
+    width: {{ section.settings.dot_size }}px;
+    height: {{ section.settings.dot_size }}px;
+    border-radius: {{ section.settings.dot_radius }}%;
+    background: var(--ita-accent);
+    flex-shrink: 0;
+  }
+
+  /* Heading */
+  #{{ section_id }} .image-text-about__heading {
+    font-family: var(--ita-heading-font);
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: {{ section.settings.heading_weight }};
+    line-height: 1.1;
+    margin: 0 0 24px 0;
+    color: var(--ita-text);
+    max-width: 600px;
+  }
+
+  /* Description */
+  #{{ section_id }} .image-text-about__description {
+    font-family: var(--ita-body-font);
+    font-size: {{ section.settings.description_size }}px;
+    line-height: 1.6;
+    color: var(--ita-text);
+    opacity: 0.85;
+    max-width: 540px;
+  }
+  
+  #{{ section_id }} .image-text-about__description p {
+    margin: 0 0 1.5em 0;
+  }
+  #{{ section_id }} .image-text-about__description p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* --- Layout Switching --- */
+  #{{ section_id }}.image-text-about--image-right .image-text-about__content { order: 1; }
+  #{{ section_id }}.image-text-about--image-right .image-text-about__media-column { order: 2; }
+
+  #{{ section_id }}.image-text-about--image-left .image-text-about__content { order: 2; }
+  #{{ section_id }}.image-text-about--image-left .image-text-about__media-column { order: 1; }
+
+  /* Mobile Responsive */
+  @media screen and (max-width: 749px) {
+    #{{ section_id }} .image-text-about__inner {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding: 0 20px;
+      align-items: start;
+    }
+
+    #{{ section_id }}.image-text-about--image-left .image-text-about__content { order: 2; }
+    #{{ section_id }}.image-text-about--image-left .image-text-about__media-column { order: 1; }
+    
+    #{{ section_id }}.image-text-about--image-right .image-text-about__content { order: 2; }
+    #{{ section_id }}.image-text-about--image-right .image-text-about__media-column { order: 1; }
+
+    #{{ section_id }} .image-text-about__content,
+    #{{ section_id }} .image-text-about__content--left,
+    #{{ section_id }} .image-text-about__content--center,
+    #{{ section_id }} .image-text-about__content--right {
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    #{{ section_id }} .image-text-about__heading {
+      font-size: calc({{ section.settings.heading_size }}px * 0.75);
+    }
+    
+    #{{ section_id }} .image-text-about__eyebrow {
+      font-size: calc({{ section.settings.eyebrow_size }}px * 0.9);
+    }
+    
+    #{{ section_id }} .image-text-about__note-wrapper {
+      transform: none;
+      margin-bottom: 20px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Image with text about",
+  "tag": "section",
+  "class": "section-image-text-about",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout variant",
+      "options": [
+        { "value": "standard", "label": "Standard (Image only)" },
+        { "value": "with_note", "label": "With note above image" }
+      ],
+      "default": "with_note"
+    },
+    {
+      "type": "richtext",
+      "id": "note_text",
+      "label": "Note text",
+      "info": "Use the editor to italicize or bold text. Defaults to Script font style.",
+      "default": "<p>\"Rescue dogs changed our lives.\"</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_note_icon",
+      "label": "Show heart icon below note",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Note Positioning"
+    },
+    {
+      "type": "range",
+      "id": "note_offset_x",
+      "label": "Note horizontal offset",
+      "min": -100,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "note_offset_y",
+      "label": "Note vertical offset",
+      "min": -100,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "note_image_gap",
+      "label": "Gap between note and image",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "Image aspect ratio",
+      "options": [
+        { "value": "auto", "label": "Adapt to image" },
+        { "value": "1/1", "label": "Square (1:1)" },
+        { "value": "4/5", "label": "Portrait (4:5)" },
+        { "value": "3/4", "label": "Tall (3:4)" },
+        { "value": "16/9", "label": "Landscape (16:9)" }
+      ],
+      "default": "16/9"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "Image corner radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "header",
+      "content": "Text Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "A FAMILY MADE BIGGER"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dot",
+      "label": "Show dot",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "From Lucy to Fig."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>In addition to our beloved senior pug, Lucy, we welcomed Mouse into our family after adopting her through Pug Nation LA. When Lucy passed away after a long, happy, and deeply loved life, we never imagined another dog would find us quite so soon.</p><p>Then, just five months later, Fig showed up in our front yard while we were out of state, as if she had fallen from the sky. No one came forward to claim her, and we knew within moments of meeting her that she was meant to be part of our family. It felt fortuitous, as though Lucy had sent us a special friend.</p>"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "garamond_n7"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 32,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading weight",
+      "default": "400",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ]
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "font_picker",
+      "id": "note_font",
+      "label": "Note font (Script/Handwriting)",
+      "default": "caveat_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "eyebrow_font",
+      "label": "Eyebrow font",
+      "default": "assistant_n6"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_weight",
+      "label": "Eyebrow weight",
+      "default": "600",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_transform",
+      "label": "Eyebrow transform",
+      "default": "uppercase",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Bullet / Dot"
+    },
+    {
+      "type": "range",
+      "id": "dot_size",
+      "label": "Dot size",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "dot_radius",
+      "label": "Dot roundness",
+      "info": "0% is square, 50% is circle",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Layout & Colors"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Column gap",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FDFBF7"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#3E2723"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent (Dot)",
+      "default": "#3E2723"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with text about"
+    }
+  ]
+}
+{% endschema %}

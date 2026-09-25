@@ -1,0 +1,167 @@
+{% doc %}
+  Adds progressive motion, native review navigation and editor lifecycle handling.
+{% enddoc %}
+{% stylesheet %}
+[class*="eyebrow"], [class*="kicker"] { display: none !important; }
+.fm-storefront { -webkit-font-smoothing: antialiased; }
+.fm-storefront :focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+.fm-home #main { overflow-x: clip; }
+.fm-home .shopify-section { scroll-margin-top: calc(var(--fm-header-height, 90px) + 20px); }
+.fm-home :is(.ra__grid,.wb-pillar-cards-container,.bw__items) { scrollbar-width: thin; scrollbar-color: #b59378 transparent; overscroll-behavior-x: contain; }
+.fm-home :is(.wb-heading__headline,.ra__heading,.cc__heading,.bw__heading,.fms__heading,.sp-panel__heading) { text-wrap: balance; }
+.fm-home :is(.ra-card,.bw-item,.cc-card) { -webkit-tap-highlight-color: transparent; }
+.fm-home .ra[data-ra-reveal-ready] [data-ra-reveal]:not(.ra-is-visible) { opacity: 1; transform: none; }
+.fm-home :is(.cc-card,.wb-stats-banner__item) { opacity: 1; transform: none; }
+@media(prefers-reduced-motion:reduce) {
+ .fm-home *, .fm-home *::before, .fm-home *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+ .fm-home .sp-panel { position: relative !important; top: auto !important; }
+}
+{% endstylesheet %}
+{% javascript %}
+(() => {
+  if (window.fmMotionLoaded) return;
+  window.fmMotionLoaded = true;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const mobile = matchMedia('(max-width: 749px)');
+  const controllers = new Map();
+  const animations = new Set();
+  const observed = new WeakSet();
+  const inEditor = Boolean(window.Shopify && Shopify.designMode);
+  const observer = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      observer.unobserve(entry.target);
+      if (reduced.matches || inEditor || !entry.target.animate) continue;
+      const motion = entry.target.animate([
+        { opacity: .15, transform: `translateY(${mobile.matches ? 12 : 24}px)` },
+        { opacity: 1, transform: 'translateY(0)' }
+      ], { duration: mobile.matches ? 420 : 680, easing: 'cubic-bezier(.2,.75,.2,1)', delay: Number(entry.target.dataset.fmDelay || 0) });
+      animations.add(motion);
+      motion.finished.catch(() => {}).finally(() => animations.delete(motion));
+    }
+  }, { threshold: .04, rootMargin: '0px 0px 35px 0px' }) : null;
+  const selectAll = (root, selector) => [...(root.matches && root.matches(selector) ? [root] : []), ...root.querySelectorAll(selector)];
+  function reveal(root) {
+    selectAll(root, '[data-fm-config]').forEach(config => {
+      const section = config.closest('.shopify-section');
+      if (!section) return;
+      section.querySelectorAll('[data-ra-reveal]').forEach(el => el.classList.add('ra-is-visible'));
+      if (config.dataset.enabled !== 'true' || reduced.matches || inEditor || !observer) return;
+      const selector = '.wb-heading,.wb-pillar-card,.ra__banner-text,.ra-card,.cc__header,.cc-card,.bw__left,.bw-item,.fms__story,.fms__commit,.st__frame,.sp-panel__content';
+      section.querySelectorAll(selector).forEach((el,i) => {
+        if (observed.has(el)) return;
+        observed.add(el);
+        el.dataset.fmDelay = String(mobile.matches ? 0 : (i % 3) * 65);
+        observer.observe(el);
+      });
+    });
+  }
+  function rails(root) {
+    selectAll(root,'.ra__grid,.wb-pillar-cards-container,.bw__items').forEach(rail => {
+      if (rail.dataset.fmRail) return;
+      rail.dataset.fmRail = 'true';
+      rail.tabIndex = 0;
+      rail.setAttribute('role','region');
+      rail.setAttribute('aria-label',document.documentElement.dataset.fmItems || 'Swipe to explore');
+      rail.addEventListener('keydown', event => {
+        if (event.target !== rail || !['ArrowLeft','ArrowRight'].includes(event.key)) return;
+        if (rail.scrollWidth <= rail.clientWidth + 1) return;
+        event.preventDefault();
+        rail.scrollBy({left: (event.key === 'ArrowRight' ? 1 : -1) * rail.clientWidth * .88, behavior: reduced.matches ? 'instant' : 'smooth'});
+      });
+    });
+  }
+  function reviews(root) {
+    selectAll(root,'[data-fm-testimonials]').forEach(el => {
+      if (controllers.has(el)) return;
+      const abort = new AbortController();
+      const options = { signal: abort.signal };
+      const rail = el.querySelector('.st__swiper');
+      const slides = [...el.querySelectorAll('.st__slide')];
+      const dotsWrap = el.querySelector('.st__dots');
+      if (!rail || !slides.length) return;
+      let index = 0, timer, inView = false, hovered = false, touched = false;
+      const dots = slides.map((slide,i) => {
+        slide.setAttribute('role','group');
+        slide.setAttribute('aria-label',`${i+1} / ${slides.length}`);
+        if (!dotsWrap) return null;
+        const dot = document.createElement('button');
+        dot.type = 'button'; dot.className = 'st__dot';
+        dot.setAttribute('aria-label',`${document.documentElement.dataset.fmReview || 'Show review'} ${i+1}`);
+        dot.addEventListener('click', () => { touched = true; stop(); go(i); },options);
+        dotsWrap.append(dot); return dot;
+      });
+      const stop = () => { clearTimeout(timer); timer = null; };
+      const allowed = () => el.dataset.autoplay === 'true' && !inEditor && !reduced.matches && !document.hidden && inView && !hovered && !touched && !el.contains(document.activeElement);
+      function schedule() {
+        stop();
+        if (slides.length > 1 && allowed()) timer = setTimeout(() => go((index+1)%slides.length),Math.max(3000,Number(el.dataset.autoplayDelay)||7000));
+      }
+      function update() {
+        index = Math.max(0,Math.min(slides.length-1,Math.round(rail.scrollLeft / rail.clientWidth)));
+        dots.forEach((dot,i) => { if (dot) { dot.classList.toggle('is-active',i===index); dot.setAttribute('aria-current',i===index ? 'true' : 'false'); } });
+      }
+      function go(next) {
+        index = (next+slides.length)%slides.length;
+        rail.scrollTo({left:index*rail.clientWidth,behavior:reduced.matches ? 'instant' : 'smooth'});
+        schedule();
+      }
+      const prev=el.querySelector('.st__arrow--prev'),next=el.querySelector('.st__arrow--next');
+      prev?.addEventListener('click',()=>{touched=true;stop();go(index-1);},options);
+      next?.addEventListener('click',()=>{touched=true;stop();go(index+1);},options);
+      if(slides.length < 2) { if(prev)prev.hidden=true;if(next)next.hidden=true;if(dotsWrap)dotsWrap.hidden=true; }
+      rail.addEventListener('scroll',update,{...options,passive:true});
+      rail.addEventListener('pointerdown',()=>{touched=true;stop();},options);
+      rail.addEventListener('keydown',event=>{
+        if(!['ArrowLeft','ArrowRight'].includes(event.key))return;
+        event.preventDefault();touched=true;stop();go(index+(event.key==='ArrowRight'?1:-1));
+      },options);
+      el.addEventListener('mouseenter',()=>{hovered=true;stop();},options);
+      el.addEventListener('mouseleave',()=>{hovered=false;schedule();},options);
+      el.addEventListener('focusin',stop,options);
+      el.addEventListener('focusout',()=>queueMicrotask(schedule),options);
+      document.addEventListener('visibilitychange',schedule,options);
+      reduced.addEventListener('change',schedule,options);
+      const resize = new ResizeObserver(()=>{rail.scrollTo({left:index*rail.clientWidth,behavior:'instant'});});
+      resize.observe(rail);
+      const visibility = new IntersectionObserver(entries=>{inView=entries[0].isIntersecting;schedule();},{threshold:.15});
+      visibility.observe(el);
+      update();
+      controllers.set(el,{go,slides,destroy(){stop();abort.abort();resize.disconnect();visibility.disconnect();if(dotsWrap)dotsWrap.replaceChildren();}});
+    });
+  }
+  let frame = 0;
+  function parallax() {
+    frame=0;
+    document.querySelectorAll('[data-fm-hero]').forEach(hero=>{
+      if(reduced.matches || mobile.matches || inEditor || hero.dataset.parallax!=='true' || hero.dataset.motion!=='true') { hero.style.removeProperty('--fm-hero-progress');return; }
+      const rect=hero.getBoundingClientRect();
+      if(rect.bottom<0 || rect.top>innerHeight)return;
+      hero.style.setProperty('--fm-hero-progress',String(Math.max(0,Math.min(1,-rect.top/rect.height))));
+    });
+  }
+  function requestFrame() { if(!frame)frame=requestAnimationFrame(parallax); }
+  function heroEntrance(root) {
+    selectAll(root,'[data-fm-hero]').forEach(hero=>{
+      if(hero.dataset.fmReady)return;
+      hero.dataset.fmReady='true';
+      if(reduced.matches || inEditor || hero.dataset.motion!=='true')return;
+      const copy=hero.querySelector('.fm-hero__copy');
+      if(copy?.animate) { const a=copy.animate([{opacity:.1,transform:'translateY(16px)'},{opacity:1,transform:'translateY(0)'}],{duration:650,easing:'cubic-bezier(.2,.75,.2,1)'});animations.add(a);a.finished.catch(()=>{}).finally(()=>animations.delete(a)); }
+    });
+  }
+  const headerObserver = new ResizeObserver(entries=>{for(const e of entries)document.documentElement.style.setProperty('--fm-header-height',`${e.target.getBoundingClientRect().height}px`);});
+  function init(root=document) { reveal(root);rails(root);reviews(root);heroEntrance(root);document.querySelectorAll('mega-header').forEach(h=>headerObserver.observe(h));requestFrame(); }
+  document.addEventListener('shopify:section:load',event=>init(event.target));
+  document.addEventListener('shopify:section:unload',event=>{event.target.querySelectorAll('mega-header').forEach(h=>headerObserver.unobserve(h));for(const [el,c] of controllers)if(event.target.contains(el)){c.destroy();controllers.delete(el);}event.target.querySelectorAll('[data-fm-delay]').forEach(el=>observer?.unobserve(el));});
+  document.addEventListener('shopify:block:select',event=>{for(const [el,c] of controllers){const i=c.slides.findIndex(s=>s===event.target || s.contains(event.target));if(i>=0)c.go(i);}});
+  reduced.addEventListener('change',()=>{if(reduced.matches)animations.forEach(a=>a.cancel());requestFrame();});
+  addEventListener('scroll',requestFrame,{passive:true});
+  addEventListener('resize',requestFrame,{passive:true});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>init(),{once:true});else init();
+})();
+{% endjavascript %}
+<script>
+document.documentElement.dataset.fmItems = {{ 'fm.items' | t | json }};
+document.documentElement.dataset.fmReview = {{ 'fm.review' | t | json }};
+</script>

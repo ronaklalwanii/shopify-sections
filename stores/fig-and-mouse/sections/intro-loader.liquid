@@ -1,0 +1,335 @@
+<script>document.body.classList.add('fm-storefront');{% if request.page_type == 'index' %}document.body.classList.add('fm-home');{% endif %}</script>
+{% if section.settings.enabled %}
+{%- if section.settings.homepage_only == false or request.page_type == 'index' -%}
+{%- comment -%}
+  Intro/Loading Screen
+  Displays while page loads with animated dots
+{%- endcomment -%}
+
+<div id="intro-loader" class="intro-loader">
+  <div class="intro-loader__content">
+    {%- if section.settings.logo != blank -%}
+      <div class="intro-loader__logo">
+        {%- if section.settings.logo.mime_type contains 'svg' -%}
+          {{ section.settings.logo | image_url: width: 300 | image_tag: loading: 'eager', class: 'intro-loader__logo-svg' }}
+        {%- else -%}
+          {{ section.settings.logo | image_url: width: 300 | image_tag: loading: 'eager', widths: '40, 60, 80, 100, 150, 200, 300' }}
+        {%- endif -%}
+      </div>
+    {%- else -%}
+      <div class="intro-loader__logo">
+        <svg width="{{ section.settings.logo_size }}" height="{{ section.settings.logo_size }}" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: {{ section.settings.logo_size }}px; height: {{ section.settings.logo_size }}px;">
+          <path d="M8 32V12L14 20L20 12V32" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M20 12L26 20L32 12V32" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    {%- endif -%}
+    
+    <div class="intro-loader__text">
+      <span class="intro-loader__message">{{ section.settings.loading_text }}</span><span class="intro-loader__dots"></span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .intro-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: {{ section.settings.background_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+  }
+
+  .intro-loader.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .intro-loader__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    animation: introFadeIn 0.8s ease;
+  }
+
+  @keyframes introFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .intro-loader__logo {
+    color: {{ section.settings.text_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .intro-loader__logo img,
+  .intro-loader__logo svg {
+    max-width: {{ section.settings.logo_size }}px;
+    max-height: {{ section.settings.logo_size }}px;
+    width: auto;
+    height: auto;
+  }
+
+  .intro-loader__logo-svg {
+    width: {{ section.settings.logo_size }}px;
+    height: {{ section.settings.logo_size }}px;
+  }
+
+  .intro-loader__text {
+    font-family: {{ section.settings.text_font.family }}, {{ section.settings.text_font.fallback_families }};
+    font-size: {{ section.settings.text_size }}px;
+    font-style: {{ section.settings.text_style }};
+    font-weight: {{ section.settings.text_weight }};
+    color: {{ section.settings.text_color }};
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .intro-loader__dots {
+    display: inline-block;
+    min-width: 24px;
+    text-align: left;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .intro-loader__content {
+      animation: none;
+    }
+    .intro-loader {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    const loader = document.getElementById('intro-loader');
+    if (!loader) return;
+
+    const dotsElement = loader.querySelector('.intro-loader__dots');
+    let dotCount = 0;
+    const maxDots = {{ section.settings.max_dots }};
+    const dotInterval = {{ section.settings.dot_speed }};
+
+    // Animate dots
+    function animateDots() {
+      dotCount = (dotCount % maxDots) + 1;
+      dotsElement.textContent = '.'.repeat(dotCount);
+    }
+
+    const dotsTimer = setInterval(animateDots, dotInterval);
+
+    // Hide loader when page is fully loaded
+    function hideLoader() {
+      clearInterval(dotsTimer);
+      loader.classList.add('is-hidden');
+      
+      // Remove from DOM after transition
+      setTimeout(function() {
+        loader.remove();
+      }, 600);
+    }
+
+    // Wait for page to fully load
+    if (document.readyState === 'complete') {
+      // Small delay so user can see the intro
+      setTimeout(hideLoader, {{ section.settings.minimum_display_time }});
+    } else {
+      window.addEventListener('load', function() {
+        setTimeout(hideLoader, {{ section.settings.minimum_display_time }});
+      });
+    }
+  })();
+</script>
+{%- endif -%}
+
+{% endif %}
+{% render 'fm-motion' %}
+
+{% schema %}
+{
+  "name": "Intro loader",
+  "tag": "section",
+  "class": "section-intro-loader",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable loading screen",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "homepage_only",
+      "label": "Show only on homepage",
+      "default": true,
+      "info": "If enabled, the intro loader will only display on the homepage."
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo (optional)",
+      "info": "Leave blank to use default M icon. SVG recommended for best quality."
+    },
+    {
+      "type": "range",
+      "id": "logo_size",
+      "label": "Logo size",
+      "min": 20,
+      "max": 300,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Loading text"
+    },
+    {
+      "type": "text",
+      "id": "loading_text",
+      "label": "Loading message",
+      "default": "fetching beautiful things"
+    },
+    {
+      "type": "font_picker",
+      "id": "text_font",
+      "label": "Text font",
+      "default": "garamond_n4"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "text_style",
+      "label": "Text style",
+      "default": "italic",
+      "options": [
+        {
+          "value": "normal",
+          "label": "Normal"
+        },
+        {
+          "value": "italic",
+          "label": "Italic"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "default": "400",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semibold"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "range",
+      "id": "max_dots",
+      "label": "Maximum dots",
+      "info": "Dots will cycle from 1 to this number",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "dot_speed",
+      "label": "Dot animation speed",
+      "min": 200,
+      "max": 1000,
+      "step": 100,
+      "unit": "ms",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "minimum_display_time",
+      "label": "Minimum display time",
+      "info": "How long the intro shows even if page loads fast",
+      "min": 500,
+      "max": 3000,
+      "step": 100,
+      "unit": "ms",
+      "default": 1500
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#D4C9A8"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text & logo color",
+      "default": "#3E2723"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Intro loader"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,279 @@
+/* =============================================================
+   The Solution — editorial split section (Elqorin)
+   Left: eyebrow / heading / description / CTA button
+   Right: icon + label + two-line text + image, repeated per block
+   All tunable values arrive as --ts-* custom properties from the
+   section's Liquid schema (see sections/the-solution.liquid).
+   ============================================================= */
+
+.ts,
+.ts * {
+  box-sizing: border-box;
+}
+
+.ts {
+  background: var(--ts-bg, #f2eee7);
+  padding-top: var(--ts-pad-top, 96px);
+  padding-bottom: var(--ts-pad-bottom, 96px);
+  font-family: var(--ts-font, inherit);
+  color: var(--ts-title-color, #161513);
+  -webkit-font-smoothing: antialiased;
+}
+
+.ts__inner {
+  max-width: var(--ts-max-w, 1680px);
+  margin-inline: auto;
+  padding-inline: var(--ts-side-pad, 56px);
+}
+
+.ts__grid {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ts-col-gap, 48px);
+}
+
+/* ---------- Text column ---------- */
+
+.ts__text {
+  flex: 0 0 var(--ts-left-w, 30%);
+  max-width: var(--ts-left-w, 30%);
+  min-width: 0;
+}
+
+.ts__eyebrow {
+  margin: 0 0 var(--ts-eyebrow-gap, 24px);
+  font-size: var(--ts-eyebrow-size, 12px);
+  font-weight: var(--ts-eyebrow-weight, 600);
+  letter-spacing: var(--ts-eyebrow-tracking, 0.14em);
+  text-transform: uppercase;
+  color: var(--ts-eyebrow-color, #161513);
+}
+
+.ts__title {
+  margin: 0;
+  max-width: var(--ts-title-max-w, 400px);
+  font-size: clamp(28px, 3.6vw, var(--ts-title-size, 42px));
+  line-height: var(--ts-title-lh, 1.12);
+  letter-spacing: var(--ts-title-tracking, -0.02em);
+  font-weight: var(--ts-title-weight, 500);
+  color: var(--ts-title-color, #161513);
+  text-wrap: balance;
+}
+
+.ts__desc {
+  margin-top: var(--ts-desc-gap, 32px);
+  max-width: var(--ts-desc-max-w, 320px);
+  font-size: var(--ts-desc-size, 15px);
+  line-height: 1.5;
+  color: var(--ts-desc-color, #4a463f);
+}
+
+.ts__desc p {
+  margin: 0;
+}
+
+.ts__desc p + p {
+  margin-top: 0.85em;
+}
+
+.ts__button {
+  margin-top: var(--ts-btn-gap, 40px);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--ts-btn-bg, #161513);
+  color: var(--ts-btn-fg, #f2eee7);
+  border-radius: var(--ts-btn-radius, 4px);
+  padding: var(--ts-btn-pad-y, 18px) var(--ts-btn-pad-x, 28px);
+  font-size: var(--ts-btn-size, 13px);
+  font-weight: 600;
+  letter-spacing: var(--ts-btn-tracking, 0.08em);
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 220ms ease;
+}
+
+.ts__button:hover {
+  background: var(--ts-btn-hover-bg, #2a2823);
+}
+
+.ts__button[aria-disabled="true"] {
+  pointer-events: none;
+}
+
+.ts__button-arrow {
+  flex: none;
+  transition: transform 220ms ease;
+}
+
+.ts__button:hover .ts__button-arrow {
+  transform: translateX(3px);
+}
+
+/* ---------- Items ---------- */
+
+.ts__items {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--ts-items-cols, 3), 1fr);
+  gap: var(--ts-items-gap, 32px);
+}
+
+.ts-item {
+  min-width: 0;
+}
+
+.ts-item__icon {
+  display: block;
+  width: var(--ts-icon-size, 26px);
+  height: var(--ts-icon-size, 26px);
+  margin-bottom: var(--ts-icon-gap, 20px);
+  color: var(--ts-icon-color, #161513);
+}
+
+.ts-item__icon svg,
+.ts-item__icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.ts-item__label {
+  margin: 0 0 var(--ts-label-gap, 8px);
+  font-size: var(--ts-label-size, 14px);
+  font-weight: var(--ts-label-weight, 600);
+  letter-spacing: var(--ts-label-tracking, 0.08em);
+  text-transform: uppercase;
+  color: var(--ts-label-color, #161513);
+}
+
+.ts-item__text {
+  margin: 0 0 var(--ts-text-gap, 20px);
+  font-size: var(--ts-text-size, 15px);
+  line-height: var(--ts-text-lh, 1.5);
+  color: var(--ts-text-color, #4a463f);
+}
+
+.ts-item__text p {
+  margin: 0;
+}
+
+.ts-item__text p + p {
+  margin-top: 2px;
+}
+
+.ts-item__media {
+  aspect-ratio: var(--ts-img-aspect, 3 / 2);
+  border-radius: var(--ts-img-radius, 6px);
+  overflow: hidden;
+  background: #121110;
+}
+
+.ts-item__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scale(1);
+  transition: transform var(--ts-img-speed, 500ms) cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.ts-item__placeholder {
+  background: #121110;
+}
+
+.ts[data-hover-zoom="true"] .ts-item:hover .ts-item__img {
+  transform: scale(var(--ts-img-zoom, 1.06));
+}
+
+/* ---------- Scroll reveal (JS adds data-ts-reveal-ready) ---------- */
+
+.ts[data-ts-reveal-ready] [data-ts-reveal] {
+  transition:
+    opacity 0.8s ease var(--ts-delay, 0ms),
+    transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) var(--ts-delay, 0ms);
+}
+
+.ts[data-ts-reveal-ready] [data-ts-reveal]:not(.ts-is-visible) {
+  opacity: 0;
+  transform: translateY(26px);
+}
+
+/* ---------- Tablet ---------- */
+
+@media (max-width: 1180px) {
+  .ts__grid {
+    gap: clamp(32px, 4vw, 56px);
+  }
+
+  .ts__items {
+    gap: clamp(20px, 3vw, var(--ts-items-gap, 32px));
+  }
+}
+
+@media (max-width: 980px) {
+  .ts__grid {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ts__text {
+    flex: none;
+    max-width: 560px;
+  }
+
+  .ts__title,
+  .ts__desc {
+    max-width: none;
+  }
+}
+
+/* ---------- Mobile: stack + snap carousel ---------- */
+
+@media (max-width: 767px) {
+  .ts__grid {
+    gap: 40px;
+  }
+
+  .ts__items {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    margin-inline: calc(var(--ts-side-pad, 56px) * -1);
+    padding-inline: var(--ts-side-pad, 56px);
+    padding-bottom: 8px;
+  }
+
+  .ts__items::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ts-item {
+    flex: 0 0 min(80%, 340px);
+    scroll-snap-align: center;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .ts-item__img,
+  .ts__button-arrow {
+    transition: none !important;
+  }
+
+  .ts[data-ts-reveal-ready] [data-ts-reveal] {
+    transition: none;
+  }
+
+  .ts[data-ts-reveal-ready] [data-ts-reveal]:not(.ts-is-visible) {
+    opacity: 1;
+    transform: none;
+  }
+}

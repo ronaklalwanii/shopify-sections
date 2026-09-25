@@ -1,0 +1,289 @@
+{%- render 'section-spacing-collapsing' -%}
+
+{%- comment -%}
+	--ul-----------------------------------------------------------------------------------------------------------------------
+	CSS
+	--ul-----------------------------------------------------------------------------------------------------------------------
+{%- endcomment -%}
+<style>
+	#shopify-section-{{ section.id }} .product-list {
+	    --ul-product-list-gap: {% if section.settings.stack_products %}
+	        {% if section.settings.products_per_row_mobile == '1' %}
+	            var(--ul-grid-gutter){% else %}
+	            var(--ul-product-list-row-gap){% endif %}
+	        var(--ul-spacing-2){% else %}
+	        var(--ul-product-list-row-gap) var(--ul-product-list-column-gap){% endif %};
+	    --ul-product-list-items-per-row: {{ section.settings.products_per_row_mobile | times: 1 }}
+	    ;
+	    --ul-product-list-carousel-item-width: 74vw;
+	    --ul-product-list-grid: {% if section.settings.stack_products %}
+	        auto / repeat(var(--ul-product-list-items-per-row), minmax(0, 1fr)){% else %}
+	        auto / auto-flow var(--ul-product-list-carousel-item-width){% endif %};
+	}
+
+	@media screen and (min-width: 700px) {
+	    #shopify-section-{{ section.id }} .product-list {
+	        --ul-product-list-gap: var(--ul-product-list-row-gap) var(--ul-product-list-column-gap);
+	        --ul-product-list-items-per-row: 2;
+	        --ul-product-list-carousel-item-width: 36vw;
+	    }
+	}
+
+	@media screen and (min-width: 1000px) {
+	    #shopify-section-{{ section.id }} .product-list {
+	        --ul-product-list-items-per-row: {{ section.settings.products_per_row_desktop }}
+	        ;
+	        --ul-product-list-carousel-item-width: calc(var(--ul-container-inner-width) / {{ section.settings.products_per_row_desktop }} -(var(--ul-product-list-column-gap) / {{ section.settings.products_per_row_desktop }} * {{ section.settings.products_per_row_desktop | minus: 1 }}));
+	    }
+	}
+
+		#shopify-section-{{ section.id }} {
+			{% if section.settings.custom_padding %}
+			padding-top: {{ section.settings.padding_top }}px;
+			padding-bottom: {{ section.settings.padding_bottom }}px;
+			{% endif %}
+		}</style>
+
+{%- comment -%}
+	--ul-----------------------------------------------------------------------------------------------------------------------
+	LIQUID
+	--ul-----------------------------------------------------------------------------------------------------------------------
+{%- endcomment -%}
+<recently-viewed-products
+	products-count='{{ section.settings.products_count }}'
+	{% if request.page_type == 'product' %}
+		exclude-id='{{ product.id }}'
+	{% endif -%}
+	{% render 'section-attributes' %}
+>
+	{%- if search.performed and search.results_count > 0 -%}
+		<div class='section-stack'>
+			{%- render 'section-header',
+				subheading: section.settings.subheading,
+				heading: section.settings.title,
+				heading_color: section.settings.heading_color,
+				heading_gradient: section.settings.heading_gradient,
+				content: section.settings.content
+			-%}
+
+			<div class='{% if section.settings.show_progress_bar %}scrollable-with-controls{% else %}floating-controls-container{% endif %}'>
+				{%- assign scroll_area_id = 'scroll-area-' | append: section.id -%}
+				{%- assign parsed_terms = search.terms | split: ' OR ' -%}
+
+				<scroll-carousel
+					selector='product-card'
+					id='{{ scroll_area_id }}'
+					class='scroll-area bleed {% if section.settings.recommendations_count > section.settings.products_per_row_desktop %}is-scrollable{% endif %}'
+				>
+					<reveal-items selector='.product-list > *'>
+						<product-list class='product-list'>
+							{%- for parsed_term in parsed_terms -%}
+								{%- assign id = parsed_term | split: 'id:' | last | times: 1 -%}
+								{%- assign product_to_render = search.results | where: 'id', id | first -%}
+
+								{%- if product_to_render != blank -%}
+									{%- render 'product-card',
+										product: product_to_render,
+										stacked: section.settings.stack_products,
+										background: section.settings.product_card_background,
+										text_color: section.settings.product_card_text_color,
+										show_badges: true
+									-%}
+								{%- endif -%}
+							{%- endfor -%}
+						</product-list>
+					</reveal-items>
+				</scroll-carousel>
+
+				{%- if section.settings.stack_products == false -%}
+					{%- if section.settings.show_progress_bar -%}
+						{%- assign default_progress = section.settings.products_per_row_desktop
+							| times: 1.0
+							| divided_by: section.settings.products_count
+						-%}
+						{%- render 'scrollbar',
+							observes: scroll_area_id,
+							default_progress: default_progress,
+							show_buttons: true
+						-%}
+					{%- else -%}
+						<button
+							is='prev-button'
+							class='circle-button circle-button--lg circle-button--fill border group'
+							aria-controls='{{ scroll_area_id }}'
+							disabled
+						>
+							<span class='sr-only'>{{ 'general.accessibility.previous' | t }}</span>
+							<span class='animated-arrow animated-arrow--reverse'></span>
+						</button>
+
+						<button
+							is='next-button'
+							class='circle-button circle-button--lg circle-button--fill border group'
+							aria-controls='{{ scroll_area_id }}'
+						>
+							<span class='sr-only'>{{ 'general.accessibility.next' | t }}</span>
+							<span class='animated-arrow'></span>
+						</button>
+					{%- endif -%}
+				{%- endif -%}
+			</div>
+		</div>
+	{%- endif -%}
+</recently-viewed-products>
+
+{% schema %}
+{
+  "name": "Recently viewed products",
+  "class": "shopify-section--recently-viewed-products",
+  "tag": "section",
+  "disabled_on": {
+    "templates": [
+      "password"
+    ],
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "products_count",
+      "min": 2,
+      "max": 24,
+      "label": "Products count",
+      "default": 6
+    },
+    {
+      "type": "checkbox",
+      "id": "stack_products",
+      "label": "Stack products",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_progress_bar",
+      "label": "Show carousel progress bar",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "products_per_row_mobile",
+      "label": "Products per row (mobile)",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "products_per_row_desktop",
+      "min": 2,
+      "max": 5,
+      "label": "Products per row (desktop)",
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Recently viewed products"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content"
+    },
+    {
+      "type": "header",
+      "content": "Colors",
+      "info": "Gradient replaces solid colors when set."
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color"
+    },
+    {
+      "type": "color_background",
+      "id": "heading_gradient",
+      "label": "Heading gradient"
+    },
+    {
+      "type": "color",
+      "id": "product_card_background",
+      "label": "Product card background"
+    },
+    {
+      "type": "color",
+      "id": "product_card_text_color",
+      "label": "Product card text"
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_padding",
+      "label": "Custom padding",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recently viewed products"
+    }
+  ]
+}
+{% endschema %}

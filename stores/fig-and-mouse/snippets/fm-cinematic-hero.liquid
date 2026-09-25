@@ -1,0 +1,131 @@
+{% doc %}
+  Renders the responsive Fig & Mouse hero using the section's existing content blocks.
+  @param {section} section - The image overlay section.
+{% enddoc %}
+{% liquid
+  assign s = section.settings
+  assign desktop_x = s.desktop_text_position | split: ' ' | first | split: '-' | last
+  assign mobile_x = s.mobile_text_position | split: ' ' | first | split: '-' | last
+  assign desktop_y = 'center'
+  assign mobile_y = 'center'
+  if s.desktop_text_position contains 'place-self-start'
+    assign desktop_y = 'flex-start'
+  elsif s.desktop_text_position contains 'place-self-end'
+    assign desktop_y = 'flex-end'
+  endif
+  if s.mobile_text_position contains 'place-self-start'
+    assign mobile_y = 'flex-start'
+  elsif s.mobile_text_position contains 'place-self-end'
+    assign mobile_y = 'flex-end'
+  endif
+  assign desktop_align = desktop_x | replace: 'start', 'left' | replace: 'end', 'right'
+  assign mobile_align = mobile_x | replace: 'start', 'left' | replace: 'end', 'right'
+  assign desktop_x = desktop_x | replace: 'start', 'flex-start' | replace: 'end', 'flex-end'
+  assign mobile_x = mobile_x | replace: 'start', 'flex-start' | replace: 'end', 'flex-end'
+%}
+<style>
+{{ s.snatched_heading_font | font_face: font_display: 'swap' }}
+{{ s.snatched_body_font | font_face: font_display: 'swap' }}
+#FMHero-{{ section.id }} {
+  --fm-hero-h: {{ s.fm_desktop_height }}px;
+  --fm-hero-progress: 0;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: {{ s.fm_background }};
+  color: {{ s.text_color }};
+  min-height: 420px;
+  height: var(--fm-hero-h);
+  font-family: {{ s.snatched_body_font.family }}, {{ s.snatched_body_font.fallback_families }};
+  {% unless s.full_width %}border-radius: 24px;{% endunless %}
+}
+#FMHero-{{ section.id }}.fm-hero--auto { height: auto; min-height: 0; aspect-ratio: {{ s.image.aspect_ratio | default: 2.333 }}; }
+#FMHero-{{ section.id }}.fm-hero--sm { height: calc(var(--fm-hero-h) * .7); }
+#FMHero-{{ section.id }}.fm-hero--md { height: calc(var(--fm-hero-h) * .85); }
+#FMHero-{{ section.id }}.fm-hero--fill { height: calc(100svh - var(--fm-header-height, 100px)); }
+{% if s.overlay_height_vh > 0 %}#FMHero-{{ section.id }} { height: {{ s.overlay_height_vh }}svh; aspect-ratio: auto; }{% endif %}
+#FMHero-{{ section.id }} .fm-hero__scene { position: absolute; inset: 0; overflow: hidden; transform: scale(calc(1 + var(--fm-hero-progress) * .035)); transform-origin: 72% 60%; }
+#FMHero-{{ section.id }} .fm-hero__scene picture { display: block; width: 100%; height: 100%; }
+#FMHero-{{ section.id }} .fm-hero__image { display: block; width: 100%; height: 100%; object-fit: cover; object-position: {{ s.fm_image_position }}; }
+#FMHero-{{ section.id }} .fm-hero__scene::after { content: ''; position: absolute; inset: 0; background: {{ s.overlay_color }}; opacity: {{ s.overlay_opacity | divided_by: 100.0 }}; pointer-events: none; }
+#FMHero-{{ section.id }} .fm-hero__content { position: relative; z-index: 1; min-height: inherit; height: 100%; display: flex; flex-direction: column; align-items: {{ desktop_x }}; justify-content: {{ desktop_y }}; padding: {{ s.fm_padding_y }}px {{ s.fm_padding_x }}px; }
+#FMHero-{{ section.id }}.fm-hero--auto .fm-hero__content { position: absolute; inset: 0; }
+#FMHero-{{ section.id }} .fm-hero__copy { width: min(100%, {{ s.fm_content_width }}px); text-align: {{ desktop_align }}; }
+#FMHero-{{ section.id }} .fm-hero__heading { font-family: {{ s.snatched_heading_font.family }}, {{ s.snatched_heading_font.fallback_families }}; font-weight: {{ s.snatched_heading_font.weight }}; font-style: {{ s.snatched_heading_font.style }}; font-size: calc({{ s.snatched_heading_size }}px * var(--fm-heading-scale, 1)); letter-spacing: -.045em; line-height: .99; text-wrap: balance; overflow-wrap: anywhere; margin: 0; color: inherit; }
+#FMHero-{{ section.id }} .fm-hero__body { font-size: {{ s.fm_body_size }}px; line-height: 1.6; margin-top: 24px; }
+#FMHero-{{ section.id }} .fm-hero__buttons { display: flex; flex-wrap: wrap; justify-content: {{ desktop_x }}; gap: 12px; margin-top: 32px; }
+#FMHero-{{ section.id }} .fm-hero__button { display: inline-flex; justify-content: center; align-items: center; min-height: 52px; padding: 14px 28px; border: 1px solid var(--fm-button-bg); border-radius: {{ s.fm_button_radius }}px; background: var(--fm-button-bg); color: var(--fm-button-fg); font-family: {{ s.snatched_body_font.family }}, {{ s.snatched_body_font.fallback_families }}; font-size: {{ s.fm_button_size }}px; line-height: 1.35; text-decoration: none; font-weight: 500; transition: transform .25s ease, filter .25s ease; }
+#FMHero-{{ section.id }} .fm-hero__button--outline { background: transparent; border-color: var(--fm-button-fg); }
+#FMHero-{{ section.id }} .fm-hero__button--sm { padding: 12px 22px; }
+#FMHero-{{ section.id }} .fm-hero__button--xl { padding: 18px 36px; }
+@media (hover:hover) { #FMHero-{{ section.id }} .fm-hero__button:hover { transform: translateY(-3px); filter: brightness(1.06); } }
+@media(min-width:750px) and (max-width:1100px) {
+ #FMHero-{{ section.id }} { --fm-hero-h: {{ s.fm_desktop_height | times: 0.82 }}px; }
+ #FMHero-{{ section.id }} .fm-hero__heading { font-size: calc({{ s.snatched_heading_size }}px * var(--fm-heading-scale, 1) * .68); }
+ #FMHero-{{ section.id }} .fm-hero__copy { width: min(62%, {{ s.fm_content_width }}px); }
+ #FMHero-{{ section.id }} .fm-hero__content { padding: {{ s.fm_padding_y | times: 0.7 }}px {{ s.fm_padding_x | times: 0.6 }}px; }
+ #FMHero-{{ section.id }} .fm-hero__button { padding-inline: 20px; }
+}
+@media(max-width:749px) {
+ #FMHero-{{ section.id }}.fm-hero { height: {{ s.fm_mobile_height }}px; min-height: {{ s.fm_mobile_height }}px; aspect-ratio: auto; color: {{ s.mobile_text_color | default: s.text_color }}; }
+ #FMHero-{{ section.id }} .fm-hero__image { object-position: {{ s.fm_mobile_image_position }}; }
+ #FMHero-{{ section.id }} .fm-hero__scene { transform: none; }
+ #FMHero-{{ section.id }} .fm-hero__scene::after { opacity: {{ s.fm_mobile_overlay | divided_by: 100.0 }}; }
+ #FMHero-{{ section.id }} .fm-hero__content { align-items: {{ mobile_x }}; justify-content: {{ mobile_y }}; padding: {{ s.fm_mobile_padding_top }}px {{ s.fm_mobile_padding_x }}px {{ s.fm_mobile_padding_bottom }}px; }
+ #FMHero-{{ section.id }} .fm-hero__copy { text-align: {{ mobile_align }}; }
+ #FMHero-{{ section.id }} .fm-hero__heading { font-size: calc({{ s.snatched_heading_size_mobile }}px * var(--fm-heading-scale, 1)); line-height: 1.04; letter-spacing: -.035em; }
+ #FMHero-{{ section.id }} .fm-hero__body { font-size: {{ s.fm_body_size_mobile }}px; margin-top: 18px; }
+ #FMHero-{{ section.id }} .fm-hero__buttons { justify-content: {{ mobile_x }}; margin-top: 24px; gap: 10px; }
+ #FMHero-{{ section.id }} .fm-hero__button { padding: 13px 20px; min-height: 50px; }
+ {% if s.fm_mobile_layout == 'below' %}
+ #FMHero-{{ section.id }}.fm-hero { height: auto; min-height: 0; }
+ #FMHero-{{ section.id }} .fm-hero__scene { position: relative; height: {{ s.fm_mobile_height }}px; }
+ #FMHero-{{ section.id }} .fm-hero__content { position: relative; height: auto; }
+ {% endif %}
+}
+@media(max-width:359px) { #FMHero-{{ section.id }} .fm-hero__button { padding-inline: 14px; } }
+@media(prefers-reduced-motion:reduce) { #FMHero-{{ section.id }} .fm-hero__scene, #FMHero-{{ section.id }} .fm-hero__button { transform: none; transition: none; } }
+</style>
+<div id="FMHero-{{ section.id }}" class="fm-hero fm-hero--{{ s.image_size }}{% if s.full_width %} full-bleed{% endif %}" data-fm-hero data-motion="{{ s.fm_motion }}" data-parallax="{{ s.enable_parallax }}">
+ <div class="fm-hero__scene">
+  {% if s.image != blank %}
+   <picture>
+    {% if s.mobile_image != blank %}<source media="(max-width:749px)" srcset="{{ s.mobile_image | image_url: width: 480 }} 480w, {{ s.mobile_image | image_url: width: 750 }} 750w, {{ s.mobile_image | image_url: width: 1100 }} 1100w" sizes="100vw">{% endif %}
+    {{ s.image | image_url: width: 2200 | image_tag: class: 'fm-hero__image', widths: '750,1100,1440,1800,2200', sizes: '100vw', loading: 'eager', fetchpriority: 'high' }}
+   </picture>
+  {% else %}{{ 'lifestyle-1' | placeholder_svg_tag: 'fm-hero__image' }}{% endif %}
+ </div>
+ <div class="fm-hero__content">
+  <div class="fm-hero__copy">
+   {% for block in section.blocks %}
+    {% case block.type %}
+     {% when 'heading' %}
+      {% if block.settings.text != blank %}
+       {% liquid
+         assign heading_tag = block.settings.heading_tag
+         unless heading_tag == 'h1' or heading_tag == 'h2' or heading_tag == 'h3' or heading_tag == 'h4' or heading_tag == 'h5' or heading_tag == 'h6'
+           assign heading_tag = 'h1'
+         endunless
+       %}
+       <{{ heading_tag }} class="fm-hero__heading" data-fm-heading-size="{{ block.settings.heading_tag }}" {{ block.shopify_attributes }}>
+        {% render 'styled-text', content: block.settings.text, text_color: block.settings.heading_color, gradient: block.settings.heading_gradient, apparition_effect: false %}
+       </{{ heading_tag }}>
+      {% endif %}
+     {% when 'richtext' %}
+      {% if block.settings.content != blank %}<div class="fm-hero__body" {{ block.shopify_attributes }}>{{ block.settings.content }}</div>{% endif %}
+     {% when 'liquid' %}<div {{ block.shopify_attributes }}>{{ block.settings.liquid }}</div>
+    {% endcase %}
+   {% endfor %}
+   {% assign buttons = section.blocks | where: 'type', 'button' %}
+   {% if buttons.size > 0 %}
+    <div class="fm-hero__buttons">
+     {% for block in buttons %}
+      {% if block.settings.text != blank %}
+       <a class="fm-hero__button fm-hero__button--{{ block.settings.style }} fm-hero__button--{{ block.settings.size }}" {% if block.settings.url != blank %}href="{{ block.settings.url }}"{% else %}role="link" aria-disabled="true"{% endif %} style="--fm-button-bg: {{ block.settings.background | default: settings.primary_button_background }}; --fm-button-fg: {{ block.settings.text_color | default: settings.primary_button_text_color }}" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</a>
+      {% endif %}
+     {% endfor %}
+    </div>
+   {% endif %}
+  </div>
+ </div>
+</div>

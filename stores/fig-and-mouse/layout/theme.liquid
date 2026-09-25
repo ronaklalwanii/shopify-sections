@@ -1,0 +1,118 @@
+{% include 'shogun-content-handler' %}
+<!doctype html>
+<html
+	class="no-js"
+	lang="{{ request.locale.iso_code }}"
+	dir="ltr"
+>{% render 'video-intro' %}
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="theme-color" content="{{ settings.header_background }}">
+
+		{%- unless settings.type_header_font.system? and settings.type_body_font.system? -%}
+			<link
+				rel="preconnect"
+				href="https://fonts.shopifycdn.com"
+				crossorigin
+			>
+		{%- endunless -%}
+
+		<title>
+			{{ page_title }}
+			{%- if current_tags %}
+				&ndash; tagged "{{ current_tags | join: ', ' }}"
+			{%- endif -%}
+			{%- if current_page != 1 %}
+				&ndash; Page {{ current_page -}}
+			{%- endif -%}
+			{%- unless page_title contains shop.name %}
+				&ndash; {{ shop.name -}}
+			{%- endunless -%}
+		</title>
+
+		<link rel="canonical" href="{{ canonical_url }}">
+
+		{%- if settings.favicon -%}
+			<link rel="shortcut icon" href="{{ settings.favicon | image_url: width: 96 }}">
+			<link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180 }}">
+		{%- endif -%}
+
+		{%- unless settings.heading_font.system? -%}
+			<link rel="preload" href="{{ settings.heading_font | font_url }}" as="font" type="font/woff2" crossorigin>
+		{%- endunless -%}
+
+		{%- unless settings.text_font.system? -%}
+			<link rel="preload" href="{{ settings.text_font | font_url }}" as="font" type="font/woff2" crossorigin>
+		{%- endunless -%}
+
+		{%- render 'meta-tags' -%}
+		{%- render 'css-variables' -%}
+		{%- render 'js-variables' -%}
+		{% render 'fonts' %}
+
+		<script type="module" src="{{ 'theme.js' | asset_url }}"></script>
+		<script type="module" src="{{ 'sections.js' | asset_url }}"></script>
+
+		{%- comment -%}
+			Customizer-only support for the Sleek hero section. Must live here rather
+			than in the section, so the listeners exist before Shopify injects a
+			newly added hero.
+		{%- endcomment -%}
+		{% if request.design_mode %}
+			<script src="{{ 'sleek-hero-editor.js' | asset_url }}" defer="defer"></script>
+		{% endif %}
+
+		{% if settings.disable_cart %}
+			<script>
+				// Redirect users from cart page when cart functionality is disabled
+				if (window.location.pathname.indexOf('/cart') === 0) {
+					window.location.href = '/'
+				}
+			</script>
+		{% endif %}
+
+		{{ content_for_header }}
+
+		{{- 'theme.css' | asset_url | stylesheet_tag: preload: true -}}
+
+		{% if template == 'product' %}
+			{{- 'product.css' | asset_url | stylesheet_tag: preload: true -}}
+		{% endif %}
+	
+  {% render 'shogun-head' %}
+</head>
+
+	<body>
+		{% section 'intro-loader' %}
+		{%- render 'shadow-dom-templates' -%}
+		<a href="#main" class="skip-to-content sr-only">{{ 'general.accessibility.skip_to_content' | t }}</a>
+
+		{%- if request.page_type != 'password' -%}
+			{%- sections 'header-group' -%}
+			{%- sections 'overlay-group' -%}
+
+			{%- if settings.cart_type == 'popover' -%}
+				<cart-notification-drawer open-from="bottom" class="quick-buy-drawer drawer"></cart-notification-drawer>
+			{%- endif -%}
+		{%- endif -%}
+
+		{%- if request.page_type == 'customers/account'
+			or request.page_type == 'customers/order'
+			or request.page_type == 'customers/addresses'
+		-%}
+			{%- section 'account-banner' -%}
+		{%- endif -%}
+
+		<main
+			role="main"
+			id="main"
+		>
+			{{ content_for_layout }}
+
+			{%- if request.page_type != 'password' -%}
+				{%- sections 'footer-group' -%}
+			{%- endif -%}
+		</main>
+	</body>
+</html>

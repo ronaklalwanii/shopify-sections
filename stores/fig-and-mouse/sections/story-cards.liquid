@@ -1,0 +1,837 @@
+{%- comment -%}
+  Section: Story Cards
+  Side-by-side landscape story/giving cards: stat or eyebrow + heading + copy + button,
+  with the image fading into the card background.
+{%- endcomment -%}
+
+<section id="StoryPanels-{{ section.id }}" class="sp">
+  {%- style -%}
+    #StoryPanels-{{ section.id }} {
+      --sp-bg: {{ section.settings.bg_color }};
+      --sp-max-width: {{ section.settings.max_width }}px;
+      --sp-space-top: {{ section.settings.space_top }}px;
+      --sp-space-bottom: {{ section.settings.space_bottom }}px;
+      --sp-gutter: {{ section.settings.mobile_gutter }}px;
+      --sp-gap: {{ section.settings.panel_gap }}px;
+      --sp-radius: {{ section.settings.panel_radius }}px;
+      --sp-pad: {{ section.settings.panel_pad }}px;
+      --sp-stat-size: {{ section.settings.stat_size }}px;
+      --sp-stat-label-size: {{ section.settings.stat_label_size }}px;
+      --sp-eyebrow-size: {{ section.settings.eyebrow_size }}px;
+      --sp-eyebrow-spacing: {{ section.settings.eyebrow_spacing }}px;
+      --sp-eyebrow-icon-size: {{ section.settings.eyebrow_icon_size }}px;
+      --sp-head-size: {{ section.settings.heading_size }}px;
+      --sp-desc-size: {{ section.settings.desc_size }}px;
+      --sp-btn-size: {{ section.settings.btn_size }}px;
+      --sp-btn-weight: {{ section.settings.btn_weight }};
+      --sp-btn-spacing: {{ section.settings.btn_spacing }}px;
+      --sp-btn-pad-x: {{ section.settings.btn_pad_x }}px;
+      --sp-btn-pad-y: {{ section.settings.btn_pad_y }}px;
+      --sp-btn-radius: {{ section.settings.btn_radius }}px;
+      --sp-fade: {{ section.settings.image_fade }}%;
+    }
+
+    #StoryPanels-{{ section.id }} {
+      background: var(--sp-bg);
+      padding-top: var(--sp-space-top);
+      padding-bottom: var(--sp-space-bottom);
+      padding-left: var(--sp-gutter);
+      padding-right: var(--sp-gutter);
+      overflow-x: clip;
+    }
+
+    #StoryPanels-{{ section.id }} .sp__shell {
+      width: min(100%, var(--sp-max-width));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--sp-gap);
+      min-width: 0;
+    }
+
+    /* ---------- Card ---------- */
+    #StoryPanels-{{ section.id }} .sp-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) var(--p-img-w);
+      border-radius: var(--sp-radius);
+      overflow: hidden;
+      background: var(--p-bg);
+      color: var(--p-color);
+      min-width: 0;
+    }
+    #StoryPanels-{{ section.id }} .sp-panel--img-left {
+      grid-template-columns: var(--p-img-w) minmax(0, 1fr);
+    }
+    #StoryPanels-{{ section.id }} .sp-panel--img-left .sp-panel__media {
+      order: -1;
+    }
+
+    #StoryPanels-{{ section.id }} .sp-panel__content {
+      padding: var(--sp-pad);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    /* Stat row (5% + label) */
+    #StoryPanels-{{ section.id }} .sp-panel__stat-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    #StoryPanels-{{ section.id }} .sp-panel__stat {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: var(--sp-stat-size);
+      line-height: 1;
+      font-weight: 400;
+    }
+    #StoryPanels-{{ section.id }} .sp-panel__stat-label {
+      font-size: var(--sp-stat-label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      line-height: 1.4;
+      max-width: 240px;
+    }
+
+    /* Eyebrow */
+    #StoryPanels-{{ section.id }} .sp-panel__eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--sp-eyebrow-size);
+      font-weight: 600;
+      letter-spacing: var(--sp-eyebrow-spacing);
+      text-transform: uppercase;
+    }
+    #StoryPanels-{{ section.id }} .sp-panel__eyebrow svg,
+    #StoryPanels-{{ section.id }} .sp-panel__eyebrow img {
+      width: var(--sp-eyebrow-icon-size);
+      height: var(--sp-eyebrow-icon-size);
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    #StoryPanels-{{ section.id }} .sp-panel__heading {
+      margin: 16px 0 0;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: var(--sp-head-size);
+      font-weight: 500;
+      line-height: 1.2;
+      {% if section.settings.heading_uppercase %}text-transform: uppercase;{% endif %}
+    }
+
+    #StoryPanels-{{ section.id }} .sp-panel__desc {
+      margin: 14px 0 0;
+      font-size: var(--sp-desc-size);
+      line-height: 1.6;
+      opacity: 0.85;
+      max-width: 360px;
+    }
+
+    #StoryPanels-{{ section.id }} .sp-panel__btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 24px;
+      padding: var(--sp-btn-pad-y) var(--sp-btn-pad-x);
+      border: 1px solid var(--p-btn-border);
+      border-radius: var(--sp-btn-radius);
+      background: var(--p-btn-bg);
+      color: var(--p-btn-text);
+      font-size: var(--sp-btn-size);
+      font-weight: var(--sp-btn-weight);
+      letter-spacing: var(--sp-btn-spacing);
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: opacity 200ms ease, transform 200ms ease;
+    }
+    #StoryPanels-{{ section.id }} .sp-panel__btn:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
+
+    /* Media */
+    #StoryPanels-{{ section.id }} .sp-panel__media {
+      position: relative;
+      min-height: 280px;
+    }
+    #StoryPanels-{{ section.id }} .sp-panel__media img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: {{ section.settings.image_position }};
+      display: block;
+      transition: transform 700ms cubic-bezier(.22, 1, .36, 1);
+    }
+    #StoryPanels-{{ section.id }} .sp-panel:hover .sp-panel__media img {
+      transform: scale(1.04);
+    }
+
+    /* Image fades into the card background (landscape cards) */
+    #StoryPanels-{{ section.id }} .sp-panel__media img {
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 var(--sp-fade));
+      mask-image: linear-gradient(to right, transparent 0%, #000 var(--sp-fade));
+    }
+    #StoryPanels-{{ section.id }} .sp-panel--img-left .sp-panel__media img {
+      -webkit-mask-image: linear-gradient(to left, transparent 0%, #000 var(--sp-fade));
+      mask-image: linear-gradient(to left, transparent 0%, #000 var(--sp-fade));
+    }
+
+    /* ---------- Tablet ---------- */
+    @media (max-width: 1080px) {
+      #StoryPanels-{{ section.id }} .sp__shell {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 640px) {
+      #StoryPanels-{{ section.id }} .sp-panel {
+        grid-template-columns: 1fr;
+      }
+      #StoryPanels-{{ section.id }} .sp-panel__media {
+        order: -1;
+        min-height: 0;
+        aspect-ratio: 4 / 3;
+      }
+      #StoryPanels-{{ section.id }} .sp-panel__media img,
+      #StoryPanels-{{ section.id }} .sp-panel--img-left .sp-panel__media img {
+        -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+        mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+      }
+      #StoryPanels-{{ section.id }} .sp-panel__content {
+        padding: 28px 24px;
+      }
+      #StoryPanels-{{ section.id }} .sp-panel__stat {
+        font-size: calc(var(--sp-stat-size) * 0.8);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #StoryPanels-{{ section.id }} .sp-panel__media img {
+        transition: none;
+      }
+      #StoryPanels-{{ section.id }} .sp-panel:hover .sp-panel__media img {
+        transform: none;
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="sp__shell">
+    {%- for block in section.blocks -%}
+      <div class="sp-panel sp-panel--{{ block.settings.layout }}" style="--p-bg: {{ block.settings.background_color }}; --p-color: {{ block.settings.text_color }}; --p-btn-text: {{ block.settings.btn_text_color }}; --p-btn-border: {{ block.settings.btn_border_color }}; --p-btn-bg: {{ block.settings.btn_bg_color }}; --p-img-w: {{ block.settings.image_width }}%;" {{ block.shopify_attributes }}>
+        <div class="sp-panel__content">
+
+          {%- if block.settings.stat_number != blank or block.settings.stat_label != blank -%}
+            <div class="sp-panel__stat-row">
+              {%- if block.settings.stat_number != blank -%}
+                <span class="sp-panel__stat">{{ block.settings.stat_number }}</span>
+              {%- endif -%}
+              {%- if block.settings.stat_label != blank -%}
+                <span class="sp-panel__stat-label">{{ block.settings.stat_label }}</span>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          {%- if false -%}
+            <span class="sp-panel__eyebrow">
+              {{ block.settings.eyebrow_text }}
+              {%- if section.settings.show_eyebrow_icon -%}
+                {%- if section.settings.eyebrow_icon_custom != blank -%}
+                  <img src="{{ section.settings.eyebrow_icon_custom | image_url: width: 64 }}" alt="" width="64" height="64" loading="lazy">
+                {%- else -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path></svg>
+                {%- endif -%}
+              {%- endif -%}
+            </span>
+          {%- endif -%}
+
+          {%- if block.settings.heading != blank -%}
+            <h2 class="sp-panel__heading">{{ block.settings.heading }}</h2>
+          {%- endif -%}
+
+          {%- if block.settings.description != blank -%}
+            <p class="sp-panel__desc">{{ block.settings.description }}</p>
+          {%- endif -%}
+
+          {%- if block.settings.btn_text != blank and block.settings.btn_link != blank -%}
+            <a class="sp-panel__btn" href="{{ block.settings.btn_link }}">{{ block.settings.btn_text }}</a>
+          {%- endif -%}
+        </div>
+
+        {%- if block.settings.image != blank -%}
+          <div class="sp-panel__media">
+            <img
+              src="{{ block.settings.image | image_url: width: 1200 }}"
+              alt="{{ block.settings.image.alt | default: block.settings.heading | default: 'Story' | escape }}"
+              loading="lazy"
+              width="1200"
+              height="900"
+            >
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% render 'fm-section-design', section: section, kind: 'story-cards' %}
+
+{% schema %}
+{
+  "name": "Story Cards",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section background",
+      "default": "#F2EFEA"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 800,
+      "max": 2000,
+      "step": 20,
+      "default": 1500,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "space_top",
+      "label": "Space above",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "space_bottom",
+      "label": "Space below",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_gutter",
+      "label": "Side gutters",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "panel_gap",
+      "label": "Gap between cards",
+      "min": 0,
+      "max": 64,
+      "step": 2,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "panel_radius",
+      "label": "Card radius",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "panel_pad",
+      "label": "Card content padding",
+      "min": 24,
+      "max": 96,
+      "step": 2,
+      "default": 48,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "image_fade",
+      "label": "Image fade into card",
+      "min": 0,
+      "max": 70,
+      "step": 5,
+      "default": 35,
+      "unit": "%"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image focal point",
+      "default": "center",
+      "options": [
+        {
+          "value": "left center",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right center",
+          "label": "Right"
+        },
+        {
+          "value": "center top",
+          "label": "Top"
+        },
+        {
+          "value": "center bottom",
+          "label": "Bottom"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "stat_size",
+      "label": "Stat number size",
+      "min": 40,
+      "max": 120,
+      "step": 2,
+      "default": 64,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "stat_label_size",
+      "label": "Stat label size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 9,
+      "max": 18,
+      "step": 1,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_spacing",
+      "label": "Eyebrow spacing",
+      "min": 0,
+      "max": 6,
+      "step": 0.5,
+      "default": 2,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow_icon",
+      "label": "Show eyebrow leaf icon",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "eyebrow_icon_custom",
+      "label": "Eyebrow icon (overrides leaf)"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_icon_size",
+      "label": "Eyebrow icon size",
+      "min": 10,
+      "max": 40,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 20,
+      "max": 56,
+      "step": 2,
+      "default": 32,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "heading_uppercase",
+      "label": "Uppercase heading",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "desc_size",
+      "label": "Description size",
+      "min": 11,
+      "max": 20,
+      "step": 1,
+      "default": 13,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "range",
+      "id": "btn_size",
+      "label": "Button font size",
+      "min": 9,
+      "max": 18,
+      "step": 1,
+      "default": 11,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "btn_weight",
+      "label": "Button weight",
+      "min": 400,
+      "max": 800,
+      "step": 100,
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "btn_spacing",
+      "label": "Button letter spacing",
+      "min": 0,
+      "max": 4,
+      "step": 0.5,
+      "default": 1.5,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "btn_pad_x",
+      "label": "Button horizontal padding",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "btn_pad_y",
+      "label": "Button vertical padding",
+      "min": 6,
+      "max": 24,
+      "step": 1,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "btn_radius",
+      "label": "Button radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 4,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Responsive design"
+    },
+    {
+      "type": "range",
+      "id": "fm_mobile_heading_size",
+      "label": "Heading size — mobile",
+      "min": 12,
+      "max": 80,
+      "step": 1,
+      "default": 36,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "fm_mobile_desc_size",
+      "label": "Description size — mobile",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "fm_mobile_stat_size",
+      "label": "Statistic size — mobile",
+      "min": 12,
+      "max": 100,
+      "step": 1,
+      "default": 72,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "fm_mobile_stat_label_size",
+      "label": "Statistic label size — mobile",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "fm_mobile_btn_size",
+      "label": "Button text size — mobile",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "fm_story_layout",
+      "label": "Desktop story layout",
+      "options": [
+        {
+          "value": "stacked",
+          "label": "Layered full-width stories"
+        },
+        {
+          "value": "columns",
+          "label": "Side-by-side stories"
+        }
+      ],
+      "default": "stacked"
+    },
+    {
+      "type": "select",
+      "id": "fm_text_align",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Centre"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "font_picker",
+      "id": "fm_heading_font",
+      "label": "Heading font",
+      "default": "fraunces_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "fm_body_font",
+      "label": "Body font",
+      "default": "jost_n4"
+    },
+    {
+      "type": "range",
+      "id": "fm_mobile_padding_top",
+      "label": "Mobile space above",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 48,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "fm_mobile_padding_bottom",
+      "label": "Mobile space below",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 48,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "fm_motion",
+      "label": "Animate as this section enters view",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "Story card",
+      "settings": [
+        {
+          "type": "select",
+          "id": "layout",
+          "label": "Image side",
+          "default": "img-right",
+          "options": [
+            {
+              "value": "img-right",
+              "label": "Image right"
+            },
+            {
+              "value": "img-left",
+              "label": "Image left"
+            }
+          ]
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Card background",
+          "default": "#3F4A38"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#F3EADB"
+        },
+        {
+          "type": "text",
+          "id": "stat_number",
+          "label": "Big stat (optional)",
+          "default": "5%",
+          "info": "Leave empty to hide (use eyebrow instead)."
+        },
+        {
+          "type": "text",
+          "id": "stat_label",
+          "label": "Stat label (optional)",
+          "default": "Of every sale supports Pug Nation LA"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow_text",
+          "label": "Eyebrow (optional)",
+          "info": "Shown above heading when set."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "It started with Fig & Mouse."
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Five percent of every sale goes to Pug Nation LA — the rescue that brought Mouse home — helping more dogs find the loving homes they deserve."
+        },
+        {
+          "type": "text",
+          "id": "btn_text",
+          "label": "Button text",
+          "default": "Our Giving Back"
+        },
+        {
+          "type": "url",
+          "id": "btn_link",
+          "label": "Button link"
+        },
+        {
+          "type": "color",
+          "id": "btn_text_color",
+          "label": "Button text color",
+          "default": "#F3EADB"
+        },
+        {
+          "type": "color",
+          "id": "btn_border_color",
+          "label": "Button border color",
+          "default": "#F3EADB"
+        },
+        {
+          "type": "color",
+          "id": "btn_bg_color",
+          "label": "Button background",
+          "default": "rgba(255,255,255,0)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Card image"
+        },
+        {
+          "type": "range",
+          "id": "image_width",
+          "label": "Image width",
+          "min": 30,
+          "max": 60,
+          "step": 1,
+          "default": 42,
+          "unit": "%"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Story Cards",
+      "blocks": [
+        {
+          "type": "panel",
+          "settings": {
+            "background_color": "#3F4A38",
+            "text_color": "#F3EADB",
+            "stat_number": "5%",
+            "stat_label": "Of every sale supports Pug Nation LA",
+            "description": "Five percent of every sale goes to Pug Nation LA — the rescue that brought Mouse home — helping more dogs find the loving homes they deserve.",
+            "btn_text": "Our Giving Back",
+            "btn_text_color": "#F3EADB",
+            "btn_border_color": "#F3EADB"
+          }
+        },
+        {
+          "type": "panel",
+          "settings": {
+            "background_color": "#EFEAE2",
+            "text_color": "#3B2E22",
+            "stat_number": "",
+            "eyebrow_text": "Our Story",
+            "heading": "It started with Fig & Mouse.",
+            "description": "We met in the fashion industry, fell in love with thoughtful design — and with each other — and built a life surrounded by our animals.",
+            "btn_text": "Read Our Story",
+            "btn_text_color": "#3B2E22",
+            "btn_border_color": "#3B2E22"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,111 @@
+.text_icon_main_wrap{
+    display: grid;    
+    align-items: center;
+    gap: 30px;
+    grid-template-columns: 2fr 2fr;
+}
+.text_icon_main_wrap .paymentoptions_only{
+    
+}
+.text_icon_main_wrap .text_icon_only::after{
+    content: '';
+    position: absolute;
+    right: -20px;
+    top: 20%;
+    height: 80%;
+    width: 1px;
+    background: #BABABA;
+}
+.text_icon_main_wrap .text_icon_only {
+    text-align: center;
+    position: relative;
+}
+.text_icon_main_wrap .text_icon_only .icon_wrapper img{
+    margin: 0 auto;
+}
+
+
+.paymentoptions_only .payment_heading p{
+    font-size: 18px;
+    margin-bottom: 22px;
+}
+
+@media(max-width:767px){
+    .text_icon_main_wrap .text_icon_only .icon_wrapper img{
+        margin: 0 auto 13px;
+    }
+    .text_icon_main_wrap .text_icon_only{
+        grid-column: auto / span 1;
+    }
+    .paymentoptions_only{
+        grid-column: auto / span 2;
+        border-top: 1px solid #BABABA;
+        padding-top: 23px;
+    }
+    .paymentoptions_only .payment_heading p{
+        font-size: 14px;
+        text-align: center;
+    }
+    .text_icon_only:not(:first-child):after {
+        display: none;
+    }
+    .promo_sub_heading p {
+        font-size: 14px;
+        margin-top: 8px;
+        font-weight: 400;
+        color: #000000;
+    }
+    .text_icon_main_wrap .text_icon_only:after{
+        right: -10px;
+    }
+    .paymentoptions_only .desktop_only{
+        display: none;
+    }
+    .paymentoptions_only .mobile_only{
+        display: block;
+    }
+    .text_icon_only .promo_heading p{
+        font-size: 20px;
+        color: #000000;
+    }
+}
+@media(min-width:768px) and (max-width:1024px){
+    .text_icon_only .promo_heading p{
+        font-size: 22px;
+    }
+    .text_icon_main_wrap .text_icon_only:after{
+        right: 0;
+    }
+}
+@media(min-width:768px){
+    .paymentoptions_only .desktop_only{
+        display: block;
+    }
+    .paymentoptions_only .mobile_only{
+        display: none;
+    }
+    .text_icon_main_wrap{
+        gap: 30px;
+        grid-template-columns: 1fr 1fr 2fr;
+    }
+    .promo_sub_heading p {
+        font-size: 18px;
+        margin-top: 8px;
+        font-weight: 400;
+    }
+}
+@media(min-width:1200px){
+    .text_icon_only .promo_heading p{
+        font-size: 32px;
+    }
+    .text_icon_main_wrap{
+        gap: 60px;
+        grid-template-columns: 1fr 1.5fr 3fr;
+    }
+    .paymentoptions_only {
+        padding: 16px 30px;
+    }
+    .text_icon_main_wrap .text_icon_only:after{
+        right: -30px;
+    }
+}

@@ -1,0 +1,743 @@
+{% doc %}
+  @prompt
+    Build a full-width hero section designed for a premium merchandise store.
+    
+    Use full-length imagery with separate desktop and mobile image controls.
+    
+    Include editable headline, description, and buttons with flexible placement over the image.
+    
+    Add subtle animation between images to create a polished, high-quality feel without distracting motion.
+    
+    Ensure the section is fully responsive and optimised for mobile performance., make the the uploaded images are fully shown as their intended size. , have desktop and mobile separate. also dont include desktop and mobile height, let them be the full size image when added, make sure the button width doesn't stretch on mobile when the second button is removed. Also allow the button size to be changed on mobile
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-premium-hero-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-color: #000000;
+  }
+
+  .ai-premium-hero__image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+  }
+
+  .ai-premium-hero__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    opacity: 0;
+    animation: ai-premium-hero-fade-in-{{ ai_gen_id }} 1.2s ease-in-out forwards;
+  }
+
+  @keyframes ai-premium-hero-fade-in-{{ ai_gen_id }} {
+    0% {
+      opacity: 0;
+      transform: scale(1.05);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .ai-premium-hero__image--desktop-{{ ai_gen_id }} {
+    display: block;
+  }
+
+  .ai-premium-hero__image--mobile-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-premium-hero__image--desktop-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-premium-hero__image--mobile-{{ ai_gen_id }} {
+      display: block;
+    }
+  }
+
+  .ai-premium-hero__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    min-height: 500px;
+    background-color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-premium-hero__image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+  }
+
+  .ai-premium-hero__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 16px 32px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    pointer-events: none;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+  }
+
+  .ai-premium-hero__overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      {{ block.settings.overlay_direction }},
+      rgba(0, 0, 0, {{ block.settings.overlay_opacity | divided_by: 100.0 }}),
+      rgba(0, 0, 0, 0)
+    );
+    pointer-events: none;
+  }
+
+  .ai-premium-hero__content-wrapper-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    max-width: {{ block.settings.content_max_width }}px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: {{ block.settings.content_vertical_alignment }};
+    align-items: {{ block.settings.content_horizontal_alignment }};
+    z-index: 2;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-premium-hero__content-wrapper-{{ ai_gen_id }} {
+      padding: 0 20px;
+      justify-content: {{ block.settings.mobile_content_vertical_alignment }};
+      align-items: {{ block.settings.mobile_content_horizontal_alignment }};
+    }
+  }
+
+  .ai-premium-hero__content-{{ ai_gen_id }} {
+    text-align: {{ block.settings.text_alignment }};
+    max-width: {{ block.settings.text_max_width }}px;
+    opacity: 0;
+    animation: ai-premium-hero-content-fade-{{ ai_gen_id }} 1s ease-out 0.3s forwards;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-premium-hero__content-{{ ai_gen_id }} {
+      text-align: {{ block.settings.mobile_text_alignment }};
+    }
+  }
+
+  @keyframes ai-premium-hero-content-fade-{{ ai_gen_id }} {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .ai-premium-hero__heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 20px;
+    letter-spacing: -0.02em;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-premium-hero__heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.6 }}px;
+      margin: 0 0 16px;
+    }
+  }
+
+  .ai-premium-hero__description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_size }}px;
+    line-height: 1.6;
+    color: {{ block.settings.description_color }};
+    margin: 0 0 32px;
+    font-weight: 400;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-premium-hero__description-{{ ai_gen_id }} {
+      font-size: {{ block.settings.description_size | times: 0.85 }}px;
+      margin: 0 0 24px;
+    }
+  }
+
+  .ai-premium-hero__buttons-{{ ai_gen_id }} {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: {{ block.settings.button_alignment }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-premium-hero__buttons-{{ ai_gen_id }} {
+      justify-content: {{ block.settings.mobile_button_alignment }};
+      gap: 12px;
+    }
+  }
+
+  .ai-premium-hero__button-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 40px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 60px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+    white-space: nowrap;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-premium-hero__button-{{ ai_gen_id }} {
+      font-size: {{ block.settings.mobile_button_font_size }}px;
+      padding: {{ block.settings.mobile_button_padding_vertical }}px {{ block.settings.mobile_button_padding_horizontal }}px;
+    }
+  }
+
+  .ai-premium-hero__button--primary-{{ ai_gen_id }} {
+    background-color: {{ block.settings.primary_button_bg }};
+    color: {{ block.settings.primary_button_color }};
+  }
+
+  .ai-premium-hero__button--primary-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.primary_button_bg | color_darken: 10 }};
+    transform: translateY(-2px);
+  }
+
+  .ai-premium-hero__button--secondary-{{ ai_gen_id }} {
+    background-color: {{ block.settings.secondary_button_bg }};
+    color: {{ block.settings.secondary_button_color }};
+    border-color: {{ block.settings.secondary_button_color }};
+  }
+
+  .ai-premium-hero__button--secondary-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.secondary_button_color }};
+    color: {{ block.settings.secondary_button_bg }};
+    transform: translateY(-2px);
+  }
+{% endstyle %}
+
+<div class="ai-premium-hero-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-premium-hero__image-wrapper-{{ ai_gen_id }}">
+    {% if block.settings.desktop_image != blank %}
+      <img
+        src="{{ block.settings.desktop_image | image_url: width: 2400 }}"
+        srcset="
+          {{ block.settings.desktop_image | image_url: width: 1200 }} 1200w,
+          {{ block.settings.desktop_image | image_url: width: 1600 }} 1600w,
+          {{ block.settings.desktop_image | image_url: width: 2000 }} 2000w,
+          {{ block.settings.desktop_image | image_url: width: 2400 }} 2400w
+        "
+        sizes="100vw"
+        alt="{{ block.settings.desktop_image.alt | escape }}"
+        loading="eager"
+        width="{{ block.settings.desktop_image.width }}"
+        height="{{ block.settings.desktop_image.height }}"
+        class="ai-premium-hero__image-{{ ai_gen_id }} ai-premium-hero__image--desktop-{{ ai_gen_id }}"
+      >
+    {% endif %}
+
+    {% if block.settings.mobile_image != blank %}
+      <img
+        src="{{ block.settings.mobile_image | image_url: width: 1200 }}"
+        srcset="
+          {{ block.settings.mobile_image | image_url: width: 600 }} 600w,
+          {{ block.settings.mobile_image | image_url: width: 800 }} 800w,
+          {{ block.settings.mobile_image | image_url: width: 1200 }} 1200w
+        "
+        sizes="100vw"
+        alt="{{ block.settings.mobile_image.alt | escape }}"
+        loading="eager"
+        width="{{ block.settings.mobile_image.width }}"
+        height="{{ block.settings.mobile_image.height }}"
+        class="ai-premium-hero__image-{{ ai_gen_id }} ai-premium-hero__image--mobile-{{ ai_gen_id }}"
+      >
+    {% endif %}
+
+    {% if block.settings.desktop_image == blank and block.settings.mobile_image == blank %}
+      <div class="ai-premium-hero__image-placeholder-{{ ai_gen_id }}">
+        {{ 'hero-apparel-1' | placeholder_svg_tag }}
+        <div class="ai-premium-hero__empty-state-{{ ai_gen_id }}">
+          Add desktop and mobile images to get started
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if block.settings.show_overlay %}
+    <div class="ai-premium-hero__overlay-{{ ai_gen_id }}"></div>
+  {% endif %}
+
+  <div class="ai-premium-hero__content-wrapper-{{ ai_gen_id }}">
+    <div class="ai-premium-hero__content-{{ ai_gen_id }}">
+      {% if block.settings.heading != blank %}
+        <h1 class="ai-premium-hero__heading-{{ ai_gen_id }}">
+          {{ block.settings.heading }}
+        </h1>
+      {% endif %}
+
+      {% if block.settings.description != blank %}
+        <div class="ai-premium-hero__description-{{ ai_gen_id }}">
+          {{ block.settings.description }}
+        </div>
+      {% endif %}
+
+      {% if block.settings.primary_button_label != blank or block.settings.secondary_button_label != blank %}
+        <div class="ai-premium-hero__buttons-{{ ai_gen_id }}">
+          {% if block.settings.primary_button_label != blank %}
+            <a
+              href="{{ block.settings.primary_button_link }}"
+              class="ai-premium-hero__button-{{ ai_gen_id }} ai-premium-hero__button--primary-{{ ai_gen_id }}"
+            >
+              {{ block.settings.primary_button_label }}
+            </a>
+          {% endif %}
+
+          {% if block.settings.secondary_button_label != blank %}
+            <a
+              href="{{ block.settings.secondary_button_link }}"
+              class="ai-premium-hero__button-{{ ai_gen_id }} ai-premium-hero__button--secondary-{{ ai_gen_id }}"
+            >
+              {{ block.settings.secondary_button_label }}
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Premium hero",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop image",
+      "info": "Displayed on screens wider than 750px"
+    },
+    {
+      "type": "header",
+      "content": "Mobile image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image",
+      "info": "Displayed on screens 750px and smaller"
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay",
+      "label": "Show overlay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "overlay_direction",
+      "label": "Overlay direction",
+      "options": [
+        {
+          "value": "to top",
+          "label": "Bottom to top"
+        },
+        {
+          "value": "to bottom",
+          "label": "Top to bottom"
+        },
+        {
+          "value": "to left",
+          "label": "Right to left"
+        },
+        {
+          "value": "to right",
+          "label": "Left to right"
+        }
+      ],
+      "default": "to top"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Premium Merchandise Collection"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 32,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 72
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Discover our exclusive range of premium quality merchandise designed for those who demand excellence.</p>"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "min": 14,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Description size",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "text_max_width",
+      "min": 400,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "label": "Text max width",
+      "default": 700
+    },
+    {
+      "type": "header",
+      "content": "Content position - Desktop"
+    },
+    {
+      "type": "select",
+      "id": "content_vertical_alignment",
+      "label": "Vertical alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "content_horizontal_alignment",
+      "label": "Horizontal alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "min": 1000,
+      "max": 1800,
+      "step": 100,
+      "unit": "px",
+      "label": "Content container width",
+      "default": 1400
+    },
+    {
+      "type": "header",
+      "content": "Content position - Mobile"
+    },
+    {
+      "type": "select",
+      "id": "mobile_content_vertical_alignment",
+      "label": "Vertical alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "mobile_content_horizontal_alignment",
+      "label": "Horizontal alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "mobile_text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Primary button"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_label",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "primary_button_bg",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "primary_button_color",
+      "label": "Text color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Secondary button"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_label",
+      "label": "Button text",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_bg",
+      "label": "Background color",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Button layout - Desktop"
+    },
+    {
+      "type": "select",
+      "id": "button_alignment",
+      "label": "Button alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Button layout - Mobile"
+    },
+    {
+      "type": "select",
+      "id": "mobile_button_alignment",
+      "label": "Button alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "mobile_button_font_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "mobile_button_padding_vertical",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "mobile_button_padding_horizontal",
+      "min": 16,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium hero"
+    }
+  ]
+}
+{% endschema %}

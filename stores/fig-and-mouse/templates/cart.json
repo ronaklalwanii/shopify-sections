@@ -1,0 +1,31 @@
+{
+	"sections": {
+		"main": {
+			"type": "main-cart",
+			"blocks": {
+				"totals": {
+					"type": "totals",
+					"settings": {
+						"show_order_weight": false,
+						"show_shipping_text": true
+					}
+				},
+				"cart_note": {
+					"type": "cart_note",
+					"disabled": true,
+					"settings": {}
+				},
+				"checkout_button": {
+					"type": "checkout_button",
+					"settings": {}
+				}
+			},
+			"block_order": ["totals", "cart_note", "checkout_button"],
+			"settings": {
+				"show_shipping_estimator": true,
+				"show_payment_icons": true
+			}
+		}
+	},
+	"order": ["main"]
+}

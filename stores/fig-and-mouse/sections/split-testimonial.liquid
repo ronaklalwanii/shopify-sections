@@ -1,0 +1,925 @@
+{%- liquid
+  assign s = section.settings
+-%}
+
+{%- comment -%} Swiper 11 from CDN (CSS + JS). {%- endcomment -%}
+
+
+{%- if s.quote_font_enable -%}
+  <style>{{ s.quote_font | font_face: font_display: 'swap' }}</style>
+{%- endif -%}
+
+<style>
+  .st--{{ section.id }} {
+    --st-bg: {{ s.background_color }};
+    --st-ctrl: {{ s.controls_color }};
+    --st-overlap: {{ s.image_overlap }}px;
+    --st-overlap-m: min({{ s.image_overlap }}px, 96px);
+    --st-tuck: {{ s.card_offset }}px;
+
+    --st-img-h: {{ s.image_height }}px;
+    --st-img-h-m: {{ s.image_height_mobile }}px;
+    --st-card-h: {{ s.card_height }}px;
+    --st-card-pad: {{ s.card_padding }}px;
+
+    --st-outline-w: {{ s.outline_width }}px;
+    --st-outline-c: {{ s.outline_color }};
+    --st-outline-r: {{ s.outline_radius }}px;
+
+    --st-qm-size: {{ s.quote_mark_size }}px;
+    --st-qm-c: {{ s.quote_mark_color }};
+
+    --st-quote-size: {{ s.quote_size }}px;
+    --st-quote-lh: {{ s.quote_line_height | divided_by: 100.0 }};
+    --st-quote-w: {{ s.quote_weight }};
+    --st-quote-c: {{ s.quote_color }};
+
+    --st-author-size: {{ s.author_size }}px;
+    --st-author-w: {{ s.author_weight }};
+    --st-author-c: {{ s.author_color }};
+    --st-role-size: {{ s.role_size }}px;
+    --st-role-c: {{ s.role_color }};
+
+    --st-star-size: {{ s.star_size }}px;
+    --st-star-c: {{ s.star_color }};
+
+    {% if s.card_bg != blank %}--st-card-bg: {{ s.card_bg }};{% endif %}
+    {% if s.quote_font_enable %}--st-quote-family: {{ s.quote_font.family }}, {{ s.quote_font.fallback_families }};{% endif %}
+
+    background: var(--st-bg);
+    padding: {{ s.padding_top }}px 24px {{ s.padding_bottom }}px;
+  }
+
+  .st--{{ section.id }} .st__container {
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+
+  .st--{{ section.id }} .st__frame {
+    position: relative;
+  }
+
+  .st--{{ section.id }} .st__swiper {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ---------- Slide layout: image left / outlined card right ---------- */
+  .st--{{ section.id }} .st__slide {
+    display: grid;
+    grid-template-columns: minmax(300px, 44%) 1fr;
+    align-items: center;
+  }
+
+  /* Image card overlaps INTO the text column so the card can tuck behind it */
+  .st--{{ section.id }} .st__media {
+    position: relative;
+    z-index: 2;
+    margin-right: calc(var(--st-overlap) * -1);
+  }
+
+  .st--{{ section.id }} .st__image-card {
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--st-bg);
+  }
+
+  .st--{{ section.id }} .st__image-card img,
+  .st--{{ section.id }} .st__image-card .st__placeholder {
+    width: 100%;
+    height: var(--st-img-h);
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Text column = clipped stage. Its left edge sits UNDER the image card. */
+  .st--{{ section.id }} .st__content {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    padding: 24px 0;
+  }
+
+  /* ---------- Outlined card, tucked in behind the image ---------- */
+  .st--{{ section.id }} .st__card {
+    --st-rest-x: calc(var(--st-overlap) - var(--st-tuck));
+    width: calc(100% - var(--st-rest-x));
+    transform: translateX(var(--st-rest-x));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: var(--st-card-h);
+    padding: var(--st-card-pad);
+    border: var(--st-outline-w) solid var(--st-outline-c);
+    border-radius: var(--st-outline-r);
+    background: var(--st-card-bg, transparent);
+  }
+
+  /* ---------- Pull-out-from-behind-image animation ----------
+     Gated behind .swiper-initialized so content is visible if Swiper fails. */
+  .st--{{ section.id }} .swiper-initialized .st__card {
+    transform: translateX(calc(-100% - 60px - var(--st-rest-x)));
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0s; /* leaving: exits first, fast, back behind the image */
+  }
+
+  .st--{{ section.id }} .swiper-initialized .swiper-slide-active .st__card {
+    transform: translateX(var(--st-rest-x));
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: 0.42s; /* entering: waits for the old card to clear */
+  }
+
+  /* ---------- Card content (matches reference design) ----------
+     Order: quote mark → quote → stars → author + role (inline) ---------- */
+  .st--{{ section.id }} .st__quote-mark {
+    display: block;
+    width: var(--st-qm-size);
+    height: auto;
+    fill: var(--st-qm-c);
+    margin: 0 0 14px;
+  }
+
+  .st--{{ section.id }} .st__quote {
+    margin: 0 0 18px;
+    font-family: var(--st-quote-family, inherit);
+    font-size: var(--st-quote-size);
+    line-height: var(--st-quote-lh);
+    font-weight: var(--st-quote-w);
+    font-style: {% if s.quote_italic %}italic{% else %}normal{% endif %};
+    color: var(--st-quote-c);
+  }
+
+  .st--{{ section.id }} .st__stars {
+    display: flex;
+    gap: 3px;
+    margin: 0 0 16px;
+  }
+
+  .st--{{ section.id }} .st__star {
+    width: var(--st-star-size);
+    height: var(--st-star-size);
+    fill: var(--st-star-c);
+  }
+
+  .st--{{ section.id }} .st__author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .st--{{ section.id }} .st__author-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .st--{{ section.id }} .st__author-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Name + role sit on the SAME line, like the reference */
+  .st--{{ section.id }} .st__author-meta {
+    display: flex;
+    align-items: baseline;
+    column-gap: 10px;
+    row-gap: 2px;
+    flex-wrap: wrap;
+  }
+
+  .st--{{ section.id }} .st__author-name {
+    margin: 0;
+    font-size: var(--st-author-size);
+    font-weight: var(--st-author-w);
+    color: var(--st-author-c);
+  }
+
+  .st--{{ section.id }} .st__author-role {
+    margin: 0;
+    font-size: var(--st-role-size);
+    color: var(--st-role-c);
+  }
+
+  /* ---------- Arrows pinned to the left / right edges ---------- */
+  .st--{{ section.id }} .st__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 6;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1.5px solid var(--st-ctrl);
+    background: var(--st-bg);
+    color: var(--st-ctrl);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.25s ease, color 0.25s ease, opacity 0.25s ease;
+  }
+
+  .st--{{ section.id }} .st__arrow:hover {
+    background: var(--st-ctrl);
+    color: var(--st-bg);
+  }
+
+  .st--{{ section.id }} .st__arrow.swiper-button-disabled {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  .st--{{ section.id }} .st__arrow svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+
+  .st--{{ section.id }} .st__arrow--prev { left: 0; }
+  .st--{{ section.id }} .st__arrow--next { right: 0; }
+
+  /* ---------- Dots ---------- */
+  .st--{{ section.id }} .st__dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 28px;
+  }
+
+  .st--{{ section.id }} .st__dots:empty {
+    display: none;
+  }
+
+  .st--{{ section.id }} .st__dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 99px;
+    background: var(--st-ctrl);
+    opacity: 0.25;
+    cursor: pointer;
+    transition: opacity 0.3s ease, width 0.3s ease;
+  }
+
+  .st--{{ section.id }} .st__dot.is-active {
+    opacity: 1;
+    width: 26px;
+  }
+
+  /* ---------- Empty state ---------- */
+  .st--{{ section.id }} .st__empty {
+    padding: 80px 20px;
+    text-align: center;
+    color: var(--st-ctrl);
+    opacity: 0.6;
+    font-size: 15px;
+  }
+
+  /* ---------- Mobile: card BELOW the image, tucked behind its bottom edge ---------- */
+  @media (max-width: 899px) {
+    .st--{{ section.id }} .st__slide {
+      grid-template-columns: 1fr;
+    }
+
+    .st--{{ section.id }} .st__media {
+      margin-right: 0;
+      margin-bottom: calc(var(--st-overlap-m) * -1);
+    }
+
+    .st--{{ section.id }} .st__image-card img,
+    .st--{{ section.id }} .st__image-card .st__placeholder {
+      height: var(--st-img-h-m);
+    }
+
+    .st--{{ section.id }} .st__content {
+      padding: 0 16px;
+    }
+
+    .st--{{ section.id }} .st__card {
+      --st-rest-y: calc(var(--st-overlap-m) - var(--st-tuck));
+      width: 100%;
+      transform: none;
+      margin-top: var(--st-rest-y);
+    }
+
+    .st--{{ section.id }} .swiper-initialized .st__card {
+      transform: translateY(calc(-100% - 60px - var(--st-rest-y)));
+    }
+
+    .st--{{ section.id }} .swiper-initialized .swiper-slide-active .st__card {
+      transform: translateY(0);
+    }
+
+    .st--{{ section.id }} .st__arrow {
+      width: 44px;
+      height: 44px;
+    }
+  }
+</style>
+
+<div
+  class="st st--{{ section.id }}" data-fm-testimonials role="region" aria-label="{{ 'fm.reviews' | t }}"
+  data-autoplay="{{ s.autoplay }}"
+  data-autoplay-delay="{{ s.autoplay_speed | times: 1000 }}"
+>
+  <div class="st__container">
+    {%- if section.blocks.size > 0 -%}
+      <div class="st__frame">
+        <div class="st__swiper" tabindex="0">
+          <div class="swiper-wrapper">
+            {%- for block in section.blocks -%}
+              {%- assign b = block.settings -%}
+              <div class="st__slide swiper-slide" {{ block.shopify_attributes }}>
+                <div class="st__media">
+                  <div class="st__image-card">
+                    {%- if b.image != blank -%}
+                      {%- assign img_alt = b.image.alt | default: b.author | escape -%}
+                      {{
+                        b.image
+                        | image_url: width: 900
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '400,600,800,900',
+                          alt: img_alt
+                      }}
+                    {%- else -%}
+                      {{ 'lifestyle-1' | placeholder_svg_tag: 'st__placeholder' }}
+                    {%- endif -%}
+                  </div>
+                </div>
+
+                <div class="st__content">
+                  <div class="st__card">
+                    {%- comment -%} Solid quote mark (no paw watermark) {%- endcomment -%}
+                    <svg class="st__quote-mark" viewBox="0 0 448 512" aria-hidden="true" focusable="false">
+                      <path d="M0 216C0 149.7 53.7 96 120 96h8c17.7 0 32 14.3 32 32s-14.3 32-32 32h-8c-30.9 0-56 25.1-56 56v8h64c35.3 0 64 28.7 64 64v64c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V216zm256 0c0-66.3 53.7-120 120-120h8c17.7 0 32 14.3 32 32s-14.3 32-32 32h-8c-30.9 0-56 25.1-56 56v8h64c35.3 0 64 28.7 64 64v64c0 35.3-28.7 64-64 64h-64c-35.3 0-64-28.7-64-64V216z"/>
+                    </svg>
+
+                    {%- if b.testimonial != blank -%}
+                      <blockquote class="st__quote">{{ b.testimonial | escape }}</blockquote>
+                    {%- endif -%}
+
+                    {%- if b.stars > 0 -%}
+                      <div class="st__stars" aria-label="{{ b.stars }} out of 5 stars">
+                        {%- for i in (1..b.stars) -%}
+                          <svg class="st__star" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                          </svg>
+                        {%- endfor -%}
+                      </div>
+                    {%- endif -%}
+
+                    {%- if b.author != blank or b.role != blank or b.author_image != blank -%}
+                      <div class="st__author">
+                        {%- if b.author_image != blank -%}
+                          <div class="st__author-avatar">
+                            {{
+                              b.author_image
+                              | image_url: width: 120
+                              | image_tag: loading: 'lazy', widths: '60,120', alt: b.author
+                            }}
+                          </div>
+                        {%- endif -%}
+                        <div class="st__author-meta">
+                          {%- if b.author != blank -%}
+                            <p class="st__author-name">{{ b.author }}</p>
+                          {%- endif -%}
+                          {%- if b.role != blank -%}
+                            <p class="st__author-role">{{ b.role }}</p>
+                          {%- endif -%}
+                        </div>
+                      </div>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+
+        {%- if s.show_arrows -%}
+          <button type="button" class="st__arrow st__arrow--prev" aria-label="Previous testimonial">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button type="button" class="st__arrow st__arrow--next" aria-label="Next testimonial">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        {%- endif -%}
+      </div>
+
+      {%- if s.show_dots -%}
+        <div class="st__dots"></div>
+      {%- endif -%}
+    {%- else -%}
+      <div class="st__empty">Add “Testimonial” blocks in the theme editor.</div>
+    {%- endif -%}
+  </div>
+</div>
+
+
+
+{% render 'fm-section-design', section: section, kind: 'split-testimonial' %}
+
+{% schema %}
+{
+  "name": "Split testimonial",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "image_overlap",
+      "label": "Image overlap over text",
+      "info": "How far the image card reaches into the text column. The outlined card tucks behind this overlap.",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "card_offset",
+      "label": "Card tuck / offset",
+      "info": "Positive slides the outlined card in behind the image card so it looks stuck in; negative opens a gap between image and card.",
+      "min": -120,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "label": "Image height (desktop)",
+      "min": 300,
+      "max": 800,
+      "step": 10,
+      "unit": "px",
+      "default": 520
+    },
+    {
+      "type": "range",
+      "id": "image_height_mobile",
+      "label": "Image height (mobile)",
+      "min": 220,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "default": 380
+    },
+    {
+      "type": "header",
+      "content": "Outlined text card"
+    },
+    {
+      "type": "range",
+      "id": "card_height",
+      "label": "Outlined card height",
+      "info": "Minimum height of the outlined text section. 0 = auto (fits content).",
+      "min": 0,
+      "max": 700,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "label": "Card inner padding",
+      "min": 16,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "outline_width",
+      "label": "Outline width",
+      "info": "0 = no outline.",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "outline_color",
+      "label": "Outline color",
+      "default": "#111111"
+    },
+    {
+      "type": "range",
+      "id": "outline_radius",
+      "label": "Outline corner radius",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card background",
+      "info": "Optional. Leave empty for transparent.",
+      "default": "#F7F1E8"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#F5F7FA"
+    },
+    {
+      "type": "color",
+      "id": "controls_color",
+      "label": "Arrows / dots color",
+      "default": "#111111"
+    },
+    {
+      "type": "header",
+      "content": "Quote mark"
+    },
+    {
+      "type": "range",
+      "id": "quote_mark_size",
+      "label": "Quote mark size",
+      "min": 16,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "color",
+      "id": "quote_mark_color",
+      "label": "Quote mark color",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "header",
+      "content": "Quote text"
+    },
+    {
+      "type": "checkbox",
+      "id": "quote_font_enable",
+      "label": "Override quote font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "quote_font",
+      "label": "Quote font family",
+      "default": "playfair_display_n4",
+      "visible_if": "{{ section.settings.quote_font_enable }}"
+    },
+    {
+      "type": "range",
+      "id": "quote_size",
+      "label": "Quote size",
+      "min": 14,
+      "max": 44,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "quote_line_height",
+      "label": "Quote line height",
+      "min": 100,
+      "max": 220,
+      "step": 5,
+      "unit": "%",
+      "default": 160
+    },
+    {
+      "type": "select",
+      "id": "quote_weight",
+      "label": "Quote weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "checkbox",
+      "id": "quote_italic",
+      "label": "Italic quote",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "quote_color",
+      "label": "Quote color",
+      "default": "#111111"
+    },
+    {
+      "type": "header",
+      "content": "Author & role"
+    },
+    {
+      "type": "range",
+      "id": "author_size",
+      "label": "Author size",
+      "min": 12,
+      "max": 26,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "author_weight",
+      "label": "Author weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "color",
+      "id": "author_color",
+      "label": "Author color",
+      "default": "#111111"
+    },
+    {
+      "type": "range",
+      "id": "role_size",
+      "label": "Role size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "color",
+      "id": "role_color",
+      "label": "Role color",
+      "default": "#6B675F"
+    },
+    {
+      "type": "header",
+      "content": "Stars"
+    },
+    {
+      "type": "range",
+      "id": "star_size",
+      "label": "Star size",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#E9A23B"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Controls"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show navigation arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show pagination dots",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Change slide every",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 5,
+      "visible_if": "{{ section.settings.autoplay }}"
+    },
+    {
+      "type": "header",
+      "content": "Responsive design"
+    },
+    {
+      "type": "range",
+      "id": "fm_mobile_quote_size",
+      "label": "Review text size \u2014 mobile",
+      "min": 12,
+      "max": 42,
+      "step": 1,
+      "default": 23,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "fm_mobile_author_size",
+      "label": "Name size \u2014 mobile",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "default": 17,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "fm_mobile_role_size",
+      "label": "Role size \u2014 mobile",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "fm_mobile_side_padding",
+      "label": "Side padding \u2014 mobile",
+      "info": "Keeps the review image and text box aligned.",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "fm_mobile_card_padding",
+      "label": "Mobile card padding",
+      "min": 12,
+      "max": 60,
+      "step": 2,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "fm_motion",
+      "label": "Animate as this section enters view",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Left side. 900 x 1100px recommended."
+        },
+        {
+          "type": "range",
+          "id": "stars",
+          "label": "Star rating",
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "testimonial",
+          "label": "Testimonial",
+          "default": "PawVita has everything my dog needs! Great quality, fast delivery, and my pup absolutely loves the toys."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author",
+          "default": "Emily R."
+        },
+        {
+          "type": "text",
+          "id": "role",
+          "label": "Author role",
+          "default": "Happy Pet Parent"
+        },
+        {
+          "type": "image_picker",
+          "id": "author_image",
+          "label": "Author avatar",
+          "info": "Optional. 120 x 120px recommended."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Split testimonial",
+      "blocks": [
+        {
+          "type": "testimonial"
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "testimonial": "From ordering to delivery everything was seamless. It looks even better in person and has completely elevated our daily routine.",
+            "author": "Mark Sullivan",
+            "role": "Verified customer"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "testimonial": "Worth every penny. The quality is unmatched and the team's attention to detail truly shows in the final product.",
+            "author": "Emily Hart",
+            "role": "Interior designer"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
