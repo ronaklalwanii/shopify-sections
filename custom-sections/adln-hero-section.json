@@ -1,0 +1,14 @@
+{
+  "slug": "adln-hero-section",
+  "name": "ADLN Hero Section",
+  "category": "Hero / Banner",
+  "tags": [
+    "custom",
+    "hero",
+    "hero-with-products"
+  ],
+  "contextStore": "custom",
+  "updatedAt": "2026-09-25T14:55:21.822Z",
+  "css": "",
+  "js": ""
+}
