@@ -78,3 +78,11 @@ test('does not call blank rendered output healthy', () => {
   assert.equal(hardIssue('no visible content'), true);
   assert.equal(hardIssue('needs Shopify block context'), false);
 });
+
+test('renders catalog thumbnails at the card viewport', () => {
+  const css = fs.readFileSync(path.join(__dirname, '../public/style.css'), 'utf8');
+  const app = fs.readFileSync(path.join(__dirname, '../public/app.js'), 'utf8');
+  assert.match(css, /\.card-thumb iframe\s*\{[^}]*width: 100%;[^}]*height: 100%;/s);
+  assert.doesNotMatch(css, /width: 1200px; height: 1560px;/);
+  assert.doesNotMatch(app, /frame\.style\.transform\s*=/);
+});

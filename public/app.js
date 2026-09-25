@@ -169,7 +169,6 @@ function loadThumb(el) {
       if (loading) loading.textContent = 'preview failed';
     } else {
       el.classList.add('loaded');
-      requestAnimationFrame(() => { frame.style.transform = `scale(${el.clientWidth / 1200})`; });
     }
     inFlight--;
     pumpThumbs();
