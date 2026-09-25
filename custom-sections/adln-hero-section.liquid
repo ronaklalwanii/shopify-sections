@@ -1,0 +1,693 @@
+{% comment %}
+  ADLN Hero Section
+  Pixel-perfect implementation based on approved plan.
+{% endcomment %}
+
+<section 
+  class="adln-hero" 
+  style="
+    min-height: {{ section.settings.min_height }}px;
+    --text-color: {{ section.settings.text_color }};
+    --text-color-secondary: {{ section.settings.text_color_secondary }};
+    --button-bg: {{ section.settings.button_bg_color }};
+    --button-text: {{ section.settings.button_text_color }};
+    --card-bg: {{ section.settings.card_bg_color }};
+    --card-text: {{ section.settings.card_text_color }};
+    --card-text-secondary: {{ section.settings.card_text_secondary_color }};
+    --heading-font: {{ section.settings.heading_font.family }}, Inter, sans-serif;
+    --body-font: {{ section.settings.body_font.family }}, Inter, sans-serif;
+    --heading-size: {{ section.settings.heading_size }}px;
+    --subheading-size: {{ section.settings.subheading_size }}px;
+    --button-font-size: {{ section.settings.button_font_size }}px;
+    --button-radius: {{ section.settings.button_border_radius }}px;
+    --card-radius: {{ section.settings.card_border_radius }}px;
+    --anim-duration: {{ section.settings.animation_duration }}s;
+    --anim-easing: {{ section.settings.animation_easing }};
+    --img-offset-x: {{ section.settings.image_offset_x }}%;
+    --img-offset-y: {{ section.settings.image_offset_y }}%;
+  "
+>
+  {% if section.settings.background_image != blank %}
+    <div class="hero__background">
+      <img 
+        src="{{ section.settings.background_image | image_url: width: 2000 }}" 
+        alt="{{ section.settings.background_image.alt | escape }}" 
+        class="hero__bg-img"
+        loading="eager"
+      >
+      <div class="hero__overlay" style="opacity: {{ section.settings.overlay_opacity }};"></div>
+    </div>
+  {% else %}
+    <div class="hero__background hero__background--fallback"></div>
+  {% endif %}
+
+  <div 
+    class="hero__content"
+    style="
+      justify-content: {{ section.settings.text_position_y }};
+      align-items: {{ section.settings.text_position_x }};
+      text-align: {{ section.settings.text_position_x }};
+    "
+  >
+    <h1 class="hero__heading {% if section.settings.enable_animation %}animate-up{% endif %}">
+      {{ section.settings.heading_text }}
+    </h1>
+    
+    <div class="hero__subheading {% if section.settings.enable_animation %}animate-up delay-1{% endif %}">
+      {{ section.settings.subheading_text }}
+    </div>
+
+    {% if section.settings.button_label != blank %}
+      <a 
+        href="{{ section.settings.button_link }}" 
+        class="hero__button {% if section.settings.enable_animation %}animate-up delay-2{% endif %}"
+      >
+        {{ section.settings.button_label }}
+      </a>
+    {% endif %}
+  </div>
+
+  {% if section.settings.show_bottom_row and section.blocks.size > 0 %}
+    <div class="hero__bottom-row {% if section.settings.enable_animation %}animate-up delay-3{% endif %}">
+      {% for block in section.blocks %}
+        <a 
+          href="{{ block.settings.card_link }}" 
+          class="hero__card"
+          style="--card-index: {{ forloop.index0 }};"
+          {{ block.shopify_attributes }}
+        >
+          <div class="card__image-wrapper">
+            {% if block.settings.card_image != blank %}
+              <img 
+                src="{{ block.settings.card_image | image_url: width: 600 }}" 
+                alt="{{ block.settings.card_image.alt | escape }}"
+                loading="lazy"
+              >
+            {% else %}
+              <div class="card__image-placeholder">{{ 'image' | placeholder_svg_tag }}</div>
+            {% endif %}
+          </div>
+          <div class="card__text">
+            <h3 class="card__title">{{ block.settings.card_title }}</h3>
+            <p class="card__subtitle">{{ block.settings.card_subtitle }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>
+
+<style>
+  .adln-hero {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background-color: #2c241b; /* Fallback color */
+  }
+
+  .hero__background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  .hero__bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: calc(50% + var(--img-offset-x, 0%)) calc(50% + var(--img-offset-y, 0%));
+  }
+
+  .hero__background--fallback {
+    background: linear-gradient(135deg, #4a3b2a 0%, #2c241b 100%);
+  }
+
+  .hero__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+    z-index: 1;
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 80px 5%;
+    gap: 24px;
+  }
+
+  .hero__heading {
+    font-family: var(--heading-font);
+    font-size: var(--heading-size);
+    color: var(--text-color);
+    margin: 0;
+    line-height: 1.1;
+    font-weight: 400;
+    max-width: 600px;
+  }
+
+  .hero__subheading {
+    font-family: var(--body-font);
+    font-size: var(--subheading-size);
+    color: var(--text-color-secondary);
+    margin: 0;
+    line-height: 1.5;
+    max-width: 400px;
+  }
+
+  .hero__subheading p {
+    margin: 0;
+  }
+
+  .hero__button {
+    display: inline-block;
+    font-family: var(--body-font);
+    font-size: var(--button-font-size);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    padding: 16px 32px;
+    border-radius: var(--button-radius);
+    transition: opacity 0.3s ease, transform 0.2s ease;
+    align-self: flex-start;
+  }
+
+  .hero__button:hover {
+    opacity: 0.9;
+  }
+
+  .hero__button:active {
+    transform: scale(0.98);
+  }
+
+  .hero__bottom-row {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    padding: 0 5% 40px 5%;
+  }
+
+  .hero__card {
+    display: flex;
+    align-items: center;
+    background-color: var(--card-bg);
+    border-radius: var(--card-radius);
+    padding: 16px;
+    gap: 16px;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .hero__card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+
+  .card__image-wrapper {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    border-radius: calc(var(--card-radius) - 4px);
+    overflow: hidden;
+    background-color: #e5e5e5;
+  }
+
+  .card__image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card__image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+  }
+
+  .card__image-placeholder svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .card__text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .card__title {
+    font-family: var(--body-font);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--card-text);
+    margin: 0;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .card__subtitle {
+    font-family: var(--body-font);
+    font-size: 13px;
+    color: var(--card-text-secondary);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  /* Animations */
+  .animate-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp var(--anim-duration) var(--anim-easing) forwards;
+  }
+
+  .delay-1 { animation-delay: 0.2s; }
+  .delay-2 { animation-delay: 0.4s; }
+  .delay-3 { animation-delay: 0.6s; }
+
+  /* Stagger cards if animation is on */
+  .hero__bottom-row.animate-up .hero__card {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp var(--anim-duration) var(--anim-easing) forwards;
+  }
+  
+  .hero__bottom-row.animate-up .hero__card:nth-child(1) { animation-delay: 0.6s; }
+  .hero__bottom-row.animate-up .hero__card:nth-child(2) { animation-delay: 0.7s; }
+  .hero__bottom-row.animate-up .hero__card:nth-child(3) { animation-delay: 0.8s; }
+  .hero__bottom-row.animate-up .hero__card:nth-child(4) { animation-delay: 0.9s; }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-up,
+    .hero__bottom-row.animate-up .hero__card {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .hero__button, .hero__card {
+      transition: none !important;
+    }
+  }
+
+  /* Responsive */
+  @media (max-width: 990px) {
+    .hero__content {
+      padding: 60px 5%;
+      align-items: center !important;
+      text-align: center !important;
+    }
+    .hero__button {
+      align-self: center;
+    }
+    .hero__bottom-row {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 749px) {
+    .hero__content {
+      padding: 40px 5%;
+    }
+    .hero__heading {
+      font-size: calc(var(--heading-size) * 0.7);
+    }
+    .hero__bottom-row {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; /* Firefox */
+      padding: 0 5% 30px 5%;
+      gap: 12px;
+    }
+    .hero__bottom-row::-webkit-scrollbar {
+      display: none; /* Chrome/Safari */
+    }
+    .hero__card {
+      flex: 0 0 85vw;
+      max-width: 320px;
+      scroll-snap-align: start;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "ADLN Hero",
+  "tag": "section",
+  "class": "section-adln-hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading_text",
+      "label": "Heading",
+      "default": "A calm ritual for your skin"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading_text",
+      "label": "Subheading",
+      "default": "<p>Science-led skincare inspired by the ocean. Made for you.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "DISCOVER COLLECTION"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "range",
+      "id": "image_offset_x",
+      "label": "Image horizontal offset",
+      "min": -50,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "image_offset_y",
+      "label": "Image vertical offset",
+      "min": -50,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Section minimum height",
+      "min": 600,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "default": 800
+    },
+    {
+      "type": "select",
+      "id": "text_position_x",
+      "label": "Horizontal alignment",
+      "options": [
+        { "value": "flex-start", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Right" }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "select",
+      "id": "text_position_y",
+      "label": "Vertical alignment",
+      "options": [
+        { "value": "flex-start", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_row",
+      "label": "Show bottom navigation cards",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Heading text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color_secondary",
+      "label": "Subheading text color",
+      "default": "#E0E0E0"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background",
+      "default": "#F2EBE5"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card background",
+      "default": "#F2EBE5"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card title text",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "card_text_secondary_color",
+      "label": "Card subtitle text",
+      "default": "#4A4A4A"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 32,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "label": "Subheading size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Button font size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Button radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Card radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Background overlay opacity",
+      "min": 0,
+      "max": 0.5,
+      "step": 0.05,
+      "default": 0.1
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "Enable entrance animations",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "label": "Animation duration",
+      "min": 0.3,
+      "max": 2.0,
+      "step": 0.1,
+      "unit": "s",
+      "default": 0.8
+    },
+    {
+      "type": "select",
+      "id": "animation_easing",
+      "label": "Easing",
+      "options": [
+        { "value": "ease", "label": "Ease" },
+        { "value": "ease-in-out", "label": "Ease In Out" },
+        { "value": "linear", "label": "Linear" },
+        { "value": "ease-out", "label": "Ease Out" }
+      ],
+      "default": "ease-out"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "bottom_card",
+      "name": "Card",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Card Content"
+        },
+        {
+          "type": "image_picker",
+          "id": "card_image",
+          "label": "Card image"
+        },
+        {
+          "type": "text",
+          "id": "card_title",
+          "label": "Title",
+          "default": "SHOP"
+        },
+        {
+          "type": "text",
+          "id": "card_subtitle",
+          "label": "Subtitle",
+          "default": "Curated essentials"
+        },
+        {
+          "type": "url",
+          "id": "card_link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "ADLN Hero",
+      "blocks": [
+        {
+          "type": "bottom_card",
+          "settings": {
+            "card_title": "SHOP",
+            "card_subtitle": "Curated essentials"
+          }
+        },
+        {
+          "type": "bottom_card",
+          "settings": {
+            "card_title": "ROUTINE",
+            "card_subtitle": "Your daily ritual"
+          }
+        },
+        {
+          "type": "bottom_card",
+          "settings": {
+            "card_title": "JOURNAL",
+            "card_subtitle": "Mind, skin & mood"
+          }
+        },
+        {
+          "type": "bottom_card",
+          "settings": {
+            "card_title": "PROFILE",
+            "card_subtitle": "Your space"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
