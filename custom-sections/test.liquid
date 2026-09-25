@@ -1,0 +1,35 @@
+{% comment %}
+  Describe what this section is for — future you will thank present you.
+{% endcomment %}
+
+<section class="my-section" id="MySection-{{ section.id }}">
+  {%- style -%}
+    #MySection-{{ section.id }} {
+      --my-accent: {{ section.settings.accent }};
+    }
+    .my-section { padding: 72px 24px; text-align: center; }
+    .my-section h2 { font-size: 40px; letter-spacing: -0.02em; margin-bottom: 12px; }
+  {%- endstyle -%}
+
+  <h2>{{ section.settings.heading }}</h2>
+  <p>{{ section.settings.text }}</p>
+
+  {% for block in section.blocks %}
+    <div {{ block.shopify_attributes }}>{{ block.settings.title }}</div>
+  {% endfor %}
+</section>
+
+{% schema %}
+{
+  "name": "My Section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "A headline that sells" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Supporting copy goes here." },
+    { "type": "color", "id": "accent", "label": "Accent color", "default": "#2f6f4f" }
+  ],
+  "blocks": [
+    { "type": "item", "name": "Item", "settings": [ { "type": "text", "id": "title", "label": "Title", "default": "Item title" } ] }
+  ],
+  "presets": [ { "name": "My Section", "blocks": [ { "type": "item" }, { "type": "item" }, { "type": "item" } ] } ]
+}
+{% endschema %}
