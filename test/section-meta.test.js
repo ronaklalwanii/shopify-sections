@@ -143,4 +143,9 @@ test('rolls back custom sections when persistence fails', () => {
   assert.match(server, /customSectionsRestoreError = error/);
   assert.match(server, /Custom sections unavailable:/);
   assert.doesNotMatch(server, /Custom sections are temporarily unavailable/);
+  const app = fs.readFileSync(path.join(__dirname, '../public/app.js'), 'utf8');
+  assert.match(app, /cache: 'no-store'/);
+  assert.match(app, /Saving to GitHub/);
+  assert.match(app, /Deleting…/);
+  assert.match(app, /function setButtonBusy\(/);
 });

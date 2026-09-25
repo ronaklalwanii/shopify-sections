@@ -59,6 +59,7 @@ body {
 .btn-ghost.small { padding: 4px 9px; font-size: 12px; }
 .btn-ghost.danger { color: var(--danger); border-color: #e7c7c4; }
 .btn-ghost.danger:hover { background: #fbeeec; }
+.btn[disabled] { opacity: .62; cursor: wait; }
 .sidebar .btn-primary { width: 100%; padding: 10px; }
 
 .side-search input {

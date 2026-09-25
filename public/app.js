@@ -366,17 +366,43 @@ function downloadLiquid(s) {
   toast('Source downloaded — install listed dependencies separately');
 }
 
+function setButtonBusy(button, busy, label) {
+  if (!button) return;
+  if (busy) {
+    button.dataset.idleText = button.textContent;
+    button.disabled = true;
+    button.setAttribute('aria-busy', 'true');
+    button.textContent = label;
+  } else {
+    button.disabled = false;
+    button.removeAttribute('aria-busy');
+    if (button.dataset.idleText) button.textContent = button.dataset.idleText;
+    delete button.dataset.idleText;
+  }
+}
+
 async function deleteCustom(s) {
   if (!confirm(`Delete "${s.name}" from the library? This cannot be undone.`)) return;
-  const response = await fetch(`/api/custom/${encodeURIComponent(s.file.replace(/\.liquid$/, ''))}`, { method: 'DELETE' });
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    toast(error.error || 'Delete failed', true);
-    return;
+  const button = $('detailDelete');
+  setButtonBusy(button, true, 'Deleting…');
+  try {
+    const response = await fetch(`/api/custom/${encodeURIComponent(s.file.replace(/\.liquid$/, ''))}`, { method: 'DELETE' });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      toast(error.error || 'Delete failed', true);
+      return;
+    }
+    state.sections = state.sections.filter((section) => !(section.store === 'custom' && section.file === s.file));
+    $('detailOverlay').hidden = true;
+    toast('Section deleted');
+    try { await load(); } catch {}
+    state.sections = state.sections.filter((section) => !(section.store === 'custom' && section.file === s.file));
+    refresh();
+  } catch {
+    toast('Delete failed — check your connection and try again', true);
+  } finally {
+    setButtonBusy(button, false);
   }
-  $('detailOverlay').hidden = true;
-  toast('Section deleted');
-  await load();
 }
 
 /* ---------------------------------- editor ----------------------------------- */
@@ -494,28 +520,37 @@ async function saveEditor() {
     css: $('fCss').value,
     js: $('fJs').value,
   };
-  const url = state.editing ? `/api/custom/${encodeURIComponent(state.editing.file.replace(/\.liquid$/, ''))}` : '/api/custom';
-  const res = await fetch(url, {
-    method: state.editing ? 'PUT' : 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
-  if (!res.ok) {
-    const e = await res.json().catch(() => ({}));
-    toast(e.error || 'Save failed', true);
-    return;
+  const editing = state.editing;
+  const url = editing ? `/api/custom/${encodeURIComponent(editing.file.replace(/\.liquid$/, ''))}` : '/api/custom';
+  const button = $('editorSave');
+  setButtonBusy(button, true, 'Saving to GitHub…');
+  try {
+    const res = await fetch(url, {
+      method: editing ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      const e = await res.json().catch(() => ({}));
+      toast(e.error || 'Save failed', true);
+      return;
+    }
+    closeOverlay('editorOverlay');
+    toast(editing ? 'Section updated & committed' : 'Section saved & committed to git');
+    state.store = 'custom';
+    state.category = 'all';
+    try { await load(); } catch { toast('Saved, but the catalog needs a refresh', true); }
+  } catch {
+    toast('Save failed — check your connection and try again', true);
+  } finally {
+    setButtonBusy(button, false);
   }
-  closeOverlay('editorOverlay');
-  toast(state.editing ? 'Section updated & committed' : 'Section saved & committed to git');
-  state.store = 'custom';
-  state.category = 'all';
-  await load();
 }
 
 /* ----------------------------------- boot ------------------------------------- */
 
 async function load() {
-  const response = await fetch('/api/index');
+  const response = await fetch('/api/index', { cache: 'no-store' });
   if (!response.ok) throw new Error(`Index request failed (${response.status})`);
   const idx = await response.json();
   state.sections = idx.sections;

@@ -101,13 +101,21 @@ async function ghRestore() {
   if (response.status === 404) return false;
   if (!response.ok) throw new Error(`GitHub restore failed (${response.status})`);
   const items = await response.json();
+  const remoteSlugs = new Set();
   for (const item of items.filter((entry) => entry.type === 'file')) {
     const file = await ghReq(`custom-sections/${item.name}`);
     if (!file.ok) throw new Error(`GitHub restore failed for ${item.name} (${file.status})`);
     const data = await file.json();
     const slug = item.name.replace(/\.(?:json|liquid)$/, '');
     const extension = item.name.endsWith('.liquid') ? 'liquid' : item.name.endsWith('.json') ? 'json' : null;
-    if (extension && CUSTOM_SLUG.test(slug)) fs.writeFileSync(customPath(slug, extension), Buffer.from(data.content, 'base64'));
+    if (extension && CUSTOM_SLUG.test(slug)) {
+      remoteSlugs.add(slug);
+      fs.writeFileSync(customPath(slug, extension), Buffer.from(data.content, 'base64'));
+    }
+  }
+  for (const file of fs.readdirSync(CUSTOM_DIR)) {
+    const match = file.match(/^([\w-]+)\.(?:json|liquid)$/);
+    if (match && !remoteSlugs.has(match[1])) removeCustomFiles(match[1]);
   }
   console.log(`gh restore: ${items.length} files restored`);
   return true;
@@ -547,7 +555,7 @@ app.get('/api/index', async (req, res) => {
       console.warn('Custom section refresh skipped:', error.message);
     }
   }
-  res.set('Cache-Control', 'private, max-age=60, stale-while-revalidate=300');
+  res.set('Cache-Control', 'no-store');
   const idx = loadIndex();
   res.json({ ...idx, sections: [...idx.sections, ...listCustomSections()] });
 });
@@ -646,13 +654,13 @@ app.delete('/api/custom/:slug', async (req, res) => {
   try {
     const slug = assertCustomSlug(req.params.slug);
     const meta = customSectionMeta(slug);
-    if (!meta) return res.status(404).json({ error: 'not found' });
+    if (!meta && !GH_DATA) return res.status(404).json({ error: 'not found' });
     for (const file of [`${slug}.liquid`, `${slug}.json`]) {
       const extension = file.endsWith('.liquid') ? 'liquid' : 'json';
       try { fs.unlinkSync(customPath(slug, extension)); } catch {}
       await ghDeleteFile(file);
     }
-    if (!IS_SERVERLESS) gitCommit(`Delete section: ${meta.name}`);
+    if (meta && !IS_SERVERLESS) gitCommit(`Delete section: ${meta.name}`);
     res.json({ ok: true });
   } catch (error) {
     res.status(/Invalid/.test(error.message) ? 400 : 500).json({ error: error.message });
