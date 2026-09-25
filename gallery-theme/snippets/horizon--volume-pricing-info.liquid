@@ -60,7 +60,7 @@
       popovertarget="{{ popover_id }}"
       style="anchor-name: {{ anchor_name }};"
     >
-      <span class="svg-wrapper">{{- 'icon-info.svg' | inline_asset_content -}}</span>
+      <span class="svg-wrapper">{{- 'horizon--icon-info.svg' | inline_asset_content -}}</span>
       {% if show_label %}
         {{ 'content.volume_pricing_available' | t }}
       {% endif %}
@@ -102,7 +102,7 @@
               <span class="volume-pricing-info__quantity">{{ min_qty }}+</span>
               {%- capture price_text -%}{%- if use_currency -%}{{ variant.price | money_with_currency | strip }}/{{ 'content.each_abbreviation' | t }}{%- else -%}{{ variant.price | money | strip }}/{{ 'content.each_abbreviation' | t }}{%- endif -%}{%- endcapture -%}
               <span class="volume-pricing-info__price"
-                ><span class="volume-pricing-info__checkmark">{{- 'icon-checkmark.svg' | inline_asset_content -}}</span>
+                ><span class="volume-pricing-info__checkmark">{{- 'horizon--icon-checkmark.svg' | inline_asset_content -}}</span>
                 {{- price_text | strip -}}
               </span>
             </div>
@@ -127,7 +127,7 @@
                 {%- capture price_text -%}{%- if use_currency -%}{{ price_break.price | money_with_currency | strip }}/{{ 'content.each_abbreviation' | t }}{%- else -%}{{ price_break.price | money | strip }}/{{ 'content.each_abbreviation' | t }}{%- endif -%}{%- endcapture -%}
                 <span class="volume-pricing-info__price"
                   ><span class="volume-pricing-info__checkmark">
-                    {{- 'icon-checkmark.svg' | inline_asset_content -}}
+                    {{- 'horizon--icon-checkmark.svg' | inline_asset_content -}}
                   </span>
                   {{- price_text | strip -}}
                 </span>

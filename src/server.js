@@ -5,7 +5,7 @@ const crypto = require('crypto');
 const { execFileSync } = require('child_process');
 const express = require('express');
 const { renderStoreSection, renderSectionSource, renderSnippet, renderLayoutTokens, layoutTokensFallback, isEsmJs, findStore, getEngine, googleFontsLink } = require('./renderer');
-const { extractSchema, collectSectionDependencies, extractAssetRefs, extractSnippetRefs } = require('./section-meta');
+const { extractSchema, collectSectionDependencies, extractAssetRefs, extractSnippetRefs, normalizeAssetName } = require('./section-meta');
 const { CUSTOM_SLUG, assertCustomSlug, customFilePath } = require('./path-safety');
 
 const ROOT = path.resolve(__dirname, '..');
@@ -279,6 +279,9 @@ const authCookieValue = () =>
   crypto.createHmac('sha256', ACCESS_PASSWORD).update('section-library-access').digest('hex');
 const hasAuthCookie = (header) => String(header || '').split(';')
   .map((part) => part.trim()).some((part) => part === `sl_auth=${authCookieValue()}`);
+const PREVIEW_COOKIE = crypto.randomBytes(32).toString('hex');
+const hasPreviewCookie = (header) => String(header || '').split(';')
+  .map((part) => part.trim()).some((part) => part === `sl_preview=${PREVIEW_COOKIE}`);
 
 function loginPage(msg = '') {
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Section Library — sign in</title>
@@ -309,7 +312,7 @@ app.use((req, res, next) => {
   if (!ACCESS_PASSWORD) return next();
   if (req.path === '/login') return next();
   if (hasAuthCookie(req.headers.cookie)) return next();
-  if (isPreviewAssetRequest(req)) return next();
+  if (isPreviewAssetRequest(req) || (req.path.startsWith('/assets/') && hasPreviewCookie(req.headers.cookie))) return next();
   if (req.path.startsWith('/api/') || req.path.startsWith('/preview/')) return res.status(401).json({ error: 'unauthorized' });
   res.status(401).type('html').send(loginPage());
 });
@@ -608,10 +611,15 @@ function getLayoutDeps(store) {
   const css = [], js = [];
   const scan = (text) => {
     let m;
-    const cssRe = /['"]([\w./-]+\.css)['"]\s*\|\s*asset_url/g;
-    while ((m = cssRe.exec(text))) if (!m[1].split('/').includes('..') && !css.includes(m[1])) css.push(m[1]);
-    const jsRe = /['"]([\w./-]+\.m?js)['"]\s*\|\s*asset_url/g;
-    while ((m = jsRe.exec(text))) if (!m[1].split('/').includes('..') && !js.includes(m[1])) js.push(m[1]);
+    const filters = '(?:asset_url|shopify_asset_url|inline_asset_content|stylesheet_tag|script_tag|preload_tag)';
+    const cssRe = new RegExp(`['"]([\\w./-]+\\.css)['"]\\s*\\|\\s*${filters}`, 'g');
+    const jsRe = new RegExp(`['"]([\\w./-]+\\.m?js)['"]\\s*\\|\\s*${filters}`, 'g');
+    const add = (list, value) => {
+      const name = normalizeAssetName(value);
+      if (name && !name.split('/').includes('..') && !list.includes(name)) list.push(name);
+    };
+    while ((m = cssRe.exec(text))) add(css, m[1]);
+    while ((m = jsRe.exec(text))) add(js, m[1]);
   };
   let layoutSrc = '';
   try { layoutSrc = fs.readFileSync(path.join(storePath, 'layout/theme.liquid'), 'utf8'); scan(layoutSrc); } catch {}
@@ -667,6 +675,8 @@ async function getLayoutHeadExtra(store) {
 app.get('/preview/:store/:file', async (req, res) => {
   const { store, file } = req.params;
   res.set('Cache-Control', 'private, max-age=60, stale-while-revalidate=300');
+  const previewSecure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
+  res.set('Set-Cookie', `sl_preview=${PREVIEW_COOKIE}; Path=/; HttpOnly; Max-Age=3600; SameSite=Lax${previewSecure}`);
   res.set('Content-Security-Policy', "default-src * data: blob:; script-src * 'unsafe-inline'; style-src * 'unsafe-inline'; connect-src 'none'; frame-ancestors 'self'; form-action 'none'; base-uri 'none'");
 
   // When a gallery store is configured, previews render on real Shopify,
@@ -710,10 +720,48 @@ app.get('/preview/:store/:file', async (req, res) => {
   return localPreview(req, res);
 });
 
+function assetUrlForStore(store, asset) {
+  const normalized = normalizeAssetName(asset);
+  return `/assets/${encodeURIComponent(store)}/${normalized.split('/').map((part) => encodeURIComponent(part)).join('/')}`;
+}
+
+function assetFileFromUrl(url, expectedStore) {
+  const match = String(url || '').match(/^\/assets\/([^/]+)\/(.+)$/i);
+  if (!match) return null;
+  try {
+    if (decodeURIComponent(match[1]) !== expectedStore) return null;
+    return normalizeAssetName(decodeURIComponent(match[2]));
+  } catch { return null; }
+}
+
+function assetExists(storePath, asset) {
+  if (!storePath || String(asset).split(/[\\/]/).includes('..')) return false;
+  const assetsRoot = path.join(storePath, 'assets');
+  const full = path.resolve(assetsRoot, normalizeAssetName(asset));
+  const relative = path.relative(assetsRoot, full);
+  return !relative.startsWith('..') && !path.isAbsolute(relative) && fs.existsSync(full);
+}
+
+function sanitizePreviewHtml(html, store, storePath) {
+  return String(html || '').replace(/\b(src|href)=(["'])([^"']+)\2/gi, (full, attribute, quote, url) => {
+    if (!/^\/assets\//i.test(url)) return full;
+    const file = assetFileFromUrl(url, store);
+    if (!file) return full;
+    if (assetExists(storePath, file)) {
+      const canonical = assetUrlForStore(store, file);
+      return url === canonical ? full : `${attribute}=${quote}${canonical}${quote}`;
+    }
+    const extension = path.extname(file).toLowerCase();
+    if (['.js', '.mjs', '.css'].includes(extension)) return '';
+    if (['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif', '.svg'].includes(extension)) return `${attribute}=${quote}/assets/demo-image.jpg${quote}`;
+    return full;
+  });
+}
+
 function readAssetText(storePath, asset) {
   if (!storePath || String(asset).split(/[\\/]/).includes('..')) return '';
   const assetsRoot = path.join(storePath, 'assets');
-  const full = path.resolve(assetsRoot, asset);
+  const full = path.resolve(assetsRoot, normalizeAssetName(asset));
   const relative = path.relative(assetsRoot, full);
   if (relative.startsWith('..') || path.isAbsolute(relative)) return '';
   try { return fs.readFileSync(full, 'utf8'); } catch { return ''; }
@@ -736,15 +784,16 @@ async function localPreview(req, res) {
       const contextStore = meta.contextStore === 'custom' ? 'custom' : meta.contextStore;
       const contextPath = contextStore === 'custom' ? null : findStore(contextStore);
       const deps = contextPath ? getLayoutDeps(contextStore) : { css: [], js: [] };
-      const exists = contextPath ? (asset) => fs.existsSync(path.join(contextPath, 'assets', asset)) : () => false;
+      const exists = (asset) => assetExists(contextPath, asset);
       const cssLinks = [...new Set([...deps.css, ...extractAssetRefs(liquid).filter((asset) => asset.endsWith('.css'))].filter(exists))]
-        .map((asset) => `/assets/${contextStore}/${asset}`);
-      const externalScripts = deps.js.filter(exists).map((asset) => ({ src: `/assets/${contextStore}/${asset}`, esm: isEsmJs(readAssetText(contextPath, asset)) }));
+        .map((asset) => assetUrlForStore(contextStore, asset));
+      const externalScripts = deps.js.filter(exists).map((asset) => ({ src: assetUrlForStore(contextStore, asset), esm: isEsmJs(readAssetText(contextPath, asset)) }));
       const headExtra = contextPath ? await getLayoutHeadExtra(contextStore) : '';
       const fontsLink = contextPath ? (() => { try { return googleFontsLink(getEngine(contextStore, contextPath)); } catch { return ''; } })() : '';
       const rendered = await renderSectionSource(contextStore, liquid, { sectionId: slug });
+      const renderedHtml = contextPath ? sanitizePreviewHtml(rendered.html, contextStore, contextPath) : rendered.html;
       return res.type('html').send(previewPage({
-        title: meta.name, html: rendered.html, inlineCss: css, scripts: js ? [js] : [],
+        title: meta.name, html: renderedHtml, inlineCss: css, scripts: js ? [js] : [],
         error: rendered.error, cssLinks, externalScripts, headExtra: headExtra + fontsLink,
       }));
     }
@@ -754,13 +803,13 @@ async function localPreview(req, res) {
     if (meta?.usesContentFor) res.set('X-Preview-Path', 'local-context');
     const r = await renderStoreSection(store, file);
     const deps = getLayoutDeps(store);
-    const exists = (a) => fs.existsSync(path.join(storePath, 'assets', a));
-    const cssLinks = [...new Set([...deps.css, ...(meta?.assets || []).filter((a) => a.endsWith('.css'))].filter(exists))]
-      .map((a) => `/assets/${store}/${a}`);
+    const exists = (asset) => assetExists(storePath, asset);
+    const cssLinks = [...new Set([...deps.css, ...(meta?.assets || []).filter((asset) => asset.endsWith('.css'))].filter(exists))]
+      .map((asset) => assetUrlForStore(store, asset));
     const isModuleAsset = (asset) => isEsmJs(readAssetText(storePath, asset));
     const sectionAssetJs = (meta?.assets || []).filter((a) => /\.m?js$/.test(a) && exists(a) && !deps.js.includes(a));
     const scripts = [...r.js ? [r.js] : []];
-    const externalScripts = deps.js.filter(exists).map((a) => ({ src: `/assets/${store}/${a}`, esm: isModuleAsset(a) }));
+    const externalScripts = deps.js.filter(exists).map((asset) => ({ src: assetUrlForStore(store, asset), esm: isModuleAsset(asset) }));
     for (const a of sectionAssetJs) {
       // The section already loads it with its own <script src> (module or
       // classic, including document.write loaders) — shipping a second copy
@@ -774,7 +823,8 @@ async function localPreview(req, res) {
     }
     const headExtra = await getLayoutHeadExtra(store);
     const fontsLink = (() => { try { return googleFontsLink(getEngine(store, storePath)); } catch { return ''; } })();
-    res.type('html').send(previewPage({ title: `${meta?.name || file} — ${store}`, html: r.html + (r.legacyCss ? `<style>${r.legacyCss}</style>` : ''), cssLinks, scripts, error: r.error, externalScripts, headExtra: headExtra + fontsLink }));
+    const renderedHtml = sanitizePreviewHtml(r.html + (r.legacyCss ? `<style>${r.legacyCss}</style>` : ''), store, storePath);
+    res.type('html').send(previewPage({ title: `${meta?.name || file} — ${store}`, html: renderedHtml, cssLinks, scripts, error: r.error, externalScripts, headExtra: headExtra + fontsLink }));
   } catch (e) {
     res.status(500).type('html').send(previewPage({ title: 'error', html: '', error: e.message }));
   }

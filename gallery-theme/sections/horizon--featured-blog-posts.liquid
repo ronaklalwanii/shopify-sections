@@ -33,7 +33,7 @@
     {%- render 'horizon--gap-style', value: section.settings.gap -%}
   "
 >
-  {% content_for 'block', id: 'static-blog-title', type: '_featured-blog-posts-title' %}
+  {% content_for 'block', id: 'static-blog-title', type: 'horizon--_featured-blog-posts-title' %}
 
   {% if section.settings.blog != blank and section.settings.blog.articles_count > 0 %}
     {% paginate section.settings.blog.articles by max_items %}
@@ -50,7 +50,7 @@
   {% capture list_items %}
     {% for article in section_articles limit: max_items %}
       <div class="resource-list__item">
-        {% content_for 'block', id: 'static-blog-post-card', type: '_featured-blog-posts-card', article: article, closest.article: article %}
+        {% content_for 'block', id: 'static-blog-post-card', type: 'horizon--_featured-blog-posts-card', article: article, closest.article: article %}
       </div>
       {% unless forloop.last %}
         <!--@list/split-->

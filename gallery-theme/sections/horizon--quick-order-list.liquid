@@ -242,7 +242,7 @@
                                 {% endif %}
                                 data-variant-id="{{ variant.id }}"
                               >
-                                {{- 'icon-delete.svg' | inline_asset_content -}}
+                                {{- 'horizon--icon-delete.svg' | inline_asset_content -}}
                                 <span class="visually-hidden">{{ 'actions.remove' | t }}</span>
                               </button>
                             {% else %}
@@ -299,7 +299,7 @@
                         {% endif %}
                         data-variant-id="{{ variant.id }}"
                       >
-                        {{- 'icon-delete.svg' | inline_asset_content -}}
+                        {{- 'horizon--icon-delete.svg' | inline_asset_content -}}
                         <span class="visually-hidden">{{ 'actions.remove' | t }}</span>
                       </button>
                     </div>
@@ -388,7 +388,7 @@
                 data-action="confirm"
                 on:click="quick-order-list-component/showRemoveAllConfirmation"
               >
-                {{- 'icon-delete.svg' | inline_asset_content -}}
+                {{- 'horizon--icon-delete.svg' | inline_asset_content -}}
                 <span>{{ 'content.remove_all' | t }}</span>
               </button>
             {% endif %}
@@ -405,7 +405,7 @@
               <span
                 class="svg-wrapper icon-success"
               >
-                {{ 'icon-checkmark.svg' | inline_asset_content }}
+                {{ 'horizon--icon-checkmark.svg' | inline_asset_content }}
               </span>
               <span ref="successText"></span>
             </span>
@@ -414,7 +414,7 @@
               ref="errorContainer"
             >
               <span class="svg-wrapper quick-order-list-total__icon--error">
-                {{- 'icon-error.svg' | inline_asset_content -}}
+                {{- 'horizon--icon-error.svg' | inline_asset_content -}}
               </span>
               <span ref="errorText"></span>
             </span>

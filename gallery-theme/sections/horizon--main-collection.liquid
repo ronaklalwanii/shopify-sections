@@ -53,7 +53,7 @@
       class="collection-wrapper grid gap-style{% if section.settings.product_grid_width == 'full-width' %} collection-wrapper--grid-full-width{% endif %}"
     >
       {% content_for 'block',
-        type: 'filters',
+        type: 'horizon--filters',
         id: 'filters',
         results: collection,
         results_size: collection.products_count
@@ -76,7 +76,7 @@
               ref="cards[]"
             >
               {% content_for 'block',
-                type: '_product-card',
+                type: 'horizon--_product-card',
                 id: 'product-card',
                 closest.product: product,
                 product_view_context: 'collection'

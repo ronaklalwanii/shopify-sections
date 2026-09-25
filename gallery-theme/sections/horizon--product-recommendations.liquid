@@ -104,7 +104,7 @@
         {% for product in products limit: section.settings.max_products %}
           <div class="resource-list__item">
             {% content_for 'block',
-              type: '_product-card',
+              type: 'horizon--_product-card',
               id: 'static-product-card',
               closest.product: product,
               product_view_context: 'recommendation'

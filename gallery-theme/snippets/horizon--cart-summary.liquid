@@ -29,7 +29,7 @@
         {%- for discount in cart.cart_level_discount_applications -%}
           <li class="cart-discounts__item">
             <span class="cart-discounts__label">
-              {{- 'icon-discount.svg' | inline_asset_content -}}
+              {{- 'horizon--icon-discount.svg' | inline_asset_content -}}
               {{ discount.title | escape }}
             </span>
             <span class="cart-discounts__value cart-secondary-typography"
@@ -62,7 +62,7 @@
                 </span>
 
                 <span class="cart-totals__icon">
-                  {{- 'icon-plus.svg' | inline_asset_content -}}
+                  {{- 'horizon--icon-plus.svg' | inline_asset_content -}}
                 </span>
               </summary>
 
@@ -126,7 +126,7 @@
               <span class="cart-discount__label cart-primary-typography">{{ 'content.discount' | t }}</span>
 
               <span class="cart-totals__icon">
-                {{- 'icon-plus.svg' | inline_asset_content -}}
+                {{- 'horizon--icon-plus.svg' | inline_asset_content -}}
               </span>
             </summary>
 
@@ -173,7 +173,7 @@
                     ref="cartDiscountError"
                   >
                     <span class="svg-wrapper">
-                      {{- 'icon-error.svg' | inline_asset_content -}}
+                      {{- 'horizon--icon-error.svg' | inline_asset_content -}}
                     </span>
                     <small
                       class="cart-discount__error-text cart-primary-typography hidden"
@@ -204,7 +204,7 @@
                           class="cart-discount__pill-remove svg-wrapper svg-wrapper--smaller button-unstyled"
                           aria-label="{{ 'actions.remove_discount' | t: code: discount_code }}"
                         >
-                          {{- 'icon-filters-close.svg' | inline_asset_content -}}
+                          {{- 'horizon--icon-filters-close.svg' | inline_asset_content -}}
                         </button>
                       </li>
                     {% endfor %}

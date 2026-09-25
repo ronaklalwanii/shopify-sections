@@ -1,3 +1,12 @@
+{%- comment -%} Section Library: injected global assets for store "base" {%- endcomment -%}
+{{ 'theme.css' | asset_url | stylesheet_tag }}
+{{ 'product.css' | asset_url | stylesheet_tag }}
+{% render 'fonts' %}
+{% render 'js-variables' %}
+{% render 'css-variables' %}
+{{ 'theme.js' | asset_url | script_tag }}
+{{ 'sections.js' | asset_url | script_tag }}
+{{ 'sleek-hero-editor.js' | asset_url | script_tag }}
 {%- unless request.page_type == 'captcha' or section.settings.show_only_on_index and request.page_type != 'index' -%}
 	{%- unless section.settings.show_only_for_visitors and customer -%}
 		{%- assign posted_successfully = false -%}

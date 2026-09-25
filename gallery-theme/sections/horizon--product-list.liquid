@@ -31,7 +31,7 @@
   "
 >
   <div class="section-resource-list__header">
-    {%- content_for 'block', type: '_product-list-content', id: 'static-header' -%}
+    {%- content_for 'block', type: 'horizon--_product-list-content', id: 'static-header' -%}
   </div>
 
   {% capture list_items %}
@@ -42,7 +42,7 @@
           class="resource-list__item"
         >
             {% content_for 'block',
-              type: '_product-card',
+              type: 'horizon--_product-card',
               id: 'static-product-card',
               closest.product: product,
               product_view_context: 'collection'
@@ -59,7 +59,7 @@
         <div
           class="resource-list__item"
         >
-            {% content_for 'block', type: '_product-card', id: 'static-product-card', closest.product: null %}
+            {% content_for 'block', type: 'horizon--_product-card', id: 'static-product-card', closest.product: null %}
         </div>
 
         {% unless forloop.last %}

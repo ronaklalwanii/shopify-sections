@@ -1,0 +1,196 @@
+{% doc %}
+  Renders a single image + text card inside the `_hero-product-cards` row.
+  Colors, sizing, and typography are inherited as CSS variables from the row
+  block so all cards stay consistent; each card only owns its content and
+  image position.
+
+  Reads the global block object provided by the theme blocks runtime.
+{%- enddoc -%}
+
+{% liquid
+  assign card_title = block.settings.title
+
+  if block.settings.image != blank
+    assign card_alt = block.settings.image.alt | default: card_title
+  endif
+%}
+
+{% capture card_content %}
+  <div class="hpc-card__media">
+    {%- if block.settings.image != blank -%}
+      {{
+        block.settings.image
+        | image_url: width: 900
+        | image_tag:
+          widths: '240, 360, 480, 600, 900',
+          sizes: '(min-width: 990px) 220px, (min-width: 750px) 30vw, 55vw',
+          alt: card_alt,
+          class: 'hpc-card__img',
+          loading: 'lazy'
+      }}
+    {%- else -%}
+      {{ 'image' | placeholder_svg_tag: 'hpc-card__img' }}
+    {%- endif -%}
+  </div>
+  <div class="hpc-card__info">
+    {%- if card_title != blank -%}
+      <span class="hpc-card__heading">{{ card_title }}</span>
+    {%- endif -%}
+    {%- if block.settings.text != blank -%}
+      <span class="hpc-card__caption">{{ block.settings.text }}</span>
+    {%- endif -%}
+  </div>
+{% endcapture %}
+
+{%- if block.settings.link != blank -%}
+  <a
+    class="hpc-card hpc-card--media-{{ block.settings.image_position }}"
+    href="{{ block.settings.link }}"
+    {% if block.settings.open_in_new_tab %}
+      target="_blank"
+      rel="noopener noreferrer"
+    {% endif %}
+    {{ block.shopify_attributes }}
+  >
+    {{ card_content }}
+  </a>
+{%- else -%}
+  <div class="hpc-card hpc-card--media-{{ block.settings.image_position }}" {{ block.shopify_attributes }}>
+    {{ card_content }}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .hpc-card {
+    display: flex;
+    align-items: stretch;
+    min-height: var(--hpc-cards-height, 224px);
+    border-radius: var(--hpc-cards-radius, 16px);
+    overflow: hidden;
+    background-color: var(--hpc-cards-bg, #eae0d1f2);
+    text-decoration: none;
+  }
+
+  .hpc-card--media-right {
+    flex-direction: row-reverse;
+  }
+
+  .hpc-card__media {
+    position: relative;
+    width: var(--hpc-cards-media-width, 50%);
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .hpc-card__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hpc-card__media svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hpc-card__info {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: var(--hpc-cards-info-align, center);
+    gap: 6px;
+    padding: var(--hpc-cards-info-padding, 24px);
+    text-align: var(--hpc-cards-text-align, left);
+  }
+
+  .hpc-card__heading {
+    font-family: var(--font-body--family);
+    font-size: var(--hpc-cards-title-size, 16px);
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: var(--hpc-cards-title-tracking, 0.06em);
+    text-transform: var(--hpc-cards-title-transform, uppercase);
+    color: var(--hpc-cards-title-color, #43301f);
+  }
+
+  .hpc-card__caption {
+    font-family: var(--font-body--family);
+    font-size: var(--hpc-cards-caption-size, 15px);
+    line-height: 1.45;
+    color: var(--hpc-cards-caption-color, #63513f);
+  }
+
+  .hpc-card:focus-visible {
+    outline: 2px solid var(--hpc-cards-title-color, currentColor);
+    outline-offset: 2px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .hpc-card {
+      min-height: var(--hpc-cards-height-mobile, 176px);
+    }
+
+    /* Narrow cards can't fit full text padding without crushing the copy. */
+    .hpc-card__info {
+      padding: min(var(--hpc-cards-info-padding, 24px), 16px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Card title"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Description",
+      "default": "Add a short description"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "Open in new tab",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    }
+  ]
+}
+{% endschema %}

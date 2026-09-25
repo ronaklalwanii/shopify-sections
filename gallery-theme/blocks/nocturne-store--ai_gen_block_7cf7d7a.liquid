@@ -1,0 +1,270 @@
+{% doc %}
+  @prompt
+    Generate me a section with image with text overlay.
+    Give me the text at the bottom of the image.
+    
+    Allow me to change the font colour and font family of the image.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-image-overlay-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ block.settings.border_radius }}px;
+    background: {{ block.settings.placeholder_background }};
+  }
+
+  .ai-image-overlay__media-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    aspect-ratio: {{ block.settings.image_ratio }};
+    position: relative;
+  }
+
+  .ai-image-overlay__media-{{ ai_gen_id }} img,
+  .ai-image-overlay__media-{{ ai_gen_id }} svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-image-overlay__placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: {{ block.settings.placeholder_icon_color }};
+  }
+
+  .ai-image-overlay__placeholder-{{ ai_gen_id }} svg {
+    width: 42%;
+    height: 42%;
+    opacity: 0.45;
+  }
+
+  .ai-image-overlay__shade-{{ ai_gen_id }} {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, {{ block.settings.overlay_opacity | divided_by: 100.0 }}) 100%);
+  }
+
+  .ai-image-overlay__content-{{ ai_gen_id }} {
+    position: absolute;
+    z-index: 1;
+    left: {{ block.settings.content_spacing }}px;
+    right: {{ block.settings.content_spacing }}px;
+    bottom: {{ block.settings.content_spacing }}px;
+    color: {{ block.settings.text_color }};
+    font-family: {{ block.settings.text_font.family }}, {{ block.settings.text_font.fallback_families }};
+    text-align: {{ block.settings.text_alignment }};
+  }
+
+  .ai-image-overlay__heading-{{ ai_gen_id }} {
+    margin: 0;
+    color: {{ block.settings.text_color }};
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-size: {{ block.settings.heading_size }}px;
+    line-height: 1.15;
+    font-weight: 600;
+  }
+
+  .ai-image-overlay__text-{{ ai_gen_id }} {
+    margin: 10px 0 0;
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.body_size }}px;
+    line-height: 1.45;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-image-overlay__content-{{ ai_gen_id }} {
+      left: 20px;
+      right: 20px;
+      bottom: 20px;
+    }
+
+    .ai-image-overlay__heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.8 }}px;
+    }
+
+    .ai-image-overlay__text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.body_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-image-overlay-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-image-overlay__media-{{ ai_gen_id }}">
+    {% if block.settings.image != blank %}
+      <img
+        src="{{ block.settings.image | image_url: width: 2400 }}"
+        alt="{{ block.settings.image.alt | escape }}"
+        loading="lazy"
+        width="{{ block.settings.image.width }}"
+        height="{{ block.settings.image.height }}"
+      >
+    {% else %}
+      <div class="ai-image-overlay__placeholder-{{ ai_gen_id }}">
+        {{ 'image' | placeholder_svg_tag }}
+      </div>
+    {% endif %}
+    <div class="ai-image-overlay__shade-{{ ai_gen_id }}"></div>
+    <div class="ai-image-overlay__content-{{ ai_gen_id }}">
+      {% if block.settings.heading != blank %}
+        <h2 class="ai-image-overlay__heading-{{ ai_gen_id }}">{{ block.settings.heading | escape }}</h2>
+      {% endif %}
+      {% if block.settings.text != blank %}
+        <div class="ai-image-overlay__text-{{ ai_gen_id }}">{{ block.settings.text }}</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image text overlay",
+  "tag": null,
+  "class": "image-text-overlay-block",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Your story starts here"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Share a meaningful message with your customers.</p>"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "16 / 9", "label": "Landscape" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "4 / 5", "label": "Portrait" }
+      ],
+      "default": "16 / 9"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "montserrat_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "text_font",
+      "label": "Text font",
+      "default": "montserrat_n4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 18,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "body_size",
+      "label": "Text size",
+      "min": 12,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "content_spacing",
+      "label": "Content spacing",
+      "min": 12,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay strength",
+      "min": 0,
+      "max": 90,
+      "step": 10,
+      "unit": "%",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "placeholder_background",
+      "label": "Placeholder background",
+      "default": "#f3f5f6"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_icon_color",
+      "label": "Placeholder icon",
+      "default": "#677279"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image text overlay"
+    }
+  ]
+}
+{% endschema %}

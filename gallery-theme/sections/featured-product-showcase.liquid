@@ -1,3 +1,12 @@
+{%- comment -%} Section Library: injected global assets for store "base" {%- endcomment -%}
+{{ 'theme.css' | asset_url | stylesheet_tag }}
+{{ 'product.css' | asset_url | stylesheet_tag }}
+{% render 'fonts' %}
+{% render 'js-variables' %}
+{% render 'css-variables' %}
+{{ 'theme.js' | asset_url | script_tag }}
+{{ 'sections.js' | asset_url | script_tag }}
+{{ 'sleek-hero-editor.js' | asset_url | script_tag }}
 {%- comment -%}
   Section: KOVARI Featured Product Showcase
   Purpose: Premium featured-product banner inspired by the approved KOVARI homepage design.

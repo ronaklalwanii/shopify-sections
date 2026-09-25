@@ -1,0 +1,219 @@
+{% doc %}
+  @prompt
+    Create a premium, compact **infinite scrolling benefits strip for Soluna**, closely inspired by the attached reference image.
+    
+    IMPORTANT: Create this as **one single Shopify section**.
+    
+    ## DESIGN
+    
+    Create a slim, full-width horizontal scrolling strip with a **black background by default**.
+    
+    The section should contain multiple benefit items moving continuously from right to left.
+    
+    Each item should consist of:
+    
+    **Icon/Image + Short Text**
+    
+    For example:
+    
+    **[Icon] Restorative Routines**
+    **[Icon] Infrared Warmth**
+    **[Icon] UK Support**
+    **[Icon] Premium Craftsmanship**
+    
+    Keep the design minimal, clean and sophisticated.
+    
+    The section should feel like a premium brand information ticker rather than a standard announcement bar.
+    
+    ## CONTENT
+    
+    Allow up to **7 individual scrolling items**.
+    
+    Each item should have:
+    
+    * Enable/disable setting
+    * Editable short text
+    * Image/icon picker
+    * Optional link
+    * Icon/image size control
+    
+    The merchant should be able to upload a custom image or icon for every item.
+    
+    If no image is uploaded, allow an optional default icon to be displayed.
+    
+    Keep the text short so the strip remains compact.
+    
+    ## DEFAULT CONTENT
+    
+    Use these as the initial example items:
+    
+    1. Restorative Routines
+    2. Infrared Warmth
+    3. Traditional Sauna
+    4. Cold Water Recovery
+    5. Premium Craftsmanship
+    6. Bespoke Wellness
+    7. Dedicated UK Support
+    
+    All of these must be editable through the Shopify Theme Editor.
+    
+    ## INFINITE SCROLL
+    
+    IMPORTANT:
+    
+    The items should continuously scroll horizontally from **right to left** in an infinite loop.
+    
+    There should be no visible beginning or end to the animation.
+    
+    When the final item leaves the screen, the sequence should seamlessly continue from the first item.
+    
+    Do not allow a blank gap to appear during the loop.
+    
+    Duplicate the item sequence behind the scenes if necessary to create a seamless infinite marquee.
+    
+    ## SCROLL SPEED
+    
+    Add a Shopify Theme Editor setting that allows the merchant to control the scrolling speed.
+    
+    Provide a simple range slider such as:
+    
+    **Slow → Fast**
+    
+    Allow the speed to be adjusted without editing code.
+    
+    The default speed should be **moderate and elegant**, not fast or distracting.
+    
+    The animation should move continuously rather than jumping from item to item.
+    
+    ## SPACING
+    
+    Keep the strip compact.
+    
+    Use consistent spacing between each benefit item.
+    
+    Each item should have:
+    
+    * Icon/image
+    * Small gap
+    * Text
+    * Generous gap before the next item
+    
+    Do not allow items to become visually crowded.
+    
+    The overall section should remain relatively short in height.
+    
+    ## COLOURS
+    
+    Default:
+    
+    **Background:** Black
+    
+    **Text:** White
+    
+    **Icon/image:** White or light/monochrome appearance where possible
+    
+    Add Theme Editor controls for:
+    
+    * Background colour
+    * Text colour
+    * Icon/image treatment where supported
+    * Item spacing
+    * Section height
+    * Icon size
+    * Text size
+    
+    ## RESPONSIVE DESIGN
+    
+    The strip must work beautifully across desktop, tablet and mobile.
+    
+    On desktop:
+    
+    Display multiple items across the screen.
+    
+    On mobile:
+    
+    Keep the section compact and allow the same continuous horizontal animation.
+    
+    Do NOT stack the items vertically.
+    
+    Do NOT turn this into a swipe carousel.
+    
+    The scrolling animation should continue automatically on mobile.
+    
+    Reduce:
+    
+    * Icon size
+    * Text size
+    * Item spacing
+    * Section height
+    
+    appropriately for smaller screens.
+    
+    ## ANIMATION
+    
+    The animation must be:
+    
+    * Continuous
+    * Smooth
+    * Linear
+    * Seamless
+    * Infinite
+    
+    Avoid easing that causes the ticker to speed up or slow down.
+    
+    Use a consistent scrolling speed throughout the animation.
+    
+    Pause the animation on hover if this is enabled, but make this an optional Theme Editor setting.
+    
+    Add an optional setting for:
+    
+    **Pause scrolling on hover: Yes / No**
+    
+    ## TYPOGRAPHY
+    
+    Use clean, modern typography consistent with the Soluna store.
+    
+    The text should be short, legible and refined.
+    
+    Avoid oversized typography.
+    
+    The icon and text should feel visually balanced.
+    
+    ## TECHNICAL REQUIREMENTS
+    
+    * Shopify Liquid
+    * HTML
+    * CSS
+    * Vanilla JavaScript only
+    * No external libraries
+    * Fully responsive
+    * Compatible with Shopify Theme Editor
+    * Up to 7 editable blocks
+    * Each block must support an image/icon and text
+    * Enable/disable individual blocks
+    * Adjustable scrolling speed
+    * Optional pause-on-hover
+    * Infinite seamless loop
+    * No blank spaces during the animation
+    * No page-level horizontal overflow
+    * Scope all CSS and JavaScript specifically to this section
+    * Do not interfere with other Shopify sections
+    * Optimise for fast loading
+    
+    ## FINAL VISUAL DIRECTION
+    
+    The final section should closely resemble the supplied reference:
+    
+    **Black full-width background → white icon → short white text → generous spacing → next icon/text → continuous horizontal movement.**
+    
+    Keep it **compact, understated and premium**.
+    
+    It should act as a subtle visual divider between sections while reinforcing Soluna's key brand benefits without overwhelming the visitor.
+    , Give me option to increase the height up to 150
+    Give me the controls separately for mobile and computer mode, Make the image size 90 pixels by default with an option to increase or decrease. 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+{% style %}.ai-benefits-{{ ai_gen_id }}{display:block;width:100%;overflow:hidden;background:{{ block.settings.background_color }};color:{{ block.settings.text_color }}}.ai-benefits-{{ ai_gen_id }}__viewport{width:{{ block.settings.desktop_width_percent }}%;max-width:100%;height:{{ block.settings.desktop_height }}px;display:flex;align-items:center;overflow:hidden;margin:0 auto}.ai-benefits-{{ ai_gen_id }}__track{display:flex;flex:none;width:max-content;animation:ai-benefits-scroll-{{ ai_gen_id }} {{ block.settings.scroll_speed }}s linear infinite}.ai-benefits-{{ ai_gen_id }}__group{display:flex;align-items:center;flex:none}.ai-benefits-{{ ai_gen_id }}__item{display:inline-flex;align-items:center;gap:{{ block.settings.desktop_icon_gap }}px;margin-right:{{ block.settings.desktop_item_spacing }}px;white-space:nowrap;color:{{ block.settings.text_color }};text-decoration:none}.ai-benefits-{{ ai_gen_id }}__icon{width:{{ block.settings.desktop_icon_size }}px;height:{{ block.settings.desktop_icon_size }}px;object-fit:contain;flex:none}{% if block.settings.monochrome_icons %}.ai-benefits-{{ ai_gen_id }}__icon{filter:grayscale(1) brightness(0) invert(1)}{% endif %}.ai-benefits-{{ ai_gen_id }}__fallback{display:inline-flex;align-items:center;justify-content:center;width:{{ block.settings.desktop_icon_size }}px;height:{{ block.settings.desktop_icon_size }}px;font-size:{{ block.settings.desktop_icon_size | times: 0.8 }}px;color:{{ block.settings.text_color }}}.ai-benefits-{{ ai_gen_id }}__text{font-family:{{ block.settings.text_font.family }};font-size:{{ block.settings.desktop_text_size }}px;letter-spacing:{{ block.settings.letter_spacing }}px;line-height:1.2}@keyframes ai-benefits-scroll-{{ ai_gen_id }}{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}{% if block.settings.pause_on_hover %}.ai-benefits-{{ ai_gen_id }}:hover .ai-benefits-{{ ai_gen_id }}__track{animation-play-state:paused}{% endif %}@media(max-width:749px){.ai-benefits-{{ ai_gen_id }}__viewport{width:100%;height:{{ block.settings.mobile_height }}px}.ai-benefits-{{ ai_gen_id }}__item{gap:{{ block.settings.mobile_icon_gap }}px;margin-right:{{ block.settings.mobile_item_spacing }}px}.ai-benefits-{{ ai_gen_id }}__icon,.ai-benefits-{{ ai_gen_id }}__fallback{width:{{ block.settings.mobile_icon_size }}px;height:{{ block.settings.mobile_icon_size }}px}.ai-benefits-{{ ai_gen_id }}__text{font-size:{{ block.settings.mobile_text_size }}px}}@media(prefers-reduced-motion:reduce){.ai-benefits-{{ ai_gen_id }}__track{animation-play-state:paused}}{% endstyle %}
+<infinite-benefits-{{ ai_gen_id }} class="ai-benefits-{{ ai_gen_id }}" {{ block.shopify_attributes }}><div class="ai-benefits-{{ ai_gen_id }}__viewport" aria-label="{{ block.settings.aria_label | escape }}"><div class="ai-benefits-{{ ai_gen_id }}__track">{% for copy in (1..2) %}<div class="ai-benefits-{{ ai_gen_id }}__group"{% if copy == 2 %} aria-hidden="true"{% endif %}>{% for i in (1..7) %}{% assign enabled_key = 'item_' | append: i | append: '_enabled' %}{% assign text_key = 'item_' | append: i | append: '_text' %}{% assign image_key = 'item_' | append: i | append: '_image' %}{% assign link_key = 'item_' | append: i | append: '_link' %}{% assign enabled = block.settings[enabled_key] %}{% assign item_text = block.settings[text_key] %}{% assign item_image = block.settings[image_key] %}{% assign item_link = block.settings[link_key] %}{% if enabled and item_text != blank %}{% if item_link != blank %}<a class="ai-benefits-{{ ai_gen_id }}__item" href="{{ item_link }}">{% else %}<span class="ai-benefits-{{ ai_gen_id }}__item">{% endif %}{% if item_image %}<img class="ai-benefits-{{ ai_gen_id }}__icon" src="{{ item_image | image_url: width: 300 }}" alt="" loading="lazy">{% else %}<span class="ai-benefits-{{ ai_gen_id }}__fallback" aria-hidden="true">✦</span>{% endif %}<span class="ai-benefits-{{ ai_gen_id }}__text">{{ item_text | escape }}</span>{% if item_link != blank %}</a>{% else %}</span>{% endif %}{% endif %}{% endfor %}</div>{% endfor %}</div></div></infinite-benefits-{{ ai_gen_id }}>
+{% schema %}{"name":"Soluna benefits strip","tag":null,"class":"soluna-benefits-strip","settings":[{"type":"range","id":"desktop_width_percent","label":"Desktop width","min":50,"max":100,"step":5,"unit":"%","default":100},{"type":"range","id":"desktop_height","label":"Desktop height","min":30,"max":150,"step":10,"unit":"px","default":60},{"type":"range","id":"mobile_height","label":"Mobile height","min":30,"max":150,"step":10,"unit":"px","default":50},{"type":"range","id":"scroll_speed","label":"Scroll speed","min":20,"max":120,"step":10,"unit":"s","default":60},{"type":"checkbox","id":"pause_on_hover","label":"Pause on hover","default":true},{"type":"checkbox","id":"monochrome_icons","label":"Monochrome images","default":true},{"type":"text","id":"aria_label","label":"Accessibility label","default":"Store benefits"},{"type":"range","id":"desktop_icon_size","label":"Desktop image size","min":10,"max":150,"step":10,"unit":"px","default":90},{"type":"range","id":"desktop_text_size","label":"Desktop text size","min":11,"max":20,"step":1,"unit":"px","default":14},{"type":"range","id":"desktop_icon_gap","label":"Desktop icon gap","min":4,"max":24,"step":2,"unit":"px","default":8},{"type":"range","id":"desktop_item_spacing","label":"Desktop item spacing","min":24,"max":140,"step":4,"unit":"px","default":72},{"type":"range","id":"mobile_icon_size","label":"Mobile image size","min":10,"max":150,"step":10,"unit":"px","default":90},{"type":"range","id":"mobile_text_size","label":"Mobile text size","min":10,"max":18,"step":1,"unit":"px","default":12},{"type":"range","id":"mobile_icon_gap","label":"Mobile icon gap","min":4,"max":20,"step":2,"unit":"px","default":6},{"type":"range","id":"mobile_item_spacing","label":"Mobile item spacing","min":18,"max":100,"step":2,"unit":"px","default":48},{"type":"range","id":"letter_spacing","label":"Letter spacing","min":-1,"max":3,"step":0.5,"unit":"px","default":0},{"type":"font_picker","id":"text_font","label":"Text font","default":"helvetica_n4"},{"type":"color","id":"background_color","label":"Background","default":"#000000"},{"type":"color","id":"text_color","label":"Text and icon","default":"#FFFFFF"},{"type":"header","content":"Benefit 1"},{"type":"checkbox","id":"item_1_enabled","label":"Enable","default":true},{"type":"text","id":"item_1_text","label":"Text","default":"Restorative Routines"},{"type":"image_picker","id":"item_1_image","label":"Image or icon"},{"type":"url","id":"item_1_link","label":"Link"},{"type":"header","content":"Benefit 2"},{"type":"checkbox","id":"item_2_enabled","label":"Enable","default":true},{"type":"text","id":"item_2_text","label":"Text","default":"Infrared Warmth"},{"type":"image_picker","id":"item_2_image","label":"Image or icon"},{"type":"url","id":"item_2_link","label":"Link"},{"type":"header","content":"Benefit 3"},{"type":"checkbox","id":"item_3_enabled","label":"Enable","default":true},{"type":"text","id":"item_3_text","label":"Text","default":"Traditional Sauna"},{"type":"image_picker","id":"item_3_image","label":"Image or icon"},{"type":"url","id":"item_3_link","label":"Link"},{"type":"header","content":"Benefit 4"},{"type":"checkbox","id":"item_4_enabled","label":"Enable","default":true},{"type":"text","id":"item_4_text","label":"Text","default":"Cold Water Recovery"},{"type":"image_picker","id":"item_4_image","label":"Image or icon"},{"type":"url","id":"item_4_link","label":"Link"},{"type":"header","content":"Benefit 5"},{"type":"checkbox","id":"item_5_enabled","label":"Enable","default":true},{"type":"text","id":"item_5_text","label":"Text","default":"Premium Craftsmanship"},{"type":"image_picker","id":"item_5_image","label":"Image or icon"},{"type":"url","id":"item_5_link","label":"Link"},{"type":"header","content":"Benefit 6"},{"type":"checkbox","id":"item_6_enabled","label":"Enable","default":true},{"type":"text","id":"item_6_text","label":"Text","default":"Bespoke Wellness"},{"type":"image_picker","id":"item_6_image","label":"Image or icon"},{"type":"url","id":"item_6_link","label":"Link"},{"type":"header","content":"Benefit 7"},{"type":"checkbox","id":"item_7_enabled","label":"Enable","default":true},{"type":"text","id":"item_7_text","label":"Text","default":"Dedicated UK Support"},{"type":"image_picker","id":"item_7_image","label":"Image or icon"},{"type":"url","id":"item_7_link","label":"Link"}],"presets":[{"name":"Soluna benefits strip"}]}
+{% endschema %}

@@ -42,7 +42,7 @@
 
     {% paginate search.results by products_per_page %}
       {% if search.results_count > 0 %}
-        {% content_for 'block', type: 'filters', id: 'filters', results: search, results_size: search.results_count %}
+        {% content_for 'block', type: 'horizon--filters', id: 'filters', results: search, results_size: search.results_count %}
         {% assign products = search.results | where: 'object_type', 'product' %}
       {% else %}
         {% assign collection = settings.empty_state_collection | default: collections.all %}
@@ -61,7 +61,7 @@
             ref="cards[]"
           >
             {% content_for 'block',
-              type: '_product-card',
+              type: 'horizon--_product-card',
               id: 'product-card',
               closest.product: product,
               product_view_context: 'search'

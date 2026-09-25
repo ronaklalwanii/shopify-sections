@@ -13,11 +13,11 @@
 
   @example
   {% capture media_gallery %}
-    {% content_for 'block', type: '_product-media-gallery', id: 'media-gallery', closest.product: product %}
+    {% content_for 'block', type: 'horizon--_product-media-gallery', id: 'media-gallery', closest.product: product %}
   {% endcapture %}
 
   {% capture product_details %}
-    {% content_for 'block', type: '_product-details', id: 'product-details', closest.product: product %}
+    {% content_for 'block', type: 'horizon--_product-details', id: 'product-details', closest.product: product %}
   {% endcapture %}
 
   {% capture additional_blocks %}

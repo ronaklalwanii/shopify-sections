@@ -1,0 +1,1339 @@
+{% doc %}
+  @prompt
+    reate a premium Shopify section called "Results Statistics with Image".
+    
+    The section should have a clean, modern and premium design with a white background.
+    
+    Layout
+    
+    At the top, display an editable heading centred on the page.
+    
+    Below the heading, place three vertical statistics cards that sit partially over the top of a large image.
+    
+    The cards should appear to emerge naturally from the top edge of the image, creating a layered effect. The image should slightly overlap the bottom portion of the cards so the design feels connected rather than stacked.
+    
+    Below the cards, display one large editable image that spans almost the full width of the container.
+    
+    The image should have rounded corners and there should be no gaps between the cards and the image.
+    
+    The section should look luxurious and minimal.
+    
+    Statistics Cards
+    
+    Allow up to 4 statistics cards.
+    
+    Each card should contain:
+    
+    Large percentage or number
+    Small supporting text underneath
+    Custom background colour
+    Custom number colour
+    Custom text colour
+    Adjustable border radius
+    Adjustable internal padding
+    
+    Cards should be evenly spaced across desktop.
+    
+    Animation
+    
+    When the section scrolls into view:
+    
+    The statistics cards should animate upwards from inside the image, as though they are growing out from the top edge of the image.
+    
+    At the same time:
+    
+    Each card should smoothly increase its height from 0 to its final height.
+    The percentage number should animate from 0 up to the configured value.
+    The supporting text should fade in after the number animation finishes.
+    The animation should only play once.
+    
+    Include controls for:
+    
+    Animation duration
+    Delay between each card
+    Enable or disable animations
+    Image
+    
+    Provide an editable image picker.
+    
+    Allow:
+    
+    Desktop image
+    Mobile image
+    
+    Image should support:
+    
+    Cover
+    Contain
+    
+    Adjustable image height for desktop and mobile.
+    
+    Heading
+    
+    Allow editing of:
+    
+    Heading
+    Font size
+    Font weight
+    Letter spacing
+    Colour
+    Alignment
+    Optional Source Text
+    
+    Add an optional small text field aligned to the bottom right underneath the image.
+    
+    Example:
+    
+    "Source: Internal customer survey"
+    
+    Allow:
+    
+    Enable or disable
+    Text
+    Colour
+    Font size
+    Mobile Design
+    
+    The mobile version should automatically optimise itself.
+    
+    The statistics cards should become much narrower while keeping the same height proportions.
+    
+    Reduce horizontal spacing between cards.
+    
+    Cards should remain side by side and never overflow the screen.
+    
+    Reduce the font size of the numbers and supporting text automatically for smaller devices.
+    
+    The image should resize proportionally and maintain the overlapping effect.
+    
+    The overall layout should closely resemble the desktop version while remaining easy to read.
+    
+    Theme Editor Settings
+    
+    Include controls for:
+    
+    Section width
+    Top and bottom padding
+    Container width
+    Background colour
+    Heading
+    Heading colour
+    Heading size
+    Desktop image
+    Mobile image
+    Image height desktop
+    Image height mobile
+    Card background colour
+    Number colour
+    Text colour
+    Card border radius
+    Card spacing
+    Card width
+    Card height
+    Number font size
+    Description font size
+    Animation enable
+    Animation speed
+    Animation delay
+    Source text
+    Source text colour
+    Source text size
+    Technical Requirements
+    Build using Shopify Liquid, HTML, CSS and vanilla JavaScript only.
+    Do not use external libraries.
+    All content must be editable from the Shopify Theme Editor.
+    Optimise for performance.
+    The section must be fully responsive and compatible with Online Store 2.0.
+    Ensure animations are smooth using CSS transforms and requestAnimationFrame where appropriate.
+    The counting animation should use an Intersection Observer so it only runs when the section enters the viewport.
+    Structure the code cleanly with descriptive class names and avoid unnecessary repetition.
+    
+    This should feel like a premium wellness brand section inspired by high-end health and recovery websites, with polished animations and a seamless overlap between the statistic cards and the hero image., the bard need to start from the top part of the image and not interact with image, Make the bars' bottom part just in touch with the image's top part.
+    
+    Make the bars squared from bottom and top part only needs 2px radius, Give me an option to add subheading in the section as welll, Give me access to change the font size and font family everywhere. 
+    
+    Give me access to changethe thickness of the bars in mobile and computer seperately.
+    
+    Give me a button below the image with 4px as radius and keep it turned off by default., Make the image smaller in computer mode and also make sure that the whole image fits on the screen in mobile mode. , In contain mode of image, make sure that the bars still touch the top of the image, Please make sure that the image fits fully in mobile mode.
+    Also ythe source detaiols are properly visible in mobile mode
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-results-stats-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.padding_top }}px 0 {{ block.settings.padding_bottom }}px;
+  }
+
+  .ai-results-stats-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-results-stats-header-{{ ai_gen_id }} {
+    text-align: {{ block.settings.heading_alignment }};
+    margin-bottom: 60px;
+  }
+
+  .ai-results-stats-heading-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-size: {{ block.settings.heading_size }}px;
+    letter-spacing: {{ block.settings.heading_letter_spacing }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0;
+  }
+
+  .ai-results-stats-subheading-{{ ai_gen_id }} {
+    font-family: {{ block.settings.subheading_font.family }}, {{ block.settings.subheading_font.fallback_families }};
+    font-weight: {{ block.settings.subheading_font.weight }};
+    font-size: {{ block.settings.subheading_size }}px;
+    color: {{ block.settings.subheading_color }};
+    margin: 16px 0 0;
+    line-height: 1.5;
+  }
+
+  .ai-results-stats-content-{{ ai_gen_id }} {
+    position: relative;
+    max-width: {{ block.settings.image_max_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-results-stats-cards-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    gap: {{ block.settings.card_spacing }}px;
+    margin-bottom: 0;
+    padding: 0 20px;
+  }
+
+  .ai-results-stat-card-{{ ai_gen_id }} {
+    background-color: {{ block.settings.card_bg_color }};
+    border-radius: 2px 2px 0 0;
+    padding: {{ block.settings.card_padding }}px;
+    width: {{ block.settings.card_width_desktop }}px;
+    min-height: {{ block.settings.card_height_desktop }}px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .ai-results-stat-card-{{ ai_gen_id }}.ai-animate {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+
+  .ai-results-stat-number-{{ ai_gen_id }} {
+    font-family: {{ block.settings.number_font.family }}, {{ block.settings.number_font.fallback_families }};
+    font-weight: {{ block.settings.number_font.weight }};
+    font-size: {{ block.settings.number_font_size }}px;
+    line-height: 1;
+    margin: 0 0 12px;
+  }
+
+  .ai-results-stat-description-{{ ai_gen_id }} {
+    font-family: {{ block.settings.description_font.family }}, {{ block.settings.description_font.fallback_families }};
+    font-weight: {{ block.settings.description_font.weight }};
+    font-size: {{ block.settings.description_font_size }}px;
+    line-height: 1.4;
+    margin: 0;
+    opacity: 0;
+  }
+
+  .ai-results-stat-description-{{ ai_gen_id }}.ai-visible {
+    opacity: 1;
+  }
+
+  .ai-results-stats-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    background-color: #f4f4f4;
+  }
+
+  .ai-results-stats-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: {{ block.settings.image_height_desktop }}px;
+    object-fit: {{ block.settings.image_fit }};
+    display: block;
+    {% if block.settings.image_fit == 'contain' %}
+      object-position: top center;
+    {% endif %}
+  }
+
+  .ai-results-stats-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: {{ block.settings.image_height_desktop }}px;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-results-stats-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    max-height: 500px;
+  }
+
+  .ai-results-stats-button-wrapper-{{ ai_gen_id }} {
+    text-align: center;
+    margin-top: 32px;
+  }
+
+  .ai-results-stats-button-{{ ai_gen_id }} {
+    display: inline-block;
+    font-family: {{ block.settings.button_font.family }}, {{ block.settings.button_font.fallback_families }};
+    font-weight: {{ block.settings.button_font.weight }};
+    font-size: {{ block.settings.button_font_size }}px;
+    padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
+    background-color: {{ block.settings.button_bg_color }};
+    color: {{ block.settings.button_text_color }};
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ai-results-stats-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_bg_color }};
+    color: {{ block.settings.button_hover_text_color }};
+  }
+
+  .ai-results-stats-source-{{ ai_gen_id }} {
+    text-align: right;
+    margin-top: 16px;
+    font-family: {{ block.settings.source_font.family }}, {{ block.settings.source_font.fallback_families }};
+    font-weight: {{ block.settings.source_font.weight }};
+    font-size: {{ block.settings.source_font_size }}px;
+    color: {{ block.settings.source_color }};
+    opacity: 0.7;
+    padding: 0 4px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-results-stats-container-{{ ai_gen_id }} {
+      padding: 0 12px;
+    }
+
+    .ai-results-stats-content-{{ ai_gen_id }} {
+      max-width: 100%;
+    }
+
+    .ai-results-stats-header-{{ ai_gen_id }} {
+      margin-bottom: 40px;
+    }
+
+    .ai-results-stats-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size_mobile }}px;
+    }
+
+    .ai-results-stats-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size_mobile }}px;
+      margin-top: 12px;
+    }
+
+    .ai-results-stats-cards-wrapper-{{ ai_gen_id }} {
+      gap: {{ block.settings.card_spacing | times: 0.5 }}px;
+      padding: 0 8px;
+    }
+
+    .ai-results-stat-card-{{ ai_gen_id }} {
+      width: {{ block.settings.card_width_mobile }}px;
+      min-width: 90px;
+      max-width: 140px;
+      padding: {{ block.settings.card_padding | times: 0.7 }}px {{ block.settings.card_padding | times: 0.5 }}px;
+      min-height: {{ block.settings.card_height_mobile }}px;
+    }
+
+    .ai-results-stat-number-{{ ai_gen_id }} {
+      font-size: {{ block.settings.number_font_size_mobile }}px;
+      margin-bottom: 8px;
+    }
+
+    .ai-results-stat-description-{{ ai_gen_id }} {
+      font-size: {{ block.settings.description_font_size_mobile }}px;
+    }
+
+    .ai-results-stats-image-wrapper-{{ ai_gen_id }} {
+      border-radius: {{ block.settings.image_border_radius | times: 0.75 }}px;
+    }
+
+    .ai-results-stats-image-{{ ai_gen_id }} {
+      height: auto;
+      max-height: {{ block.settings.image_height_mobile }}px;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .ai-results-stats-image-placeholder-{{ ai_gen_id }} {
+      height: auto;
+      min-height: 250px;
+      max-height: {{ block.settings.image_height_mobile }}px;
+    }
+
+    .ai-results-stats-button-wrapper-{{ ai_gen_id }} {
+      margin-top: 24px;
+    }
+
+    .ai-results-stats-button-{{ ai_gen_id }} {
+      font-size: {{ block.settings.button_font_size_mobile }}px;
+      padding: {{ block.settings.button_padding_vertical | times: 0.875 }}px {{ block.settings.button_padding_horizontal | times: 0.875 }}px;
+    }
+
+    .ai-results-stats-source-{{ ai_gen_id }} {
+      font-size: {{ block.settings.source_font_size_mobile }}px;
+      margin-top: 12px;
+      text-align: center;
+      padding: 0 8px;
+      line-height: 1.4;
+    }
+  }
+{% endstyle %}
+
+<results-statistics-{{ ai_gen_id }}
+  class="ai-results-stats-{{ ai_gen_id }}"
+  data-animation-enabled="{{ block.settings.enable_animation }}"
+  data-animation-duration="{{ block.settings.animation_duration }}"
+  data-animation-delay="{{ block.settings.animation_delay }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-results-stats-container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank or block.settings.subheading != blank %}
+      <div class="ai-results-stats-header-{{ ai_gen_id }}">
+        {% if block.settings.heading != blank %}
+          <h2 class="ai-results-stats-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+        {% endif %}
+        {% if block.settings.subheading != blank %}
+          <div class="ai-results-stats-subheading-{{ ai_gen_id }}">{{ block.settings.subheading }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="ai-results-stats-content-{{ ai_gen_id }}">
+      <div class="ai-results-stats-cards-wrapper-{{ ai_gen_id }}">
+        {% for i in (1..4) %}
+          {% liquid
+            assign card_enabled_key = 'card_' | append: i | append: '_enabled'
+            assign card_number_key = 'card_' | append: i | append: '_number'
+            assign card_suffix_key = 'card_' | append: i | append: '_suffix'
+            assign card_description_key = 'card_' | append: i | append: '_description'
+            assign card_bg_key = 'card_' | append: i | append: '_bg_color'
+            assign card_number_color_key = 'card_' | append: i | append: '_number_color'
+            assign card_text_color_key = 'card_' | append: i | append: '_text_color'
+
+            assign card_enabled = block.settings[card_enabled_key]
+            assign card_number = block.settings[card_number_key]
+            assign card_suffix = block.settings[card_suffix_key]
+            assign card_description = block.settings[card_description_key]
+            assign card_bg = block.settings[card_bg_key]
+            assign card_number_color = block.settings[card_number_color_key]
+            assign card_text_color = block.settings[card_text_color_key]
+          %}
+
+          {% if card_enabled %}
+            <div
+              class="ai-results-stat-card-{{ ai_gen_id }} {% if block.settings.enable_animation %}ai-animate{% endif %}"
+              data-card-index="{{ i }}"
+              data-target-number="{{ card_number }}"
+              style="
+                background-color: {{ card_bg }};
+              "
+            >
+              <div
+                class="ai-results-stat-number-{{ ai_gen_id }}"
+                style="color: {{ card_number_color }};"
+                data-number-element
+              >
+                0{{ card_suffix }}
+              </div>
+              <div
+                class="ai-results-stat-description-{{ ai_gen_id }} {% unless block.settings.enable_animation %}ai-visible{% endunless %}"
+                style="color: {{ card_text_color }};"
+                data-description-element
+              >
+                {{ card_description }}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="ai-results-stats-image-wrapper-{{ ai_gen_id }}">
+        {% if block.settings.image_desktop %}
+          <img
+            src="{{ block.settings.image_desktop | image_url: width: 2000 }}"
+            alt="{{ block.settings.image_desktop.alt | escape }}"
+            loading="lazy"
+            width="{{ block.settings.image_desktop.width }}"
+            height="{{ block.settings.image_desktop.height }}"
+            class="ai-results-stats-image-{{ ai_gen_id }}"
+            srcset="{{ block.settings.image_desktop | image_url: width: 375 }} 375w,
+                    {{ block.settings.image_desktop | image_url: width: 750 }} 750w,
+                    {{ block.settings.image_desktop | image_url: width: 1100 }} 1100w,
+                    {{ block.settings.image_desktop | image_url: width: 1500 }} 1500w,
+                    {{ block.settings.image_desktop | image_url: width: 2000 }} 2000w"
+            sizes="(min-width: 750px) calc(100vw - 40px), calc(100vw - 24px)"
+          >
+        {% else %}
+          <div class="ai-results-stats-image-placeholder-{{ ai_gen_id }}">
+            {{ 'lifestyle-1' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+      </div>
+
+      {% if block.settings.show_button and block.settings.button_text != blank %}
+        <div class="ai-results-stats-button-wrapper-{{ ai_gen_id }}">
+          <a href="{{ block.settings.button_link }}" class="ai-results-stats-button-{{ ai_gen_id }}">
+            {{ block.settings.button_text }}
+          </a>
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_source and block.settings.source_text != blank %}
+        <div class="ai-results-stats-source-{{ ai_gen_id }}">
+          {{ block.settings.source_text }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</results-statistics-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ResultsStatistics{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.animationEnabled = this.dataset.animationEnabled === 'true';
+        this.animationDuration = parseFloat(this.dataset.animationDuration) * 1000;
+        this.animationDelay = parseFloat(this.dataset.animationDelay) * 1000;
+        this.hasAnimated = false;
+      }
+
+      connectedCallback() {
+        if (this.animationEnabled) {
+          this.setupIntersectionObserver();
+        }
+      }
+
+      setupIntersectionObserver() {
+        const options = {
+          root: null,
+          rootMargin: '0px',
+          threshold: 0.2
+        };
+
+        this.observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && !this.hasAnimated) {
+              this.hasAnimated = true;
+              this.animateCards();
+              this.observer.disconnect();
+            }
+          });
+        }, options);
+
+        this.observer.observe(this);
+      }
+
+      animateCards() {
+        const cards = this.querySelectorAll('.ai-results-stat-card-{{ ai_gen_id }}');
+        
+        cards.forEach((card, index) => {
+          setTimeout(() => {
+            this.animateCard(card);
+          }, index * this.animationDelay);
+        });
+      }
+
+      animateCard(card) {
+        const targetNumber = parseInt(card.dataset.targetNumber);
+        const numberElement = card.querySelector('[data-number-element]');
+        const descriptionElement = card.querySelector('[data-description-element]');
+        const suffix = numberElement.textContent.replace(/[0-9]/g, '');
+
+        card.style.transition = `transform ${this.animationDuration}ms cubic-bezier(0.34, 1.56, 0.64, 1), 
+                                 opacity ${this.animationDuration}ms ease`;
+        
+        requestAnimationFrame(() => {
+          card.classList.remove('ai-animate');
+        });
+
+        const countDuration = this.animationDuration * 0.8;
+        const startTime = performance.now();
+
+        const animateCount = (currentTime) => {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / countDuration, 1);
+          
+          const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+          const currentNumber = Math.floor(easeOutQuart * targetNumber);
+          
+          numberElement.textContent = currentNumber + suffix;
+
+          if (progress < 1) {
+            requestAnimationFrame(animateCount);
+          } else {
+            numberElement.textContent = targetNumber + suffix;
+            
+            if (descriptionElement) {
+              descriptionElement.style.transition = 'opacity 400ms ease';
+              descriptionElement.classList.add('ai-visible');
+            }
+          }
+        };
+
+        setTimeout(() => {
+          requestAnimationFrame(animateCount);
+        }, this.animationDuration * 0.3);
+      }
+    }
+
+    customElements.define('results-statistics-{{ ai_gen_id }}', ResultsStatistics{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Results statistics",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Container width",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 60
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Proven Results"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 24,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile size",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "min": -2,
+      "max": 4,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": -1
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "font_picker",
+      "id": "subheading_font",
+      "label": "Font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "subheading_size_mobile",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "Desktop image"
+    },
+    {
+      "type": "range",
+      "id": "image_max_width",
+      "min": 600,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "label": "Desktop max width",
+      "default": 1000
+    },
+    {
+      "type": "range",
+      "id": "image_height_desktop",
+      "min": 300,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "label": "Desktop height",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "image_height_mobile",
+      "min": 200,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "label": "Mobile max height",
+      "default": 400
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image fit",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover"
+        },
+        {
+          "value": "contain",
+          "label": "Contain"
+        }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Default background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_width_desktop",
+      "min": 150,
+      "max": 350,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop width",
+      "default": 240
+    },
+    {
+      "type": "range",
+      "id": "card_width_mobile",
+      "min": 80,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile width",
+      "default": 110
+    },
+    {
+      "type": "range",
+      "id": "card_height_desktop",
+      "min": 120,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop height",
+      "default": 180
+    },
+    {
+      "type": "range",
+      "id": "card_height_mobile",
+      "min": 100,
+      "max": 250,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile height",
+      "default": 150
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 16,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "card_spacing",
+      "min": 12,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Spacing",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Card number"
+    },
+    {
+      "type": "font_picker",
+      "id": "number_font",
+      "label": "Font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "number_font_size",
+      "min": 32,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop size",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "number_font_size_mobile",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile size",
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Card description"
+    },
+    {
+      "type": "font_picker",
+      "id": "description_font",
+      "label": "Font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "description_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "description_font_size_mobile",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile size",
+      "default": 13
+    },
+    {
+      "type": "header",
+      "content": "Card 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_1_enabled",
+      "label": "Enable card 1",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "card_1_number",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "label": "Number",
+      "default": 95
+    },
+    {
+      "type": "text",
+      "id": "card_1_suffix",
+      "label": "Suffix",
+      "default": "%"
+    },
+    {
+      "type": "text",
+      "id": "card_1_description",
+      "label": "Description",
+      "default": "Customer satisfaction"
+    },
+    {
+      "type": "color",
+      "id": "card_1_bg_color",
+      "label": "Background",
+      "default": "#f3eeea"
+    },
+    {
+      "type": "color",
+      "id": "card_1_number_color",
+      "label": "Number color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "card_1_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Card 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_2_enabled",
+      "label": "Enable card 2",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "card_2_number",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "label": "Number",
+      "default": 87
+    },
+    {
+      "type": "text",
+      "id": "card_2_suffix",
+      "label": "Suffix",
+      "default": "%"
+    },
+    {
+      "type": "text",
+      "id": "card_2_description",
+      "label": "Description",
+      "default": "Improved sleep quality"
+    },
+    {
+      "type": "color",
+      "id": "card_2_bg_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_2_number_color",
+      "label": "Number color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "card_2_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Card 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_3_enabled",
+      "label": "Enable card 3",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "card_3_number",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "label": "Number",
+      "default": 92
+    },
+    {
+      "type": "text",
+      "id": "card_3_suffix",
+      "label": "Suffix",
+      "default": "%"
+    },
+    {
+      "type": "text",
+      "id": "card_3_description",
+      "label": "Description",
+      "default": "Would recommend"
+    },
+    {
+      "type": "color",
+      "id": "card_3_bg_color",
+      "label": "Background",
+      "default": "#f3eeea"
+    },
+    {
+      "type": "color",
+      "id": "card_3_number_color",
+      "label": "Number color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "card_3_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Card 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_4_enabled",
+      "label": "Enable card 4",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "card_4_number",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "label": "Number",
+      "default": 78
+    },
+    {
+      "type": "text",
+      "id": "card_4_suffix",
+      "label": "Suffix",
+      "default": "%"
+    },
+    {
+      "type": "text",
+      "id": "card_4_description",
+      "label": "Description",
+      "default": "Repeat customers"
+    },
+    {
+      "type": "color",
+      "id": "card_4_bg_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_4_number_color",
+      "label": "Number color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "card_4_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show button",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "font_picker",
+      "id": "button_font",
+      "label": "Font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_font_size_mobile",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile size",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "min": 16,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Hover background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "Enable animation",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "min": 0.5,
+      "max": 2,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Duration",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "animation_delay",
+      "min": 0,
+      "max": 0.5,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Delay between cards",
+      "default": 0.2
+    },
+    {
+      "type": "header",
+      "content": "Source text"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_source",
+      "label": "Show source",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "source_text",
+      "label": "Text",
+      "default": "Source: Internal customer survey"
+    },
+    {
+      "type": "font_picker",
+      "id": "source_font",
+      "label": "Font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "color",
+      "id": "source_color",
+      "label": "Color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "source_font_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop size",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "source_font_size_mobile",
+      "min": 9,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile size",
+      "default": 11
+    }
+  ],
+  "presets": [
+    {
+      "name": "Results statistics"
+    }
+  ]
+}
+{% endschema %}

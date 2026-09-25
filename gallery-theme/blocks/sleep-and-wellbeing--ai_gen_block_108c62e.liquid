@@ -1,0 +1,776 @@
+{% doc %}
+  @prompt
+    a premium look and feel section to highlight clothing for men and women. a side by side card which leads to a collection. 2x2 on desktop and mobile and make it animated. Let me add and remove collections., make the m stack on mobile, let me change the titles of the collections on the cards
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-collection-grid-{{ ai_gen_id }} {
+    padding: 60px 20px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-collection-grid__container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-collection-grid__header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .ai-collection-grid__title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 15px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .ai-collection-grid__subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0;
+    opacity: 0.8;
+  }
+
+  .ai-collection-grid__grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+  }
+
+  .ai-collection-card-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    aspect-ratio: {{ block.settings.card_aspect_ratio }};
+    opacity: 0;
+    transform: translateY(30px);
+    animation: ai-collection-card-fade-in-{{ ai_gen_id }} 0.8s ease-out forwards;
+  }
+
+  .ai-collection-card-{{ ai_gen_id }}:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+
+  .ai-collection-card-{{ ai_gen_id }}:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .ai-collection-card-{{ ai_gen_id }}:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  .ai-collection-card-{{ ai_gen_id }}:nth-child(4) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes ai-collection-card-fade-in-{{ ai_gen_id }} {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .ai-collection-card__link-{{ ai_gen_id }} {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .ai-collection-card__image-wrapper-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .ai-collection-card__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ai-collection-card__link-{{ ai_gen_id }}:hover .ai-collection-card__image-{{ ai_gen_id }} {
+    transform: scale(1.08);
+  }
+
+  .ai-collection-card__overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, {{ block.settings.overlay_opacity | divided_by: 100.0 }}) 100%
+    );
+    transition: opacity 0.4s ease;
+  }
+
+  .ai-collection-card__link-{{ ai_gen_id }}:hover .ai-collection-card__overlay-{{ ai_gen_id }} {
+    opacity: 0.85;
+  }
+
+  .ai-collection-card__content-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 30px;
+    z-index: 2;
+    transform: translateY(0);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ai-collection-card__link-{{ ai_gen_id }}:hover .ai-collection-card__content-{{ ai_gen_id }} {
+    transform: translateY(-10px);
+  }
+
+  .ai-collection-card__title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_title_size }}px;
+    color: {{ block.settings.card_text_color }};
+    margin: 0 0 8px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .ai-collection-card__count-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_count_size }}px;
+    color: {{ block.settings.card_text_color }};
+    margin: 0 0 15px;
+    opacity: 0.9;
+  }
+
+  .ai-collection-card__button-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+    border: 2px solid {{ block.settings.button_background }};
+  }
+
+  .ai-collection-card__link-{{ ai_gen_id }}:hover .ai-collection-card__button-{{ ai_gen_id }} {
+    background-color: {{ block.settings.button_hover_background }};
+    border-color: {{ block.settings.button_hover_background }};
+    transform: translateX(5px);
+  }
+
+  .ai-collection-card__button-icon-{{ ai_gen_id }} {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-collection-card__link-{{ ai_gen_id }}:hover .ai-collection-card__button-icon-{{ ai_gen_id }} {
+    transform: translateX(3px);
+  }
+
+  .ai-collection-card__placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-collection-card__placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-collection-card__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    font-size: 13px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-collection-grid-{{ ai_gen_id }} {
+      padding: 40px 16px;
+    }
+
+    .ai-collection-grid__header-{{ ai_gen_id }} {
+      margin-bottom: 30px;
+    }
+
+    .ai-collection-grid__title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.7);
+    }
+
+    .ai-collection-grid__subtitle-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.subtitle_size }}px * 0.9);
+    }
+
+    .ai-collection-grid__grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+    }
+
+    .ai-collection-card__content-{{ ai_gen_id }} {
+      padding: 20px;
+    }
+
+    .ai-collection-card__title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.card_title_size }}px * 0.8);
+    }
+
+    .ai-collection-card__count-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.card_count_size }}px * 0.9);
+    }
+
+    .ai-collection-card__button-{{ ai_gen_id }} {
+      padding: 10px 20px;
+      font-size: 12px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-collection-grid-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-collection-grid__container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank or block.settings.subtitle != blank %}
+      <div class="ai-collection-grid__header-{{ ai_gen_id }}">
+        {% if block.settings.heading != blank %}
+          <h2 class="ai-collection-grid__title-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+        {% endif %}
+        {% if block.settings.subtitle != blank %}
+          <p class="ai-collection-grid__subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="ai-collection-grid__grid-{{ ai_gen_id }}">
+      {% if block.settings.collection_1 != blank or block.settings.custom_title_1 != blank %}
+        {% assign collection = block.settings.collection_1 %}
+        <div class="ai-collection-card-{{ ai_gen_id }}">
+          <a
+            href="{{ collection.url | default: '#' }}"
+            class="ai-collection-card__link-{{ ai_gen_id }}"
+            {% if collection == blank %}aria-disabled="true"{% endif %}
+          >
+            <div class="ai-collection-card__image-wrapper-{{ ai_gen_id }}">
+              {% if collection.featured_image %}
+                <img
+                  src="{{ collection.featured_image | image_url: width: 800 }}"
+                  alt="{{ collection.featured_image.alt | escape }}"
+                  class="ai-collection-card__image-{{ ai_gen_id }}"
+                  loading="lazy"
+                  width="800"
+                  height="800"
+                >
+              {% else %}
+                <div class="ai-collection-card__placeholder-{{ ai_gen_id }}">
+                  {{ 'collection-1' | placeholder_svg_tag }}
+                  {% if collection == blank %}
+                    <div class="ai-collection-card__empty-state-{{ ai_gen_id }}">
+                      Add a collection
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="ai-collection-card__overlay-{{ ai_gen_id }}"></div>
+
+            <div class="ai-collection-card__content-{{ ai_gen_id }}">
+              <h3 class="ai-collection-card__title-{{ ai_gen_id }}">
+                {% if block.settings.custom_title_1 != blank %}
+                  {{ block.settings.custom_title_1 }}
+                {% else %}
+                  {{ collection.title | default: 'Collection Name' }}
+                {% endif %}
+              </h3>
+              <p class="ai-collection-card__count-{{ ai_gen_id }}">
+                {% if collection.products_count %}
+                  {{ collection.products_count }} {{ collection.products_count | pluralize: 'item', 'items' }}
+                {% else %}
+                  0 items
+                {% endif %}
+              </p>
+              <span class="ai-collection-card__button-{{ ai_gen_id }}">
+                {{ block.settings.button_text }}
+                <svg class="ai-collection-card__button-icon-{{ ai_gen_id }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </div>
+          </a>
+        </div>
+      {% endif %}
+
+      {% if block.settings.collection_2 != blank or block.settings.custom_title_2 != blank %}
+        {% assign collection = block.settings.collection_2 %}
+        <div class="ai-collection-card-{{ ai_gen_id }}">
+          <a
+            href="{{ collection.url | default: '#' }}"
+            class="ai-collection-card__link-{{ ai_gen_id }}"
+            {% if collection == blank %}aria-disabled="true"{% endif %}
+          >
+            <div class="ai-collection-card__image-wrapper-{{ ai_gen_id }}">
+              {% if collection.featured_image %}
+                <img
+                  src="{{ collection.featured_image | image_url: width: 800 }}"
+                  alt="{{ collection.featured_image.alt | escape }}"
+                  class="ai-collection-card__image-{{ ai_gen_id }}"
+                  loading="lazy"
+                  width="800"
+                  height="800"
+                >
+              {% else %}
+                <div class="ai-collection-card__placeholder-{{ ai_gen_id }}">
+                  {{ 'collection-1' | placeholder_svg_tag }}
+                  {% if collection == blank %}
+                    <div class="ai-collection-card__empty-state-{{ ai_gen_id }}">
+                      Add a collection
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="ai-collection-card__overlay-{{ ai_gen_id }}"></div>
+
+            <div class="ai-collection-card__content-{{ ai_gen_id }}">
+              <h3 class="ai-collection-card__title-{{ ai_gen_id }}">
+                {% if block.settings.custom_title_2 != blank %}
+                  {{ block.settings.custom_title_2 }}
+                {% else %}
+                  {{ collection.title | default: 'Collection Name' }}
+                {% endif %}
+              </h3>
+              <p class="ai-collection-card__count-{{ ai_gen_id }}">
+                {% if collection.products_count %}
+                  {{ collection.products_count }} {{ collection.products_count | pluralize: 'item', 'items' }}
+                {% else %}
+                  0 items
+                {% endif %}
+              </p>
+              <span class="ai-collection-card__button-{{ ai_gen_id }}">
+                {{ block.settings.button_text }}
+                <svg class="ai-collection-card__button-icon-{{ ai_gen_id }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </div>
+          </a>
+        </div>
+      {% endif %}
+
+      {% if block.settings.collection_3 != blank or block.settings.custom_title_3 != blank %}
+        {% assign collection = block.settings.collection_3 %}
+        <div class="ai-collection-card-{{ ai_gen_id }}">
+          <a
+            href="{{ collection.url | default: '#' }}"
+            class="ai-collection-card__link-{{ ai_gen_id }}"
+            {% if collection == blank %}aria-disabled="true"{% endif %}
+          >
+            <div class="ai-collection-card__image-wrapper-{{ ai_gen_id }}">
+              {% if collection.featured_image %}
+                <img
+                  src="{{ collection.featured_image | image_url: width: 800 }}"
+                  alt="{{ collection.featured_image.alt | escape }}"
+                  class="ai-collection-card__image-{{ ai_gen_id }}"
+                  loading="lazy"
+                  width="800"
+                  height="800"
+                >
+              {% else %}
+                <div class="ai-collection-card__placeholder-{{ ai_gen_id }}">
+                  {{ 'collection-1' | placeholder_svg_tag }}
+                  {% if collection == blank %}
+                    <div class="ai-collection-card__empty-state-{{ ai_gen_id }}">
+                      Add a collection
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="ai-collection-card__overlay-{{ ai_gen_id }}"></div>
+
+            <div class="ai-collection-card__content-{{ ai_gen_id }}">
+              <h3 class="ai-collection-card__title-{{ ai_gen_id }}">
+                {% if block.settings.custom_title_3 != blank %}
+                  {{ block.settings.custom_title_3 }}
+                {% else %}
+                  {{ collection.title | default: 'Collection Name' }}
+                {% endif %}
+              </h3>
+              <p class="ai-collection-card__count-{{ ai_gen_id }}">
+                {% if collection.products_count %}
+                  {{ collection.products_count }} {{ collection.products_count | pluralize: 'item', 'items' }}
+                {% else %}
+                  0 items
+                {% endif %}
+              </p>
+              <span class="ai-collection-card__button-{{ ai_gen_id }}">
+                {{ block.settings.button_text }}
+                <svg class="ai-collection-card__button-icon-{{ ai_gen_id }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </div>
+          </a>
+        </div>
+      {% endif %}
+
+      {% if block.settings.collection_4 != blank or block.settings.custom_title_4 != blank %}
+        {% assign collection = block.settings.collection_4 %}
+        <div class="ai-collection-card-{{ ai_gen_id }}">
+          <a
+            href="{{ collection.url | default: '#' }}"
+            class="ai-collection-card__link-{{ ai_gen_id }}"
+            {% if collection == blank %}aria-disabled="true"{% endif %}
+          >
+            <div class="ai-collection-card__image-wrapper-{{ ai_gen_id }}">
+              {% if collection.featured_image %}
+                <img
+                  src="{{ collection.featured_image | image_url: width: 800 }}"
+                  alt="{{ collection.featured_image.alt | escape }}"
+                  class="ai-collection-card__image-{{ ai_gen_id }}"
+                  loading="lazy"
+                  width="800"
+                  height="800"
+                >
+              {% else %}
+                <div class="ai-collection-card__placeholder-{{ ai_gen_id }}">
+                  {{ 'collection-1' | placeholder_svg_tag }}
+                  {% if collection == blank %}
+                    <div class="ai-collection-card__empty-state-{{ ai_gen_id }}">
+                      Add a collection
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="ai-collection-card__overlay-{{ ai_gen_id }}"></div>
+
+            <div class="ai-collection-card__content-{{ ai_gen_id }}">
+              <h3 class="ai-collection-card__title-{{ ai_gen_id }}">
+                {% if block.settings.custom_title_4 != blank %}
+                  {{ block.settings.custom_title_4 }}
+                {% else %}
+                  {{ collection.title | default: 'Collection Name' }}
+                {% endif %}
+              </h3>
+              <p class="ai-collection-card__count-{{ ai_gen_id }}">
+                {% if collection.products_count %}
+                  {{ collection.products_count }} {{ collection.products_count | pluralize: 'item', 'items' }}
+                {% else %}
+                  0 items
+                {% endif %}
+              </p>
+              <span class="ai-collection-card__button-{{ ai_gen_id }}">
+                {{ block.settings.button_text }}
+                <svg class="ai-collection-card__button-icon-{{ ai_gen_id }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </div>
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Premium collection grid",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop by Category"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Discover our curated collections for men and women"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "header",
+      "content": "Collection 1"
+    },
+    {
+      "type": "collection",
+      "id": "collection_1",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "custom_title_1",
+      "label": "Custom title",
+      "info": "Leave blank to use collection title"
+    },
+    {
+      "type": "header",
+      "content": "Collection 2"
+    },
+    {
+      "type": "collection",
+      "id": "collection_2",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "custom_title_2",
+      "label": "Custom title",
+      "info": "Leave blank to use collection title"
+    },
+    {
+      "type": "header",
+      "content": "Collection 3"
+    },
+    {
+      "type": "collection",
+      "id": "collection_3",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "custom_title_3",
+      "label": "Custom title",
+      "info": "Leave blank to use collection title"
+    },
+    {
+      "type": "header",
+      "content": "Collection 4"
+    },
+    {
+      "type": "collection",
+      "id": "collection_4",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "custom_title_4",
+      "label": "Custom title",
+      "info": "Leave blank to use collection title"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "label": "Container width",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Grid gap",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "card_aspect_ratio",
+      "label": "Card aspect ratio",
+      "options": [
+        {
+          "value": "1/1",
+          "label": "Square (1:1)"
+        },
+        {
+          "value": "4/5",
+          "label": "Portrait (4:5)"
+        },
+        {
+          "value": "3/4",
+          "label": "Portrait (3:4)"
+        },
+        {
+          "value": "16/9",
+          "label": "Landscape (16:9)"
+        }
+      ],
+      "default": "4/5"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "default": 50
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "min": 18,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "card_count_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Count size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Hover background",
+      "default": "#f0c417"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 30
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium collection grid"
+    }
+  ]
+}
+{% endschema %}

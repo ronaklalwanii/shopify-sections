@@ -87,7 +87,7 @@
         aria-label="{{ 'accessibility.slideshow_pause' | t }}"
         on:click="/pause"
       >
-        {{- 'icon-pause.svg' | inline_asset_content -}}
+        {{- 'horizon--icon-pause.svg' | inline_asset_content -}}
       </button>
       <button
         type="button"
@@ -95,7 +95,7 @@
         aria-label="{{ 'accessibility.slideshow_play' | t }}"
         on:click="/play"
       >
-        {{- 'icon-play.svg' | inline_asset_content -}}
+        {{- 'horizon--icon-play.svg' | inline_asset_content -}}
       </button>
     {% endif %}
 
@@ -132,7 +132,7 @@
 
                 {% if media.media_type == 'video' or media.media_type == 'external_video' %}
                   <span class="slideshow-controls__thumbnail-badge">
-                    {{ 'icon-play.svg' | inline_asset_content }}
+                    {{ 'horizon--icon-play.svg' | inline_asset_content }}
                   </span>
                 {% elsif media.media_type == 'model' %}
                   <span class="slideshow-controls__thumbnail-badge">

@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 const { findStore } = require('./roots');
-const { extractSchema, extractSnippetRefs, scanRenderEdits } = require('./section-meta');
+const { extractSchema, extractSnippetRefs, extractAssetRefs, normalizeAssetName, scanRenderEdits } = require('./section-meta');
 const OUT = path.resolve(__dirname, '../gallery-theme');
 const HOST = process.env.HOST_STORE || 'base'; // provides layout, config, locales skeleton
 
@@ -21,17 +21,47 @@ function scanRenderNames(source) {
 const prefixFor = (store) => (store === HOST ? '' : store.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '--');
 const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
+function balanceCss(css) {
+  const stripped = String(css || '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/"([^"\\]|\\.)*"|'([^'\\]|\\.)*'/g, '""');
+  let depth = 0;
+  for (const char of stripped) {
+    if (char === '{') depth++;
+    else if (char === '}') depth--;
+  }
+  return depth > 0 ? `${css}\n${'}'.repeat(depth)}` : css;
+}
+
+function normalizeTokenCss(css) {
+  const detached = [];
+  const cleaned = String(css || '').replace(/(^|\n)(\s*--[\w-]+\s*:[^;{}]+;)/g, (full, prefix, declaration) => {
+    detached.push(declaration.trim());
+    return prefix;
+  });
+  const tokens = detached.length ? `:root{\n${detached.join('\n')}\n}\n` : '';
+  return tokens + balanceCss(cleaned);
+}
+
+function fallbackAsset(name) {
+  const extension = path.extname(name).toLowerCase();
+  if (extension === '.js' || extension === '.mjs') return Buffer.from('window.QRCode=window.QRCode||function(){};\n');
+  if (extension === '.svg') return Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><image href="../demo-image.jpg" width="400" height="300" preserveAspectRatio="xMidYMid slice"/></svg>');
+  if (['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif'].includes(extension)) {
+    const demo = path.resolve(__dirname, '../assets/demo-image.jpg');
+    if (fs.existsSync(demo)) return fs.readFileSync(demo);
+  }
+  return null;
+}
+
 /* ------------------------------- store scanning ------------------------------ */
 
 function readStoreLayoutDeps(store) {
   const storePath = findStore(store);
   const css = [], js = [], snippets = [], styleBlocks = [];
   const scan = (text) => {
-    let m;
-    const cssRe = /['"]([\w./-]+\.css)['"]\s*\|\s*asset_url/g;
-    while ((m = cssRe.exec(text))) if (!css.includes(m[1])) css.push(m[1]);
-    const jsRe = /['"]([\w./-]+\.m?js)['"]\s*\|\s*asset_url/g;
-    while ((m = jsRe.exec(text))) if (!js.includes(m[1])) js.push(m[1]);
+    for (const asset of extractAssetRefs(text)) {
+      if (asset.endsWith('.css')) { if (!css.includes(asset)) css.push(asset); }
+      else if (/\.m?js$/.test(asset)) { if (!js.includes(asset)) js.push(asset); }
+    }
     for (const name of extractSnippetRefs(text)) if (!snippets.includes(name)) snippets.push(name);
   };
   let layout = '';
@@ -55,8 +85,18 @@ class Copier {
     this.store = store;
     this.prefix = prefixFor(store);
     this.storePath = findStore(store);
-    this.queue = [];            // [{kind:'snippet'|'asset', name}]
+    this.queue = [];            // [{kind:'snippet'|'asset'|'block', name}]
     this.copied = new Set();    // prefixed names already handled
+  }
+
+  hasStoreBlock(name) { return fs.existsSync(path.join(this.storePath, 'blocks', `${name}.liquid`)); }
+
+  rewriteBlocks(source) {
+    return source.replace(/(\bcontent_for\s+(['"])block\2[\s\S]{0,500}?\btype\s*:\s*(['"]))([\w-]+)(\3)/gi, (full, lead, blockQuote, typeQuote, name, closingQuote) => {
+      if (!this.hasStoreBlock(name)) return full;
+      this.enqueue('block', name);
+      return `${lead}${this.prefix}${name}${closingQuote}`;
+    });
   }
 
   rewrite(source) {
@@ -91,12 +131,13 @@ class Copier {
           return full;
         });
     }
-    // assets: 'file.ext' | asset_url
+    source = this.rewriteBlocks(source);
     source = source.replace(
-      /(['"])([\w./-]+\.(?:css|mjs|js|woff2?|png|jpe?g|svg|gif|webp|avif|eot|ttf|otf))\1\s*\|\s*asset_url/g,
-      (full, q1, file) => {
-        this.enqueue('asset', file);
-        return `${q1}${this.prefix}${file}${q1} | asset_url`;
+      /(['"])([\w./-]+\.(?:css|mjs|js|woff2?|png|jpe?g|svg|gif|webp|avif|eot|ttf|otf))\1\s*\|\s*(asset_url|shopify_asset_url|inline_asset_content|stylesheet_tag|script_tag|preload_tag)/g,
+      (full, quote, file, filter) => {
+        const name = normalizeAssetName(file);
+        this.enqueue('asset', name);
+        return `${quote}${this.prefix}${name}${quote} | ${filter}`;
       },
     );
     return source;
@@ -105,10 +146,12 @@ class Copier {
   hasStoreSnippet(name) { return fs.existsSync(path.join(this.storePath, 'snippets', `${name}.liquid`)); }
 
   enqueue(kind, name) {
-    const prefixed = `${this.prefix}${name}`;
-    if (this.copied.has(prefixed)) return;
-    this.copied.add(prefixed);
-    this.queue.push({ kind, name, prefixed });
+    const normalized = kind === 'asset' ? normalizeAssetName(name) : name;
+    const prefixed = `${this.prefix}${normalized}`;
+    const key = `${kind}:${prefixed}`;
+    if (this.copied.has(key)) return;
+    this.copied.add(key);
+    this.queue.push({ kind, name: normalized, prefixed });
   }
 
   drain() {
@@ -116,12 +159,25 @@ class Copier {
       const { kind, name, prefixed } = this.queue.shift();
       const src = kind === 'snippet'
         ? path.join(this.storePath, 'snippets', `${name}.liquid`)
-        : path.join(this.storePath, 'assets', name);
-      if (!fs.existsSync(src)) continue;
+        : kind === 'block'
+          ? path.join(this.storePath, 'blocks', `${name}.liquid`)
+          : path.join(this.storePath, 'assets', name);
+      if (!fs.existsSync(src)) {
+        if (kind !== 'asset') continue;
+        const fallback = fallbackAsset(name);
+        if (!fallback) continue;
+        const fallbackDest = path.join(OUT, 'assets', prefixed);
+        fs.mkdirSync(path.dirname(fallbackDest), { recursive: true });
+        fs.writeFileSync(fallbackDest, fallback);
+        continue;
+      }
       const dest = kind === 'snippet'
         ? path.join(OUT, 'snippets', `${prefixed}.liquid`)
-        : path.join(OUT, 'assets', prefixed);
-      if (kind === 'snippet') {
+        : kind === 'block'
+          ? path.join(OUT, 'blocks', `${prefixed}.liquid`)
+          : path.join(OUT, 'assets', prefixed);
+      fs.mkdirSync(path.dirname(dest), { recursive: true });
+      if (kind === 'snippet' || kind === 'block') {
         const body = this.rewrite(fs.readFileSync(src, 'utf8'));
         fs.writeFileSync(dest, body);
       } else {
@@ -212,6 +268,8 @@ function main() {
   const index = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../data/index.json'), 'utf8'));
   fs.rmSync(OUT, { recursive: true, force: true });
   fs.cpSync(findStore(HOST), OUT, { recursive: true });
+  const demoAsset = path.resolve(__dirname, '../assets/demo-image.jpg');
+  if (fs.existsSync(demoAsset)) fs.copyFileSync(demoAsset, path.join(OUT, 'assets', 'demo-image.jpg'));
   // keep the host's own JSON templates (index, product, 404, ...) so the store
   // works normally — our generated lib-* templates are added alongside them.
 
@@ -221,6 +279,14 @@ function main() {
   for (const store of index.stores.map((s) => s.name)) {
     const deps = readStoreLayoutDeps(store);
     const copier = new Copier(store);
+    if (prefixFor(store)) {
+      const blocksDir = path.join(findStore(store), 'blocks');
+      if (fs.existsSync(blocksDir)) {
+        for (const file of fs.readdirSync(blocksDir)) {
+          if (file.endsWith('.liquid')) copier.enqueue('block', file.replace(/\.liquid$/, ''));
+        }
+      }
+    }
 
     for (const f of [...deps.css, ...deps.js]) copier.enqueue('asset', f);
     // design tokens: prefer the css-variables-style snippet; else the layout's
@@ -234,7 +300,7 @@ function main() {
       tokensRender = `{% render '${prefixFor(store)}${tokensSnippet}' %}`;
     } else if (deps.styleBlocks.join('\n').trim()) {
       const name = `${prefixFor(store)}layout-tokens`;
-      fs.writeFileSync(path.join(gallerySnippets, `${name}.liquid`), `<style>\n${copier.rewrite(deps.styleBlocks.join('\n'))}\n</style>`);
+      fs.writeFileSync(path.join(gallerySnippets, `${name}.liquid`), `<style>\n${normalizeTokenCss(copier.rewrite(deps.styleBlocks.join('\n')))}\n</style>`);
       tokensRender = `{% render '${name}' %}`;
     }
     let scriptsRender = null;
@@ -254,10 +320,11 @@ function main() {
       src = copier.rewrite(src);
 
       const prefixedName = `${prefixFor(store)}${file.replace(/\.liquid$/, '')}`;
-      if (prefixFor(store)) {
+      if (prefixFor(store) || store === HOST) {
         // load the store's global css + tokens before the section markup
         const head = [];
         for (const c of deps.css) head.push(`{{ '${prefixFor(store)}${c}' | asset_url | stylesheet_tag }}`);
+        if (store === HOST) head.push("{% render 'fonts' %}", "{% render 'js-variables' %}");
         if (tokensRender) head.push(tokensRender);
         if (scriptsRender) head.push(scriptsRender);
         else for (const script of deps.js) head.push(`{{ '${prefixFor(store)}${script}' | asset_url | script_tag }}`);
@@ -348,19 +415,22 @@ function main() {
 
 function lint() {
   const g = (d) => new Set(fs.existsSync(path.join(OUT, d)) ? fs.readdirSync(path.join(OUT, d)) : []);
-  const snippets = g('snippets'), assets = g('assets'), sections = g('sections');
-  let missingSnips = 0, missingAssets = 0;
+  const snippets = g('snippets'), sections = g('sections'), blocks = g('blocks');
+  let missingSnips = 0, missingAssets = 0, missingBlocks = 0;
   const checkDir = (dir, set) => {
     for (const f of set) {
       if (!f.endsWith('.liquid')) continue;
       const src = fs.readFileSync(path.join(OUT, dir, f), 'utf8');
-      let m;
       for (const name of scanRenderNames(src)) {
         if (!snippets.has(`${name}.liquid`)) { missingSnips++; if (missingSnips <= 8) console.log(`  missing snippet: ${name} (used in ${dir}/${f})`); }
       }
-      const assetRe = /['"]([\w./-]+\.(?:css|mjs|js|woff2?|png|jpe?g|svg|gif|webp|avif|eot|ttf|otf))['"]\s*\|\s*asset_url/g;
-      while ((m = assetRe.exec(src))) {
-        if (!assets.has(m[1])) { missingAssets++; if (missingAssets <= 8) console.log(`  missing asset: ${m[1]} (used in ${dir}/${f})`); }
+      for (const name of extractAssetRefs(src)) {
+        if (!fs.existsSync(path.join(OUT, 'assets', name))) { missingAssets++; if (missingAssets <= 8) console.log(`  missing asset: ${name} (used in ${dir}/${f})`); }
+      }
+      const contentFor = /\bcontent_for\s+(['"])block\1[\s\S]{0,500}?\btype\s*:\s*(['"])([\w-]+)\2/gi;
+      let match;
+      while ((match = contentFor.exec(src))) {
+        if (!blocks.has(`${match[3]}.liquid`)) { missingBlocks++; if (missingBlocks <= 8) console.log(`  missing block: ${match[3]} (used in ${dir}/${f})`); }
       }
       if (dir === 'sections') {
         const hasSchema = /{%-?\s*schema\s*-?%}/i.test(src);
@@ -370,9 +440,10 @@ function lint() {
   };
   checkDir('sections', sections);
   checkDir('snippets', snippets);
-  console.log(`Lint: ${missingSnips} missing snippet refs, ${missingAssets} missing asset refs`);
-  if (missingSnips || missingAssets) throw new Error('Gallery dependency lint failed');
-  return { missingSnips, missingAssets };
+  checkDir('blocks', blocks);
+  console.log(`Lint: ${missingSnips} missing snippet refs, ${missingAssets} missing asset refs, ${missingBlocks} missing block refs`);
+  if (missingSnips || missingAssets || missingBlocks) throw new Error('Gallery dependency lint failed');
+  return { missingSnips, missingAssets, missingBlocks };
 }
 
 function zip() {

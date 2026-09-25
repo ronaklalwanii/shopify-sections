@@ -1,0 +1,1035 @@
+{% doc %}
+  @prompt
+    Create a mobile-only menu animation with a jigsaw puzzle effect. When the menu opens, two jigsaw-shaped pieces should slide in from the left and right sides of the screen and connect together in the center to reveal the menu content. The pieces should have interlocking jigsaw edges that fit together perfectly. Include smooth animations for the sliding and connecting motion. The animation should only trigger on mobile devices and should work when the mobile menu is opened. Add appropriate timing and easing for a satisfying connection effect., make this the main header menu style and make the jigsaw pieces fully connect when the menu is opened, When the menu is opened make the jigsaws fully close together with no gaps. Also make this available for me to use as the main header option for my store
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-jigsaw-header-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    background-color: {{ block.settings.header_background_color }};
+    padding: {{ block.settings.header_padding }}px 20px;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-jigsaw-header-content-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: {{ settings.page_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-jigsaw-logo-{{ ai_gen_id }} {
+    font-size: {{ block.settings.logo_font_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.header_text_color }};
+    text-decoration: none;
+    font-family: {{ block.settings.logo_font.family }}, {{ block.settings.logo_font.fallback_families }};
+    z-index: 1001;
+    position: relative;
+  }
+
+  .ai-jigsaw-desktop-nav-{{ ai_gen_id }} {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 30px;
+  }
+
+  .ai-jigsaw-desktop-nav-link-{{ ai_gen_id }} {
+    color: {{ block.settings.header_text_color }};
+    text-decoration: none;
+    font-size: {{ block.settings.nav_font_size }}px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    font-family: {{ block.settings.nav_font.family }}, {{ block.settings.nav_font.fallback_families }};
+  }
+
+  .ai-jigsaw-desktop-nav-link-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.nav_hover_color }};
+  }
+
+  .ai-jigsaw-menu-{{ ai_gen_id }} {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-jigsaw-menu-{{ ai_gen_id }}.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .ai-jigsaw-menu-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .ai-jigsaw-menu-{{ ai_gen_id }}.active .ai-jigsaw-menu-overlay-{{ ai_gen_id }} {
+    opacity: 1;
+  }
+
+  .ai-jigsaw-pieces-container-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .ai-jigsaw-piece-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background-color: {{ block.settings.menu_background_color }};
+    transition: transform {{ block.settings.animation_duration }}s {{ block.settings.animation_easing }};
+  }
+
+  .ai-jigsaw-piece-left-{{ ai_gen_id }} {
+    left: 0;
+    clip-path: polygon(
+      0% 0%, 
+      100% 0%, 
+      100% 15%, 
+      110% 15%, 
+      110% 25%, 
+      100% 25%, 
+      100% 35%, 
+      110% 35%, 
+      110% 45%, 
+      100% 45%, 
+      100% 55%, 
+      110% 55%, 
+      110% 65%, 
+      100% 65%, 
+      100% 75%, 
+      110% 75%, 
+      110% 85%, 
+      100% 85%, 
+      100% 100%, 
+      0% 100%
+    );
+    transform: translateX(-100%);
+  }
+
+  .ai-jigsaw-piece-right-{{ ai_gen_id }} {
+    right: 0;
+    clip-path: polygon(
+      0% 0%, 
+      100% 0%, 
+      100% 100%, 
+      0% 100%, 
+      0% 85%, 
+      -10% 85%, 
+      -10% 75%, 
+      0% 75%, 
+      0% 65%, 
+      -10% 65%, 
+      -10% 55%, 
+      0% 55%, 
+      0% 45%, 
+      -10% 45%, 
+      -10% 35%, 
+      0% 35%, 
+      0% 25%, 
+      -10% 25%, 
+      -10% 15%, 
+      0% 15%
+    );
+    transform: translateX(100%);
+  }
+
+  .ai-jigsaw-menu-{{ ai_gen_id }}.active .ai-jigsaw-piece-left-{{ ai_gen_id }} {
+    transform: translateX(0);
+  }
+
+  .ai-jigsaw-menu-{{ ai_gen_id }}.active .ai-jigsaw-piece-right-{{ ai_gen_id }} {
+    transform: translateX(0);
+  }
+
+  .ai-jigsaw-menu-content-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease {{ block.settings.animation_duration | times: 0.7 }}s;
+    z-index: 10001;
+  }
+
+  .ai-jigsaw-menu-{{ ai_gen_id }}.active .ai-jigsaw-menu-content-{{ ai_gen_id }} {
+    opacity: 1;
+  }
+
+  .ai-jigsaw-menu-title-{{ ai_gen_id }} {
+    color: {{ block.settings.menu_text_color }};
+    font-size: {{ block.settings.title_font_size }}px;
+    font-weight: 700;
+    margin: 0 0 30px 0;
+    font-family: {{ block.settings.title_font.family }}, {{ block.settings.title_font.fallback_families }};
+  }
+
+  .ai-jigsaw-menu-nav-{{ ai_gen_id }} {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ai-jigsaw-menu-nav-item-{{ ai_gen_id }} {
+    margin-bottom: 15px;
+  }
+
+  .ai-jigsaw-menu-nav-link-{{ ai_gen_id }} {
+    color: {{ block.settings.menu_text_color }};
+    text-decoration: none;
+    font-size: {{ block.settings.link_font_size }}px;
+    font-weight: 500;
+    display: block;
+    padding: 15px 20px;
+    border-radius: {{ block.settings.link_border_radius }}px;
+    background-color: {{ block.settings.link_background_color }};
+    transition: all 0.3s ease;
+    font-family: {{ block.settings.link_font.family }}, {{ block.settings.link_font.fallback_families }};
+  }
+
+  .ai-jigsaw-menu-nav-link-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.link_hover_background_color }};
+    color: {{ block.settings.link_hover_text_color }};
+    transform: translateY(-2px);
+  }
+
+  .ai-jigsaw-menu-close-{{ ai_gen_id }} {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background: none;
+    border: none;
+    color: {{ block.settings.menu_text_color }};
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    z-index: 10002;
+  }
+
+  .ai-jigsaw-menu-close-{{ ai_gen_id }}:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+  }
+
+  .ai-jigsaw-trigger-{{ ai_gen_id }} {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    color: {{ block.settings.header_text_color }};
+    font-size: {{ block.settings.trigger_size }}px;
+    transition: all 0.3s ease;
+    display: none;
+    z-index: 1001;
+    position: relative;
+  }
+
+  .ai-jigsaw-trigger-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.nav_hover_color }};
+    transform: scale(1.1);
+  }
+
+  @media screen and (max-width: 1024px) {
+    .ai-jigsaw-desktop-nav-{{ ai_gen_id }} {
+      display: none;
+    }
+    
+    .ai-jigsaw-trigger-{{ ai_gen_id }} {
+      display: block;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-jigsaw-header-{{ ai_gen_id }} {
+      padding: {{ block.settings.header_padding | times: 0.8 }}px 15px;
+    }
+
+    .ai-jigsaw-logo-{{ ai_gen_id }} {
+      font-size: {{ block.settings.logo_font_size | times: 0.8 }}px;
+    }
+
+    .ai-jigsaw-menu-content-{{ ai_gen_id }} {
+      width: 95%;
+      padding: 20px;
+    }
+
+    .ai-jigsaw-menu-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_font_size | times: 0.8 }}px;
+      margin-bottom: 20px;
+    }
+
+    .ai-jigsaw-menu-nav-link-{{ ai_gen_id }} {
+      font-size: {{ block.settings.link_font_size | times: 0.9 }}px;
+      padding: 12px 16px;
+    }
+
+    .ai-jigsaw-menu-close-{{ ai_gen_id }} {
+      top: 20px;
+      right: 20px;
+      font-size: 20px;
+    }
+  }
+
+  .ai-jigsaw-header-actions-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1001;
+    position: relative;
+  }
+
+  .ai-jigsaw-header-icon-{{ ai_gen_id }} {
+    color: {{ block.settings.header_text_color }};
+    text-decoration: none;
+    font-size: {{ block.settings.icon_size }}px;
+    transition: color 0.3s ease;
+    position: relative;
+  }
+
+  .ai-jigsaw-header-icon-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.nav_hover_color }};
+  }
+
+  .ai-jigsaw-cart-count-{{ ai_gen_id }} {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: {{ block.settings.nav_hover_color }};
+    color: {{ block.settings.header_background_color }};
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+  }
+
+  @media screen and (max-width: 1024px) {
+    .ai-jigsaw-header-actions-{{ ai_gen_id }} .ai-jigsaw-header-icon-{{ ai_gen_id }}:not(.ai-jigsaw-cart-icon-{{ ai_gen_id }}) {
+      display: none;
+    }
+  }
+
+  .ai-jigsaw-announcement-{{ ai_gen_id }} {
+    background-color: {{ block.settings.announcement_background_color }};
+    color: {{ block.settings.announcement_text_color }};
+    text-align: center;
+    padding: 10px 20px;
+    font-size: {{ block.settings.announcement_font_size }}px;
+    font-family: {{ block.settings.announcement_font.family }}, {{ block.settings.announcement_font.fallback_families }};
+  }
+
+  .ai-jigsaw-announcement-{{ ai_gen_id }} a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  .ai-jigsaw-announcement-{{ ai_gen_id }} a:hover {
+    color: {{ block.settings.nav_hover_color }};
+  }
+
+  {% if block.settings.show_announcement == false %}
+    .ai-jigsaw-announcement-{{ ai_gen_id }} {
+      display: none;
+    }
+  {% endif %}
+{% endstyle %}
+
+<jigsaw-header-{{ ai_gen_id }} class="ai-jigsaw-header-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.show_announcement and block.settings.announcement_text != blank %}
+    <div class="ai-jigsaw-announcement-{{ ai_gen_id }}">
+      {{ block.settings.announcement_text }}
+    </div>
+  {% endif %}
+
+  <div class="ai-jigsaw-header-content-{{ ai_gen_id }}">
+    <a href="/" class="ai-jigsaw-logo-{{ ai_gen_id }}">
+      {% if block.settings.logo_image %}
+        <img 
+          src="{{ block.settings.logo_image | image_url: width: 200 }}" 
+          alt="{{ shop.name }}"
+          width="{{ block.settings.logo_font_size | times: 3 }}"
+          height="{{ block.settings.logo_font_size }}"
+          style="height: {{ block.settings.logo_font_size }}px; width: auto;"
+        >
+      {% elsif block.settings.logo_text != blank %}
+        {{ block.settings.logo_text }}
+      {% else %}
+        {{ shop.name }}
+      {% endif %}
+    </a>
+
+    <nav class="ai-jigsaw-desktop-nav-{{ ai_gen_id }}">
+      <ul style="display: flex; list-style: none; margin: 0; padding: 0; gap: 30px;">
+        {% for i in (1..8) %}
+          {% liquid
+            assign link_text_key = 'link_' | append: i | append: '_text'
+            assign link_url_key = 'link_' | append: i | append: '_url'
+            assign link_text = block.settings[link_text_key]
+            assign link_url = block.settings[link_url_key]
+          %}
+          
+          {% if link_text != blank %}
+            <li>
+              <a 
+                href="{{ link_url | default: '#' }}" 
+                class="ai-jigsaw-desktop-nav-link-{{ ai_gen_id }}"
+              >
+                {{ link_text }}
+              </a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </nav>
+
+    <div class="ai-jigsaw-header-actions-{{ ai_gen_id }}">
+      {% if block.settings.show_search %}
+        <a href="/search" class="ai-jigsaw-header-icon-{{ ai_gen_id }}" aria-label="Search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </a>
+      {% endif %}
+
+      {% if block.settings.show_account %}
+        <a href="/account" class="ai-jigsaw-header-icon-{{ ai_gen_id }}" aria-label="Account">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </a>
+      {% endif %}
+
+      {% if block.settings.show_cart %}
+        <a href="/cart" class="ai-jigsaw-header-icon-{{ ai_gen_id }} ai-jigsaw-cart-icon-{{ ai_gen_id }}" aria-label="Cart">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z"></path>
+            <path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z"></path>
+            <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6"></path>
+          </svg>
+          {% if cart.item_count > 0 %}
+            <span class="ai-jigsaw-cart-count-{{ ai_gen_id }}">{{ cart.item_count }}</span>
+          {% endif %}
+        </a>
+      {% endif %}
+
+      <button class="ai-jigsaw-trigger-{{ ai_gen_id }}" aria-label="Open mobile menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="ai-jigsaw-menu-{{ ai_gen_id }}" role="dialog" aria-modal="true" aria-labelledby="jigsaw-menu-title-{{ ai_gen_id }}">
+    <div class="ai-jigsaw-menu-overlay-{{ ai_gen_id }}"></div>
+    
+    <div class="ai-jigsaw-pieces-container-{{ ai_gen_id }}">
+      <div class="ai-jigsaw-piece-{{ ai_gen_id }} ai-jigsaw-piece-left-{{ ai_gen_id }}"></div>
+      <div class="ai-jigsaw-piece-{{ ai_gen_id }} ai-jigsaw-piece-right-{{ ai_gen_id }}"></div>
+      
+      <div class="ai-jigsaw-menu-content-{{ ai_gen_id }}">
+        {% if block.settings.menu_title != blank %}
+          <h2 id="jigsaw-menu-title-{{ ai_gen_id }}" class="ai-jigsaw-menu-title-{{ ai_gen_id }}">
+            {{ block.settings.menu_title }}
+          </h2>
+        {% endif %}
+        
+        <nav>
+          <ul class="ai-jigsaw-menu-nav-{{ ai_gen_id }}">
+            {% for i in (1..8) %}
+              {% liquid
+                assign link_text_key = 'link_' | append: i | append: '_text'
+                assign link_url_key = 'link_' | append: i | append: '_url'
+                assign link_text = block.settings[link_text_key]
+                assign link_url = block.settings[link_url_key]
+              %}
+              
+              {% if link_text != blank %}
+                <li class="ai-jigsaw-menu-nav-item-{{ ai_gen_id }}">
+                  <a 
+                    href="{{ link_url | default: '#' }}" 
+                    class="ai-jigsaw-menu-nav-link-{{ ai_gen_id }}"
+                  >
+                    {{ link_text }}
+                  </a>
+                </li>
+              {% endif %}
+            {% endfor %}
+
+            {% if block.settings.show_mobile_extras %}
+              {% if block.settings.show_search %}
+                <li class="ai-jigsaw-menu-nav-item-{{ ai_gen_id }}">
+                  <a href="/search" class="ai-jigsaw-menu-nav-link-{{ ai_gen_id }}">Search</a>
+                </li>
+              {% endif %}
+              {% if block.settings.show_account %}
+                <li class="ai-jigsaw-menu-nav-item-{{ ai_gen_id }}">
+                  <a href="/account" class="ai-jigsaw-menu-nav-link-{{ ai_gen_id }}">Account</a>
+                </li>
+              {% endif %}
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+      
+      <button class="ai-jigsaw-menu-close-{{ ai_gen_id }}" aria-label="Close menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+</jigsaw-header-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class JigsawHeader{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.trigger = this.querySelector('.ai-jigsaw-trigger-{{ ai_gen_id }}');
+        this.menu = this.querySelector('.ai-jigsaw-menu-{{ ai_gen_id }}');
+        this.closeButton = this.querySelector('.ai-jigsaw-menu-close-{{ ai_gen_id }}');
+        this.overlay = this.querySelector('.ai-jigsaw-menu-overlay-{{ ai_gen_id }}');
+        this.isOpen = false;
+        this.lastFocusedElement = null;
+      }
+
+      connectedCallback() {
+        this.setupEventListeners();
+        this.setupKeyboardNavigation();
+        this.handleResize();
+        this.updateCartCount();
+      }
+
+      setupEventListeners() {
+        this.trigger.addEventListener('click', () => this.openMenu());
+        this.closeButton.addEventListener('click', () => this.closeMenu());
+        this.overlay.addEventListener('click', () => this.closeMenu());
+        
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && this.isOpen) {
+            this.closeMenu();
+          }
+        });
+
+        this.querySelectorAll('.ai-jigsaw-menu-nav-link-{{ ai_gen_id }}').forEach(link => {
+          link.addEventListener('click', () => {
+            setTimeout(() => this.closeMenu(), 100);
+          });
+        });
+
+        window.addEventListener('resize', () => this.handleResize());
+
+        document.addEventListener('cart:updated', () => this.updateCartCount());
+      }
+
+      setupKeyboardNavigation() {
+        const focusableElements = this.menu.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        
+        this.menu.addEventListener('keydown', (e) => {
+          if (e.key === 'Tab') {
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+            
+            if (e.shiftKey && document.activeElement === firstElement) {
+              e.preventDefault();
+              lastElement.focus();
+            } else if (!e.shiftKey && document.activeElement === lastElement) {
+              e.preventDefault();
+              firstElement.focus();
+            }
+          }
+        });
+      }
+
+      handleResize() {
+        if (window.innerWidth > 1024 && this.isOpen) {
+          this.closeMenu();
+        }
+      }
+
+      updateCartCount() {
+        fetch('/cart.js')
+          .then(response => response.json())
+          .then(cart => {
+            const cartIcon = this.querySelector('.ai-jigsaw-cart-icon-{{ ai_gen_id }}');
+            const existingCount = cartIcon.querySelector('.ai-jigsaw-cart-count-{{ ai_gen_id }}');
+            
+            if (existingCount) {
+              existingCount.remove();
+            }
+            
+            if (cart.item_count > 0) {
+              const countElement = document.createElement('span');
+              countElement.className = 'ai-jigsaw-cart-count-{{ ai_gen_id }}';
+              countElement.textContent = cart.item_count;
+              cartIcon.appendChild(countElement);
+            }
+          })
+          .catch(error => console.log('Cart update error:', error));
+      }
+
+      openMenu() {
+        if (window.innerWidth > 1024) return;
+        
+        this.lastFocusedElement = document.activeElement;
+        this.isOpen = true;
+        this.menu.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        setTimeout(() => {
+          this.closeButton.focus();
+        }, {{ block.settings.animation_duration | times: 1000 | plus: 100 }});
+      }
+
+      closeMenu() {
+        this.isOpen = false;
+        this.menu.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        if (this.lastFocusedElement) {
+          this.lastFocusedElement.focus();
+        } else {
+          this.trigger.focus();
+        }
+      }
+    }
+
+    customElements.define('jigsaw-header-{{ ai_gen_id }}', JigsawHeader{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Jigsaw header menu",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Announcement bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "Show announcement bar",
+      "default": false
+    },
+    {
+      "type": "richtext",
+      "id": "announcement_text",
+      "label": "Announcement text",
+      "default": "<p>Free shipping on orders over £50!</p>"
+    },
+    {
+      "type": "color",
+      "id": "announcement_background_color",
+      "label": "Announcement background",
+      "default": "#f0c417"
+    },
+    {
+      "type": "color",
+      "id": "announcement_text_color",
+      "label": "Announcement text",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "font_picker",
+      "id": "announcement_font",
+      "label": "Announcement font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "announcement_font_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Announcement font size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo image"
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo text",
+      "info": "Leave blank to use shop name"
+    },
+    {
+      "type": "range",
+      "id": "header_padding",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Header padding",
+      "default": 20
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show account icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart",
+      "label": "Show cart icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mobile_extras",
+      "label": "Show search and account in mobile menu",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Navigation links"
+    },
+    {
+      "type": "text",
+      "id": "link_1_text",
+      "label": "Link 1 text",
+      "default": "Home"
+    },
+    {
+      "type": "url",
+      "id": "link_1_url",
+      "label": "Link 1 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_2_text",
+      "label": "Link 2 text",
+      "default": "Shop"
+    },
+    {
+      "type": "url",
+      "id": "link_2_url",
+      "label": "Link 2 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_3_text",
+      "label": "Link 3 text",
+      "default": "About"
+    },
+    {
+      "type": "url",
+      "id": "link_3_url",
+      "label": "Link 3 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_4_text",
+      "label": "Link 4 text",
+      "default": "Contact"
+    },
+    {
+      "type": "url",
+      "id": "link_4_url",
+      "label": "Link 4 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_5_text",
+      "label": "Link 5 text"
+    },
+    {
+      "type": "url",
+      "id": "link_5_url",
+      "label": "Link 5 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_6_text",
+      "label": "Link 6 text"
+    },
+    {
+      "type": "url",
+      "id": "link_6_url",
+      "label": "Link 6 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_7_text",
+      "label": "Link 7 text"
+    },
+    {
+      "type": "url",
+      "id": "link_7_url",
+      "label": "Link 7 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_8_text",
+      "label": "Link 8 text"
+    },
+    {
+      "type": "url",
+      "id": "link_8_url",
+      "label": "Link 8 URL"
+    },
+    {
+      "type": "header",
+      "content": "Mobile menu"
+    },
+    {
+      "type": "text",
+      "id": "menu_title",
+      "label": "Menu title",
+      "default": "Menu"
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "min": 0.3,
+      "max": 1.5,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Animation duration",
+      "default": 0.8
+    },
+    {
+      "type": "select",
+      "id": "animation_easing",
+      "label": "Animation easing",
+      "options": [
+        {
+          "value": "ease",
+          "label": "Ease"
+        },
+        {
+          "value": "ease-in-out",
+          "label": "Ease in out"
+        },
+        {
+          "value": "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
+          "label": "Bounce"
+        },
+        {
+          "value": "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          "label": "Smooth"
+        }
+      ],
+      "default": "cubic-bezier(0.68, -0.55, 0.265, 1.55)"
+    },
+    {
+      "type": "header",
+      "content": "Header colors"
+    },
+    {
+      "type": "color",
+      "id": "header_background_color",
+      "label": "Header background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "header_text_color",
+      "label": "Header text",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "nav_hover_color",
+      "label": "Navigation hover color",
+      "default": "#f0c417"
+    },
+    {
+      "type": "header",
+      "content": "Mobile menu colors"
+    },
+    {
+      "type": "color",
+      "id": "menu_background_color",
+      "label": "Menu background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "menu_text_color",
+      "label": "Menu text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "link_background_color",
+      "label": "Link background",
+      "default": "rgba(255, 255, 255, 0.1)"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_background_color",
+      "label": "Link hover background",
+      "default": "#f0c417"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_text_color",
+      "label": "Link hover text",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "logo_font",
+      "label": "Logo font",
+      "default": "helvetica_n7"
+    },
+    {
+      "type": "range",
+      "id": "logo_font_size",
+      "min": 18,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Logo font size",
+      "default": 24
+    },
+    {
+      "type": "font_picker",
+      "id": "nav_font",
+      "label": "Navigation font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "nav_font_size",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Navigation font size",
+      "default": 16
+    },
+    {
+      "type": "font_picker",
+      "id": "title_font",
+      "label": "Mobile menu title font",
+      "default": "helvetica_n7"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "min": 20,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile menu title size",
+      "default": 28
+    },
+    {
+      "type": "font_picker",
+      "id": "link_font",
+      "label": "Mobile menu link font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "link_font_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile menu link size",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Sizing"
+    },
+    {
+      "type": "range",
+      "id": "trigger_size",
+      "min": 20,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile trigger size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 16,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Header icon size",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "link_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile link border radius",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Jigsaw header menu"
+    }
+  ]
+}
+{% endschema %}

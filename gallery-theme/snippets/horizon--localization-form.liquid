@@ -61,7 +61,7 @@
           <div class="field">
             <div class="country-filter__search-icon field__button">
               <span class="svg-wrapper">
-                {{ 'icon-search.svg' | inline_asset_content }}
+                {{ 'horizon--icon-search.svg' | inline_asset_content }}
               </span>
             </div>
             <input
@@ -99,7 +99,7 @@
               on:click="/resetCountriesFilter"
             >
               <span class="svg-wrapper">
-                {{ 'icon-reset.svg' | inline_asset_content }}
+                {{ 'horizon--icon-reset.svg' | inline_asset_content }}
               </span>
             </button>
           </div>
@@ -159,7 +159,7 @@
                   on:click="/selectCountry/{{ country.iso_code }}"
                 >
                   <span class="svg-wrapper icon-checkmark">
-                    {{- 'icon-checkmark.svg' | inline_asset_content -}}
+                    {{- 'horizon--icon-checkmark.svg' | inline_asset_content -}}
                   </span>
                   <span class="country">{{- country.name }}</span>
                   <span
@@ -214,7 +214,7 @@
                 on:click="/selectCountry/{{ country.iso_code }}"
               >
                 <span class="svg-wrapper icon-checkmark">
-                  {{- 'icon-checkmark.svg' | inline_asset_content -}}
+                  {{- 'horizon--icon-checkmark.svg' | inline_asset_content -}}
                 </span>
                 <span class="country">{{- country.name }}</span>
                 <span
@@ -272,7 +272,7 @@
           {%- endfor -%}
         </select>
         <span class="svg-wrapper icon-caret">
-          {{- 'icon-caret.svg' | inline_asset_content -}}
+          {{- 'horizon--icon-caret.svg' | inline_asset_content -}}
         </span>
       </div>
     {% endif %}

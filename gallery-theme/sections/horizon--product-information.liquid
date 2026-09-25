@@ -11,7 +11,7 @@
 
 {% capture media_gallery %}
   {%- content_for 'block',
-    type: '_product-media-gallery',
+    type: 'horizon--_product-media-gallery',
     id: 'media-gallery',
     closest.product: closest.product
   -%}
@@ -19,7 +19,7 @@
 
 {% capture product_details %}
   {% content_for 'block',
-    type: '_product-details',
+    type: 'horizon--_product-details',
     id: 'product-details',
     closest.product: closest.product
   %}
@@ -140,7 +140,7 @@
         >
           {% if current_variant.available %}
             <span class="svg-wrapper">
-              {{- 'icon-add-to-cart.svg' | inline_asset_content -}}
+              {{- 'horizon--icon-add-to-cart.svg' | inline_asset_content -}}
             </span>
           {% endif %}
           <span class="add-to-cart-text__content">
@@ -169,7 +169,7 @@
         </span>
         <span class="add-to-cart__added">
           <span class="svg-wrapper add-to-cart__added-icon">
-            {{- 'icon-checkmark-burst.svg' | inline_asset_content -}}
+            {{- 'horizon--icon-checkmark-burst.svg' | inline_asset_content -}}
           </span>
         </span>
       </button>

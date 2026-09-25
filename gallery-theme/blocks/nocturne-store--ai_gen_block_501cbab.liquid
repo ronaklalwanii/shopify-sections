@@ -1,0 +1,745 @@
+{% doc %}
+  @prompt
+    Create an animated image card section which overlap eachother slightly and are diagonally split with a heading title above them and a clickable button below the section, use store fonts and make them overlap on mobile, by clicking an image on mobile to animates to the next card
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-diagonal-cards-{{ ai_gen_id }} {
+    padding: 60px 20px;
+    background-color: {{ block.settings.section_background }};
+  }
+
+  .ai-diagonal-cards__container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-diagonal-cards__heading-{{ ai_gen_id }} {
+    text-align: {{ block.settings.heading_alignment }};
+    color: {{ block.settings.heading_color }};
+    font-size: {{ block.settings.heading_size }}px;
+    margin: 0 0 60px;
+    font-family: {{ settings.heading_font.family }}, {{ settings.heading_font.fallback_families }};
+    font-weight: {{ settings.heading_font.weight }};
+    font-style: {{ settings.heading_font.style }};
+    letter-spacing: {{ settings.heading_letter_spacing }}%;
+    text-transform: {{ settings.heading_text_transform }};
+  }
+
+  .ai-diagonal-cards__cards-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: {{ block.settings.card_gap }}px;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+  }
+
+  .ai-diagonal-cards__card-{{ ai_gen_id }} {
+    position: relative;
+    width: {{ block.settings.card_width }}px;
+    height: {{ block.settings.card_height }}px;
+    overflow: hidden;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, {{ block.settings.shadow_opacity | divided_by: 100.0 }});
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    cursor: pointer;
+  }
+
+  .ai-diagonal-cards__card-{{ ai_gen_id }}:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, {{ block.settings.shadow_opacity | times: 1.5 | divided_by: 100.0 }});
+  }
+
+  .ai-diagonal-cards__card-{{ ai_gen_id }}:nth-child(2) {
+    margin-top: {{ block.settings.overlap_offset }}px;
+  }
+
+  .ai-diagonal-cards__card-{{ ai_gen_id }}:nth-child(3) {
+    margin-top: {{ block.settings.overlap_offset | times: 2 }}px;
+  }
+
+  .ai-diagonal-cards__image-wrapper-{{ ai_gen_id }} {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    clip-path: polygon(0 0, 100% 0, 100% {{ block.settings.diagonal_split }}%, 0 100%);
+  }
+
+  .ai-diagonal-cards__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-diagonal-cards__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-diagonal-cards__image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 200px;
+    max-height: 200px;
+    opacity: 0.3;
+  }
+
+  .ai-diagonal-cards__overlay-{{ ai_gen_id }} {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, {{ block.settings.overlay_color_1 }} 0%, {{ block.settings.overlay_color_2 }} 100%);
+    opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};
+    clip-path: polygon(0 100%, 100% {{ block.settings.diagonal_split }}%, 100% 100%);
+  }
+
+  .ai-diagonal-cards__content-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    right: 30px;
+    color: {{ block.settings.card_text_color }};
+    z-index: 2;
+  }
+
+  .ai-diagonal-cards__card-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_title_size }}px;
+    margin: 0 0 10px;
+    font-family: {{ settings.heading_font.family }}, {{ settings.heading_font.fallback_families }};
+    font-weight: {{ settings.heading_font.weight }};
+    font-style: {{ settings.heading_font.style }};
+  }
+
+  .ai-diagonal-cards__card-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_text_size }}px;
+    margin: 0;
+    line-height: 1.5;
+    font-family: {{ settings.text_font.family }}, {{ settings.text_font.fallback_families }};
+    font-weight: {{ settings.text_font.weight }};
+    font-style: {{ settings.text_font.style }};
+  }
+
+  .ai-diagonal-cards__button-wrapper-{{ ai_gen_id }} {
+    text-align: {{ block.settings.button_alignment }};
+  }
+
+  .ai-diagonal-cards__button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 16px 40px;
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_text_size }}px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid {{ block.settings.button_background }};
+    font-family: {{ settings.text_font.family }}, {{ settings.text_font.fallback_families }};
+  }
+
+  .ai-diagonal-cards__button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_background }};
+    color: {{ block.settings.button_hover_text_color }};
+    border-color: {{ block.settings.button_hover_background }};
+    transform: translateY(-2px);
+  }
+
+  .ai-diagonal-cards__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-diagonal-cards__cards-wrapper-{{ ai_gen_id }} {
+      position: relative;
+      flex-direction: column;
+      gap: 0;
+      align-items: center;
+      height: {{ block.settings.card_height }}px;
+    }
+
+    .ai-diagonal-cards__card-{{ ai_gen_id }} {
+      position: absolute;
+      width: 90%;
+      max-width: 400px;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+    }
+
+    .ai-diagonal-cards__card-{{ ai_gen_id }}.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+      z-index: 3;
+    }
+
+    .ai-diagonal-cards__card-{{ ai_gen_id }}.prev {
+      opacity: 0.3;
+      transform: translateX(-20px) scale(0.95);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .ai-diagonal-cards__card-{{ ai_gen_id }}.next {
+      opacity: 0.3;
+      transform: translateX(20px) scale(0.95);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .ai-diagonal-cards__card-{{ ai_gen_id }}:nth-child(2),
+    .ai-diagonal-cards__card-{{ ai_gen_id }}:nth-child(3) {
+      margin-top: 0;
+    }
+
+    .ai-diagonal-cards__card-{{ ai_gen_id }}:hover {
+      transform: translateX(0) scale(1);
+    }
+
+    .ai-diagonal-cards__card-{{ ai_gen_id }}.active:hover {
+      transform: translateX(0) scale(1);
+    }
+
+    .ai-diagonal-cards__heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.7 }}px;
+      margin-bottom: 40px;
+    }
+
+    .ai-diagonal-cards__cards-wrapper-{{ ai_gen_id }} {
+      margin-bottom: 40px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-diagonal-cards-{{ ai_gen_id }} {
+      padding: 40px 20px;
+    }
+
+    .ai-diagonal-cards__content-{{ ai_gen_id }} {
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+    }
+
+    .ai-diagonal-cards__card-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.card_title_size | times: 0.8 }}px;
+    }
+
+    .ai-diagonal-cards__card-text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.card_text_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<diagonal-cards-{{ ai_gen_id }} class="ai-diagonal-cards-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-diagonal-cards__container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank %}
+      <h2 class="ai-diagonal-cards__heading-{{ ai_gen_id }}">
+        {{ block.settings.heading }}
+      </h2>
+    {% endif %}
+
+    <div class="ai-diagonal-cards__cards-wrapper-{{ ai_gen_id }}" data-card-container>
+      {% for i in (1..3) %}
+        {% liquid
+          assign image_key = 'card_' | append: i | append: '_image'
+          assign title_key = 'card_' | append: i | append: '_title'
+          assign text_key = 'card_' | append: i | append: '_text'
+          
+          assign card_image = block.settings[image_key]
+          assign card_title = block.settings[title_key]
+          assign card_text = block.settings[text_key]
+        %}
+
+        <div class="ai-diagonal-cards__card-{{ ai_gen_id }}" data-card-index="{{ forloop.index0 }}">
+          <div class="ai-diagonal-cards__image-wrapper-{{ ai_gen_id }}">
+            {% if card_image %}
+              <img
+                src="{{ card_image | image_url: width: 800 }}"
+                alt="{{ card_image.alt | escape }}"
+                loading="lazy"
+                width="{{ card_image.width }}"
+                height="{{ card_image.height }}"
+                class="ai-diagonal-cards__image-{{ ai_gen_id }}"
+              >
+            {% else %}
+              <div class="ai-diagonal-cards__image-placeholder-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="ai-diagonal-cards__overlay-{{ ai_gen_id }}"></div>
+
+          {% if card_title != blank or card_text != blank %}
+            <div class="ai-diagonal-cards__content-{{ ai_gen_id }}">
+              {% if card_title != blank %}
+                <h3 class="ai-diagonal-cards__card-title-{{ ai_gen_id }}">
+                  {{ card_title }}
+                </h3>
+              {% endif %}
+              {% if card_text != blank %}
+                <p class="ai-diagonal-cards__card-text-{{ ai_gen_id }}">
+                  {{ card_text }}
+                </p>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {% if card_image == blank %}
+            <div class="ai-diagonal-cards__empty-state-{{ ai_gen_id }}">
+              Add image for card {{ i }}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if block.settings.button_text != blank %}
+      <div class="ai-diagonal-cards__button-wrapper-{{ ai_gen_id }}">
+        <a
+          href="{{ block.settings.button_link }}"
+          class="ai-diagonal-cards__button-{{ ai_gen_id }}"
+        >
+          {{ block.settings.button_text }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</diagonal-cards-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class DiagonalCards{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentIndex = 0;
+        this.cards = [];
+        this.isMobile = false;
+      }
+
+      connectedCallback() {
+        this.cards = Array.from(this.querySelectorAll('[data-card-index]'));
+        this.checkMobile();
+        this.updateCards();
+        this.setupEventListeners();
+        
+        window.addEventListener('resize', () => {
+          this.checkMobile();
+          this.updateCards();
+        });
+      }
+
+      checkMobile() {
+        this.isMobile = window.innerWidth <= 989;
+      }
+
+      setupEventListeners() {
+        this.cards.forEach((card) => {
+          card.addEventListener('click', () => {
+            if (this.isMobile) {
+              this.nextCard();
+            }
+          });
+        });
+      }
+
+      nextCard() {
+        this.currentIndex = (this.currentIndex + 1) % this.cards.length;
+        this.updateCards();
+      }
+
+      updateCards() {
+        if (!this.isMobile) {
+          this.cards.forEach((card) => {
+            card.classList.remove('active', 'prev', 'next');
+          });
+          return;
+        }
+
+        this.cards.forEach((card, index) => {
+          card.classList.remove('active', 'prev', 'next');
+          
+          if (index === this.currentIndex) {
+            card.classList.add('active');
+          } else if (index === (this.currentIndex - 1 + this.cards.length) % this.cards.length) {
+            card.classList.add('prev');
+          } else if (index === (this.currentIndex + 1) % this.cards.length) {
+            card.classList.add('next');
+          }
+        });
+      }
+    }
+
+    customElements.define('diagonal-cards-{{ ai_gen_id }}', DiagonalCards{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Diagonal split cards",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Discover Our Collection"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 48
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Card 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "card_1_title",
+      "label": "Title",
+      "default": "Summer Collection"
+    },
+    {
+      "type": "text",
+      "id": "card_1_text",
+      "label": "Description",
+      "default": "Explore our latest arrivals"
+    },
+    {
+      "type": "header",
+      "content": "Card 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "card_2_title",
+      "label": "Title",
+      "default": "New Styles"
+    },
+    {
+      "type": "text",
+      "id": "card_2_text",
+      "label": "Description",
+      "default": "Fresh designs for every season"
+    },
+    {
+      "type": "header",
+      "content": "Card 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "card_3_title",
+      "label": "Title",
+      "default": "Best Sellers"
+    },
+    {
+      "type": "text",
+      "id": "card_3_text",
+      "label": "Description",
+      "default": "Shop our most popular items"
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "range",
+      "id": "card_width",
+      "min": 200,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "label": "Card width",
+      "default": 350
+    },
+    {
+      "type": "range",
+      "id": "card_height",
+      "min": 300,
+      "max": 700,
+      "step": 20,
+      "unit": "px",
+      "label": "Card height",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap between cards",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "overlap_offset",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Overlap offset",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "shadow_opacity",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Shadow opacity",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Diagonal split"
+    },
+    {
+      "type": "range",
+      "id": "diagonal_split",
+      "min": 30,
+      "max": 70,
+      "step": 5,
+      "unit": "%",
+      "label": "Split position",
+      "default": 50
+    },
+    {
+      "type": "color",
+      "id": "overlay_color_1",
+      "label": "Overlay gradient start",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color_2",
+      "label": "Overlay gradient end",
+      "default": "#46b0d1"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Card content"
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "card_text_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "button_alignment",
+      "label": "Button alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 60
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Background color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Hover background",
+      "default": "#46b0d1"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Section settings"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1000,
+      "max": 1800,
+      "step": 100,
+      "unit": "px",
+      "label": "Container width",
+      "default": 1400
+    },
+    {
+      "type": "color",
+      "id": "section_background",
+      "label": "Background color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Diagonal split cards"
+    }
+  ]
+}
+{% endschema %}

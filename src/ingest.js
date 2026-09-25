@@ -118,7 +118,7 @@ function ingestStore(root, storeDir) {
       dependencies,
       hasSchema: !!schema,
       schemaStatus,
-      usesContentFor: /{%-?\s*content_for\b/i.test(src),
+      usesContentFor: /\bcontent_for\b/i.test(src),
       empty: src.trim().length === 0,
       hash: contentHash(src),
     });

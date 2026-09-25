@@ -30,10 +30,10 @@
         style="{% render 'horizon--spacing-style', settings: section.settings %}"
       >
         <div class="cart-page__title">
-          {%- content_for 'block', id: 'cart-page-title', type: '_cart-title', force_empty: true %}
+          {%- content_for 'block', id: 'cart-page-title', type: 'horizon--_cart-title', force_empty: true %}
         </div>
         <div class="cart-page__items">
-          {%- content_for 'block', id: 'cart-page-items', type: '_cart-products', force_empty: true %}
+          {%- content_for 'block', id: 'cart-page-items', type: 'horizon--_cart-products', force_empty: true %}
         </div>
         {{ cart_page_more_blocks_content }}
       </div>
@@ -49,16 +49,16 @@
       style="{% render 'horizon--spacing-style', settings: section.settings %}"
     >
       <div class="cart-page__title">
-        {%- content_for 'block', id: 'cart-page-title', type: '_cart-title' %}
+        {%- content_for 'block', id: 'cart-page-title', type: 'horizon--_cart-title' %}
       </div>
 
       <div class="cart-page__items">
-        {%- content_for 'block', id: 'cart-page-items', type: '_cart-products' %}
+        {%- content_for 'block', id: 'cart-page-items', type: 'horizon--_cart-products' %}
       </div>
 
       {%- unless cart.empty? -%}
         <div class="cart-page__summary">
-          {%- content_for 'block', id: 'cart-page-summary', type: '_cart-summary' -%}
+          {%- content_for 'block', id: 'cart-page-summary', type: 'horizon--_cart-summary' -%}
         </div>
       {%- endunless -%}
 

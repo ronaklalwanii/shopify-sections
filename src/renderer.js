@@ -4,12 +4,13 @@ const fs = require('fs');
 const path = require('path');
 const { Liquid, Tag: LiquidTag } = require('liquidjs');
 const { findStore } = require('./roots');
-const { extractSchema, parseJsonLoose } = require('./section-meta');
+const { extractSchema, parseJsonLoose, normalizeAssetName } = require('./section-meta');
 
 /* ---------------------------------- mocks ---------------------------------- */
 
 const DEMO_IMAGE = '/assets/demo-image.jpg';
 const DEMO_ICON = '/assets/star.svg';
+const DEMO_ICON_MARKUP = `<img src="${DEMO_ICON}" alt="" aria-hidden="true" width="16" height="16">`;
 const PH = (seed, w, h, kind = 'image') => kind === 'icon' ? DEMO_ICON : DEMO_IMAGE;
 
 function imageMock(seed, alt = 'Sample image', aspect = 1.5, kind = 'image') {
@@ -151,6 +152,7 @@ function articleMock(i = 1) {
 
 function settingDefault(s, ctx) {
   const { id, type, default: def } = s;
+  if (/emoji/i.test(id)) return def ? DEMO_ICON_MARKUP : '';
   switch (type) {
     case 'text': case 'text_alignment': case 'select': case 'radio': case 'liquid':
       return def != null ? def : (type === 'text' ? 'Sample text' : '');
@@ -180,6 +182,7 @@ function settingDefault(s, ctx) {
 }
 
 function coercePresetValue(id, value, schemaSetting, ctx) {
+  if (/emoji/i.test(id)) return value ? DEMO_ICON_MARKUP : '';
   const type = schemaSetting?.type;
   if (type === 'image_picker') return toImageMock(value, seedFor(ctx.seedBase, id));
   if (type === 'font_picker') return parseFontHandle(value) || settingDefault(schemaSetting, ctx);
@@ -342,7 +345,7 @@ function readAsset(storePath, file) {
   let out = null;
   try {
     const assetsRoot = path.join(storePath, 'assets');
-    const full = path.resolve(assetsRoot, file);
+    const full = path.resolve(assetsRoot, normalizeAssetName(file));
     const relative = path.relative(assetsRoot, full);
     if (!relative.startsWith('..') && !path.isAbsolute(relative)) out = fs.readFileSync(full, 'utf8');
   } catch { out = null; }
@@ -390,12 +393,16 @@ function googleFontsLink(engine) {
 }
 
 function buildFilters(storeName) {
-  const assetUrl = (file) => `/assets/${storeName}/${file}`;
+  const assetUrl = (file) => {
+    if (/^(?:https?:)?\/\//i.test(String(file))) return file;
+    const normalized = normalizeAssetName(file);
+    return `/assets/${encodeURIComponent(storeName)}/${normalized.split('/').map((part) => encodeURIComponent(part)).join('/')}`;
+  };
   return {
     image_url(input, opts = {}) {
       const info = imageInputInfo(input);
       if (!info) return input;
-      if (info.src) return /^https?:\/\//.test(info.src) || info.src.startsWith('/') ? info.src : `/assets/${storeName}/${info.src}`;
+      if (info.src) return /^https?:\/\//.test(info.src) || info.src.startsWith('/') ? info.src : assetUrl(info.src);
       const w = Math.min(+opts.width || info.w || 1000, 2400);
       const h = Math.round(w * (info.h / info.w));
       return PH(info.seed, w, h, info.kind);
@@ -403,7 +410,7 @@ function buildFilters(storeName) {
     img_url(input, size = '1000x') {
       const info = imageInputInfo(input);
       if (!info) return input;
-      if (info.src) return /^https?:\/\//.test(info.src) || info.src.startsWith('/') ? info.src : `/assets/${storeName}/${info.src}`;
+      if (info.src) return /^https?:\/\//.test(info.src) || info.src.startsWith('/') ? info.src : assetUrl(info.src);
       const m = String(size).match(/^(\d*)x?(\d*)/);
       const w = +m[1] || info.w, h = +m[2] || Math.round(w / (info.w / info.h));
       return PH(info.seed, w, h, info.kind);

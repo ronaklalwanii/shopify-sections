@@ -5,7 +5,7 @@ const os = require('os');
 const path = require('path');
 const { extractSchema, extractSnippetRefs, extractAssetRefs, collectSectionDependencies, parseJsonLoose } = require('../src/section-meta');
 const { assertCustomSlug, customFilePath } = require('../src/path-safety');
-const { renderSectionSource } = require('../src/renderer');
+const { renderSectionSource, renderStoreSection } = require('../src/renderer');
 const { visibleContentIssues, hardIssue } = require('../src/qa');
 
 test('parses Shopify-style loose JSON', () => {
@@ -60,6 +60,17 @@ test('uses the supplied demo assets for mocked images and icons', async () => {
   assert.match(icon.html, /\/assets\/star\.svg/);
   const placeholder = await renderSectionSource('custom', "{{ 'icon' | placeholder_svg_tag }}", { sectionId: 'placeholder-test' });
   assert.match(placeholder.html, /\/assets\/star\.svg/);
+});
+
+test('keeps the Azura collection and announcement sections renderable', async () => {
+  const announcement = await renderStoreSection('azura', 'announcement-bar.liquid');
+  const collection = await renderStoreSection('azura', 'collection-list.liquid');
+  assert.equal(announcement.error, null);
+  assert.equal(collection.error, null);
+  assert.match(announcement.html, /class="announcement-bar"/);
+  assert.match(announcement.html, /\/assets\/star\.svg/);
+  assert.match(collection.html, /class="collection-grid/);
+  assert.match(collection.html, /\/assets\/demo-image\.jpg/);
 });
 
 test('does not call blank rendered output healthy', () => {

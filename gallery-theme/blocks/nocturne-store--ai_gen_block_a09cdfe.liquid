@@ -1,0 +1,1346 @@
+{% doc %}
+  @prompt
+    Generate a clean and stylish header. The header should be able to connect with the menu that is created. Give me option to change the font of menu. Give me control over the size of logo seperately in mobile and computer. In mobile, have a stylish menu button with cool animation in the left side that opens the menu drawer. Give me search and cart icons in the right. Make the icons stylish and raw. Give me option to hide and show the menu icons separately in computer and mobile mode. , Give the button for menu only in mobile mode and not in computer mode., Give me different design for the hamburger menu option in mobile mode, In mobile mode, Make the logo centered. Keep the search option turned off in mobile by default. In mobile mode, add a search bar in menu drawer, In desktop the logo should be left and the menu should be centred while in mobile the menu should be center aligned, Logo is not visible in mobile, Give me option to adjust the height of section seperately in mobile and computer mode, In mobile mode, give me different design options for hamburger menu style, The hamburger options don't work.. Correct those options please, Give me another extra button on the menu that reads "Loyalty Program". Give this button a hollow outlined look and give me an option to control the radius of border. In mobile version, this button needs to be in drawer menu and should also have that box outlined.
+    
+    Make sure when the menu options have multiple words, the menu spreads in the computer mode accordingly, There are 2 cart icons in mobile more, correct that, IMPORTANT:
+    
+    Keep the logo centered in mobile mode., Give me more styles in hamburger menu like oje line in the middle short.
+    Staggered, etc
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-header-{{ ai_gen_id }} {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: {{ block.settings.header_bg_color }};
+    border-bottom: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    width: 100%;
+  }
+
+  .ai-header-container-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 {{ block.settings.horizontal_padding_desktop }}px;
+    height: {{ block.settings.header_height_desktop }}px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .ai-header-left-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+  }
+
+  .ai-header-center-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+  }
+
+  .ai-header-right-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: {{ block.settings.icon_spacing }}px;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  .ai-header-logo-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+  }
+
+  .ai-header-logo-{{ ai_gen_id }} img {
+    max-width: {{ block.settings.logo_width_desktop }}px;
+    height: auto;
+    display: block;
+  }
+
+  .ai-header-menu-button-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  .ai-header-nav-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: {{ block.settings.menu_spacing }}px;
+  }
+
+  .ai-header-nav-link-{{ ai_gen_id }} {
+    color: {{ block.settings.menu_text_color }};
+    text-decoration: none;
+    font-family: {{ block.settings.menu_font.family }}, {{ block.settings.menu_font.fallback_families }};
+    font-weight: {{ block.settings.menu_font.weight }};
+    font-size: {{ block.settings.menu_font_size }}px;
+    white-space: nowrap;
+    transition: color 0.3s ease;
+  }
+
+  .ai-header-nav-link-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.menu_hover_color }};
+  }
+
+  .ai-header-loyalty-btn-{{ ai_gen_id }} {
+    color: {{ block.settings.loyalty_text_color }};
+    background-color: transparent;
+    border: {{ block.settings.loyalty_border_width }}px solid {{ block.settings.loyalty_border_color }};
+    border-radius: {{ block.settings.loyalty_border_radius }}px;
+    padding: {{ block.settings.loyalty_padding_vertical }}px {{ block.settings.loyalty_padding_horizontal }}px;
+    font-family: {{ block.settings.menu_font.family }}, {{ block.settings.menu_font.fallback_families }};
+    font-weight: {{ block.settings.menu_font.weight }};
+    font-size: {{ block.settings.menu_font_size }}px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .ai-header-loyalty-btn-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.loyalty_border_color }};
+    color: {{ block.settings.header_bg_color }};
+  }
+
+  .ai-header-icon-{{ ai_gen_id }} {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: {{ block.settings.icon_color }};
+    transition: color 0.3s ease;
+  }
+
+  .ai-header-icon-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.icon_hover_color }};
+  }
+
+  .ai-header-icon-{{ ai_gen_id }} svg {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    stroke-width: {{ block.settings.icon_stroke_width }};
+  }
+
+  .ai-header-drawer-{{ ai_gen_id }} {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: {{ block.settings.drawer_width }}%;
+    max-width: 400px;
+    height: 100vh;
+    background-color: {{ block.settings.drawer_bg_color }};
+    z-index: 2000;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+    padding: 20px;
+  }
+
+  .ai-header-drawer-{{ ai_gen_id }}.active {
+    left: 0;
+  }
+
+  .ai-header-drawer-overlay-{{ ai_gen_id }} {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .ai-header-drawer-overlay-{{ ai_gen_id }}.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .ai-header-drawer-header-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .ai-header-drawer-close-{{ ai_gen_id }} {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    color: {{ block.settings.drawer_text_color }};
+  }
+
+  .ai-header-drawer-close-{{ ai_gen_id }} svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2;
+  }
+
+  .ai-header-drawer-nav-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .ai-header-drawer-link-{{ ai_gen_id }} {
+    color: {{ block.settings.drawer_text_color }};
+    text-decoration: none;
+    font-family: {{ block.settings.menu_font.family }}, {{ block.settings.menu_font.fallback_families }};
+    font-weight: {{ block.settings.menu_font.weight }};
+    font-size: 18px;
+    padding: 10px 0;
+    border-bottom: 1px solid {{ block.settings.drawer_divider_color }};
+  }
+
+  .ai-header-drawer-search-{{ ai_gen_id }} {
+    margin-bottom: 20px;
+  }
+
+  .ai-header-drawer-search-{{ ai_gen_id }} input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid {{ block.settings.drawer_divider_color }};
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: {{ block.settings.drawer_bg_color }};
+    color: {{ block.settings.drawer_text_color }};
+  }
+
+  .ai-header-drawer-loyalty-{{ ai_gen_id }} {
+    margin-top: 20px;
+  }
+
+  .ai-header-drawer-loyalty-{{ ai_gen_id }} .ai-header-loyalty-btn-{{ ai_gen_id }} {
+    width: 100%;
+    text-align: center;
+    display: block;
+  }
+
+  .ai-header-logo-mobile-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-header-container-{{ ai_gen_id }} {
+      padding: 0 {{ block.settings.horizontal_padding_mobile }}px;
+      height: {{ block.settings.header_height_mobile }}px;
+    }
+
+    .ai-header-left-{{ ai_gen_id }} {
+      flex: 0;
+      order: 1;
+    }
+
+    .ai-header-center-{{ ai_gen_id }} {
+      flex: 1;
+      order: 2;
+      justify-content: center;
+    }
+
+    .ai-header-right-{{ ai_gen_id }} {
+      flex: 0;
+      order: 3;
+    }
+
+    .ai-header-logo-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-header-logo-mobile-{{ ai_gen_id }} {
+      display: flex;
+      align-items: center;
+    }
+
+    .ai-header-logo-mobile-{{ ai_gen_id }} img {
+      max-width: {{ block.settings.logo_width_mobile }}px;
+      height: auto;
+      display: block;
+    }
+
+    .ai-header-menu-button-{{ ai_gen_id }} {
+      display: flex;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      color: {{ block.settings.icon_color }};
+      position: relative;
+      width: 40px;
+      height: 40px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ai-header-hamburger-{{ ai_gen_id }} {
+      position: relative;
+      width: 24px;
+      height: 18px;
+    }
+
+    {% if block.settings.hamburger_style == 'classic' %}
+      .ai-header-hamburger-line-{{ ai_gen_id }} {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: {{ block.settings.icon_color }};
+        transition: all 0.3s ease;
+        left: 0;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 0;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 0;
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        opacity: 0;
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 50%;
+        transform: translateY(50%) rotate(-45deg);
+      }
+    {% elsif block.settings.hamburger_style == 'arrow' %}
+      .ai-header-hamburger-line-{{ ai_gen_id }} {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: {{ block.settings.icon_color }};
+        transition: all 0.3s ease;
+        left: 0;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 0;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 0;
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 50%;
+        width: 50%;
+        transform: translateY(-50%) rotate(-45deg);
+        transform-origin: left center;
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        transform: translateY(-50%) translateX(5px);
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 50%;
+        width: 50%;
+        transform: translateY(50%) rotate(45deg);
+        transform-origin: left center;
+      }
+    {% elsif block.settings.hamburger_style == 'minimal' %}
+      .ai-header-hamburger-line-{{ ai_gen_id }} {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: {{ block.settings.icon_color }};
+        transition: all 0.3s ease;
+        left: 0;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 25%;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        top: 75%;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        display: none;
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%) rotate(-45deg);
+      }
+    {% elsif block.settings.hamburger_style == 'dots' %}
+      .ai-header-hamburger-dot-{{ ai_gen_id }} {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background-color: {{ block.settings.icon_color }};
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .ai-header-hamburger-dot-{{ ai_gen_id }}:nth-child(1) {
+        top: 0;
+      }
+
+      .ai-header-hamburger-dot-{{ ai_gen_id }}:nth-child(2) {
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .ai-header-hamburger-dot-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 0;
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-dot-{{ ai_gen_id }}:nth-child(1) {
+        top: 50%;
+        left: 25%;
+        transform: translate(-50%, -50%);
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-dot-{{ ai_gen_id }}:nth-child(2) {
+        opacity: 0;
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-dot-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 50%;
+        left: 75%;
+        transform: translate(-50%, 50%);
+      }
+    {% elsif block.settings.hamburger_style == 'squeeze' %}
+      .ai-header-hamburger-line-{{ ai_gen_id }} {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: {{ block.settings.icon_color }};
+        transition: all 0.3s ease;
+        left: 0;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 0;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 0;
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+        width: 80%;
+        left: 10%;
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        opacity: 0;
+        transform: translateY(-50%) scale(0);
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 50%;
+        transform: translateY(50%) rotate(-45deg);
+        width: 80%;
+        left: 10%;
+      }
+    {% elsif block.settings.hamburger_style == 'short_middle' %}
+      .ai-header-hamburger-line-{{ ai_gen_id }} {
+        position: absolute;
+        height: 2px;
+        background-color: {{ block.settings.icon_color }};
+        transition: all 0.3s ease;
+        left: 0;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 0;
+        width: 100%;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+        width: 60%;
+        left: 20%;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 0;
+        width: 100%;
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        opacity: 0;
+        width: 0;
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 50%;
+        transform: translateY(50%) rotate(-45deg);
+      }
+    {% elsif block.settings.hamburger_style == 'staggered' %}
+      .ai-header-hamburger-line-{{ ai_gen_id }} {
+        position: absolute;
+        height: 2px;
+        background-color: {{ block.settings.icon_color }};
+        transition: all 0.3s ease;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 0;
+        width: 100%;
+        left: 0;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+        width: 75%;
+        left: 25%;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 0;
+        width: 50%;
+        right: 0;
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+        left: 0;
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        opacity: 0;
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 50%;
+        transform: translateY(50%) rotate(-45deg);
+        width: 100%;
+        right: auto;
+        left: 0;
+      }
+    {% elsif block.settings.hamburger_style == 'spin' %}
+      .ai-header-hamburger-line-{{ ai_gen_id }} {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: {{ block.settings.icon_color }};
+        transition: all 0.4s ease;
+        left: 0;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 0;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 0;
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 50%;
+        transform: translateY(-50%) rotate(135deg);
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        opacity: 0;
+        transform: translateY(-50%) rotate(180deg);
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 50%;
+        transform: translateY(50%) rotate(-135deg);
+      }
+    {% elsif block.settings.hamburger_style == 'collapse' %}
+      .ai-header-hamburger-line-{{ ai_gen_id }} {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: {{ block.settings.icon_color }};
+        transition: all 0.3s ease;
+        left: 0;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 0;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 0;
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        transform: translateY(-50%) rotate(45deg);
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 50%;
+        transform: translateY(50%) rotate(-45deg);
+      }
+    {% elsif block.settings.hamburger_style == 'elastic' %}
+      .ai-header-hamburger-line-{{ ai_gen_id }} {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: {{ block.settings.icon_color }};
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        left: 0;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 0;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 0;
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        opacity: 0;
+        transform: translateY(-50%) translateX(20px);
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 50%;
+        transform: translateY(50%) rotate(-45deg);
+      }
+    {% elsif block.settings.hamburger_style == 'parallel' %}
+      .ai-header-hamburger-line-{{ ai_gen_id }} {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: {{ block.settings.icon_color }};
+        transition: all 0.3s ease;
+        left: 0;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 0;
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 0;
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(1) {
+        top: 30%;
+        transform: rotate(45deg);
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(2) {
+        transform: translateY(-50%) rotate(45deg);
+      }
+
+      .ai-header-menu-button-{{ ai_gen_id }}.active .ai-header-hamburger-line-{{ ai_gen_id }}:nth-child(3) {
+        bottom: 30%;
+        transform: rotate(45deg);
+      }
+    {% endif %}
+
+    .ai-header-nav-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    {% if block.settings.show_search_desktop == false %}
+      .ai-header-icon-{{ ai_gen_id }}.ai-header-search-{{ ai_gen_id }} {
+        display: none;
+      }
+    {% endif %}
+
+    {% if block.settings.show_cart_desktop == false %}
+      .ai-header-icon-{{ ai_gen_id }}.ai-header-cart-{{ ai_gen_id }} {
+        display: none;
+      }
+    {% endif %}
+
+    {% if block.settings.show_search_mobile == false %}
+      .ai-header-icon-{{ ai_gen_id }}.ai-header-search-{{ ai_gen_id }} {
+        display: none;
+      }
+    {% endif %}
+
+    {% if block.settings.show_cart_mobile == false %}
+      .ai-header-icon-{{ ai_gen_id }}.ai-header-cart-{{ ai_gen_id }} {
+        display: none;
+      }
+    {% endif %}
+  }
+
+  @media screen and (min-width: 750px) {
+    {% if block.settings.show_search_desktop == false %}
+      .ai-header-icon-{{ ai_gen_id }}.ai-header-search-{{ ai_gen_id }} {
+        display: none;
+      }
+    {% endif %}
+
+    {% if block.settings.show_cart_desktop == false %}
+      .ai-header-icon-{{ ai_gen_id }}.ai-header-cart-{{ ai_gen_id }} {
+        display: none;
+      }
+    {% endif %}
+  }
+{% endstyle %}
+
+<header-component-{{ ai_gen_id }} class="ai-header-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-header-container-{{ ai_gen_id }}">
+    <div class="ai-header-left-{{ ai_gen_id }}">
+      <button class="ai-header-menu-button-{{ ai_gen_id }}" aria-label="Open menu">
+        <div class="ai-header-hamburger-{{ ai_gen_id }}">
+          {% if block.settings.hamburger_style == 'dots' %}
+            <span class="ai-header-hamburger-dot-{{ ai_gen_id }}"></span>
+            <span class="ai-header-hamburger-dot-{{ ai_gen_id }}"></span>
+            <span class="ai-header-hamburger-dot-{{ ai_gen_id }}"></span>
+          {% else %}
+            <span class="ai-header-hamburger-line-{{ ai_gen_id }}"></span>
+            <span class="ai-header-hamburger-line-{{ ai_gen_id }}"></span>
+            <span class="ai-header-hamburger-line-{{ ai_gen_id }}"></span>
+          {% endif %}
+        </div>
+      </button>
+
+      <div class="ai-header-logo-{{ ai_gen_id }}">
+        {% if block.settings.logo %}
+          <a href="/">
+            <img
+              src="{{ block.settings.logo | image_url: width: 400 }}"
+              alt="{{ shop.name }}"
+              width="{{ block.settings.logo.width }}"
+              height="{{ block.settings.logo.height }}"
+              loading="eager"
+            >
+          </a>
+        {% else %}
+          <a href="/" style="font-size: 24px; font-weight: bold; color: {{ block.settings.menu_text_color }};">
+            {{ shop.name }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="ai-header-center-{{ ai_gen_id }}">
+      <div class="ai-header-logo-mobile-{{ ai_gen_id }}">
+        {% if block.settings.logo %}
+          <a href="/">
+            <img
+              src="{{ block.settings.logo | image_url: width: 400 }}"
+              alt="{{ shop.name }}"
+              width="{{ block.settings.logo.width }}"
+              height="{{ block.settings.logo.height }}"
+              loading="eager"
+            >
+          </a>
+        {% else %}
+          <a href="/" style="font-size: 20px; font-weight: bold; color: {{ block.settings.menu_text_color }};">
+            {{ shop.name }}
+          </a>
+        {% endif %}
+      </div>
+
+      <nav class="ai-header-nav-{{ ai_gen_id }}">
+        {% if block.settings.menu != blank %}
+          {% for link in block.settings.menu.links %}
+            <a href="{{ link.url }}" class="ai-header-nav-link-{{ ai_gen_id }}">
+              {{ link.title }}
+            </a>
+          {% endfor %}
+        {% endif %}
+        
+        {% if block.settings.show_loyalty_button %}
+          <a href="{{ block.settings.loyalty_link }}" class="ai-header-loyalty-btn-{{ ai_gen_id }}">
+            {{ block.settings.loyalty_text }}
+          </a>
+        {% endif %}
+      </nav>
+    </div>
+
+    <div class="ai-header-right-{{ ai_gen_id }}">
+      <button class="ai-header-icon-{{ ai_gen_id }} ai-header-search-{{ ai_gen_id }}" aria-label="Search">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+      </button>
+
+      <a href="/cart" class="ai-header-icon-{{ ai_gen_id }} ai-header-cart-{{ ai_gen_id }}" aria-label="Cart">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="ai-header-drawer-overlay-{{ ai_gen_id }}"></div>
+  
+  <div class="ai-header-drawer-{{ ai_gen_id }}">
+    <div class="ai-header-drawer-header-{{ ai_gen_id }}">
+      <div class="ai-header-logo-{{ ai_gen_id }}">
+        {% if block.settings.logo %}
+          <a href="/">
+            <img
+              src="{{ block.settings.logo | image_url: width: 200 }}"
+              alt="{{ shop.name }}"
+              width="{{ block.settings.logo.width }}"
+              height="{{ block.settings.logo.height }}"
+              loading="lazy"
+            >
+          </a>
+        {% else %}
+          <a href="/" style="font-size: 20px; font-weight: bold; color: {{ block.settings.drawer_text_color }};">
+            {{ shop.name }}
+          </a>
+        {% endif %}
+      </div>
+      <button class="ai-header-drawer-close-{{ ai_gen_id }}" aria-label="Close menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="ai-header-drawer-search-{{ ai_gen_id }}">
+      <form action="/search" method="get">
+        <input
+          type="search"
+          name="q"
+          placeholder="Search..."
+          aria-label="Search"
+        >
+      </form>
+    </div>
+
+    <nav class="ai-header-drawer-nav-{{ ai_gen_id }}">
+      {% if block.settings.menu != blank %}
+        {% for link in block.settings.menu.links %}
+          <a href="{{ link.url }}" class="ai-header-drawer-link-{{ ai_gen_id }}">
+            {{ link.title }}
+          </a>
+        {% endfor %}
+      {% endif %}
+    </nav>
+
+    {% if block.settings.show_loyalty_button %}
+      <div class="ai-header-drawer-loyalty-{{ ai_gen_id }}">
+        <a href="{{ block.settings.loyalty_link }}" class="ai-header-loyalty-btn-{{ ai_gen_id }}">
+          {{ block.settings.loyalty_text }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</header-component-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class HeaderComponent{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.menuButton = this.querySelector('.ai-header-menu-button-{{ ai_gen_id }}');
+        this.drawer = this.querySelector('.ai-header-drawer-{{ ai_gen_id }}');
+        this.overlay = this.querySelector('.ai-header-drawer-overlay-{{ ai_gen_id }}');
+        this.closeButton = this.querySelector('.ai-header-drawer-close-{{ ai_gen_id }}');
+      }
+
+      connectedCallback() {
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        if (this.menuButton) {
+          this.menuButton.addEventListener('click', () => this.openDrawer());
+        }
+
+        if (this.closeButton) {
+          this.closeButton.addEventListener('click', () => this.closeDrawer());
+        }
+
+        if (this.overlay) {
+          this.overlay.addEventListener('click', () => this.closeDrawer());
+        }
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && this.drawer.classList.contains('active')) {
+            this.closeDrawer();
+          }
+        });
+      }
+
+      openDrawer() {
+        this.drawer.classList.add('active');
+        this.overlay.classList.add('active');
+        this.menuButton.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      closeDrawer() {
+        this.drawer.classList.remove('active');
+        this.overlay.classList.remove('active');
+        this.menuButton.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    customElements.define('header-component-{{ ai_gen_id }}', HeaderComponent{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width_desktop",
+      "label": "Logo width on desktop",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 150
+    },
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "label": "Logo width on mobile",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "font_picker",
+      "id": "menu_font",
+      "label": "Menu font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "menu_font_size",
+      "label": "Menu font size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "menu_spacing",
+      "label": "Space between menu items",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "color",
+      "id": "menu_text_color",
+      "label": "Menu text color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "menu_hover_color",
+      "label": "Menu hover color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Loyalty button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_loyalty_button",
+      "label": "Show loyalty button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "loyalty_text",
+      "label": "Button text",
+      "default": "Loyalty Program"
+    },
+    {
+      "type": "url",
+      "id": "loyalty_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "loyalty_text_color",
+      "label": "Text color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "loyalty_border_color",
+      "label": "Border color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "loyalty_border_width",
+      "label": "Border width",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "loyalty_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "loyalty_padding_vertical",
+      "label": "Vertical padding",
+      "min": 5,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "loyalty_padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Header style"
+    },
+    {
+      "type": "color",
+      "id": "header_bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "header_height_desktop",
+      "label": "Height on desktop",
+      "min": 60,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "header_height_mobile",
+      "label": "Height on mobile",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "horizontal_padding_desktop",
+      "label": "Horizontal padding on desktop",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "horizontal_padding_mobile",
+      "label": "Horizontal padding on mobile",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Bottom border width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Bottom border color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "icon_hover_color",
+      "label": "Icon hover color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 18,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "icon_stroke_width",
+      "label": "Icon stroke width",
+      "min": 1,
+      "max": 3,
+      "step": 0.5,
+      "default": 1.5
+    },
+    {
+      "type": "range",
+      "id": "icon_spacing",
+      "label": "Space between icons",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Desktop visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search_desktop",
+      "label": "Show search on desktop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart_desktop",
+      "label": "Show cart on desktop",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Mobile visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search_mobile",
+      "label": "Show search on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart_mobile",
+      "label": "Show cart on mobile",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Mobile menu"
+    },
+    {
+      "type": "select",
+      "id": "hamburger_style",
+      "label": "Hamburger menu style",
+      "options": [
+        {
+          "value": "classic",
+          "label": "Classic"
+        },
+        {
+          "value": "arrow",
+          "label": "Arrow"
+        },
+        {
+          "value": "minimal",
+          "label": "Minimal"
+        },
+        {
+          "value": "dots",
+          "label": "Dots"
+        },
+        {
+          "value": "squeeze",
+          "label": "Squeeze"
+        },
+        {
+          "value": "short_middle",
+          "label": "Short middle"
+        },
+        {
+          "value": "staggered",
+          "label": "Staggered"
+        },
+        {
+          "value": "spin",
+          "label": "Spin"
+        },
+        {
+          "value": "collapse",
+          "label": "Collapse"
+        },
+        {
+          "value": "elastic",
+          "label": "Elastic"
+        },
+        {
+          "value": "parallel",
+          "label": "Parallel"
+        }
+      ],
+      "default": "classic"
+    },
+    {
+      "type": "range",
+      "id": "drawer_width",
+      "label": "Drawer width",
+      "min": 70,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 85
+    },
+    {
+      "type": "color",
+      "id": "drawer_bg_color",
+      "label": "Drawer background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "drawer_text_color",
+      "label": "Drawer text color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "drawer_divider_color",
+      "label": "Drawer divider color",
+      "default": "#e5e5e5"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header"
+    }
+  ]
+}
+{% endschema %}

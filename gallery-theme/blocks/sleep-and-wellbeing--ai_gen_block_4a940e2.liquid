@@ -1,0 +1,433 @@
+{% doc %}
+  @prompt
+    Create a section to display 3 collections in landscape/horizontal card layout with text at the bottom of each card. The cards should have a shiny, reflective, glossy effect with modern styling. Each card must include an image placeholder in the top corner where a logo can be added. Include settings to upload a logo image that appears in the top corner of all 3 collection cards. The cards should have smooth hover effects, the text should be positioned at the bottom, and the overall design should be sleek and premium-looking with the reflective shine effect.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-collections-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 20px 0;
+  }
+
+  .ai-collection-card-{{ ai_gen_id }} {
+    position: relative;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: {{ settings.block_border_radius }}px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    aspect-ratio: 16 / 9;
+    min-height: 250px;
+  }
+
+  .ai-collection-card-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.4) 0%,
+      rgba(255, 255, 255, 0.1) 25%,
+      rgba(255, 255, 255, 0.05) 50%,
+      rgba(0, 0, 0, 0.05) 75%,
+      rgba(0, 0, 0, 0.1) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .ai-collection-card-{{ ai_gen_id }}::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 70%
+    );
+    transform: rotate(45deg) translate(-100%, -100%);
+    transition: transform 0.6s ease;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .ai-collection-card-{{ ai_gen_id }}:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+      0 20px 60px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-collection-card-{{ ai_gen_id }}:hover::after {
+    transform: rotate(45deg) translate(0%, 0%);
+  }
+
+  .ai-collection-image-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .ai-collection-card-{{ ai_gen_id }}:hover .ai-collection-image-{{ ai_gen_id }} {
+    transform: scale(1.05);
+  }
+
+  .ai-collection-placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f1f3f4 0%, #e8eaed 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-collection-placeholder-{{ ai_gen_id }} svg {
+    width: 80px;
+    height: 80px;
+    opacity: 0.3;
+    color: #9aa0a6;
+  }
+
+  .ai-collection-logo-{{ ai_gen_id }} {
+    position: absolute;
+    top: {{ block.settings.logo_position_y }}px;
+    left: {{ block.settings.logo_position_x }}px;
+    width: {{ block.settings.logo_size }}px;
+    height: {{ block.settings.logo_size }}px;
+    z-index: 3;
+    background: rgba(255, 255, 255, {{ block.settings.logo_background_opacity | divided_by: 100.0 }});
+    border-radius: {{ block.settings.logo_border_radius }}px;
+    padding: {{ block.settings.logo_padding }}px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+
+  .ai-collection-card-{{ ai_gen_id }}:hover .ai-collection-logo-{{ ai_gen_id }} {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .ai-collection-logo-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .ai-collection-content-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 25px;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, {{ block.settings.text_overlay_opacity | divided_by: 100.0 }}) 0%,
+      rgba(0, 0, 0, {{ block.settings.text_overlay_opacity | divided_by: 200.0 }}) 50%,
+      transparent 100%
+    );
+    z-index: 3;
+    transition: all 0.3s ease;
+  }
+
+  .ai-collection-title-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.title_font_size }}px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .ai-collection-description-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.description_font_size }}px;
+    margin: 0;
+    opacity: 0.9;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    line-height: 1.4;
+  }
+
+  .ai-collection-card-{{ ai_gen_id }}:hover .ai-collection-title-{{ ai_gen_id }} {
+    transform: translateY(-2px);
+  }
+
+  .ai-collection-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+    z-index: 4;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-collections-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .ai-collection-card-{{ ai_gen_id }} {
+      min-height: 200px;
+    }
+
+    .ai-collection-logo-{{ ai_gen_id }} {
+      width: {{ block.settings.logo_size | times: 0.8 }}px;
+      height: {{ block.settings.logo_size | times: 0.8 }}px;
+      top: {{ block.settings.logo_position_y | times: 0.8 }}px;
+      left: {{ block.settings.logo_position_x | times: 0.8 }}px;
+    }
+
+    .ai-collection-content-{{ ai_gen_id }} {
+      padding: 20px;
+    }
+
+    .ai-collection-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_font_size | times: 0.9 }}px;
+    }
+
+    .ai-collection-description-{{ ai_gen_id }} {
+      font-size: {{ block.settings.description_font_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-collections-grid-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% for i in (1..3) %}
+    {% liquid
+      assign collection_key = 'collection_' | append: i
+      assign collection = block.settings[collection_key]
+    %}
+    
+    <div class="ai-collection-card-{{ ai_gen_id }}">
+      {% if collection != blank %}
+        <a href="{{ collection.url }}" aria-label="View {{ collection.title }} collection">
+          {% if collection.featured_image %}
+            <img
+              src="{{ collection.featured_image | image_url: width: 800 }}"
+              alt="{{ collection.featured_image.alt | escape }}"
+              class="ai-collection-image-{{ ai_gen_id }}"
+              loading="lazy"
+              width="800"
+              height="450"
+            >
+          {% else %}
+            <div class="ai-collection-placeholder-{{ ai_gen_id }}">
+              {{ 'collection-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+
+          {% if block.settings.logo_image %}
+            <div class="ai-collection-logo-{{ ai_gen_id }}">
+              <img
+                src="{{ block.settings.logo_image | image_url: width: 200 }}"
+                alt="{{ block.settings.logo_image.alt | escape }}"
+                loading="lazy"
+                width="200"
+                height="200"
+              >
+            </div>
+          {% endif %}
+
+          <div class="ai-collection-content-{{ ai_gen_id }}">
+            <h3 class="ai-collection-title-{{ ai_gen_id }}">{{ collection.title }}</h3>
+            {% if collection.description != blank %}
+              <p class="ai-collection-description-{{ ai_gen_id }}">
+                {{ collection.description | strip_html | truncate: 120 }}
+              </p>
+            {% endif %}
+          </div>
+        </a>
+      {% else %}
+        <div class="ai-collection-placeholder-{{ ai_gen_id }}">
+          {{ 'collection-1' | placeholder_svg_tag }}
+        </div>
+        
+        {% if block.settings.logo_image %}
+          <div class="ai-collection-logo-{{ ai_gen_id }}">
+            <img
+              src="{{ block.settings.logo_image | image_url: width: 200 }}"
+              alt="{{ block.settings.logo_image.alt | escape }}"
+              loading="lazy"
+              width="200"
+              height="200"
+            >
+          </div>
+        {% endif %}
+
+        <div class="ai-collection-empty-state-{{ ai_gen_id }}">
+          Select collection {{ i }}
+        </div>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+
+{% schema %}
+{
+  "name": "Glossy collections grid",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Collections"
+    },
+    {
+      "type": "collection",
+      "id": "collection_1",
+      "label": "Collection 1"
+    },
+    {
+      "type": "collection",
+      "id": "collection_2",
+      "label": "Collection 2"
+    },
+    {
+      "type": "collection",
+      "id": "collection_3",
+      "label": "Collection 3"
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_size",
+      "min": 40,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Logo size",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "logo_position_x",
+      "min": 10,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Logo horizontal position",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "logo_position_y",
+      "min": 10,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Logo vertical position",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "logo_padding",
+      "min": 4,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "label": "Logo padding",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "logo_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Logo border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "logo_background_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Logo background opacity",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Text style"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "min": 16,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Title font size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "description_font_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Description font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "text_overlay_opacity",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Text overlay opacity",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Glossy collections grid"
+    }
+  ]
+}
+{% endschema %}

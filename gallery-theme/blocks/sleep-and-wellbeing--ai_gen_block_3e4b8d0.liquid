@@ -1,0 +1,482 @@
+{% doc %}
+  @prompt
+    create a premium look and feel animated heading section with body text and 3 points with tick icons, make sure the text has padding on both sides on mobile and that the points align nicely, on the same line on desktop with even spacing between the icons and stacked on mobile., have each point on desktop on the same line and make it centre text on mobile
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-premium-heading-{{ ai_gen_id }} {
+    padding: {{ block.settings.padding_top }}px {{ block.settings.padding_horizontal }}px {{ block.settings.padding_bottom }}px;
+    background: {{ block.settings.background_gradient }};
+    text-align: {{ block.settings.text_alignment }};
+  }
+
+  .ai-premium-heading__container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.content_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-premium-heading__title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 {{ block.settings.spacing_after_heading }}px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .ai-premium-heading__body-{{ ai_gen_id }} {
+    font-size: {{ block.settings.body_size }}px;
+    color: {{ block.settings.body_color }};
+    margin: 0 0 {{ block.settings.spacing_after_body }}px;
+    line-height: 1.6;
+    opacity: 0.9;
+  }
+
+  .ai-premium-heading__points-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: {{ block.settings.point_spacing }}px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ai-premium-heading__point-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: {{ block.settings.icon_gap }}px;
+    font-size: {{ block.settings.point_size }}px;
+    color: {{ block.settings.point_color }};
+    opacity: 0;
+    transform: translateY(20px);
+    white-space: nowrap;
+  }
+
+  .ai-premium-heading__icon-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    background-color: {{ block.settings.icon_background }};
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-premium-heading__icon-{{ ai_gen_id }} svg {
+    width: {{ block.settings.icon_size | times: 0.6 }}px;
+    height: {{ block.settings.icon_size | times: 0.6 }}px;
+    stroke: {{ block.settings.icon_color }};
+    stroke-width: 3;
+    fill: none;
+  }
+
+  .ai-premium-heading__point-text-{{ ai_gen_id }} {
+    font-weight: 500;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-premium-heading-{{ ai_gen_id }} {
+      padding: {{ block.settings.padding_top | times: 0.7 }}px 20px {{ block.settings.padding_bottom | times: 0.7 }}px;
+      text-align: center;
+    }
+
+    .ai-premium-heading__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.6 }}px;
+      padding: 0 8px;
+    }
+
+    .ai-premium-heading__body-{{ ai_gen_id }} {
+      font-size: {{ block.settings.body_size | times: 0.9 }}px;
+      padding: 0 8px;
+    }
+
+    .ai-premium-heading__points-{{ ai_gen_id }} {
+      flex-direction: column;
+      align-items: center;
+      gap: {{ block.settings.point_spacing }}px;
+      padding: 0 8px;
+    }
+
+    .ai-premium-heading__point-{{ ai_gen_id }} {
+      font-size: {{ block.settings.point_size | times: 0.9 }}px;
+      white-space: normal;
+      text-align: center;
+      justify-content: center;
+    }
+
+    .ai-premium-heading__icon-{{ ai_gen_id }} {
+      width: {{ block.settings.icon_size | times: 0.85 }}px;
+      height: {{ block.settings.icon_size | times: 0.85 }}px;
+    }
+
+    .ai-premium-heading__icon-{{ ai_gen_id }} svg {
+      width: {{ block.settings.icon_size | times: 0.5 }}px;
+      height: {{ block.settings.icon_size | times: 0.5 }}px;
+    }
+  }
+
+  @keyframes ai-premium-heading-fade-in-{{ ai_gen_id }} {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .ai-premium-heading--animated-{{ ai_gen_id }} .ai-premium-heading__point-{{ ai_gen_id }} {
+    animation: ai-premium-heading-fade-in-{{ ai_gen_id }} 0.6s ease-out forwards;
+  }
+
+  .ai-premium-heading--animated-{{ ai_gen_id }} .ai-premium-heading__point-{{ ai_gen_id }}:nth-child(1) {
+    animation-delay: 0.2s;
+  }
+
+  .ai-premium-heading--animated-{{ ai_gen_id }} .ai-premium-heading__point-{{ ai_gen_id }}:nth-child(2) {
+    animation-delay: 0.4s;
+  }
+
+  .ai-premium-heading--animated-{{ ai_gen_id }} .ai-premium-heading__point-{{ ai_gen_id }}:nth-child(3) {
+    animation-delay: 0.6s;
+  }
+{% endstyle %}
+
+<premium-heading-{{ ai_gen_id }}
+  class="ai-premium-heading-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-premium-heading__container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank %}
+      <h2 class="ai-premium-heading__title-{{ ai_gen_id }}">
+        {{ block.settings.heading }}
+      </h2>
+    {% endif %}
+
+    {% if block.settings.body_text != blank %}
+      <div class="ai-premium-heading__body-{{ ai_gen_id }}">
+        {{ block.settings.body_text }}
+      </div>
+    {% endif %}
+
+    <ul class="ai-premium-heading__points-{{ ai_gen_id }}">
+      {% if block.settings.point_1 != blank %}
+        <li class="ai-premium-heading__point-{{ ai_gen_id }}">
+          <span class="ai-premium-heading__icon-{{ ai_gen_id }}">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </span>
+          <span class="ai-premium-heading__point-text-{{ ai_gen_id }}">{{ block.settings.point_1 }}</span>
+        </li>
+      {% endif %}
+
+      {% if block.settings.point_2 != blank %}
+        <li class="ai-premium-heading__point-{{ ai_gen_id }}">
+          <span class="ai-premium-heading__icon-{{ ai_gen_id }}">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </span>
+          <span class="ai-premium-heading__point-text-{{ ai_gen_id }}">{{ block.settings.point_2 }}</span>
+        </li>
+      {% endif %}
+
+      {% if block.settings.point_3 != blank %}
+        <li class="ai-premium-heading__point-{{ ai_gen_id }}">
+          <span class="ai-premium-heading__icon-{{ ai_gen_id }}">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </span>
+          <span class="ai-premium-heading__point-text-{{ ai_gen_id }}">{{ block.settings.point_3 }}</span>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</premium-heading-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class PremiumHeading{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.hasAnimated = false;
+      }
+
+      connectedCallback() {
+        if (!this.hasAnimated) {
+          this.setupIntersectionObserver();
+        }
+      }
+
+      setupIntersectionObserver() {
+        const options = {
+          root: null,
+          rootMargin: '0px',
+          threshold: 0.2
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !this.hasAnimated) {
+              this.classList.add('ai-premium-heading--animated-{{ ai_gen_id }}');
+              this.hasAnimated = true;
+              observer.unobserve(this);
+            }
+          });
+        }, options);
+
+        observer.observe(this);
+      }
+    }
+
+    customElements.define('premium-heading-{{ ai_gen_id }}', PremiumHeading{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Premium heading",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Premium Quality Guaranteed"
+    },
+    {
+      "type": "richtext",
+      "id": "body_text",
+      "label": "Body text",
+      "default": "<p>Experience excellence with our carefully curated selection of premium products designed to exceed your expectations.</p>"
+    },
+    {
+      "type": "text",
+      "id": "point_1",
+      "label": "Point 1",
+      "default": "Handcrafted with attention to detail"
+    },
+    {
+      "type": "text",
+      "id": "point_2",
+      "label": "Point 2",
+      "default": "Sustainably sourced materials"
+    },
+    {
+      "type": "text",
+      "id": "point_3",
+      "label": "Point 3",
+      "default": "Lifetime quality guarantee"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 400,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "label": "Content width",
+      "default": 800
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 24,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "body_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Body size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "point_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Point size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background",
+      "default": "linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(250, 250, 250, 1) 100%)"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Body text",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "point_color",
+      "label": "Point text",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "icon_background",
+      "label": "Icon background",
+      "default": "#46b0d1"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Icon style"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "icon_gap",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap between icon and text",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "spacing_after_heading",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Space after heading",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "spacing_after_body",
+      "min": 16,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "label": "Space after body",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "point_spacing",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Space between points",
+      "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium heading"
+    }
+  ]
+}
+{% endschema %}

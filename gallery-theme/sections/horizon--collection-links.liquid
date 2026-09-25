@@ -61,7 +61,7 @@
           endif
         %}
         {% content_for 'block',
-          type: '_collection-link',
+          type: 'horizon--_collection-link',
           id: 'link',
           closest.collection: collection,
           index: forloop.index0,
@@ -84,7 +84,7 @@
 
           {% capture slide %}
             {% content_for 'block',
-              type: '_collection-link',
+              type: 'horizon--_collection-link',
               id: 'link',
               closest.collection: collection,
               index: forloop.index0,

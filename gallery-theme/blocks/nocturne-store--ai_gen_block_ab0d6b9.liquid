@@ -1,0 +1,272 @@
+{% doc %}
+  @prompt
+    Create a premium, editorial **three-tab storytelling section for Soluna**, closely inspired by the attached desktop and mobile reference screenshots.
+    
+    IMPORTANT: Create this as **one single Shopify section**.
+    
+    The section should allow the customer to switch between **3 different stories/content tabs**, with each tab displaying its own image, text and optional button.
+    
+    The experience should feel smooth, minimal and premium.
+    
+    ---
+    
+    # TAB NAVIGATION
+    
+    At the very top of the section, create a minimal horizontal tab switcher.
+    
+    Allow exactly **3 tabs**.
+    
+    Each tab should contain **text only**.
+    
+    For example:
+    
+    **We're**  **About**  **You**
+    
+    The tab navigation must be extremely minimal.
+    
+    ### Active tab
+    
+    The active tab should be indicated by a simple **underline underneath the text**.
+    
+    Do NOT use:
+    
+    * Boxes
+    * Pills
+    * Background fills
+    * Borders around the tabs
+    * Large buttons
+    * Icons
+    
+    The inactive tabs should simply appear as text.
+    
+    Allow Theme Editor controls for:
+    
+    * Tab text
+    * Tab text colour
+    * Active tab colour
+    * Underline colour
+    * Underline thickness
+    * Tab spacing
+    * Tab font size
+    * Active/inactive font weight
+    
+    ---
+    
+    # TAB CONTENT
+    
+    Create **3 individual tab blocks**.
+    
+    Each tab must have its own:
+    
+    * Tab label
+    * Image
+    * Eyebrow/subheading
+    * Heading
+    * Main content
+    * Button text
+    * Button link
+    * Button enable/disable setting
+    
+    Everything should be independently editable.
+    
+    For example:
+    
+    ### Tab 1
+    
+    **Eyebrow:** Safety Ingredients
+    
+    **Heading:** More Than a Sauna
+    
+    **Content:** A sauna is often seen as a product. We see it differently.
+    
+    **Button:** Explore Our Story
+    
+    ### Tab 2
+    
+    Different image and content.
+    
+    ### Tab 3
+    
+    Different image and content.
+    
+    The actual content should be fully editable through Shopify Theme Editor.
+    
+    ---
+    
+    # DESKTOP LAYOUT
+    
+    When a tab is active, display its content in a **two-column layout** underneath the tab navigation.
+    
+    ### LEFT SIDE
+    
+    Content area containing:
+    
+    Eyebrow
+    
+    Heading
+    
+    Supporting content
+    
+    Optional button
+    
+    ### RIGHT SIDE
+    
+    Large lifestyle image.
+    
+    The two sides should occupy approximately **50% / 50%** of the section.
+    
+    The image should be large and visually dominant.
+    
+    The content should be vertically centred against the image.
+    
+    Keep generous whitespace around the content.
+    
+    The section should closely resemble the supplied desktop reference.
+    
+    ---
+    
+    # IMAGE POSITION
+    
+    Add a Theme Editor setting allowing the merchant to choose:
+    
+    **Image Position**
+    
+    * Left
+    * Right
+    
+    If Right:
+    
+    **CONTENT | IMAGE**
+    
+    If Left:
+    
+    **IMAGE | CONTENT**
+    
+    This should apply consistently to all three tabs.
+    
+    The image should maintain its aspect ratio and should not appear distorted.
+    
+    Allow controls for:
+    
+    * Image fit: Cover / Contain
+    * Image focal position
+    * Image border radius
+    * Image height
+    * Image width
+    
+    ---
+    
+    # BUTTON
+    
+    The button should be optional.
+    
+    Each tab must have an:
+    
+    **Show Button: Yes / No**
+    
+    setting.
+    
+    If enabled, display the editable button text and link.
+    
+    Allow Theme Editor controls for:
+    
+    * Button text
+    * Button link
+    * Button background
+    * Button text colour
+    * Button border
+    * Button border colour
+    * Button border radius
+    * Button padding
+    * Button width
+    
+    The button should have a subtle hover transition.
+    
+    ---
+    
+    # TAB SWITCHING ANIMATION
+    
+    IMPORTANT:
+    
+    Switching between tabs must feel **swift, smooth and premium**.
+    
+    Do NOT simply replace the content instantly.
+    
+    When the customer selects another tab:
+    
+    1. The current content should smoothly transition out.
+    2. The new image and content should smoothly transition in.
+    3. Use a subtle horizontal slide combined with a gentle fade.
+    4. The movement should be quick and responsive.
+    
+    The animation should feel like the content is **sliding naturally into place**, rather than the entire page moving.
+    
+    Recommended behaviour:
+    
+    **Current tab → subtle fade/slide out → new tab → subtle fade/slide in**
+    
+    Keep the transition around **300–450ms**.
+    
+    Do not use slow or dramatic animations.
+    
+    The tab underline should also smoothly move from the previous tab to the newly selected tab.
+    
+    IMPORTANT:
+    
+    The underline should **slide smoothly between tab positions**, rather than disappearing and reappearing.
+    
+    ---
+    
+    # MOBILE LAYOUT
+    
+    IMPORTANT:
+    
+    The mobile layout must follow the attached mobile screenshot.
+    
+    At the very top:
+    
+    ### 1. TAB NAVIGATION
+    
+    Display the three text-only tabs horizontally.
+    
+    The active tab has a simple underline.
+    
+    Keep the navigation compact.
+    
+    Do not use boxes, pills or buttons.
+    
+    Make sure all three tabs fit comfortably within the mobile screen.
+    
+    Do NOT allow horizontal scrolling for the tab navigation.
+    
+    ---
+    
+    ### 2. ACTIVE TAB IMAGE
+    
+    Immediately below the tab navigation, display the image belonging to the currently active tab.
+    
+    The image should span most of the available mobile width.
+    
+    Use an appropriate mobile image height while maintaining a premium editorial appearance.
+    
+    ---
+    
+    ### 3. ACTIVE TAB CONTENT
+    
+    Immediately below the image, display the content for the active tab:
+    
+    Eyebrow
+    
+    Heading
+    
+    Supporting content
+    
+    Optional button
+    
+    IN mobile mode, make everything center aligned.
+    In desktop mode, give me an opti
+    , give me an option to turn off the buttons by default.
+    
+    In the tab changer, make sure that the underline is under the text and not above, Keep everything else the same, Give me an option to change the font everywhere, In mobile mode, reduce the difference between the tab change options, In Mobile mode, Make it possible to swipe between the tabs by swiping the screen as well 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}{% style %}.soluna-{{ ai_gen_id }}{display:block;width:100%;padding:60px 24px;background:{{ block.settings.background }};color:{{ block.settings.text_color }};font-family:{{ block.settings.story_font.family }},sans-serif}.soluna-{{ ai_gen_id }}__tabs{position:relative;display:flex;justify-content:center;gap:40px;margin-bottom:40px}.soluna-{{ ai_gen_id }}__tab{border:0;background:none;padding:0 0 10px;color:{{ block.settings.tab_color }};font:inherit;font-size:15px;cursor:pointer}.soluna-{{ ai_gen_id }}__tab[aria-selected=true]{color:{{ block.settings.active_color }}}.soluna-{{ ai_gen_id }}__line{position:absolute;bottom:0;left:0;height:{{ block.settings.underline_thickness }}px;background:{{ block.settings.active_color }};transition:left .35s ease,width .35s ease}.soluna-{{ ai_gen_id }}__panel{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;transition:opacity .35s ease,transform .35s ease}.soluna-{{ ai_gen_id }}__panel.out{opacity:0;transform:translateX(-15px)}.soluna-{{ ai_gen_id }}__media{height:{{ block.settings.image_height }}px}.soluna-{{ ai_gen_id }}__media img{width:100%;height:100%;object-fit:cover;border-radius:{{ block.settings.radius }}px}.soluna-{{ ai_gen_id }}__content{max-width:520px}.soluna-{{ ai_gen_id }}__heading{font-size:clamp(32px,4vw,56px);font-weight:400}.soluna-{{ ai_gen_id }}__button{display:inline-block;padding:14px 24px;background:#1a1a1a;color:#fff;text-decoration:none}@media(max-width:749px){.soluna-{{ ai_gen_id }}{padding:32px 16px}.soluna-{{ ai_gen_id }}__tabs{gap:24px;margin-bottom:24px}.soluna-{{ ai_gen_id }}__tab{font-size:14px}.soluna-{{ ai_gen_id }}__panel{display:flex;flex-direction:column;gap:24px}.soluna-{{ ai_gen_id }}__media{width:100%;height:{{ block.settings.mobile_height }}px}.soluna-{{ ai_gen_id }}__content{text-align:center}}{% endstyle %}<soluna-story-{{ ai_gen_id }} class="soluna-{{ ai_gen_id }}" {{ block.shopify_attributes }}><nav class="soluna-{{ ai_gen_id }}__tabs" aria-label="Story tabs">{% for i in (1..3) %}{% assign l='tab_'|append:i|append:'_label' %}<button class="soluna-{{ ai_gen_id }}__tab" data-i="{{ i | minus:1 }}" aria-selected="{% if i==1 %}true{% else %}false{% endif %}">{{ block.settings[l] }}</button>{% endfor %}<span class="soluna-{{ ai_gen_id }}__line"></span></nav><div class="soluna-{{ ai_gen_id }}__panel" data-panel><div class="soluna-{{ ai_gen_id }}__content" data-content></div><div class="soluna-{{ ai_gen_id }}__media" data-media></div></div></soluna-story-{{ ai_gen_id }}><script>(function(){class S extends HTMLElement{connectedCallback(){this.t=[...this.querySelectorAll('[data-i]')];this.p=this.querySelector('[data-panel]');this.c=this.querySelector('[data-content]');this.m=this.querySelector('[data-media]');this.l=this.querySelector('[class$="__line"]');this.d=[{% for i in (1..3) %}{% assign e='tab_'|append:i|append:'_eyebrow' %}{% assign h='tab_'|append:i|append:'_heading' %}{% assign b='tab_'|append:i|append:'_body' %}{% assign q='tab_'|append:i|append:'_button' %}{% assign u='tab_'|append:i|append:'_link' %}{% assign s='tab_'|append:i|append:'_show_button' %}{% assign im='tab_'|append:i|append:'_image' %}{"e":{{ block.settings[e]|json }},"h":{{ block.settings[h]|json }},"b":{{ block.settings[b]|json }},"q":{{ block.settings[q]|json }},"u":{{ block.settings[u]|json }},"s":{{ block.settings[s]|json }},"im":"{% if block.settings[im] %}{{ block.settings[im]|image_url:width:1200 }}{% endif %}"}{% unless i==3 %},{% endunless %}{% endfor %}];this.t.forEach(x=>x.onclick=()=>this.go(+x.dataset.i));this.startX=0;this.addEventListener('touchstart',e=>{this.startX=e.changedTouches[0].screenX},{passive:true});this.addEventListener('touchend',e=>{let dx=e.changedTouches[0].screenX-this.startX;if(Math.abs(dx)>45)this.go(Math.max(0,Math.min(2,this.index+(dx<0?1:-1))))},{passive:true});this.go(0)}go(i){this.index=i;let d=this.d[i];this.p.classList.add('out');setTimeout(()=>{this.c.innerHTML='<p>'+d.e+'</p><h2 class="soluna-{{ ai_gen_id }}__heading">'+d.h+'</h2><div>'+d.b+'</div>'+(d.s?'<a class="soluna-{{ ai_gen_id }}__button" href="'+d.u+'">'+d.q+'</a>':'');this.m.innerHTML=d.im?'<img src="'+d.im+'" alt="" loading="lazy">':'{{ "image"|placeholder_svg_tag }}';this.t.forEach(x=>x.setAttribute('aria-selected',+x.dataset.i==i));this.l.style.left=this.t[i].offsetLeft+'px';this.l.style.width=this.t[i].offsetWidth+'px';this.p.classList.remove('out')},170)}}customElements.define('soluna-story-{{ ai_gen_id }}',S)})();</script>{% schema %}{"name":"Soluna story tabs","tag":null,"class":"soluna-story","settings":[{"type":"font_picker","id":"story_font","label":"Font","default":"montserrat_n4"},{"type":"range","id":"desktop_width_percent","label":"Desktop width","min":50,"max":100,"step":5,"unit":"%","default":100},{"type":"color","id":"background","label":"Background","default":"#ffffff"},{"type":"color","id":"text_color","label":"Text","default":"#1a1a1a"},{"type":"color","id":"tab_color","label":"Tab text","default":"#677279"},{"type":"color","id":"active_color","label":"Active tab","default":"#1a1a1a"},{"type":"range","id":"underline_thickness","label":"Underline thickness","min":1,"max":5,"step":1,"unit":"px","default":1},{"type":"range","id":"image_height","label":"Image height","min":300,"max":900,"step":50,"unit":"px","default":600},{"type":"range","id":"mobile_height","label":"Mobile image height","min":220,"max":600,"step":20,"unit":"px","default":360},{"type":"range","id":"radius","label":"Image radius","min":0,"max":40,"step":2,"unit":"px","default":0},{"type":"header","content":"Tab 1"},{"type":"text","id":"tab_1_label","label":"Label","default":"We're"},{"type":"image_picker","id":"tab_1_image","label":"Image"},{"type":"text","id":"tab_1_eyebrow","label":"Eyebrow","default":"Safety ingredients"},{"type":"text","id":"tab_1_heading","label":"Heading","default":"More than a sauna"},{"type":"richtext","id":"tab_1_body","label":"Content","default":"<p>A sauna is often seen as a product. We see it differently.</p>"},{"type":"checkbox","id":"tab_1_show_button","label":"Show button","default":false},{"type":"text","id":"tab_1_button","label":"Button text","default":"Explore our story"},{"type":"url","id":"tab_1_link","label":"Button link"},{"type":"header","content":"Tab 2"},{"type":"text","id":"tab_2_label","label":"Label","default":"About"},{"type":"image_picker","id":"tab_2_image","label":"Image"},{"type":"text","id":"tab_2_eyebrow","label":"Eyebrow","default":"Thoughtful design"},{"type":"text","id":"tab_2_heading","label":"Heading","default":"Made for your rituals"},{"type":"richtext","id":"tab_2_body","label":"Content","default":"<p>Beautiful wellness begins with considered details.</p>"},{"type":"checkbox","id":"tab_2_show_button","label":"Show button","default":false},{"type":"text","id":"tab_2_button","label":"Button text","default":"Discover Soluna"},{"type":"url","id":"tab_2_link","label":"Button link"},{"type":"header","content":"Tab 3"},{"type":"text","id":"tab_3_label","label":"Label","default":"You"},{"type":"image_picker","id":"tab_3_image","label":"Image"},{"type":"text","id":"tab_3_eyebrow","label":"Eyebrow","default":"Your wellbeing"},{"type":"text","id":"tab_3_heading","label":"Heading","default":"Come back to yourself"},{"type":"richtext","id":"tab_3_body","label":"Content","default":"<p>Create space to slow down and restore your energy.</p>"},{"type":"checkbox","id":"tab_3_show_button","label":"Show button","default":false},{"type":"text","id":"tab_3_button","label":"Button text","default":"Shop wellness"},{"type":"url","id":"tab_3_link","label":"Button link"}],"presets":[{"name":"Soluna story tabs"}]}{% endschema %}

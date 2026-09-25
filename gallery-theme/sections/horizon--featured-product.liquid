@@ -50,11 +50,11 @@
     "
   >
     {% capture featured_product_media %}
-      {% content_for 'block', type: '_media-without-appearance', id: 'media', closest.product: section.settings.product %}
+      {% content_for 'block', type: 'horizon--_media-without-appearance', id: 'media', closest.product: section.settings.product %}
     {% endcapture %}
 
     {% capture featured_product_content %}
-      {% content_for 'block', type: '_featured-product', id: 'featured-product', closest.product: section.settings.product %}
+      {% content_for 'block', type: 'horizon--_featured-product', id: 'featured-product', closest.product: section.settings.product %}
     {% endcapture %}
 
     {% if section.settings.layout == 'media-left' %}

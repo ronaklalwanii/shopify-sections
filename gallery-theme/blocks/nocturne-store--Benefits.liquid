@@ -1,0 +1,1396 @@
+{% doc %}
+  @prompt
+    Create a premium interactive section that showcases the benefits of infrared saunas. The design should feel luxurious, modern and minimalist with generous spacing, clean typography and a high-end wellness aesthetic.
+    
+    At the top of the section, include a small uppercase subtitle above the main heading.
+    
+    Subtitle: Supported by Modern Research
+    
+    Heading: Sauna Benefits
+    
+    Tab Navigation
+    
+    Below the heading, create a compact, centred tab switcher with three tabs:
+    
+    Performance
+    Health
+    Longevity
+    
+    The tab switcher should have:
+    
+    Square or very slightly rounded corners (maximum 4px border radius)
+    Equal-width tabs
+    A thin border around the entire tab switcher
+    A solid background for the active tab with white text
+    Transparent background for inactive tabs with dark text
+    Subtle hover effects
+    Premium typography
+    
+    Do not use pill-shaped or fully rounded tabs.
+    
+    Tab Animation
+    
+    When switching between tabs:
+    
+    Use a smooth sliding animation rather than an instant change.
+    The active tab indicator should glide smoothly from one tab to another.
+    The content below should fade and slide in simultaneously.
+    The transition should feel fluid and premium, similar to Apple's product pages.
+    Avoid any flickering or page jumping.
+    Preload all images so the transitions happen instantly without loading delays.
+    Main Content
+    
+    Below the tabs, display one large image with rounded corners.
+    
+    Each tab should have its own editable image that can be uploaded separately through the Shopify Theme Editor.
+    
+    Below the image, display a responsive grid containing six benefit cards.
+    
+    Each card should include:
+    
+    Bold benefit title
+    Short description
+    No icons
+    Left-aligned text
+    Dynamic Content
+    
+    When switching between Performance, Health and Longevity, all of the following should change instantly:
+    
+    Large image
+    Six benefit titles
+    Six benefit descriptions
+    
+    No page reloads.
+    
+    Shopify Theme Editor Settings
+    General
+    Subtitle
+    Heading
+    Background colour
+    Text colour
+    Active tab colour
+    Inactive tab colour
+    Tab border colour
+    Section width
+    Maximum content width
+    Top and bottom padding
+    Image border radius
+    Animation on/off
+    Performance Tab
+    Upload image
+    Six editable benefit titles
+    Six editable benefit descriptions
+    Health Tab
+    Upload image
+    Six editable benefit titles
+    Six editable benefit descriptions
+    Longevity Tab
+    Upload image
+    Six editable benefit titles
+    Six editable benefit descriptions
+    Desktop Layout
+    Centred heading
+    Compact centred tab switcher
+    Large image below tabs
+    Six benefit cards displayed in three columns
+    Consistent spacing throughout
+    Mobile Layout
+    
+    Optimise the section specifically for mobile devices.
+    
+    The tab switcher should become more compact.
+    Ensure the complete tab switcher fits within the screen width without overflowing.
+    Do not allow the tabs to wrap onto multiple lines.
+    Keep all three tabs visible at the same time.
+    Reduce horizontal padding and font size where necessary while maintaining readability.
+    The tab switcher should remain centred.
+    The image should appear below the tabs.
+    Benefit cards should stack into a single column with generous spacing.
+    Maintain large touch targets for easy interaction.
+    Styling
+    Premium luxury wellness aesthetic
+    Soft neutral colours
+    Clean minimalist design
+    Large amounts of white space
+    Smooth hover effects
+    Elegant typography
+    Fast loading
+    Fully responsive
+    Optimised for performance
+    
+    Build this section using Shopify Liquid, HTML, CSS and vanilla JavaScript only. Do not use any external libraries or apps. The section should be modular, easy to customise from the Shopify Theme Editor and designed to match the look and feel of a premium high-ticket wellness brand., Give me option to change active tab text ciolour, hav performance tab preloaded and have all the images pre loaded for all the tabs for speed.
+    
+    Give me option for alignment for text but keep center aligned as default
+    
+    , Give me ability to change the font family every where.
+    
+    Give me ability to change the colour of the text everywhere.
+    
+    Give me accessto control the height and width of tab navigation separately in mobile and computer mode, For tab navigation, can you give me different styles that I can choose out of, for pill sand bordered in tab navigation, can you give me access to control the radius, the tab height and width should also apply to pills and other structured formats so that one button can control the height regardsless of the style, ensure mobile tab and height work on pills or bordered , allow me to add separate images for mobile and computer mode, Give me access to control the height and width of tab selector in pill mode
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-sauna-benefits-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    color: {{ block.settings.text_color }};
+    padding: {{ block.settings.padding_top }}px 20px {{ block.settings.padding_bottom }}px;
+  }
+
+  .ai-sauna-benefits-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_content_width }}px;
+    margin: 0 auto;
+    width: {{ block.settings.section_width }}%;
+  }
+
+  .ai-sauna-benefits-header-{{ ai_gen_id }} {
+    text-align: {{ block.settings.text_alignment }};
+    margin-bottom: 60px;
+  }
+
+  .ai-sauna-benefits-subtitle-{{ ai_gen_id }} {
+    font-family: {{ block.settings.subtitle_font.family }}, {{ block.settings.subtitle_font.fallback_families }};
+    font-weight: {{ block.settings.subtitle_font.weight }};
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0.7;
+    color: {{ block.settings.subtitle_color }};
+  }
+
+  .ai-sauna-benefits-heading-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-size: 48px;
+    margin: 0;
+    letter-spacing: -1px;
+    color: {{ block.settings.heading_color }};
+  }
+
+  .ai-sauna-benefits-tabs-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: {{ block.settings.text_alignment }};
+    margin-bottom: 60px;
+  }
+
+  .ai-sauna-benefits-tabs-{{ ai_gen_id }} {
+    display: inline-flex;
+    position: relative;
+    background-color: transparent;
+  }
+
+  {% if block.settings.tab_style == 'bordered' %}
+    .ai-sauna-benefits-tabs-{{ ai_gen_id }} {
+      border: 1px solid {{ block.settings.tab_border_color }};
+      border-radius: {{ block.settings.tab_border_radius }}px;
+    }
+  {% elsif block.settings.tab_style == 'underline' %}
+    .ai-sauna-benefits-tabs-{{ ai_gen_id }} {
+      gap: 8px;
+      border-bottom: 1px solid {{ block.settings.tab_border_color }};
+      padding-bottom: 0;
+    }
+  {% elsif block.settings.tab_style == 'pills' %}
+    .ai-sauna-benefits-tabs-{{ ai_gen_id }} {
+      gap: 12px;
+    }
+  {% elsif block.settings.tab_style == 'minimal' %}
+    .ai-sauna-benefits-tabs-{{ ai_gen_id }} {
+      gap: 24px;
+    }
+  {% endif %}
+
+  .ai-sauna-benefits-tab-{{ ai_gen_id }} {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: {{ block.settings.tab_font.family }}, {{ block.settings.tab_font.fallback_families }};
+    font-weight: {{ block.settings.tab_font.weight }};
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+    color: {{ block.settings.inactive_tab_color }};
+    white-space: nowrap;
+    padding: {{ block.settings.tab_height_desktop }}px {{ block.settings.tab_width_desktop }}px;
+  }
+
+  {% if block.settings.tab_style == 'underline' %}
+    .ai-sauna-benefits-tab-{{ ai_gen_id }} {
+      padding-bottom: 16px;
+    }
+  {% elsif block.settings.tab_style == 'pills' %}
+    .ai-sauna-benefits-tab-{{ ai_gen_id }} {
+      border-radius: {{ block.settings.tab_pill_radius }}px;
+      border: 1px solid {{ block.settings.tab_border_color }};
+      padding: {{ block.settings.pill_height_desktop }}px {{ block.settings.pill_width_desktop }}px;
+    }
+  {% endif %}
+
+  .ai-sauna-benefits-tab-{{ ai_gen_id }}:hover {
+    opacity: 0.7;
+  }
+
+  .ai-sauna-benefits-tab-{{ ai_gen_id }}.active {
+    color: {{ block.settings.active_tab_text_color }};
+  }
+
+  {% if block.settings.tab_style == 'pills' %}
+    .ai-sauna-benefits-tab-{{ ai_gen_id }}.active {
+      background-color: {{ block.settings.active_tab_color }};
+      border-color: {{ block.settings.active_tab_color }};
+    }
+  {% elsif block.settings.tab_style == 'minimal' %}
+    .ai-sauna-benefits-tab-{{ ai_gen_id }}.active {
+      font-weight: 600;
+    }
+  {% endif %}
+
+  .ai-sauna-benefits-tab-indicator-{{ ai_gen_id }} {
+    position: absolute;
+    background-color: {{ block.settings.active_tab_color }};
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+  }
+
+  {% if block.settings.tab_style == 'bordered' %}
+    .ai-sauna-benefits-tab-indicator-{{ ai_gen_id }} {
+      top: 0;
+      left: 0;
+      height: 100%;
+      border-radius: {{ block.settings.tab_border_radius | minus: 1 }}px;
+    }
+  {% elsif block.settings.tab_style == 'underline' %}
+    .ai-sauna-benefits-tab-indicator-{{ ai_gen_id }} {
+      bottom: 0;
+      left: 0;
+      height: 2px;
+    }
+  {% elsif block.settings.tab_style == 'pills' %}
+    .ai-sauna-benefits-tab-indicator-{{ ai_gen_id }} {
+      display: none;
+    }
+  {% elsif block.settings.tab_style == 'minimal' %}
+    .ai-sauna-benefits-tab-indicator-{{ ai_gen_id }} {
+      bottom: 0;
+      left: 0;
+      height: 1px;
+    }
+  {% endif %}
+
+  .ai-sauna-benefits-content-{{ ai_gen_id }} {
+    position: relative;
+    min-height: 400px;
+  }
+
+  .ai-sauna-benefits-tab-content-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: translateY(20px);
+  }
+
+  .ai-sauna-benefits-tab-content-{{ ai_gen_id }}.active {
+    opacity: 1;
+    visibility: visible;
+    position: relative;
+    transform: translateY(0);
+  }
+
+  .ai-sauna-benefits-image-wrapper-{{ ai_gen_id }} {
+    margin-bottom: 60px;
+    overflow: hidden;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-sauna-benefits-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ai-sauna-benefits-image-mobile-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  .ai-sauna-benefits-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-sauna-benefits-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 400px;
+    max-height: 400px;
+  }
+
+  .ai-sauna-benefits-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .ai-sauna-benefits-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+
+  .ai-sauna-benefits-card-{{ ai_gen_id }} {
+    text-align: {{ block.settings.text_alignment }};
+  }
+
+  .ai-sauna-benefits-card-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.card_title_font.family }}, {{ block.settings.card_title_font.fallback_families }};
+    font-weight: {{ block.settings.card_title_font.weight }};
+    font-size: 20px;
+    margin: 0 0 12px 0;
+    letter-spacing: -0.3px;
+    color: {{ block.settings.card_title_color }};
+  }
+
+  .ai-sauna-benefits-card-description-{{ ai_gen_id }} {
+    font-family: {{ block.settings.card_description_font.family }}, {{ block.settings.card_description_font.fallback_families }};
+    font-weight: {{ block.settings.card_description_font.weight }};
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0;
+    opacity: 0.8;
+    color: {{ block.settings.card_description_color }};
+  }
+
+  .ai-sauna-benefits-preload-{{ ai_gen_id }} {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-sauna-benefits-heading-{{ ai_gen_id }} {
+      font-size: 36px;
+    }
+
+    .ai-sauna-benefits-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-sauna-benefits-{{ ai_gen_id }} {
+      padding: {{ block.settings.padding_top | times: 0.7 }}px 16px {{ block.settings.padding_bottom | times: 0.7 }}px;
+    }
+
+    .ai-sauna-benefits-header-{{ ai_gen_id }} {
+      margin-bottom: 40px;
+    }
+
+    .ai-sauna-benefits-heading-{{ ai_gen_id }} {
+      font-size: 28px;
+    }
+
+    .ai-sauna-benefits-tabs-wrapper-{{ ai_gen_id }} {
+      margin-bottom: 40px;
+      padding: 0 10px;
+    }
+
+    {% if block.settings.tab_style == 'bordered' or block.settings.tab_style == 'underline' %}
+      .ai-sauna-benefits-tabs-{{ ai_gen_id }} {
+        width: 100%;
+        max-width: 100%;
+      }
+    {% endif %}
+
+    {% if block.settings.tab_style == 'pills' or block.settings.tab_style == 'minimal' %}
+      .ai-sauna-benefits-tabs-{{ ai_gen_id }} {
+        gap: 8px;
+      }
+    {% endif %}
+
+    .ai-sauna-benefits-tab-{{ ai_gen_id }} {
+      font-size: 13px;
+      min-width: 0;
+      padding: {{ block.settings.tab_height_mobile }}px {{ block.settings.tab_width_mobile }}px;
+    }
+
+    {% if block.settings.tab_style == 'bordered' or block.settings.tab_style == 'underline' %}
+      .ai-sauna-benefits-tab-{{ ai_gen_id }} {
+        flex: 1;
+      }
+    {% endif %}
+
+    {% if block.settings.tab_style == 'underline' %}
+      .ai-sauna-benefits-tab-{{ ai_gen_id }} {
+        padding-bottom: 12px;
+      }
+    {% endif %}
+
+    {% if block.settings.tab_style == 'pills' %}
+      .ai-sauna-benefits-tab-{{ ai_gen_id }} {
+        border-radius: {{ block.settings.tab_pill_radius }}px;
+        padding: {{ block.settings.pill_height_mobile }}px {{ block.settings.pill_width_mobile }}px;
+      }
+    {% endif %}
+
+    .ai-sauna-benefits-image-wrapper-{{ ai_gen_id }} {
+      margin-bottom: 40px;
+    }
+
+    .ai-sauna-benefits-image-desktop-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-sauna-benefits-image-mobile-{{ ai_gen_id }} {
+      display: block;
+    }
+
+    .ai-sauna-benefits-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    .ai-sauna-benefits-card-title-{{ ai_gen_id }} {
+      font-size: 18px;
+    }
+
+    .ai-sauna-benefits-card-description-{{ ai_gen_id }} {
+      font-size: 14px;
+    }
+  }
+{% endstyle %}
+
+<sauna-benefits-{{ ai_gen_id }} class="ai-sauna-benefits-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-sauna-benefits-container-{{ ai_gen_id }}">
+    <div class="ai-sauna-benefits-header-{{ ai_gen_id }}">
+      {% if block.settings.subtitle != blank %}
+        <div class="ai-sauna-benefits-subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</div>
+      {% endif %}
+      {% if block.settings.heading != blank %}
+        <h2 class="ai-sauna-benefits-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+      {% endif %}
+    </div>
+
+    <div class="ai-sauna-benefits-tabs-wrapper-{{ ai_gen_id }}">
+      <div class="ai-sauna-benefits-tabs-{{ ai_gen_id }}">
+        <button class="ai-sauna-benefits-tab-{{ ai_gen_id }} active" data-tab="performance">Performance</button>
+        <button class="ai-sauna-benefits-tab-{{ ai_gen_id }}" data-tab="health">Health</button>
+        <button class="ai-sauna-benefits-tab-{{ ai_gen_id }}" data-tab="longevity">Longevity</button>
+        <div class="ai-sauna-benefits-tab-indicator-{{ ai_gen_id }}"></div>
+      </div>
+    </div>
+
+    <div class="ai-sauna-benefits-content-{{ ai_gen_id }}">
+      <div class="ai-sauna-benefits-tab-content-{{ ai_gen_id }} active" data-content="performance">
+        <div class="ai-sauna-benefits-image-wrapper-{{ ai_gen_id }}">
+          {% if block.settings.performance_image %}
+            <img
+              src="{{ block.settings.performance_image | image_url: width: 2000 }}"
+              alt="{{ block.settings.performance_image.alt | escape }}"
+              width="{{ block.settings.performance_image.width }}"
+              height="{{ block.settings.performance_image.height }}"
+              class="ai-sauna-benefits-image-{{ ai_gen_id }} ai-sauna-benefits-image-desktop-{{ ai_gen_id }}"
+            >
+          {% else %}
+            <div class="ai-sauna-benefits-image-placeholder-{{ ai_gen_id }} ai-sauna-benefits-image-desktop-{{ ai_gen_id }}">
+              {{ 'lifestyle-1' | placeholder_svg_tag }}
+              <div class="ai-sauna-benefits-empty-state-{{ ai_gen_id }}">
+                Add Performance desktop image
+              </div>
+            </div>
+          {% endif %}
+
+          {% if block.settings.performance_image_mobile %}
+            <img
+              src="{{ block.settings.performance_image_mobile | image_url: width: 1000 }}"
+              alt="{{ block.settings.performance_image_mobile.alt | escape }}"
+              width="{{ block.settings.performance_image_mobile.width }}"
+              height="{{ block.settings.performance_image_mobile.height }}"
+              class="ai-sauna-benefits-image-{{ ai_gen_id }} ai-sauna-benefits-image-mobile-{{ ai_gen_id }}"
+            >
+          {% elsif block.settings.performance_image %}
+            <img
+              src="{{ block.settings.performance_image | image_url: width: 1000 }}"
+              alt="{{ block.settings.performance_image.alt | escape }}"
+              width="{{ block.settings.performance_image.width }}"
+              height="{{ block.settings.performance_image.height }}"
+              class="ai-sauna-benefits-image-{{ ai_gen_id }} ai-sauna-benefits-image-mobile-{{ ai_gen_id }}"
+            >
+          {% else %}
+            <div class="ai-sauna-benefits-image-placeholder-{{ ai_gen_id }} ai-sauna-benefits-image-mobile-{{ ai_gen_id }}">
+              {{ 'lifestyle-1' | placeholder_svg_tag }}
+              <div class="ai-sauna-benefits-empty-state-{{ ai_gen_id }}">
+                Add Performance mobile image
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="ai-sauna-benefits-grid-{{ ai_gen_id }}">
+          {% for i in (1..6) %}
+            {% liquid
+              assign title_key = 'performance_benefit_' | append: i | append: '_title'
+              assign desc_key = 'performance_benefit_' | append: i | append: '_description'
+              assign title = block.settings[title_key]
+              assign description = block.settings[desc_key]
+            %}
+            {% if title != blank or description != blank %}
+              <div class="ai-sauna-benefits-card-{{ ai_gen_id }}">
+                {% if title != blank %}
+                  <h3 class="ai-sauna-benefits-card-title-{{ ai_gen_id }}">{{ title }}</h3>
+                {% endif %}
+                {% if description != blank %}
+                  <p class="ai-sauna-benefits-card-description-{{ ai_gen_id }}">{{ description }}</p>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="ai-sauna-benefits-tab-content-{{ ai_gen_id }}" data-content="health">
+        <div class="ai-sauna-benefits-image-wrapper-{{ ai_gen_id }}">
+          {% if block.settings.health_image %}
+            <img
+              src="{{ block.settings.health_image | image_url: width: 2000 }}"
+              alt="{{ block.settings.health_image.alt | escape }}"
+              width="{{ block.settings.health_image.width }}"
+              height="{{ block.settings.health_image.height }}"
+              class="ai-sauna-benefits-image-{{ ai_gen_id }} ai-sauna-benefits-image-desktop-{{ ai_gen_id }}"
+            >
+          {% else %}
+            <div class="ai-sauna-benefits-image-placeholder-{{ ai_gen_id }} ai-sauna-benefits-image-desktop-{{ ai_gen_id }}">
+              {{ 'lifestyle-1' | placeholder_svg_tag }}
+              <div class="ai-sauna-benefits-empty-state-{{ ai_gen_id }}">
+                Add Health desktop image
+              </div>
+            </div>
+          {% endif %}
+
+          {% if block.settings.health_image_mobile %}
+            <img
+              src="{{ block.settings.health_image_mobile | image_url: width: 1000 }}"
+              alt="{{ block.settings.health_image_mobile.alt | escape }}"
+              width="{{ block.settings.health_image_mobile.width }}"
+              height="{{ block.settings.health_image_mobile.height }}"
+              class="ai-sauna-benefits-image-{{ ai_gen_id }} ai-sauna-benefits-image-mobile-{{ ai_gen_id }}"
+            >
+          {% elsif block.settings.health_image %}
+            <img
+              src="{{ block.settings.health_image | image_url: width: 1000 }}"
+              alt="{{ block.settings.health_image.alt | escape }}"
+              width="{{ block.settings.health_image.width }}"
+              height="{{ block.settings.health_image.height }}"
+              class="ai-sauna-benefits-image-{{ ai_gen_id }} ai-sauna-benefits-image-mobile-{{ ai_gen_id }}"
+            >
+          {% else %}
+            <div class="ai-sauna-benefits-image-placeholder-{{ ai_gen_id }} ai-sauna-benefits-image-mobile-{{ ai_gen_id }}">
+              {{ 'lifestyle-1' | placeholder_svg_tag }}
+              <div class="ai-sauna-benefits-empty-state-{{ ai_gen_id }}">
+                Add Health mobile image
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="ai-sauna-benefits-grid-{{ ai_gen_id }}">
+          {% for i in (1..6) %}
+            {% liquid
+              assign title_key = 'health_benefit_' | append: i | append: '_title'
+              assign desc_key = 'health_benefit_' | append: i | append: '_description'
+              assign title = block.settings[title_key]
+              assign description = block.settings[desc_key]
+            %}
+            {% if title != blank or description != blank %}
+              <div class="ai-sauna-benefits-card-{{ ai_gen_id }}">
+                {% if title != blank %}
+                  <h3 class="ai-sauna-benefits-card-title-{{ ai_gen_id }}">{{ title }}</h3>
+                {% endif %}
+                {% if description != blank %}
+                  <p class="ai-sauna-benefits-card-description-{{ ai_gen_id }}">{{ description }}</p>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="ai-sauna-benefits-tab-content-{{ ai_gen_id }}" data-content="longevity">
+        <div class="ai-sauna-benefits-image-wrapper-{{ ai_gen_id }}">
+          {% if block.settings.longevity_image %}
+            <img
+              src="{{ block.settings.longevity_image | image_url: width: 2000 }}"
+              alt="{{ block.settings.longevity_image.alt | escape }}"
+              width="{{ block.settings.longevity_image.width }}"
+              height="{{ block.settings.longevity_image.height }}"
+              class="ai-sauna-benefits-image-{{ ai_gen_id }} ai-sauna-benefits-image-desktop-{{ ai_gen_id }}"
+            >
+          {% else %}
+            <div class="ai-sauna-benefits-image-placeholder-{{ ai_gen_id }} ai-sauna-benefits-image-desktop-{{ ai_gen_id }}">
+              {{ 'lifestyle-1' | placeholder_svg_tag }}
+              <div class="ai-sauna-benefits-empty-state-{{ ai_gen_id }}">
+                Add Longevity desktop image
+              </div>
+            </div>
+          {% endif %}
+
+          {% if block.settings.longevity_image_mobile %}
+            <img
+              src="{{ block.settings.longevity_image_mobile | image_url: width: 1000 }}"
+              alt="{{ block.settings.longevity_image_mobile.alt | escape }}"
+              width="{{ block.settings.longevity_image_mobile.width }}"
+              height="{{ block.settings.longevity_image_mobile.height }}"
+              class="ai-sauna-benefits-image-{{ ai_gen_id }} ai-sauna-benefits-image-mobile-{{ ai_gen_id }}"
+            >
+          {% elsif block.settings.longevity_image %}
+            <img
+              src="{{ block.settings.longevity_image | image_url: width: 1000 }}"
+              alt="{{ block.settings.longevity_image.alt | escape }}"
+              width="{{ block.settings.longevity_image.width }}"
+              height="{{ block.settings.longevity_image.height }}"
+              class="ai-sauna-benefits-image-{{ ai_gen_id }} ai-sauna-benefits-image-mobile-{{ ai_gen_id }}"
+            >
+          {% else %}
+            <div class="ai-sauna-benefits-image-placeholder-{{ ai_gen_id }} ai-sauna-benefits-image-mobile-{{ ai_gen_id }}">
+              {{ 'lifestyle-1' | placeholder_svg_tag }}
+              <div class="ai-sauna-benefits-empty-state-{{ ai_gen_id }}">
+                Add Longevity mobile image
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="ai-sauna-benefits-grid-{{ ai_gen_id }}">
+          {% for i in (1..6) %}
+            {% liquid
+              assign title_key = 'longevity_benefit_' | append: i | append: '_title'
+              assign desc_key = 'longevity_benefit_' | append: i | append: '_description'
+              assign title = block.settings[title_key]
+              assign description = block.settings[desc_key]
+            %}
+            {% if title != blank or description != blank %}
+              <div class="ai-sauna-benefits-card-{{ ai_gen_id }}">
+                {% if title != blank %}
+                  <h3 class="ai-sauna-benefits-card-title-{{ ai_gen_id }}">{{ title }}</h3>
+                {% endif %}
+                {% if description != blank %}
+                  <p class="ai-sauna-benefits-card-description-{{ ai_gen_id }}">{{ description }}</p>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-sauna-benefits-preload-{{ ai_gen_id }}">
+      {% if block.settings.performance_image %}
+        <img src="{{ block.settings.performance_image | image_url: width: 2000 }}" alt="">
+      {% endif %}
+      {% if block.settings.performance_image_mobile %}
+        <img src="{{ block.settings.performance_image_mobile | image_url: width: 1000 }}" alt="">
+      {% endif %}
+      {% if block.settings.health_image %}
+        <img src="{{ block.settings.health_image | image_url: width: 2000 }}" alt="">
+      {% endif %}
+      {% if block.settings.health_image_mobile %}
+        <img src="{{ block.settings.health_image_mobile | image_url: width: 1000 }}" alt="">
+      {% endif %}
+      {% if block.settings.longevity_image %}
+        <img src="{{ block.settings.longevity_image | image_url: width: 2000 }}" alt="">
+      {% endif %}
+      {% if block.settings.longevity_image_mobile %}
+        <img src="{{ block.settings.longevity_image_mobile | image_url: width: 1000 }}" alt="">
+      {% endif %}
+    </div>
+  </div>
+</sauna-benefits-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class SaunaBenefits{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.tabs = this.querySelectorAll('.ai-sauna-benefits-tab-{{ ai_gen_id }}');
+        this.contents = this.querySelectorAll('.ai-sauna-benefits-tab-content-{{ ai_gen_id }}');
+        this.indicator = this.querySelector('.ai-sauna-benefits-tab-indicator-{{ ai_gen_id }}');
+        this.animationEnabled = {{ block.settings.enable_animation }};
+        this.tabStyle = '{{ block.settings.tab_style }}';
+      }
+
+      connectedCallback() {
+        if (this.indicator && this.tabStyle !== 'pills') {
+          this.updateIndicator(this.querySelector('.ai-sauna-benefits-tab-{{ ai_gen_id }}.active'));
+        }
+        
+        this.tabs.forEach((tab) => {
+          tab.addEventListener('click', () => this.switchTab(tab));
+        });
+
+        window.addEventListener('resize', () => {
+          const activeTab = this.querySelector('.ai-sauna-benefits-tab-{{ ai_gen_id }}.active');
+          if (activeTab && this.indicator && this.tabStyle !== 'pills') {
+            this.updateIndicator(activeTab);
+          }
+        });
+      }
+
+      switchTab(clickedTab) {
+        const targetTab = clickedTab.dataset.tab;
+        
+        this.tabs.forEach((tab) => tab.classList.remove('active'));
+        clickedTab.classList.add('active');
+
+        if (this.indicator && this.tabStyle !== 'pills') {
+          this.updateIndicator(clickedTab);
+        }
+
+        this.contents.forEach((content) => {
+          if (content.dataset.content === targetTab) {
+            if (this.animationEnabled) {
+              setTimeout(() => {
+                content.classList.add('active');
+              }, 100);
+            } else {
+              content.classList.add('active');
+            }
+          } else {
+            content.classList.remove('active');
+          }
+        });
+      }
+
+      updateIndicator(activeTab) {
+        const tabRect = activeTab.getBoundingClientRect();
+        const containerRect = activeTab.parentElement.getBoundingClientRect();
+        const offsetLeft = tabRect.left - containerRect.left;
+        
+        this.indicator.style.width = tabRect.width + 'px';
+        this.indicator.style.transform = 'translateX(' + offsetLeft + 'px)';
+      }
+    }
+
+    customElements.define('sauna-benefits-{{ ai_gen_id }}', SaunaBenefits{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Sauna benefits",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Supported by Modern Research"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Sauna Benefits"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "section_width",
+      "label": "Section width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "max_content_width",
+      "label": "Maximum content width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Image border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "Enable animation",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "subtitle_font",
+      "label": "Subtitle font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#000000"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "font_picker",
+      "id": "tab_font",
+      "label": "Tab font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "card_title_font",
+      "label": "Card title font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Card title color",
+      "default": "#000000"
+    },
+    {
+      "type": "font_picker",
+      "id": "card_description_font",
+      "label": "Card description font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "color",
+      "id": "card_description_color",
+      "label": "Card description color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Tab navigation"
+    },
+    {
+      "type": "select",
+      "id": "tab_style",
+      "label": "Tab style",
+      "options": [
+        {
+          "value": "bordered",
+          "label": "Bordered"
+        },
+        {
+          "value": "underline",
+          "label": "Underline"
+        },
+        {
+          "value": "pills",
+          "label": "Pills"
+        },
+        {
+          "value": "minimal",
+          "label": "Minimal"
+        }
+      ],
+      "default": "bordered"
+    },
+    {
+      "type": "color",
+      "id": "active_tab_color",
+      "label": "Active tab background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "active_tab_text_color",
+      "label": "Active tab text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "inactive_tab_color",
+      "label": "Inactive tab color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "tab_border_color",
+      "label": "Tab border color",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "range",
+      "id": "tab_border_radius",
+      "label": "Bordered tab radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 4,
+      "info": "Applies to bordered style"
+    },
+    {
+      "type": "range",
+      "id": "tab_pill_radius",
+      "label": "Pill tab radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 50,
+      "info": "Applies to pills style"
+    },
+    {
+      "type": "header",
+      "content": "Bordered, underline and minimal tabs"
+    },
+    {
+      "type": "range",
+      "id": "tab_height_desktop",
+      "label": "Desktop tab height",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "tab_width_desktop",
+      "label": "Desktop tab width",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "tab_height_mobile",
+      "label": "Mobile tab height",
+      "min": 6,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "tab_width_mobile",
+      "label": "Mobile tab width",
+      "min": 10,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Pills tabs"
+    },
+    {
+      "type": "range",
+      "id": "pill_height_desktop",
+      "label": "Desktop pill height",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "pill_width_desktop",
+      "label": "Desktop pill width",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "pill_height_mobile",
+      "label": "Mobile pill height",
+      "min": 6,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "pill_width_mobile",
+      "label": "Mobile pill width",
+      "min": 10,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Performance tab"
+    },
+    {
+      "type": "image_picker",
+      "id": "performance_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "performance_image_mobile",
+      "label": "Mobile image",
+      "info": "Optional. Falls back to desktop image if not set"
+    },
+    {
+      "type": "text",
+      "id": "performance_benefit_1_title",
+      "label": "Benefit 1 title",
+      "default": "Enhanced Recovery"
+    },
+    {
+      "type": "textarea",
+      "id": "performance_benefit_1_description",
+      "label": "Benefit 1 description",
+      "default": "Accelerate muscle recovery and reduce post-workout soreness through improved circulation."
+    },
+    {
+      "type": "text",
+      "id": "performance_benefit_2_title",
+      "label": "Benefit 2 title",
+      "default": "Increased Endurance"
+    },
+    {
+      "type": "textarea",
+      "id": "performance_benefit_2_description",
+      "label": "Benefit 2 description",
+      "default": "Regular sauna use can improve cardiovascular endurance and heat tolerance."
+    },
+    {
+      "type": "text",
+      "id": "performance_benefit_3_title",
+      "label": "Benefit 3 title",
+      "default": "Better Sleep Quality"
+    },
+    {
+      "type": "textarea",
+      "id": "performance_benefit_3_description",
+      "label": "Benefit 3 description",
+      "default": "Promote deeper, more restorative sleep for optimal athletic performance."
+    },
+    {
+      "type": "text",
+      "id": "performance_benefit_4_title",
+      "label": "Benefit 4 title",
+      "default": "Reduced Inflammation"
+    },
+    {
+      "type": "textarea",
+      "id": "performance_benefit_4_description",
+      "label": "Benefit 4 description",
+      "default": "Lower systemic inflammation to support faster recovery and injury prevention."
+    },
+    {
+      "type": "text",
+      "id": "performance_benefit_5_title",
+      "label": "Benefit 5 title",
+      "default": "Mental Clarity"
+    },
+    {
+      "type": "textarea",
+      "id": "performance_benefit_5_description",
+      "label": "Benefit 5 description",
+      "default": "Enhance focus and mental resilience through heat stress adaptation."
+    },
+    {
+      "type": "text",
+      "id": "performance_benefit_6_title",
+      "label": "Benefit 6 title",
+      "default": "Detoxification"
+    },
+    {
+      "type": "textarea",
+      "id": "performance_benefit_6_description",
+      "label": "Benefit 6 description",
+      "default": "Support natural detoxification processes through deep sweating."
+    },
+    {
+      "type": "header",
+      "content": "Health tab"
+    },
+    {
+      "type": "image_picker",
+      "id": "health_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "health_image_mobile",
+      "label": "Mobile image",
+      "info": "Optional. Falls back to desktop image if not set"
+    },
+    {
+      "type": "text",
+      "id": "health_benefit_1_title",
+      "label": "Benefit 1 title",
+      "default": "Cardiovascular Health"
+    },
+    {
+      "type": "textarea",
+      "id": "health_benefit_1_description",
+      "label": "Benefit 1 description",
+      "default": "Improve heart health and reduce risk of cardiovascular disease."
+    },
+    {
+      "type": "text",
+      "id": "health_benefit_2_title",
+      "label": "Benefit 2 title",
+      "default": "Immune Support"
+    },
+    {
+      "type": "textarea",
+      "id": "health_benefit_2_description",
+      "label": "Benefit 2 description",
+      "default": "Strengthen immune function through regular heat exposure."
+    },
+    {
+      "type": "text",
+      "id": "health_benefit_3_title",
+      "label": "Benefit 3 title",
+      "default": "Pain Relief"
+    },
+    {
+      "type": "textarea",
+      "id": "health_benefit_3_description",
+      "label": "Benefit 3 description",
+      "default": "Alleviate chronic pain and muscle tension naturally."
+    },
+    {
+      "type": "text",
+      "id": "health_benefit_4_title",
+      "label": "Benefit 4 title",
+      "default": "Skin Health"
+    },
+    {
+      "type": "textarea",
+      "id": "health_benefit_4_description",
+      "label": "Benefit 4 description",
+      "default": "Promote clearer, healthier skin through improved circulation."
+    },
+    {
+      "type": "text",
+      "id": "health_benefit_5_title",
+      "label": "Benefit 5 title",
+      "default": "Stress Reduction"
+    },
+    {
+      "type": "textarea",
+      "id": "health_benefit_5_description",
+      "label": "Benefit 5 description",
+      "default": "Lower cortisol levels and promote relaxation."
+    },
+    {
+      "type": "text",
+      "id": "health_benefit_6_title",
+      "label": "Benefit 6 title",
+      "default": "Blood Pressure"
+    },
+    {
+      "type": "textarea",
+      "id": "health_benefit_6_description",
+      "label": "Benefit 6 description",
+      "default": "Support healthy blood pressure levels over time."
+    },
+    {
+      "type": "header",
+      "content": "Longevity tab"
+    },
+    {
+      "type": "image_picker",
+      "id": "longevity_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "longevity_image_mobile",
+      "label": "Mobile image",
+      "info": "Optional. Falls back to desktop image if not set"
+    },
+    {
+      "type": "text",
+      "id": "longevity_benefit_1_title",
+      "label": "Benefit 1 title",
+      "default": "Cellular Health"
+    },
+    {
+      "type": "textarea",
+      "id": "longevity_benefit_1_description",
+      "label": "Benefit 1 description",
+      "default": "Activate heat shock proteins that protect and repair cells."
+    },
+    {
+      "type": "text",
+      "id": "longevity_benefit_2_title",
+      "label": "Benefit 2 title",
+      "default": "Brain Function"
+    },
+    {
+      "type": "textarea",
+      "id": "longevity_benefit_2_description",
+      "label": "Benefit 2 description",
+      "default": "Support cognitive health and reduce risk of neurodegenerative diseases."
+    },
+    {
+      "type": "text",
+      "id": "longevity_benefit_3_title",
+      "label": "Benefit 3 title",
+      "default": "Metabolic Health"
+    },
+    {
+      "type": "textarea",
+      "id": "longevity_benefit_3_description",
+      "label": "Benefit 3 description",
+      "default": "Improve insulin sensitivity and metabolic function."
+    },
+    {
+      "type": "text",
+      "id": "longevity_benefit_4_title",
+      "label": "Benefit 4 title",
+      "default": "Mitochondrial Function"
+    },
+    {
+      "type": "textarea",
+      "id": "longevity_benefit_4_description",
+      "label": "Benefit 4 description",
+      "default": "Enhance cellular energy production and efficiency."
+    },
+    {
+      "type": "text",
+      "id": "longevity_benefit_5_title",
+      "label": "Benefit 5 title",
+      "default": "Hormonal Balance"
+    },
+    {
+      "type": "textarea",
+      "id": "longevity_benefit_5_description",
+      "label": "Benefit 5 description",
+      "default": "Support healthy hormone production and regulation."
+    },
+    {
+      "type": "text",
+      "id": "longevity_benefit_6_title",
+      "label": "Benefit 6 title",
+      "default": "Longevity Pathways"
+    },
+    {
+      "type": "textarea",
+      "id": "longevity_benefit_6_description",
+      "label": "Benefit 6 description",
+      "default": "Activate biological pathways associated with increased lifespan."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sauna benefits"
+    }
+  ]
+}
+{% endschema %}

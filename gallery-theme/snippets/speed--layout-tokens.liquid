@@ -1,4 +1,11 @@
 <style>
+:root{
+--font-display: 'Archivo Black', 'Anton', sans-serif;
+--font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+--font-body-style: normal;
+--font-heading-weight: 400;
+--font-body-weight: 400;
+}
 
       {%- liquid
         assign body_font_bold = settings.body_font | font_modify: 'weight', 'bold'
@@ -24,11 +31,11 @@
       :root {
         --font-body: 'Jost', {% if settings.body_font.family %}{{ settings.body_font.family }}, {% endif %}{{ settings.body_font.fallback_families | default: 'sans-serif' }};
         --font-heading: 'Anton', {% if settings.heading_font.family %}{{ settings.heading_font.family }}, {% endif %}sans-serif;
-        --font-display: 'Archivo Black', 'Anton', sans-serif;
-        --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-        --font-body-style: normal;
-        --font-heading-weight: 400;
-        --font-body-weight: 400;
+
+
+
+
+
         --body-size: {{ settings.body_size | divided_by: 16.0 }}rem;
         --heading-scale: {{ settings.heading_scale | divided_by: 100.0 }};
         --heading-spacing: {{ settings.heading_spacing | divided_by: 100.0 }}em;
@@ -62,4 +69,5 @@
           {{ card_elems }} { --card-border: none; --card-bg: transparent; }
       {% endcase %}
     
+}
 </style>

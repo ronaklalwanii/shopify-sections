@@ -70,12 +70,17 @@ function extractSnippetRefs(source) {
   return [...new Set(names)];
 }
 
+function normalizeAssetName(name) {
+  return String(name || '').replace(/^\/?assets\/[^/]+\//, '').replace(/^\/+/, '');
+}
+
 function extractAssetRefs(source) {
   const refs = new Set();
-  const pattern = /['"]([\w./-]+\.(?:css|mjs|js|woff2?|png|jpe?g|svg|gif|webp|avif|eot|ttf|otf))['"]\s*\|\s*(?:asset_url|shopify_asset_url|stylesheet_tag|script_tag|preload_tag)/g;
+  const pattern = /['"]([\w./-]+\.(?:css|mjs|js|woff2?|png|jpe?g|svg|gif|webp|avif|eot|ttf|otf))['"]\s*\|\s*(?:asset_url|shopify_asset_url|inline_asset_content|stylesheet_tag|script_tag|preload_tag)/g;
   let match;
   while ((match = pattern.exec(source))) {
-    if (!match[1].split('/').includes('..')) refs.add(match[1]);
+    const name = normalizeAssetName(match[1]);
+    if (name && !name.split('/').includes('..')) refs.add(name);
   }
   return [...refs];
 }
@@ -115,5 +120,6 @@ module.exports = {
   scanRenderEdits,
   extractSnippetRefs,
   extractAssetRefs,
+  normalizeAssetName,
   collectSectionDependencies,
 };
