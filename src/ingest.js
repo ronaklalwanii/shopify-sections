@@ -34,21 +34,101 @@ const CATEGORY_RULES = [
   ['Text / Content', ['rich-text', 'multi-column', 'accordion', 'tabs', 'faq', 'editorial', 'story', 'flip', 'about', 'text-with-icons', 'bento', 'grid', 'card', 'decorated', 'button', 'glow', 'process', 'services', 'paths', 'scrolling', 'word-scroll', 'duo', 'layout', 'categories', 'accessories', 'link']],
 ];
 
-function classify(fileName, overrides) {
+function classify(fileName, overrides, context = {}) {
   const n = fileName.toLowerCase();
   if (overrides.category) return { category: overrides.category, core: overrides.core ?? false };
-  const core = CORE_RULES.some((r) => (r instanceof RegExp ? r.test(n) : n.includes(r)));
+  const { referenced = false, signals = null } = context;
+  // Ground truth first: a section the theme's own layout or a section group
+  // renders is chrome by definition. Filename rules are the fallback, which is
+  // what keeps utilities like custom-liquid flagged as core even though no
+  // layout references them.
+  const core = referenced || CORE_RULES.some((r) => (r instanceof RegExp ? r.test(n) : n.includes(r)));
   let category = 'Other';
   if (core) {
     category = /^main-|search|pickup|account|password|gift-card|cart|privacy|apps/.test(n) ? 'Core Shopify files' : 'Header / Footer / Nav';
     if (/drawer|search|pickup|privacy|promo-payment|recently-viewed|related|apps|custom-liquid|custom-html|shogun|newsletter-popup|variant-added/.test(n)) category = 'Core Shopify files';
-  } else {
-    for (const [cat, kws] of CATEGORY_RULES) {
-      if (kws.some((k) => n.includes(k))) { category = cat; break; }
-    }
+    return { category, core };
+  }
+  for (const [cat, kws] of CATEGORY_RULES) {
+    if (kws.some((k) => n.includes(k))) { category = cat; break; }
+  }
+  // A keyword match is a confident label, so signals only get to rescue the
+  // sections the filename rules could not place. Overruling a confident match
+  // with a weak signal made labels worse - a contact form read as core
+  // plumbing, a video hero was relabelled Media - so it is deliberately not done.
+  if (category === 'Other' && signals) {
+    const fromSignals = signalCategory(signals);
+    if (fromSignals) category = fromSignals;
   }
   return { category, core };
 }
+
+// What the section actually does, read from its schema and its Liquid rather
+// than guessed from its filename.
+function deriveSignals(src, schema) {
+  const settings = (schema && schema.settings) || [];
+  const blocks = (schema && schema.blocks) || [];
+  const dataObjects = [];
+  for (const object of ['product', 'cart', 'collection', 'blog', 'article', 'customer', 'order', 'shop', 'predictive_search', 'localization']) {
+    if (new RegExp(`\\b${object}\\s*\\.`, 'i').test(src)) dataObjects.push(object);
+  }
+  const settingTypes = {};
+  for (const setting of settings) if (setting && setting.type) settingTypes[setting.type] = true;
+  return {
+    dataObjects,
+    // Unique type names, not counts: this is for search and display, and the
+    // index is held in memory and served to the browser, so it stays compact.
+    settingTypes: Object.keys(settingTypes),
+    blockTypes: blocks.map((b) => b && b.type).filter(Boolean),
+    hasProductForm: /\{%-?\s*form\s+['"]product['"]/.test(src),
+    hasCartForm: /\{%-?\s*form\s+['"]cart['"]/.test(src),
+    hasVideo: /<video|\.mp4|\.m3u8|video_url|external_video/.test(src),
+    hasMediaSetting: ['image', 'video', 'richtext'].some((t) => settingTypes[t]),
+    usesRichtext: !!settingTypes.richtext,
+    usesBlocks: blocks.length > 0 || /content_for\s+['"]block['"]/i.test(src),
+    usesSnippet: /\{%-?\s*(?:render|include)\s+/.test(src),
+    usesRemoteAsset: /https?:\/\//.test(src) && !/https?:\/\/(?:cdn\.shopify\.com|fonts\.|\/\/)/.test(src),
+  };
+}
+
+// Only unambiguous evidence, and only ever used for sections the filename rules
+// could not place. A {% form 'product' %} really does mean it sells something.
+function signalCategory(signals) {
+  const { dataObjects, settingTypes } = signals;
+  if (signals.hasProductForm || signals.hasCartForm) return 'Product showcase';
+  if (dataObjects.includes('blog') || dataObjects.includes('article')) return 'Text / Content';
+  if (signals.usesRichtext && !signals.hasMediaSetting && settingTypes.length <= 3) return 'Text / Content';
+  return null;
+}
+
+// The sections a store's chrome is built from: the ones its layout renders
+// statically or through a section group. Deliberately excludes page templates,
+// because a page template referencing collection-banner or contact means those
+// are that page's content, not store plumbing. (The exporter keeps a wider set
+// for a different reason: anything a template references must survive export.)
+function chromeSectionTypes(storeDir) {
+  const referenced = new Set();
+  const sectionsDir = path.join(storeDir, 'sections');
+  const addGroup = (name) => {
+    try {
+      const data = parseJsonLoose(fs.readFileSync(path.join(sectionsDir, `${name}.json`), 'utf8'));
+      for (const section of Object.values((data && data.sections) || {})) if (section && section.type) referenced.add(section.type);
+    } catch {}
+  };
+  try {
+    for (const entry of fs.readdirSync(sectionsDir)) if (entry.endsWith('.json')) addGroup(entry.replace(/\.json$/, ''));
+  } catch {}
+  try {
+    for (const entry of fs.readdirSync(path.join(storeDir, 'layout'))) {
+      if (!entry.endsWith('.liquid')) continue;
+      const text = fs.readFileSync(path.join(storeDir, 'layout', entry), 'utf8');
+      for (const match of text.matchAll(/\{%-?\s*section\s+(['"])([^'"]+)\1/g)) referenced.add(match[2]);
+      for (const match of text.matchAll(/\{%-?\s*sections\s+(['"])([^'"]+)\1/g)) addGroup(match[2]);
+    }
+  } catch {}
+  return referenced;
+}
+
 
 function contentHash(src) {
   const norm = src.replace(/\r/g, '').split('\n').map((l) => l.trimEnd()).join('\n').trim();
@@ -98,6 +178,7 @@ function ingestStore(root, storeDir) {
   const sectionsDir = path.join(storeDir, 'sections');
   if (!fs.existsSync(sectionsDir)) return null;
   const sections = [];
+  const referenced = chromeSectionTypes(storeDir);
   for (const f of fs.readdirSync(sectionsDir).sort()) {
     if (!f.endsWith('.liquid')) continue;
     const full = path.join(sectionsDir, f);
@@ -105,11 +186,13 @@ function ingestStore(root, storeDir) {
     const schema = extractSchema(src);
     const dependencies = collectSectionDependencies(storeDir, src);
     const schemaStatus = schema ? 'valid' : /{%-?\s*schema\s*-?%}/i.test(src) ? 'invalid' : 'missing';
+    const slug = f.replace(/\.liquid$/, '');
     sections.push({
       store: path.basename(storeDir),
       root,
       file: f,
-      name: (schema && schema.name) || f.replace(/\.liquid$/, '').replace(/[-_]/g, ' '),
+      slug,
+      name: (schema && schema.name) || slug.replace(/[-_]/g, ' '),
       category: null,
       settings: schema ? (schema.settings || []).length : 0,
       blocks: schema ? (schema.blocks || []).length : 0,
@@ -122,21 +205,24 @@ function ingestStore(root, storeDir) {
       usesContentFor: /\bcontent_for\b/i.test(src),
       empty: src.trim().length === 0,
       hash: contentHash(src),
+      // Ground truth for "is this store plumbing", plus what the code does.
+      referenced: referenced.has(slug),
+      signals: deriveSignals(src, schema),
     });
   }
   return sections;
 }
 
-function loadQaIndex() {
+function loadQaIndex(reportPath = QA_REPORT) {
   try {
-    const report = JSON.parse(fs.readFileSync(QA_REPORT, 'utf8'));
+    const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
     const mapRows = (rows = []) => new Map(rows.map((row) => [`${row.store}/${row.file}`, row]));
     return { checkedAt: report.generatedAt || null, local: mapRows(report.local?.results), live: mapRows(report.live?.results) };
   } catch { return { checkedAt: null, local: new Map(), live: new Map() }; }
 }
 
-function applyQuality(sections) {
-  const report = loadQaIndex();
+function applyQuality(sections, reportPath) {
+  const report = loadQaIndex(reportPath);
   const byKey = new Map(sections.map((section) => [`${section.store}/${section.file}`, section]));
   for (const section of sections) {
     let key = `${section.store}/${section.file}`;
@@ -149,11 +235,10 @@ function applyQuality(sections) {
   }
 }
 
-function main() {
-  const overrides = loadOverrides();
+function ingestIndex({ outFile = OUT_FILE, roots = ROOTS, overrides = loadOverrides(), quiet = false } = {}) {
   const stores = [];
   const sections = [];
-  for (const root of ROOTS) {
+  for (const root of roots) {
     for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
       if (!entry.isDirectory()) continue;
       const ingested = ingestStore(root, path.join(root, entry.name));
@@ -162,7 +247,7 @@ function main() {
       stores.push({ name: entry.name, sectionCount: ingested.length, color, textColor: luminance(color) > 0.6 ? '#191a1c' : '#ffffff' });
       for (const s of ingested) {
         const ov = overrides[`${s.store}/${s.file}`] || {};
-        const { category, core } = classify(s.file, ov);
+        const { category, core } = classify(s.file, ov, { referenced: s.referenced, signals: s.signals });
         s.category = category;
         s.core = core;
         s.custom = false;
@@ -189,19 +274,59 @@ function main() {
     }
   }
 
+  // Variant grouping: same slug across stores. Content-hash dedupe cannot see
+  // these, because a modified or extended version is by definition a different
+  // hash - which is exactly the interesting case. Groups with a single distinct
+  // hash are exact copies and carry no new information.
+  //
+  // The variant list is stored once per slug at the top level rather than on
+  // every member: announcement-bar alone spans 24 stores, and duplicating that
+  // array on each of them was the difference between a 1.5 MB and a 4 MB index.
+  const bySlug = new Map();
+  for (const s of sections) {
+    if (!bySlug.has(s.slug)) bySlug.set(s.slug, []);
+    bySlug.get(s.slug).push(s);
+  }
+  const variants = {};
+  for (const [slug, group] of bySlug) {
+    if (group.length < 2) continue;
+    group.sort((a, b) => (a.store + a.file).localeCompare(b.store + b.file));
+    const list = [];
+    const seenHashes = new Set();
+    for (const s of group) {
+      if (seenHashes.has(s.hash)) continue;
+      seenHashes.add(s.hash);
+      list.push({ store: s.store, file: s.file, hash: s.hash, lines: s.lines, settings: s.settings, blocks: s.blocks, stores: group.filter((o) => o.hash === s.hash).map((o) => o.store) });
+    }
+    if (list.length < 2) continue;
+    variants[slug] = { stores: group.length, variants: list };
+    for (const s of group) {
+      s.variantSlug = slug;
+      s.variantCount = list.length;
+      s.diverged = true;
+    }
+  }
+
   for (const s of sections) delete s.root;
   const version = crypto.createHash('sha256').update(JSON.stringify({ stores, sections })).digest('hex').slice(0, 16);
-  applyQuality(sections);
-  const index = { version, stores, sections };
-  fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true });
-  fs.writeFileSync(OUT_FILE, JSON.stringify(index, null, 2));
-  const byCat = {};
-  let dupes = 0;
-  for (const s of sections) { byCat[s.category] = (byCat[s.category] || 0) + 1; if (s.duplicate) dupes++; }
-  console.log(`Ingested ${sections.length} sections from ${stores.length} store(s) across ${ROOTS.length} root(s)`);
-  console.log(`Duplicates collapsed: ${dupes} (${groups.size} unique components)`);
-  console.log(byCat);
+  applyQuality(sections, overrides.qualityReport);
+  const index = { version, stores, variants, sections };
+  fs.mkdirSync(path.dirname(outFile), { recursive: true });
+  fs.writeFileSync(outFile, JSON.stringify(index, null, 2));
+  if (!quiet) {
+    const byCat = {};
+    let dupes = 0;
+    for (const s of sections) { byCat[s.category] = (byCat[s.category] || 0) + 1; if (s.duplicate) dupes++; }
+    console.log(`Ingested ${sections.length} sections from ${stores.length} store(s) across ${roots.length} root(s)`);
+    console.log(`Duplicates collapsed: ${dupes} (${groups.size} unique components)`);
+    console.log(byCat);
+  }
+  return { index, stores, sections, variants, groups };
+}
+
+function main() {
+  ingestIndex();
 }
 
 if (require.main === module) main();
-module.exports = { main, extractSchema };
+module.exports = { main, ingestIndex, extractSchema };

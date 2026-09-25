@@ -9,6 +9,8 @@ const state = {
   category: 'all',
   q: '',
   showCore: false,
+  showAllVariants: false,
+  variants: {},
   showPreviews: localStorage.getItem('sl-previews') !== 'off',
   columns: [2, 4].includes(Number(localStorage.getItem('sl-columns'))) ? Number(localStorage.getItem('sl-columns')) : 2,
   visibleCount: 48,
@@ -33,15 +35,35 @@ const catColor = (c) => CAT_COLORS[c] || '#8b8d93';
 
 /* ---------------------------------- filtering --------------------------------- */
 
+function searchHaystack(s) {
+  if (s._hay) return s._hay;
+  const sig = s.signals || {};
+  const deps = s.dependencies || {};
+  // Search covers what the code does, not just what it is called: schema
+  // signals, block types, and the snippets/assets it pulls in.
+  s._hay = [
+    s.name, s.file, s.slug, s.store, s.category,
+    (s.tags || []).join(' '),
+    (sig.dataObjects || []).join(' '),
+    (sig.settingTypes || []).join(' '),
+    (sig.blockTypes || []).join(' '),
+    (deps.snippets || []).join(' '),
+    (deps.assets || []).join(' '),
+    sig.hasProductForm ? 'productform addtocart' : '',
+    sig.hasCartForm ? 'cartform' : '',
+    sig.usesBlocks ? 'blocks schema' : '',
+    sig.usesRemoteAsset ? 'remote' : '',
+  ].join(' ').toLowerCase();
+  return s._hay;
+}
+
 function visibleSections() {
   const q = state.q.trim().toLowerCase();
   return state.sections.filter((s) => {
-    // Duplicates collapse into their canonical entry globally; picking a store
-    // shows that store's own files (which is what the store actually contains).
-    if (state.store === 'all' ? s.duplicate : s.store !== state.store) return false;
+    if (state.store === 'all' ? s.duplicate && !state.showAllVariants : s.store !== state.store) return false;
     if (state.category !== 'all' && s.category !== state.category) return false;
     if (s.core && !state.showCore) return false;
-    if (q && !(`${s.name} ${s.file} ${s.store} ${s.category} ${(s.tags || []).join(' ')}`.toLowerCase().includes(q))) return false;
+    if (q && !searchHaystack(s).includes(q)) return false;
     return true;
   });
 }
@@ -54,10 +76,11 @@ function counts() {
     if (s.core && !state.showCore) continue;
     stores[s.store] = (stores[s.store] || 0) + 1;
   }
-  // Headline + categories: current scope (store filter applied, dupes collapsed).
+  // Headline + categories: current scope (store filter applied, dupes collapsed
+  // unless the variant toggle is on).
   for (const s of state.sections) {
     if (s.core && !state.showCore) continue;
-    if (state.store === 'all' ? s.duplicate : s.store !== state.store) continue;
+    if (state.store === 'all' ? s.duplicate && !state.showAllVariants : s.store !== state.store) continue;
     stores.all++;
     cats[s.category] = (cats[s.category] || 0) + 1;
   }
@@ -105,11 +128,14 @@ function renderGrid() {
       <div class="card-meta">
         <span class="chip store-chip" style="${storeChipStyle(s.store === 'custom' ? null : s.store)}">${s.store === 'custom' ? 'custom' : esc(s.store)}</span>
         ${(s.group && s.group.length > 1) ? `<span class="chip" title="also in: ${esc(s.group.filter((x) => x !== s.store).join(', '))}">${s.group.length} stores</span>` : ''}
+        ${s.diverged && state.variants && state.variants[s.variantSlug] ? `<span class="chip variant" title="distinct implementations of ${esc(s.variantSlug)} across ${state.variants[s.variantSlug].stores} stores — click to compare">${s.variantCount} variants</span>` : ''}
         ${dependencyCount ? `<span class="chip" title="includes ${dependencyCount} section-owned dependencies">${dependencyCount} dep${dependencyCount === 1 ? '' : 's'}</span>` : ''}
         ${s.schemaStatus === 'invalid' ? '<span class="chip warning">schema issue</span>' : ''}
         <span class="chip ${quality.status === 'failed' ? 'warning' : ''}" title="${esc((quality.issues || []).join(' · '))}">${qualityText}</span>
         <span class="chip">${esc(s.category)}</span>
         ${s.core ? '<span class="chip core">core</span>' : ''}
+        ${(s.signals && s.signals.usesBlocks) ? '<span class="chip" title="uses theme blocks">blocks</span>' : ''}
+        ${(s.signals && s.signals.hasProductForm) ? '<span class="chip" title="contains an add-to-cart product form">adds to cart</span>' : ''}
         <span class="meta-dim">${s.settings || 0} set · ${s.blocks || 0} blk</span>
       </div>
     </div>`;
@@ -137,7 +163,7 @@ function renderGrid() {
   $('loadMore').textContent = `Load ${Math.min(48, all.length - list.length)} more sections`;
   const scope = [state.category !== 'all' && state.category, state.store !== 'all' && (state.store === 'custom' ? 'custom sections' : `store "${state.store}"`)].filter(Boolean).join(' · ');
   $('resultsTitle').textContent = state.q ? `Results for "${state.q}"` : (scope || 'All sections');
-  $('resultsSub').textContent = `${all.length} section${all.length === 1 ? '' : 's'}${state.showCore ? '' : ' · core Shopify files hidden'}`;
+  $('resultsSub').textContent = `${all.length} section${all.length === 1 ? '' : 's'}${state.showCore ? '' : ' · core Shopify files hidden'}${state.showAllVariants ? ' · all store variants' : ''}`;
   if (state.showPreviews) observeThumbs();
 }
 
@@ -654,6 +680,7 @@ async function load() {
   if (!response.ok) throw new Error(`Index request failed (${response.status})`);
   const idx = await response.json();
   state.sections = idx.sections;
+  state.variants = idx.variants || {};
   state.stores = idx.stores;
   state.storeColors = Object.fromEntries(idx.stores.map((s) => [s.name, { color: s.color, textColor: s.textColor }]));
   const cats = [...new Set(idx.sections.map((s) => s.category))].sort();
@@ -699,12 +726,14 @@ $('search').addEventListener('input', (e) => {
 });
 $('loadMore').onclick = () => { state.visibleCount += 48; renderGrid(); };
 $('coreToggle').addEventListener('change', (e) => { state.showCore = e.target.checked; refresh(); });
+$('variantsToggle').addEventListener('change', (e) => { state.showAllVariants = e.target.checked; refresh(); });
 syncColumnButtons();
 $('columnSwitch').addEventListener('click', (e) => {
   const button = e.target.closest('button[data-columns]');
   if (button) setColumns(button.dataset.columns);
 });
 $('coreToggle').checked = state.showCore;
+$('variantsToggle').checked = state.showAllVariants;
 $('previewsToggle').checked = state.showPreviews;
 $('previewsToggle').addEventListener('change', (e) => {
   state.showPreviews = e.target.checked;

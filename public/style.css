@@ -177,6 +177,7 @@ body {
 }
 .chip.store-chip { background: #e8efe9; color: #2f6f4f; }
 .chip.core { background: #efe9f4; color: #6d4f8a; }
+.chip.variant { background: #eaf1ea; color: #3f6b46; cursor: pointer; }
 .chip.warning { background: #f8e8e4; color: var(--danger); }
 .card .meta-dim { font-size: 11px; color: var(--ink-3); margin-left: auto; font-variant-numeric: tabular-nums; }
 
