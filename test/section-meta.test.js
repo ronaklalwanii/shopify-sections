@@ -148,4 +148,9 @@ test('rolls back custom sections when persistence fails', () => {
   assert.match(app, /Saving to GitHub/);
   assert.match(app, /Deleting…/);
   assert.match(app, /function setButtonBusy\(/);
+  const ui = fs.readFileSync(path.join(__dirname, '../public/index.html'), 'utf8');
+  assert.match(ui, /id="packBar"/);
+  assert.match(ui, /id="exportOverlay"/);
+  assert.match(app, /\/api\/export/);
+  assert.match(app, /function movePack\(/);
 });

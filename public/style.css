@@ -148,10 +148,27 @@ body {
   width: 100%; color: inherit; font: inherit; text-align: left;
   content-visibility: auto; contain-intrinsic-size: 220px;
 }
+.pack-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin: -4px 0 16px; padding: 10px 12px; border: 1px solid #cfe1d5;
+  background: #eef6f0; border-radius: 10px;
+}
+.pack-bar[hidden] { display: none; }
+.pack-bar-info, .pack-bar-actions { display: flex; align-items: center; gap: 9px; }
+.pack-bar-title { font-weight: 680; font-size: 13px; }
+.pack-bar-count { color: var(--ink-3); font-size: 12px; }
 .card:hover { border-color: #cfcac1; box-shadow: 0 6px 18px -8px rgba(25,26,28,.18); transform: translateY(-1px); }
 .card .cat-dot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 8px; }
-.card-top { display: flex; align-items: center; gap: 8px; }
-.card-name { font-weight: 620; font-size: 13.5px; line-height: 1.35; letter-spacing: -0.005em; }
+.card:focus-visible { outline: 3px solid #78a98a; outline-offset: 2px; }
+.card-top { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.card-name { font-weight: 620; font-size: 13.5px; line-height: 1.35; letter-spacing: -0.005em; min-width: 0; }
+.pack-toggle {
+  margin-left: auto; flex: 0 0 auto; border: 1px solid var(--line); background: #fff;
+  color: var(--ink-2); border-radius: 99px; padding: 4px 8px; font: inherit;
+  font-size: 10.5px; font-weight: 650; cursor: pointer; white-space: nowrap;
+}
+.pack-toggle:hover { background: #f0efeb; }
+.pack-toggle.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
 .card-file { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .card-meta { margin-top: auto; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .chip {
@@ -181,7 +198,30 @@ body {
 }
 .modal-detail { height: calc(100vh - 52px); max-width: 1500px; }
 .modal-editor { height: calc(100vh - 52px); max-width: 1360px; }
+.modal-export { max-width: 720px; max-height: calc(100vh - 52px); }
 .detail-preview iframe, .editor-preview iframe { min-height: 280px; }
+.export-body { overflow: auto; padding: 18px; display: flex; flex-direction: column; gap: 16px; }
+.export-options { display: grid; gap: 9px; }
+.export-option {
+  display: flex; align-items: flex-start; gap: 10px; padding: 12px;
+  border: 1px solid var(--line); border-radius: 9px; background: #fff; cursor: pointer;
+}
+.export-option:has(input:checked) { border-color: #8fbb9e; background: #f2f8f3; }
+.export-option input { margin-top: 3px; accent-color: var(--accent); }
+.export-option span { display: flex; flex-direction: column; gap: 3px; }
+.export-option strong { font-size: 13px; }
+.export-option small { color: var(--ink-3); font-size: 11.5px; }
+.export-selection-head { display: flex; justify-content: space-between; color: var(--ink-3); font-size: 12px; font-weight: 650; }
+.export-selection { display: flex; flex-direction: column; gap: 6px; }
+.export-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: #fff; border: 1px solid var(--line); border-radius: 8px; }
+.export-order { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: #eef6f0; color: var(--accent); font-size: 11px; font-weight: 700; }
+.export-item-name { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.export-item-name strong { font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.export-item-name small { color: var(--ink-3); font: 10.5px var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.icon-btn { border: 1px solid var(--line); background: #fff; border-radius: 6px; width: 26px; height: 26px; cursor: pointer; color: var(--ink-2); }
+.icon-btn:hover { background: #f0efeb; }
+.icon-btn:disabled { opacity: .35; cursor: default; }
+.icon-btn.danger { color: var(--danger); }
 
 .modal-head {
   display: flex; align-items: center; justify-content: space-between; gap: 14px;
@@ -312,6 +352,9 @@ body {
   .grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
   .overlay { padding: 8px; }
   .modal-detail, .modal-editor { height: calc(100vh - 16px); }
+  .modal-export { max-height: calc(100vh - 16px); }
+  .pack-bar { align-items: flex-start; flex-direction: column; }
+  .pack-bar-actions { width: 100%; justify-content: flex-end; }
   .modal-head { align-items: flex-start; flex-wrap: wrap; }
   .modal-actions { flex-wrap: wrap; }
   .detail-preview, .editor-preview { min-height: 42vh; }

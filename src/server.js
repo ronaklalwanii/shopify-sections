@@ -6,6 +6,7 @@ const { execFileSync } = require('child_process');
 const express = require('express');
 const { renderStoreSection, renderSectionSource, renderSnippet, renderLayoutTokens, layoutTokensFallback, isEsmJs, findStore, getEngine, googleFontsLink } = require('./renderer');
 const { extractSchema, collectSectionDependencies, extractAssetRefs, extractSnippetRefs, normalizeAssetName } = require('./section-meta');
+const { buildExport } = require('./exporter');
 const { CUSTOM_SLUG, assertCustomSlug, customFilePath } = require('./path-safety');
 
 const ROOT = path.resolve(__dirname, '..');
@@ -603,6 +604,30 @@ app.post('/api/render-preview', async (req, res) => {
   const res2 = await renderSectionSource(store === 'custom' ? 'custom' : store, liquid, { sectionId: 'live-preview' });
   const token = createPreviewToken();
   res.json({ ...res2, html: tokenizePreviewAssets(normalizePreviewMedia(res2.html), token) });
+});
+
+app.post('/api/export', async (req, res) => {
+  try {
+    const body = req.body || {};
+    const name = String(body.name || 'section-pack').replace(/[^a-z0-9_-]+/gi, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'section-pack';
+    const result = buildExport({
+      items: body.items,
+      mode: body.mode,
+      baseStore: body.baseStore || 'base',
+      name,
+      customDir: CUSTOM_DIR,
+      sourceCommit: process.env.VERCEL_GIT_COMMIT_SHA || null,
+    });
+    const maxBytes = IS_SERVERLESS ? 4.5 * 1024 * 1024 : 0;
+    if (maxBytes && result.buffer.length > maxBytes) throw new Error('This export is too large for the deployment. Select fewer sections or use the lightweight pack.');
+    const suffix = body.mode === 'pack' ? 'sections' : 'theme';
+    res.set('Cache-Control', 'no-store');
+    res.set('Content-Disposition', `attachment; filename="${name}-${suffix}.zip"`);
+    res.type('application/zip');
+    res.send(result.buffer);
+  } catch (error) {
+    res.status(400).json({ error: error.message || 'Export failed' });
+  }
 });
 
 app.post('/api/custom', async (req, res) => {

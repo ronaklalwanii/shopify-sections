@@ -19,6 +19,18 @@ Saved sections persist to the `DATA_REPO` GitHub repo and survive restarts/redep
 
 Note: themes are content-hash deduped, so shared sections across stores appear once.
 
+## Export a section pack
+
+Use **Add to pack** on any section card, reorder the selection, then choose one
+of two one-time exports:
+
+- **Ready-to-upload theme ZIP** — a `base` theme with the selected sections,
+  namespaced dependencies, source CSS/JS, and `page.section-pack.json`.
+- **Lightweight section pack ZIP** — selected sections and their dependencies
+  for merging into an existing theme, with an import manifest.
+
+The catalog and original store folders are never modified by an export.
+
 ## Run
 
 ```bash
@@ -144,6 +156,7 @@ verified.
 src/ingest.js    scan stores/* → data/index.json (schemas, dependencies, quality)
 src/section-meta.js shared schema/dependency analysis
 src/renderer.js  liquidjs engine, Shopify mocks, filters & custom tags
+src/exporter.js  ready-to-upload theme and lightweight section-pack ZIPs
 src/server.js    API, preview routes, placeholder SVGs, custom section CRUD
 public/          frontend (vanilla JS)
 custom-sections/ your saved sections — standalone git repo

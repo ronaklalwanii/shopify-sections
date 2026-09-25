@@ -63,6 +63,16 @@
         </label>
       </div>
     </div>
+    <div class="pack-bar" id="packBar" hidden>
+      <div class="pack-bar-info">
+        <span class="pack-bar-title">Section pack</span>
+        <span class="pack-bar-count" id="packCount">0 sections</span>
+      </div>
+      <div class="pack-bar-actions">
+        <button type="button" class="btn btn-primary small" id="packReview">Review &amp; export</button>
+        <button type="button" class="btn btn-ghost small" id="packClear">Clear</button>
+      </div>
+    </div>
     <div class="grid" id="grid"></div>
     <button type="button" class="btn btn-ghost load-more" id="loadMore" hidden>Load more</button>
     <div class="empty" id="empty" hidden>
@@ -70,6 +80,41 @@
       <div class="empty-sub">Try clearing the search or picking another store.</div>
     </div>
   </main>
+</div>
+
+<!-- export modal -->
+<div class="overlay" id="exportOverlay" hidden>
+  <div class="modal modal-export" role="dialog" aria-modal="true" aria-labelledby="exportTitle">
+    <header class="modal-head">
+      <div class="modal-head-info">
+        <div class="modal-kicker">Section pack · base store</div>
+        <h2 id="exportTitle">Export selection</h2>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="exportCancel">Cancel</button>
+        <button type="button" class="btn btn-primary" id="exportDownload">Download ZIP</button>
+        <button type="button" class="btn btn-ghost" id="exportClose">✕</button>
+      </div>
+    </header>
+    <div class="export-body">
+      <label class="field">
+        <span>Pack name</span>
+        <input type="text" id="exportName" maxlength="60" value="section-pack">
+      </label>
+      <div class="export-options">
+        <label class="export-option">
+          <input type="radio" name="exportMode" value="theme" checked>
+          <span><strong>Ready-to-upload theme ZIP</strong><small>Base theme folders, selected sections, dependencies, and a generated page template.</small></span>
+        </label>
+        <label class="export-option">
+          <input type="radio" name="exportMode" value="pack">
+          <span><strong>Lightweight section pack ZIP</strong><small>Selected sections, dependencies, manifest, and import notes for an existing theme.</small></span>
+        </label>
+      </div>
+      <div class="export-selection-head"><span>Section order</span><span id="exportSelectionCount"></span></div>
+      <div class="export-selection" id="exportSelection"></div>
+    </div>
+  </div>
 </div>
 
 <!-- detail modal -->

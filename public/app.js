@@ -18,6 +18,8 @@ const state = {
   dependencies: null,
   codeTab: 'liquid',
   editing: null,   // meta of section being edited (custom only)
+  pack: [],
+  exportMode: 'theme',
   lastFocus: null,
 };
 
@@ -91,11 +93,13 @@ function renderGrid() {
     const dependencyCount = (dependencies.snippets || []).length + (dependencies.assets || []).length;
     const quality = s.quality || { status: 'unverified' };
     const qualityText = { checked: 'render checked', review: 'needs review', failed: 'render issue', unverified: 'not checked' }[quality.status] || 'not checked';
-    return `<button type="button" class="card" data-store="${esc(s.store)}" data-file="${esc(s.file)}" aria-label="Open ${esc(s.name)}">
+    const packed = state.pack.some((item) => item.store === s.store && item.file === s.file);
+    return `<div class="card" role="button" tabindex="0" data-store="${esc(s.store)}" data-file="${esc(s.file)}" aria-label="Open ${esc(s.name)}">
       ${state.showPreviews ? `<div class="card-thumb"><span class="thumb-loading">loading preview…</span></div>` : ''}
       <div class="card-top">
         <span class="cat-dot" style="background:${catColor(s.category)}"></span>
         <div class="card-name">${esc(s.name)}</div>
+        <button type="button" class="pack-toggle ${packed ? 'selected' : ''}" data-pack-toggle aria-pressed="${packed}">${packed ? 'Added' : 'Add to pack'}</button>
       </div>
       <div class="card-file">${esc(s.file)}</div>
       <div class="card-meta">
@@ -108,10 +112,25 @@ function renderGrid() {
         ${s.functional ? '<span class="chip functional">functional</span>' : ''}
         <span class="meta-dim">${s.settings || 0} set · ${s.blocks || 0} blk</span>
       </div>
-    </button>`;
+    </div>`;
   }).join('');
   $('grid').querySelectorAll('.card').forEach((card) => {
-    card.onclick = () => openDetail(card.dataset.store, card.dataset.file);
+    const open = () => openDetail(card.dataset.store, card.dataset.file);
+    card.onclick = (event) => {
+      if (event.target.closest('[data-pack-toggle]')) return;
+      open();
+    };
+    card.onkeydown = (event) => {
+      if (event.target === card && (event.key === 'Enter' || event.key === ' ')) {
+        event.preventDefault();
+        open();
+      }
+    };
+    card.querySelector('[data-pack-toggle]')?.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const section = state.sections.find((item) => item.store === card.dataset.store && item.file === card.dataset.file);
+      if (section) togglePack(section);
+    });
   });
   $('empty').hidden = all.length > 0;
   $('loadMore').hidden = all.length <= list.length;
@@ -120,6 +139,87 @@ function renderGrid() {
   $('resultsTitle').textContent = state.q ? `Results for "${state.q}"` : (scope || 'All sections');
   $('resultsSub').textContent = `${all.length} section${all.length === 1 ? '' : 's'}${state.showFunctional ? '' : ' · functional hidden'}`;
   if (state.showPreviews) observeThumbs();
+}
+
+const packKey = (section) => `${section.store}/${section.file}`;
+
+function togglePack(section) {
+  const key = packKey(section);
+  const index = state.pack.findIndex((item) => packKey(item) === key);
+  if (index >= 0) state.pack.splice(index, 1);
+  else state.pack.push({ store: section.store, file: section.file, name: section.name });
+  renderPack();
+  renderGrid();
+}
+
+function movePack(index, direction) {
+  const next = index + direction;
+  if (next < 0 || next >= state.pack.length) return;
+  [state.pack[index], state.pack[next]] = [state.pack[next], state.pack[index]];
+  renderPack();
+  renderGrid();
+}
+
+function renderPack() {
+  const count = state.pack.length;
+  $('packBar').hidden = count === 0;
+  $('packCount').textContent = `${count} section${count === 1 ? '' : 's'}`;
+  if (!$('exportOverlay').hidden) renderExportSelection();
+}
+
+function renderExportSelection() {
+  const count = state.pack.length;
+  $('exportSelectionCount').textContent = `${count} selected`;
+  $('exportSelection').innerHTML = count ? state.pack.map((item, index) => `<div class="export-item">
+    <span class="export-order">${index + 1}</span>
+    <span class="export-item-name"><strong>${esc(item.name)}</strong><small>${esc(item.store)}/${esc(item.file)}</small></span>
+    <button type="button" class="icon-btn" data-pack-move="-1" data-pack-index="${index}" ${index === 0 ? 'disabled' : ''} aria-label="Move up">↑</button>
+    <button type="button" class="icon-btn" data-pack-move="1" data-pack-index="${index}" ${index === count - 1 ? 'disabled' : ''} aria-label="Move down">↓</button>
+    <button type="button" class="icon-btn danger" data-pack-remove="${index}" aria-label="Remove section">×</button>
+  </div>`).join('') : '<div class="settings-empty">No sections selected.</div>';
+}
+
+function openExport() {
+  if (!state.pack.length) return toast('Add at least one section to the pack', true);
+  $('exportName').value = 'section-pack';
+  $('exportOverlay').hidden = false;
+  state.lastFocus = state.lastFocus || document.activeElement;
+  renderExportSelection();
+  requestAnimationFrame(() => $('exportName').focus());
+}
+
+async function downloadExport() {
+  if (!state.pack.length) return toast('Add at least one section to the pack', true);
+  const name = $('exportName').value.trim() || 'section-pack';
+  const button = $('exportDownload');
+  setButtonBusy(button, true, 'Preparing…');
+  try {
+    const response = await fetch('/api/export', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, mode: state.exportMode, baseStore: 'base', items: state.pack.map(({ store, file }) => ({ store, file })) }),
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.error || 'Export failed');
+    }
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'section-pack'}-${state.exportMode === 'pack' ? 'sections' : 'theme'}.zip`;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    state.pack = [];
+    closeOverlay('exportOverlay');
+    renderPack();
+    renderGrid();
+    toast('Export downloaded');
+  } catch (error) {
+    toast(error.message || 'Export failed', true);
+  } finally {
+    setButtonBusy(button, false);
+  }
 }
 
 /* ------------------------- lazy live-preview thumbnails ------------------------ */
@@ -611,6 +711,20 @@ $('previewsToggle').addEventListener('change', (e) => {
   refresh();
 });
 $('addBtn').onclick = () => openEditor(null);
+$('packReview').onclick = openExport;
+$('packClear').onclick = () => { state.pack = []; renderPack(); renderGrid(); };
+$('exportCancel').onclick = () => closeOverlay('exportOverlay');
+$('exportClose').onclick = () => closeOverlay('exportOverlay');
+$('exportDownload').onclick = downloadExport;
+document.querySelectorAll('input[name="exportMode"]').forEach((input) => {
+  input.addEventListener('change', () => { if (input.checked) state.exportMode = input.value; });
+});
+$('exportSelection').addEventListener('click', (event) => {
+  const move = event.target.closest('[data-pack-move]');
+  const remove = event.target.closest('[data-pack-remove]');
+  if (move) movePack(Number(move.dataset.packIndex), Number(move.dataset.packMove));
+  if (remove) { state.pack.splice(Number(remove.dataset.packRemove), 1); renderPack(); renderGrid(); }
+});
 $('detailClose').onclick = () => closeOverlay('detailOverlay');
 $('detailOpenTab').onclick = () => state.current && window.open(previewUrl(state.current), '_blank', 'noopener,noreferrer');
 $('detailCopy').onclick = () => state.current && copyText(state.code.liquid, 'Liquid copied');
