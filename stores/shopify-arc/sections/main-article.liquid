@@ -1,0 +1,42 @@
+<article class="page-width" style="padding-block: 3rem; max-width: 760px;">
+  {%- if article.image -%}
+    <img
+      src="{{ article.image | image_url: width: 900 }}"
+      alt="{{ article.image.alt | escape }}"
+      width="900"
+      height="{{ 900 | divided_by: article.image.aspect_ratio | round }}"
+      style="border-radius: var(--blocks-radius); margin-bottom: 1.5rem;"
+    >
+  {%- endif -%}
+  <p style="opacity: 0.65; margin-bottom: 0.5rem;">{{ article.published_at | time_tag: format: 'date' }}{% if article.author != blank %} &middot; {{ article.author }}{% endif %}</p>
+  <h1 style="margin-bottom: 1.5rem;">{{ article.title }}</h1>
+  <div class="rte">{{ article.content }}</div>
+
+  {%- if blog.comments_enabled? -%}
+    <div class="article-comments" style="margin-top: 3rem; border-top: 1px solid rgb(var(--color-border)); padding-top: 2rem;">
+      <h2 style="margin-bottom: 1rem;">{{ "%1 comments" | replace: "%1", article.comments_count }}</h2>
+      {%- for comment in article.comments -%}
+        <div style="margin-bottom: 1.5rem;">
+          <p style="font-weight: 600;">{{ comment.author }}</p>
+          <div class="rte">{{ comment.content }}</div>
+        </div>
+      {%- endfor -%}
+      {%- form 'new_comment', article -%}
+        {%- if form.posted_successfully? -%}
+          <p role="status">Your comment was posted successfully!</p>
+        {%- endif -%}
+        <input type="text" name="comment[author]" placeholder="Name" required>
+        <input type="email" name="comment[email]" placeholder="Email" required>
+        <textarea name="comment[body]" placeholder="Message" required></textarea>
+        <button type="submit" class="btn btn--primary">Post comment</button>
+      {%- endform -%}
+    </div>
+  {%- endif -%}
+</article>
+
+{% schema %}
+{
+  "name": "Article",
+  "settings": []
+}
+{% endschema %}

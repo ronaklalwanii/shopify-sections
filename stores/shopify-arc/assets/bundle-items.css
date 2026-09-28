@@ -1,0 +1,255 @@
+.bundle-items {
+  padding-block: 4rem;
+  padding-inline: 1.5rem;
+  /* Safety net for the product-grid divider lines below, which are
+     positioned via a negative inset and can land outside the grid's own
+     bounds for a card that wraps to a new row (documented trade-off where
+     they're defined) - clips rather than ever producing a page-level
+     horizontal scrollbar. */
+  overflow-x: hidden;
+}
+.bundle-items__heading {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.bundle-items__layout {
+  display: grid;
+  /* minmax(0, 1fr), not a bare 1fr: a bare fr track refuses to shrink below
+     its content's min-content size (the classic CSS grid overflow trap) -
+     without the 0 floor, a wide product grid here could push the summary
+     column out and force the whole page to scroll horizontally. */
+  grid-template-columns: minmax(0, 1fr) var(--selected-bundle-width, 500px);
+  gap: 3rem;
+  align-items: start;
+  max-width: var(--page-width, 1400px);
+  margin-inline: auto;
+}
+/* Narrows the fixed-width summary column proportionally before the layout
+   fully stacks (King parity: 421px -> 380px at a matching width, then a
+   single column below 1024px) - without this step the product grid gets
+   squeezed uncomfortably tight right before the stack breakpoint. Floored
+   at 320px so an unusually narrow configured width can't invert below it. */
+@media screen and (max-width: 1365px) {
+  .bundle-items__layout {
+    grid-template-columns: minmax(0, 1fr) max(320px, calc(var(--selected-bundle-width, 500px) - 120px));
+  }
+}
+
+.bundle-items__products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2.5rem 3.5rem;
+}
+
+.bundle-items__product {
+  position: relative;
+  text-align: center;
+}
+/* Vertical divider between cards. Column count is auto-fit (responsive to
+   available width), so there's no reliable CSS-only way to detect "first
+   card in a wrapped row" - this puts a rule before every card but the
+   first overall. Correct for the common case (a bundle's few products fit
+   on one row at normal page widths); a card that wraps to a new row would
+   also show one on its left edge, which is an acceptable trade-off for a
+   cosmetic divider rather than adding JS just to suppress it. */
+.bundle-items__product:not(:first-child)::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(-1.75rem - 1px);
+  inset-block-start: 0;
+  width: 1px;
+  height: 100%;
+  background: rgb(var(--color-border));
+}
+@media screen and (max-width: 749px) {
+  .bundle-items__product::before { display: none; }
+}
+.bundle-items__product-media {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: var(--blocks-radius, 0);
+  margin-bottom: 0.75rem;
+  background: rgb(var(--color-secondary-background));
+}
+.bundle-items__product-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.bundle-items__product-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.bundle-items__product-price {
+  opacity: 0.75;
+  font-size: 0.9375rem;
+  margin-bottom: 0.75rem;
+}
+.bundle-items__empty {
+  opacity: 0.6;
+  font-size: 0.875rem;
+}
+
+.bundle-items__row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.bundle-items__select {
+  flex: 1;
+  border: 1px solid rgb(var(--color-border));
+  border-radius: var(--inputs-radius, 0);
+  padding: 0.5rem 0.75rem;
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+}
+.bundle-items__add {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--buttons-radius, 0);
+  border: 1px solid rgb(var(--color-button));
+  background: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+.bundle-items__add:hover {
+  background: rgb(var(--color-button-hover));
+  border-color: rgb(var(--color-button-hover));
+  color: rgb(var(--color-button-text-hover));
+}
+.bundle-items__add:active {
+  transform: scale(0.95);
+}
+.bundle-items__add.is-added {
+  background: rgb(var(--color-stock-in, var(--color-foreground)));
+  border-color: rgb(var(--color-stock-in, var(--color-foreground)));
+}
+.bundle-items__add:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.bundle-items__summary {
+  border: 1px solid rgb(var(--color-border));
+  border-radius: var(--blocks-radius, 0);
+  padding: 1.75rem;
+  position: sticky;
+  top: 2rem;
+}
+.bundle-items__summary-heading {
+  margin-bottom: 0.5rem;
+}
+.bundle-items__summary-description {
+  opacity: 0.75;
+  font-size: 0.9375rem;
+  margin-bottom: 1.5rem;
+}
+
+.bundle-items__slots {
+  gap: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  margin-bottom: 1.5rem;
+  justify-content: space-between;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.bundle-items__slot {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 6rem;
+  padding: 1rem;
+  border: 1px dashed rgb(var(--color-border));
+  border-radius: var(--blocks-radius, 0);
+  font-size: 0.875rem;
+  min-width: 125px;
+}
+.bundle-items__slot.is-filled {
+  border-style: solid;
+}
+.bundle-items__slot-plus {
+  opacity: 0.4;
+  font-size: 1.25rem;
+  margin: 0 auto;
+}
+.bundle-items__slot-image {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: calc(var(--blocks-radius, 0) * 0.6);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.bundle-items__slot-info {
+  flex: 1;
+  min-width: 0;
+}
+.bundle-items__slot-title {
+  display: block;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bundle-items__slot-variant {
+  display: block;
+  opacity: 0.65;
+  font-size: 0.8125rem;
+}
+.bundle-items__slot-remove {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.125rem;
+  opacity: 0.6;
+  line-height: 1;
+}
+.bundle-items__slot-remove:hover {
+  opacity: 1;
+}
+
+.bundle-items__totals {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  padding-top: 1rem;
+  border-top: 1px solid rgb(var(--color-border));
+  margin-bottom: 1rem;
+}
+.bundle-items__discount-note,
+.bundle-items__min-note {
+  font-size: 0.8125rem;
+  opacity: 0.75;
+  margin: -0.5rem 0 1rem;
+}
+
+.bundle-items__remove-all {
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+.bundle-items__add-to-cart {
+  width: 100%;
+}
+.bundle-items__add-to-cart:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media screen and (max-width: 989px) {
+  .bundle-items__layout {
+    grid-template-columns: 1fr;
+  }
+  .bundle-items__summary {
+    position: static;
+  }
+}

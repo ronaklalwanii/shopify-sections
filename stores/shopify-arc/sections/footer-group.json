@@ -1,0 +1,60 @@
+{
+  "name": "Footer",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "newsletter": {
+          "type": "newsletter",
+          "settings": {
+            "block_width": 30,
+            "heading": "Subscribe to get 10% OFF",
+            "heading_size": "h4"
+          }
+        },
+        "menu-shop": {
+          "type": "menu",
+          "settings": {
+            "block_width": 18,
+            "heading": "Shop",
+            "heading_size": "h4",
+            "menu": "footer"
+          }
+        },
+        "menu-customer-care": {
+          "type": "menu",
+          "settings": {
+            "block_width": 18,
+            "heading": "Customer care",
+            "heading_size": "h4"
+          }
+        },
+        "about": {
+          "type": "image_text",
+          "settings": {
+            "block_width": 22,
+            "heading": "About",
+            "heading_size": "h4",
+            "image_width": 150,
+            "text": "<p>Share store details, promotions, or brand content with your customers.</p>",
+            "button_label": "Learn More",
+            "button_style": "btn--underline"
+          }
+        }
+      },
+      "block_order": ["newsletter", "menu-shop", "menu-customer-care", "about"],
+      "settings": {
+        "color_scheme": "scheme-2",
+        "enable_follow_on_shop": false,
+        "show_social": true,
+        "enable_country_selector": true,
+        "enable_language_selector": false,
+        "payment_enable": true,
+        "show_section_divider": true,
+        "divider_width": "full"
+      }
+    }
+  },
+  "order": ["footer"]
+}

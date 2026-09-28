@@ -1,0 +1,18 @@
+{%- doc -%}
+  Inner markup for the "Animated" button style (icon + slide-swap letter-reveal label).
+  Shared by snippets/button.liquid (link buttons) and card-product.liquid's quick-add
+  button (a <button> element), so both stay visually/behaviorally identical.
+  Accepts: label
+{%- enddoc -%}
+{%- if settings.animated_button_show_icon -%}
+  <span class="btn-animated__icon">{%- render 'icon-picker', style: settings.animated_button_icon_style, direction: 'right' -%}</span>
+{%- endif -%}
+<span class="btn-animated__label">
+  <span class="btn-animated__text btn-animated__text--static">{{ label }}</span>
+  <span class="btn-animated__text btn-animated__text--reveal" aria-hidden="true">
+    {%- assign chars = label | split: '' -%}
+    {%- for char in chars -%}
+      <span class="btn-animated__char" style="--i: {{ forloop.index0 }};">{% if char == ' ' %}&nbsp;{% else %}{{ char }}{% endif %}</span>
+    {%- endfor -%}
+  </span>
+</span>

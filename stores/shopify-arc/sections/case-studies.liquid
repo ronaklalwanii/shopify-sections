@@ -1,0 +1,106 @@
+{{ 'case-studies.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="case-studies color-{{ section.settings.color_scheme }}"
+  style="
+    --case-studies-columns: {{ section.settings.columns }};
+    --case-studies-gap: {{ section.settings.gap }}px;
+    --case-studies-fade-height: {{ section.settings.fade_height }}%;
+    {%- if section.settings.fade_color != blank %}--case-studies-fade-color: {{ section.settings.fade_color }};{% endif -%}
+  "
+>
+  <div class="case-studies__header">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="case-studies__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class="case-studies__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+  </div>
+
+  <div class="case-studies__grid">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'case_study' -%}
+        {%- liquid
+          assign tag = 'div'
+          if block.settings.link != blank
+            assign tag = 'a'
+          endif
+        -%}
+        <{{ tag }} {% if tag == 'a' %}href="{{ block.settings.link }}"{% endif %} class="case-studies__item" {{ block.shopify_attributes }}>
+          <span class="case-studies__media">
+            {%- if block.settings.image -%}
+              <img
+                src="{{ block.settings.image | image_url: width: 700 }}"
+                alt="{{ block.settings.image.alt | escape }}"
+                width="700"
+                height="{{ 700 | divided_by: block.settings.image.aspect_ratio | round }}"
+                loading="lazy"
+              >
+            {%- else -%}
+              <span class="case-studies__placeholder">{{ 'image' | placeholder_svg_tag }}</span>
+            {%- endif -%}
+            <span class="case-studies__fade" aria-hidden="true"></span>
+          </span>
+          {%- if block.settings.label != blank -%}
+            <div class="case-studies__wrapper" style="text-align: {{  block.settings.text_alignment  }}">
+            <span class="case-studies__label">{{ block.settings.label }}</span>
+            {%- if block.settings.label_subtitle != blank -%}
+              <span class="case-studies__label-subtitle">{{ block.settings.label_subtitle }}</span>
+            {%- endif -%}
+            </div>
+          {%- endif -%}
+        </{{ tag }}>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Case studies",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Our Process is Built For Results, Not Vanity Metrics" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Client Case Studies" },
+    { "type": "range", "id": "columns", "label": "Columns (desktop)", "min": 2, "max": 5, "step": 1, "default": 4 },
+    { "type": "range", "id": "gap", "label": "Gap", "min": 8, "max": 60, "step": 2, "unit": "px", "default": 24 },
+    { "type": "header", "content": "Bottom fade" },
+    { "type": "range", "id": "fade_height", "label": "Fade height", "min": 0, "max": 60, "step": 5, "unit": "%", "default": 30 },
+    { "type": "color", "id": "fade_color", "label": "Fade color (blank = theme background)" }
+  ],
+  "blocks": [
+    {
+      "type": "case_study",
+      "name": "Case study",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "label", "label": "Client name", "default": "Client Name" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "text", "id": "label_subtitle", "label": "Client subtitle", "default": "Client Subtitle" },
+        {
+          "type": "select",
+          "label": "Label Alignment",
+          "id": "text_alignment",
+          "options": [
+             { "value": "left", "label": "Left" },
+             { "value": "center", "label": "Center" },
+             { "value": "right", "label": "Right" }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Case studies",
+      "blocks": [
+        { "type": "case_study", "settings": { "label": "Sona Wellness" } },
+        { "type": "case_study", "settings": { "label": "LINNE Collection" } },
+        { "type": "case_study", "settings": { "label": "Cove Studio" } },
+        { "type": "case_study", "settings": { "label": "The Mondays" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

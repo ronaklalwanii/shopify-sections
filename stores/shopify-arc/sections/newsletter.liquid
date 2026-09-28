@@ -1,0 +1,479 @@
+{{ 'newsletter.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign form_id = 'NewsletterForm-' | append: section.id
+  assign has_image = false
+  if section.settings.image != blank and section.settings.image_position != 'none'
+    assign has_image = true
+  endif
+
+  assign is_bg_image = false
+  if has_image and section.settings.image_position == 'background'
+    assign is_bg_image = true
+  endif
+
+  assign is_side_image = false
+  if has_image and section.settings.image_position == 'left' or section.settings.image_position == 'right'
+    assign is_side_image = true
+  endif
+-%}
+
+<div
+  id="Newsletter-{{ section.id }}"
+  class="newsletter-section color-{{ section.settings.color_scheme }}{% if is_bg_image %} newsletter-section--bg-image{% endif %}{% if is_side_image %} newsletter-section--layout-image-{{ section.settings.image_position }}{% endif %}"
+  style="
+    --newsletter-padding-top: {{ section.settings.padding_top }}px;
+    --newsletter-padding-bottom: {{ section.settings.padding_bottom }}px;
+    {%- if section.settings.background_color != blank %}--newsletter-bg: {{ section.settings.background_color }};{% endif -%}
+    {%- if section.settings.heading_color != blank %}--newsletter-heading-color: {{ section.settings.heading_color }};{% endif -%}
+    {%- if section.settings.text_color != blank %}--newsletter-text: {{ section.settings.text_color }};{% endif -%}
+
+    /* Form & Input */
+    --newsletter-input-height: {{ section.settings.input_height }}px;
+    --newsletter-input-radius: {{ section.settings.input_border_radius }}px;
+    {%- if section.settings.input_bg_color != blank %}--newsletter-input-bg: {{ section.settings.input_bg_color }};{% endif -%}
+    {%- if section.settings.input_text_color != blank %}--newsletter-input-text-color: {{ section.settings.input_text_color }};{% endif -%}
+    {%- if section.settings.input_placeholder_color != blank %}--newsletter-input-placeholder-color: {{ section.settings.input_placeholder_color }};{% endif -%}
+    {%- if section.settings.input_border_color != blank %}--newsletter-input-border-color: {{ section.settings.input_border_color }};{% endif -%}
+    {%- if section.settings.button_text_color != blank %}--newsletter-button-text: {{ section.settings.button_text_color }};{% endif -%}
+
+    /* Feature Highlights */
+    {%- if section.settings.feature_divider_color != blank %}--newsletter-feature-divider-color: {{ section.settings.feature_divider_color }};{% endif -%}
+
+    /* Media */
+    --newsletter-image-width: {{ section.settings.image_width }}%;
+    --newsletter-image-radius: {{ section.settings.image_border_radius }}px;
+
+    /* Card */
+    {%- if section.settings.enable_card %}
+      --newsletter-card-radius: {{ section.settings.card_border_radius }}px;
+      --newsletter-card-padding: {{ section.settings.card_padding_desktop }}px;
+      --newsletter-card-padding-mobile: {{ section.settings.card_padding_mobile }}px;
+      {%- if section.settings.card_bg_color != blank %}--newsletter-card-bg: {{ section.settings.card_bg_color }};{% endif -%}
+      {%- if section.settings.card_border_color != blank %}--newsletter-card-border-color: {{ section.settings.card_border_color }};{% endif -%}
+    {%- endif -%}
+
+    {%- if is_bg_image and section.settings.image != blank -%}
+      background-image: url('{{ section.settings.image | image_url: width: 2400 }}');
+    {%- endif -%}
+  "
+>
+  <div class="newsletter-section__container {% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="{% if section.settings.enable_card %}newsletter-section__card{% endif %}">
+      {%- if is_side_image -%}
+        <div class="newsletter-section__grid">
+          <div class="newsletter-section__media-wrap newsletter-section__media-wrap--aspect-{{ section.settings.image_aspect_ratio }}">
+            {%- if section.settings.image != blank -%}
+              <img
+                src="{{ section.settings.image | image_url: width: 1400 }}"
+                alt="{{ section.settings.image.alt | default: section.settings.heading | escape }}"
+                width="1400"
+                height="{{ 1400 | divided_by: section.settings.image.aspect_ratio | round }}"
+                loading="lazy"
+                class="newsletter-section__image"
+              >
+            {%- else -%}
+              {{ 'lifestyle-2' | placeholder_svg_tag: 'newsletter-section__image newsletter-section__image--placeholder' }}
+            {%- endif -%}
+          </div>
+          <div class="newsletter-section__inner newsletter-section__inner--{{ section.settings.content_alignment }}">
+            {%- render 'newsletter-content', section: section, form_id: form_id -%}
+          </div>
+        </div>
+      {%- else -%}
+        <div class="newsletter-section__inner newsletter-section__inner--{{ section.settings.content_alignment }}">
+          {%- render 'newsletter-content', section: section, form_id: form_id -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "tag": "section",
+  "class": "section-newsletter",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card background"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body / description color"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "ATELIER JOURNAL"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Stories worth bringing home."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Description",
+      "default": "<p>Thoughts on materials, craftsmanship, and timeless design. Sent occasionally, always worth reading.</p>"
+    },
+    {
+      "type": "text",
+      "id": "input_placeholder",
+      "label": "Email placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "select",
+      "id": "form_style",
+      "label": "Form style",
+      "default": "embedded_icon",
+      "options": [
+        { "value": "embedded_icon", "label": "Pill with embedded arrow" },
+        { "value": "inline", "label": "Inline button" },
+        { "value": "stacked", "label": "Stacked button" },
+        { "value": "minimal", "label": "Minimal underline" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_consent_checkbox",
+      "label": "Show consent checkbox",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "consent_text",
+      "label": "Consent text",
+      "default": "<p>I agree to receive Atelier Journal and understand I can unsubscribe at any time.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Input & Button Styles"
+    },
+    {
+      "type": "color",
+      "id": "input_bg_color",
+      "label": "Input background"
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "Input text color"
+    },
+    {
+      "type": "color",
+      "id": "input_placeholder_color",
+      "label": "Input placeholder color"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Input border color"
+    },
+    {
+      "type": "range",
+      "id": "input_height",
+      "label": "Input height",
+      "min": 40,
+      "max": 68,
+      "step": 2,
+      "unit": "px",
+      "default": 54
+    },
+    {
+      "type": "range",
+      "id": "input_border_radius",
+      "label": "Input corner radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Submit arrow / text color"
+    },
+    {
+      "type": "header",
+      "content": "Card Container"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_card",
+      "label": "Enable card wrapper",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border color"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_padding_desktop",
+      "label": "Card padding (desktop)",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "card_padding_mobile",
+      "label": "Card padding (mobile)",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Media & Layout"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "default": "left",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "left", "label": "Left of content" },
+        { "value": "right", "label": "Right of content" },
+        { "value": "background", "label": "Background cover" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "label": "Image column width (desktop)",
+      "min": 30,
+      "max": 70,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "Image aspect ratio",
+      "default": "portrait",
+      "options": [
+        { "value": "auto", "label": "Natural / Auto" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "portrait", "label": "Portrait (4:5)" },
+        { "value": "landscape", "label": "Landscape (16:9)" },
+        { "value": "fill", "label": "Fill full column height" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Image corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "checkbox",
+      "id": "show_feature_dividers",
+      "label": "Show feature dividers",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "feature_divider_color",
+      "label": "Feature divider color"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width section",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature badge",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "mail",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "mail", "label": "Mail / Envelope" },
+            { "value": "box", "label": "3D Box / Collections" },
+            { "value": "chair", "label": "Chair / Interior" },
+            { "value": "star", "label": "Star / Quality" },
+            { "value": "shield", "label": "Shield / Security" },
+            { "value": "sparkles", "label": "Sparkles / Inspiration" },
+            { "value": "leaf", "label": "Leaf / Sustainability" },
+            { "value": "custom_svg", "label": "Custom SVG code" }
+          ]
+        },
+        {
+          "type": "html",
+          "id": "custom_svg",
+          "label": "Custom SVG code (if selected above)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Feature title"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Description",
+          "default": "Short feature description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter",
+      "settings": {
+        "eyebrow": "ATELIER JOURNAL",
+        "heading": "Stories worth bringing home.",
+        "text": "<p>Thoughts on materials, craftsmanship, and timeless design. Sent occasionally, always worth reading.</p>",
+        "input_placeholder": "Enter your email",
+        "form_style": "embedded_icon",
+        "content_alignment": "left",
+        "image_position": "left",
+        "enable_card": true,
+        "background_color": "#0d0d0d",
+        "card_bg_color": "#141414",
+        "card_border_color": "#262626",
+        "card_border_radius": 20,
+        "card_padding_desktop": 28,
+        "heading_color": "#ffffff",
+        "text_color": "#a1a1aa",
+        "image_border_radius": 14,
+        "input_bg_color": "#1c1c1e",
+        "input_border_color": "#2c2c2e",
+        "input_text_color": "#ffffff",
+        "input_placeholder_color": "#71717a",
+        "input_border_radius": 10,
+        "button_text_color": "#ffffff",
+        "show_consent_checkbox": true,
+        "consent_text": "<p>I agree to receive Atelier Journal and understand I can unsubscribe at any time.</p>",
+        "show_feature_dividers": true
+      },
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "mail",
+            "title": "Journal & stories",
+            "text": "Design insights and atelier updates"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "box",
+            "title": "New collections",
+            "text": "Be the first to know what's coming"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "chair",
+            "title": "Timeless living",
+            "text": "Curated inspiration for intentional spaces"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

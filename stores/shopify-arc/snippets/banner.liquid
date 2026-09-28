@@ -1,0 +1,16 @@
+{%- comment -%}
+  Renders a status banner message.
+
+  Accepts:
+  - status: 'error' | 'success' | 'info'
+  - content: {String} message text
+
+  Usage:
+  {%- render 'banner', status: 'error', content: 'This gift card has expired' -%}
+{%- endcomment -%}
+{%- liquid
+  assign banner_status = status | default: 'info'
+-%}
+<div class="banner banner--{{ banner_status }}" role="{% if banner_status == 'error' %}alert{% else %}status{% endif %}" data-banner>
+  {{ content }}
+</div>

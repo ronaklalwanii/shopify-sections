@@ -1,0 +1,542 @@
+{{ 'shop-by-space.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign space_blocks = section.blocks | where: 'type', 'space_card'
+  assign desktop_columns = section.settings.columns_desktop
+  assign tablet_columns = section.settings.columns_tablet
+  assign mobile_layout = section.settings.mobile_layout
+  assign gap = section.settings.gap
+  assign section_width = section.settings.section_width
+  assign padding_top = section.settings.padding_top
+  assign padding_bottom = section.settings.padding_bottom
+  assign bg_color = section.settings.background_color
+  assign text_color = section.settings.text_color
+  assign card_text_color = section.settings.card_text_color
+-%}
+
+{%- if section.settings.enabled -%}
+<div
+  class="shop-by-space color-{{ section.settings.color_scheme }}"
+  style="
+    --sbs-columns-desktop: {{ desktop_columns }};
+    --sbs-columns-tablet: {{ tablet_columns }};
+    --sbs-gap: {{ gap }}px;
+    --sbs-padding-top: {{ padding_top }}px;
+    --sbs-padding-bottom: {{ padding_bottom }}px;
+    --sbs-section-width: {{ section_width }};
+    {% if bg_color != blank %}--sbs-bg: {{ bg_color }};{% endif %}
+    {% if text_color != blank %}--sbs-text: {{ text_color }};{% endif %}
+    {% if card_text_color != blank %}--sbs-card-text: {{ card_text_color }};{% endif %}
+    --sbs-mobile-layout: {{ mobile_layout }};
+    --sbs-card-radius: {{ section.settings.card_border_radius }}px;
+    --sbs-card-aspect: {{ section.settings.card_aspect_ratio }};
+    --sbs-hover-zoom: {{ section.settings.hover_zoom | divided_by: 100.0 }};
+    --sbs-transition: {{ section.settings.transition_speed }}ms;
+  "
+>
+  <div class="shop-by-space__container">
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.description != blank -%}
+      <div class="shop-by-space__header shop-by-space__header--{{ section.settings.heading_alignment }}">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="shop-by-space__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="shop-by-space__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.description != blank -%}
+          <div class="shop-by-space__description rte">{{ section.settings.description }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="shop-by-space__grid" data-mobile-layout="{{ mobile_layout }}">
+      {%- for block in space_blocks -%}
+        {%- liquid
+          assign card_h_align = block.settings.text_position_h
+          assign card_v_align = block.settings.text_position_v
+          assign text_align = block.settings.text_alignment
+          assign card_height = block.settings.card_height
+          assign hover_zoom = block.settings.hover_zoom
+          assign hover_overlay_opacity = block.settings.hover_overlay_opacity | divided_by: 100.0
+          assign card_border_radius = block.settings.card_border_radius
+          assign card_aspect = block.settings.card_aspect_ratio
+        -%}
+        {%- liquid
+          assign tag = 'div'
+          if block.settings.link != blank
+            assign tag = 'a'
+          endif
+        -%}
+        <{{ tag }}
+          {% if tag == 'a' %}href="{{ block.settings.link }}"{% endif %}
+          class="shop-by-space__card shop-by-space__card--h-{{ card_h_align }} shop-by-space__card--v-{{ card_v_align }} shop-by-space__card--text-{{ text_align }}"
+          style="
+            --sbs-card-height: {{ card_height }}px;
+            --sbs-card-aspect-override: {{ card_aspect }};
+            --sbs-hover-zoom-override: {{ hover_zoom | divided_by: 100.0 }};
+            --sbs-hover-overlay-opacity: {{ hover_overlay_opacity }};
+            --sbs-card-radius-override: {{ card_border_radius }}px;
+          "
+          {{ block.shopify_attributes }}
+        >
+          <div class="shop-by-space__card-media">
+            {%- if block.settings.desktop_image != blank -%}
+              <img
+                class="shop-by-space__card-image shop-by-space__card-image--desktop{% if block.settings.mobile_image == blank %} shop-by-space__card-image--always{% endif %}"
+                src="{{ block.settings.desktop_image | image_url: width: 800 }}"
+                srcset="
+                  {{ block.settings.desktop_image | image_url: width: 400 }} 400w,
+                  {{ block.settings.desktop_image | image_url: width: 800 }} 800w,
+                  {{ block.settings.desktop_image | image_url: width: 1200 }} 1200w
+                "
+                sizes="(max-width: 749px) 100vw, (max-width: 1199px) 50vw, 33vw"
+                width="800"
+                height="{{ 800 | divided_by: block.settings.desktop_image.aspect_ratio | round }}"
+                alt="{{ block.settings.desktop_image.alt | escape }}"
+                loading="lazy"
+                style="object-position: {{ block.settings.image_position_x }}% {{ block.settings.image_position_y }}%; object-fit: {{ block.settings.image_fit }};"
+              >
+            {%- endif -%}
+            {%- if block.settings.mobile_image != blank -%}
+              <img
+                class="shop-by-space__card-image shop-by-space__card-image--mobile"
+                src="{{ block.settings.mobile_image | image_url: width: 600 }}"
+                srcset="
+                  {{ block.settings.mobile_image | image_url: width: 400 }} 400w,
+                  {{ block.settings.mobile_image | image_url: width: 600 }} 600w
+                "
+                sizes="100vw"
+                width="600"
+                height="{{ 600 | divided_by: block.settings.mobile_image.aspect_ratio | round }}"
+                alt="{{ block.settings.mobile_image.alt | escape }}"
+                loading="lazy"
+                style="object-position: {{ block.settings.image_position_x }}% {{ block.settings.image_position_y }}%; object-fit: {{ block.settings.image_fit }};"
+              >
+            {%- endif -%}
+            {%- if block.settings.desktop_image == blank and block.settings.mobile_image == blank -%}
+              <div class="shop-by-space__card-placeholder">{{ 'image' | placeholder_svg_tag }}</div>
+            {%- endif -%}
+
+            {%- if block.settings.overlay_opacity > 0 -%}
+              <span class="shop-by-space__card-overlay" aria-hidden="true" style="opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};"></span>
+            {%- endif -%}
+          </div>
+
+          <div class="shop-by-space__card-content">
+            {%- if block.settings.title != blank -%}
+              <h3 class="shop-by-space__card-title">{{ block.settings.title }}</h3>
+            {%- endif -%}
+            {%- if block.settings.description != blank -%}
+              <p class="shop-by-space__card-description">{{ block.settings.description }}</p>
+            {%- endif -%}
+            {%- if block.settings.cta_label != blank and block.settings.link != blank -%}
+              <span class="shop-by-space__card-cta">
+                {{ block.settings.cta_label }}
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            {%- endif -%}
+          </div>
+        </{{ tag }}>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Shop by Space",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable section",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "SHOP BY SPACE"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Curated for every room"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Discover pieces designed for the way you live.</p>"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns (desktop)",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "label": "Columns (tablet)",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile layout",
+      "default": "stacked",
+      "options": [
+        { "value": "stacked", "label": "Stacked cards" },
+        { "value": "two-column", "label": "2-column grid" },
+        { "value": "swipe", "label": "Horizontal swipe" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between cards",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "section_width",
+      "label": "Section width",
+      "min": 80,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Colors (blank = theme default)"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "info": "Heading and description above the grid only."
+    },
+    {
+      "type": "header",
+      "content": "Card defaults"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card text color",
+      "info": "Text over card images. Blank = white."
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "card_aspect_ratio",
+      "label": "Aspect ratio",
+      "default": "4/3",
+      "options": [
+        { "value": "1/1", "label": "Square (1:1)" },
+        { "value": "4/3", "label": "Landscape (4:3)" },
+        { "value": "3/4", "label": "Portrait (3:4)" },
+        { "value": "16/9", "label": "Cinematic (16:9)" },
+        { "value": "auto", "label": "Auto (image natural)" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "hover_zoom",
+      "label": "Hover zoom",
+      "min": 100,
+      "max": 130,
+      "step": 1,
+      "unit": "%",
+      "default": 108
+    },
+    {
+      "type": "range",
+      "id": "transition_speed",
+      "label": "Transition speed",
+      "min": 100,
+      "max": 800,
+      "step": 50,
+      "unit": "ms",
+      "default": 400
+    }
+  ],
+  "blocks": [
+    {
+      "type": "space_card",
+      "name": "Space card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "desktop_image",
+          "label": "Desktop image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile image",
+          "info": "Optional. Falls back to desktop image."
+        },
+        {
+          "type": "range",
+          "id": "image_position_x",
+          "label": "Image position X",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "image_position_y",
+          "label": "Image position Y",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "select",
+          "id": "image_fit",
+          "label": "Image fit",
+          "default": "cover",
+          "options": [
+            { "value": "cover", "label": "Cover" },
+            { "value": "contain", "label": "Contain" },
+            { "value": "fill", "label": "Fill" }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "LIVING ROOM"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "Sofas · Chairs · Tables"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "cta_label",
+          "label": "CTA label",
+          "default": "View collection"
+        },
+        {
+          "type": "header",
+          "content": "Card layout"
+        },
+        {
+          "type": "select",
+          "id": "text_position_h",
+          "label": "Text horizontal position",
+          "default": "left",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "text_position_v",
+          "label": "Text vertical position",
+          "default": "bottom",
+          "options": [
+            { "value": "top", "label": "Top" },
+            { "value": "center", "label": "Center" },
+            { "value": "bottom", "label": "Bottom" }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "label": "Text alignment",
+          "default": "left",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Card overrides (blank = section default)"
+        },
+        {
+          "type": "range",
+          "id": "card_height",
+          "label": "Card height (0 = use aspect ratio)",
+          "min": 0,
+          "max": 600,
+          "step": 20,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "card_aspect_ratio",
+          "label": "Aspect ratio",
+          "default": "auto",
+          "options": [
+            { "value": "auto", "label": "Use section default" },
+            { "value": "1/1", "label": "Square (1:1)" },
+            { "value": "4/3", "label": "Landscape (4:3)" },
+            { "value": "3/4", "label": "Portrait (3:4)" },
+            { "value": "16/9", "label": "Cinematic (16:9)" }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "card_border_radius",
+          "label": "Border radius",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Hover effects"
+        },
+        {
+          "type": "range",
+          "id": "hover_zoom",
+          "label": "Hover zoom",
+          "min": 100,
+          "max": 130,
+          "step": 1,
+          "unit": "%",
+          "default": 108
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "label": "Base overlay opacity",
+          "min": 0,
+          "max": 80,
+          "step": 5,
+          "unit": "%",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "hover_overlay_opacity",
+          "label": "Hover overlay opacity",
+          "min": 0,
+          "max": 80,
+          "step": 5,
+          "unit": "%",
+          "default": 40
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop by Space",
+      "blocks": [
+        { "type": "space_card", "settings": { "title": "LIVING ROOM", "description": "Sofas · Chairs · Tables" } },
+        { "type": "space_card", "settings": { "title": "DINING ROOM", "description": "Tables · Chairs · Benches" } },
+        { "type": "space_card", "settings": { "title": "BEDROOM", "description": "Beds · Nightstands · Dressers" } },
+        { "type": "space_card", "settings": { "title": "STORAGE", "description": "Sideboards · Cabinets · Shelving" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

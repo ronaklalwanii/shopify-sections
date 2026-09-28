@@ -1,0 +1,124 @@
+{{ 'product-reviews.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign review_blocks = section.blocks | where: 'type', 'review'
+  assign review_count = review_blocks.size
+  assign rating_sum = 0
+  for review in review_blocks
+    assign rating_sum = rating_sum | plus: review.settings.rating
+  endfor
+  if review_count > 0
+    assign average_rating = rating_sum | times: 1.0 | divided_by: review_count
+  else
+    assign average_rating = 0
+  endif
+-%}
+
+<div
+  class="product-reviews page-width color-{{ section.settings.color_scheme }}"
+  id="Reviews"
+  style="
+    --reviews-columns: {{ section.settings.columns }};
+    --reviews-card-radius: {{ section.settings.card_radius }}px;
+    --reviews-card-gap: {{ section.settings.card_gap }}px;
+    {% if section.settings.star_color_filled != blank %}--star-color-filled: {{ section.settings.star_color_filled }};{% endif %}
+    {% if section.settings.star_color_empty != blank %}--star-color-empty: {{ section.settings.star_color_empty }};{% endif %}
+  "
+>
+  <div class="product-reviews__header">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="product-reviews__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- if review_count > 0 -%}
+      <div class="product-reviews__summary">
+        <span class="product-reviews__average">{{ average_rating | round: 1 }}</span>
+        {%- render 'star-rating', rating: average_rating, size: section.settings.summary_star_size -%}
+        <span class="product-reviews__count">{% if review_count == 1 %}1 review{% else %}{{ "%1 reviews" | replace: "%1", review_count }}{% endif %}</span>
+      </div>
+    {%- else -%}
+      <p class="product-reviews__empty">No reviews yet</p>
+    {%- endif -%}
+
+    {%- if section.settings.write_review_url != blank -%}
+      <a href="{{ section.settings.write_review_url }}" class="btn btn--secondary product-reviews__write-btn">
+        Write a review
+      </a>
+    {%- endif -%}
+  </div>
+
+  {%- if review_count > 0 -%}
+    <div class="product-reviews__grid">
+      {%- for block in review_blocks -%}
+        <div class="product-reviews__card" {{ block.shopify_attributes }}>
+          <div class="product-reviews__card-header">
+            {%- render 'star-rating', rating: block.settings.rating, size: section.settings.card_star_size -%}
+            {%- if block.settings.verified -%}
+              <span class="product-reviews__verified">Verified purchase</span>
+            {%- endif -%}
+          </div>
+          {%- if block.settings.title != blank -%}
+            <p class="product-reviews__card-title">{{ block.settings.title }}</p>
+          {%- endif -%}
+          {%- if block.settings.body != blank -%}
+            <div class="product-reviews__card-body rte">{{ block.settings.body }}</div>
+          {%- endif -%}
+          <div class="product-reviews__card-footer">
+            {%- if block.settings.author != blank -%}
+              <span class="product-reviews__author">{{ block.settings.author }}</span>
+            {%- endif -%}
+            {%- if block.settings.date != blank -%}
+              <span class="product-reviews__date">{{ block.settings.date }}</span>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Product reviews",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Customer reviews" },
+    { "type": "url", "id": "write_review_url", "label": "\"Write a review\" link (optional)" },
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select", "id": "columns", "label": "Columns (desktop)", "default": "2",
+      "options": [ { "value": "1", "label": "1" }, { "value": "2", "label": "2" }, { "value": "3", "label": "3" } ]
+    },
+    { "type": "range", "id": "card_radius", "label": "Card corner radius", "min": 0, "max": 32, "step": 1, "unit": "px", "default": 12 },
+    { "type": "range", "id": "card_gap", "label": "Card spacing", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 20 },
+    { "type": "header", "content": "Stars" },
+    { "type": "range", "id": "summary_star_size", "label": "Summary star size", "min": 12, "max": 32, "step": 1, "unit": "px", "default": 20 },
+    { "type": "range", "id": "card_star_size", "label": "Review card star size", "min": 10, "max": 24, "step": 1, "unit": "px", "default": 14 },
+    { "type": "color", "id": "star_color_filled", "label": "Filled star color", "default": "#F5A623" },
+    { "type": "color", "id": "star_color_empty", "label": "Empty star color" }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "range", "id": "rating", "label": "Rating", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "text", "id": "author", "label": "Reviewer name", "default": "Anonymous" },
+        { "type": "text", "id": "date", "label": "Date" },
+        { "type": "checkbox", "id": "verified", "label": "Verified purchase", "default": true },
+        { "type": "text", "id": "title", "label": "Review title" },
+        { "type": "textarea", "id": "body", "label": "Review text" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product reviews",
+      "blocks": [
+        { "type": "review" },
+        { "type": "review" }
+      ]
+    }
+  ]
+}
+{% endschema %}

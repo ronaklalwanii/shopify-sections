@@ -1,0 +1,798 @@
+.header-wrapper {
+  position: relative;
+  z-index: 30;
+  width: 100%;
+}
+/* `position: fixed`, not `sticky`: each section-group member (announcement
+   bar, header) is wrapped by Shopify in its own snug shopify-section div, so
+   a sticky header's containing block is only ever as tall as the header
+   itself — it has no room to actually stay pinned once scrolled past that
+   div (confirmed live: it just scrolls away like a static element). `fixed`
+   is viewport-relative and has no such limitation. `position` here never
+   changes at any scroll threshold — only background/color/transform do —
+   which is what actually fixes the jank; the previous version switched
+   between `absolute` and `sticky` at the scroll boundary, shifting the
+   whole page's layout every time that boundary was crossed. */
+.header-wrapper[data-sticky="always"],
+.header-wrapper[data-sticky="on-scroll-up"] {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: var(--announcement-height, 0px);
+}
+.header-wrapper[data-sticky="on-scroll-up"].is-hidden {
+  transform: translateY(-100%);
+}
+.header-wrapper {
+  transition:
+    transform 0.25s ease,
+    background-color 0.2s ease,
+    top 0.25s ease;
+}
+.header-wrapper--separator {
+  border-bottom: 1px solid rgb(var(--color-border));
+}
+.header-wrapper.has-open-menu {
+  z-index: 41;
+}
+
+/* The announcement bar stays fixed at the very top, above the header, for
+   the same reason (no sticky containing-block room). It scrolls away with
+   the header when `sticky_header` is "on-scroll-up" (both toggle together,
+   see header.js), and both are absent from this fixed stack entirely when
+   `sticky_header` is "none" (falls back to `.header-wrapper`'s plain
+   `position: relative` above, and the announcement bar to its own default
+   in-flow position — see mega-menu.css). */
+body:has(.header-wrapper[data-sticky="always"]) .announcement-bar,
+body:has(.header-wrapper[data-sticky="on-scroll-up"]) .announcement-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 31;
+  transition: transform 0.25s ease;
+}
+.announcement-bar.is-hidden {
+  transform: translateY(-100%);
+}
+
+/* Reserve the space the fixed chrome no longer occupies in normal flow. */
+body:has(.header-wrapper[data-sticky="always"]) .main-content,
+body:has(.header-wrapper[data-sticky="on-scroll-up"]) .main-content {
+  padding-top: calc(
+    var(--announcement-height, 0px) + var(--header-height, 0px)
+  );
+}
+
+/* ---- Transparent header v2 (King mechanics) ------------------------------
+   Translucent RGBA base over the hero, plus a ::before solid layer that
+   fades in on hover / sticky / open-menu and fades back out with a .5s
+   delay so brief mouse exits don't flicker. Visibility classes gate which
+   breakpoints go see-through; blur turns the translucency into glass. */
+.header-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgb(var(--color-background));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.104, 0.204, 0.492, 1) 0.1s;
+}
+.header-wrapper--transparent.floating-true::before {
+  display: none;
+}
+.header-wrapper--transparent.is-sticky::before,
+.header-wrapper--transparent.has-open-menu::before {
+  opacity: 1;
+}
+.header-wrapper--transparent:not(.hover-solid-false):hover::before {
+  opacity: 1;
+}
+.header-wrapper--transparent:not(.is-sticky):not(:hover):not(
+    .has-open-menu
+  )::before {
+  transition-delay: 0.5s;
+}
+
+.header-wrapper--transparent.transparent--both:not(.has-open-menu),
+.header-wrapper--transparent.floating-true {
+  background: rgb(var(--transparent-overlay-rgb), var(--transparent-overlay-o));
+}
+@media screen and (min-width: 990px) {
+  .header-wrapper--transparent.transparent--desktop-only:not(.has-open-menu) {
+    background: rgb(
+      var(--transparent-overlay-rgb),
+      var(--transparent-overlay-o)
+    );
+  }
+}
+@media screen and (max-width: 989px) {
+  .header-wrapper--transparent.transparent--mobile-only:not(.has-open-menu) {
+    background: rgb(
+      var(--transparent-overlay-rgb),
+      var(--transparent-overlay-o)
+    );
+  }
+}
+
+/* See-through text/icon recolor — same visibility gating as the surface. */
+.header-wrapper--transparent.transparent--both,
+.header-wrapper--transparent.transparent--desktop-only,
+.header-wrapper--transparent.transparent--mobile-only {
+  border-bottom-color: transparent;
+}
+.header-wrapper--transparent.transparent--both:not(.is-scrolled):not(
+    :hover
+  ):not(.is-sticky) {
+  color: var(--transparent-color);
+}
+@media screen and (min-width: 990px) {
+  .header-wrapper--transparent.transparent--desktop-only:not(.is-scrolled):not(
+      :hover
+    ):not(.is-sticky) {
+    color: var(--transparent-color);
+  }
+}
+@media screen and (max-width: 989px) {
+  .header-wrapper--transparent.transparent--mobile-only:not(.is-scrolled):not(
+      :hover
+    ):not(.is-sticky) {
+    color: var(--transparent-color);
+  }
+}
+
+.header-wrapper--transparent.floating-true {
+  inset-inline: 0;
+  margin-inline: auto;
+  margin-top: 0;
+  width: calc(100% - 2rem);
+  /* Base state carries the "end" geometry at zero strength so every
+     property interpolates instead of popping when .is-scrolled lands. */
+  border: 1px solid transparent;
+  border-radius: var(--buttons-radius, 8px);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition:
+    width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    margin 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    border-radius 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.35s ease,
+    background-color 0.35s ease,
+    color 0.2s ease,
+    backdrop-filter 0.35s ease,
+    -webkit-backdrop-filter 0.35s ease,
+    transform 0.25s ease,
+    top 0.25s ease;
+}
+.header-wrapper.floating-true.is-scrolled {
+  margin-top: var(--floating-header-margin-top, 0px);
+  border-color: var(--floating-header-border-color);
+  background: var(--floating-header-bg);
+  color: var(--floating-header-text, inherit);
+  backdrop-filter: blur(var(--floating-header-blur-on-scroll));
+  -webkit-backdrop-filter: blur(var(--floating-header-blur-on-scroll));
+}
+.header-wrapper--transparent.floating-true:not(.is-scrolled) {
+  border-radius: 0;
+  width: 100%;
+}
+
+@media screen and (min-width: 1200px) {
+  .header-wrapper--transparent.floating-true {
+    width: calc(100% - 6rem);
+  }
+}
+@media screen and (min-width: 1441px) {
+  .header-wrapper--transparent.floating-true {
+    width: calc(100% - 14rem);
+  }
+}
+
+/* While hidden on scroll-down the header must not eat taps aimed at the
+   page underneath it. */
+.header-wrapper.is-hidden {
+  pointer-events: none;
+}
+
+.header__logo-image--transparent {
+  display: none;
+}
+
+/* Pull the first section back up under the (fixed) header specifically —
+   the padding-top above already reserves room for announcement + header
+   combined; this cancels just the header's share for a transparent header,
+   letting the hero extend up underneath it while the (opaque) announcement
+   bar still paints over the very top on its own, higher z-index layer. */
+body:has(.header-wrapper--transparent)
+  .main-content
+  > .shopify-section:first-child {
+  margin-top: calc(-1 * var(--header-height, 0px));
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  min-height: var(--header-min-height, 0px);
+  padding-top: var(--header-padding-top);
+  padding-bottom: var(--header-padding-bottom);
+  backdrop-filter: blur(var(--blur-background, 0px));
+  -webkit-backdrop-filter: blur(var(--blur-background, 0px));
+}
+
+.header--left-center {
+  justify-content: space-between;
+}
+/* min-width:990px, not unscoped: this selector (.header--left-center
+   .header__nav, two classes) is more specific than the plain .header__nav
+   mobile-hide rule below (one class, inside @media max-width:989px) - an
+   unscoped display:flex here wins over display:none at any width regardless
+   of source order, which was silently keeping the nav links visible right
+   alongside the hamburger toggle on mobile. Scoping it to desktop is the
+   fix, not raising the mobile rule's specificity to chase it. */
+@media screen and (min-width: 990px) {
+  .header--left-center .header__nav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+}
+/* True centering for both center-* layouts: nav (the left slot on desktop)
+   and icons both get flex:1, giving the logo two genuinely EQUAL-width
+   wings to sit between. Giving only the logo flex:1 (as this used to) lets
+   it grow to fill whatever's left over after two UNEQUAL-width siblings -
+   if icons has more items than nav, that remaining space is lopsided and
+   the logo's own text-align:center just centers within that lopsided box,
+   so the logo visibly drifts toward the narrower side instead of sitting
+   at the header's true center. */
+.header--center-left,
+.header--center-split {
+  flex-direction: row;
+}
+.header--center-left .header__nav,
+.header--center-split .header__nav {
+  order: 1;
+  flex: 1;
+}
+.header--center-left .header__logo,
+.header--center-split .header__logo {
+  order: 2;
+  flex: 0 0 auto;
+  text-align: center;
+}
+.header--center-left .header__icons,
+.header--center-split .header__icons {
+  order: 3;
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Logo stays at its natural (first) position; margin-inline-start:auto on
+   nav consumes all the leftover space before it, pushing nav + icons (which
+   follows it in DOM order, so it rides along automatically) flush right
+   together, with the header's own gap still spacing nav from icons. */
+.header--left-right .header__nav {
+  margin-inline-start: auto;
+}
+
+.header__toggle {
+  display: none;
+}
+
+/* Mobile is intentionally the SAME arrangement for every desktop layout:
+   toggle left, logo centered, icons right - independent of which
+   .header--* variant is selected above. The desktop layout only controls
+   how the nav sits when it's actually visible; on mobile the nav is
+   replaced by the toggle entirely, and that replacement always looks the
+   same regardless of the desktop choice. Plain, unprefixed selectors here
+   (not .header--{variant} .header__x) are deliberate: for center-left and
+   center-split their values happen to match the desktop centering rules
+   above anyway, but for the two logo-left layouts nothing else touches
+   .header__logo / .header__icons at all, so these are what actually
+   produces the centered mobile logo for those two - not a side effect of
+   the desktop rules. */
+@media screen and (max-width: 989px) {
+  .header__nav {
+    display: none;
+  }
+  .header__toggle--left {
+    display: flex;
+    order: 1;
+    flex: 1;
+  }
+  .header__toggle--right {
+    display: none;
+  }
+  .header__logo {
+    order: 2;
+    flex: 0 0 auto;
+    text-align: center;
+  }
+  .header__icons {
+    order: 3;
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+  /* Mobile header = hamburger | logo centered in the remaining space | icons.
+     The middle track shrinks to fit, so the logo can never collide with the
+     icon cluster at any width — near-dead-center on real phones, and unlike
+     fixed side tracks (which measured 36px/141px on WebKit and squeezed the
+     icons into the logo) this cannot overlap. */
+  .header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+  }
+  .header__toggle--left {
+    grid-column: 1;
+    justify-self: start;
+  }
+  .header__logo {
+    grid-column: 2;
+    justify-self: center;
+    min-width: 0;
+    margin-right: 46px;
+  }
+  .header__logo img {
+    max-width: 100%;
+  }
+  .header__icons {
+    grid-column: 3;
+    justify-self: end;
+  }
+  /* Floating pill: a touch of extra room so the bag icon doesn't sit glued
+     to the right edge once scrolled. */
+  .header-wrapper.floating-true.is-scrolled .header__icons {
+    padding-right: 0.6rem;
+  }
+}
+
+.header__logo-link {
+  display: inline-flex;
+  align-items: center;
+}
+.header__logo-image--mobile {
+  display: none;
+}
+.header__logo-text {
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  font-size: 1.25rem;
+}
+
+@media screen and (min-width: 990px) {
+  .header-wrapper--transparent:not(.is-scrolled):not(.has-open-menu):not(:hover)
+    .header__logo-image--desktop.header__logo-image--default {
+    display: none;
+  }
+  .header-wrapper--transparent:not(.is-scrolled):not(.has-open-menu):not(:hover)
+    .header__logo-image--desktop.header__logo-image--transparent {
+    display: block;
+  }
+}
+@media screen and (max-width: 989px) {
+  .header__logo-image--desktop {
+    display: none;
+  }
+  .header__logo-image--mobile {
+    display: block;
+  }
+  .header-wrapper--transparent:not(.is-scrolled):not(.has-open-menu)
+    .header__logo-image--mobile.header__logo-image--default {
+    display: none;
+  }
+  .header-wrapper--transparent:not(.is-scrolled):not(.has-open-menu)
+    .header__logo-image--mobile.header__logo-image--transparent {
+    display: block;
+  }
+  /* The transparent (light) variant belongs to the unscrolled overlay state only.
+     Once the header goes solid — scrolled, menu open, or a non-transparent page —
+     hide it again so the default logo appears alone. Placed after the rules above
+     so it wins the cascade against the generic display:block. */
+  .header__logo-image--mobile.header__logo-image--transparent {
+    display: none;
+  }
+}
+
+.desktop-menu {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  list-style: none;
+}
+.desktop-menu__item {
+  position: relative;
+}
+.desktop-menu__link {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 0;
+  font-family: var(--font-navigation-family);
+  font-weight: var(--font-navigation-weight);
+  text-transform: var(--font-navigation-transform);
+  cursor: pointer;
+  list-style: none;
+}
+.desktop-menu__link::-webkit-details-marker {
+  display: none;
+}
+.desktop-menu__link .icon-chevron {
+  width: 0.85rem;
+  height: 0.85rem;
+  transition: transform 0.2s ease;
+}
+details[open] > .desktop-menu__link .icon-chevron {
+  transform: rotate(180deg);
+}
+
+details-dropdown,
+details-mega {
+  display: block;
+}
+details-dropdown details,
+details-mega details {
+  position: static;
+}
+menu-drawer-details {
+  display: contents;
+}
+
+.desktop-menu__dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 260px;
+  padding: 1.5rem;
+  background: rgb(var(--color-background));
+  border-radius: var(--blocks-radius);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+}
+.desktop-menu__dropdown ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.desktop-menu__sublink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+}
+.desktop-menu__sublink .icon-chevron {
+  width: 0.75rem;
+  height: 0.75rem;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+/* Hover-only styling gated to true pointer devices: on touch screens
+   :hover latches after a tap and never clears, leaving the link stuck at
+   reduced opacity. */
+@media (hover: hover) {
+  .desktop-menu__sublink:hover {
+    opacity: 0.65;
+  }
+}
+.desktop-menu__subsublist {
+  padding-left: 1rem;
+  margin-top: 0.25rem;
+  opacity: 0.75;
+}
+
+.header__icons {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.header__icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  background: transparent;
+  color: inherit;
+}
+.header__localization {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cart-count {
+  position: absolute;
+  top: -0.25rem;
+  right: -0.25rem;
+  min-width: 1.1rem;
+  height: 1.1rem;
+  padding: 0 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  border-radius: 999px;
+  background: rgb(var(--color-cart-bubble));
+  color: #fff;
+}
+.cart-count--empty {
+  display: none;
+}
+
+/* Mobile menu drawer */
+menu-drawer {
+  display: contents;
+}
+.menu-drawer__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+  z-index: 50;
+}
+.menu-drawer__panel {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: min(360px, 85vw);
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
+  z-index: 51;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+menu-drawer[open] .menu-drawer__overlay {
+  opacity: 1;
+  visibility: visible;
+}
+menu-drawer[open] .menu-drawer__panel {
+  transform: translateX(0);
+}
+
+.menu-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgb(var(--color-border));
+}
+/* Each nesting level (top-level list, and each menu-drawer-details'
+   .menu-drawer__submenu) is an inset:0 panel stacked within this clipped,
+   positioned container — a new level slides in from the right and the
+   current one stays put underneath, so drilling into a submenu doesn't
+   resize/reflow the drawer itself. */
+.menu-drawer__nav {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.menu-drawer__list {
+  position: relative;
+  height: 100%;
+  overflow-y: auto;
+  padding: 0.5rem 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+/* Live search at the top of the menu drawer — a search-drawer instance
+   reusing the theme's predictive-search wiring. */
+.menu-drawer__search {
+  /* display:block overrides component-drawer.css's `search-drawer { display: contents }`
+     — with contents, this element has no box and its side padding is ignored. */
+  display: block;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid rgb(var(--color-border));
+}
+.menu-drawer__search-form {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.menu-drawer__search-form > .icon {
+  position: absolute;
+  left: 0.85rem;
+  width: 1.05rem;
+  height: 1.05rem;
+  opacity: 0.7;
+  pointer-events: none;
+}
+.menu-drawer__search-form input[type="search"] {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.6rem;
+  border-radius: var(--inputs-radius);
+  border: 1px solid rgb(var(--color-border));
+  background: rgb(var(--color-field));
+  color: rgb(var(--color-field-text));
+  font-size: 0.95rem;
+}
+.menu-drawer__search-results:empty {
+  display: none;
+}
+.menu-drawer__search-results {
+  padding: 1rem 0 0.25rem;
+}
+.menu-drawer__link,
+.menu-drawer__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid rgb(var(--color-border));
+  font-family: var(--font-navigation-family);
+  cursor: pointer;
+  list-style: none;
+}
+.menu-drawer__summary::-webkit-details-marker {
+  display: none;
+}
+/* Hidden off to the right until its wrapping <menu-drawer-details> gets the
+   JS-delayed `--active` class — keyed to that class rather than the native
+   `open` attribute for the same reason the desktop mega-menu is WAAPI- and
+   not [open]-driven: a transition tied straight to [open] only plays on the
+   very first open of a given <details>. */
+.menu-drawer__submenu {
+  position: absolute;
+  inset: 0;
+  inset-inline-start: 100%;
+  background: rgb(var(--color-background));
+  overflow-y: auto;
+  /* Once one axis scrolls, the other computes to auto — without this, any
+     child wider than the panel (long unbroken strings etc.) gets a
+     horizontal scrollbar and the promo cards visibly "slide" on swipe. */
+  overflow-x: hidden;
+  padding: 0 1.25rem 1.5rem;
+  transition: inset-inline-start 0.4s cubic-bezier(0.3, 1, 0.3, 1);
+}
+menu-drawer-details.menu-drawer-details--active
+  > details
+  > .menu-drawer__submenu {
+  inset-inline-start: 0;
+}
+.menu-drawer__sublist {
+  padding: 0;
+}
+.menu-drawer__back-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.85rem 0;
+  margin-bottom: 0.25rem;
+  border: none;
+  border-bottom: 1px solid rgb(var(--color-border));
+  background: transparent;
+  font-family: var(--font-navigation-family);
+  font-size: var(--font-h5-size, 1rem);
+  color: rgba(var(--color-foreground), 0.7);
+  cursor: pointer;
+}
+.menu-drawer__back-link svg {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex-shrink: 0;
+}
+.menu-drawer__collection-link {
+  display: block;
+  padding: 0.6rem 0;
+  font-weight: 600;
+  border-bottom: 1px solid rgb(var(--color-border));
+}
+.menu-drawer__promotions {
+  padding-top: 1.5rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid rgb(var(--color-border));
+}
+.menu-drawer__product-list {
+  /* Horizontal snap scroller — parity with Sleek's drawer, whose products
+     swipe in a single row (68vw columns, mandatory snap, hidden scrollbar)
+     instead of stacking in a grid. The drawer only exists below 990px, so
+     this rule is effectively mobile-only by construction. */
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(150px, 1fr);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+.menu-drawer__product-list::-webkit-scrollbar {
+  display: none;
+}
+.menu-drawer__product-list > * {
+  scroll-snap-align: start;
+  min-width: 0;
+}
+/* The card's quick-add pill is sized for product-grid cards; inside the
+   narrow scroller columns it overflows its bounds (and Sleek disables
+   quick actions in its drawer too), so remove it here. */
+.menu-drawer__promotions .product-card__quick-add {
+  display: none;
+}
+.menu-drawer__footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  border-top: 1px solid rgb(var(--color-border));
+}
+.menu-drawer__account {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.menu-drawer__logout {
+  font-size: 0.875rem;
+  opacity: 0.7;
+  text-decoration: underline;
+}
+
+.icon-plus-toggle__v {
+  transition: opacity 0.15s ease;
+}
+/* Scoped to the icon's own <summary>, not just any open ancestor <details> —
+   an unscoped `details[open] .icon-plus-toggle__v` also matches a *closed*
+   nested item's icon whenever it sits inside another, already-open <details>
+   (e.g. a child link's own toggle inside an open top-level drawer level),
+   incorrectly showing it as expanded too. */
+details[open] > summary .icon-plus-toggle__v {
+  opacity: 0;
+}
+
+.announcement-bar {
+  overflow: hidden;
+}
+.announcement-bar__track {
+  padding: 0.6rem 0;
+}
+.announcement-bar__list {
+  display: flex;
+  gap: 3rem;
+  white-space: nowrap;
+  width: max-content;
+  animation: scroll-announce var(--speed, 25s) linear infinite;
+}
+.announcement-bar__track[data-pause-on-hover]:hover .announcement-bar__list {
+  animation-play-state: paused;
+}
+.announcement-bar__item {
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+}
+@keyframes scroll-announce {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .header__icons {
+    gap: 0.25rem;
+  }
+  .header__icon-btn {
+    width: 2rem;
+    height: 2rem;
+  }
+  .header__logo img {
+    max-width: 96px;
+  }
+}

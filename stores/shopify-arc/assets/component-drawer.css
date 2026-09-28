@@ -1,0 +1,49 @@
+/* Shared base styles for slide-out drawers (cart, search). Mobile menu drawer styles live in header.css. */
+cart-drawer,
+search-drawer { display: contents; }
+
+.cart-drawer__overlay,
+.search-drawer__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  z-index: 50;
+}
+.cart-drawer[open] .cart-drawer__overlay,
+.search-drawer[open] .search-drawer__overlay { opacity: 1; visibility: visible; }
+
+.cart-drawer__panel {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: min(420px, 92vw);
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+  z-index: 51;
+  display: flex;
+  flex-direction: column;
+}
+.cart-drawer[open] .cart-drawer__panel { transform: translateX(0); }
+
+.search-drawer__panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  transform: translateY(-100%);
+  transition: transform 0.25s ease;
+  z-index: 51;
+}
+.search-drawer[open] .search-drawer__panel { transform: translateY(0); }
+
+.cart-drawer.is-loading .cart-drawer__panel { pointer-events: none; opacity: 0.7; }

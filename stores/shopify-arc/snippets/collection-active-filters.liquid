@@ -1,0 +1,75 @@
+{%- liquid
+  assign active_filter_count = 0
+  for filter in collection.filters
+    assign active_filter_count = active_filter_count | plus: filter.active_values.size
+    if filter.type == 'price_range'
+      if filter.min_value.value != nil or filter.max_value.value != nil
+        if filter.min_value.value > 0 or filter.max_value.value < filter.range_max
+          assign active_filter_count = active_filter_count | plus: 1
+        endif
+      endif
+    endif
+  endfor
+-%}
+
+{%- if active_filter_count > 0 -%}
+  <div class="collection-active-filters" id="CollectionActiveFilters" data-active-filters-count="{{ active_filter_count }}">
+    <div class="collection-active-filters__list">
+      {%- for filter in collection.filters -%}
+        {%- for filter_value in filter.active_values -%}
+          <a
+            href="{{ filter_value.url_to_remove }}"
+            class="collection-active-filters__pill"
+            data-filter-remove
+            data-url="{{ filter_value.url_to_remove }}"
+            aria-label="Clear: {{ filter.label }} {{ filter_value.label }}"
+          >
+            <span class="collection-active-filters__label">
+              <span class="collection-active-filters__group-name">{{ filter.label }}:</span>
+              {{ filter_value.label }}
+            </span>
+            <span class="collection-active-filters__icon" aria-hidden="true">
+              {%- render 'icon-close' -%}
+            </span>
+          </a>
+        {%- endfor -%}
+
+        {%- if filter.type == 'price_range' -%}
+          {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+            {%- if filter.min_value.value > 0 or filter.max_value.value < filter.range_max -%}
+              {%- liquid
+                assign min_price = filter.min_value.value | default: 0 | money
+                assign max_price = filter.max_value.value | default: filter.range_max | money
+              -%}
+              <a
+                href="{{ filter.url_to_remove }}"
+                class="collection-active-filters__pill"
+                data-filter-remove
+                data-url="{{ filter.url_to_remove }}"
+                aria-label="Clear: {{ filter.label }} {{ min_price }} - {{ max_price }}"
+              >
+                <span class="collection-active-filters__label">
+                  <span class="collection-active-filters__group-name">{{ filter.label }}:</span>
+                  {{ min_price }} &ndash; {{ max_price }}
+                </span>
+                <span class="collection-active-filters__icon" aria-hidden="true">
+                  {%- render 'icon-close' -%}
+                </span>
+              </a>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      <a
+        href="{{ collection.url }}"
+        class="collection-active-filters__clear-all btn btn--underline"
+        data-filter-clear-all
+      >
+        Clear all
+      </a>
+    </div>
+  </div>
+{%- else -%}
+  <div class="collection-active-filters" id="CollectionActiveFilters" data-active-filters-count="0" hidden></div>
+{%- endif -%}

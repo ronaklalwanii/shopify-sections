@@ -1,0 +1,118 @@
+{%- doc -%}
+  Renders pagination or load more component.
+  Accepts:
+  - paginate: paginate object (required)
+  - pagination_style: 'numbers' | 'load_more' (default: 'numbers')
+  - total_products: total number of products (optional)
+  - current_count: current number of products rendered (optional)
+{%- enddoc -%}
+
+{%- liquid
+  assign pagination_style = pagination_style | default: 'numbers'
+  assign total_products = total_products | default: paginate.items
+  assign current_page_products = paginate.page_size | times: paginate.current_page
+  if current_page_products > total_products
+    assign current_page_products = total_products
+  endif
+  if current_count != nil and current_count > 0
+    assign current_page_products = current_count
+  endif
+-%}
+
+<div class="collection-pagination" id="CollectionPagination" data-pagination-style="{{ pagination_style }}">
+  {%- if pagination_style == 'load_more' -%}
+    <div class="pagination-load-more">
+      {%- if total_products > 0 -%}
+        <div class="pagination-load-more__info">
+          <p class="pagination-load-more__count" data-load-more-count>
+            {{ "Showing %1 of %2 products" | replace: "%1", current_page_products | replace: "%2", total_products }}
+          </p>
+          {%- liquid
+            assign progress_percent = current_page_products | times: 100.0 | divided_by: total_products | round
+          -%}
+          <div class="pagination-load-more__bar" role="progressbar" aria-valuenow="{{ current_page_products }}" aria-valuemin="0" aria-valuemax="{{ total_products }}">
+            <div class="pagination-load-more__progress" style="width: {{ progress_percent }}%;"></div>
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- if paginate.next -%}
+        <a
+          href="{{ paginate.next.url }}"
+          class="btn btn--primary pagination-load-more__btn"
+          data-load-more
+          data-next-url="{{ paginate.next.url }}"
+          data-page="{{ paginate.current_page | plus: 1 }}"
+        >
+          <span class="pagination-load-more__btn-text">Load more</span>
+          <span class="pagination-load-more__spinner spinner" aria-hidden="true" hidden></span>
+        </a>
+      {%- elsif total_products > 0 -%}
+        <p class="pagination-load-more__completed">
+          {{ "All %1 products loaded" | replace: "%1", total_products }}
+        </p>
+      {%- endif -%}
+    </div>
+  {%- else -%}
+    {%- if paginate.pages > 1 -%}
+      <nav class="pagination" role="navigation" aria-label="Pagination">
+        <ul class="pagination__list" role="list">
+          {%- if paginate.previous -%}
+            <li class="pagination__item-wrapper">
+              <a
+                href="{{ paginate.previous.url }}"
+                class="pagination__item pagination__item--prev"
+                data-pagination-link
+                aria-label="Previous"
+              >
+                <span aria-hidden="true">&larr;</span>
+                <span class="visually-hidden">Previous</span>
+              </a>
+            </li>
+          {%- endif -%}
+
+          {%- for part in paginate.parts -%}
+            <li class="pagination__item-wrapper">
+              {%- if part.is_link -%}
+                <a
+                  href="{{ part.url }}"
+                  class="pagination__item"
+                  data-pagination-link
+                  aria-label="{{ "Page %1 of %2" | replace: "%1", part.title | replace: "%2", paginate.pages }}"
+                >
+                  {{ part.title }}
+                </a>
+              {%- else -%}
+                {%- if part.title == paginate.current_page -%}
+                  <span
+                    class="pagination__item pagination__item--current"
+                    aria-current="page"
+                    aria-label="{{ "Page %1 of %2" | replace: "%1", part.title | replace: "%2", paginate.pages }}"
+                  >
+                    {{ part.title }}
+                  </span>
+                {%- else -%}
+                  <span class="pagination__item pagination__item--gap">&hellip;</span>
+                {%- endif -%}
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+
+          {%- if paginate.next -%}
+            <li class="pagination__item-wrapper">
+              <a
+                href="{{ paginate.next.url }}"
+                class="pagination__item pagination__item--next"
+                data-pagination-link
+                aria-label="Next"
+              >
+                <span aria-hidden="true">&rarr;</span>
+                <span class="visually-hidden">Next</span>
+              </a>
+            </li>
+          {%- endif -%}
+        </ul>
+      </nav>
+    {%- endif -%}
+  {%- endif -%}
+</div>

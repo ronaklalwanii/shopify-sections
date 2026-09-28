@@ -1,0 +1,667 @@
+/* Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  font-family: var(--font-body-family);
+  font-style: var(--font-body-style);
+  font-weight: var(--font-body-weight);
+  font-size: var(--font-body-size);
+  line-height: 1.5;
+  color: rgb(var(--color-foreground));
+  background: rgb(var(--color-background));
+}
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+a {
+  color: currentColor;
+  text-decoration: none;
+}
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+/* Focus */
+:focus-visible {
+  outline: 2px solid var(--color-keyboard-focus, #0b61cd);
+  outline-offset: 2px;
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Layout */
+.page-width {
+  max-width: var(--page-width);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+@media screen and (min-width: 750px) {
+  .page-width {
+    padding-inline: 3rem;
+  }
+}
+.site-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.main-content {
+  flex: 1 0 auto;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+.skip-to-content-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  z-index: 1000;
+  padding: 0.75rem 1.25rem;
+  background: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+  border-radius: var(--buttons-radius);
+}
+.skip-to-content-link:focus {
+  top: 1rem;
+}
+
+/* Headings */
+h1,
+.h1 {
+  font-size: var(--font-h1-size);
+}
+h2,
+.h2 {
+  font-size: var(--font-h2-size);
+}
+h3,
+.h3 {
+  font-size: var(--font-h3-size);
+}
+h4,
+.h4 {
+  font-size: var(--font-h4-size);
+}
+h5,
+.h5 {
+  font-size: var(--font-h5-size);
+}
+h6,
+.h6 {
+  font-size: var(--font-h6-size);
+}
+.display-heading {
+  font-size: var(--font-display-size);
+  text-transform: var(--font-display-transform);
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: var(--font-heading-weight);
+  letter-spacing: var(--font-heading-letter-spacing);
+  text-transform: var(--font-heading-transform);
+  line-height: 1.2;
+}
+.subheading {
+  display: block;
+  font-family: var(--font-subheading-family);
+  font-weight: var(--font-subheading-weight);
+  font-size: var(--font-subheading-size);
+  letter-spacing: var(--font-subheading-letter-spacing);
+  text-transform: var(--font-subheading-transform);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: var(--buttons-height);
+  padding: var(--button-padding-top, 0) var(--button-padding-right, 1.5rem)
+    var(--button-padding-bottom, 0) var(--button-padding-left, 1.5rem);
+  border-radius: var(--buttons-radius);
+  border: 1px solid transparent;
+  font-family: var(--font-buttons-family);
+  font-weight: var(--font-buttons-weight);
+  letter-spacing: var(--font-buttons-letter-spacing);
+  text-transform: var(--font-buttons-transform);
+  font-size: 0.9375rem;
+  text-align: center;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+.btn--primary {
+  background: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+}
+.btn--primary:hover {
+  background: rgb(var(--color-button-hover));
+  color: rgb(var(--color-button-text-hover));
+}
+.btn--secondary {
+  background: rgb(var(--color-secondary-button));
+  color: rgb(var(--color-secondary-button-text));
+  border-color: rgb(var(--color-secondary-button-border));
+}
+.btn--secondary:hover {
+  background: rgb(var(--color-secondary-button-hover));
+  color: rgb(var(--color-secondary-button-text-hover));
+  border-color: rgb(var(--color-secondary-button-hover));
+}
+.btn--hollow {
+  background: transparent;
+  color: var(--btn-hollow-text, rgb(var(--color-button)));
+  border-color: var(--btn-hollow-border, rgb(var(--color-button)));
+  border-width: var(--btn-hollow-border-width, 1px);
+}
+.btn--hollow:hover {
+  background: var(--btn-hollow-hover-bg, rgb(var(--color-button)));
+  color: var(--btn-hollow-hover-text, rgb(var(--color-button-text)));
+  border-color: var(--btn-hollow-hover-bg, rgb(var(--color-button)));
+}
+.btn.btn--underline {
+  background: transparent;
+  color: inherit;
+  min-height: auto;
+  padding: 0;
+  border-radius: 0;
+  border-bottom: 1px solid currentColor;
+}
+.btn.btn--underline:hover {
+  opacity: 0.7;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Static icon buttons (Primary/Secondary/Underline with icon: true).
+   Left/right is expressed by DOM order (button.liquid), not flex-direction. */
+.btn__icon-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: calc(var(--btn-icon-size, 14px) + 10px);
+  height: calc(var(--btn-icon-size, 14px) + 10px);
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+.btn__icon-circle .icon {
+  width: var(--btn-icon-size, 14px);
+  height: var(--btn-icon-size, 14px);
+}
+
+/* Animated buttons (settings.animated_button_*). .btn-animated carries the shared
+   structure/animation; the --animated / --animated-secondary classes carry colors. */
+.btn-animated {
+  position: relative;
+  overflow: hidden;
+  border-color: transparent;
+  border-radius: var(--btn-animated-radius, var(--buttons-radius));
+  transition:
+    background-color var(--btn-animated-duration) ease,
+    color var(--btn-animated-duration) ease;
+}
+.btn--animated {
+  background: var(--btn-animated-bg);
+  color: var(--btn-animated-text);
+}
+.btn--animated:hover {
+  background: var(--btn-animated-hover-bg);
+  color: var(--btn-animated-hover-text);
+}
+.btn--animated-secondary {
+  background: var(--btn-animated-secondary-bg);
+  color: var(--btn-animated-secondary-text);
+}
+.btn--animated-secondary:hover {
+  background: var(--btn-animated-secondary-hover-bg);
+  color: var(--btn-animated-secondary-hover-text);
+}
+.btn-animated__icon {
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--btn-animated-icon-size, 14px) + 10px);
+  height: calc(var(--btn-animated-icon-size, 14px) + 10px);
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  transition: left var(--btn-animated-duration) ease;
+}
+.btn-animated__icon .icon {
+  width: var(--btn-animated-icon-size, 14px);
+  height: var(--btn-animated-icon-size, 14px);
+}
+/* Both variants reserve clearance on BOTH sides (not just the resting side) so the
+   icon has a dedicated lane to travel through on hover without ever overlapping
+   the label — the icon only ever occupies one of its two reserved end positions. */
+.btn.btn-animated--icon-left,
+.btn.btn-animated--icon-right {
+  padding-left: var(--btn-animated-padding-left, 56px);
+  padding-right: var(--btn-animated-padding-right, 56px);
+}
+.btn-animated--icon-left .btn-animated__icon {
+  left: 1rem;
+}
+.btn-animated--icon-left:hover .btn-animated__icon {
+  left: calc(100% - 1rem - var(--btn-animated-icon-size, 14px) - 10px);
+}
+.btn-animated--icon-right .btn-animated__icon {
+  left: calc(100% - 1rem - var(--btn-animated-icon-size, 14px) - 10px);
+}
+.btn-animated--icon-right:hover .btn-animated__icon {
+  left: 1rem;
+}
+
+.btn-animated__label {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  height: 1.2em;
+  line-height: 1.2;
+  vertical-align: middle;
+}
+.btn-animated__text--static {
+  display: block;
+  transition:
+    transform var(--btn-animated-duration) ease,
+    opacity var(--btn-animated-duration) ease;
+}
+.btn-animated__text--reveal {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+.btn-animated__char {
+  display: inline-block;
+  transform: translateY(100%);
+  opacity: 0;
+  transition:
+    transform var(--btn-animated-duration) ease,
+    opacity var(--btn-animated-duration) ease;
+  transition-delay: calc(var(--i) * var(--btn-animated-stagger));
+}
+.btn-animated:hover .btn-animated__text--static {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+.btn-animated:hover .btn-animated__char {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-animated__icon,
+  .btn-animated__text--static,
+  .btn-animated__char {
+    transition: none;
+  }
+}
+
+/* Forms */
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  min-height: var(--buttons-height);
+  padding: 0 1rem;
+  border-radius: var(--inputs-radius);
+  border: 1px solid rgb(var(--color-border));
+  background: rgb(var(--color-field));
+  color: rgb(var(--color-field-text));
+  font-family: var(--font-body-family);
+  font-size: 1rem;
+  width: 100%;
+}
+textarea {
+  min-height: 6rem;
+  padding-block: 0.75rem;
+}
+label {
+  font-size: 0.875rem;
+}
+
+/* Country/language selectors (snippets/country-selector.liquid, language-selector.liquid) */
+.localization-form__select-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.localization-form__flag {
+  font-size: 1rem;
+  line-height: 1;
+}
+.localization-form__select {
+  appearance: none;
+  min-height: auto;
+  width: auto;
+  border: none;
+  background: transparent;
+  padding: 0;
+  padding-right: 1.25rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+.localization-form__select-wrapper .icon-chevron {
+  position: absolute;
+  right: 0;
+  width: 0.85rem;
+  height: 0.85rem;
+  pointer-events: none;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: var(--badges-radius);
+}
+.badge--sale {
+  background: rgb(var(--color-badge-sale));
+  color: rgb(var(--color-badge-sale-text));
+}
+.badge--hot {
+  background: rgb(var(--color-badge-hot));
+  color: rgb(var(--color-badge-hot-text));
+}
+.badge--new {
+  background: rgb(var(--color-badge-new));
+  color: rgb(var(--color-badge-new-text));
+}
+.badge--soldout {
+  background: rgb(var(--color-badge-soldout));
+  color: rgb(var(--color-badge-soldout-text));
+}
+
+/* Icons */
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+.icon--filled {
+  fill: currentColor;
+  stroke: none;
+}
+.icon-chevron {
+  transform: rotate(var(--icon-rotation, 0deg));
+}
+.icon-picker--flip {
+  transform: scaleX(-1);
+}
+
+/* Back to top */
+.back-to-top {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 40;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+  border: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.5rem);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+.back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Fade-in on scroll utility */
+[data-animate] {
+  opacity: 0;
+  transform: translateY(1rem);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+[data-animate].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-animate] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Page transition */
+body[data-page-transitioning] {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+/* Loading spinner */
+.spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid rgba(var(--color-foreground), 0.2);
+  border-top-color: rgb(var(--color-foreground));
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---- Rolling-text button (King-style) --------------------------------------
+   Resting: solid pill with a small circled ↗ arrow at the start edge.
+   Hover: the icon circle expands to become the entire surface, the resting
+   label fades, and a duplicate label rolls in character-by-character
+   (translateY 18px → 0, 50ms stagger via --ci stamped by Liquid).
+
+   Structure note: secondary roll buttons carry BOTH classes in their markup
+   ('btn--roll btn--roll-secondary' - see snippets/button.liquid), never
+   'btn--roll-secondary' alone. Every rule below that isn't purely a color
+   override scopes to the single shared '.btn--roll' class, so it matches
+   both variants automatically - only the couple of color properties that
+   must actually differ scope to '.btn--roll-secondary' as a modifier,
+   placed after the base rule so it wins on equal specificity. This is
+   deliberate: an earlier version scoped every rule to '.btn--roll' OR
+   '.btn--roll-secondary' as two entirely separate class names, and it's
+   very easy for a new rule to only get added to one of them - which is
+   exactly what happened (the secondary button silently had no icon, no
+   hover-text reveal, no char-roll at all, on every slide, until caught).
+   With one shared class driving all shared behavior, that bug class can't
+   recur.
+
+   Hover is gated to devices with a real pointer, matching King's own
+   button.animated CSS - it wraps all its hover rules in
+   @media (min-width:1025px) specifically to avoid "stuck" hover states on
+   touch devices (no mouse-leave event to clear it). (hover:hover) and
+   (pointer:fine) is the more correct modern equivalent - it targets actual
+   pointer capability rather than a screen-size proxy.
+
+   NOTE: Arc color tokens are raw "r,g,b" triples — always wrap them in
+   rgb(...). data-magnet enables the magnetic cursor pull (hero JS). */
+.btn--roll {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  /* flex-start + reserved icon lane: resting label and rolled hover label
+     share one exact x-position (base .btn centers content otherwise). */
+  justify-content: flex-start;
+  padding: 1em 1.5em;
+  padding-inline-start: var(--roll-label-x, calc(0.85em + 2.2em + 0.8em));
+  overflow: hidden;
+  white-space: nowrap;
+  background: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+}
+.btn--roll-secondary {
+  background: rgb(var(--color-secondary-button));
+  color: rgb(var(--color-secondary-button-text));
+  border: 1px solid rgb(var(--color-secondary-button-border));
+}
+
+.btn--roll .btn-roll__icon {
+  position: absolute;
+  inset-inline-start: 0.85em;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.2em;
+  height: 2.2em;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-out;
+}
+.btn--roll .btn-roll__icon svg {
+  width: 1em;
+  height: 1em;
+  display: block;
+}
+.btn.btn--roll .btn__label {
+  transition: opacity 0.18s ease;
+}
+.btn-roll__hover {
+  /* Matches King's actual button--hover-text position: it sits roughly where
+     the icon badge sits at rest (~0.85em), not where the resting label starts
+     (which is further right, past the icon's reserved space). The icon slides
+     away to the right edge on hover (see .btn-roll__icon svg below), and the
+     char-roll text fills in from the left where it vacated - the two labels
+     cross-fade at genuinely different x-positions, matching King, not the
+     same spot the resting label occupies. */
+  position: absolute;
+  inset-inline-start: 0.85em;
+  inset-block-start: 50%;
+  translate: 0 -50%;
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  font-weight: inherit;
+}
+.btn-roll__char {
+  display: inline-flex;
+  transform: translateY(18px);
+}
+.btn--roll[data-magnet] {
+  will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn--roll:hover {
+    background: rgb(var(--color-button-hover));
+    color: rgb(var(--color-button-text-hover));
+  }
+  .btn--roll-secondary:hover {
+    background: rgb(var(--color-secondary-button-hover));
+    color: rgb(var(--color-secondary-button-text-hover));
+  }
+  /* Circle swallows the button; the arrow shrugs off its own centering
+     transform and parks on the far side, staying small like King's. */
+  .btn--roll:hover .btn-roll__icon {
+    inset-inline-start: 0;
+    top: 0;
+    transform: none;
+    width: 100%;
+    height: 100%;
+    border-color: transparent;
+    /* Match the button's own shape instead of staying a 50% circle radius,
+       which on a non-square expanded box drew an ellipse instead of the
+       button's pill/rounded-rect. border-radius isn't naturally inherited,
+       so this must be explicit. */
+    border-radius: inherit;
+  }
+  .btn--roll:hover .btn-roll__icon svg {
+    position: absolute;
+    inset-inline-end: 1.1em;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .btn.btn--roll:hover .btn__label {
+    opacity: 0;
+  }
+  .btn--roll:hover .btn-roll__hover {
+    opacity: 1;
+  }
+  .btn--roll:hover .btn-roll__char {
+    transform: translateY(0);
+    transition: transform 0.25s ease-out;
+    transition-delay: calc(var(--ci, 0) * 50ms);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-roll__char {
+    transform: none;
+    transition: none !important;
+  }
+  .btn-roll__hover {
+    opacity: 1;
+  }
+  .btn.btn--roll:hover .btn__label {
+    opacity: 0;
+  }
+}

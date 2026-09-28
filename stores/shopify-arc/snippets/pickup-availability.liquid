@@ -1,0 +1,73 @@
+{%- doc -%}
+  Accepts: product, variant (optional, defaults to product's selected/first available variant), section,
+  render_summary (optional, default true), render_drawer (optional, default true).
+  Renders real Shopify local pickup data for the variant (product.selected_or_first_available_variant.store_availabilities).
+  Renders nothing if the shop has no pickup-enabled locations for this variant.
+
+  The summary (dot + text + "check other stores" trigger) and the multi-store drawer are split behind
+  two flags so a caller can render them separately: the drawer must stay a single, stable element
+  (its id is referenced by aria-controls), while the summary is what gets swapped on variant change.
+{%- enddoc -%}
+{%- liquid
+  assign target = variant | default: product.selected_or_first_available_variant
+  assign availabilities = target.store_availabilities
+  assign render_summary = render_summary | default: true
+  assign render_drawer = render_drawer | default: true
+-%}
+{%- if availabilities.size > 0 -%}
+  {%- assign primary = availabilities.first -%}
+
+  {%- if render_summary -%}
+    <div class="pickup-availability" data-pickup-availability data-variant-id="{{ target.id }}">
+      <div class="pickup-availability__summary">
+        <span class="pickup-availability__dot{% unless primary.available %} pickup-availability__dot--unavailable{% endunless %}" aria-hidden="true"></span>
+        <div class="pickup-availability__text">
+          <p class="pickup-availability__heading">
+            {{ "Pickup available at %1" | replace: "%1", primary.location.name }}
+          </p>
+          {%- if primary.pick_up_time != blank -%}
+            <p class="pickup-availability__time">{{ primary.pick_up_time }}</p>
+          {%- endif -%}
+        </div>
+      </div>
+      {%- if availabilities.size > 1 -%}
+        <button
+          type="button"
+          class="pickup-availability__trigger"
+          aria-controls="PickupDrawer-{{ section.id }}"
+          aria-expanded="false"
+        >
+          Check availability at other stores
+        </button>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- if availabilities.size > 1 and render_drawer -%}
+    <product-drawer id="PickupDrawer-{{ section.id }}" class="pickup-drawer">
+      <div class="pickup-drawer__panel" role="dialog" aria-modal="true" aria-label="Check availability at other stores">
+        <div class="pickup-drawer__header">
+          <p class="pickup-drawer__title">{{ product.title }}</p>
+          <button type="button" class="pickup-drawer__close" data-drawer-close aria-label="Close">&times;</button>
+        </div>
+        <ul class="pickup-drawer__list" data-pickup-drawer-list>
+          {%- for availability in availabilities -%}
+            <li class="pickup-drawer__item{% if availability.available %} pickup-drawer__item--available{% else %} pickup-drawer__item--unavailable{% endif %}">
+              <p class="pickup-drawer__location">{{ availability.location.name }}</p>
+              <p class="pickup-drawer__status">
+                {%- if availability.available -%}
+                  Usually ready in 24 hours
+                {%- else -%}
+                  Currently unavailable
+                {%- endif -%}
+              </p>
+              {%- if availability.location.address -%}
+                <p class="pickup-drawer__address">{{ availability.location.address | format_address }}</p>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </product-drawer>
+  {%- endif -%}
+{%- endif -%}

@@ -1,0 +1,94 @@
+{%- doc -%}
+  Accepts: menu (link list handle), blocks (header section blocks), section (header section, for footer settings)
+{%- enddoc -%}
+<menu-drawer id="MenuDrawer" class="menu-drawer">
+  <div class="menu-drawer__overlay" data-drawer-close></div>
+  <div class="menu-drawer__panel" role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="menu-drawer__header">
+      <a href="{{ routes.root_url }}" class="menu-drawer__logo">
+        {%- if settings.logo != blank -%}
+          <img
+            src="{{ settings.logo | image_url: width: 200 }}"
+            alt="{{ shop.name }}"
+            width="120"
+            height="{{ 120 | divided_by: settings.logo.aspect_ratio | round }}"
+            loading="lazy"
+          >
+        {%- else -%}
+          <span>{{ shop.name }}</span>
+        {%- endif -%}
+      </a>
+      <button type="button" class="header__icon-btn" data-drawer-close aria-label="Close">
+        {%- render 'icon-close' -%}
+      </button>
+    </div>
+
+    <nav class="menu-drawer__nav">
+      <ul class="menu-drawer__list">
+        {%- liquid
+          assign menu_link_list = linklists[menu]
+        -%}
+        {%- for link in menu_link_list.links -%}
+          {%- liquid
+            assign mega_block = null
+            assign link_handle = link.title | handleize
+            for block in blocks
+              if block.type == 'promotion_banner' or block.type == 'custom_card' or block.type == 'product_list'
+                assign block_handle = block.settings.menu_title | handleize
+                if block_handle != '' and block_handle == link_handle and block.settings.enable_on_mobile
+                  assign mega_block = block
+                endif
+              endif
+            endfor
+          -%}
+          {%- if link.links.size > 0 or mega_block -%}
+            {%- render 'menu-drawer-details', link: link, block: mega_block -%}
+          {%- else -%}
+            <li><a href="{{ link.url }}" class="menu-drawer__link">{{ link.title }}</a></li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    {%- comment -%} Live search at the bottom of the drawer: a standalone
+        search-drawer instance — reuses the theme's predictive-search wiring
+        (Shopify /search/suggest API) and submits to the search page on Enter. {%- endcomment -%}
+    <search-drawer class="menu-drawer__search">
+      <form role="search" action="{{ routes.search_url }}" method="get" class="menu-drawer__search-form">
+        {%- render 'icon-search' -%}
+        <input
+          type="search"
+          name="q"
+          value="{{ search.terms | escape }}"
+          placeholder="Search"
+          autocomplete="off"
+          data-predictive-search-input
+          aria-label="Search"
+        >
+      </form>
+      <div data-predictive-search-results class="menu-drawer__search-results"></div>
+    </search-drawer>
+
+    <div class="menu-drawer__footer">
+      {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
+        {%- render 'country-selector', id: 'MenuDrawerCountry' -%}
+      {%- endif -%}
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="menu-drawer__account">
+          {%- render 'icon-account' -%}
+          {%- if customer -%}
+            Account
+          {%- else -%}
+            Log in
+          {%- endif -%}
+        </a>
+        {%- if customer -%}
+          <a href="{{ routes.account_logout_url }}" class="menu-drawer__logout">Log out</a>
+        {%- endif -%}
+      {%- endif -%}
+      {%- if section.settings.show_social_media_icons -%}
+        {%- render 'social-icons' -%}
+      {%- endif -%}
+    </div>
+  </div>
+</menu-drawer>

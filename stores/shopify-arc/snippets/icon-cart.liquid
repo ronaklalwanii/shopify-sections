@@ -1,0 +1,15 @@
+{%- liquid
+  assign icon_style = settings.cart_icon | default: 'shopping-bag'
+-%}
+{%- if icon_style == 'shopping-cart' -%}
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon icon-cart" aria-hidden="true" focusable="false">
+    <circle cx="9" cy="21" r="1"></circle>
+    <circle cx="19" cy="21" r="1"></circle>
+    <path d="M2.5 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 8H6"></path>
+  </svg>
+{%- else -%}
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon icon-cart" aria-hidden="true" focusable="false">
+    <path d="M6 8V6a6 6 0 0 1 12 0v2"></path>
+    <path d="M4.5 8h15l-1 12.5a2 2 0 0 1-2 1.5H7.5a2 2 0 0 1-2-1.5L4.5 8Z"></path>
+  </svg>
+{%- endif -%}

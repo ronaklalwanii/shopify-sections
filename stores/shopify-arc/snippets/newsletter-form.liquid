@@ -1,0 +1,27 @@
+{%- doc -%}
+  Accepts: id (unique form id for this instance)
+{%- enddoc -%}
+{%- form 'customer', id: id, class: 'newsletter-form' -%}
+  <input type="hidden" name="contact[tags]" value="newsletter">
+  <div class="newsletter-form__field">
+    <label for="{{ id }}-email" class="visually-hidden">Email</label>
+    <input
+      type="email"
+      name="contact[email]"
+      id="{{ id }}-email"
+      placeholder="Email address"
+      autocomplete="email"
+      required
+    >
+    <button type="submit" class="newsletter-form__submit" aria-label="Subscribe">
+      {%- render 'icon-picker', style: 'chevron', direction: 'right' -%}
+    </button>
+  </div>
+  {%- if form.posted_successfully? -%}
+    <p class="newsletter-form__message newsletter-form__message--success" role="status">Thanks for subscribing!</p>
+  {%- elsif form.errors -%}
+    <p class="newsletter-form__message newsletter-form__message--error" role="alert">
+      {{ form.errors.messages['email'] | default: form.errors.messages['form'] }}
+    </p>
+  {%- endif -%}
+{%- endform -%}

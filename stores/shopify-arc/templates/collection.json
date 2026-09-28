@@ -1,0 +1,41 @@
+{
+  "sections": {
+    "collection-hero": {
+      "type": "collection-hero",
+      "settings": {}
+    },
+    "product-grid": {
+      "type": "main-collection-product-grid",
+      "settings": {}
+    },
+    "shop-by-space": {
+      "type": "shop-by-space",
+      "settings": {}
+    },
+    "arc-edit": {
+      "type": "arc-edit",
+      "settings": {}
+    },
+    "editorial-strip": {
+      "type": "editorial-strip",
+      "settings": {}
+    },
+    "materials-editorial": {
+      "type": "materials-editorial",
+      "settings": {}
+    },
+    "final-lifestyle-cta": {
+      "type": "final-lifestyle-cta",
+      "settings": {}
+    }
+  },
+  "order": [
+    "collection-hero",
+    "product-grid",
+    "shop-by-space",
+    "arc-edit",
+    "editorial-strip",
+    "materials-editorial",
+    "final-lifestyle-cta"
+  ]
+}

@@ -1,0 +1,39 @@
+{%- doc -%}
+  Renders collection sort options.
+  Accepts:
+  - context: 'desktop' | 'mobile' | 'drawer' (default: 'desktop')
+{%- enddoc -%}
+
+{%- liquid
+  assign context = context | default: 'desktop'
+  assign sort_by = collection.sort_by | default: collection.default_sort_by
+-%}
+
+<div class="collection-sort collection-sort--{{ context }}">
+  <label for="SortBy-{{ context }}" class="collection-sort__label">
+    Sort by:
+  </label>
+  <div class="collection-sort__select-wrapper">
+    <select
+      name="sort_by"
+      id="SortBy-{{ context }}"
+      class="collection-sort__select"
+      data-collection-sort
+      aria-describedby="a11y-refresh-page-message"
+    >
+      {%- for option in collection.sort_options -%}
+        <option
+          value="{{ option.value }}"
+          {% if option.value == sort_by %}
+            selected="selected"
+          {% endif %}
+        >
+          {{ option.name }}
+        </option>
+      {%- endfor -%}
+    </select>
+    <span class="collection-sort__icon" aria-hidden="true">
+      {%- render 'icon-chevron', direction: 'down' -%}
+    </span>
+  </div>
+</div>

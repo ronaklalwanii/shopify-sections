@@ -1,0 +1,39 @@
+{%- doc -%}
+  Accepts: rating (0-5, decimals allowed), size (px, default 16), gap (px, default 2),
+  color_filled, color_empty (optional overrides), class (extra wrapper class)
+  Renders 5 stars with partial fill support (e.g. 4.5 renders a half-filled 5th star).
+{%- enddoc -%}
+{%- liquid
+  assign rating = rating | times: 1.0
+  assign size = size | default: 16
+  assign gap = gap | default: 2
+-%}
+<span
+  class="star-rating {{ class }}"
+  style="
+    --star-size: {{ size }}px;
+    --star-gap: {{ gap }}px;
+    {%- if color_filled != blank %}--star-color-filled: {{ color_filled }};{% endif -%}
+    {%- if color_empty != blank %}--star-color-empty: {{ color_empty }};{% endif -%}
+  "
+  role="img"
+  aria-label="{{ rating }} out of 5 stars"
+>
+  {%- for i in (1..5) -%}
+    {%- liquid
+      assign fraction = rating | minus: i | plus: 1
+      if fraction > 1
+        assign fraction = 1
+      elsif fraction < 0
+        assign fraction = 0
+      endif
+      assign fill_percent = fraction | times: 100
+    -%}
+    <span class="star-rating__star" aria-hidden="true">
+      <svg class="star-rating__star-bg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.6 6 .7-4.5 4.1 1.2 6-5.3-3-5.3 3 1.2-6-4.5-4.1 6-.7L10 1.5Z"/></svg>
+      <span class="star-rating__star-fill" style="width: {{ fill_percent }}%;">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.6 6 .7-4.5 4.1 1.2 6-5.3-3-5.3 3 1.2-6-4.5-4.1 6-.7L10 1.5Z"/></svg>
+      </span>
+    </span>
+  {%- endfor -%}
+</span>

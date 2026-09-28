@@ -1,0 +1,182 @@
+{{ 'testimonials.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'testimonials.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign testimonial_blocks = section.blocks | where: 'type', 'testimonial'
+  assign thumb_height = section.settings.thumb_width | times: 2 | divided_by: 3.0
+  assign scale_delta = section.settings.active_scale | minus: 1
+  assign active_margin = thumb_height | times: scale_delta | divided_by: 2 | round
+-%}
+
+<div
+  class="testimonials color-{{ section.settings.color_scheme }}"
+  style="
+    --testimonials-thumb-width: {{ section.settings.thumb_width }}px;
+    --testimonials-thumb-radius: {{ section.settings.thumb_radius }}px;
+    --testimonials-active-scale: {{ section.settings.active_scale }};
+    --testimonials-active-margin: {{ active_margin }}px;
+    --testimonials-progress-duration: {{ section.settings.autorotate_speed | times: 1000 }}ms;
+    {%- if section.settings.progress_color != blank %}--testimonials-progress-color: {{ section.settings.progress_color }};{% endif -%}
+  "
+>
+  <div class="testimonials__header">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="testimonials__eyebrow">
+        {%- if section.settings.show_eyebrow_icon -%}<span class="testimonials__eyebrow-icon" aria-hidden="true"></span>{%- endif -%}
+        {{ section.settings.eyebrow }}
+      </p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class="testimonials__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.description != blank -%}
+      <div class="testimonials__description rte">{{ section.settings.description }}</div>
+    {%- endif -%}
+  </div>
+
+  {%- if testimonial_blocks.size > 0 -%}
+    <div
+      class="testimonials__body"
+      data-testimonials
+      {% if section.settings.autorotate %}data-autorotate="true" data-autorotate-speed="{{ section.settings.autorotate_speed | times: 1000 }}"{% endif %}
+      {% if section.settings.autorotate and section.settings.show_progress_ticker %}data-progress="true"{% endif %}
+    >
+      <div class="testimonials__thumbs">
+        {%- for block in testimonial_blocks -%}
+          <button
+            type="button"
+            class="testimonials__thumb{% if forloop.first %} is-active{% endif %}"
+            data-testimonial-thumb
+            data-index="{{ forloop.index0 }}"
+            aria-label="{{ block.settings.author_name | default: 'Testimonial' | append: ' ' | append: forloop.index }}"
+            {{ block.shopify_attributes }}
+          >
+            <span class="testimonials__thumb-media">
+              {%- if block.settings.image -%}
+                <img src="{{ block.settings.image | image_url: width: 300 }}" alt="{{ block.settings.author_name | escape }}" width="150" height="150" loading="lazy">
+              {%- else -%}
+                <span class="testimonials__thumb-placeholder">{{ 'image' | placeholder_svg_tag }}</span>
+              {%- endif -%}
+            </span>
+          </button>
+        {%- endfor -%}
+      </div>
+
+      <div class="testimonials__panel">
+        <span class="testimonials__quote-mark" aria-hidden="true">&rdquo;</span>
+        {%- for block in testimonial_blocks -%}
+          <div class="testimonials__content{% if forloop.first %} is-active{% endif %}" data-testimonial-content data-index="{{ forloop.index0 }}">
+            {%- if block.settings.quote != blank -%}
+              <p class="testimonials__quote">{{ block.settings.quote }}</p>
+            {%- endif -%}
+            {%- if block.settings.description != blank -%}
+              <p class="testimonials__panel-description">{{ block.settings.description }}</p>
+            {%- endif -%}
+            <div class="testimonials__footer">
+              <div class="testimonials__author">
+                {%- if block.settings.author_name != blank -%}<p class="testimonials__author-name">{{ block.settings.author_name }}</p>{%- endif -%}
+                {%- if block.settings.author_title != blank -%}<p class="testimonials__author-title">{{ block.settings.author_title }}</p>{%- endif -%}
+              </div>
+              {%- if block.settings.rating > 0 -%}
+                {%- render 'star-rating', rating: block.settings.rating, size: section.settings.star_size, color_filled: section.settings.star_color -%}
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.show_cta -%}
+    <div class="testimonials__cta">
+      {%- if section.settings.cta_text != blank -%}
+        <p class="testimonials__cta-text">{{ section.settings.cta_text }}</p>
+      {%- endif -%}
+      {%- if section.settings.cta_label != blank -%}
+        {%- render 'button', label: section.settings.cta_label, url: section.settings.cta_link, style: section.settings.cta_style -%}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "header", "content": "Heading" },
+    { "type": "checkbox", "id": "show_eyebrow_icon", "label": "Show eyebrow icon", "default": true },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "What clients say" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Honest Feedback From Valued People" },
+    { "type": "richtext", "id": "description", "label": "Description" },
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "thumb_width", "label": "Thumbnail width", "min": 80, "max": 200, "step": 5, "unit": "px", "default": 130 },
+    { "type": "range", "id": "thumb_radius", "label": "Thumbnail corner radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 8 },
+    { "type": "range", "id": "active_scale", "label": "Active thumbnail scale", "min": 1, "max": 2, "step": 0.1, "default": 1.4 },
+    { "type": "header", "content": "Auto-rotate" },
+    { "type": "checkbox", "id": "autorotate", "label": "Auto-rotate testimonials", "default": true },
+    { "type": "range", "id": "autorotate_speed", "label": "Speed (time per testimonial)", "min": 3, "max": 15, "step": 1, "unit": "s", "default": 6, "info": "Also controls how fast the progress outline below fills in." },
+    { "type": "checkbox", "id": "show_progress_ticker", "label": "Show progress outline on active thumbnail", "default": true },
+    { "type": "color", "id": "progress_color", "label": "Progress outline color (blank = theme default)" },
+    { "type": "header", "content": "Stars" },
+    { "type": "range", "id": "star_size", "label": "Star size", "min": 10, "max": 24, "step": 1, "unit": "px", "default": 16 },
+    { "type": "color", "id": "star_color", "label": "Star color", "default": "#E0382D" },
+    { "type": "header", "content": "Call to action" },
+    { "type": "checkbox", "id": "show_cta", "label": "Show call to action", "default": true },
+    { "type": "text", "id": "cta_text", "label": "Text", "default": "See how impactful content makes a difference?" },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Schedule a call" },
+    { "type": "url", "id": "cta_link", "label": "Button link" },
+    {
+      "type": "select", "id": "cta_style", "label": "Button style", "default": "btn--primary",
+      "options": [
+        { "value": "", "label": "Use theme default" },
+        { "value": "btn--primary", "label": "Filled" }, { "value": "btn--hollow", "label": "Hollow" }, { "value": "btn--secondary", "label": "Secondary" },
+        { "value": "btn--animated", "label": "Animated" }, { "value": "btn--animated-secondary", "label": "Animated (secondary)" },
+        { "value": "btn--underline", "label": "Link" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "textarea", "id": "quote", "label": "Quote", "default": "Our ad campaigns finally speak to the right audience with clarity resulting in high CTR and ROI." },
+        { "type": "textarea", "id": "description", "label": "Supporting text", "default": "Trust her work, that the words that she delivered completely transformed our brand presence." },
+        { "type": "text", "id": "author_name", "label": "Name", "default": "Kathrine Katija" },
+        { "type": "text", "id": "author_title", "label": "Title / Company", "default": "Marketing Manager, ABC Ad Services" },
+        { "type": "range", "id": "rating", "label": "Rating (0 = hide)", "min": 0, "max": 5, "step": 1, "default": 5 }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        { "type": "testimonial" },
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Working with them completely changed how we think about content.",
+            "description": "Every piece felt intentional and on-brand from day one.",
+            "author_name": "James Carter",
+            "author_title": "Founder, North Studio",
+            "rating": 5
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Fast turnaround without sacrificing quality.",
+            "description": "Exactly the kind of partner a growing brand needs.",
+            "author_name": "Priya Menon",
+            "author_title": "Brand Lead, Solace Co.",
+            "rating": 4
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

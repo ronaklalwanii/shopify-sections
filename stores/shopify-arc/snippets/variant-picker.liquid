@@ -1,0 +1,317 @@
+{%- doc -%}
+  Accepts: product, mode ('full', the default — a real picker that drives price/availability;
+  or 'swatches_only' — a small read-only color swatch row for product cards)
+{%- enddoc -%}
+{%- liquid
+  assign mode = mode | default: 'full'
+  assign trigger_names = settings.color_swatch_trigger | downcase | split: ','
+  assign swatch_pairs = settings.swatch_list | newline_to_br | strip_newlines | split: '<br />'
+-%}
+
+{%- if mode == 'swatches_only' -%}
+  {%- liquid
+    assign color_option = null
+    for option in product.options_with_values
+      assign option_name_down = option.name | downcase | strip
+      for trigger in trigger_names
+        assign trigger_trimmed = trigger | strip
+        if option_name_down == trigger_trimmed
+          assign color_option = option
+        endif
+      endfor
+    endfor
+  -%}
+  {%- if color_option -%}
+    {%- assign total_values = color_option.values.size -%}
+    <fieldset
+      class="product-card__swatches product-card__swatches--{{ settings.pcard_swatch_shape }}{% unless settings.pcard_swatches_clickable %} product-card__swatches--static{% endunless %}"
+      data-option-position="{{ color_option.position }}"
+    >
+      <legend class="visually-hidden">{{ color_option.name }}</legend>
+      {%- for value in color_option.values limit: settings.pcard_maximum_swatches_to_show -%}
+        {%- liquid
+          assign swatch_style = ''
+          case settings.pcard_swatches_type
+            when 'shopify_swatch'
+              if value.swatch.color
+                assign swatch_style = 'background-color: ' | append: value.swatch.color | append: ';'
+              elsif value.swatch.image
+                assign swatch_image_url = value.swatch.image | image_url: width: 60
+                assign swatch_style = 'background-image: url(' | append: swatch_image_url | append: '); background-size: cover;'
+              else
+                assign swatch_style = 'background-color: ' | append: value | handle | append: ';'
+              endif
+            when 'variant_image'
+              assign swatch_variant = nil
+              for variant in product.variants
+                if variant.options contains value and variant.featured_image
+                  assign swatch_variant = variant
+                  break
+                endif
+              endfor
+              if swatch_variant.featured_image
+                assign variant_image_url = swatch_variant.featured_image | image_url: width: 60
+                assign swatch_style = 'background-image: url(' | append: variant_image_url | append: '); background-size: cover;'
+              else
+                assign swatch_style = 'background-color: ' | append: value | handle | append: ';'
+              endif
+            else
+              assign swatch_color = value | handle
+              for pair in swatch_pairs
+                assign pair_parts = pair | split: ':'
+                if pair_parts[0] and pair_parts[0] == value
+                  assign swatch_color = pair_parts[1] | strip
+                endif
+              endfor
+              assign swatch_style = 'background-color: ' | append: swatch_color | append: ';'
+          endcase
+
+          # Resolve the first available variant carrying this value (falls back to
+          # any variant) plus an image to swap the card media to on selection.
+          assign value_available = false
+          assign value_variant = nil
+          assign value_image_url = nil
+          for variant in product.variants
+            unless variant.options contains value
+              continue
+            endunless
+            if variant.available
+              assign value_available = true
+              if value_variant == nil
+                assign value_variant = variant
+              endif
+            endif
+            if value_image_url == nil and variant.featured_image
+              assign value_image_url = variant.featured_image | image_url: width: 800
+            endif
+          endfor
+          if value_variant == nil
+            for variant in product.variants
+              if variant.options contains value
+                assign value_variant = variant
+                break
+              endif
+            endfor
+          endif
+
+          if value_available
+            assign swatch_aria_label = color_option.name | append: ': ' | append: value
+          else
+            assign unavailable_value_label = value | append: " (unavailable)"
+            assign swatch_aria_label = color_option.name | append: ': ' | append: unavailable_value_label
+          endif
+        -%}
+        {%- if settings.pcard_swatches_clickable -%}
+          <label
+            class="swatch{% unless value_available %} swatch--unavailable{% endunless %}"
+            style="{{ swatch_style }}"
+            title="{{ value | escape }}"
+          >
+            <input
+              type="radio"
+              class="visually-hidden"
+              name="card-swatch-{{ product.id }}-{{ color_option.position }}"
+              value="{{ value | escape }}"
+              {% if color_option.selected_value == value %}checked{% endif %}
+              {% unless value_available %}aria-disabled="true"{% endunless %}
+              aria-label="{{ swatch_aria_label | escape }}"
+              {% if value_variant %}data-variant-id="{{ value_variant.id }}"{% endif %}
+              {% if value_image_url and settings.pcard_swatch_swap_image %}data-variant-image="{{ value_image_url }}"{% endif %}
+              {% if value_variant %}data-variant-url="{{ product.url }}?variant={{ value_variant.id }}"{% endif %}
+            >
+          </label>
+        {%- else -%}
+          <span class="swatch{% unless value_available %} swatch--unavailable{% endunless %}" style="{{ swatch_style }}" title="{{ value | escape }}"></span>
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if total_values > settings.pcard_maximum_swatches_to_show -%}
+        {%- assign more_count = total_values | minus: settings.pcard_maximum_swatches_to_show -%}
+        <a href="{{ product.url }}" class="product-card__swatches-more">
+          {{ "+%1" | replace: "%1", more_count }}
+          <span class="visually-hidden">{{ color_option.name }}</span>
+        </a>
+      {%- endif -%}
+    </fieldset>
+  {%- endif -%}
+
+{%- else -%}
+  {%- liquid
+    assign picker_type = picker_type | default: 'buttons'
+    assign show_labels = show_labels | default: true
+    assign size_style = size_style | default: 'square'
+    assign item_height = item_height | default: 48
+    assign item_min_width = item_min_width | default: 60
+    assign item_radius = item_radius | default: 4
+    assign item_gap = item_gap | default: 6
+    assign swatch_size = swatch_size | default: 33
+    # A block left at its schema default (33) follows the theme-wide Swatch
+    # size setting; any other value is an explicit per-section override.
+    if swatch_size == 33
+      assign swatch_size = settings.swatch_size | default: 33
+    endif
+    assign swatch_shape = swatch_shape | default: 'circle'
+  -%}
+  <variant-picker
+    class="variant-picker--{{ size_style }} variant-picker--type-{{ picker_type }}"
+    {% if section_id != blank %}data-form-id="product-form-{{ section_id }}"{% endif %}
+    style="
+      --vp-item-height: {{ item_height }}px;
+      --vp-item-min-width: {{ item_min_width }}px;
+      --vp-item-radius: {{ item_radius }}px;
+      --vp-item-gap: {{ item_gap }}px;
+      --vp-swatch-size: {{ swatch_size }}px;
+      --vp-label-size: {{ label_text_size | default: 14 }}px;
+      --vp-label-spacing: {{ label_letter_spacing | default: 0.5 }}px;
+      --vp-option-margin: {{ bottom_spacing | default: 24 }}px;
+      {%- if border_color != blank %}--vp-border-color: {{ border_color }};{% endif -%}
+      {%- if selected_bg != blank %}--vp-selected-bg: {{ selected_bg }};{% endif -%}
+      {%- if selected_text != blank %}--vp-selected-text: {{ selected_text }};{% endif -%}
+    "
+  >
+    {%- liquid
+      assign product_fully_unavailable = false
+      unless product.available
+        assign product_fully_unavailable = true
+      endunless
+    -%}
+    {%- for option in product.options_with_values -%}
+      {%- liquid
+        assign option_name_down = option.name | downcase | strip
+        assign is_color = false
+        for trigger in trigger_names
+          assign trigger_trimmed = trigger | strip
+          if option_name_down == trigger_trimmed
+            assign is_color = true
+          endif
+        endfor
+
+        # Swatch options stay as swatches even in dropdown mode - a color
+        # reads visually, not as text in a list.
+        assign use_dropdown = false
+        if picker_type == 'dropdown' and is_color == false
+          assign use_dropdown = true
+        endif
+      -%}
+      {%- if use_dropdown -%}
+        <div class="variant-picker__option variant-picker__option--dropdown" data-option-position="{{ option.position }}">
+          {%- if show_labels -%}
+            <label class="variant-picker__label" for="Option-{{ option.position }}-{{ section_id }}">
+              {{- option.name -}}{%- if option.selected_value != blank %}: <span data-selected-value>{{ option.selected_value }}</span>{% endif -%}
+            </label>
+          {%- else -%}
+            <span class="visually-hidden" data-selected-value-hidden>{{ option.name }}</span>
+          {%- endif -%}
+          <div class="variant-picker__values">
+            <select
+              id="Option-{{ option.position }}-{{ section_id }}"
+              class="variant-picker__select"
+              data-option-select
+              aria-label="{{ option.name | escape }}"
+            >
+              {%- for value in option.values -%}
+                {%- liquid
+                  assign value_available = false
+                  for variant in product.variants
+                    if variant.options contains value and variant.available
+                      assign value_available = true
+                      break
+                    endif
+                  endfor
+                -%}
+                <option
+                  value="{{ value | escape }}"
+                  {% if option.selected_value == value %}selected{% endif %}
+                  {% if value_available == false and product_fully_unavailable == false %}disabled{% endif %}
+                >{{ value }}</option>
+              {%- endfor -%}
+            </select>
+          </div>
+        </div>
+      {%- else -%}
+        <fieldset class="variant-picker__option" data-option-position="{{ option.position }}">
+          {%- if show_labels -%}
+            <legend>{{ option.name }}: <span data-selected-value>{{ option.selected_value }}</span></legend>
+          {%- else -%}
+            <legend class="visually-hidden">{{ option.name }}</legend>
+          {%- endif -%}
+          <div class="variant-picker__values{% if is_color %} variant-picker__values--swatches variant-picker__values--{{ swatch_shape }}{% endif %}">
+            {%- for value in option.values -%}
+              {%- liquid
+                assign input_id = 'Option-' | append: option.position | append: '-' | append: forloop.index
+
+                # Resolve the fill the same way product-card swatches do:
+                # Shopify native swatch, then the theme's swatch list, then the
+                # option name as a (best-effort CSS) color.
+                assign swatch_style = ''
+                if value.swatch.color
+                  assign swatch_style = 'background-color: ' | append: value.swatch.color | append: ';'
+                elsif value.swatch.image
+                  assign swatch_image_url = value.swatch.image | image_url: width: 120
+                  assign swatch_style = 'background-image: url(' | append: swatch_image_url | append: '); background-size: cover;'
+                else
+                  assign swatch_color = value | handle
+                  for pair in swatch_pairs
+                    assign pair_parts = pair | split: ':'
+                    if pair_parts[0] and pair_parts[0] == value
+                      assign swatch_color = pair_parts[1] | strip
+                    endif
+                  endfor
+                  assign swatch_style = 'background-color: ' | append: swatch_color | append: ';'
+                endif
+
+                assign value_available = false
+                for variant in product.variants
+                  if variant.options contains value and variant.available
+                    assign value_available = true
+                    break
+                  endif
+                endfor
+              -%}
+              <input
+                type="radio"
+                id="{{ input_id }}"
+                name="option-{{ option.position }}"
+                value="{{ value | escape }}"
+                {% if option.selected_value == value %}checked{% endif %}
+                class="visually-hidden"
+              >
+              <label
+                for="{{ input_id }}"
+                class="variant-picker__value{% if is_color %} variant-picker__value--swatch{% endif %}{% if value_available == false and product_fully_unavailable == false %} variant-picker__value--unavailable{% endif %}"
+              >
+              {%- if is_color -%}
+                <span class="swatch" style="{{ swatch_style }}"></span>
+                <span class="tooltip">{{ value }}</span>
+                <span class="variant-picker__swatch-name">{{ value }}</span>
+              {%- else -%}
+                {{ value }}
+              {%- endif -%}
+              </label>
+            {%- endfor -%}
+          </div>
+        </fieldset>
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- comment -%} Hidden per-variant price sources, swapped into the sibling `price` block's [data-variant-price] on variant change. {%- endcomment -%}
+    <div hidden>
+      {%- for variant in product.variants -%}
+        <div data-price-source="{{ variant.id }}">{%- render 'price', product: product, variant: variant -%}</div>
+      {%- endfor -%}
+    </div>
+
+    <script type="application/json" data-variant-data>
+      [
+        {%- for variant in product.variants -%}
+          {
+            "id": {{ variant.id | json }},
+            "available": {{ variant.available | json }},
+            "options": {{ variant.options | json }},
+            "price_formatted": {{ variant.price | money | json }},
+            "quantity_rule_max": {{ variant.quantity_rule.max | json }}
+          }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      ]
+    </script>
+  </variant-picker>
+{%- endif -%}

@@ -1,0 +1,131 @@
+/* Customer account pages (login, register, account, order, addresses,
+   reset password, activate account). Loaded by the customer main-* sections. */
+
+.customer {
+  max-width: 60rem;
+  margin-inline: auto;
+  padding-block: 3rem 4rem;
+}
+.customer--narrow { max-width: 30rem; }
+
+.customer__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgb(var(--color-border));
+}
+.customer__title { margin: 0; }
+.customer__return-link { font-size: 0.875rem; text-decoration: underline; opacity: 0.8; }
+.customer__return-link:hover { opacity: 1; }
+
+.customer__section { margin-bottom: 2.5rem; }
+.customer__section-title { margin-bottom: 1rem; }
+.customer__subtext { margin-bottom: 1.5rem; opacity: 0.8; }
+
+/* Forms */
+.customer__form { display: flex; flex-direction: column; gap: 1.25rem; }
+.customer__field { display: flex; flex-direction: column; gap: 0.375rem; }
+.customer__field input,
+.customer__field select { width: 100%; }
+.customer__field-error { color: rgb(var(--color-primary-accent)); font-size: 0.8125rem; }
+.customer__checkbox { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; }
+
+.customer__message {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgb(var(--color-border));
+  border-radius: var(--inputs-radius);
+  font-size: 0.875rem;
+}
+.customer__message--error { color: rgb(var(--color-primary-accent)); }
+.customer__message--success { color: rgb(var(--color-primary-accent)); }
+.customer__errors-list { margin: 0.5rem 0 0; padding-left: 1.25rem; font-size: 0.875rem; }
+.customer__errors-list a { text-decoration: underline; }
+
+.customer__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+.customer__actions-link { font-size: 0.875rem; text-decoration: underline; }
+.customer__divider {
+  border: none;
+  border-top: 1px solid rgb(var(--color-border));
+  margin: 2rem 0;
+}
+.customer__alt-text { font-size: 0.875rem; opacity: 0.7; margin: 1rem 0; text-align: center; }
+
+/* Order history & order detail tables */
+.customer__table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; }
+.customer__table th,
+.customer__table td {
+  text-align: left;
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid rgb(var(--color-border));
+  vertical-align: top;
+}
+.customer__table thead th {
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+}
+.customer__table tfoot tr:last-child th,
+.customer__table tfoot tr:last-child td { border-bottom: none; }
+.customer__table tfoot th { font-weight: 600; }
+.customer__table-num { text-align: right; }
+.customer__empty { opacity: 0.75; }
+
+.customer__item-properties { margin: 0.375rem 0 0; font-size: 0.8125rem; opacity: 0.75; display: grid; gap: 0.125rem; }
+.customer__item-discounts { margin: 0.375rem 0 0; padding: 0; list-style: none; font-size: 0.8125rem; color: rgb(var(--color-primary-accent)); }
+.customer__item-fulfillment { margin-top: 0.375rem; font-size: 0.8125rem; opacity: 0.75; display: grid; gap: 0.125rem; }
+.customer__price-s { opacity: 0.55; margin-right: 0.25rem; }
+
+.customer__grid { display: grid; gap: 2.5rem; }
+.customer__address-block { margin-bottom: 2rem; }
+.customer__address { font-size: 0.9375rem; line-height: 1.6; }
+
+/* Addresses — the add/edit forms start hidden and are toggled by customer.js,
+   which flips aria-expanded on the trigger and hidden on the form panel. */
+.customer__address-list { display: grid; gap: 1.5rem; padding: 0; margin: 1.5rem 0; list-style: none; }
+.customer__address-item { padding-bottom: 1.5rem; border-bottom: 1px solid rgb(var(--color-border)); }
+.customer__address-item h2 { font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.7; margin-bottom: 0.5rem; }
+.customer__address-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
+.customer__address-form { margin-top: 1.25rem; padding-top: 1.5rem; border-top: 1px dashed rgb(var(--color-border)); }
+.customer__field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+/* Responsive tables: collapse rows into labeled stacks on small screens */
+@media screen and (max-width: 749px) {
+  .customer__table,
+  .customer__table tbody,
+  .customer__table tfoot,
+  .customer__table tr,
+  .customer__table th,
+  .customer__table td { display: block; }
+  .customer__table thead { display: none; }
+  .customer__table tr { padding-block: 0.75rem; border-bottom: 1px solid rgb(var(--color-border)); }
+  .customer__table td {
+    border-bottom: none;
+    padding: 0.25rem 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .customer__table td::before {
+    content: attr(data-label);
+    font-size: 0.8125rem;
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+  .customer__table tfoot td,
+  .customer__table tfoot th { display: flex; justify-content: space-between; }
+  .customer__table tfoot th::after { content: ':'; }
+  .customer__field-row { grid-template-columns: 1fr; }
+}
+
+@media screen and (min-width: 750px) {
+  .customer { padding-block: 4rem 5rem; }
+  .customer__grid--halves { grid-template-columns: 1fr 1fr; }
+}

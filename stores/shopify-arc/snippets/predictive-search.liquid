@@ -1,0 +1,21 @@
+{%- if predictive_search.performed -%}
+  <div data-predictive-search-results>
+    {%- if predictive_search.resources.results.products.size > 0 -%}
+      <div class="predictive-search__products">
+        {%- for product in predictive_search.resources.results.products -%}
+          {%- render 'card-product',
+            product: product,
+            show_swatches: false,
+            show_vendor: settings.predictive_search_show_vendor,
+            show_price: settings.predictive_search_show_price
+          -%}
+        {%- endfor -%}
+      </div>
+      <a href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}" class="predictive-search__view-all">
+        View all results
+      </a>
+    {%- else -%}
+      <p class="predictive-search__empty">{{ "No results found for &quot;%1&quot;" | replace: "%1", predictive_search.terms }}</p>
+    {%- endif -%}
+  </div>
+{%- endif -%}

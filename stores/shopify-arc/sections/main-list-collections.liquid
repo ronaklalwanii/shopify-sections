@@ -1,0 +1,15 @@
+<div class="page-width" style="padding-block: 3rem;">
+  <h1 style="margin-bottom: 2rem;">Collections</h1>
+  <div class="collection-grid">
+    {%- for collection in collections -%}
+      {%- render 'card-collection', collection: collection -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "All collections",
+  "settings": []
+}
+{% endschema %}

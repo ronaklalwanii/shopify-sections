@@ -1,0 +1,168 @@
+{{ 'rich-text.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign content_width_px = 600
+  case section.settings.content_width
+    when 'medium'
+      assign content_width_px = 800
+    when 'large'
+      assign content_width_px = 1000
+  endcase
+
+  assign padding_top = 60
+  assign padding_bottom = 60
+  if section.settings.custom_padding
+    assign padding_top = section.settings.padding_top
+    assign padding_bottom = section.settings.padding_bottom
+  endif
+-%}
+
+<div
+  class="rich-text color-{{ section.settings.color_scheme }}{% if section.settings.full_width %} rich-text--full{% endif %}"
+  style="
+    padding-top: {{ padding_top }}px;
+    padding-bottom: {{ padding_bottom }}px;
+    {% if section.settings.background != blank %}background: {{ section.settings.background }};{% endif %}
+    {% if section.settings.text_color != blank %}color: {{ section.settings.text_color }};{% endif %}
+  "
+>
+  <div
+    class="rich-text__inner rich-text__inner--{{ section.settings.text_position }}"
+    style="--rich-text-width: {{ content_width_px }}px;"
+  >
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+
+        {%- when 'subheading' -%}
+          {%- if block.settings.text != blank -%}
+            <p class="subheading" {{ block.shopify_attributes }}>{{ block.settings.text }}</p>
+          {%- endif -%}
+
+        {%- when 'heading' -%}
+          {%- if block.settings.text != blank -%}
+            <h2 class="rich-text__heading" style="--rich-text-heading-scale: {{ block.settings.size }}%;" {{ block.shopify_attributes }}>
+              {{ block.settings.text }}
+            </h2>
+          {%- endif -%}
+
+        {%- when 'text' -%}
+          {%- if block.settings.content != blank -%}
+            <div class="rich-text__text rte" {{ block.shopify_attributes }}>{{ block.settings.content }}</div>
+          {%- endif -%}
+
+        {%- when 'buttons' -%}
+          {%- if block.settings.button_1_label != blank or block.settings.button_2_label != blank -%}
+            <div class="rich-text__buttons" {{ block.shopify_attributes }}>
+              {%- if block.settings.button_1_label != blank -%}
+                {%- render 'button', label: block.settings.button_1_label, url: block.settings.button_1_link, style: block.settings.button_1_style -%}
+              {%- endif -%}
+              {%- if block.settings.button_2_label != blank -%}
+                {%- render 'button', label: block.settings.button_2_label, url: block.settings.button_2_link, style: block.settings.button_2_style -%}
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rich text",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "checkbox", "id": "full_width", "label": "Full width", "default": false },
+    {
+      "type": "select", "id": "content_width", "label": "Content width", "default": "small",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ]
+    },
+    {
+      "type": "select", "id": "text_position", "label": "Text position", "default": "center",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    { "type": "header", "content": "Colors" },
+    { "type": "paragraph", "content": "Blank uses the color scheme above. Background accepts a gradient too." },
+    { "type": "color_background", "id": "background", "label": "Background" },
+    { "type": "color", "id": "text_color", "label": "Text" },
+    { "type": "header", "content": "Padding" },
+    { "type": "checkbox", "id": "custom_padding", "label": "Custom padding", "default": false },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 60 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 60 }
+  ],
+  "blocks": [
+    {
+      "type": "subheading",
+      "name": "Subheading",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Subheading", "default": "Subheading" }
+      ]
+    },
+    {
+      "type": "heading",
+      "name": "Heading",
+      "settings": [
+        { "type": "inline_richtext", "id": "text", "label": "Heading", "default": "Heading" },
+        { "type": "range", "id": "size", "label": "Size", "min": 50, "max": 150, "step": 5, "unit": "%", "default": 100 }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "richtext", "id": "content", "label": "Text",
+          "default": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+        }
+      ]
+    },
+    {
+      "type": "buttons",
+      "name": "Buttons",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "button_1_label", "label": "Button 1 label" },
+        { "type": "url", "id": "button_1_link", "label": "Button 1 link" },
+        {
+          "type": "select", "id": "button_1_style", "label": "Button 1 style", "default": "btn--primary",
+          "options": [
+            { "value": "", "label": "Use theme default" },
+            { "value": "btn--primary", "label": "Filled" }, { "value": "btn--hollow", "label": "Hollow" }, { "value": "btn--secondary", "label": "Secondary" },
+            { "value": "btn--animated", "label": "Animated" }, { "value": "btn--animated-secondary", "label": "Animated (secondary)" },
+            { "value": "btn--underline", "label": "Link" }
+          ]
+        },
+        { "type": "text", "id": "button_2_label", "label": "Button 2 label" },
+        { "type": "url", "id": "button_2_link", "label": "Button 2 link" },
+        {
+          "type": "select", "id": "button_2_style", "label": "Button 2 style", "default": "btn--secondary",
+          "options": [
+            { "value": "", "label": "Use theme default" },
+            { "value": "btn--primary", "label": "Filled" }, { "value": "btn--hollow", "label": "Hollow" }, { "value": "btn--secondary", "label": "Secondary" },
+            { "value": "btn--animated", "label": "Animated" }, { "value": "btn--animated-secondary", "label": "Animated (secondary)" },
+            { "value": "btn--underline", "label": "Link" }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rich text",
+      "blocks": [
+        { "type": "subheading" },
+        { "type": "heading" },
+        { "type": "text" }
+      ]
+    }
+  ]
+}
+{% endschema %}

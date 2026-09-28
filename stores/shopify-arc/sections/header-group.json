@@ -1,0 +1,146 @@
+{
+  "name": "Header",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "scrolling-promotion",
+      "blocks": {
+        "text_1": {
+          "type": "text",
+          "settings": {
+            "text": "Free shipping on all orders"
+          }
+        }
+      },
+      "block_order": ["text_1"],
+      "settings": {
+        "color_scheme": "scheme-2"
+      }
+    },
+    "header": {
+      "type": "header",
+      "blocks": {
+        "mega_catalog": {
+          "type": "product_list",
+          "settings": {
+            "menu_title": "Catalog",
+            "menu_columns": 4,
+            "promotions_width": 66,
+            "products_per_view": 2,
+            "show_menu_column_divider": true,
+            "heading": "Best sellers this week",
+            "collections": ["frontpage", "all"],
+            "product_list": ["coffee-table", "solis-dining-table", "vale-sideboard"]
+          }
+        },
+        "mega_collections": {
+          "type": "custom_card",
+          "settings": {
+            "menu_title": "Collection",
+            "menu_columns": 2,
+            "enable_on_mobile": true,
+            "promotions_width": 72,
+            "promotion_columns": 4,
+            "promo_image_1": "shopify://shop_images/092bf6c5-b7f2-4446-ad41-fbe697eb11ed.png",
+            "eyebrow_1": "New in",
+            "heading_1": "The autumn drop",
+            "heading_size_1": "h5",
+            "description_1": "<p>Fresh pieces, small batches.</p>",
+            "button_label_1": "Shop new in",
+            "promotion_link_1": "/collections/all",
+            "promo_image_2": "shopify://shop_images/1e04ecb0-42d3-4609-ba5b-57d1dc7e46be.png",
+            "eyebrow_2": "Best sellers",
+            "heading_2": "Loved by everyone",
+            "heading_size_2": "h5",
+            "description_2": "<p>The pieces that keep selling out.</p>",
+            "button_label_2": "Shop best sellers",
+            "promotion_link_2": "/collections/frontpage",
+            "promo_image_3": "shopify://shop_images/2aee6e28-3ef3-4a22-9093-7b24232b4f7b.png",
+            "eyebrow_3": "The edit",
+            "heading_3": "Quietly considered",
+            "heading_size_3": "h5",
+            "description_3": "<p>Our founder's twelve favourites.</p>",
+            "button_label_3": "View the edit",
+            "promotion_link_3": "/collections/all",
+            "promo_image_4": "shopify://shop_images/2dd3cb95-790d-4051-94f4-f8030da7062e.png",
+            "eyebrow_4": "Final chance",
+            "heading_4": "Last few left",
+            "heading_size_4": "h5",
+            "description_4": "<p>Once they're gone, they're gone.</p>",
+            "button_label_4": "Shop final chance",
+            "promotion_link_4": "/collections/frontpage"
+          }
+        },
+        "mega_about": {
+          "type": "promotion_banner",
+          "settings": {
+            "menu_title": "About",
+            "menu_columns": 3,
+            "enable_on_mobile": true,
+            "promotions_width": 64,
+            "promotion_columns": 2,
+            "button_style": "btn--secondary",
+            "promo_image_1": "shopify://shop_images/9a670a8f-5ff0-42ce-a1b7-f8ae8b172e24.png",
+            "subheading_1": "The story",
+            "heading_1": "Made by hand, made to last",
+            "heading_size_1": "h4",
+            "description_1": "<p>Every piece starts as a sketch and ends in your home.</p>",
+            "button_label_1": "Our story",
+            "button_style_1": "btn--secondary",
+            "content_position_1": "bottom-left",
+            "content_alignment_1": "left",
+            "promotion_link_1": "/pages/about-us",
+            "promo_image_2": "shopify://shop_images/dc1d3e16-4fd8-483c-9ac1-37902b2aad7e.png",
+            "subheading_2": "Small batch",
+            "heading_2": "Released in seasons, not weeks",
+            "heading_size_2": "h4",
+            "description_2": "<p>Two collections a year. Nothing wasted.</p>",
+            "button_label_2": "Explore",
+            "button_style_2": "btn--primary",
+            "content_position_2": "middle-center",
+            "content_alignment_2": "center",
+            "promotion_link_2": "/collections/all",
+            "color_scheme_3": "scheme-2",
+            "subheading_3": "Est. 2020",
+            "heading_3": "Designed slowly in Copenhagen",
+            "heading_size_3": "h5",
+            "description_3": "<p>Materials we can trace. Joints we're proud of.</p>",
+            "content_position_3": "middle-center",
+            "content_alignment_3": "center",
+            "color_scheme_4": "scheme-1",
+            "subheading_4": "The workshop",
+            "heading_4": "Meet the makers",
+            "heading_size_4": "h5",
+            "description_4": "<p>Seven people. One bench. Zero shortcuts.</p>",
+            "button_label_4": "Our craft",
+            "button_style_4": "btn--animated",
+            "content_position_4": "middle-left",
+            "content_alignment_4": "left",
+            "promotion_link_4": "/pages/about-us"
+          }
+        }
+      },
+      "block_order": ["mega_catalog", "mega_collections", "mega_about"],
+      "settings": {
+        "container": "fixed",
+        "color_scheme": "scheme-2",
+        "menu": "main-menu",
+        "header_layout": "left-center",
+        "sticky_header": "always",
+        "menu_trigger": "hover",
+        "show_separator_line": true,
+        "enable_transparent_header": true,
+        "transparent_header_color": "#FFFFFF",
+        "transparent_header_hover_bg": "#FFFFFF",
+        "transparent_header_hover_text": "#121212",
+        "blur_background": 0,
+        "logo_mobile_position": "center",
+        "show_social_media_icons": false,
+        "enable_country_selector": false,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    }
+  },
+  "order": ["announcement-bar", "header"]
+}

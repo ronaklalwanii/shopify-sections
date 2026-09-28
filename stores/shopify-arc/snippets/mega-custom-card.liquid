@@ -1,0 +1,28 @@
+{%- doc -%}
+  Accepts: image, eyebrow, heading, heading_size_class (optional utility class, e.g. h3), description, button_label, link
+{%- enddoc -%}
+{%- liquid
+  assign has_media = false
+  if image != blank
+    assign has_media = true
+  endif
+-%}
+{%- if link != blank -%}<a href="{{ link }}" class="mega-custom-card{% unless has_media %} mega-custom-card--text-only{% endunless %}">{%- else -%}<div class="mega-custom-card{% unless has_media %} mega-custom-card--text-only{% endunless %}">{%- endif -%}
+  {%- if has_media -%}
+    <img
+      src="{{ image | image_url: width: 500 }}"
+      alt="{{ heading | escape }}"
+      width="500"
+      height="{{ 500.0 | divided_by: image.aspect_ratio | round }}"
+      loading="lazy"
+    >
+  {%- endif -%}
+  {%- if eyebrow != blank or heading != blank or description != blank or button_label != blank -%}
+    <div class="mega-custom-card__content">
+      {%- if eyebrow != blank -%}<p class="mega-custom-card__eyebrow">{{ eyebrow }}</p>{%- endif -%}
+      {%- if heading != blank -%}<p class="mega-custom-card__heading{% if heading_size_class != blank %} {{ heading_size_class }}{% endif %}">{{ heading }}</p>{%- endif -%}
+      {%- if description != blank -%}<div class="mega-custom-card__description">{{ description }}</div>{%- endif -%}
+      {%- if button_label != blank -%}<span class="mega-custom-card__button">{{ button_label }}</span>{%- endif -%}
+    </div>
+  {%- endif -%}
+{%- if link != blank -%}</a>{%- else -%}</div>{%- endif -%}

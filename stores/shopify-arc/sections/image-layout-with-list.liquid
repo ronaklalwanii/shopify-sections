@@ -1,0 +1,210 @@
+{{ 'image-layout-with-list.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign item_blocks = section.blocks | where: 'type', 'item'
+-%}
+<div
+  class="image-text-list color-{{ section.settings.color_scheme }} image-text-list--{{ section.settings.layout_style }} image-text-list--image-{{ section.settings.image_position }} image-text-list--aspect-{{ section.settings.image_aspect_ratio }}{% if section.settings.contained %} image-text-list--contained{% endif %}{% if section.settings.layout_style == 'overlap' and section.settings.card_position_mobile == 'top' %} image-text-list--card-top{% endif %}"
+  style="
+    --image-text-list-padding-inline: {{ section.settings.padding_horizontal }}px;
+    --image-text-list-padding-top: {{ section.settings.padding_top }}px;
+    --image-text-list-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --image-text-list-image-radius: {{ section.settings.image_radius }}px;
+    --image-text-list-image-width: {{ section.settings.image_width }}%;
+    --image-text-list-image-height: {{ section.settings.image_height }}px;
+    --image-text-list-overlay-opacity: {{ section.settings.image_overlay_opacity | divided_by: 100.0 }};
+    --image-text-list-heading-size: {{ section.settings.heading_font_size }}px;
+    --image-text-list-heading-weight: {{ section.settings.heading_font_weight }};
+    --image-text-list-heading-spacing: {{ section.settings.heading_letter_spacing }}px;
+    --image-text-list-text-size: {{ section.settings.text_font_size }}px;
+    --image-text-list-text-weight: {{ section.settings.text_font_weight }};
+    --image-text-list-label-size: {{ section.settings.item_label_font_size }}px;
+    --image-text-list-label-weight: {{ section.settings.item_label_font_weight }};
+    --image-text-list-card-width: {{ section.settings.card_width }}%;
+    --image-text-list-card-overlap: {{ section.settings.card_overlap }}px;
+    --image-text-list-card-overlap-mobile: {{ section.settings.card_overlap_mobile }}px;
+    --image-text-list-card-radius: {{ section.settings.card_radius }}px;
+    --image-text-list-card-padding: {{ section.settings.card_padding }}px;
+    {%- if section.settings.card_height > 0 %}--image-text-list-card-height: {{ section.settings.card_height }}px;{% endif -%}
+    {%- if section.settings.heading_color != blank %}--image-text-list-heading-color: {{ section.settings.heading_color }};{% endif -%}
+    {%- if section.settings.text_color != blank %}--image-text-list-text-color: {{ section.settings.text_color }};{% endif -%}
+    {%- if section.settings.item_label_color != blank %}--image-text-list-label-color: {{ section.settings.item_label_color }};{% endif -%}
+    {%- if section.settings.card_background != blank %}--image-text-list-card-bg: {{ section.settings.card_background }};{% endif -%}
+    {%- if section.settings.image_overlay_color != blank %}--image-text-list-overlay-color: {{ section.settings.image_overlay_color }};{% endif -%}
+  "
+>
+  <div class="image-text-list__media">
+    {%- if section.settings.image -%}
+      <img
+        src="{{ section.settings.image | image_url: width: 1200 }}"
+        alt="{{ section.settings.image.alt | escape }}"
+        width="1200"
+        height="{{ 1200 | divided_by: section.settings.image.aspect_ratio | round }}"
+        loading="lazy"
+      >
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'image-text-list__placeholder' }}
+    {%- endif -%}
+    {%- if section.settings.image_overlay_color != blank and section.settings.image_overlay_opacity > 0 -%}
+      <span class="image-text-list__overlay" aria-hidden="true"></span>
+    {%- endif -%}
+  </div>
+
+  <div class="image-text-list__content">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="image-text-list__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.text != blank -%}
+      <div class="image-text-list__text rte">{{ section.settings.text }}</div>
+    {%- endif -%}
+
+    {%- if item_blocks.size > 0 -%}
+      <div class="image-text-list__items">
+        {%- for block in item_blocks -%}
+          <div class="image-text-list__item" {{ block.shopify_attributes }}>
+            {%- if block.settings.icon -%}
+              <img class="image-text-list__item-icon" src="{{ block.settings.icon | image_url: width: 60 }}" alt="" width="24" height="24" loading="lazy">
+            {%- else -%}
+              <span class="image-text-list__item-icon image-text-list__item-icon--dot" aria-hidden="true"></span>
+            {%- endif -%}
+            {%- if block.settings.label != blank -%}
+              <p class="image-text-list__item-label">{{ block.settings.label }}</p>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      <div class="image-text-list__button">
+        {%- render 'button', label: section.settings.button_label, url: section.settings.button_link, style: section.settings.button_style -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "ImageLayoutWithList",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "header", "content": "Layout style" },
+    {
+      "type": "select", "id": "layout_style", "label": "Style", "default": "side-by-side",
+      "options": [
+        { "value": "side-by-side", "label": "Side by side" },
+        { "value": "overlap", "label": "Overlapping card" }
+      ]
+    },
+    {
+      "type": "select", "id": "image_position", "label": "Image position", "default": "left",
+      "options": [ { "value": "left", "label": "Left" }, { "value": "right", "label": "Right" } ]
+    },
+    { "type": "checkbox", "id": "contained", "label": "Contained (page width, not edge-to-edge)", "default": false },
+    { "type": "range", "id": "padding_horizontal", "label": "Side padding", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 60 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 60 },
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "range", "id": "image_radius", "label": "Corner radius", "min": 0, "max": 60, "step": 2, "unit": "px", "default": 0 },
+    {
+      "type": "select", "id": "image_aspect_ratio", "label": "Aspect ratio", "default": "auto",
+      "info": "Auto stretches to fill the row (side by side style) or the image's own natural shape (overlap style).",
+      "options": [
+        { "value": "auto", "label": "Auto" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "portrait", "label": "Portrait (4:5)" },
+        { "value": "tall", "label": "Tall (3:4)" },
+        { "value": "landscape", "label": "Landscape (4:3)" }
+      ]
+    },
+    { "type": "range", "id": "image_width", "label": "Image width (overlap style)", "min": 40, "max": 80, "step": 1, "unit": "%", "default": 58 },
+    { "type": "range", "id": "image_height", "label": "Max height", "min": 240, "max": 900, "step": 20, "unit": "px", "default": 640, "info": "Applies when an aspect ratio (not Auto) is selected." },
+    { "type": "color", "id": "image_overlay_color", "label": "Overlay tint color (blank = none)" },
+    { "type": "range", "id": "image_overlay_opacity", "label": "Overlay tint opacity", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 0 },
+    { "type": "header", "content": "Overlapping card (overlap style only)" },
+    { "type": "range", "id": "card_width", "label": "Card width", "min": 30, "max": 80, "step": 1, "unit": "%", "default": 42 },
+    { "type": "range", "id": "card_overlap", "label": "Overlap onto image (desktop)", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "card_overlap_mobile", "label": "Overlap onto image (mobile)", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 60 },
+    { "type": "color", "id": "card_background", "label": "Background color (blank = theme default)" },
+    { "type": "range", "id": "card_radius", "label": "Corner radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 0 },
+    { "type": "range", "id": "card_padding", "label": "Padding", "min": 20, "max": 80, "step": 4, "unit": "px", "default": 48 },
+    { "type": "range", "id": "card_height", "label": "Min height (0 = auto)", "min": 0, "max": 900, "step": 20, "unit": "px", "default": 0 },
+    {
+      "type": "select", "id": "card_position_mobile", "label": "Card position on mobile", "default": "bottom",
+      "options": [
+        { "value": "bottom", "label": "Below image" },
+        { "value": "top", "label": "Above image" }
+      ]
+    },
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "heading", "label": "Heading" },
+    { "type": "range", "id": "heading_font_size", "label": "Size", "min": 18, "max": 64, "step": 1, "unit": "px", "default": 34 },
+    {
+      "type": "select", "id": "heading_font_weight", "label": "Weight", "default": "600",
+      "options": [
+        { "value": "400", "label": "400" }, { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" }, { "value": "700", "label": "700" }
+      ]
+    },
+    { "type": "range", "id": "heading_letter_spacing", "label": "Letter spacing", "min": -2, "max": 8, "step": 0.5, "unit": "px", "default": 0 },
+    { "type": "color", "id": "heading_color", "label": "Color (blank = theme default)" },
+    { "type": "header", "content": "Text" },
+    {
+      "type": "richtext", "id": "text", "label": "Text",
+      "default": "<p>Describe your product or brand story here.</p>"
+    },
+    { "type": "range", "id": "text_font_size", "label": "Text size", "min": 12, "max": 28, "step": 1, "unit": "px", "default": 16 },
+    {
+      "type": "select", "id": "text_font_weight", "label": "Text weight", "default": "400",
+      "options": [
+        { "value": "400", "label": "400" }, { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" }, { "value": "700", "label": "700" }
+      ]
+    },
+    { "type": "color", "id": "text_color", "label": "Text color (blank = theme default)" },
+    { "type": "header", "content": "List item label" },
+    { "type": "range", "id": "item_label_font_size", "label": "Size", "min": 12, "max": 24, "step": 1, "unit": "px", "default": 16 },
+    {
+      "type": "select", "id": "item_label_font_weight", "label": "Weight", "default": "500",
+      "options": [
+        { "value": "400", "label": "400" }, { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" }, { "value": "700", "label": "700" }
+      ]
+    },
+    { "type": "color", "id": "item_label_color", "label": "Color (blank = theme default)" },
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "button_label", "label": "Label" },
+    { "type": "url", "id": "button_link", "label": "Link" },
+    {
+      "type": "select", "id": "button_style", "label": "Style", "default": "btn--secondary",
+      "options": [
+        { "value": "", "label": "Use theme default" },
+        { "value": "btn--primary", "label": "Filled" }, { "value": "btn--hollow", "label": "Hollow" }, { "value": "btn--secondary", "label": "Secondary" },
+        { "value": "btn--animated", "label": "Animated" }, { "value": "btn--animated-secondary", "label": "Animated (secondary)" },
+        { "value": "btn--underline", "label": "Link" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "List item",
+      "settings": [
+        { "type": "image_picker", "id": "icon", "label": "Icon image" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Feature name" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "ImageLayoutWithList",
+      "blocks": [
+        { "type": "item" },
+        { "type": "item" },
+        { "type": "item" }
+      ]
+    }
+  ]
+}
+{% endschema %}

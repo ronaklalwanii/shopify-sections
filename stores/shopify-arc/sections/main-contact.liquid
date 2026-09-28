@@ -1,0 +1,404 @@
+{{ 'contact.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} .contact-us__heading {
+    font-family: var(--cu-heading-family, inherit);
+  }
+  #shopify-section-{{ section.id }} .contact-us__subtitle {
+    font-family: var(--cu-subtitle-family, inherit);
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign form_id = 'ContactUs-' | append: section.id
+  assign contact_image = section.settings.image
+
+  # Pill needs a radius larger than any px range can express; 100 maps to a full pill.
+  if section.settings.badge_radius >= 100
+    assign badge_radius = '999px'
+  else
+    assign badge_radius = section.settings.badge_radius | append: 'px'
+  endif
+
+  # Submit button resolves through the same system as every other Arc button.
+  capture cu_button_classes
+    render 'button-classes', style: section.settings.button_style, icon: section.settings.show_button_icon, icon_position: 'right'
+  endcapture
+  assign cu_button_is_animated = false
+  if cu_button_classes contains 'btn-animated'
+    assign cu_button_is_animated = true
+  endif
+  assign cu_button_is_roll = false
+  if cu_button_classes contains 'btn--roll'
+    assign cu_button_is_roll = true
+  endif
+-%}
+
+<section
+  class="contact-us color-{{ section.settings.color_scheme }} contact-us--image-{{ section.settings.image_position }}"
+  id="shopify-section-{{ section.id }}"
+  style="
+    --cu-image-width: {{ section.settings.image_width }};
+    --cu-image-height: {{ section.settings.image_height }}px;
+    --cu-image-height-mobile: {{ section.settings.image_height_mobile }}px;
+    --cu-image-radius: {{ section.settings.image_radius }}px;
+    --cu-badge-radius: {{ badge_radius }};
+    --cu-card-radius: {{ section.settings.card_radius }}px;
+    --cu-heading-size: {{ section.settings.heading_size }}px;
+    --cu-subtitle-size: {{ section.settings.subtitle_size }}px;
+    --cu-grid-gap: {{ section.settings.gap }}rem;
+    --cu-padding-top: {{ section.settings.padding_top }}rem;
+    --cu-padding-bottom: {{ section.settings.padding_bottom }}rem;
+    {% if section.settings.heading_weight != blank %}--cu-heading-weight: {{ section.settings.heading_weight }};{% endif %}
+    {% if section.settings.heading_color != blank %}--cu-heading-color: {{ section.settings.heading_color }};{% endif %}
+    {% if section.settings.heading_font_family != blank %}--cu-heading-family: {{ section.settings.heading_font_family.family }}, {{ section.settings.heading_font_family.fallback_families }};{% endif %}
+    {% if section.settings.subtitle_weight != blank %}--cu-subtitle-weight: {{ section.settings.subtitle_weight }};{% endif %}
+    {% if section.settings.subtitle_color != blank %}--cu-subtitle-color: {{ section.settings.subtitle_color }};{% endif %}
+    {% if section.settings.subtitle_font_family != blank %}--cu-subtitle-family: {{ section.settings.subtitle_font_family.family }}, {{ section.settings.subtitle_font_family.fallback_families }};{% endif %}
+    {% if section.settings.card_background != blank %}--cu-card-bg: {{ section.settings.card_background }};{% endif %}
+  "
+>
+  <div class="page-width">
+    <div class="contact-us__grid">
+      <div class="contact-us__content" data-animate>
+        {%- if section.settings.heading != blank -%}
+          <h1 class="contact-us__heading">{{ section.settings.heading | escape }}</h1>
+        {%- endif -%}
+
+        <div class="contact-us__card">
+          {%- form 'contact', id: form_id, class: 'contact-us__form' -%}
+            {%- if form.posted_successfully? -%}
+              <div class="contact-us__message contact-us__message--success" role="status" tabindex="-1" autofocus>
+                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <circle cx="10" cy="10" r="10" fill="currentColor" fill-opacity="0.15"/>
+                  <path d="M6 10.5L8.5 13L14 7.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>{{ section.settings.success_message | escape }}</span>
+              </div>
+            {%- endif -%}
+
+            {%- if form.errors -%}
+              <div id="{{ form_id }}-error" class="contact-us__message contact-us__message--error" role="alert">
+                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <circle cx="10" cy="10" r="10" fill="currentColor" fill-opacity="0.15"/>
+                  <path d="M10 6V11M10 14H10.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <div class="contact-us__message-body">
+                  <p>{{ section.settings.error_message | escape }}</p>
+                  <ul>
+                    {%- for field in form.errors -%}
+                      <li>{{ form.errors.translated_fields[field] | capitalize }} {{ form.errors.messages[field] }}</li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              </div>
+            {%- endif -%}
+
+            <div class="contact-us__fields">
+              {%- for block in section.blocks -%}
+                {%- liquid
+                  assign field_id = form_id | append: '-' | append: block.id
+                  assign field_label = block.settings.label | default: 'Field'
+
+                  # contact[email] is what Shopify uses for the reply-to address;
+                  # every other field key flows into the notification email as-is.
+                  if block.settings.field_type == 'email'
+                    assign field_name = 'contact[email]'
+                  else
+                    assign field_name = 'contact[' | append: field_label | append: ']'
+                  endif
+
+                  assign field_required = ''
+                  if block.settings.required
+                    assign field_required = 'required aria-required="true"'
+                  endif
+
+                  assign field_errors = ''
+                  if form.errors
+                    assign field_errors = 'aria-describedby="' | append: form_id | append: '-error"'
+                  endif
+                -%}
+                <div class="contact-us__field contact-us__field--{{ block.settings.width | default: 'half' }}" {{ block.shopify_attributes }}>
+                  <label class="contact-us__label" for="{{ field_id }}">{{ field_label | escape }}</label>
+
+                  {%- case block.settings.field_type -%}
+                    {%- when 'email' -%}
+                      <input
+                        type="email"
+                        id="{{ field_id }}"
+                        name="{{ field_name }}"
+                        class="contact-us__input"
+                        placeholder="{{ block.settings.placeholder | escape }}"
+                        value="{{ form.email }}"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        autocomplete="email"
+                        {{ field_required }}
+                        {{ field_errors }}
+                        {% if form.errors %}aria-invalid="true"{% endif %}
+                      >
+                    {%- when 'phone' -%}
+                      <input
+                        type="tel"
+                        id="{{ field_id }}"
+                        name="{{ field_name }}"
+                        class="contact-us__input"
+                        placeholder="{{ block.settings.placeholder | escape }}"
+                        autocomplete="tel"
+                        {{ field_required }}
+                        {{ field_errors }}
+                      >
+                    {%- when 'date' -%}
+                      <input
+                        type="date"
+                        id="{{ field_id }}"
+                        name="{{ field_name }}"
+                        class="contact-us__input"
+                        {{ field_required }}
+                        {{ field_errors }}
+                      >
+                    {%- when 'dropdown' -%}
+                      {%- assign dropdown_options = block.settings.options | split: '
+' -%}
+                      <select
+                        id="{{ field_id }}"
+                        name="{{ field_name }}"
+                        class="contact-us__select"
+                        {{ field_required }}
+                        {{ field_errors }}
+                      >
+                        {%- if block.settings.required -%}
+                          <option value="" disabled selected hidden>{{ block.settings.placeholder | default: 'Select an option' | escape }}</option>
+                        {%- else -%}
+                          <option value="">{{ block.settings.placeholder | default: 'Select an option' | escape }}</option>
+                        {%- endif -%}
+                        {%- for option in dropdown_options -%}
+                          {%- assign option_value = option | strip -%}
+                          {%- if option_value != blank -%}
+                            <option value="{{ option_value | escape }}">{{ option_value | escape }}</option>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </select>
+                    {%- when 'textarea' -%}
+                      <textarea
+                        id="{{ field_id }}"
+                        name="{{ field_name }}"
+                        class="contact-us__input contact-us__textarea"
+                        rows="4"
+                        placeholder="{{ block.settings.placeholder | escape }}"
+                        {{ field_required }}
+                        {{ field_errors }}
+                      ></textarea>
+                    {%- else -%}
+                      <input
+                        type="text"
+                        id="{{ field_id }}"
+                        name="{{ field_name }}"
+                        class="contact-us__input"
+                        placeholder="{{ block.settings.placeholder | escape }}"
+                        {{ field_required }}
+                        {{ field_errors }}
+                      >
+                  {%- endcase -%}
+                </div>
+              {%- endfor -%}
+            </div>
+
+            <div class="contact-us__actions">
+              <button
+                type="submit"
+                class="btn {{ cu_button_classes }} contact-us__submit"
+                {% if cu_button_is_roll %}data-magnet{% endif %}
+              >
+                {%- if cu_button_is_roll -%}
+                  <span class="btn-roll__icon" aria-hidden="true">
+                    <svg viewBox="0 0 100 100" fill="none"><path d="M28 72L72 28M32 24H76V68" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                  <span class="btn__label">{{ section.settings.button_label | escape }}</span>
+                  <span class="btn-roll__hover" aria-hidden="true">
+                    {%- assign cu_label_chars = section.settings.button_label | split: '' -%}
+                    {%- for c in cu_label_chars -%}
+                      <span class="btn-roll__char" data-char style="--ci: {{ forloop.index0 }}"{% if c == ' ' %} data-space{% endif %}>{% if c == ' ' %}&nbsp;{% else %}{{ c }}{% endif %}</span>
+                    {%- endfor -%}
+                  </span>
+                {%- elsif cu_button_is_animated -%}
+                  {%- render 'button-animated-content', label: section.settings.button_label -%}
+                {%- else -%}
+                  <span class="btn__label">{{ section.settings.button_label | escape }}</span>
+                  {%- if section.settings.show_button_icon -%}
+                    <span class="btn__icon-circle">{%- render 'icon-picker', style: settings.button_icon_style, direction: 'right' -%}</span>
+                  {%- endif -%}
+                {%- endif -%}
+              </button>
+            </div>
+          {%- endform -%}
+        </div>
+      </div>
+
+      <div class="contact-us__aside" data-animate>
+        {%- if section.settings.subtitle != blank -%}
+          <div class="contact-us__subtitle rte">{{ section.settings.subtitle }}</div>
+        {%- endif -%}
+
+        <figure class="contact-us__media">
+          {%- if contact_image != blank -%}
+            <img
+              class="contact-us__image"
+              src="{{ contact_image | image_url: width: 1200 }}"
+              srcset="
+                {{ contact_image | image_url: width: 600 }} 600w,
+                {{ contact_image | image_url: width: 900 }} 900w,
+                {{ contact_image | image_url: width: 1200 }} 1200w,
+                {{ contact_image | image_url: width: 1600 }} 1600w
+              "
+              sizes="(min-width: 750px) {{ section.settings.image_width }}vw, 100vw"
+              width="1200"
+              height="{{ 1200 | divided_by: contact_image.aspect_ratio | round }}"
+              alt="{{ contact_image.alt | default: section.settings.heading | escape }}"
+              loading="lazy"
+            >
+          {%- else -%}
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'contact-us__image contact-us__image--placeholder' }}
+          {%- endif -%}
+
+          {%- if section.settings.show_badge and section.settings.badge_text != blank -%}
+            <span class="contact-us__badge">{{ section.settings.badge_text | escape }}</span>
+          {%- endif -%}
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact us",
+  "max_blocks": 16,
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "header", "content": "Title" },
+    { "type": "text", "id": "heading", "label": "Title", "default": "Contact Us" },
+    {
+      "type": "font_picker",
+      "id": "heading_font_family",
+      "label": "Title font family",
+      "default": "assistant_n4"
+    },
+    { "type": "range", "id": "heading_size", "label": "Title size", "min": 32, "max": 96, "step": 2, "unit": "px", "default": 64 },
+    {
+      "type": "select", "id": "heading_weight", "label": "Title weight", "default": "",
+      "options": [
+        { "value": "", "label": "Theme default" },
+        { "value": "400", "label": "400 — Regular" },
+        { "value": "500", "label": "500 — Medium" },
+        { "value": "600", "label": "600 — Semibold" },
+        { "value": "700", "label": "700 — Bold" }
+      ]
+    },
+    { "type": "color", "id": "heading_color", "label": "Title color", "info": "Blank uses the color scheme text color." },
+    { "type": "header", "content": "Subtitle" },
+    { "type": "richtext", "id": "subtitle", "label": "Subtitle", "default": "<p>Tell us when and where you'd like to go, and we'll confirm availability within 24 hours.</p>" },
+    {
+      "type": "font_picker",
+      "id": "subtitle_font_family",
+      "label": "Subtitle font family",
+      "default": "assistant_n4"
+    },
+    { "type": "range", "id": "subtitle_size", "label": "Subtitle size", "min": 14, "max": 24, "step": 1, "unit": "px", "default": 16 },
+    {
+      "type": "select", "id": "subtitle_weight", "label": "Subtitle weight", "default": "",
+      "options": [
+        { "value": "", "label": "Theme default" },
+        { "value": "400", "label": "400 — Regular" },
+        { "value": "500", "label": "500 — Medium" },
+        { "value": "600", "label": "600 — Semibold" },
+        { "value": "700", "label": "700 — Bold" }
+      ]
+    },
+    { "type": "color", "id": "subtitle_color", "label": "Subtitle color", "info": "Blank uses the color scheme text color." },
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Reserve Your Spot" },
+    {
+      "type": "select", "id": "button_style", "label": "Button style", "default": "btn--primary",
+      "options": [
+        { "value": "", "label": "Use theme default" },
+        { "value": "btn--primary", "label": "Filled" },
+        { "value": "btn--secondary", "label": "Secondary" },
+        { "value": "btn--hollow", "label": "Hollow" },
+        { "value": "btn--underline", "label": "Link" },
+        { "value": "btn--animated", "label": "Animated" },
+        { "value": "btn--animated-secondary", "label": "Animated (secondary)" },
+        { "value": "btn--roll", "label": "Rolling text" },
+        { "value": "btn--roll-secondary", "label": "Rolling text (secondary)" }
+      ]
+    },
+    { "type": "checkbox", "id": "show_button_icon", "label": "Show button icon", "info": "Icon style follows Theme settings > Buttons.", "default": true },
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    {
+      "type": "select", "id": "image_position", "label": "Image position", "default": "right",
+      "options": [ { "value": "left", "label": "Left" }, { "value": "right", "label": "Right" } ]
+    },
+    { "type": "range", "id": "image_height", "label": "Image height (desktop)", "min": 320, "max": 800, "step": 20, "unit": "px", "default": 560, "info": "The image is cropped to fit (never stretched)." },
+    { "type": "range", "id": "image_height_mobile", "label": "Image height (mobile)", "min": 240, "max": 560, "step": 20, "unit": "px", "default": 380 },
+    { "type": "range", "id": "image_radius", "label": "Image radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 24 },
+    { "type": "header", "content": "Image badge" },
+    { "type": "checkbox", "id": "show_badge", "label": "Show badge over image", "default": true },
+    { "type": "text", "id": "badge_text", "label": "Badge text", "default": "Your Journey" },
+    { "type": "range", "id": "badge_radius", "label": "Badge radius", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 100, "info": "Set to 100 for a pill shape." },
+    { "type": "header", "content": "Form card" },
+    { "type": "color", "id": "card_background", "label": "Card background", "info": "Blank uses the color scheme secondary background." },
+    { "type": "range", "id": "card_radius", "label": "Card radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 24 },
+    { "type": "header", "content": "Form messages" },
+    { "type": "text", "id": "success_message", "label": "Success message", "default": "Thanks for reaching out — we'll get back to you within 24 hours." },
+    { "type": "text", "id": "error_message", "label": "Error message", "default": "Please review the following:" },
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "image_width", "label": "Image width (desktop)", "min": 35, "max": 60, "step": 1, "unit": "%", "default": 46 },
+    { "type": "range", "id": "gap", "label": "Gap between columns", "min": 2, "max": 8, "step": 0.5, "unit": "rem", "default": 4 },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 12, "step": 0.5, "unit": "rem", "default": 6 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 12, "step": 0.5, "unit": "rem", "default": 6 }
+  ],
+  "blocks": [
+    {
+      "type": "field",
+      "name": "Form field",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Name" },
+        {
+          "type": "select", "id": "field_type", "label": "Field type", "default": "text",
+          "options": [
+            { "value": "text", "label": "Text" },
+            { "value": "email", "label": "Email" },
+            { "value": "phone", "label": "Phone" },
+            { "value": "date", "label": "Date" },
+            { "value": "dropdown", "label": "Dropdown" },
+            { "value": "textarea", "label": "Multi-line text" }
+          ]
+        },
+        { "type": "text", "id": "placeholder", "label": "Placeholder" },
+        { "type": "checkbox", "id": "required", "label": "Required field", "default": false },
+        { "type": "textarea", "id": "options", "label": "Dropdown options", "info": "One option per line. Only used when the field type is Dropdown." },
+        {
+          "type": "select", "id": "width", "label": "Width (desktop)", "default": "half",
+          "options": [ { "value": "half", "label": "Half" }, { "value": "full", "label": "Full" } ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact us",
+      "blocks": [
+        { "type": "field", "settings": { "label": "Name", "field_type": "text", "placeholder": "Jane Doe", "required": true, "width": "half" } },
+        { "type": "field", "settings": { "label": "Email", "field_type": "email", "placeholder": "jane@example.com", "required": true, "width": "half" } },
+        { "type": "field", "settings": { "label": "Phone Number", "field_type": "phone", "placeholder": "(555) 000-0000", "required": false, "width": "half" } },
+        { "type": "field", "settings": { "label": "Select Your Tour", "field_type": "dropdown", "required": true, "options": "Coastal Escape\nMountain Retreat\nCity Highlights\nCustom Itinerary", "width": "half" } },
+        { "type": "field", "settings": { "label": "Preferred Date", "field_type": "date", "required": false, "width": "half" } },
+        { "type": "field", "settings": { "label": "Number of Travelers", "field_type": "dropdown", "required": false, "options": "1\n2\n3\n4\n5+", "width": "half" } },
+        { "type": "field", "settings": { "label": "Message / Special Requests", "field_type": "textarea", "placeholder": "Tell us more about your trip…", "required": false, "width": "full" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

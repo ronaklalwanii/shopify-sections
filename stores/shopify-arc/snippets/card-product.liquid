@@ -1,0 +1,241 @@
+{%- doc -%}
+  Accepts: product, show_swatches, show_vendor, show_price (all optional, fall back to global settings)
+{%- enddoc -%}
+{%- liquid
+  assign show_swatches_final = settings.pcard_enable_color_swatches
+  if show_swatches != nil
+    assign show_swatches_final = show_swatches
+  endif
+  assign show_vendor_final = settings.pcard_show_vendor
+  if show_vendor != nil
+    assign show_vendor_final = show_vendor
+  endif
+  assign show_price_final = true
+  if show_price != nil
+    assign show_price_final = show_price
+  endif
+
+  assign featured_image = product.featured_image
+  assign second_image = product.images[1]
+  assign is_multivariant = false
+  if product.variants.size > 1
+    assign is_multivariant = true
+  endif
+
+  case settings.pcard_image_ratio
+    when '1:1'
+      assign ratio = 1
+    when '3:4'
+      assign ratio = 0.75
+    when '4:3'
+      assign ratio = 1.33
+    else
+      assign ratio = featured_image.aspect_ratio | default: 1
+  endcase
+
+  assign image_widths = '300,400,500,600,800,1000' | split: ','
+  capture primary_srcset
+    for w in image_widths
+      echo featured_image | image_url: width: w
+      echo ' ' | append: w | append: 'w'
+      unless forloop.last
+        echo ', '
+      endunless
+    endfor
+  endcapture
+  capture secondary_srcset
+    for w in image_widths
+      echo second_image | image_url: width: w
+      echo ' ' | append: w | append: 'w'
+      unless forloop.last
+        echo ', '
+      endunless
+    endfor
+  endcapture
+
+  # New badge: product created within the configured window.
+  assign show_new_badge = false
+  if settings.pcard_show_badge_new
+    assign now_epoch = 'now' | date: '%s' | plus: 0
+    assign created_epoch = product.created_at | date: '%s' | plus: 0
+    assign new_window = settings.pcard_badge_new_days | times: 86400
+    assign product_age = now_epoch | minus: created_epoch
+    if product_age < new_window
+      assign show_new_badge = true
+    endif
+  endif
+
+  # Custom badge: text pulled from a merchant-configured metafield (e.g. custom.badge).
+  assign custom_badge_text = ''
+  if settings.pcard_badge_custom_metafield contains '.'
+    assign badge_ns = settings.pcard_badge_custom_metafield | split: '.' | first
+    assign badge_key = settings.pcard_badge_custom_metafield | split: '.' | last
+    assign custom_badge_text = product.metafields[badge_ns][badge_key].value
+  endif
+-%}
+<div class="product-card{% if settings.pcard_style == 'card' %} product-card--card color-{{ settings.pcard_color_scheme }}{% endif %} product-card--{{ settings.pcard_content_alignment }}">
+  <div class="product-card__media-wrap">
+    <a href="{{ product.url }}" class="product-card__media-link" tabindex="-1" aria-hidden="true">
+      <div class="product-card__media" style="aspect-ratio: {{ ratio }};">
+        {%- if featured_image -%}
+          <img
+            src="{{ featured_image | image_url: width: 600 }}"
+            srcset="{{ primary_srcset }}"
+            sizes="(min-width: 990px) 25vw, (min-width: 750px) 33vw, calc(50vw - 40px)"
+            alt=""
+            width="600"
+            height="{{ 600 | divided_by: featured_image.aspect_ratio | round }}"
+            loading="lazy"
+            class="product-card__image product-card__image--primary"
+            data-card-primary-image
+          >
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'product-card__image product-card__image--placeholder' }}
+        {%- endif -%}
+        {%- if second_image and settings.pcard_show_second_img -%}
+          <img
+            src="{{ second_image | image_url: width: 600 }}"
+            srcset="{{ secondary_srcset }}"
+            sizes="(min-width: 990px) 25vw, (min-width: 750px) 33vw, calc(50vw - 40px)"
+            alt=""
+            width="600"
+            height="{{ 600 | divided_by: second_image.aspect_ratio | round }}"
+            loading="lazy"
+            class="product-card__image product-card__image--secondary"
+          >
+        {%- endif -%}
+
+        <div class="product-card__badges product-card__badges--{{ settings.pcard_badge_position }}{% if settings.pcard_badge_uppercase %} product-card__badges--uppercase{% endif %}">
+          {%- if product.available == false and settings.pcard_show_badge_soldout -%}
+            <span class="badge badge--soldout">Sold out</span>
+          {%- elsif product.compare_at_price > product.price and settings.pcard_show_sale_badge -%}
+            <span class="badge badge--sale">
+              {%- case settings.pcard_sale_badge_type -%}
+                {%- when 'show_percentage' -%}
+                  {%- assign pct = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round -%}
+                  -{{ pct }}%
+                {%- when 'show_amount' -%}
+                  {%- assign amount_off = product.compare_at_price | minus: product.price -%}
+                  -{{ amount_off | money }}
+                {%- else -%}
+                  Sale
+              {%- endcase -%}
+            </span>
+          {%- endif -%}
+          {%- if custom_badge_text != blank -%}
+            <span class="badge badge--custom">{{ custom_badge_text }}</span>
+          {%- endif -%}
+          {%- if show_new_badge -%}
+            <span class="badge badge--new">New</span>
+          {%- endif -%}
+        </div>
+      </div>
+    </a>
+
+    {%- if settings.pcard_show_cart_button and product.available and settings.pcard_quick_add_style == 'icon' -%}
+      {%- liquid
+        if is_multivariant
+          assign quick_add_action_label = 'products.product.choose_options' | t
+        else
+          assign quick_add_action_label = 'products.product.quick_add' | t
+        endif
+        assign quick_add_aria_label = product.title | append: ' — ' | append: quick_add_action_label
+      -%}
+      <button
+        type="button"
+        class="product-card__quick-add product-card__quick-add--icon product-card__quick-add--{{ settings.pcard_quick_add_icon_position }} color-{{ settings.pcard_overlay_color_scheme }}{% if settings.pcard_mobile_hide_quick_add %} product-card__quick-add--hide-mobile{% endif %}"
+        data-quick-add
+        {% if settings.pcard_quick_add_hover_expand %}data-hover-expand{% endif %}
+        {% if is_multivariant %}
+          data-product-url="{{ product.url }}"
+          aria-haspopup="dialog"
+        {% else %}
+          data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+        {% endif %}
+        aria-label="{{ quick_add_aria_label | escape }}"
+        data-adding-label="Adding…"
+        data-added-label="Added"
+        data-error-label="Couldn't add to cart. Please try again."
+        data-details-label="View full details"
+      >
+        <span class="product-card__quick-add-icon" aria-hidden="true">
+          {%- if settings.pcard_quick_add_icon == 'bag' -%}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon" aria-hidden="true" focusable="false">
+              <path d="M6 8V6a6 6 0 0 1 12 0v2"></path>
+              <path d="M4.5 8h15l-1 12.5a2 2 0 0 1-2 1.5H7.5a2 2 0 0 1-2-1.5L4.5 8Z"></path>
+            </svg>
+          {%- else -%}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon" aria-hidden="true" focusable="false">
+              <path d="M12 5v14"></path>
+              <path d="M5 12h14"></path>
+            </svg>
+          {%- endif -%}
+        </span>
+        <span class="product-card__quick-add-label" aria-hidden="true">{{ quick_add_action_label }}</span>
+        <span class="product-card__quick-add-check" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon" aria-hidden="true" focusable="false">
+            <path d="m4 12.5 5 5L20 6.5"></path>
+          </svg>
+        </span>
+        <span class="product-card__quick-add-spinner" aria-hidden="true"></span>
+        <span class="visually-hidden" data-quick-add-status aria-live="polite"></span>
+      </button>
+    {%- endif -%}
+  </div>
+
+  {%- if settings.pcard_show_cart_button and product.available and settings.pcard_quick_add_style == 'button' -%}
+    {%- liquid
+      capture quick_add_classes
+        render 'button-classes', style: settings.pcard_button_style
+      endcapture
+      assign quick_add_is_animated = false
+      if quick_add_classes contains 'btn-animated'
+        assign quick_add_is_animated = true
+      endif
+      if is_multivariant
+        assign quick_add_button_label = 'products.product.choose_options' | t
+        assign quick_add_aria_label = product.title | append: ' — ' | append: quick_add_button_label
+      else
+        assign quick_add_button_label = 'products.product.add_to_cart' | t
+        assign quick_add_aria_label = product.title | append: ' — ' | append: quick_add_button_label
+      endif
+    -%}
+    <button
+      type="button"
+      class="btn {{ quick_add_classes }} color-{{ settings.pcard_overlay_color_scheme }} product-card__quick-add product-card__quick-add--button{% if settings.pcard_mobile_hide_quick_add %} product-card__quick-add--hide-mobile{% endif %}"
+      data-quick-add
+      {% if is_multivariant %}
+        data-product-url="{{ product.url }}"
+        aria-haspopup="dialog"
+      {% else %}
+        data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+      {% endif %}
+      aria-label="{{ quick_add_aria_label | escape }}"
+      data-adding-label="Adding…"
+      data-added-label="Added"
+      data-error-label="Couldn't add to cart. Please try again."
+      data-details-label="View full details"
+    >
+      {%- if quick_add_is_animated -%}
+        {%- render 'button-animated-content', label: quick_add_button_label -%}
+      {%- else -%}
+        <span class="product-card__quick-add-label">{{ quick_add_button_label }}</span>
+        <span class="product-card__quick-add-spinner" aria-hidden="true"></span>
+        <span class="visually-hidden" data-quick-add-status aria-live="polite"></span>
+      {%- endif -%}
+    </button>
+  {%- endif -%}
+
+  <div class="product-card__info">
+    {%- if show_vendor_final -%}<p class="product-card__vendor">{{ product.vendor }}</p>{%- endif -%}
+    {%- if settings.pcard_show_type and product.type != blank -%}<p class="product-card__type">{{ product.type }}</p>{%- endif -%}
+    <h3 class="product-card__title{% if settings.pcard_title_lines != '0' %} product-card__title--lines-{{ settings.pcard_title_lines }}{% endif %}">
+      <a href="{{ product.url }}" data-card-title-link>{{ product.title }}</a>
+    </h3>
+    {%- if show_price_final -%}{%- render 'price', product: product -%}{%- endif -%}
+
+    {%- if show_swatches_final and product.options_with_values.size > 0 -%}
+      {%- render 'variant-picker', product: product, mode: 'swatches_only' -%}
+    {%- endif -%}
+  </div>
+</div>

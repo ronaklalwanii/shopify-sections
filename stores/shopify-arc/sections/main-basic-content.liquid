@@ -1,0 +1,24 @@
+<div class="page-width basic-content color-{{ section.settings.color_scheme }}" style="padding-block: 5rem; text-align: center;">
+  {%- if section.settings.heading != blank -%}
+    <h1 class="display-heading" style="margin-bottom: 1rem;">{{ section.settings.heading }}</h1>
+  {%- endif -%}
+  {%- if section.settings.text != blank -%}
+    <div class="rte" style="max-width: 640px; margin-inline: auto; opacity: 0.8;">{{ section.settings.text }}</div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Basic content",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Welcome" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>This is a basic theme homepage.</p>" }
+  ],
+  "presets": [
+    {
+      "name": "Basic content"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,278 @@
+/* Collection Hero - Editorial full-screen hero */
+
+.collection-hero {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.collection-hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.collection-hero__image {
+  width: 100%;
+  height: 100%;
+  object-fit: var(--hero-image-fit, cover);
+  object-position: var(--hero-image-position, 50% 50%);
+}
+
+.collection-hero__image--mobile {
+  display: block;
+}
+
+.collection-hero__image--desktop {
+  display: none;
+}
+
+.collection-hero__image--desktop.collection-hero__image--always {
+  display: block;
+}
+
+@media screen and (min-width: 750px) {
+  .collection-hero__image--mobile {
+    display: none;
+  }
+  .collection-hero__image--desktop {
+    display: block;
+  }
+}
+
+/* Overlay - sits above image, below content */
+.collection-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--hero-overlay-color, #000);
+  opacity: var(--hero-overlay-opacity, 0.3);
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+@media screen and (min-width: 750px) {
+  .collection-hero__overlay {
+    opacity: var(--hero-overlay-opacity-desktop, 0.3);
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .collection-hero__overlay {
+    opacity: var(--hero-overlay-opacity-mobile, 0.2);
+  }
+}
+
+/* Gradient overlay */
+.collection-hero__gradient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    var(--hero-gradient-direction, to top),
+    rgba(0, 0, 0, calc(var(--hero-gradient-strength, 0.6) * 1)) 0%,
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.collection-hero:has(.collection-hero__gradient) .collection-hero__gradient {
+  opacity: 1;
+}
+
+/* Content wrapper - full hero area with responsive gutters */
+.collection-hero__content-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  padding: calc(var(--hero-padding-desktop, 64px) / 2)
+    var(--hero-padding-desktop, 64px);
+  pointer-events: none;
+}
+
+@media screen and (max-width: 989px) {
+  .collection-hero__content-wrapper {
+    padding-left: var(--hero-padding-tablet, 40px);
+    padding-right: var(--hero-padding-tablet, 40px);
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .collection-hero__content-wrapper {
+    padding-left: var(--hero-padding-mobile, 24px);
+    padding-right: var(--hero-padding-mobile, 24px);
+  }
+}
+
+/* Horizontal alignment */
+.collection-hero--left .collection-hero__content-wrapper {
+  justify-content: flex-start;
+}
+
+.collection-hero--center .collection-hero__content-wrapper {
+  justify-content: center;
+}
+
+.collection-hero--right .collection-hero__content-wrapper {
+  justify-content: flex-end;
+}
+
+/* Vertical alignment */
+.collection-hero--top .collection-hero__content-wrapper {
+  align-items: flex-start;
+}
+
+.collection-hero--center .collection-hero__content-wrapper {
+  align-items: center;
+}
+
+.collection-hero--bottom .collection-hero__content-wrapper {
+  align-items: flex-end;
+}
+
+/* Content */
+.collection-hero__content {
+  pointer-events: auto;
+  max-width: var(--hero-content-max-width, 55%);
+  width: 100%;
+}
+
+@media screen and (max-width: 749px) {
+  .collection-hero__content {
+    max-width: 90%;
+  }
+}
+
+/* Text alignment */
+.collection-hero--text-left .collection-hero__content {
+  text-align: left;
+}
+
+.collection-hero--text-center .collection-hero__content {
+  text-align: center;
+}
+
+.collection-hero--text-right .collection-hero__content {
+  text-align: right;
+}
+
+.collection-hero--text-center .collection-hero__cta {
+  display: flex;
+  justify-content: center;
+}
+
+.collection-hero--text-right .collection-hero__cta {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Typography */
+.collection-hero__eyebrow {
+  font-family: var(--font-subheading-family);
+  font-weight: var(--font-subheading-weight);
+  font-size: var(--hero-eyebrow-size, 13px);
+  letter-spacing: var(--font-subheading-letter-spacing);
+  text-transform: var(--font-subheading-transform);
+  margin-bottom: 1rem;
+  opacity: 0.8;
+}
+
+.collection-hero__heading {
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  font-size: var(--hero-heading-size, 72px);
+  line-height: calc(var(--hero-heading-line-height, 105) / 100);
+  letter-spacing: var(--font-heading-letter-spacing);
+  text-transform: var(--font-heading-transform);
+  margin-bottom: 1.5rem;
+  max-width: 90%;
+}
+
+@media screen and (max-width: 749px) {
+  .collection-hero__heading {
+    font-size: calc(var(--hero-heading-size, 72px) * 0.6);
+    max-width: 100%;
+  }
+}
+
+.collection-hero__description {
+  font-family: var(--font-body-family);
+  font-size: var(--hero-description-size, 18px);
+  line-height: calc(var(--hero-description-line-height, 160) / 100);
+  color: inherit;
+  opacity: 0.9;
+  margin-bottom: 2rem;
+  max-width: 80%;
+}
+
+@media screen and (max-width: 749px) {
+  .collection-hero__description {
+    font-size: var(--hero-description-size, 18px);
+    max-width: 100%;
+  }
+}
+
+/* CTA */
+.collection-hero__cta {
+  display: flex;
+  align-items: center;
+  margin-top: 16px;
+}
+
+/* Animations */
+.collection-hero__content[data-hero-text] > * {
+  transition:
+    opacity calc(var(--hero-animation-duration, 800ms) / 1000) ease-out,
+    transform calc(var(--hero-animation-duration, 800ms) / 1000) ease-out;
+  transition-delay: calc(
+    var(--hero-animation-delay, 200ms) / 1000 + var(--i, 0) * 150ms
+  );
+}
+
+.collection-hero__content[data-hero-text][data-animate] > * {
+  opacity: 0;
+}
+
+.collection-hero__content[data-hero-text][data-animate][data-animation="fade-up"]
+  > * {
+  transform: translateY(28px);
+}
+
+.collection-hero__content[data-hero-text][data-animate][data-animation="fade-in"]
+  > * {
+  transform: none;
+}
+
+.collection-hero__content[data-hero-text][data-animate][data-animation="slide-right"]
+  > * {
+  transform: translateX(-32px);
+}
+
+.collection-hero__content[data-hero-text][data-animate].is-visible > *,
+.collection-hero__content[data-hero-text]:not([data-animate]) > * {
+  opacity: 1;
+  transform: translateY(0) translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collection-hero__content[data-hero-text] > * {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Responsive height */
+.collection-hero {
+  height: var(--hero-height-mobile, 70vh);
+  min-height: var(--hero-min-height, 500px);
+  max-height: var(--hero-max-height, 1000px);
+}
+
+@media screen and (min-width: 750px) {
+  .collection-hero {
+    height: var(--hero-height, 90vh);
+  }
+}

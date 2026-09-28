@@ -1,0 +1,64 @@
+{{ 'mega-menu.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  # Repeat the block run enough times per marquee half to span ~2 viewports,
+  # scaled to the content length so scroll speed stays sane however much
+  # (or little) the merchant announces. The two halves stay identical, which
+  # is what makes the -50% keyframe loop seamless.
+  assign total_chars = 0
+  for block in section.blocks
+    assign block_chars = block.settings.text | size
+    assign total_chars = total_chars | plus: block_chars
+  endfor
+  if total_chars > 10
+    assign marquee_repeats = 1200 | divided_by: total_chars | at_least: 1 | at_most: 8
+  else
+    assign marquee_repeats = 6
+  endif
+  # Duration scales with the strip length (~0.12s per character) so the scroll
+  # speed stays ~constant whether the bar has one short line or many long ones.
+  assign marquee_speed = marquee_repeats | times: total_chars | times: 0.12 | at_least: 10 | at_most: 60
+-%}
+
+<div class="announcement-bar color-{{ section.settings.color_scheme }}">
+  {%- if section.blocks.size > 0 -%}
+    <div class="announcement-bar__track" {% if section.settings.pause_on_hover %}data-pause-on-hover{% endif %} style="--speed: {{ marquee_speed }}s;">
+      <div class="announcement-bar__list">
+        {%- for i in (1..2) -%}
+          {%- for r in (1..marquee_repeats) -%}
+            {%- for block in section.blocks -%}
+              {%- if block.settings.link != blank -%}
+                <a href="{{ block.settings.link }}" class="announcement-bar__item" {% if i == 1 and r == 1 %}{{ block.shopify_attributes }}{% else %}aria-hidden="true"{% endif %}>{{ block.settings.text }}</a>
+              {%- else -%}
+                <span class="announcement-bar__item" {% if i == 1 and r == 1 %}{{ block.shopify_attributes }}{% else %}aria-hidden="true"{% endif %}>{{ block.settings.text }}</span>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endfor -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2" },
+    { "type": "checkbox", "id": "pause_on_hover", "label": "Pause on hover", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Announcement text" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "groups": ["header"]
+  }
+}
+{% endschema %}

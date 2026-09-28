@@ -1,0 +1,185 @@
+{%- doc -%}
+  Accepts:
+  - section: section object
+  - form_id: unique string ID for the form and inputs
+{%- enddoc -%}
+
+<div class="newsletter-section__body">
+  {%- if section.settings.eyebrow != blank -%}
+    <p class="newsletter-section__eyebrow">{{ section.settings.eyebrow }}</p>
+  {%- endif -%}
+
+  {%- if section.settings.heading != blank -%}
+    <h2 class="newsletter-section__heading">{{ section.settings.heading }}</h2>
+  {%- endif -%}
+
+  {%- if section.settings.text != blank -%}
+    <div class="newsletter-section__text rte">{{ section.settings.text }}</div>
+  {%- endif -%}
+
+  <div class="newsletter-section__form-wrapper">
+    {%- form 'customer', id: form_id, class: 'newsletter-section__form' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+
+      {%- if form.posted_successfully? -%}
+        <div class="newsletter-section__message newsletter-section__message--success" role="status" tabindex="-1" autofocus>
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="10" cy="10" r="10" fill="currentColor" fill-opacity="0.15"/>
+            <path d="M6 10.5L8.5 13L14 7.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>{{ "Thanks for subscribing!"| default: 'Thank you for subscribing.'  }}</span>
+        </div>
+      {%- else -%}
+        <div class="newsletter-section__fields newsletter-section__fields--{{ section.settings.form_style }}">
+          <label for="{{ form_id }}-email" class="visually-hidden">
+            {{ "Email"| default: 'Email'  }}
+          </label>
+          <input
+            type="email"
+            name="contact[email]"
+            id="{{ form_id }}-email"
+            class="newsletter-section__input"
+            value="{{ form.email }}"
+            placeholder="{{ section.settings.input_placeholder | default: 'Enter your email' | escape }}"
+            aria-required="true"
+            autocorrect="off"
+            autocapitalize="off"
+            autocomplete="email"
+            spellcheck="false"
+            required
+            {% if form.errors %}
+              aria-invalid="true"
+              aria-describedby="{{ form_id }}-error"
+            {% endif %}
+          >
+
+          {%- if section.settings.form_style == 'embedded_icon' -%}
+            <button
+              type="submit"
+              class="newsletter-section__submit newsletter-section__submit--embedded"
+              name="commit"
+              aria-label="{{ section.settings.button_text | default: 'Subscribe' | escape }}"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          {%- else -%}
+            <button
+              type="submit"
+              class="newsletter-section__submit"
+              name="commit"
+              aria-label="{{ section.settings.button_text | default: 'Subscribe' | escape }}"
+            >
+              <span class="newsletter-section__submit-text">
+                {{ section.settings.button_text | default: 'Subscribe' }}
+              </span>
+              {%- if section.settings.show_button_icon -%}
+                <span class="newsletter-section__submit-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </span>
+              {%- endif -%}
+            </button>
+          {%- endif -%}
+        </div>
+
+        {%- if form.errors -%}
+          <div id="{{ form_id }}-error" class="newsletter-section__message newsletter-section__message--error" role="alert">
+            <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="10" cy="10" r="10" fill="currentColor" fill-opacity="0.15"/>
+              <path d="M10 6V11M10 14H10.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>
+              {{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}
+            </span>
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.show_consent_checkbox and section.settings.consent_text != blank -%}
+          <label class="newsletter-section__consent" for="{{ form_id }}-consent">
+            <input
+              type="checkbox"
+              id="{{ form_id }}-consent"
+              name="contact[accepts_marketing]"
+              value="true"
+              class="newsletter-section__consent-checkbox"
+              {% if section.settings.consent_required %}required aria-required="true"{% endif %}
+            >
+            <span class="newsletter-section__consent-text rte">
+              {{ section.settings.consent_text }}
+            </span>
+          </label>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endform -%}
+  </div>
+
+  {%- if section.settings.disclaimer != blank -%}
+    <div class="newsletter-section__disclaimer rte">{{ section.settings.disclaimer }}</div>
+  {%- endif -%}
+</div>
+
+{%- assign feature_blocks = section.blocks | where: 'type', 'feature' -%}
+{%- if feature_blocks.size > 0 -%}
+  <div class="newsletter-section__features{% if section.settings.show_feature_dividers %} newsletter-section__features--dividers{% endif %}">
+    {%- for block in feature_blocks -%}
+      <div class="newsletter-section__feature-item" {{ block.shopify_attributes }}>
+        {%- if block.settings.icon != 'none' -%}
+          <div class="newsletter-section__feature-icon" aria-hidden="true">
+            {%- case block.settings.icon -%}
+              {%- when 'mail' -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="20" height="16" x="2" y="4" rx="2"/>
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                </svg>
+              {%- when 'box' -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/>
+                  <path d="m3.3 7 8.7 5 8.7-5"/>
+                  <path d="M12 22V12"/>
+                </svg>
+              {%- when 'chair' -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3"/>
+                  <path d="M3 11v5a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H7v-2a2 2 0 0 0-4 0Z"/>
+                  <path d="M5 18v2"/>
+                  <path d="M19 18v2"/>
+                </svg>
+              {%- when 'star' -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              {%- when 'shield' -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              {%- when 'sparkles' -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
+                </svg>
+              {%- when 'leaf' -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+                  <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+                </svg>
+              {%- when 'custom_svg' -%}
+                {{ block.settings.custom_svg }}
+            {%- endcase -%}
+          </div>
+        {%- endif -%}
+        <div class="newsletter-section__feature-content">
+          {%- if block.settings.title != blank -%}
+            <p class="newsletter-section__feature-title">{{ block.settings.title }}</p>
+          {%- endif -%}
+          {%- if block.settings.text != blank -%}
+            <p class="newsletter-section__feature-text">{{ block.settings.text }}</p>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+{%- endif -%}

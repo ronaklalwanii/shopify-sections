@@ -1,0 +1,74 @@
+{%- comment -%}
+  Rendered on demand into the global QuickAddDrawer via the Section Rendering API:
+  fetch(`${product.url}?section_id=quick-add`). Not attached to any template.
+{%- endcomment -%}
+{%- liquid
+  assign product_form_id = 'product-form-' | append: section.id
+  assign current_variant = product.selected_or_first_available_variant
+-%}
+{%- if product -%}
+  <div class="quick-add" data-quick-add-root>
+    <div class="quick-add__grid">
+      <a href="{{ product.url }}" class="quick-add__media" tabindex="-1" aria-hidden="true">
+        {%- if product.featured_image -%}
+          <img
+            src="{{ product.featured_image | image_url: width: 400 }}"
+            alt=""
+            width="200"
+            height="{{ 200 | divided_by: product.featured_image.aspect_ratio | round }}"
+            loading="lazy"
+            class="quick-add__image"
+          >
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'quick-add__image' }}
+        {%- endif -%}
+      </a>
+
+      <div class="quick-add__details">
+        {%- if settings.pcard_show_vendor and product.vendor != blank -%}
+          <p class="quick-add__vendor">{{ product.vendor }}</p>
+        {%- endif -%}
+        <h2 class="quick-add__title"><a href="{{ product.url }}">{{ product.title }}</a></h2>
+        <div class="quick-add__price" data-variant-price>
+          {%- render 'price', product: product -%}
+        </div>
+
+        {%- form 'product', product, id: product_form_id, data-product-form: '', novalidate: 'novalidate' -%}
+          <input type="hidden" name="id" value="{{ current_variant.id }}">
+          {%- render 'variant-picker',
+            product: product,
+            mode: 'full',
+            section_id: section.id,
+            picker_type: 'buttons',
+            show_labels: true,
+            size_style: 'square',
+            item_height: 44,
+            item_min_width: 56,
+            item_radius: 4,
+            item_gap: 8
+          -%}
+          <button
+            type="submit"
+            class="btn btn--primary quick-add__submit"
+            data-add-text="Add to cart"
+            data-sold-out-text="Sold out"
+            data-unavailable-text="Unavailable"
+            {% unless current_variant.available %}disabled{% endunless %}
+          >
+            Add to cart
+          </button>
+          <p class="quick-add__error" data-form-error role="alert"></p>
+        {%- endform -%}
+
+        <a href="{{ product.url }}" class="quick-add__details-link">View full details</a>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Quick add",
+  "settings": []
+}
+{% endschema %}

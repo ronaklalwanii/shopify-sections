@@ -1,0 +1,11 @@
+<script>
+  window.Shopify = window.Shopify || {};
+  window.Shopify.routes = window.Shopify.routes || {};
+  window.Shopify.routes.root = {{ routes.root_url | json }};
+  window.themeSettings = {
+    cartType: {{ settings.cart_type | json }},
+    predictiveSearchEnabled: {{ settings.predictive_search_enabled | json }},
+    predictiveSearchLimit: {{ settings.number_results_to_show | json }},
+    moneyFormat: {{ shop.money_format | json }}
+  };
+</script>

@@ -1,0 +1,216 @@
+{{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+{{ 'editorial-strip.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'editorial-strip.js' | asset_url }}" defer="defer"></script>
+
+
+<section
+  class="editorial-strip swiper color-{{ section.settings.color_scheme }}"
+  id="EditorialStrip-{{ section.id }}"
+  data-editorial-strip
+  data-gap="{{ section.settings.gap }}"
+  data-speed="{{ section.settings.speed }}"
+  style="
+    --es-slide-width: {{ section.settings.slide_width }}vw;
+    --es-slide-width-mobile: {{ section.settings.slide_width_mobile }}vw;
+    --es-slide-height: {{ section.settings.slide_height }}vh;
+    --es-slide-height-mobile: {{ section.settings.slide_height_mobile }}vh;
+    --es-padding-block: {{ section.settings.padding_block }}rem;
+    --es-padding-block-mobile: {{ section.settings.padding_block_mobile }}rem;
+    --es-image-border-radius: {{  section.settings.image_border_radius  }}px
+  "
+>
+  <div class="swiper-wrapper">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'image' -%}
+        {%- liquid
+          assign image = block.settings.image
+
+          # Placeholder art shown until a merchant picks a real image.
+          assign placeholder_index = forloop.index0 | modulo: 2
+          assign placeholder_handle = 'lifestyle-1'
+          if placeholder_index == 1
+            assign placeholder_handle = 'lifestyle-2'
+          endif
+        -%}
+        <div class="swiper-slide editorial-strip__slide" {{ block.shopify_attributes }}>
+          <button
+            type="button"
+            class="editorial-strip__frame"
+            aria-label="{{ block.settings.alt_text | default: 'View image' | escape }}"
+            tabindex="-1"
+          >
+            {%- if image != blank -%}
+              <img
+                class="editorial-strip__image"
+                src="{{ image | image_url: width: 1000 }}"
+                srcset="
+                  {{ image | image_url: width: 600 }} 600w,
+                  {{ image | image_url: width: 1000 }} 1000w,
+                  {{ image | image_url: width: 1400 }} 1400w
+                "
+                sizes="(min-width: 750px) {{ section.settings.slide_width }}vw, {{ section.settings.slide_width_mobile }}vw"
+                width="1000"
+                height="{{ 1000 | divided_by: image.aspect_ratio | round }}"
+                alt="{{ block.settings.alt_text | escape }}"
+                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+              >
+            {%- else -%}
+              {{ placeholder_handle | placeholder_svg_tag: 'editorial-strip__image' }}
+            {%- endif -%}
+          </button>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Editorial strip",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "slide_width",
+      "label": "Slide width (desktop)",
+      "min": 10,
+      "max": 60,
+      "step": 1,
+      "unit": "vw",
+      "default": 28,
+      "info": "How much of the viewport each image fills on desktop. The next image peeks past the edge."
+    },
+    {
+      "type": "range",
+      "id": "slide_width_mobile",
+      "label": "Slide width (mobile)",
+      "min": 10,
+      "max": 100,
+      "step": 2,
+      "unit": "vw",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "slide_height",
+      "label": "Strip height (desktop)",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "slide_height_mobile",
+      "label": "Strip height (mobile)",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between images",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding_block",
+      "label": "Vertical padding (desktop)",
+      "min": 0,
+      "max": 12,
+      "step": 0.5,
+      "unit": "rem",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "padding_block_mobile",
+      "label": "Vertical padding (mobile)",
+      "min": 0,
+      "max": 8,
+      "step": 0.5,
+      "unit": "rem",
+      "default": 2.5
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Image border Radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Behavior"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Slide-into-view speed on click",
+      "min": 300,
+      "max": 1200,
+      "step": 50,
+      "unit": "ms",
+      "default": 600
+    },
+    {
+      "type": "paragraph",
+      "content": "No pagination, arrows, or auto-rotate — images sit side by side and dragging or tapping an image brings it into view."
+    }
+  ],
+  "max_blocks": 12,
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Alt text",
+          "info": "Describes the image for screen readers."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial strip",
+      "blocks": [
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,43 @@
+{%- doc -%}
+  Resolves a button `style` setting (blank = "Use theme default") into the full class
+  list that drives icon/animation behavior. Single source of truth for this derivation,
+  which used to be copy-pasted separately in snippets/button.liquid, card-product.liquid,
+  mega-menu.liquid, and menu-drawer-details.liquid.
+
+  Accepts:
+  - style (blank falls back to settings.button_default_style, then 'btn--primary')
+  - icon (optional bool) — adds a static icon-circle class for non-animated styles.
+    Ignored for the animated styles, which use the sitewide animated-icon setting instead.
+  - icon_position: 'left' (default) | 'right' — used when icon is true, or for the
+    animated styles' icon resting position.
+
+  Outputs a space-separated class string (does NOT include the leading 'btn' class —
+  callers add that themselves alongside any element-specific classes). For
+  'btn--roll-secondary' the output expands to both roll classes together, never
+  'btn--roll-secondary' alone — see assets/base.css's roll-button comment for why.
+{%- enddoc -%}
+{%- liquid
+  assign resolved_style = style | default: settings.button_default_style | default: 'btn--primary'
+
+  assign is_animated = false
+  if resolved_style == 'btn--animated' or resolved_style == 'btn--animated-secondary'
+    assign is_animated = true
+  endif
+
+  assign classes = resolved_style
+  if resolved_style == 'btn--roll-secondary'
+    assign classes = 'btn--roll btn--roll-secondary'
+  endif
+
+  if is_animated
+    assign classes = classes | append: ' btn-animated'
+    if settings.animated_button_show_icon
+      assign icon_position = icon_position | default: 'left'
+      assign classes = classes | append: ' btn-animated--icon-' | append: icon_position
+    endif
+  elsif icon
+    assign icon_position = icon_position | default: 'left'
+    assign classes = classes | append: ' btn--icon-' | append: icon_position
+  endif
+-%}
+{{- classes -}}

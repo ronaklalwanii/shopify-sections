@@ -1,0 +1,89 @@
+{{ 'about-intro.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="about-intro color-{{ section.settings.color_scheme }}"
+  style="--about-intro-image-radius: {{ section.settings.image_radius }}px;"
+>
+  {%- if section.settings.top_image -%}
+    <div class="about-intro__top-image">
+      <img
+        src="{{ section.settings.top_image | image_url: width: 900 }}"
+        alt="{{ section.settings.top_image.alt | escape }}"
+        width="900"
+        height="{{ 900 | divided_by: section.settings.top_image.aspect_ratio | round }}"
+        loading="lazy"
+      >
+    </div>
+  {%- endif -%}
+
+  <div class="about-intro__body">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="about-intro__eyebrow" style="color: {{ section.settings.eyebrow_color }}; font-weight: {{ section.settings.eyebrow_font_weight }}; text-align: {{ section.settings.eyebrow_text_alignment }};">
+        {{ section.settings.eyebrow }}
+      </p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class="about-intro__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.text_left != blank or section.settings.text_right != blank -%}
+      <div class="about-intro__columns">
+        {%- if section.settings.text_left != blank -%}
+          <div class="about-intro__column rte">{{ section.settings.text_left }}</div>
+        {%- endif -%}
+        {%- if section.settings.text_right != blank -%}
+          <div class="about-intro__column rte">{{ section.settings.text_right }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "About intro",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "header", "content": "Top image" },
+    { "type": "image_picker", "id": "top_image", "label": "Image" },
+    { "type": "range", "id": "image_radius", "label": "Image corner radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 0 },
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Marketing Shouldn't Feel Like a Guessing Game" },
+    { "type": "color", "id": "eyebrow_color", "label": "Eyebrow color", "default": "#000000" },
+    { "type": "select", "id": "eyebrow_font_weight", "label": "Eyebrow font weight", "default": "400", "options": [
+      { "value": "100", "label": "Thin" },
+      { "value": "200", "label": "Extra Light" },
+      { "value": "300", "label": "Light" },
+      { "value": "400", "label": "Normal" },
+      { "value": "500", "label": "Medium" },
+      { "value": "600", "label": "Semi Bold" },
+      { "value": "700", "label": "Bold" },
+      { "value": "800", "label": "Extra Bold" },
+      { "value": "900", "label": "Black" }
+    ]},
+    { 
+      "type": "select",
+      "id": 	"eyebrow_text_alignment",
+     	"label": 	"Eyebrow text alignment",
+     	"default": 	"left",
+     	"options":[
+        {"value":"left","label":"Left"},
+        {"value":"center","label":"Center"},
+        {"value":"right","label":"Right"}
+      ]
+    },
+
+    {
+      "type": "inline_richtext", "id": "heading", "label": "Heading",
+      "default": "We want brilliant founders to spend less hours trying to “stand out” and more hours doing what they truly love"
+    },
+    { "type": "richtext", "id": "text_left", "label": "Text (left column)" },
+    { "type": "richtext", "id": "text_right", "label": "Text (right column)" }
+
+    
+    
+  ],
+  "presets": [
+    { "name": "About intro" }
+  ]
+}
+{% endschema %}

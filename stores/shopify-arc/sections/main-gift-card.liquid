@@ -1,0 +1,294 @@
+<script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" defer></script>
+
+<script>
+  if (!window.customElements.get('qr-code')) {
+    window.customElements.define(
+      'qr-code',
+      class extends HTMLElement {
+        async connectedCallback() {
+          await new Promise((resolve) => {
+            if (window.QRCode) {
+              resolve();
+            } else {
+              window.addEventListener('load', resolve, { once: true });
+            }
+          });
+          if (!window.QRCode) return;
+          new window.QRCode(this, {
+            text: this.getAttribute('identifier'),
+            width: 200,
+            height: 200,
+          });
+        }
+      }
+    );
+  }
+</script>
+
+{%- style -%}
+  #shopify-section-{{ section.id }} .gift-card {
+    max-width: 44rem;
+    margin-inline: auto;
+    padding-block: 3rem 4rem;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .gift-card__image {
+    width: 270px;
+    height: auto;
+    margin-inline: auto;
+    border-radius: var(--inputs-radius);
+  }
+  #shopify-section-{{ section.id }} .gift-card__title {
+    margin-top: 1.5rem;
+  }
+  #shopify-section-{{ section.id }} .gift-card__issued-info {
+    margin-block: 2rem;
+    padding: 1.5rem;
+    border: 1px solid rgb(var(--color-border));
+    border-radius: var(--inputs-radius);
+    background: var(--gift-card-amount-bg, transparent);
+    color: var(--gift-card-amount-text, inherit);
+  }
+  #shopify-section-{{ section.id }} .gift-card__balance {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+  #shopify-section-{{ section.id }} .gift-card__redeem-box {
+    padding: 1.5rem;
+    border: 1px solid rgb(var(--color-border));
+    border-radius: var(--inputs-radius);
+    margin-bottom: 1rem;
+  }
+  #shopify-section-{{ section.id }} .gift-card__redeem-code {
+    max-width: 20rem;
+    margin-block: 1rem;
+    text-align: center;
+    letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
+  }
+  #shopify-section-{{ section.id }} .gift-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+  #shopify-section-{{ section.id }} .gift-card__expires {
+    font-size: 0.8125rem;
+    opacity: 0.7;
+    margin-top: 1rem;
+  }
+  #shopify-section-{{ section.id }} .gift-card__scan {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  #shopify-section-{{ section.id }} .gift-card__back {
+    margin-top: 1rem;
+  }
+  #shopify-section-{{ section.id }} .banner {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgb(var(--color-border));
+    border-radius: var(--inputs-radius);
+    font-size: 0.875rem;
+  }
+  #shopify-section-{{ section.id }} .banner--error { color: rgb(var(--color-primary-accent)); }
+  @media print {
+    #shopify-section-{{ section.id }} .gift-card__actions,
+    #shopify-section-{{ section.id }} .gift-card__back { display: none; }
+  }
+{%- endstyle -%}
+
+<div class="page-width">
+  <div class="gift-card">
+    <div class="gift-card__image-wrapper">
+      {%- assign image = section.settings.image | default: gift_card.product.featured_media -%}
+
+      {%- if image != blank -%}
+        {{-
+          image
+          | image_url: width: image.width
+          | image_tag: loading: 'lazy', sizes: '270px', widths: '270,540,810', class: 'gift-card__image'
+        -}}
+      {%- else -%}
+        <img
+          src="{{ 'gift-card/card.svg' | shopify_asset_url }}"
+          alt=""
+          class="gift-card__image"
+          width="270"
+          height="180"
+          loading="lazy"
+        >
+      {%- endif -%}
+
+      <h1 class="gift-card__title">Here's your gift card!</h1>
+
+      {%- if gift_card.expired or gift_card.enabled == false -%}
+        {%- assign banner_error = 'This gift card has expired or been disabled' -%}
+        {%- render 'banner', status: 'error', content: banner_error -%}
+      {%- endif -%}
+    </div>
+
+    <div class="gift-card__issued-info"
+      {% if section.settings.amount_background != blank %}
+        style="--gift-card-amount-bg: {{ section.settings.amount_background }};{% if section.settings.amount_text_color != blank %} --gift-card-amount-text: {{ section.settings.amount_text_color }};{% endif %}"
+      {% endif %}
+    >
+      <p>Remaining balance</p>
+
+      {% if settings.currency_code_enabled %}
+        {%- assign gift_card_balance = gift_card.balance | money_with_currency -%}
+        {%- assign gift_card_initial_value = gift_card.initial_value | money_with_currency -%}
+      {% else %}
+        {%- assign gift_card_balance = gift_card.balance | money_without_trailing_zeros -%}
+        {%- assign gift_card_initial_value = gift_card.initial_value | money_without_trailing_zeros -%}
+      {% endif %}
+
+      <p class="gift-card__balance">{{ gift_card_balance }}</p>
+
+      {%- if gift_card.balance != gift_card.initial_value -%}
+        <p>{{ "Out of %1" | replace: "%1", gift_card_initial_value }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="gift-card__redeem-info">
+      <div class="gift-card__redeem-box">
+        <p>Use the gift card code online or QR code in-store</p>
+
+        <input
+          type="text"
+          value="{{ gift_card.code | format_code }}"
+          readonly
+          aria-label="Gift card code"
+          onclick="this.select()"
+          class="gift-card__redeem-code"
+        >
+
+        <div class="gift-card__actions">
+          <button
+            type="button"
+            class="btn btn--secondary"
+            data-copy-button
+            data-text="{{ gift_card.code | escape }}"
+          >
+            Copy code
+          </button>
+          <button type="button" class="btn btn--primary" onclick="window.print()">
+            Print
+          </button>
+        </div>
+
+        {%- if gift_card.expires_on -%}
+          {%- assign expires_on = gift_card.expires_on | date: format: 'date' -%}
+          <p class="gift-card__expires">{{ "Expires %1" | replace: "%1", expires_on }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- if gift_card.pass_url or section.settings.show_qr_code -%}
+        <div class="gift-card__redeem-box">
+          <p>Scan the QR code to redeem</p>
+
+          <div class="gift-card__scan">
+            {%- if section.settings.show_qr_code -%}
+              <qr-code class="gift-card__qr-code" identifier="{{ gift_card.qr_identifier }}"></qr-code>
+            {%- endif -%}
+
+            {%- if gift_card.pass_url -%}
+              <a href="{{ gift_card.pass_url }}">
+                <img
+                  src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}"
+                  width="145"
+                  height="45"
+                  alt="Add to Apple Wallet"
+                  loading="lazy"
+                >
+              </a>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="gift-card__back">
+      {%- assign button_label = 'Back to store' -%}
+      {%- render 'button', label: button_label, url: routes.root_url, style: 'btn--secondary' -%}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-copy-button]');
+    if (!button) return;
+    const text = button.dataset.text || '';
+    const copy = () => navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject();
+    copy().catch(() => {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      textarea.remove();
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Gift card",
+  "class": "shopify-section--main-gift-card",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Gift card image",
+      "info": "Default to gift card product image."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_qr_code",
+      "label": "Show QR code",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "amount_background",
+      "label": "Amount box background"
+    },
+    {
+      "type": "color",
+      "id": "amount_text_color",
+      "label": "Amount text"
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_padding",
+      "label": "Custom padding",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,16 @@
+.pull-quote { padding-block: 4rem; padding-inline: 1.5rem; }
+.pull-quote__inner {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+.pull-quote__media { flex-shrink: 0; width: 140px; }
+.pull-quote__media img { width: 100%; display: block; border-radius: var(--pull-quote-image-radius, 0px); }
+.pull-quote__text { font-size: 1.5rem; font-style: italic; line-height: 1.4; margin-bottom: 0.75rem; }
+.pull-quote__attribution { opacity: 0.6; font-style: italic; }
+
+@media screen and (max-width: 749px) {
+  .pull-quote__inner { flex-direction: column; text-align: center; }
+}

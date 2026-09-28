@@ -1,0 +1,412 @@
+{{ 'materials-editorial.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign image_position = section.settings.image_position
+  assign content_alignment = section.settings.content_alignment
+  assign layout = section.settings.layout
+  assign section_height = section.settings.section_height
+  assign overlay_enabled = section.settings.enable_overlay
+  assign overlay_color = section.settings.overlay_color
+  assign overlay_opacity = section.settings.overlay_opacity | divided_by: 100.0
+  assign overlay_opacity_desktop = section.settings.overlay_opacity_desktop | divided_by: 100.0
+  assign overlay_opacity_mobile = section.settings.overlay_opacity_mobile | divided_by: 100.0
+  assign enable_gradient = section.settings.enable_gradient
+  assign gradient_direction = section.settings.gradient_direction
+  assign gradient_strength = section.settings.gradient_strength | divided_by: 100.0
+
+  assign bg_color = section.settings.background_color
+  assign text_color = section.settings.text_color
+  assign border_color = section.settings.border_color
+
+  assign padding_desktop = section.settings.padding_desktop
+  assign padding_tablet = section.settings.padding_tablet
+  assign padding_mobile = section.settings.padding_mobile
+-%}
+
+<div
+  class="materials-editorial color-{{ section.settings.color_scheme }} materials-editorial--{{ layout }} materials-editorial--image-{{ image_position }} materials-editorial--{{ content_alignment }}"
+  style="
+    --me-section-height: {{ section_height }}px;
+    --me-padding-desktop: {{ padding_desktop }}px;
+    --me-padding-tablet: {{ padding_tablet }}px;
+    --me-padding-mobile: {{ padding_mobile }}px;
+    --me-overlay-opacity: {{ overlay_opacity }};
+    --me-overlay-opacity-desktop: {{ overlay_opacity_desktop }};
+    --me-overlay-opacity-mobile: {{ overlay_opacity_mobile }};
+    --me-overlay-color: {{ overlay_color }};
+    --me-gradient-direction: {{ gradient_direction }};
+    --me-gradient-strength: {{ gradient_strength }};
+    {% if bg_color != blank %}--me-bg: {{ bg_color }};{% endif %}
+    {% if text_color != blank %}--me-text: {{ text_color }};{% endif %}
+    {% if border_color != blank %}--me-border: {{ border_color }};{% endif %}
+  "
+>
+  <div class="materials-editorial__container">
+    <div class="materials-editorial__media">
+      {%- if section.settings.desktop_image != blank -%}
+        <img
+          class="materials-editorial__image materials-editorial__image--desktop{% if section.settings.mobile_image == blank %} materials-editorial__image--always{% endif %}"
+          src="{{ section.settings.desktop_image | image_url: width: 1600 }}"
+          srcset="
+            {{ section.settings.desktop_image | image_url: width: 750 }} 750w,
+            {{ section.settings.desktop_image | image_url: width: 1200 }} 1200w,
+            {{ section.settings.desktop_image | image_url: width: 1600 }} 1600w,
+            {{ section.settings.desktop_image | image_url: width: 2400 }} 2400w
+          "
+          sizes="(max-width: 749px) 100vw, 50vw"
+          width="1600"
+          height="{{ 1600 | divided_by: section.settings.desktop_image.aspect_ratio | round }}"
+          alt="{{ section.settings.desktop_image.alt | escape }}"
+          loading="lazy"
+        >
+      {%- endif -%}
+      {%- if section.settings.mobile_image != blank -%}
+        <img
+          class="materials-editorial__image materials-editorial__image--mobile"
+          src="{{ section.settings.mobile_image | image_url: width: 1200 }}"
+          srcset="
+            {{ section.settings.mobile_image | image_url: width: 750 }} 750w,
+            {{ section.settings.mobile_image | image_url: width: 1200 }} 1200w
+          "
+          sizes="100vw"
+          width="1200"
+          height="{{ 1200 | divided_by: section.settings.mobile_image.aspect_ratio | round }}"
+          alt="{{ section.settings.mobile_image.alt | escape }}"
+          loading="lazy"
+        >
+      {%- endif -%}
+      {%- if section.settings.desktop_image == blank and section.settings.mobile_image == blank -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'materials-editorial__image materials-editorial__image--desktop materials-editorial__image--always' }}
+      {%- endif -%}
+
+      {%- if overlay_enabled -%}
+        <div class="materials-editorial__overlay" aria-hidden="true"></div>
+      {%- endif -%}
+
+      {%- if enable_gradient -%}
+        <div class="materials-editorial__gradient" aria-hidden="true"></div>
+      {%- endif -%}
+    </div>
+
+    <div class="materials-editorial__content">
+      <div class="materials-editorial__content-inner" data-animate data-animation="fade-up">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="materials-editorial__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="materials-editorial__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.description != blank -%}
+          <div class="materials-editorial__description rte">{{ section.settings.description }}</div>
+        {%- endif -%}
+        {%- if section.settings.cta_label != blank and section.settings.cta_link != blank -%}
+          <div class="materials-editorial__cta">
+            {%- render 'button',
+              label: section.settings.cta_label,
+              url: section.settings.cta_link,
+              style: section.settings.cta_style,
+              icon: section.settings.cta_icon,
+              icon_position: section.settings.cta_icon_position
+            -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Materials Editorial",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "MATERIALS WITH MEANING"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Honest materials.\nBeautifully aged."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>We select natural materials for their integrity, character, and the way they evolve over time.</p>"
+    },
+    {
+      "type": "header",
+      "content": "CTA"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA label",
+      "default": "EXPLORE MATERIALS →"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA link"
+    },
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "CTA style",
+      "default": "btn--animated",
+      "options": [
+        { "value": "", "label": "Use theme default" },
+        { "value": "btn--primary", "label": "Filled" },
+        { "value": "btn--hollow", "label": "Hollow" },
+        { "value": "btn--secondary", "label": "Secondary" },
+        { "value": "btn--underline", "label": "Link" },
+        { "value": "btn--animated", "label": "Animated" },
+        { "value": "btn--animated-secondary", "label": "Animated (secondary)" },
+        { "value": "btn--roll", "label": "Rolling text" },
+        { "value": "btn--roll-secondary", "label": "Rolling text (secondary)" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "cta_icon",
+      "label": "Show icon",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "cta_icon_position",
+      "label": "Icon position",
+      "default": "right",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image",
+      "info": "Optional. Falls back to desktop image."
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position (desktop)",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "default": "split",
+      "options": [
+        { "value": "split", "label": "Image + content split (50/50)" },
+        { "value": "split-60-40", "label": "Image 60% / Content 40%" },
+        { "value": "split-40-60", "label": "Image 40% / Content 60%" },
+        { "value": "full-image", "label": "Full-width image, content overlay" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "label": "Section height (min)",
+      "min": 400,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 600
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_overlay",
+      "label": "Enable overlay",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity (default)",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity_desktop",
+      "label": "Overlay opacity (desktop)",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity_mobile",
+      "label": "Overlay opacity (mobile)",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Gradient overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_gradient",
+      "label": "Enable gradient",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "gradient_direction",
+      "label": "Gradient direction",
+      "default": "to right",
+      "options": [
+        { "value": "to right", "label": "Left to right" },
+        { "value": "to left", "label": "Right to left" },
+        { "value": "to top", "label": "Bottom to top" },
+        { "value": "to bottom", "label": "Top to bottom" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "gradient_strength",
+      "label": "Gradient strength",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Colors (blank = theme default)"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_desktop",
+      "label": "Desktop padding (sides)",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_tablet",
+      "label": "Tablet padding (sides)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile",
+      "label": "Mobile padding (sides)",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "Materials Editorial",
+      "settings": {
+        "eyebrow": "MATERIALS WITH MEANING",
+        "heading": "Honest materials.\nBeautifully aged.",
+        "description": "<p>We select natural materials for their integrity, character, and the way they evolve over time.</p>",
+        "cta_label": "EXPLORE MATERIALS →",
+        "layout": "split",
+        "image_position": "left",
+        "enable_overlay": true,
+        "cta_style": "btn--animated"
+      }
+    }
+  ]
+}
+{% endschema %}

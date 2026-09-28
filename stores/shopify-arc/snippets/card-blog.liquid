@@ -1,0 +1,40 @@
+{%- doc -%}
+  Accepts: article, blog
+{%- enddoc -%}
+{%- liquid
+  case settings.blog_cards_image_ratio
+    when '1:1'
+      assign blog_ratio = 1
+    when '3:4'
+      assign blog_ratio = 0.75
+    when '4:3'
+      assign blog_ratio = 1.33
+    else
+      assign blog_ratio = article.image.aspect_ratio | default: 1.5
+  endcase
+-%}
+<article class="blog-card">
+  <a href="{{ article.url }}" class="blog-card__media-link">
+    <div class="blog-card__media" style="aspect-ratio: {{ blog_ratio }};">
+      {%- if article.image -%}
+        <img
+          src="{{ article.image | image_url: width: 600 }}"
+          alt="{{ article.image.alt | escape }}"
+          width="600"
+          height="{{ 600 | divided_by: article.image.aspect_ratio | round }}"
+          loading="lazy"
+        >
+      {%- endif -%}
+    </div>
+  </a>
+  {%- if settings.blog_cards_show_date -%}
+    <p class="blog-card__date">{{ article.published_at | time_tag: format: 'date' }}</p>
+  {%- endif -%}
+  <h3 class="blog-card__title"><a href="{{ article.url }}">{{ article.title }}</a></h3>
+  {%- if settings.blog_cards_show_excerpt and article.excerpt_or_content != blank -%}
+    <div class="blog-card__excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: 20 }}</div>
+  {%- endif -%}
+  {%- if settings.blog_cards_show_button -%}
+    <a href="{{ article.url }}" class="btn btn--underline blog-card__link">Read more</a>
+  {%- endif -%}
+</article>

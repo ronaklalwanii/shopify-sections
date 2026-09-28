@@ -1,0 +1,81 @@
+<!doctype html>
+<html class="no-js{% if cart != empty %} cart-has-items{% endif %}" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="canonical" href="{{ canonical_url }}">
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    {%- render 'meta-tags' -%}
+    {%- render 'css-variables' -%}
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ 'product.css' | asset_url | stylesheet_tag }}
+    {{ 'component-drawer.css' | asset_url | stylesheet_tag }}
+
+    {{ content_for_header }}
+    {%- render 'js-variables' -%}
+
+    <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'header.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'footer.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'search.js' | asset_url }}" defer="defer"></script>
+    {%- comment -%} Variant picker logic (product-form.js) is shared by the PDP, featured product and the quick add drawer, so it loads globally. {%- endcomment -%}
+    <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'product-card.js' | asset_url }}" defer="defer"></script>
+    {%- if request.design_mode -%}
+      {%- comment -%} Theme-editor re-init handlers for the Showcase hero section. {%- endcomment -%}
+      <script src="{{ 'showcase-hero-editor.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+
+    {{ shop.metafields.theme.code_head.value }}
+  </head>
+  <body
+    class="{{ request.page_type }}-template blocks-corner--{{ settings.blocks_corner_radius }} color-{{ settings.body_color_scheme }}{% if request.design_mode %} shopify-design-mode{% endif %}"
+    {% if settings.enable_page_transition %}data-page-transition-enabled data-page-transitioning{% endif %}
+  >
+    {{ shop.metafields.theme.code_body.value }}
+    <a class="skip-to-content-link visually-hidden" href="#MainContent">Skip to content</a>
+
+    <div class="site-wrapper">
+      {% sections 'header-group' %}
+      <main id="MainContent" class="main-content" role="main" tabindex="-1">
+        {{ content_for_layout }}
+      </main>
+      {% sections 'footer-group' %}
+    </div>
+
+    {% sections 'overlay-group' %}
+
+    {%- comment -%} Single quick add drawer instance; content is fetched into it on demand per product. {%- endcomment -%}
+    <quick-add-drawer id="QuickAddDrawer" class="quick-add-drawer">
+      <div class="quick-add-drawer__overlay" data-drawer-close></div>
+      <div class="quick-add-drawer__panel" role="dialog" aria-modal="true" aria-label="Choose options">
+        <div class="quick-add-drawer__header">
+          <p class="quick-add-drawer__title">Choose options</p>
+          <button type="button" class="header__icon-btn" data-drawer-close aria-label="Close">
+            {%- render 'icon-close' -%}
+          </button>
+        </div>
+        <div class="quick-add-drawer__content" data-drawer-content></div>
+      </div>
+    </quick-add-drawer>
+
+    {%- if settings.enable_back_to_top -%}
+      <button type="button" class="back-to-top" data-back-to-top hidden aria-label="Back to top">
+        {%- render 'icon-chevron', direction: 'up' -%}
+      </button>
+    {%- endif -%}
+  </body>
+</html>

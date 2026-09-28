@@ -1,0 +1,128 @@
+<div id="text-grid-layout-{{ section.id }}" class="text-grid-layout color-{{ section.settings.color_scheme }}">
+  <div class="text-grid-layout__heading">
+    <h2
+      class="text-grid-layout__heading-text"
+      style="
+        font-size: {{ section.settings.heading_font_size }}px;
+        color: {{ section.settings.heading_color }};
+        text-align: {{ section.settings.text_alignment }};
+        padding-left: {{ section.settings.heading_padding_sides }}px;
+        padding-right: {{ section.settings.heading_padding_sides }}px;
+      "
+    >
+      {{ section.settings.heading_text }}
+    </h2>
+  </div>
+  <div class="text-grid-layout__text-blocks" style="
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: {{ section.settings.text_gap }}px;    
+    margin-top: {{ section.settings.space_between_heading_and_text }}px;
+    padding-left: {{ section.settings.heading_padding_sides }}px;
+    padding-right: {{ section.settings.heading_padding_sides }}px;
+  ">
+    {%- for block in section.blocks -%}
+      <div class="text-grid-layout__text-block" style="
+       width: 100%;
+       max-width: none !important;
+      ">
+        <p
+          class="text-grid-layout__text-block-text"
+          style="
+            font-size: {{ section.settings.text_font_size }}px;
+            color: {{ section.settings.text_color }};
+            text-align: {{ section.settings.block_text_alignment }};
+          "
+        >
+          {{ block.settings.text_block_text }}
+        </p>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Text grid layout",
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "heading_text", "label": "Heading text", "default": "Heading" },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "label": "Heading font size",
+      "min": 20,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "number",
+      "id": "heading_padding_sides",
+      "label": "Heading padding sides",
+      "default": 0
+    },    
+    { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#000000" },
+    { "type": "header", "content": "Text blocks" },
+    {
+      "type": "range",
+      "id": "text_font_size",
+      "label": "Text font size",
+      "min": 10,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#000000" },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Header Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "block_text_alignment",
+      "label": "Block Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+     {
+      "type": "range",
+      "id": "text_gap",
+      "label": "Text gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+        "type": "number",
+        "id": "space_between_heading_and_text",
+        "label": "Space between Heading and Text Block",
+        "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text_block",
+      "name": "Text block",
+      "settings": [{ "type": "text", "id": "text_block_text", "label": "Text block text", "default": "Text block" }]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [{ "name": "Text grid layout", "category": "Text" }]
+}
+{% endschema %}

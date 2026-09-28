@@ -1,0 +1,20 @@
+{
+  "name": "Overlays",
+  "type": "custom.overlay",
+  "sections": {
+    "cart-drawer": {
+      "type": "cart-drawer",
+      "settings": {
+        "show_cart_note": true,
+        "enable_cart_recommendations": true,
+        "cart_recommendations_heading": "You may also like",
+        "cart_recommendations_limit": 3
+      }
+    },
+    "search-drawer": {
+      "type": "search-drawer",
+      "settings": {}
+    }
+  },
+  "order": ["cart-drawer", "search-drawer"]
+}

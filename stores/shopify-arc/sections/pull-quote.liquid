@@ -1,0 +1,44 @@
+{{ 'pull-quote.css' | asset_url | stylesheet_tag }}
+
+<div class="pull-quote color-{{ section.settings.color_scheme }}" style="--pull-quote-image-radius: {{ section.settings.image_radius }}px;">
+  <div class="pull-quote__inner">
+    {%- if section.settings.image -%}
+      <div class="pull-quote__media">
+        <img
+          src="{{ section.settings.image | image_url: width: 500 }}"
+          alt="{{ section.settings.image.alt | escape }}"
+          width="500"
+          height="{{ 500 | divided_by: section.settings.image.aspect_ratio | round }}"
+          loading="lazy"
+        >
+      </div>
+    {%- endif -%}
+    <div class="pull-quote__content">
+      {%- if section.settings.quote != blank -%}
+        <p class="pull-quote__text">&ldquo;{{ section.settings.quote }}&rdquo;</p>
+      {%- endif -%}
+      {%- if section.settings.attribution != blank -%}
+        <p class="pull-quote__attribution">{{ section.settings.attribution }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Pull quote",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "range", "id": "image_radius", "label": "Image corner radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 0 },
+    {
+      "type": "textarea", "id": "quote", "label": "Quote",
+      "default": "The team took everything swirling in my head and turned it into a brand that finally feels like home."
+    },
+    { "type": "text", "id": "attribution", "label": "Attribution", "default": "Cove Studio" }
+  ],
+  "presets": [
+    { "name": "Pull quote" }
+  ]
+}
+{% endschema %}

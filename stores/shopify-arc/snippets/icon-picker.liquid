@@ -1,0 +1,39 @@
+{%- doc -%}
+  Renders one of a curated set of directional icon styles, used anywhere a merchant
+  can choose an icon (hero pagination arrows, animated button icon, etc).
+  Accepts: style ('chevron' | 'arrow' | 'hooked-arrow' | 'plus' | 'none', default 'arrow')
+           direction ('left' | 'right', default 'right' — 'left' mirrors the icon via CSS)
+           class (optional extra classes)
+{%- enddoc -%}
+{%- liquid
+  assign style = style | default: 'arrow'
+  assign direction = direction | default: 'right'
+  assign icon_class = 'icon icon-picker'
+  if direction == 'left'
+    assign icon_class = icon_class | append: ' icon-picker--flip'
+  endif
+  if class
+    assign icon_class = icon_class | append: ' ' | append: class
+  endif
+-%}
+{%- case style -%}
+  {%- when 'chevron' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="{{ icon_class }}" aria-hidden="true" focusable="false">
+      <path d="m9 6 6 6-6 6"></path>
+    </svg>
+  {%- when 'arrow' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="{{ icon_class }}" aria-hidden="true" focusable="false">
+      <path class="icon-picker__line" d="M5 12h14"></path>
+      <path d="m13 6 6 6-6 6"></path>
+    </svg>
+  {%- when 'hooked-arrow' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="{{ icon_class }}" aria-hidden="true" focusable="false">
+      <polyline points="15 14 20 9 15 4"></polyline>
+      <path d="M4 20v-7a4 4 0 0 1 4-4h12"></path>
+    </svg>
+  {%- when 'plus' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="{{ icon_class }}" aria-hidden="true" focusable="false">
+      <path d="M12 5v14"></path>
+      <path d="M5 12h14"></path>
+    </svg>
+{%- endcase -%}

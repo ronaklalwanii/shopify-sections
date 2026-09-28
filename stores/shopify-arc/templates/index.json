@@ -1,0 +1,1060 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero-slideshow",
+      "blocks": {
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "image_position": "50% 20%",
+            "color_scheme": "scheme-2",
+            "subheading": "",
+            "heading": "Welcome to the store",
+            "heading_size": "display-heading",
+            "heading_shadow": true,
+            "description": "This is a basic theme homepage.",
+            "content_position": "bottom-left",
+            "content_position_mobile": "middle-center",
+            "content_width": 55,
+            "content_padding_bottom": 48,
+            "text_animation": "fade-up",
+            "button_1_label": "Shop now",
+            "button_1_link": "/collections/all",
+            "button_1_style": "btn--roll",
+            "button_2_label": "View all",
+            "button_2_link": "/collections/all",
+            "button_2_style": "btn--roll-secondary"
+          }
+        },
+        "slide_2": {
+          "type": "slide",
+          "settings": {
+            "image_position": "50% 50%",
+            "color_scheme": "scheme-2",
+            "subheading": "",
+            "heading": "New arrivals every week",
+            "heading_size": "display-heading",
+            "heading_shadow": true,
+            "description": "Add your own photography from Theme settings.",
+            "content_position": "bottom-left",
+            "content_position_mobile": "middle-center",
+            "content_width": 55,
+            "content_padding_bottom": 48,
+            "text_animation": "fade-up",
+            "button_1_label": "Shop now",
+            "button_1_link": "/collections/all",
+            "button_1_style": "btn--roll",
+            "button_2_label": "View all",
+            "button_2_link": "/collections/all",
+            "button_2_style": "btn--roll-secondary"
+          }
+        },
+        "trust_1": {
+          "type": "trust_badge",
+          "settings": {
+            "icon": "shipping",
+            "heading": "Fast & Free Shipping",
+            "text": "We deliver your favorite styles fast, with free shipping on eligible orders."
+          }
+        },
+        "trust_2": {
+          "type": "trust_badge",
+          "settings": {
+            "icon": "secure",
+            "heading": "100% Secure",
+            "text": "Pay with confidence through secure, encrypted, and trusted payments."
+          }
+        },
+        "trust_3": {
+          "type": "trust_badge",
+          "settings": {
+            "icon": "returns",
+            "heading": "Returns & Exchanges",
+            "text": "We make returns and exchanges quick, easy, and convenient for your peace of mind."
+          }
+        },
+        "trust_4": {
+          "type": "trust_badge",
+          "settings": {
+            "icon": "support",
+            "heading": "Our Premium Support",
+            "text": "Our support team is always here to help with any query."
+          }
+        }
+      },
+      "block_order": [
+        "slide_1",
+        "slide_2",
+        "trust_1",
+        "trust_2",
+        "trust_3",
+        "trust_4"
+      ],
+      "settings": {}
+    },
+    "reveal": {
+      "type": "reveal-cards",
+      "blocks": {
+        "card_1": {
+          "type": "card",
+          "settings": {
+            "badge_label": "NEW ARRIVALS",
+            "heading": "Stay Classic Stay Confident",
+            "description": "Timeless styles crafted with premium quality and modern comfort.",
+            "button_label": "Shop now",
+            "button_link": "/collections/all",
+            "button_style": "btn--animated"
+          }
+        },
+        "card_2": {
+          "type": "card",
+          "settings": {
+            "badge_label": "SWEATER SALE",
+            "heading": "Luxury You Can Wear Daily",
+            "description": "Soft knits and elevated basics made to last all season.",
+            "button_label": "Shop now",
+            "button_link": "/collections/all",
+            "button_style": "btn--animated"
+          }
+        },
+        "card_3": {
+          "type": "card",
+          "settings": {
+            "badge_label": "DENIM SALE",
+            "heading": "Modern Fits for Modern Life",
+            "description": "Everyday denim designed for movement and comfort.",
+            "button_label": "Shop now",
+            "button_link": "/collections/all",
+            "button_style": "btn--animated"
+          }
+        }
+      },
+      "block_order": [
+        "card_1",
+        "card_2",
+        "card_3"
+      ],
+      "settings": {}
+    },
+    "featured_product": {
+      "type": "featured-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+            "show_vendor": true
+          }
+        },
+        "rating": {
+          "type": "rating",
+          "settings": {
+            "average_rating": 4.5,
+            "review_count": 2
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "show_shipping_note": true
+          }
+        },
+        "accordion_description": {
+          "type": "accordion_item",
+          "settings": {
+            "heading": "Description",
+            "content_source": "product_description",
+            "default_open": true
+          }
+        },
+        "accordion_material": {
+          "type": "accordion_item",
+          "settings": {
+            "heading": "Material",
+            "content_source": "custom",
+            "content": "<p>95% viscose, 5% elastane. Lightweight, flowy fabric with a soft drape.</p>"
+          }
+        },
+        "accordion_care": {
+          "type": "accordion_item",
+          "settings": {
+            "heading": "Care Instructions",
+            "content_source": "custom",
+            "content": "<p>Hand wash cold. Do not bleach. Lay flat to dry. Cool iron if needed.</p>"
+          }
+        },
+        "inventory": {
+          "type": "inventory_status",
+          "settings": {
+            "show_dot": true,
+            "display_style": "text",
+            "text_in_stock": "In stock, ready to be shipped",
+            "text_low_stock": "Low stock — order soon",
+            "text_out_stock": "Out of stock",
+            "low_stock_threshold": 10,
+            "show_progress_bar": true,
+            "text_size": 14,
+            "dot_size": 7,
+            "dot_gap": 8,
+            "bottom_margin": 24
+          }
+        },
+        "size_chart": {
+          "type": "size_chart",
+          "settings": {
+            "trigger_label": "Size chart",
+            "content": "<p>S: Bust 34in / Waist 27in<br>L: Bust 38in / Waist 31in<br>XL: Bust 40in / Waist 33in</p>"
+          }
+        },
+        "variants": {
+          "type": "variant_picker",
+          "settings": {
+            "size_style": "square",
+            "item_height": 40,
+            "item_min_width": 60,
+            "item_radius": 4,
+            "item_gap": 6,
+            "swatch_shape": "circle",
+            "swatch_size": 33
+          }
+        },
+        "quantity": {
+          "type": "quantity_selector",
+          "settings": {
+            "height": 52,
+            "radius": 8,
+            "button_width": 50
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_installments": true,
+            "show_payment_icons": true
+          }
+        },
+        "trust_1": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "shipping",
+            "label": "Fast shipping"
+          }
+        },
+        "trust_2": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "returns",
+            "label": "30 day returns"
+          }
+        },
+        "trust_3": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "secure",
+            "label": "Secure purchase"
+          }
+        },
+        "pickup_availability": {
+          "type": "pickup_availability",
+          "settings": {
+            "enable": true,
+            "radius": 6
+          }
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "style": "bordered",
+            "size": 30,
+            "radius": 8,
+            "show_facebook": true,
+            "show_twitter": true,
+            "show_pinterest": true
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "rating",
+        "price",
+        "accordion_description",
+        "accordion_material",
+        "accordion_care",
+        "inventory",
+        "size_chart",
+        "variants",
+        "quantity",
+        "buy_buttons",
+        "trust_1",
+        "trust_2",
+        "trust_3",
+        "pickup_availability",
+        "share"
+      ],
+      "settings": {
+        "product": "off-shoulder-wrap-top",
+        "color_scheme": "scheme-1",
+        "gallery_layout": "split",
+        "gallery_main_width": 58,
+        "gallery_thumb_width": 38,
+        "gallery_main_aspect": "portrait",
+        "gallery_gap": 16,
+        "enable_zoom": true
+      }
+    },
+    "rich_text": {
+      "type": "rich-text",
+      "blocks": {
+        "subheading": {
+          "type": "subheading",
+          "settings": {
+            "text": "Our story"
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "text": "Made with care, built to last"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
+        },
+        "buttons": {
+          "type": "buttons",
+          "settings": {
+            "button_1_label": "Shop now",
+            "button_1_link": "/collections/all",
+            "button_1_style": "btn--primary"
+          }
+        }
+      },
+      "block_order": [
+        "subheading",
+        "heading",
+        "text",
+        "buttons"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "full_width": false,
+        "content_width": "small",
+        "text_position": "center"
+      }
+    },
+    "trust_badges": {
+      "type": "trust-badges",
+      "blocks": {
+        "badge_1": {
+          "type": "badge",
+          "settings": {
+            "icon": "support",
+            "heading": "Customer service",
+            "text": "It's not actually free we just price it into the products."
+          }
+        },
+        "badge_2": {
+          "type": "badge",
+          "settings": {
+            "icon": "shipping",
+            "heading": "Fast Free Shipping",
+            "text": "Get free shipping on orders of $150 or more"
+          }
+        },
+        "badge_3": {
+          "type": "badge",
+          "settings": {
+            "icon": "returns",
+            "heading": "Refer a friend",
+            "text": "Refer a friend and get 15% off each other."
+          }
+        },
+        "badge_4": {
+          "type": "badge",
+          "settings": {
+            "icon": "secure",
+            "heading": "Secure payment",
+            "text": "Your payment information is processed securely"
+          }
+        }
+      },
+      "block_order": [
+        "badge_1",
+        "badge_2",
+        "badge_3",
+        "badge_4"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "columns_desktop": 4,
+        "columns_mobile": "1"
+      }
+    },
+    "image_text_list": {
+      "type": "image-layout-with-list",
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "label": "Made in France"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "label": "100% Nature"
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "label": "Distilled 3 years"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "image_position": "left",
+        "text": "<p>Our fragrances blend nature's finest ingredients with artistry and passion, creating a sensory escape that celebrates individuality and elegance.</p><p>Whether you're seeking a scent to inspire confidence, awaken romance, or embrace calm, we have the perfect fragrance for every moment.</p>"
+      }
+    },
+    "blog_showcase": {
+      "type": "blog-showcase",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "blog": "news",
+        "articles_count": 3,
+        "heading": "Latest Stories",
+        "heading_alignment": "left",
+        "show_view_all": true,
+        "view_all_position": "inline",
+        "view_all_text": "View all",
+        "view_all_style": "outlined",
+        "read_more_text": "Read more",
+        "read_more_style": "link",
+        "card_style": "editorial",
+        "columns_desktop": 3,
+        "mobile_layout": "swipe"
+      }
+    },
+    "image_grid": {
+      "type": "image-grid",
+      "blocks": {
+        "img_1": {
+          "type": "image",
+          "settings": {
+            "label": "01"
+          }
+        },
+        "img_2": {
+          "type": "image",
+          "settings": {
+            "label": "02"
+          }
+        },
+        "img_3": {
+          "type": "image",
+          "settings": {
+            "label": "03"
+          }
+        }
+      },
+      "block_order": [
+        "img_1",
+        "img_2",
+        "img_3"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1"
+      }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "t_1": {
+          "type": "testimonial",
+          "settings": {}
+        },
+        "t_2": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Working with them completely changed how we think about content.",
+            "description": "Every piece felt intentional and on-brand from day one.",
+            "author_name": "James Carter",
+            "author_title": "Founder, North Studio",
+            "rating": 5
+          }
+        },
+        "t_3": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Fast turnaround without sacrificing quality.",
+            "description": "Exactly the kind of partner a growing brand needs.",
+            "author_name": "Priya Menon",
+            "author_title": "Brand Lead, Solace Co.",
+            "rating": 4
+          }
+        }
+      },
+      "block_order": [
+        "t_1",
+        "t_2",
+        "t_3"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1"
+      }
+    },
+    "marquee_hero": {
+      "type": "marquee-hero",
+      "settings": {
+        "color_scheme": "scheme-2",
+        "marquee_text": "ARC STUDIO"
+      }
+    },
+    "bundle_items": {
+      "type": "bundle-items",
+      "blocks": {
+        "p_1": {
+          "type": "product",
+          "settings": {
+            "product": "off-shoulder-wrap-top"
+          }
+        },
+        "p_2": {
+          "type": "product",
+          "settings": {}
+        },
+        "p_3": {
+          "type": "product",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "p_1",
+        "p_2",
+        "p_3"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "enable_discount": true
+      }
+    },
+    "case_studies": {
+      "type": "case-studies",
+      "blocks": {
+        "cs_1": {
+          "type": "case_study",
+          "settings": {
+            "label": "Sona Wellness"
+          }
+        },
+        "cs_2": {
+          "type": "case_study",
+          "settings": {
+            "label": "LINNE Collection"
+          }
+        },
+        "cs_3": {
+          "type": "case_study",
+          "settings": {
+            "label": "Cove Studio"
+          }
+        },
+        "cs_4": {
+          "type": "case_study",
+          "settings": {
+            "label": "The Mondays"
+          }
+        }
+      },
+      "block_order": [
+        "cs_1",
+        "cs_2",
+        "cs_3",
+        "cs_4"
+      ],
+      "settings": {
+        "color_scheme": "scheme-2"
+      }
+    },
+    "showcase_hero_default": {
+      "type": "showcase-hero",
+      "blocks": {
+        "showcase-hero_b1": {
+          "type": "slide",
+          "settings": {
+            "subheading": "Featured collection",
+            "title": "Elevate the <em>everyday</em>",
+            "description": "<p>Considered pieces made to last, delivered with care.</p>",
+            "button_label": "Shop now",
+            "text_alignment": "left",
+            "content_position": "middle-left",
+            "content_position_mobile": "middle-center",
+            "text_color": "#FFFFFF",
+            "image_overlay_opacity": 30
+          }
+        },
+        "showcase-hero_b2": {
+          "type": "slide",
+          "settings": {
+            "subheading": "New arrivals",
+            "title": "Built for <em>longer</em>",
+            "description": "<p>New season materials, quieter colours, better make.</p>",
+            "button_label": "Shop new in",
+            "text_alignment": "left",
+            "content_position": "middle-left",
+            "content_position_mobile": "middle-center",
+            "text_color": "#FFFFFF",
+            "image_overlay_opacity": 30
+          }
+        },
+        "showcase-hero_b3": {
+          "type": "slide",
+          "settings": {
+            "subheading": "The edit",
+            "title": "Fewer, <em>better</em> things",
+            "description": "<p>A short list of essentials we actually use and love.</p>",
+            "button_label": "View the edit",
+            "text_alignment": "left",
+            "content_position": "middle-left",
+            "content_position_mobile": "middle-center",
+            "text_color": "#FFFFFF",
+            "image_overlay_opacity": 30
+          }
+        }
+      },
+      "block_order": [
+        "showcase-hero_b1",
+        "showcase-hero_b2",
+        "showcase-hero_b3"
+      ],
+      "settings": {
+        "autoplay": true,
+        "autoplay_delay": 5,
+        "show_dots": true,
+        "controls_position": "bottom",
+        "slide_height": "large"
+      }
+    },
+    "showcase_hero_numbered": {
+      "type": "showcase-hero",
+      "blocks": {
+        "showcase-hero_b1": {
+          "type": "slide",
+          "settings": {
+            "content_position": "middle-left",
+            "content_position_mobile": "middle-center",
+            "text_alignment": "left",
+            "text_color": "#FFFFFF",
+            "image_overlay_opacity": 30,
+            "subheading": "Season highlight",
+            "title": "Quiet <em>luxury</em>, daily comfort",
+            "description": "<p>Soft textures and calm palettes for slower mornings.</p>",
+            "button_label": "Shop the season",
+            "button_style": "btn--outline",
+            "button_radius": 2
+          }
+        },
+        "showcase-hero_b2": {
+          "type": "slide",
+          "settings": {
+            "subheading": "Best sellers",
+            "title": "The pieces that <em>sell out</em>",
+            "description": "<p>Restocked and ready — the favourites customers keep coming back for.</p>",
+            "button_label": "Shop best sellers",
+            "text_alignment": "left",
+            "content_position": "middle-left",
+            "content_position_mobile": "middle-center",
+            "text_color": "#FFFFFF",
+            "image_overlay_opacity": 30
+          }
+        },
+        "showcase-hero_b3": {
+          "type": "slide",
+          "settings": {
+            "subheading": "Limited run",
+            "title": "Once it's <em>gone</em>",
+            "description": "<p>Small-batch releases, made in limited numbers.</p>",
+            "button_label": "Shop limited",
+            "text_alignment": "left",
+            "content_position": "middle-left",
+            "content_position_mobile": "middle-center",
+            "text_color": "#FFFFFF",
+            "image_overlay_opacity": 30
+          }
+        }
+      },
+      "block_order": [
+        "showcase-hero_b1",
+        "showcase-hero_b2",
+        "showcase-hero_b3"
+      ],
+      "settings": {
+        "design_style": "numbered",
+        "layout": "standard",
+        "slide_height": "large",
+        "show_dots": true,
+        "controls_position": "bottom",
+        "numbered_active_color": "#FFFFFF",
+        "numbered_inactive_color": "#8C8C8C",
+        "autoplay": true,
+        "autoplay_delay": 5
+      }
+    },
+    "iwto_default": {
+      "type": "image-with-text-overlay",
+      "blocks": {
+        "image-with-text-overlay_b1": {
+          "type": "subheading",
+          "settings": {
+            "text": "Subheading"
+          }
+        },
+        "image-with-text-overlay_b2": {
+          "type": "heading",
+          "settings": {
+            "text": "Image with text overlay",
+            "heading_tag": "h2"
+          }
+        },
+        "image-with-text-overlay_b3": {
+          "type": "richtext",
+          "settings": {}
+        },
+        "image-with-text-overlay_b4": {
+          "type": "button",
+          "settings": {
+            "label": "Explore More",
+            "button_style": "btn--primary"
+          }
+        }
+      },
+      "block_order": [
+        "image-with-text-overlay_b1",
+        "image-with-text-overlay_b2",
+        "image-with-text-overlay_b3",
+        "image-with-text-overlay_b4"
+      ],
+      "settings": {}
+    },
+    "asymmetric_split": {
+      "type": "asymmetric-split",
+      "settings": {}
+    },
+    "arc_edit": {
+      "type": "arc-edit",
+      "blocks": {
+        "arc-edit_b1": {
+          "type": "product_card",
+          "settings": {
+            "title": "SOLIS DINING TABLE",
+            "material": "Solid Walnut",
+            "price": "£2,400"
+          }
+        },
+        "arc-edit_b2": {
+          "type": "product_card",
+          "settings": {
+            "title": "VALE SIDEBOARD",
+            "material": "Solid Walnut",
+            "price": "£2,100"
+          }
+        },
+        "arc-edit_b3": {
+          "type": "product_card",
+          "settings": {
+            "title": "TERRA COFFEE TABLE",
+            "material": "Natural Stone",
+            "price": "£1,250"
+          }
+        },
+        "arc-edit_b4": {
+          "type": "product_card",
+          "settings": {
+            "title": "ARDENT LOUNGE CHAIR",
+            "material": "Walnut & Leather",
+            "price": "£1,800"
+          }
+        }
+      },
+      "block_order": [
+        "arc-edit_b1",
+        "arc-edit_b2",
+        "arc-edit_b3",
+        "arc-edit_b4"
+      ],
+      "settings": {}
+    },
+    "custom_testimonial_showcase": {
+      "type": "custom-testimonial-showcase",
+      "blocks": {
+        "custom-testimonial-showcase_b1": {
+          "type": "testimonial",
+          "settings": {}
+        },
+        "custom-testimonial-showcase_b2": {
+          "type": "testimonial",
+          "settings": {}
+        },
+        "custom-testimonial-showcase_b3": {
+          "type": "testimonial",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "custom-testimonial-showcase_b1",
+        "custom-testimonial-showcase_b2",
+        "custom-testimonial-showcase_b3"
+      ],
+      "settings": {}
+    },
+    "materials_editorial": {
+      "type": "materials-editorial",
+      "settings": {
+        "eyebrow": "MATERIALS WITH MEANING",
+        "heading": "Honest materials.\nBeautifully aged.",
+        "description": "<p>We select natural materials for their integrity, character, and the way they evolve over time.</p>",
+        "cta_label": "EXPLORE MATERIALS →",
+        "layout": "split",
+        "image_position": "left",
+        "enable_overlay": true,
+        "cta_style": "btn--animated"
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "blocks": {
+        "newsletter_b1": {
+          "type": "feature",
+          "settings": {
+            "icon": "mail",
+            "title": "Journal & stories",
+            "text": "Design insights and atelier updates"
+          }
+        },
+        "newsletter_b2": {
+          "type": "feature",
+          "settings": {
+            "icon": "box",
+            "title": "New collections",
+            "text": "Be the first to know what's coming"
+          }
+        },
+        "newsletter_b3": {
+          "type": "feature",
+          "settings": {
+            "icon": "chair",
+            "title": "Timeless living",
+            "text": "Curated inspiration for intentional spaces"
+          }
+        }
+      },
+      "block_order": [
+        "newsletter_b1",
+        "newsletter_b2",
+        "newsletter_b3"
+      ],
+      "settings": {
+        "eyebrow": "ATELIER JOURNAL",
+        "heading": "Stories worth bringing home.",
+        "text": "<p>Thoughts on materials, craftsmanship, and timeless design. Sent occasionally, always worth reading.</p>",
+        "input_placeholder": "Enter your email",
+        "form_style": "embedded_icon",
+        "content_alignment": "left",
+        "image_position": "left",
+        "enable_card": true,
+        "background_color": "#0d0d0d",
+        "card_bg_color": "#141414",
+        "card_border_color": "#262626",
+        "card_border_radius": 20,
+        "card_padding_desktop": 28,
+        "heading_color": "#ffffff",
+        "text_color": "#a1a1aa",
+        "image_border_radius": 14,
+        "input_bg_color": "#1c1c1e",
+        "input_border_color": "#2c2c2e",
+        "input_text_color": "#ffffff",
+        "input_placeholder_color": "#71717a",
+        "input_border_radius": 10,
+        "button_text_color": "#ffffff",
+        "show_consent_checkbox": true,
+        "consent_text": "<p>I agree to receive Atelier Journal and understand I can unsubscribe at any time.</p>",
+        "show_feature_dividers": true
+      }
+    },
+    "product_reviews": {
+      "type": "product-reviews",
+      "blocks": {
+        "product-reviews_b1": {
+          "type": "review",
+          "settings": {}
+        },
+        "product-reviews_b2": {
+          "type": "review",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "product-reviews_b1",
+        "product-reviews_b2"
+      ],
+      "settings": {}
+    },
+    "pull_quote": {
+      "type": "pull-quote",
+      "settings": {}
+    },
+    "text_grid_layout": {
+      "type": "text-grid-layout",
+      "settings": {}
+    },
+    "trust_badge_style_2": {
+      "type": "trust-badge-style-2",
+      "blocks": {
+        "trust-badge-style-2_b1": {
+          "type": "standard",
+          "settings": {
+            "icon": "delivery",
+            "title": "Complimentary Delivery",
+            "description": "White-glove delivery to your door."
+          }
+        },
+        "trust-badge-style-2_b2": {
+          "type": "standard",
+          "settings": {
+            "icon": "warranty",
+            "title": "5-Year Warranty",
+            "description": "Built to last. Backed with confidence."
+          }
+        },
+        "trust-badge-style-2_b3": {
+          "type": "standard",
+          "settings": {
+            "icon": "returns",
+            "title": "30-Day Returns",
+            "description": "Love it or return it. Hassle-free."
+          }
+        },
+        "trust-badge-style-2_b4": {
+          "type": "standard",
+          "settings": {
+            "icon": "materials",
+            "title": "Sustainable Craft",
+            "description": "Thoughtfully made. Responsibly sourced."
+          }
+        },
+        "trust-badge-style-2_b5": {
+          "type": "standard",
+          "settings": {
+            "icon": "support",
+            "title": "Concierge Support",
+            "description": "Personal assistance whenever you need."
+          }
+        }
+      },
+      "block_order": [
+        "trust-badge-style-2_b1",
+        "trust-badge-style-2_b2",
+        "trust-badge-style-2_b3",
+        "trust-badge-style-2_b4",
+        "trust-badge-style-2_b5"
+      ],
+      "settings": {}
+    },
+    "why_buy": {
+      "type": "why-buy",
+      "blocks": {
+        "why-buy_b1": {
+          "type": "feature",
+          "settings": {
+            "stat_number": "33",
+            "title": "LED LIGHT THERAPY",
+            "description": "Designed to support a simple at-home skincare routine."
+          }
+        },
+        "why-buy_b2": {
+          "type": "feature",
+          "settings": {
+            "stat_number": "33",
+            "title": "EMS MICROCURRENT",
+            "description": "Microcurrent technology in an easy-to-use facial device."
+          }
+        },
+        "why-buy_b3": {
+          "type": "feature",
+          "settings": {
+            "stat_number": "33",
+            "title": "RADIO FREQUENCY",
+            "description": "RF technology designed for simple, effective at-home facial care."
+          }
+        },
+        "why-buy_b4": {
+          "type": "feature",
+          "settings": {
+            "stat_number": "33",
+            "title": "VIBRATION",
+            "description": "Built-in vibration for a comfortable treatment experience."
+          }
+        }
+      },
+      "block_order": [
+        "why-buy_b1",
+        "why-buy_b2",
+        "why-buy_b3",
+        "why-buy_b4"
+      ],
+      "settings": {
+        "eyebrow_text": "THE TECHNOLOGY",
+        "heading": "Made for your routine",
+        "description": "",
+        "btn_text": "",
+        "show_research_bar": false
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "showcase_hero_default",
+    "showcase_hero_numbered",
+    "reveal",
+    "featured_product",
+    "image_grid",
+    "testimonials",
+    "marquee_hero",
+    "bundle_items",
+    "rich_text",
+    "trust_badges",
+    "image_text_list",
+    "case_studies",
+    "blog_showcase",
+    "iwto_default",
+    "asymmetric_split",
+    "arc_edit",
+    "custom_testimonial_showcase",
+    "materials_editorial",
+    "newsletter",
+    "product_reviews",
+    "pull_quote",
+    "text_grid_layout",
+    "trust_badge_style_2",
+    "why_buy"
+  ]
+}

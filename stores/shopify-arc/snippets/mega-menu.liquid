@@ -1,0 +1,180 @@
+{%- doc -%}
+  Renders the full-width mega menu panel for a matched header block.
+  Accepts: block (header section block), link (the top-level nav link this block is attached to)
+{%- enddoc -%}
+{% style %}
+  #MegaMenu-{{ block.id }} {
+    --menu-columns: {{ block.settings.menu_columns | default: 3 }};
+    --promotions-width: {{ block.settings.promotions_width | default: 62 }}%;
+    {%- if block.type == 'product_list' -%}
+      --products-per-view: {{ block.settings.products_per_view | default: 4 }};
+    {%- else -%}
+      --promotion-columns: {{ block.settings.promotion_columns | default: 3 }};
+    {%- endif -%}
+  }
+{% endstyle %}
+<div id="MegaMenu-{{ block.id }}" class="mega-menu">
+  <div class="mega-menu__inner page-width">
+    <div class="mega-menu__nav{% if block.type == 'product_list' and block.settings.show_menu_column_divider %} mega-menu__nav--divided{% endif %}">
+      <ul class="mega-menu__nav-list">
+        {%- for childlink in link.links -%}
+          <li class="mega-menu__nav-group" style="--i: {{ forloop.index }}">
+            <a href="{{ childlink.url }}" class="mega-menu__nav-link">{{ childlink.title }}</a>
+            {%- if childlink.links.size > 0 -%}
+              <ul class="mega-menu__nav-sublist">
+                {%- for grandchildlink in childlink.links -%}
+                  <li><a href="{{ grandchildlink.url }}" class="mega-menu__nav-sublink">{{ grandchildlink.title }}</a></li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+
+    {%- case block.type -%}
+      {%- when 'promotion_banner' -%}
+        <div class="mega-menu__promos">
+          {%- for i in (1..5) -%}
+            {%- liquid
+              assign img_key = 'promo_image_' | append: i
+              assign scheme_key = 'color_scheme_' | append: i
+              assign sub_key = 'subheading_' | append: i
+              assign heading_key = 'heading_' | append: i
+              assign size_key = 'heading_size_' | append: i
+              assign desc_key = 'description_' | append: i
+              assign btn_key = 'button_label_' | append: i
+              assign bstyle_key = 'button_style_' | append: i
+              assign pos_key = 'content_position_' | append: i
+              assign align_key = 'content_alignment_' | append: i
+              assign link_key = 'promotion_link_' | append: i
+
+              assign promo_image = block.settings[img_key]
+              if promo_image == blank and block.settings[heading_key] == blank
+                continue
+              endif
+
+              assign pos = block.settings[pos_key] | default: 'bottom-left'
+              assign align = block.settings[align_key] | default: 'left'
+              assign btn_style = block.settings[bstyle_key] | default: block.settings.button_style | default: settings.button_default_style | default: 'btn--secondary'
+            -%}
+            <a
+              href="{{ block.settings[link_key] | default: '#' }}"
+              style="--i: {{ forloop.index }}"
+              class="mega-menu__promo mega-menu__promo--pos-{{ pos }} mega-menu__promo--align-{{ align }}{% if promo_image == blank %} mega-menu__promo--text-only{% endif %}{% if block.settings[scheme_key] != blank %} color-{{ block.settings[scheme_key] }}{% endif %}"
+            >
+              {%- if promo_image != blank -%}
+                <img
+                  src="{{ promo_image | image_url: width: 600 }}"
+                  alt="{{ block.settings[heading_key] | default: promo_image.alt | escape }}"
+                  width="600"
+                  height="{{ 600.0 | divided_by: promo_image.aspect_ratio | round }}"
+                  loading="lazy"
+                >
+              {%- endif -%}
+              {%- if block.settings[sub_key] != blank or block.settings[heading_key] != blank or block.settings[desc_key] != blank or block.settings[btn_key] != blank -%}
+                <span class="mega-menu__promo-content">
+                  {%- if block.settings[sub_key] != blank -%}
+                    <span class="mega-menu__promo-subheading">{{ block.settings[sub_key] }}</span>
+                  {%- endif -%}
+                  {%- if block.settings[heading_key] != blank -%}
+                    <span class="mega-menu__promo-heading{% if block.settings[size_key] != blank %} {{ block.settings[size_key] }}{% endif %}">{{ block.settings[heading_key] }}</span>
+                  {%- endif -%}
+                  {%- if block.settings[desc_key] != blank -%}
+                    <span class="mega-menu__promo-description">{{ block.settings[desc_key] }}</span>
+                  {%- endif -%}
+                  {%- if block.settings[btn_key] != blank -%}
+                    {%- liquid
+                      capture promo_btn_classes
+                        render 'button-classes', style: btn_style
+                      endcapture
+                      assign promo_btn_is_animated = false
+                      if promo_btn_classes contains 'btn-animated'
+                        assign promo_btn_is_animated = true
+                      endif
+                    -%}
+                    <span class="btn {{ promo_btn_classes }} mega-menu__promo-btn">
+                      {%- if promo_btn_is_animated -%}
+                        {%- render 'button-animated-content', label: block.settings[btn_key] -%}
+                      {%- else -%}
+                        {{ block.settings[btn_key] }}
+                      {%- endif -%}
+                    </span>
+                  {%- endif -%}
+                </span>
+              {%- endif -%}
+            </a>
+          {%- endfor -%}
+        </div>
+
+      {%- when 'custom_card' -%}
+        <div class="mega-menu__promos">
+          {%- for i in (1..5) -%}
+            {%- liquid
+              assign img_key = 'promo_image_' | append: i
+              assign eyebrow_key = 'eyebrow_' | append: i
+              assign heading_key = 'heading_' | append: i
+              assign size_key = 'heading_size_' | append: i
+              assign desc_key = 'description_' | append: i
+              assign btn_key = 'button_label_' | append: i
+              assign link_key = 'promotion_link_' | append: i
+
+              if block.settings[img_key] == blank and block.settings[heading_key] == blank
+                continue
+              endif
+            -%}
+            <div class="mega-menu__card-slot" style="--i: {{ forloop.index }}">
+              {%- render 'mega-custom-card',
+                image: block.settings[img_key],
+                eyebrow: block.settings[eyebrow_key],
+                heading: block.settings[heading_key],
+                heading_size_class: block.settings[size_key],
+                description: block.settings[desc_key],
+                button_label: block.settings[btn_key],
+                link: block.settings[link_key]
+              -%}
+            </div>
+          {%- endfor -%}
+        </div>
+
+      {%- when 'product_list' -%}
+        <div class="mega-menu__products">
+          {%- assign ppv = block.settings.products_per_view | default: 4 | times: 1 -%}
+          <div class="mega-menu__products-header">
+            {%- if block.settings.heading != blank -%}
+              <p class="mega-menu__products-heading">{{ block.settings.heading }}</p>
+            {%- endif -%}
+            {%- if block.settings.product_list.size > ppv -%}
+              <div class="mega-menu__product-nav">
+                <span class="mega-menu__product-counter" data-product-counter>1/{{ block.settings.product_list.size }}</span>
+                <button type="button" class="mega-menu__product-arrow" data-product-prev aria-label="Previous image">
+                  {%- render 'icon-picker', style: 'chevron', direction: 'left' -%}
+                </button>
+                <button type="button" class="mega-menu__product-arrow" data-product-next aria-label="Next image">
+                  {%- render 'icon-picker', style: 'chevron', direction: 'right' -%}
+                </button>
+              </div>
+            {%- endif -%}
+          </div>
+          {%- if block.settings.collections.size > 0 -%}
+            <ul class="mega-menu__collection-links">
+              {%- for collection in block.settings.collections -%}
+                <li><a href="{{ collection.url }}">{{ collection.title }}</a></li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+          {%- if block.settings.product_list.size > 0 -%}
+            <menu-product-list class="mega-menu__product-grid" data-count="{{ block.settings.product_list.size }}">
+              <div class="mega-menu__product-track" data-product-track>
+                {%- for product in block.settings.product_list -%}
+                  <div class="mega-menu__product" style="--i: {{ forloop.index }}">
+                    {%- render 'card-product', product: product, show_swatches: false -%}
+                  </div>
+                {%- endfor -%}
+              </div>
+            </menu-product-list>
+          {%- endif -%}
+        </div>
+    {%- endcase -%}
+  </div>
+</div>

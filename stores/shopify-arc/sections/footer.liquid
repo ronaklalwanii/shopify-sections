@@ -1,0 +1,264 @@
+{{ 'footer.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign has_social = false
+  if settings.social_facebook_link != blank or settings.social_instagram_link != blank or settings.social_youtube_link != blank or settings.social_tiktok_link != blank or settings.social_twitter_link != blank or settings.social_snapchat_link != blank or settings.social_pinterest_link != blank or settings.social_tumblr_link != blank or settings.social_vimeo_link != blank
+    assign has_social = true
+  endif
+-%}
+
+<footer class="footer color-{{ section.settings.color_scheme }}">
+  {%- if section.settings.show_section_divider -%}
+    <div class="footer__divider{% if section.settings.divider_width == 'full' %} footer__divider--full{% else %} page-width{% endif %}"></div>
+  {%- endif -%}
+
+  {%- if section.blocks.size > 0 -%}
+    <div class="footer__top page-width">
+      {%- for block in section.blocks -%}
+        <div class="footer__block" style="--col-width: {{ block.settings.block_width }}%;" {{ block.shopify_attributes }}>
+          <details class="footer__block-details" {% if block.settings.open_default %}open{% endif %}>
+            <summary class="footer__block-heading {{ block.settings.heading_size | default: 'h4' }}">
+              {{ block.settings.heading }}
+              {%- render 'icon-plus-toggle' -%}
+            </summary>
+            <div class="footer__block-content">
+              {%- case block.type -%}
+                {%- when 'menu' -%}
+                  {%- assign footer_menu = linklists[block.settings.menu] -%}
+                  {%- if footer_menu != blank -%}
+                    <ul class="footer__menu-list">
+                      {%- for link in footer_menu.links -%}
+                        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+
+                {%- when 'contact_information' -%}
+                  <ul class="footer__contact-list">
+                    {%- if block.settings.address != blank -%}
+                      <li>{{ block.settings.address }}</li>
+                    {%- endif -%}
+                    {%- if block.settings.working_hours != blank -%}
+                      <li>{{ block.settings.working_hours }}</li>
+                    {%- endif -%}
+                    {%- if block.settings.email != blank -%}
+                      <li><a href="mailto:{{ block.settings.email }}">{{ block.settings.email }}</a></li>
+                    {%- endif -%}
+                    {%- if block.settings.phone != blank -%}
+                      <li><a href="tel:{{ block.settings.phone }}">{{ block.settings.phone }}</a></li>
+                    {%- endif -%}
+                  </ul>
+
+                {%- when 'image_text' -%}
+                  {%- if block.settings.image != blank -%}
+                    {%- assign footer_image_src_width = block.settings.image_width | times: 2 | round -%}
+                    <img
+                      src="{{ block.settings.image | image_url: width: footer_image_src_width }}"
+                      alt=""
+                      width="{{ block.settings.image_width }}"
+                      height="{{ block.settings.image_width | divided_by: block.settings.image.aspect_ratio | round }}"
+                      loading="lazy"
+                      class="footer__block-image"
+                    >
+                  {%- endif -%}
+                  <div class="footer__block-text">{{ block.settings.text }}</div>
+                  {%- if block.settings.button_label != blank -%}
+                    {%- render 'button', label: block.settings.button_label, url: block.settings.button_link, style: block.settings.button_style -%}
+                  {%- endif -%}
+
+                {%- when 'newsletter' -%}
+                  <div class="footer__newsletter" style="text-align: {{ block.settings.newsletter_text_alignment }};">
+                    <div class="footer__newsletter-description">{{ block.settings.newsletter_description }}</div>
+                    {%- render 'newsletter-form', id: 'FooterNewsletter' -%}
+                    {%- if block.settings.newsletter_term != blank -%}
+                      <div class="footer__newsletter-terms">{{ block.settings.newsletter_term }}</div>
+                    {%- endif -%}
+                  </div>
+              {%- endcase -%}
+            </div>
+          </details>
+        </div>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  <div class="footer__bottom page-width">
+    <div class="footer__bottom-row">
+      <div class="footer__localization">
+        {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
+          {%- render 'country-selector', id: 'FooterCountry' -%}
+        {%- endif -%}
+      </div>
+      {%- if section.settings.show_social and has_social -%}
+        {%- render 'social-icons' -%}
+      {%- endif -%}
+    </div>
+
+    <div class="footer__bottom-row footer__bottom-row--meta">
+      <div class="footer__copyright">
+        <span>
+          &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}.
+          <a href="https://www.shopify.com" target="_blank" rel="nofollow noopener">Powered by Shopify</a>
+        </span>
+        {%- if section.settings.enable_follow_on_shop and shop.features.follow_on_shop? -%}
+          {{ shop | login_button: action: 'follow' }}
+        {%- endif -%}
+      </div>
+      <div class="footer__payment-row">
+        {%- assign footer_bottom_menu = linklists['footer-bottom'] -%}
+        {%- if footer_bottom_menu != blank or section.settings.show_policies -%}
+          <ul class="footer__bottom-menu">
+            {%- for link in footer_bottom_menu.links -%}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {%- endfor -%}
+            {%- if section.settings.show_policies -%}
+              {%- for policy in shop.policies -%}
+                {%- if policy != blank -%}
+                  <li><a href="{{ policy.url }}">{{ policy.title }}</a></li>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+          </ul>
+        {%- endif -%}
+        {%- if section.settings.payment_enable -%}
+          <ul class="footer__payment-icons">
+            {%- for type in shop.enabled_payment_types -%}
+              <li>{{ type | payment_type_svg_tag: class: 'footer__payment-icon' }}</li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "header", "content": "Follow on Shop" },
+    { "type": "checkbox", "id": "enable_follow_on_shop", "label": "Show follow on Shop button", "default": false },
+    { "type": "header", "content": "Social media" },
+    { "type": "checkbox", "id": "show_social", "label": "Show social icons", "default": true },
+    { "type": "header", "content": "Localization" },
+    { "type": "checkbox", "id": "enable_country_selector", "label": "Show country/region selector", "default": false },
+    { "type": "header", "content": "Payment" },
+    { "type": "checkbox", "id": "payment_enable", "label": "Show payment icons", "default": true },
+    { "type": "header", "content": "Policies" },
+    { "type": "checkbox", "id": "show_policies", "label": "Show store policy links", "info": "Refund, privacy, terms, and shipping policies set in Shopify admin", "default": true },
+    { "type": "header", "content": "Divider" },
+    { "type": "checkbox", "id": "show_section_divider", "label": "Show top divider", "default": true },
+    {
+      "type": "select",
+      "id": "divider_width",
+      "label": "Divider width",
+      "default": "full",
+      "options": [
+        { "value": "fixed", "label": "Fixed" },
+        { "value": "full", "label": "Full width" }
+      ],
+      "visible_if": "{{ section.settings.show_section_divider == true }}"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        { "type": "range", "id": "block_width", "label": "Column width", "min": 10, "max": 100, "step": 1, "unit": "%", "default": 20 },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Quick links" },
+        {
+          "type": "select", "id": "heading_size", "label": "Heading size", "default": "h4",
+          "options": [
+            { "value": "h6", "label": "H6" }, { "value": "h5", "label": "H5" }, { "value": "h4", "label": "H4" },
+            { "value": "h3", "label": "H3" }, { "value": "h2", "label": "H2" }, { "value": "h1", "label": "H1" }
+          ]
+        },
+        { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" },
+        { "type": "checkbox", "id": "open_default", "label": "Open by default on mobile", "default": false }
+      ]
+    },
+    {
+      "type": "contact_information",
+      "name": "Contact information",
+      "limit": 1,
+      "settings": [
+        { "type": "range", "id": "block_width", "label": "Column width", "min": 10, "max": 100, "step": 1, "unit": "%", "default": 25 },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Contact" },
+        {
+          "type": "select", "id": "heading_size", "label": "Heading size", "default": "h4",
+          "options": [
+            { "value": "h6", "label": "H6" }, { "value": "h5", "label": "H5" }, { "value": "h4", "label": "H4" },
+            { "value": "h3", "label": "H3" }, { "value": "h2", "label": "H2" }, { "value": "h1", "label": "H1" }
+          ]
+        },
+        { "type": "text", "id": "address", "label": "Address" },
+        { "type": "text", "id": "working_hours", "label": "Working hours" },
+        { "type": "text", "id": "email", "label": "Email" },
+        { "type": "text", "id": "phone", "label": "Phone" },
+        { "type": "checkbox", "id": "open_default", "label": "Open by default on mobile", "default": false }
+      ]
+    },
+    {
+      "type": "image_text",
+      "name": "Image with text",
+      "settings": [
+        { "type": "range", "id": "block_width", "label": "Column width", "min": 10, "max": 100, "step": 1, "unit": "%", "default": 25 },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "About" },
+        {
+          "type": "select", "id": "heading_size", "label": "Heading size", "default": "h4",
+          "options": [
+            { "value": "h6", "label": "H6" }, { "value": "h5", "label": "H5" }, { "value": "h4", "label": "H4" },
+            { "value": "h3", "label": "H3" }, { "value": "h2", "label": "H2" }, { "value": "h1", "label": "H1" }
+          ]
+        },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "range", "id": "image_width", "label": "Image width", "min": 50, "max": 250, "step": 2, "unit": "px", "default": 150 },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Share store details, promotions, or brand content with your customers.</p>" },
+        { "type": "text", "id": "button_label", "label": "Button label" },
+        { "type": "url", "id": "button_link", "label": "Button link" },
+        {
+          "type": "select", "id": "button_style", "label": "Button style", "default": "btn--secondary",
+          "options": [
+            { "value": "", "label": "Use theme default" },
+            { "value": "btn--primary", "label": "Filled" }, { "value": "btn--hollow", "label": "Hollow" }, { "value": "btn--secondary", "label": "Secondary" },
+            { "value": "btn--animated", "label": "Animated" }, { "value": "btn--underline", "label": "Link" }
+          ]
+        },
+        { "type": "checkbox", "id": "open_default", "label": "Open by default on mobile", "default": false }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter",
+      "limit": 1,
+      "settings": [
+        { "type": "range", "id": "block_width", "label": "Column width", "min": 10, "max": 100, "step": 1, "unit": "%", "default": 30 },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Subscribe to our emails" },
+        {
+          "type": "select", "id": "heading_size", "label": "Heading size", "default": "h4",
+          "options": [
+            { "value": "h6", "label": "H6" }, { "value": "h5", "label": "H5" }, { "value": "h4", "label": "H4" },
+            { "value": "h3", "label": "H3" }, { "value": "h2", "label": "H2" }, { "value": "h1", "label": "H1" }
+          ]
+        },
+        { "type": "richtext", "id": "newsletter_description", "label": "Description", "default": "<p>Subscribe for store updates and discounts.</p>" },
+        { "type": "richtext", "id": "newsletter_term", "label": "Terms text" },
+        {
+          "type": "select", "id": "newsletter_text_alignment", "label": "Text alignment", "default": "left",
+          "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" } ]
+        },
+        { "type": "checkbox", "id": "open_default", "label": "Open by default on mobile", "default": true }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [{ "type": "menu" }]
+  },
+  "enabled_on": {
+    "groups": ["footer"]
+  }
+}
+{% endschema %}

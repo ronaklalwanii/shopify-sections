@@ -1,0 +1,32 @@
+<div class="page-width" style="padding-block: 3rem;">
+  {%- liquid
+    assign mobile_align = settings.section_header_alignment
+    if settings.section_header_alignment_mobile != 'inherit'
+      assign mobile_align = settings.section_header_alignment_mobile
+    endif
+  -%}
+  <div class="section-header" style="--header-align: {{ settings.section_header_alignment }}; --header-align-mobile: {{ mobile_align }}; margin-bottom: 2rem;">
+    <h1>{{ blog.title }}</h1>
+  </div>
+  {%- paginate blog.articles by 12 -%}
+    <div class="blog-grid">
+      {%- for article in blog.articles -%}
+        {%- render 'card-blog', article: article, blog: blog -%}
+      {%- endfor -%}
+    </div>
+    {%- if paginate.pages > 1 -%}
+      <nav class="pagination" role="navigation" aria-label="Pagination" style="margin-top: 2rem;">
+        {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}">Previous</a>{%- endif -%}
+        <span>{{ "Page %1 of %2" | replace: "%1", paginate.current_page | replace: "%2", paginate.pages }}</span>
+        {%- if paginate.next -%}<a href="{{ paginate.next.url }}">Next</a>{%- endif -%}
+      </nav>
+    {%- endif -%}
+  {%- endpaginate -%}
+</div>
+
+{% schema %}
+{
+  "name": "Blog posts",
+  "settings": []
+}
+{% endschema %}

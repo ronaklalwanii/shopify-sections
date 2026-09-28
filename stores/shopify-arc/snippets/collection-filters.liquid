@@ -1,0 +1,291 @@
+{%- doc -%}
+  Renders collection filters.
+  Accepts:
+  - context: 'drawer' | 'horizontal' | 'vertical' (default: 'drawer')
+  - show_swatches: boolean
+  - show_counts: boolean
+{%- enddoc -%}
+
+{%- liquid
+  assign context = context | default: 'drawer'
+  assign show_swatches = show_swatches | default: true
+  assign show_counts = show_counts | default: true
+  assign currencies_using_comma_decimals = 'ANG,ARS,BRL,BYN,BYR,CLF,CLP,COP,CRC,CZK,DKK,EUR,HRK,HUF,IDR,ISK,MZN,NOK,PLN,RON,RUB,SEK,TRY,UYU,VES,VND' | split: ','
+  assign uses_comma_decimals = false
+  if currencies_using_comma_decimals contains cart.currency.iso_code
+    assign uses_comma_decimals = true
+  endif
+-%}
+
+<div class="collection-filters collection-filters--{{ context }}">
+  {%- for filter in collection.filters -%}
+    {%- liquid
+      assign filter_label_down = filter.label | downcase
+      assign is_color = false
+      if show_swatches and filter_label_down contains 'color' or filter_label_down contains 'colour' or filter.presentation == 'swatch'
+        assign is_color = true
+      endif
+      assign is_size = false
+      if filter_label_down contains 'size'
+        assign is_size = true
+      endif
+
+      assign active_values_count = filter.active_values.size
+      if filter.type == 'price_range'
+        if filter.min_value.value != nil or filter.max_value.value != nil
+          if filter.min_value.value > 0 or filter.max_value.value < filter.range_max
+            assign active_values_count = 1
+          endif
+        endif
+      endif
+    -%}
+
+    <details
+      class="filter-group filter-group--{{ filter.type }}{% if is_color %} filter-group--color{% elsif is_size %} filter-group--size{% endif %}"
+      {% if context != 'horizontal' or forloop.first %}open{% endif %}
+      data-filter-index="{{ forloop.index }}"
+    >
+      <summary class="filter-group__summary" role="button" aria-expanded="{% if context != 'horizontal' or forloop.first %}true{% else %}false{% endif %}">
+        <span class="filter-group__header">
+          <span class="filter-group__title">{{ filter.label }}</span>
+          {%- if active_values_count > 0 -%}
+            <span class="filter-group__active-count">({{ active_values_count }})</span>
+          {%- endif -%}
+        </span>
+        <span class="filter-group__icon" aria-hidden="true">
+          {%- render 'icon-chevron', direction: 'down' -%}
+        </span>
+      </summary>
+
+      <div class="filter-group__content">
+        <div class="filter-group__top-bar">
+          <span class="filter-group__selected-text">
+            {%- if active_values_count > 0 -%}
+              {{ "%1 results" | replace: "%1", active_values_count }}
+            {%- endif -%}
+          </span>
+          {%- if active_values_count > 0 -%}
+            <a
+              href="{{ filter.url_to_remove }}"
+              class="filter-group__reset-btn btn btn--underline"
+              data-filter-remove
+              data-url="{{ filter.url_to_remove }}"
+            >
+              Clear
+            </a>
+          {%- endif -%}
+        </div>
+
+        {%- case filter.type -%}
+          {%- when 'boolean', 'list' -%}
+            {%- if is_color -%}
+              <ul class="filter-group__swatches" role="list">
+                {%- for filter_value in filter.values -%}
+                  {%- liquid
+                    assign is_disabled = false
+                    if filter_value.count == 0 and filter_value.active == false
+                      assign is_disabled = true
+                    endif
+
+                    # Swatch color determination
+                    assign swatch_color = filter_value.label | handle
+                    if filter_value.swatch.color
+                      assign swatch_color = filter_value.swatch.color
+                    endif
+                  -%}
+                  <li class="filter-swatch-item">
+                    <label
+                      for="Filter-{{ filter.param_name | escape }}-{{ forloop.index }}-{{ context }}"
+                      class="filter-swatch{% if filter_value.active %} is-active{% endif %}{% if is_disabled %} is-disabled{% endif %}"
+                      title="{{ filter_value.label }} ({{ filter_value.count }})"
+                    >
+                      <input
+                        type="checkbox"
+                        name="{{ filter_value.param_name }}"
+                        value="{{ filter_value.value }}"
+                        id="Filter-{{ filter.param_name | escape }}-{{ forloop.index }}-{{ context }}"
+                        class="visually-hidden"
+                        {% if filter_value.active %}checked{% endif %}
+                        {% if is_disabled %}disabled{% endif %}
+                      >
+                      <span
+                        class="filter-swatch__color"
+                        style="--swatch-color: {{ swatch_color }};{% if filter_value.swatch.image %} background-image: url({{ filter_value.swatch.image | image_url: width: 50 }});{% endif %}"
+                        data-color-name="{{ filter_value.label | escape }}"
+                      ></span>
+                      <span class="filter-swatch__label">{{ filter_value.label }}</span>
+                      {%- if show_counts -%}
+                        <span class="filter-swatch__count">({{ filter_value.count }})</span>
+                      {%- endif -%}
+                    </label>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- elsif is_size -%}
+              <ul class="filter-group__chips" role="list">
+                {%- for filter_value in filter.values -%}
+                  {%- liquid
+                    assign is_disabled = false
+                    if filter_value.count == 0 and filter_value.active == false
+                      assign is_disabled = true
+                    endif
+                  -%}
+                  <li class="filter-chip-item">
+                    <label
+                      for="Filter-{{ filter.param_name | escape }}-{{ forloop.index }}-{{ context }}"
+                      class="filter-chip{% if filter_value.active %} is-active{% endif %}{% if is_disabled %} is-disabled{% endif %}"
+                    >
+                      <input
+                        type="checkbox"
+                        name="{{ filter_value.param_name }}"
+                        value="{{ filter_value.value }}"
+                        id="Filter-{{ filter.param_name | escape }}-{{ forloop.index }}-{{ context }}"
+                        class="visually-hidden"
+                        {% if filter_value.active %}checked{% endif %}
+                        {% if is_disabled %}disabled{% endif %}
+                      >
+                      <span class="filter-chip__text">{{ filter_value.label }}</span>
+                    </label>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- else -%}
+              <ul class="filter-group__list" role="list">
+                {%- for filter_value in filter.values -%}
+                  {%- liquid
+                    assign is_disabled = false
+                    if filter_value.count == 0 and filter_value.active == false
+                      assign is_disabled = true
+                    endif
+                  -%}
+                  <li class="filter-list-item">
+                    <label
+                      for="Filter-{{ filter.param_name | escape }}-{{ forloop.index }}-{{ context }}"
+                      class="filter-checkbox-label{% if filter_value.active %} is-active{% endif %}{% if is_disabled %} is-disabled{% endif %}"
+                    >
+                      <input
+                        type="checkbox"
+                        name="{{ filter_value.param_name }}"
+                        value="{{ filter_value.value }}"
+                        id="Filter-{{ filter.param_name | escape }}-{{ forloop.index }}-{{ context }}"
+                        class="filter-checkbox-input"
+                        {% if filter_value.active %}checked{% endif %}
+                        {% if is_disabled %}disabled{% endif %}
+                      >
+                      <span class="filter-checkbox-custom" aria-hidden="true"></span>
+                      <span class="filter-checkbox-text">{{ filter_value.label }}</span>
+                      {%- if show_counts -%}
+                        <span class="filter-checkbox-count">({{ filter_value.count }})</span>
+                      {%- endif -%}
+                    </label>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+
+          {%- when 'price_range' -%}
+            {%- liquid
+              if uses_comma_decimals
+                assign max_price_amount = filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.'
+              else
+                assign max_price_amount = filter.range_max | money_without_currency | replace: ',', ''
+              endif
+
+              assign filter_min_value = 0
+              if filter.min_value.value
+                if uses_comma_decimals
+                  assign filter_min_value = filter.min_value.value | money_without_currency | replace: '.', '' | replace: ',', '.'
+                else
+                  assign filter_min_value = filter.min_value.value | money_without_currency | replace: ',', ''
+                endif
+              endif
+
+              assign filter_max_value = max_price_amount
+              if filter.max_value.value
+                if uses_comma_decimals
+                  assign filter_max_value = filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.'
+                else
+                  assign filter_max_value = filter.max_value.value | money_without_currency | replace: ',', ''
+                endif
+              endif
+            -%}
+            <div class="filter-price-range" data-price-range>
+              <div class="filter-price-range__inputs">
+                <div class="filter-price-field">
+                  <span class="filter-price-field__currency">{{ cart.currency.symbol }}</span>
+                  <label class="visually-hidden" for="Filter-{{ filter.min_value.param_name | escape }}-{{ context }}">
+                    {{- 'collections.general.from' | t -}}
+                  </label>
+                  <input
+                    class="filter-price-input"
+                    name="{{ filter.min_value.param_name }}"
+                    id="Filter-{{ filter.min_value.param_name | escape }}-{{ context }}"
+                    {% if filter.min_value.value %}
+                      value="{{ filter_min_value }}"
+                    {% endif %}
+                    type="number"
+                    placeholder="0"
+                    min="0"
+                    max="{{ max_price_amount }}"
+                    data-min-input
+                  >
+                </div>
+                <span class="filter-price-range__separator">&ndash;</span>
+                <div class="filter-price-field">
+                  <span class="filter-price-field__currency">{{ cart.currency.symbol }}</span>
+                  <label class="visually-hidden" for="Filter-{{ filter.max_value.param_name | escape }}-{{ context }}">
+                    {{- 'collections.general.to' | t -}}
+                  </label>
+                  <input
+                    class="filter-price-input"
+                    name="{{ filter.max_value.param_name }}"
+                    id="Filter-{{ filter.max_value.param_name | escape }}-{{ context }}"
+                    {% if filter.max_value.value %}
+                      value="{{ filter_max_value }}"
+                    {% endif %}
+                    type="number"
+                    placeholder="{{ max_price_amount }}"
+                    min="0"
+                    max="{{ max_price_amount }}"
+                    data-max-input
+                  >
+                </div>
+              </div>
+              <div
+                class="filter-price-slider"
+                data-price-slider
+                data-min="0"
+                data-max="{{ max_price_amount }}"
+                data-current-min="{{ filter_min_value }}"
+                data-current-max="{{ filter_max_value }}"
+              >
+                <div class="filter-price-slider__track" data-slider-track>
+                  <div class="filter-price-slider__progress" data-slider-progress></div>
+                </div>
+                <input
+                  type="range"
+                  class="filter-price-slider__range filter-price-slider__range--min"
+                  min="0"
+                  max="{{ max_price_amount }}"
+                  value="{{ filter_min_value }}"
+                  step="1"
+                  data-slider-min
+                  aria-label="From"
+                >
+                <input
+                  type="range"
+                  class="filter-price-slider__range filter-price-slider__range--max"
+                  min="0"
+                  max="{{ max_price_amount }}"
+                  value="{{ filter_max_value }}"
+                  step="1"
+                  data-slider-max
+                  aria-label="To"
+                >
+              </div>
+            </div>
+        {%- endcase -%}
+      </div>
+    </details>
+  {%- endfor -%}
+</div>

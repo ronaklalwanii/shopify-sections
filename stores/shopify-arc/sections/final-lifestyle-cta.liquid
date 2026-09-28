@@ -1,0 +1,409 @@
+{{ 'final-lifestyle-cta.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign content_position = section.settings.content_position
+  assign content_alignment = section.settings.content_alignment
+  assign section_height = section.settings.section_height
+  assign section_height_mobile = section.settings.section_height_mobile
+  assign overlay_enabled = section.settings.enable_overlay
+  assign overlay_color = section.settings.overlay_color
+  assign overlay_opacity = section.settings.overlay_opacity | divided_by: 100.0
+  assign overlay_opacity_desktop = section.settings.overlay_opacity_desktop | divided_by: 100.0
+  assign overlay_opacity_mobile = section.settings.overlay_opacity_mobile | divided_by: 100.0
+  assign enable_gradient = section.settings.enable_gradient
+  assign gradient_direction = section.settings.gradient_direction
+  assign gradient_strength = section.settings.gradient_strength | divided_by: 100.0
+  assign enable_animation = section.settings.enable_animation
+  assign animation_type = section.settings.animation_type
+  assign animation_duration = section.settings.animation_duration
+  assign animation_delay = section.settings.animation_delay
+  assign heading_size = section.settings.heading_size
+  assign description_size = section.settings.description_size
+-%}
+
+<section
+  class="final-lifestyle-cta color-{{ section.settings.color_scheme }} final-cta--{{ content_position }} final-cta--{{ content_alignment }}"
+  style="
+    --fl-section-height: {{ section_height }}px;
+    --fl-section-height-mobile: {{ section_height_mobile }}px;
+    --fl-overlay-opacity: {{ overlay_opacity }};
+    --fl-overlay-opacity-desktop: {{ overlay_opacity_desktop }};
+    --fl-overlay-opacity-mobile: {{ overlay_opacity_mobile }};
+    --fl-overlay-color: {{ overlay_color }};
+    --fl-gradient-direction: {{ gradient_direction }};
+    --fl-gradient-strength: {{ gradient_strength }};
+    --fl-animation-duration: {{ animation_duration }}ms;
+    --fl-animation-delay: {{ animation_delay }}ms;
+    --fl-heading-size: {{ heading_size }}px;
+    --fl-description-size: {{ description_size }}px;
+  "
+>
+  <div class="final-cta__media">
+    {%- if section.settings.desktop_image != blank -%}
+      <img
+        class="final-cta__image final-cta__image--desktop{% if section.settings.mobile_image == blank %} final-cta__image--always{% endif %}"
+        src="{{ section.settings.desktop_image | image_url: width: 2000 }}"
+        srcset="
+          {{ section.settings.desktop_image | image_url: width: 750 }} 750w,
+          {{ section.settings.desktop_image | image_url: width: 1500 }} 1500w,
+          {{ section.settings.desktop_image | image_url: width: 2000 }} 2000w,
+          {{ section.settings.desktop_image | image_url: width: 3000 }} 3000w
+        "
+        sizes="100vw"
+        width="2000"
+        height="{{ 2000 | divided_by: section.settings.desktop_image.aspect_ratio | round }}"
+        alt=""
+        loading="lazy"
+      >
+    {%- endif -%}
+    {%- if section.settings.mobile_image != blank -%}
+      <img
+        class="final-cta__image final-cta__image--mobile"
+        src="{{ section.settings.mobile_image | image_url: width: 1200 }}"
+        srcset="
+          {{ section.settings.mobile_image | image_url: width: 750 }} 750w,
+          {{ section.settings.mobile_image | image_url: width: 1200 }} 1200w
+        "
+        sizes="100vw"
+        width="1200"
+        height="{{ 1200 | divided_by: section.settings.mobile_image.aspect_ratio | round }}"
+        alt=""
+        loading="lazy"
+      >
+    {%- endif -%}
+    {%- if section.settings.desktop_image == blank and section.settings.mobile_image == blank -%}
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'final-cta__image final-cta__image--desktop final-cta__image--always' }}
+    {%- endif -%}
+
+    {%- if overlay_enabled -%}
+      <div class="final-cta__overlay" aria-hidden="true"></div>
+    {%- endif -%}
+
+    {%- if enable_gradient -%}
+      <div class="final-cta__gradient" aria-hidden="true"></div>
+    {%- endif -%}
+  </div>
+
+  <div class="final-cta__content-wrapper">
+    <div class="final-cta__content" data-hero-text {% if enable_animation %}data-animate data-animation="{{ animation_type }}"{% endif %}>
+      {%- if section.settings.heading != blank -%}
+        <h2
+          class="final-cta__heading"
+          style="--i: 0;"
+        >
+          {{ section.settings.heading | newline_to_br }}
+        </h2>
+      {%- endif -%}
+      {%- if section.settings.description != blank -%}
+        <p class="final-cta__description" style="--i: 1;">{{ section.settings.description }}</p>
+      {%- endif -%}
+      {%- if section.settings.cta_label != blank and section.settings.cta_link != blank -%}
+        <div class="final-cta__cta" style="--i: 2;">
+          {%- render 'button',
+            label: section.settings.cta_label,
+            url: section.settings.cta_link,
+            style: section.settings.cta_style,
+            icon: section.settings.cta_icon,
+            icon_position: section.settings.cta_icon_position
+          -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Final Lifestyle CTA",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Made for living."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Furniture that becomes part of your story.</p>"
+    },
+    {
+      "type": "header",
+      "content": "CTA"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA label",
+      "default": "SHOP ALL PIECES →"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA link"
+    },
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "CTA style",
+      "default": "btn--animated",
+      "options": [
+        { "value": "", "label": "Use theme default" },
+        { "value": "btn--primary", "label": "Filled" },
+        { "value": "btn--hollow", "label": "Hollow" },
+        { "value": "btn--secondary", "label": "Secondary" },
+        { "value": "btn--underline", "label": "Link" },
+        { "value": "btn--animated", "label": "Animated" },
+        { "value": "btn--animated-secondary", "label": "Animated (secondary)" },
+        { "value": "btn--roll", "label": "Rolling text" },
+        { "value": "btn--roll-secondary", "label": "Rolling text (secondary)" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "cta_icon",
+      "label": "Show icon",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "cta_icon_position",
+      "label": "Icon position",
+      "default": "right",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image",
+      "info": "Optional. Falls back to desktop image."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "label": "Section height (desktop)",
+      "min": 400,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "section_height_mobile",
+      "label": "Section height (mobile)",
+      "min": 300,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "default": 500
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Content position",
+      "default": "center",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "bottom", "label": "Bottom" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "default": "center",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_overlay",
+      "label": "Enable overlay",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity (default)",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 35
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity_desktop",
+      "label": "Overlay opacity (desktop)",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 35
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity_mobile",
+      "label": "Overlay opacity (mobile)",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 25
+    },
+    {
+      "type": "header",
+      "content": "Gradient overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_gradient",
+      "label": "Enable gradient",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "gradient_direction",
+      "label": "Gradient direction",
+      "default": "to top",
+      "options": [
+        { "value": "to top", "label": "Bottom to top" },
+        { "value": "to bottom", "label": "Top to bottom" },
+        { "value": "to left", "label": "Right to left" },
+        { "value": "to right", "label": "Left to right" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "gradient_strength",
+      "label": "Gradient strength",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 70
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 40,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 16,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "Enable entrance animation",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "animation_type",
+      "label": "Animation type",
+      "default": "fade-up",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade-in", "label": "Fade in" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "slide-right", "label": "Slide in from left" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "label": "Animation duration",
+      "min": 300,
+      "max": 1200,
+      "step": 50,
+      "unit": "ms",
+      "default": 800
+    },
+    {
+      "type": "range",
+      "id": "animation_delay",
+      "label": "Animation delay",
+      "min": 0,
+      "max": 500,
+      "step": 50,
+      "unit": "ms",
+      "default": 200
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Final Lifestyle CTA",
+      "settings": {
+        "heading": "Made for living.",
+        "description": "<p>Furniture that becomes part of your story.</p>",
+        "cta_label": "SHOP ALL PIECES →",
+        "cta_style": "btn--animated",
+        "enable_overlay": true,
+        "overlay_opacity": 35
+      }
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,199 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "iwto_beauty": {
+      "type": "image-with-text-overlay",
+      "blocks": {
+        "image-with-text-overlay_b1": {
+          "type": "subheading",
+          "settings": {
+            "text": "SALON-INSPIRED BEAUTY, AT HOME."
+          }
+        },
+        "image-with-text-overlay_b2": {
+          "type": "heading",
+          "settings": {
+            "text": "Lift. Sculpt.",
+            "heading_tag": "h2"
+          }
+        },
+        "image-with-text-overlay_b3": {
+          "type": "richtext",
+          "settings": {
+            "content": "<p>Advanced beauty technology designed to help you look lifted, sculpted and confidently Arc.</p>"
+          }
+        },
+        "image-with-text-overlay_b4": {
+          "type": "button",
+          "settings": {
+            "label": "SHOP THE COLLECTION",
+            "button_style": "btn--primary",
+            "background": "#8B7355",
+            "text_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "image-with-text-overlay_b1",
+        "image-with-text-overlay_b2",
+        "image-with-text-overlay_b3",
+        "image-with-text-overlay_b4"
+      ],
+      "settings": {
+        "arc_variant_mode": "arc",
+        "arc_show_features": true,
+        "arc_f1_text": "Multi-Technology",
+        "arc_f2_text": "Easy To Use",
+        "arc_f3_text": "Visible Results",
+        "arc_show_rating": true,
+        "arc_rating_score": "4.8/5",
+        "arc_rating_count": "2,000+"
+      }
+    },
+    "collection_hero": {
+      "type": "collection-hero",
+      "settings": {
+        "eyebrow": "THE COLLECTION",
+        "heading": "Furniture with presence.\nDesigned to last.",
+        "description": "<p>Timeless pieces crafted from honest materials and made for the spaces you live in.</p>",
+        "cta_label": "EXPLORE THE COLLECTION →",
+        "show_cta": true,
+        "cta_style": "btn--animated"
+      }
+    },
+    "editorial_strip": {
+      "type": "editorial-strip",
+      "blocks": {
+        "editorial-strip_b1": {
+          "type": "image",
+          "settings": {}
+        },
+        "editorial-strip_b2": {
+          "type": "image",
+          "settings": {}
+        },
+        "editorial-strip_b3": {
+          "type": "image",
+          "settings": {}
+        },
+        "editorial-strip_b4": {
+          "type": "image",
+          "settings": {}
+        },
+        "editorial-strip_b5": {
+          "type": "image",
+          "settings": {}
+        },
+        "editorial-strip_b6": {
+          "type": "image",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "editorial-strip_b1",
+        "editorial-strip_b2",
+        "editorial-strip_b3",
+        "editorial-strip_b4",
+        "editorial-strip_b5",
+        "editorial-strip_b6"
+      ],
+      "settings": {}
+    },
+    "shop_by_space": {
+      "type": "shop-by-space",
+      "blocks": {
+        "shop-by-space_b1": {
+          "type": "space_card",
+          "settings": {
+            "title": "LIVING ROOM",
+            "description": "Sofas · Chairs · Tables"
+          }
+        },
+        "shop-by-space_b2": {
+          "type": "space_card",
+          "settings": {
+            "title": "DINING ROOM",
+            "description": "Tables · Chairs · Benches"
+          }
+        },
+        "shop-by-space_b3": {
+          "type": "space_card",
+          "settings": {
+            "title": "BEDROOM",
+            "description": "Beds · Nightstands · Dressers"
+          }
+        },
+        "shop-by-space_b4": {
+          "type": "space_card",
+          "settings": {
+            "title": "STORAGE",
+            "description": "Sideboards · Cabinets · Shelving"
+          }
+        }
+      },
+      "block_order": [
+        "shop-by-space_b1",
+        "shop-by-space_b2",
+        "shop-by-space_b3",
+        "shop-by-space_b4"
+      ],
+      "settings": {}
+    },
+    "product_story": {
+      "type": "product-story",
+      "settings": {}
+    },
+    "image_text_list_overlap": {
+      "type": "image-layout-with-list",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "layout_style": "overlap",
+        "contained": true,
+        "image_position": "left",
+        "image_aspect_ratio": "tall",
+        "image_width": 58,
+        "card_width": 38,
+        "card_overlap": 80,
+        "card_overlap_mobile": 60,
+        "card_background": "#DDD3C4",
+        "card_radius": 0,
+        "card_padding": 56,
+        "heading": "Momentum Mastermind",
+        "heading_font_size": 34,
+        "heading_font_weight": "600",
+        "text": "<p>For the ambitious soulful entrepreneur who is looking to attract more premium clients through high ticket programs, ready to step into the vibration of financial abundance.</p>",
+        "text_font_size": 15,
+        "button_label": "Learn more",
+        "button_style": "btn--secondary"
+      }
+    },
+    "final_lifestyle_cta": {
+      "type": "final-lifestyle-cta",
+      "settings": {
+        "heading": "Made for living.",
+        "description": "<p>Furniture that becomes part of your story.</p>",
+        "cta_label": "SHOP ALL PIECES →",
+        "cta_style": "btn--animated",
+        "enable_overlay": true,
+        "overlay_opacity": 35
+      }
+    }
+  },
+  "order": [
+    "iwto_beauty",
+    "collection_hero",
+    "editorial_strip",
+    "shop_by_space",
+    "product_story",
+    "image_text_list_overlap",
+    "final_lifestyle_cta"
+  ]
+}

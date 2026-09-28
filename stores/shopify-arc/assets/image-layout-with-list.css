@@ -1,0 +1,209 @@
+.image-text-list {
+  padding-inline: var(--image-text-list-padding-inline, 0px);
+  padding-block: var(--image-text-list-padding-top, 60px) var(--image-text-list-padding-bottom, 60px);
+  /* Contains the overlap style's negative-margin card pull (below) so it
+     can never push the page's own scrollable width out, regardless of how
+     large a merchant sets the overlap amount to. */
+  overflow-x: hidden;
+}
+.image-text-list--contained {
+  max-width: var(--page-width, 1400px);
+  margin-inline: auto;
+}
+
+/* ---- Side by side (default) --------------------------------------------- */
+.image-text-list--side-by-side {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+}
+.image-text-list--side-by-side.image-text-list--image-right .image-text-list__media { order: 2; }
+.image-text-list--side-by-side.image-text-list--image-right .image-text-list__content { order: 1; }
+
+/* ---- Overlapping card ----------------------------------------------------
+   Image and content sit in explicit grid columns (not DOM order + `order`,
+   which would fight the asymmetric image-width column when mirrored for
+   image-right) - the image column is sized from the image_width setting,
+   the content/card is pulled over its edge via a negative margin sized
+   from card_overlap, in the direction that points back at the image.
+   Both tracks are fixed percentages of the section (not one fixed + one
+   `1fr` "fill the rest" track) so the card is always exactly card_width
+   wide - never a percentage of whatever space happens to be left over.
+   `justify-content: center` then centers that fixed-width image+card unit
+   as a whole within the section, so it never drifts to one side no matter
+   what the two percentages add up to. */
+.image-text-list--overlap {
+  display: grid;
+  grid-template-columns:
+    minmax(0, var(--image-text-list-image-width, 58%))
+    minmax(0, var(--image-text-list-card-width, 42%));
+  justify-content: center;
+  align-items: center;
+}
+.image-text-list--overlap .image-text-list__media {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: stretch;
+}
+.image-text-list--overlap .image-text-list__content {
+  grid-column: 2;
+  grid-row: 1;
+  margin-inline-start: calc(-1 * var(--image-text-list-card-overlap, 80px));
+}
+.image-text-list--overlap.image-text-list--image-right {
+  grid-template-columns:
+    minmax(0, var(--image-text-list-card-width, 42%))
+    minmax(0, var(--image-text-list-image-width, 58%));
+}
+.image-text-list--overlap.image-text-list--image-right .image-text-list__media {
+  grid-column: 2;
+}
+.image-text-list--overlap.image-text-list--image-right .image-text-list__content {
+  grid-column: 1;
+  margin-inline-start: 0;
+  margin-inline-end: calc(-1 * var(--image-text-list-card-overlap, 80px));
+}
+.image-text-list--overlap .image-text-list__content {
+  position: relative;
+  z-index: 1;
+  background: var(--image-text-list-card-bg, rgb(var(--color-secondary-background)));
+  border-radius: var(--image-text-list-card-radius, 0px);
+  min-height: var(--image-text-list-card-height, auto);
+}
+
+/* ---- Media / image -------------------------------------------------------- */
+.image-text-list__media { position: relative; }
+.image-text-list__media img,
+.image-text-list__placeholder,
+.image-text-list__demo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--image-text-list-image-radius, 0px);
+}
+/* Auto (default) keeps the existing stretch-to-fill-the-row behavior for
+   side-by-side, and the image's own natural shape for overlap. An explicit
+   ratio overrides both to a fixed shape instead of stretching. */
+/* max-height is a hard ceiling, not just a preference: aspect-ratio + a
+   fixed width:100% has no built-in upper bound - on a wide/uncontained
+   section, a tall ratio (3:4, 1:1, 4:5) times a wide container can compute
+   to a genuinely enormous height with nothing to stop it. Capping height
+   directly (object-fit:cover absorbs the rest via cropping) guarantees a
+   sane result regardless of container width or which ratio is chosen,
+   instead of relying on the width/ratio math alone to stay reasonable. */
+.image-text-list--aspect-square .image-text-list__media img,
+.image-text-list--aspect-square .image-text-list__demo { aspect-ratio: 1 / 1; height: auto; max-height: min(var(--image-text-list-image-height, 640px), 80vh); }
+.image-text-list--aspect-portrait .image-text-list__media img,
+.image-text-list--aspect-portrait .image-text-list__demo { aspect-ratio: 4 / 5; height: auto; max-height: min(var(--image-text-list-image-height, 640px), 80vh); }
+.image-text-list--aspect-tall .image-text-list__media img,
+.image-text-list--aspect-tall .image-text-list__demo { aspect-ratio: 3 / 4; height: auto; max-height: min(var(--image-text-list-image-height, 640px), 80vh); }
+.image-text-list--aspect-landscape .image-text-list__media img,
+.image-text-list--aspect-landscape .image-text-list__demo { aspect-ratio: 4 / 3; height: auto; max-height: min(var(--image-text-list-image-height, 640px), 80vh); }
+
+.image-text-list__overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--image-text-list-overlay-color, transparent);
+  opacity: var(--image-text-list-overlay-opacity, 0);
+  border-radius: var(--image-text-list-image-radius, 0px);
+  pointer-events: none;
+}
+
+/* ---- Content / card -------------------------------------------------------- */
+.image-text-list__content {
+  padding: 3rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.image-text-list--overlap .image-text-list__content {
+  padding: var(--image-text-list-card-padding, 48px);
+}
+.image-text-list__heading {
+  margin-bottom: 1rem;
+  font-size: var(--image-text-list-heading-size, 34px);
+  font-weight: var(--image-text-list-heading-weight, 600);
+  letter-spacing: var(--image-text-list-heading-spacing, 0px);
+  color: var(--image-text-list-heading-color, inherit);
+}
+.image-text-list__text {
+  margin-bottom: 1.5rem;
+  font-size: var(--image-text-list-text-size, 16px);
+  font-weight: var(--image-text-list-text-weight, 400);
+  color: var(--image-text-list-text-color, inherit);
+}
+.image-text-list__text p + p { margin-top: 1rem; }
+
+.image-text-list__items { display: flex; flex-direction: column; margin-bottom: 1.5rem; }
+.image-text-list__button { margin-top: 0.5rem; }
+.image-text-list__item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-block: 1.25rem;
+  border-top: 1px solid rgb(var(--color-border));
+}
+.image-text-list__item:last-child { border-bottom: 1px solid rgb(var(--color-border)); }
+.image-text-list__item-icon { width: 24px; height: 24px; object-fit: contain; flex-shrink: 0; }
+.image-text-list__item-icon--dot { display: flex; align-items: center; justify-content: center; }
+.image-text-list__item-icon--dot::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: rgb(var(--color-foreground)); }
+.image-text-list__item-label {
+  font-size: var(--image-text-list-label-size, 16px);
+  font-weight: var(--image-text-list-label-weight, 500);
+  color: var(--image-text-list-label-color, inherit);
+}
+
+@media screen and (max-width: 749px) {
+  .image-text-list--side-by-side,
+  .image-text-list--side-by-side.image-text-list--image-right {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .image-text-list--side-by-side.image-text-list--image-right .image-text-list__media,
+  .image-text-list--side-by-side.image-text-list--image-right .image-text-list__content {
+    order: initial;
+  }
+  .image-text-list--side-by-side .image-text-list__media { aspect-ratio: 4 / 3; }
+  .image-text-list__content { padding: 2rem 1.5rem; }
+
+  /* Overlap collapses to: full-width image, card pulled over its adjoining
+     edge - same mechanism as desktop (negative margin), just vertical
+     instead of horizontal, and inset from the section's own edges instead
+     of butting flush against them. Default stacks the card below the
+     image; --card-top flips both the grid-row order and which margin
+     carries the negative pull so the card sits above instead.
+     The wrapper div intentionally carries no aspect-ratio of its own here -
+     it must size itself off the actual (capped) rendered height of the img
+     inside it. Giving the wrapper its own independent aspect-ratio made it
+     grow taller than the capped image on wider phone/tablet widths (nothing
+     reconciled the two), leaving the gap between them as blank space and
+     pushing the card down by that same amount. */
+  .image-text-list--overlap,
+  .image-text-list--overlap.image-text-list--image-right {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .image-text-list--overlap .image-text-list__media,
+  .image-text-list--overlap.image-text-list--image-right .image-text-list__media {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .image-text-list--overlap .image-text-list__content,
+  .image-text-list--overlap.image-text-list--image-right .image-text-list__content {
+    grid-column: 1;
+    grid-row: 2;
+    width: auto;
+    margin-inline: 1.25rem;
+    margin-block-start: calc(-1 * var(--image-text-list-card-overlap-mobile, 60px));
+  }
+
+  .image-text-list--card-top.image-text-list--overlap .image-text-list__media,
+  .image-text-list--card-top.image-text-list--overlap.image-text-list--image-right .image-text-list__media {
+    grid-row: 2;
+  }
+  .image-text-list--card-top.image-text-list--overlap .image-text-list__content,
+  .image-text-list--card-top.image-text-list--overlap.image-text-list--image-right .image-text-list__content {
+    grid-row: 1;
+    margin-block-start: 0;
+    margin-block-end: calc(-1 * var(--image-text-list-card-overlap-mobile, 60px));
+  }
+}

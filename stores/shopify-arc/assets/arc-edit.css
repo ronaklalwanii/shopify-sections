@@ -1,0 +1,162 @@
+/* =========================================
+   Atelier Edit Section
+   ========================================= */
+
+.atelier-edit {
+  background-color: var(--ae-bg, #111111);
+  color: var(--ae-text, #ffffff);
+  padding-top: var(--ae-padding-top, 80px);
+  padding-bottom: var(--ae-padding-bottom, 80px);
+  width: 100%;
+}
+
+/* Container */
+.atelier-edit__container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+@media screen and (max-width: 749px) {
+  .atelier-edit__container {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+}
+
+/* Eyebrow */
+.atelier-edit__eyebrow {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  margin: 0 0 3rem 0;
+  opacity: 0.8;
+}
+
+/* Grid Layout */
+.atelier-edit__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--ae-columns-desktop, 4), 1fr);
+  gap: var(--ae-card-gap, 30px);
+}
+
+@media screen and (max-width: 749px) {
+  .atelier-edit__grid {
+    grid-template-columns: repeat(var(--ae-columns-mobile, 1), 1fr);
+  }
+}
+
+/* Card Base */
+.atelier-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Media / Image */
+.atelier-card__link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 1.5rem;
+}
+
+.atelier-card__media {
+  aspect-ratio: var(--ae-aspect-ratio, 4/3);
+  overflow: hidden;
+  background-color: #222222;
+  width: 100%;
+  position: relative;
+}
+
+.atelier-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.atelier-card__link:hover .atelier-card__image {
+  transform: scale(1.03);
+}
+
+.atelier-card__placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.3;
+}
+
+/* Content Area */
+.atelier-card__content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.atelier-card__title {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.4;
+}
+
+.atelier-card__title a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.atelier-card__title a:hover {
+  opacity: 0.7;
+}
+
+.atelier-card__material {
+  font-size: 0.875rem;
+  color: var(--ae-muted, #888888);
+  margin: 0 0 1rem 0;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.atelier-card__price-row {
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* Button & Form */
+.atelier-card__button-wrapper {
+  margin-top: auto;
+  width: 100%;
+}
+
+.atelier-card__form {
+  width: 100%;
+  margin: 0;
+}
+
+.atelier-card__btn {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  /* Ensure it inherits theme button styles properly */
+}
+
+/* Responsive adjustments for smaller screens */
+@media screen and (max-width: 749px) {
+  .atelier-edit__eyebrow {
+    margin-bottom: 2rem;
+  }
+
+  .atelier-card__link {
+    margin-bottom: 1rem;
+  }
+}

@@ -1,0 +1,593 @@
+{{ 'collection-hero.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign hero_height_desktop = section.settings.hero_height_desktop
+  assign hero_height_mobile = section.settings.hero_height_mobile
+  assign hero_min_height = section.settings.hero_min_height
+  assign hero_max_height = section.settings.hero_max_height
+  assign content_max_width = section.settings.content_max_width
+  assign content_h_align = section.settings.content_h_align
+  assign content_v_align = section.settings.content_v_align
+  assign text_align = section.settings.text_align
+
+  assign desktop_padding = section.settings.padding_desktop
+  assign tablet_padding = section.settings.padding_tablet
+  assign mobile_padding = section.settings.padding_mobile
+
+  assign eyebrow_size = section.settings.eyebrow_size
+  assign heading_size = section.settings.heading_size
+  assign heading_line_height = section.settings.heading_line_height
+  assign description_size = section.settings.description_size
+  assign description_line_height = section.settings.description_line_height
+
+  assign enable_overlay = section.settings.enable_overlay
+  assign overlay_color = section.settings.overlay_color
+  assign overlay_opacity = section.settings.overlay_opacity | divided_by: 100.0
+  assign overlay_opacity_desktop = section.settings.overlay_opacity_desktop | divided_by: 100.0
+  assign overlay_opacity_mobile = section.settings.overlay_opacity_mobile | divided_by: 100.0
+  assign enable_gradient = section.settings.enable_gradient
+  assign gradient_direction = section.settings.gradient_direction
+  assign gradient_strength = section.settings.gradient_strength | divided_by: 100.0
+
+  assign enable_animation = section.settings.enable_animation
+  assign animation_type = section.settings.animation_type
+  assign animation_duration = section.settings.animation_duration
+  assign animation_delay = section.settings.animation_delay
+
+  assign image_position_x = section.settings.image_position_x
+  assign image_position_y = section.settings.image_position_y
+  assign image_fit = section.settings.image_fit
+-%}
+
+<section
+  class="collection-hero color-{{ section.settings.color_scheme }} collection-hero--{{ content_h_align }} collection-hero--{{ content_v_align }} collection-hero--text-{{ text_align }}"
+  style="
+    --hero-height: {{ hero_height_desktop }}vh;
+    --hero-height-mobile: {{ hero_height_mobile }}vh;
+    --hero-min-height: {{ hero_min_height }}px;
+    --hero-max-height: {{ hero_max_height }}px;
+    --hero-content-max-width: {{ content_max_width }}%;
+    --hero-padding-desktop: {{ desktop_padding }}px;
+    --hero-padding-tablet: {{ tablet_padding }}px;
+    --hero-padding-mobile: {{ mobile_padding }}px;
+    --hero-eyebrow-size: {{ eyebrow_size }}px;
+    --hero-heading-size: {{ heading_size }}px;
+    --hero-heading-line-height: {{ heading_line_height }};
+    --hero-description-size: {{ description_size }}px;
+    --hero-description-line-height: {{ description_line_height }};
+    --hero-overlay-opacity: {{ overlay_opacity }};
+    --hero-overlay-opacity-desktop: {{ overlay_opacity_desktop }};
+    --hero-overlay-opacity-mobile: {{ overlay_opacity_mobile }};
+    --hero-overlay-color: {{ overlay_color }};
+    --hero-gradient-direction: {{ gradient_direction }};
+    --hero-gradient-strength: {{ gradient_strength }};
+    --hero-animation-duration: {{ animation_duration }}ms;
+    --hero-animation-delay: {{ animation_delay }}ms;
+    --hero-image-position: {{ image_position_x }}% {{ image_position_y }}%;
+    --hero-image-fit: {{ image_fit }};
+  "
+>
+  <div class="collection-hero__media">
+    {%- if section.settings.desktop_image != blank -%}
+      <img
+        class="collection-hero__image collection-hero__image--desktop{% if section.settings.mobile_image == blank %} collection-hero__image--always{% endif %}"
+        src="{{ section.settings.desktop_image | image_url: width: 2000 }}"
+        srcset="
+          {{ section.settings.desktop_image | image_url: width: 750 }} 750w,
+          {{ section.settings.desktop_image | image_url: width: 1500 }} 1500w,
+          {{ section.settings.desktop_image | image_url: width: 2000 }} 2000w,
+          {{ section.settings.desktop_image | image_url: width: 3000 }} 3000w
+        "
+        sizes="100vw"
+        width="2000"
+        height="{{ 2000 | divided_by: section.settings.desktop_image.aspect_ratio | round }}"
+        alt=""
+        loading="eager"
+        fetchpriority="high"
+        style="object-position: {{ image_position_x }}% {{ image_position_y }}%; object-fit: {{ image_fit }};"
+      >
+    {%- endif -%}
+    {%- if section.settings.mobile_image != blank -%}
+      <img
+        class="collection-hero__image collection-hero__image--mobile"
+        src="{{ section.settings.mobile_image | image_url: width: 1200 }}"
+        srcset="
+          {{ section.settings.mobile_image | image_url: width: 750 }} 750w,
+          {{ section.settings.mobile_image | image_url: width: 1200 }} 1200w
+        "
+        sizes="100vw"
+        width="1200"
+        height="{{ 1200 | divided_by: section.settings.mobile_image.aspect_ratio | round }}"
+        alt=""
+        loading="eager"
+        fetchpriority="high"
+        style="object-position: {{ image_position_x }}% {{ image_position_y }}%; object-fit: {{ image_fit }};"
+      >
+    {%- endif -%}
+    {%- if section.settings.desktop_image == blank and section.settings.mobile_image == blank -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'collection-hero__image collection-hero__image--desktop collection-hero__image--always' }}
+    {%- endif -%}
+
+    {%- if enable_overlay -%}
+      <div class="collection-hero__overlay" aria-hidden="true"></div>
+    {%- endif -%}
+
+    {%- if enable_gradient -%}
+      <div class="collection-hero__gradient" aria-hidden="true"></div>
+    {%- endif -%}
+  </div>
+
+  <div class="collection-hero__content-wrapper">
+    <div class="collection-hero__content" data-hero-text {% if enable_animation %}data-animate data-animation="{{ animation_type }}"{% endif %}>
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="collection-hero__eyebrow" style="--i: 0;">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h1
+          class="collection-hero__heading"
+          style="--i: 1;"
+        >
+          {{ section.settings.heading | newline_to_br }}
+        </h1>
+      {%- endif -%}
+      {%- if section.settings.description != blank -%}
+        <p class="collection-hero__description" style="--i: 2;">{{ section.settings.description }}</p>
+      {%- endif -%}
+      {%- if section.settings.show_cta and section.settings.cta_label != blank -%}
+        <div class="collection-hero__cta" style="--i: 3;">
+          {%- render 'button',
+            label: section.settings.cta_label,
+            url: section.settings.cta_link,
+            style: section.settings.cta_style,
+            icon: section.settings.cta_icon,
+            icon_position: section.settings.cta_icon_position
+          -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection Hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "THE COLLECTION"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Furniture with presence.\nDesigned to last."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Timeless pieces crafted from honest materials and made for the spaces you live in.</p>"
+    },
+    {
+      "type": "header",
+      "content": "CTA"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Show CTA button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA label",
+      "default": "EXPLORE THE COLLECTION →"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA link"
+    },
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "CTA style",
+      "default": "btn--animated",
+      "options": [
+        { "value": "", "label": "Use theme default" },
+        { "value": "btn--primary", "label": "Filled" },
+        { "value": "btn--hollow", "label": "Hollow" },
+        { "value": "btn--secondary", "label": "Secondary" },
+        { "value": "btn--underline", "label": "Link" },
+        { "value": "btn--animated", "label": "Animated" },
+        { "value": "btn--animated-secondary", "label": "Animated (secondary)" },
+        { "value": "btn--roll", "label": "Rolling text" },
+        { "value": "btn--roll-secondary", "label": "Rolling text (secondary)" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "cta_icon",
+      "label": "Show icon",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "cta_icon_position",
+      "label": "Icon position",
+      "default": "right",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image",
+      "info": "Optional. Falls back to desktop image."
+    },
+    {
+      "type": "range",
+      "id": "image_position_x",
+      "label": "Image position X",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_position_y",
+      "label": "Image position Y",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image fit",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" },
+        { "value": "fill", "label": "Fill" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "hero_height_desktop",
+      "label": "Hero height (desktop)",
+      "min": 50,
+      "max": 120,
+      "step": 5,
+      "unit": "vh",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "hero_height_mobile",
+      "label": "Hero height (mobile)",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "hero_min_height",
+      "label": "Minimum height",
+      "min": 300,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "hero_max_height",
+      "label": "Maximum height",
+      "min": 500,
+      "max": 1500,
+      "step": 20,
+      "unit": "px",
+      "default": 1000
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content max width",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 55
+    },
+    {
+      "type": "select",
+      "id": "content_h_align",
+      "label": "Content horizontal position",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "content_v_align",
+      "label": "Content vertical position",
+      "default": "bottom",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "bottom", "label": "Bottom" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Text alignment",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_desktop",
+      "label": "Desktop side padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_tablet",
+      "label": "Tablet side padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile",
+      "label": "Mobile side padding",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 32,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "heading_line_height",
+      "label": "Heading line height",
+      "min": 80,
+      "max": 150,
+      "step": 1,
+      "unit": "%",
+      "default": 105
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "description_line_height",
+      "label": "Description line height",
+      "min": 120,
+      "max": 200,
+      "step": 5,
+      "unit": "%",
+      "default": 160
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_overlay",
+      "label": "Enable overlay",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity (default)",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity_desktop",
+      "label": "Overlay opacity (desktop)",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity_mobile",
+      "label": "Overlay opacity (mobile)",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Gradient overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_gradient",
+      "label": "Enable gradient",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "gradient_direction",
+      "label": "Gradient direction",
+      "default": "to top",
+      "options": [
+        { "value": "to top", "label": "Bottom to top" },
+        { "value": "to bottom", "label": "Top to bottom" },
+        { "value": "to left", "label": "Right to left" },
+        { "value": "to right", "label": "Left to right" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "gradient_strength",
+      "label": "Gradient strength",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "Enable entrance animation",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "animation_type",
+      "label": "Animation type",
+      "default": "fade-up",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade-in", "label": "Fade in" },
+        { "value": "fade-up", "label": "Fade up" },
+        { "value": "slide-right", "label": "Slide in from left" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "label": "Animation duration",
+      "min": 300,
+      "max": 1200,
+      "step": 50,
+      "unit": "ms",
+      "default": 800
+    },
+    {
+      "type": "range",
+      "id": "animation_delay",
+      "label": "Animation delay",
+      "min": 0,
+      "max": 500,
+      "step": 50,
+      "unit": "ms",
+      "default": 200
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Hero",
+      "settings": {
+        "eyebrow": "THE COLLECTION",
+        "heading": "Furniture with presence.\nDesigned to last.",
+        "description": "<p>Timeless pieces crafted from honest materials and made for the spaces you live in.</p>",
+        "cta_label": "EXPLORE THE COLLECTION →",
+        "show_cta": true,
+        "cta_style": "btn--animated"
+      }
+    }
+  ]
+}
+{% endschema %}

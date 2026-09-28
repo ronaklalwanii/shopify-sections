@@ -1,0 +1,97 @@
+{{ 'image-grid.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="image-grid color-{{ section.settings.color_scheme }}{% if section.settings.contained %} image-grid--contained{% endif %}"
+  style="
+    --image-grid-columns: {{ section.settings.columns }};
+    --image-grid-gap: {{ section.settings.gap }}px;
+    --image-grid-radius: {{ section.settings.image_radius }}px;
+    --image-grid-zoom: {{ section.settings.zoom_amount | divided_by: 100.0 }};
+    --image-grid-overlay: {{ section.settings.overlay_color }};
+    --image-grid-transition: {{ section.settings.transition_speed }}ms;
+    {%- if section.settings.label_color != blank %}--image-grid-label-color: {{ section.settings.label_color }};{% endif -%}
+  "
+>
+  <div class="image-grid__items">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'image' -%}
+        {%- liquid
+          assign tag = 'div'
+          if block.settings.link != blank
+            assign tag = 'a'
+          endif
+        -%}
+        <{{ tag }}
+          {% if tag == 'a' %}href="{{ block.settings.link }}"{% endif %}
+          class="image-grid__item"
+          style="--image-grid-item-aspect: {{ block.settings.aspect_ratio }}; overflow: hidden;"
+          {{ block.shopify_attributes }}
+        >
+          {%- if block.settings.image -%}
+            <img
+              src="{{ block.settings.image | image_url: width: 800 }}"
+              alt="{{ block.settings.image.alt | escape }}"
+              width="800"
+              height="{{ 800 | divided_by: block.settings.image.aspect_ratio | round }}"
+              loading="lazy"
+              class="image-grid__image"
+            >
+          {%- else -%}
+            <div class="image-grid__placeholder">{{ 'image' | placeholder_svg_tag }}</div>
+          {%- endif -%}
+          <span class="image-grid__overlay" aria-hidden="true"></span>
+          {%- if block.settings.label != blank -%}
+            <span class="image-grid__label" style="color: {{ block.settings.label_color }};">{{ block.settings.label }}</span>
+          {%- endif -%}
+        </{{ tag }}>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image grid",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "checkbox", "id": "contained", "label": "Contained (page width)", "default": true },
+    { "type": "range", "id": "columns", "label": "Columns (desktop)", "min": 2, "max": 5, "step": 1, "default": 3 },
+    { "type": "range", "id": "gap", "label": "Gap", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 4 },
+    { "type": "range", "id": "image_radius", "label": "Corner radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 0 },
+    { "type": "header", "content": "Hover effect" },
+    { "type": "range", "id": "zoom_amount", "label": "Zoom on hover", "min": 100, "max": 130, "step": 1, "unit": "%", "default": 108 },
+    { "type": "range", "id": "transition_speed", "label": "Transition speed", "min": 100, "max": 800, "step": 50, "unit": "ms", "default": 400 },
+    { "type": "color_background", "id": "overlay_color", "label": "Overlay color on hover", "default": "rgba(0, 0, 0, 0.25)" },
+    { "type": "color", "id": "label_color", "label": "Label text color (blank = white)" }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "text", "id": "label", "label": "Label (optional)", "placeholder": "e.g. 03" },
+        {"type": "color", "id": "label_color", "default": "#000", "label": "Label text color (blank = white)"},
+        {
+          "type": "select", "id": "aspect_ratio", "label": "Aspect ratio", "default": "1 / 1",
+          "options": [
+            { "value": "1 / 1", "label": "Square" }, { "value": "4 / 5", "label": "Portrait (4:5)" },
+            { "value": "3 / 4", "label": "Portrait (3:4)" }, { "value": "4 / 3", "label": "Landscape (4:3)" }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image grid",
+      "blocks": [
+        { "type": "image", "settings": { "label": "01" } },
+        { "type": "image", "settings": { "label": "02" } },
+        { "type": "image", "settings": { "label": "03" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

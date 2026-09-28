@@ -1,0 +1,43 @@
+{%- doc -%}
+  Accepts: product, variant (optional, defaults to product's selected/first available variant), block
+  Renders the stock-status line (dot + text) and, for low-stock items, an optional progress bar.
+  State is derived the same way Shopify's own inventory data works: sold-out variants -> "out",
+  tracked variants at/under the low-stock threshold -> "low", everything else -> "in".
+{%- enddoc -%}
+{%- liquid
+  assign target = variant | default: product.selected_or_first_available_variant
+  assign threshold = block.settings.low_stock_threshold | default: 10
+
+  assign state = 'in'
+  if target.available == false
+    assign state = 'out'
+  elsif target.inventory_management == 'shopify' and target.inventory_policy == 'deny' and target.inventory_quantity <= threshold
+    assign state = 'low'
+  endif
+
+  case state
+    when 'out'
+      assign status_text = block.settings.text_out_stock
+    when 'low'
+      assign status_text = block.settings.text_low_stock
+    else
+      assign status_text = block.settings.text_in_stock
+  endcase
+
+  assign show_progress_bar = block.settings.show_progress_bar
+  if show_progress_bar == nil
+    assign show_progress_bar = true
+  endif
+-%}
+<div data-inventory-status data-variant-id="{{ target.id }}">
+  <div class="inventory-status inventory-status--{{ state }} inventory-status--{{ block.settings.display_style }}">
+    {%- if block.settings.show_dot -%}<span class="inventory-status__dot" aria-hidden="true"></span>{%- endif -%}
+    <span class="inventory-status__text">{{ status_text }}</span>
+  </div>
+  {%- if show_progress_bar and state == 'low' and target.inventory_quantity > 0 -%}
+    {%- assign progress_pct = target.inventory_quantity | times: 100.0 | divided_by: threshold | at_most: 100 -%}
+    <div class="inventory-status__progress inventory-status__progress--{{ state }}" aria-hidden="true">
+      <div class="inventory-status__progress-fill" style="width: {{ progress_pct }}%;"></div>
+    </div>
+  {%- endif -%}
+</div>

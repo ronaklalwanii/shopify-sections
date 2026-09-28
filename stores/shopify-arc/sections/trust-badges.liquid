@@ -1,0 +1,106 @@
+{{ 'trust-badges.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="trust-badges page-width color-{{ section.settings.color_scheme }}"
+  style="
+    --trust-badges-columns: {{ section.settings.columns_desktop }};
+    --trust-badges-columns-mobile: {{ section.settings.columns_mobile }};
+    --trust-badges-gap: {{ section.settings.gap }}px;
+    --trust-badges-icon-size: {{ section.settings.icon_size }}px;
+    --trust-badges-heading-size: {{ section.settings.heading_font_size }}px;
+    --trust-badges-heading-weight: {{ section.settings.heading_font_weight }};
+    --trust-badges-text-size: {{ section.settings.text_font_size }}px;
+    {%- if section.settings.heading_color != blank %}--trust-badges-heading-color: {{ section.settings.heading_color }};{% endif -%}
+    {%- if section.settings.text_color != blank -%}
+      --trust-badges-text-color: {{ section.settings.text_color }};
+      --trust-badges-text-opacity: 1;
+    {%- endif -%}
+  "
+>
+  {%- if section.settings.heading != blank -%}
+    <h2 class="trust-badges__heading">{{ section.settings.heading }}</h2>
+  {%- endif -%}
+  <div class="trust-badges__grid">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'badge' -%}
+        <div class="trust-badges__item{% if section.settings.show_divider %} trust-badges__item--divider{% endif %}" {{ block.shopify_attributes }}>
+          <span class="trust-badges__icon">
+            {%- if block.settings.custom_icon -%}
+              <img src="{{ block.settings.custom_icon | image_url: width: 80 }}" alt="" width="{{ section.settings.icon_size }}" height="{{ section.settings.icon_size }}" loading="lazy">
+            {%- else -%}
+              {%- render 'icon-trust', style: block.settings.icon -%}
+            {%- endif -%}
+          </span>
+          <div>
+          {%- if block.settings.heading != blank -%}
+            <p class="trust-badges__item-heading">{{ block.settings.heading }}</p>
+          {%- endif -%}
+          {%- if block.settings.text != blank -%}
+            <p class="trust-badges__item-text">{{ block.settings.text }}</p>
+          {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Trust badges",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "text", "id": "heading", "label": "Heading" },
+    { "type": "range", "id": "columns_desktop", "label": "Columns (desktop)", "min": 2, "max": 5, "step": 1, "default": 4 },
+    {
+      "type": "select", "id": "columns_mobile", "label": "Columns (mobile)", "default": "1",
+      "options": [ { "value": "1", "label": "1" }, { "value": "2", "label": "2" } ]
+    },
+    { "type": "range", "id": "icon_size", "label": "Icon size", "min": 20, "max": 60, "step": 2, "unit": "px", "default": 32 },
+    { "type": "range", "id": "gap", "label": "Gap", "min": 12, "max": 60, "step": 4, "unit": "px", "default": 32 },
+    { "type": "checkbox", "id": "show_divider", "label": "Show divider between badges", "default": true },
+    { "type": "header", "content": "Badge title" },
+    { "type": "range", "id": "heading_font_size", "label": "Size", "min": 12, "max": 28, "step": 1, "unit": "px", "default": 16 },
+    {
+      "type": "select", "id": "heading_font_weight", "label": "Weight", "default": "600",
+      "options": [
+        { "value": "400", "label": "400" }, { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" }, { "value": "700", "label": "700" }, { "value": "800", "label": "800" }
+      ]
+    },
+    { "type": "color", "id": "heading_color", "label": "Color (blank = theme default)" },
+    { "type": "header", "content": "Badge subtitle" },
+    { "type": "range", "id": "text_font_size", "label": "Size", "min": 10, "max": 22, "step": 1, "unit": "px", "default": 15 },
+    { "type": "color", "id": "text_color", "label": "Color (blank = theme default)" }
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "settings": [
+        { "type": "image_picker", "id": "custom_icon", "label": "Custom icon image", "info": "Optional. Replaces the built-in icon below when set." },
+        {
+          "type": "select", "id": "icon", "label": "Built-in icon", "default": "shipping",
+          "options": [
+            { "value": "shipping", "label": "Shipping" }, { "value": "secure", "label": "Secure payment" },
+            { "value": "returns", "label": "Returns" }, { "value": "support", "label": "Support" }
+          ]
+        },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Customer service" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Share a short line about this benefit." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust badges",
+      "blocks": [
+        { "type": "badge", "settings": { "icon": "support", "heading": "Customer service", "text": "It's not actually free we just price it into the products." } },
+        { "type": "badge", "settings": { "icon": "shipping", "heading": "Fast Free Shipping", "text": "Get free shipping on orders of $150 or more" } },
+        { "type": "badge", "settings": { "icon": "returns", "heading": "Refer a friend", "text": "Refer a friend and get 15% off each other." } },
+        { "type": "badge", "settings": { "icon": "secure", "heading": "Secure payment", "text": "Your payment information is processed securely" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

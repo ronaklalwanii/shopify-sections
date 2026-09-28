@@ -1,0 +1,88 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-contact",
+      "blocks": {
+        "name": {
+          "type": "field",
+          "settings": {
+            "label": "Name",
+            "field_type": "text",
+            "placeholder": "Jane Doe",
+            "required": true,
+            "width": "half"
+          }
+        },
+        "email": {
+          "type": "field",
+          "settings": {
+            "label": "Email",
+            "field_type": "email",
+            "placeholder": "jane@example.com",
+            "required": true,
+            "width": "half"
+          }
+        },
+        "phone": {
+          "type": "field",
+          "settings": {
+            "label": "Phone Number",
+            "field_type": "phone",
+            "placeholder": "(555) 000-0000",
+            "required": false,
+            "width": "half"
+          }
+        },
+        "tour": {
+          "type": "field",
+          "settings": {
+            "label": "Select Your Tour",
+            "field_type": "dropdown",
+            "required": true,
+            "options": "Coastal Escape\nMountain Retreat\nCity Highlights\nCustom Itinerary",
+            "width": "half"
+          }
+        },
+        "date": {
+          "type": "field",
+          "settings": {
+            "label": "Preferred Date",
+            "field_type": "date",
+            "required": false,
+            "width": "half"
+          }
+        },
+        "travelers": {
+          "type": "field",
+          "settings": {
+            "label": "Number of Travelers",
+            "field_type": "dropdown",
+            "required": false,
+            "options": "1\n2\n3\n4\n5+",
+            "width": "half"
+          }
+        },
+        "message": {
+          "type": "field",
+          "settings": {
+            "label": "Message / Special Requests",
+            "field_type": "textarea",
+            "placeholder": "Tell us more about your trip…",
+            "required": false,
+            "width": "full"
+          }
+        }
+      },
+      "block_order": ["name", "email", "phone", "tour", "date", "travelers", "message"],
+      "settings": {
+        "heading": "Contact Us",
+        "subtitle": "<p>Tell us when and where you'd like to go, and we'll confirm availability within 24 hours.</p>",
+        "button_label": "Reserve Your Spot",
+        "image_position": "right",
+        "badge_text": "Your Journey",
+        "show_badge": true
+      }
+    }
+  },
+  "order": ["main"]
+}

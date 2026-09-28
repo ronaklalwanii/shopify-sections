@@ -1,0 +1,15 @@
+{%- liquid
+  assign direction = direction | default: 'down'
+  assign rotation = 0
+  case direction
+    when 'up'
+      assign rotation = 180
+    when 'left'
+      assign rotation = 90
+    when 'right'
+      assign rotation = -90
+  endcase
+-%}
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon icon-chevron" style="--icon-rotation: {{ rotation }}deg;" aria-hidden="true" focusable="false">
+  <path d="m6 9 6 6 6-6"></path>
+</svg>

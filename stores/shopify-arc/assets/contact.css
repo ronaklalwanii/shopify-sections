@@ -1,0 +1,219 @@
+/* Contact Us — sections/main-contact.liquid
+   Layout and section-specific composition only. Inputs, buttons, typography
+   and colors inherit the global systems in assets/base.css and the color
+   scheme tokens; merchant settings arrive as --cu-* custom properties. */
+
+.contact-us {
+  padding-top: var(--cu-padding-top, 6rem);
+  padding-bottom: var(--cu-padding-bottom, 6rem);
+}
+
+/* ----------------------------------------------------------------- Layout */
+.contact-us__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, calc(var(--cu-image-width, 46) * 1%));
+  gap: var(--cu-grid-gap, 4rem);
+  align-items: start;
+}
+
+/* Image position flips column order only — the markup stays identical. */
+.contact-us--image-left .contact-us__content { order: 2; }
+.contact-us--image-left .contact-us__aside { order: 1; }
+
+/* ------------------------------------------------------------- Typography */
+.contact-us__heading {
+  margin: 0 0 2rem;
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: var(--cu-heading-weight, var(--font-heading-weight));
+  font-size: var(--cu-heading-size, 64px);
+  line-height: 1.1;
+  letter-spacing: var(--font-heading-letter-spacing);
+  text-transform: var(--font-heading-transform);
+  color: var(--cu-heading-color, rgb(var(--color-foreground)));
+}
+
+.contact-us__subtitle {
+  margin: 0 0 1.75rem;
+  font-size: var(--cu-subtitle-size, 16px);
+  font-weight: var(--cu-subtitle-weight, 400);
+  line-height: 1.6;
+  color: var(--cu-subtitle-color, rgba(var(--color-foreground), 0.72));
+  max-width: 48ch;
+}
+.contact-us__subtitle.rte p { margin: 0 0 0.75rem; }
+.contact-us__subtitle.rte p:last-child { margin-bottom: 0; }
+
+/* -------------------------------------------------------------- Form card */
+.contact-us__card {
+  max-width: 100%;
+  background: var(--cu-card-bg, rgb(var(--color-secondary-background)));
+  border-radius: var(--cu-card-radius, 24px);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+/* ----------------------------------------------------------------- Fields */
+.contact-us__fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+.contact-us__field--full { grid-column: 1 / -1; }
+
+.contact-us__label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgb(var(--color-foreground));
+}
+
+/* Inputs/selects/textareas pick up the global element rules in base.css
+   (height token, --inputs-radius, scheme field colors). */
+.contact-us__input,
+.contact-us__select {
+  min-height: var(--cu-input-height, 50px);
+}
+.contact-us__select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.75rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23000000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  cursor: pointer;
+}
+.contact-us__textarea {
+  min-height: 7.5rem;
+  resize: vertical;
+}
+.contact-us__input:focus,
+.contact-us__select:focus,
+.contact-us__textarea:focus {
+  border-color: var(--color-keyboard-focus);
+}
+.contact-us__input::placeholder,
+.contact-us__textarea::placeholder {
+  color: rgba(var(--color-field-text), 0.55);
+  opacity: 1;
+}
+
+/* ----------------------------------------------------------------- Button */
+.contact-us__actions {
+  margin-top: 2rem;
+}
+
+/* ---------------------------------------------------------- Status messages */
+.contact-us__message {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  margin: 0 0 1.25rem;
+  padding: 0.875rem 1.125rem;
+  border-radius: var(--inputs-radius);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+.contact-us__message svg {
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-top: 0.125rem;
+}
+.contact-us__message--success {
+  background: rgba(39, 174, 96, 0.12);
+  border: 1px solid rgba(39, 174, 96, 0.3);
+  color: #2ecc71;
+}
+.contact-us__message--error {
+  background: rgba(231, 76, 60, 0.12);
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  color: #e74c3c;
+}
+.contact-us__message--error ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  text-align: left;
+}
+.contact-us__message-body p {
+  margin: 0 0 0.25rem;
+}
+
+/* ------------------------------------------------------------------- Media */
+.contact-us__media {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border-radius: var(--cu-image-radius, 24px);
+  height: var(--cu-image-height, 560px);
+}
+.contact-us__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.contact-us__image--placeholder {
+  background: rgba(var(--color-foreground), 0.06);
+}
+
+.contact-us__badge {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  padding: 0.5rem 1.125rem;
+  border-radius: var(--cu-badge-radius, 999px);
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* ------------------------------------------------------------ Responsive */
+@media screen and (max-width: 989px) {
+  .contact-us__grid {
+    gap: min(var(--cu-grid-gap, 4rem), 2.5rem);
+  }
+  .contact-us__heading {
+    font-size: calc(var(--cu-heading-size, 64px) * 0.82);
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .contact-us__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+  /* Content (title + form) always leads on mobile, regardless of image position. */
+  .contact-us__content,
+  .contact-us--image-left .contact-us__content { order: 1; }
+  .contact-us__aside,
+  .contact-us--image-left .contact-us__aside { order: 2; }
+
+  .contact-us__heading {
+    font-size: calc(var(--cu-heading-size, 64px) * 0.65);
+    margin-bottom: 1.25rem;
+  }
+  .contact-us__subtitle {
+    margin-bottom: 1.25rem;
+  }
+  .contact-us__fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .contact-us__card {
+    padding: 1.25rem;
+  }
+  .contact-us__actions {
+    margin-top: 1.5rem;
+  }
+  .contact-us__media {
+    height: var(--cu-image-height-mobile, 380px);
+  }
+  .contact-us__badge {
+    top: 0.875rem;
+    right: 0.875rem;
+    font-size: 0.75rem;
+  }
+}

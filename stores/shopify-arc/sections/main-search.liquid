@@ -1,0 +1,34 @@
+<div class="page-width" style="padding-block: 3rem;">
+  <form role="search" action="{{ routes.search_url }}" method="get" style="margin-bottom: 2rem; max-width: 480px;">
+    <input type="hidden" name="type" value="product">
+    <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search">
+    <button type="submit" class="btn btn--primary">Search</button>
+  </form>
+
+  {%- if search.performed -%}
+    <h1 style="margin-bottom: 1.5rem;">{{ "Search results for &quot;%1&quot;" | replace: "%1", search.terms }}</h1>
+    {%- if search.results.size > 0 -%}
+      <div class="product-grid">
+        {%- for item in search.results -%}
+          {%- if item.object_type == 'product' -%}
+            {%- render 'card-product', product: item -%}
+          {%- else -%}
+            <a href="{{ item.url }}" class="blog-card">
+              <h3>{{ item.title }}</h3>
+              <p>{{ item.content | strip_html | truncatewords: 20 }}</p>
+            </a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <p>{{ "No results found for &quot;%1&quot;" | replace: "%1", search.terms }}</p>
+    {%- endif -%}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Search results",
+  "settings": []
+}
+{% endschema %}

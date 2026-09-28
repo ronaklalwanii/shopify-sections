@@ -1,0 +1,118 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+
+<div class="page-width">
+  <div class="customer customer--narrow register">
+    <h1 class="customer__title">Create account</h1>
+
+    {%- form 'create_customer', novalidate: 'novalidate' -%}
+      {%- if form.errors -%}
+        <div class="customer__message customer__message--error" tabindex="-1" autofocus>
+          <span>Please adjust the following:</span>
+        </div>
+        <ul class="customer__errors-list">
+          {%- for field in form.errors -%}
+            <li>
+              {%- if field == 'form' -%}
+                {{ form.errors.messages[field] }}
+              {%- else -%}
+                <a href="#RegisterForm-{{ field }}">
+                  {{ form.errors.translated_fields[field] | capitalize }}
+                  {{ form.errors.messages[field] }}
+                </a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      <div class="customer__form">
+        <div class="customer__field-row">
+          <div class="customer__field">
+            <label for="RegisterForm-FirstName">First name</label>
+            <input
+              type="text"
+              name="customer[first_name]"
+              id="RegisterForm-FirstName"
+              {% if form.first_name %}
+                value="{{ form.first_name }}"
+              {% endif %}
+              autocomplete="given-name"
+            >
+          </div>
+          <div class="customer__field">
+            <label for="RegisterForm-LastName">Last name</label>
+            <input
+              type="text"
+              name="customer[last_name]"
+              id="RegisterForm-LastName"
+              {% if form.last_name %}
+                value="{{ form.last_name }}"
+              {% endif %}
+              autocomplete="family-name"
+            >
+          </div>
+        </div>
+
+        <div class="customer__field">
+          <label for="RegisterForm-email">Email</label>
+          <input
+            type="email"
+            name="customer[email]"
+            id="RegisterForm-email"
+            {% if form.email %}
+              value="{{ form.email }}"
+            {% endif %}
+            spellcheck="false"
+            autocapitalize="off"
+            autocomplete="email"
+            aria-required="true"
+            {% if form.errors contains 'email' %}
+              aria-invalid="true"
+              aria-describedby="RegisterForm-email-error"
+            {% endif %}
+          >
+          {%- if form.errors contains 'email' -%}
+            <span id="RegisterForm-email-error" class="customer__field-error">
+              {{ form.errors.translated_fields.email | capitalize }}
+              {{ form.errors.messages.email }}.
+            </span>
+          {%- endif -%}
+        </div>
+
+        <div class="customer__field">
+          <label for="RegisterForm-password">Password</label>
+          <input
+            type="password"
+            name="customer[password]"
+            id="RegisterForm-password"
+            aria-required="true"
+            {% if form.errors contains 'password' %}
+              aria-invalid="true"
+              aria-describedby="RegisterForm-password-error"
+            {% endif %}
+          >
+          {%- if form.errors contains 'password' -%}
+            <span id="RegisterForm-password-error" class="customer__field-error">
+              {{ form.errors.translated_fields.password | capitalize }}
+              {{ form.errors.messages.password }}.
+            </span>
+          {%- endif -%}
+        </div>
+
+        <div class="customer__actions">
+          <button type="submit" class="btn btn--primary">Create</button>
+          <a href="{{ routes.account_login_url }}" class="customer__actions-link">
+            Login
+          </a>
+        </div>
+      </div>
+    {%- endform -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Register",
+  "settings": []
+}
+{% endschema %}

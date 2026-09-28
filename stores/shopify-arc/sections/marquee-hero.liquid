@@ -1,0 +1,125 @@
+{{ 'marquee-hero.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="marquee-hero color-{{ section.settings.color_scheme }}"
+  style="
+    --marquee-hero-height: {{ section.settings.height }}px;
+    --marquee-hero-font-size: {{ section.settings.marquee_font_size }}px;
+    --marquee-hero-speed: {{ section.settings.marquee_speed }}s;
+    --marquee-hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --marquee-hero-inset-width: {{ section.settings.inset_width }}px;
+    --marquee-hero-inset-height: {{ section.settings.inset_height }}px;
+    --marquee-hero-inset-drop: {{ section.settings.inset_drop }}px;
+    /* --marquee-hero-inset-fade-width: {{ section.settings.inset_fade_width }}%; */
+    {%- if section.settings.text_color != blank %}--marquee-hero-text-color: {{ section.settings.text_color }};{% endif -%}
+    {%- if section.settings.transparent_background -%}
+      background: transparent;
+    {%- elsif section.settings.background_color != blank -%}
+      background: {{ section.settings.background_color }};
+    {%- endif -%}
+  "
+>
+  <div class="marquee-hero__media">
+    {%- if section.settings.background_image -%}
+      <img
+        src="{{ section.settings.background_image | image_url: width: 2000 }}"
+        alt=""
+        width="2000"
+        height="{{ 2000 | divided_by: section.settings.background_image.aspect_ratio | round }}"
+        loading="eager"
+        class="marquee-hero__bg"
+      >
+    {%- endif -%}
+    <span class="marquee-hero__overlay" aria-hidden="true"></span>
+
+    
+    {%- if section.settings.marquee_text != blank and section.settings.hide_marquee_text == false -%}
+      <div class="marquee-hero__marquee-wrap">
+        <div class="marquee-hero__marquee{% if section.settings.marquee_direction == 'right' %} marquee-hero__marquee--reverse{% endif %} 
+          {% if section.settings.stop_marquee_text == true %}marquee-hero__marquee--stopped{% endif %}"
+          {% if section.settings.marquee_text_position %} style="text-align: {{ section.settings.marquee_text_position }};"{% endif %}
+          >          
+          {%- if section.settings.stop_marquee_text == false -%}
+            {%- for i in (1..8) -%}
+              <span class="marquee-hero__marquee-item">{{ section.settings.marquee_text }}</span>
+            {%- endfor -%}
+          {%- endif -%}
+          {%- if section.settings.stop_marquee_text == true -%}
+            <span class="marquee-hero__marquee-item">{{ section.settings.marquee_text }}</span>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.overlay_text != blank and section.settings.hide_marquee_text == false -%}
+      <p class="marquee-hero__overlay-text">{{ section.settings.overlay_text }}</p>
+    {%- endif -%}
+  </div>
+
+  {%- if section.settings.show_inset_image and section.settings.inset_image -%}
+    <div class="marquee-hero__inset-wrap marquee-hero__inset-wrap--{{ section.settings.inset_position }}">
+      <div class="marquee-hero__inset{% if section.settings.inset_fade_edge %} marquee-hero__inset--fade{% endif %}">
+        <img
+          src="{{ section.settings.inset_image | image_url: width: 700 }}"
+          alt=""
+          width="{{ section.settings.inset_width }}"
+          height="{{ section.settings.inset_height }}"
+          loading="lazy"
+        >
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.show_tagline and section.settings.tagline != blank -%}
+    <p class="marquee-hero__tagline">{{ section.settings.tagline }}</p>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Marquee hero",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "checkbox", "id": "transparent_background", "label": "Transparent section background", "default": true, "info": "Removes the color scheme's solid background so the area below the photo shows the page background instead." },
+    { "type": "color", "id": "background_color", "label": "Custom background color", "info": "Only used when 'Transparent section background' is off. Blank uses the color scheme's background." },
+    { "type": "header", "content": "Background" },
+    { "type": "image_picker", "id": "background_image", "label": "Background image" },
+    { "type": "range", "id": "height", "label": "Height", "min": 300, "max": 900, "step": 20, "unit": "px", "default": 600 },
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay darkness", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 20 },
+    { "type": "header", "content": "Marquee text" },
+    { "type": "checkbox", "id": "hide_marquee_text", "label": "Hide marquee text", "default": false },
+    { "type": "checkbox", "id": "stop_marquee_text", "label": "Stop marquee text", "default": false },
+    { "type": "text", "id": "marquee_text", "label": "Text", "default": "VICTORIA" },
+    { "type": "range", "id": "marquee_font_size", "label": "Font size", "min": 40, "max": 220, "step": 5, "unit": "px", "default": 140 },
+    {
+      "type": "select", "id": "marquee_text_position", "label": "Text position", "default": "center",
+      "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" } ]
+    },
+    { "type": "range", "id": "marquee_speed", "label": "Speed (seconds per loop)", "min": 5, "max": 60, "step": 1, "default": 20 },
+    { 
+      "type": "select", "id": "marquee_direction", "label": "Direction", "default": "left",
+      "options": [ { "value": "left", "label": "Right to left" }, { "value": "right", "label": "Left to right" } ]
+    },
+    { "type": "color", "id": "text_color", "label": "Text color (blank = theme default)" },
+    { "type": "text", "id": "overlay_text", "label": "Text over image (below marquee)", "default": "Digital Marketing Agency in Central London" },
+    { "type": "header", "content": "Inset image" },
+    { "type": "checkbox", "id": "show_inset_image", "label": "Show inset image", "default": true },
+    { "type": "image_picker", "id": "inset_image", "label": "Image" },
+    {
+      "type": "select", "id": "inset_position", "label": "Position", "default": "center",
+      "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" } ]
+    },
+    { "type": "range", "id": "inset_width", "label": "Width", "min": 100, "max": 500, "step": 10, "unit": "px", "default": 240 },
+    { "type": "range", "id": "inset_height", "label": "Height", "min": 100, "max": 600, "step": 10, "unit": "px", "default": 300 },
+    { "type": "range", "id": "inset_drop", "label": "Drop below main image", "min": 0, "max": 300, "step": 10, "unit": "px", "info": "How far the image extends past the bottom of the main image.", "default": 120 },
+    // { "type": "checkbox", "id": "inset_fade_edge", "label": "Fade left edge", "default": true },
+    // { "type": "range", "id": "inset_fade_width", "label": "Fade width", "min": 5, "max": 50, "step": 5, "unit": "%", "default": 20 },
+    { "type": "header", "content": "Tagline" },
+    { "type": "checkbox", "id": "show_tagline", "label": "Show tagline", "default": true },
+    { "type": "text", "id": "tagline", "label": "Text below image", "default": "For Lifestyle Brands & Creative Founders" }
+  ],
+  "presets": [
+    { "name": "Marquee hero" }
+  ]
+}
+{% endschema %}

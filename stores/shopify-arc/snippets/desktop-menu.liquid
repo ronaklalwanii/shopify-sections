@@ -1,0 +1,62 @@
+{%- liquid
+  assign menu_link_list = linklists[menu]
+-%}
+<ul class="desktop-menu">
+  {%- for link in menu_link_list.links -%}
+    {%- liquid
+      assign mega_block = null
+      assign link_handle = link.title | handleize
+      for block in blocks
+        if block.type == 'promotion_banner' or block.type == 'custom_card' or block.type == 'product_list'
+          assign block_handle = block.settings.menu_title | handleize
+          if block_handle != '' and block_handle == link_handle
+            assign mega_block = block
+          endif
+        endif
+      endfor
+    -%}
+    <li class="desktop-menu__item{% if mega_block %} desktop-menu__item--mega{% endif %}">
+      {%- if mega_block -%}
+        <details-mega class="mega-menu-wrapper" data-trigger="{{ trigger }}" {{ mega_block.shopify_attributes }}>
+          <details>
+            <summary class="desktop-menu__link" aria-haspopup="true">
+              {{ link.title }}
+              {%- render 'icon-chevron' -%}
+            </summary>
+            {%- render 'mega-menu', block: mega_block, link: link -%}
+          </details>
+        </details-mega>
+      {%- elsif link.links.size > 0 -%}
+        <details-dropdown data-trigger="{{ trigger }}">
+          <details>
+            <summary class="desktop-menu__link" aria-haspopup="true">
+              {{ link.title }}
+              {%- render 'icon-chevron' -%}
+            </summary>
+            <div class="desktop-menu__dropdown">
+              <ul>
+                {%- for childlink in link.links -%}
+                  <li>
+                    <a href="{{ childlink.url }}" class="desktop-menu__sublink">
+                      {{ childlink.title }}
+                      {%- if childlink.links.size > 0 -%}{%- render 'icon-chevron', direction: 'right' -%}{%- endif -%}
+                    </a>
+                    {%- if childlink.links.size > 0 -%}
+                      <ul class="desktop-menu__subsublist">
+                        {%- for grandchildlink in childlink.links -%}
+                          <li><a href="{{ grandchildlink.url }}">{{ grandchildlink.title }}</a></li>
+                        {%- endfor -%}
+                      </ul>
+                    {%- endif -%}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          </details>
+        </details-dropdown>
+      {%- else -%}
+        <a href="{{ link.url }}" class="desktop-menu__link">{{ link.title }}</a>
+      {%- endif -%}
+    </li>
+  {%- endfor -%}
+</ul>

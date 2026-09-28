@@ -1,0 +1,426 @@
+{{ 'arc-edit.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign button_style = section.settings.button_style
+  assign show_button = section.settings.show_button
+  assign columns_desktop = section.settings.columns_desktop
+  assign card_gap = section.settings.card_gap
+  assign aspect_ratio = section.settings.aspect_ratio
+-%}
+
+<section
+  id="shopify-section-{{ section.id }}"
+  class="atelier-edit color-{{ section.settings.color_scheme }}"
+  style="
+    --ae-bg: {{ section.settings.bg_color }};
+    --ae-text: {{ section.settings.text_color }};
+    --ae-muted: {{ section.settings.muted_color }};
+    --ae-padding-top: {{ section.settings.padding_top }}px;
+    --ae-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --ae-columns-desktop: {{ columns_desktop }};
+    --ae-columns-mobile: {{ section.settings.columns_mobile }};
+    --ae-card-gap: {{ card_gap }}px;
+    --ae-aspect-ratio: {{ aspect_ratio }};
+  "
+>
+  <div class="atelier-edit__container">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="atelier-edit__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    <div class="atelier-edit__grid">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign product = block.settings.product
+          if product
+            assign current_variant = product.selected_or_first_available_variant
+            assign add_to_cart_label = 'products.product.add_to_cart' | t
+            assign sold_out_label = 'products.product.sold_out' | t
+            assign unavailable_label = 'products.product.unavailable' | t
+          endif
+        -%}
+        
+        <div class="atelier-card" {{ block.shopify_attributes }}>
+          <a href="{{ block.settings.link | default: product.url }}" class="atelier-card__link">
+            <div class="atelier-card__media">
+              {%- if block.settings.image != blank -%}
+                <img
+                  src="{{ block.settings.image | image_url: width: 600 }}"
+                  alt="{{ block.settings.image.alt | escape }}"
+                  width="600"
+                  height="{{ 600 | divided_by: block.settings.image.aspect_ratio | round }}"
+                  loading="lazy"
+                  class="atelier-card__image"
+                >
+              {%- elsif product.featured_image != blank -%}
+                <img
+                  src="{{ product.featured_image | image_url: width: 600 }}"
+                  alt="{{ product.featured_image.alt | escape }}"
+                  width="600"
+                  height="{{ 600 | divided_by: product.featured_image.aspect_ratio | round }}"
+                  loading="lazy"
+                  class="atelier-card__image"
+                >
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'atelier-card__placeholder' }}
+              {%- endif -%}
+            </div>
+          </a>
+          
+          <div class="atelier-card__content">
+            <h3 class="atelier-card__title">
+              <a href="{{ block.settings.link | default: product.url }}">{{ block.settings.title | default: product.title }}</a>
+            </h3>
+            
+            {%- if block.settings.material != blank -%}
+              <p class="atelier-card__material">{{ block.settings.material }}</p>
+            {%- endif -%}
+            
+            <div class="atelier-card__price-row">
+              <span class="atelier-card__price">{{ block.settings.price | default: current_variant.price | money }}</span>
+            </div>
+
+            {%- if show_button and product -%}
+              {%- liquid
+                assign atc_is_animated = false
+                if button_style contains 'animated'
+                  assign atc_is_animated = true
+                endif
+              -%}
+              <div class="atelier-card__button-wrapper">
+                {%- form 'product', product, id: "form-{{ block.id }}", class: "atelier-card__form" -%}
+                  <input type="hidden" name="id" value="{{ current_variant.id }}">
+                  <button
+                    type="submit"
+                    class="btn {{ button_style }} atelier-card__btn"
+                    data-add-text="{{ add_to_cart_label }}"
+                    data-sold-out-text="{{ sold_out_label }}"
+                    data-unavailable-text="{{ unavailable_label }}"
+                    {% unless current_variant.available %}disabled{% endunless %}
+                  >
+                    {%- if atc_is_animated -%}
+                      {%- if current_variant.available -%}
+                        {%- render 'button-animated-content', label: add_to_cart_label -%}
+                      {%- else -%}
+                        {%- render 'button-animated-content', label: sold_out_label -%}
+                      {%- endif -%}
+                    {%- else -%}
+                      {%- if current_variant.available -%}
+                        {{ add_to_cart_label }}
+                      {%- else -%}
+                        {{ sold_out_label }}
+                      {%- endif -%}
+                    {%- endif -%}
+                  </button>
+                {%- endform -%}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Scoped Styles for Atelier Edit */
+  .atelier-edit {
+    background-color: var(--ae-bg, #111);
+    color: var(--ae-text, #fff);
+    padding-top: var(--ae-padding-top, 80px);
+    padding-bottom: var(--ae-padding-bottom, 80px);
+  }
+
+  .atelier-edit__container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .atelier-edit__eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    margin-bottom: 3rem;
+    opacity: 0.8;
+  }
+
+  .atelier-edit__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--ae-columns-desktop, 4), 1fr);
+    gap: var(--ae-card-gap, 2rem);
+  }
+
+  @media (max-width: 768px) {
+    .atelier-edit__grid {
+      grid-template-columns: repeat(var(--ae-columns-mobile, 1), 1fr);
+    }
+  }
+
+  /* Card Styles */
+  .atelier-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .atelier-card__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    margin-bottom: 1.5rem;
+  }
+
+  .atelier-card__media {
+    aspect-ratio: var(--ae-aspect-ratio, 4/3);
+    overflow: hidden;
+    background: #222;
+    width: 100%;
+  }
+
+  .atelier-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+
+  .atelier-card__link:hover .atelier-card__image {
+    transform: scale(1.03);
+  }
+
+  .atelier-card__content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .atelier-card__title {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.4;
+  }
+
+  .atelier-card__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .atelier-card__material {
+    font-size: 0.875rem;
+    color: var(--ae-muted, #888);
+    margin: 0 0 1rem 0;
+    font-weight: 400;
+  }
+
+  .atelier-card__price-row {
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .atelier-card__button-wrapper {
+    margin-top: auto;
+    width: 100%;
+  }
+
+  .atelier-card__form {
+    width: 100%;
+  }
+
+  .atelier-card__btn {
+    width: 100%;
+    justify-content: center;
+    /* Ensure button fits theme styles */
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Atelier Edit",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "THE ATELIER EDIT"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns (Desktop)",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+  "type": "select",
+  "id": "columns_mobile",
+  "label": "Columns (Mobile)",
+  "default": "1",
+  "options": [
+    { "value": "1", "label": "1 column" },
+    { "value": "2", "label": "2 columns" }
+  ]
+},
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Gap between cards",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "Image Aspect Ratio",
+      "default": "4/3",
+      "options": [
+        { "value": "1/1", "label": "Square (1:1)" },
+        { "value": "4/3", "label": "Landscape (4:3)" },
+        { "value": "3/4", "label": "Portrait (3:4)" },
+        { "value": "16/9", "label": "Cinematic (16:9)" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Add to Cart Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show Add to Cart button",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "default": "btn--primary",
+      "options": [
+        { "value": "", "label": "Use theme default" },
+        { "value": "btn--primary", "label": "Filled" },
+        { "value": "btn--hollow", "label": "Hollow" },
+        { "value": "btn--secondary", "label": "Secondary" },
+        { "value": "btn--underline", "label": "Link" },
+        { "value": "btn--animated", "label": "Animated" },
+        { "value": "btn--animated-secondary", "label": "Animated (secondary)" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted Text (Material)",
+      "default": "#888888"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Product Card",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Required for Add to Cart button"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image (Optional override)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title (Optional override)",
+          "default": "PRODUCT NAME"
+        },
+        {
+          "type": "text",
+          "id": "material",
+          "label": "Material / Subtitle",
+          "default": "Solid Walnut"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price (Optional override)",
+          "default": "£2,400"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (Optional override)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Atelier Edit",
+      "blocks": [
+        { "type": "product_card", "settings": { "title": "SOLIS DINING TABLE", "material": "Solid Walnut", "price": "£2,400" } },
+        { "type": "product_card", "settings": { "title": "VALE SIDEBOARD", "material": "Solid Walnut", "price": "£2,100" } },
+        { "type": "product_card", "settings": { "title": "TERRA COFFEE TABLE", "material": "Natural Stone", "price": "£1,250" } },
+        { "type": "product_card", "settings": { "title": "ARDENT LOUNGE CHAIR", "material": "Walnut & Leather", "price": "£1,800" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

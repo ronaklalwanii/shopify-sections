@@ -1,0 +1,19 @@
+{%- doc -%}
+  Accepts: id (unique form id for this instance)
+{%- enddoc -%}
+{%- if localization.available_countries.size > 1 -%}
+  {%- form 'localization', id: id, class: 'localization-form' -%}
+    <div class="localization-form__select-wrapper">
+      <span class="localization-form__flag" data-country-flag aria-hidden="true"></span>
+      <select name="country_code" class="localization-form__select" data-country-select aria-label="Country/region" onchange="this.form.submit()">
+        {%- for country in localization.available_countries -%}
+          <option value="{{ country.iso_code }}" {% if country.iso_code == localization.country.iso_code %}selected="selected"{% endif %}>
+            {{ country.name }} ({{ country.currency.iso_code }})
+          </option>
+        {%- endfor -%}
+      </select>
+      {%- render 'icon-chevron' -%}
+    </div>
+    <noscript><button type="submit">Update</button></noscript>
+  {%- endform -%}
+{%- endif -%}

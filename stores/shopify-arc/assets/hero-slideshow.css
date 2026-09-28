@@ -1,0 +1,354 @@
+.hero-slideshow {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  /* Progressive side gutter: tightens up through three desktop tiers. */
+  --gutter: var(--content-gutter-mobile, 24px);
+}
+@media screen and (min-width: 750px) {
+  .hero-slideshow { --gutter: var(--content-gutter, 32px); }
+}
+@media screen and (min-width: 1200px) {
+  .hero-slideshow { --gutter: var(--content-gutter-large, 64px); }
+}
+@media screen and (min-width: 1441px) {
+  .hero-slideshow { --gutter: var(--content-gutter-ultra, 112px); }
+}
+.hero-slide {
+  position: relative;
+  height: var(--slide-height, 90vh);
+  min-height: 420px;
+}
+@media screen and (max-width: 749px) {
+  .hero-slide { height: var(--slide-height-mobile, 70vh); }
+}
+
+.hero-slide__media { position: absolute; inset: 0; }
+.hero-slide__image { width: 100%; height: 100%; object-fit: cover; }
+.hero-slide__image--mobile { display: block; }
+.hero-slide__image--desktop { display: none; }
+.hero-slide__image--desktop.hero-slide__image--always { display: block; }
+@media screen and (min-width: 750px) {
+  .hero-slide__image--mobile { display: none; }
+  .hero-slide__image--desktop { display: block; }
+}
+.hero-slide__overlay { position: absolute; inset: 0; background: #000; }
+
+.hero-slide__content-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  --trust-offset: 0px;
+  --nav-clearance: 0px;
+  padding-top: var(--content-padding-top, 96px);
+  padding-right: calc(var(--content-padding-right, 0px) + var(--gutter, 24px));
+  padding-bottom: calc(var(--content-padding-bottom, 48px) + var(--trust-offset) + var(--nav-clearance));
+  padding-left: calc(var(--content-padding-left, 0px) + var(--gutter, 24px));
+  pointer-events: none;
+}
+.hero-slide__content-wrapper--page {
+  max-width: var(--page-width);
+  margin-inline: auto;
+}
+.hero-slide__content-wrapper--full {
+  max-width: none;
+}
+/* Bottom-positioned content always sits clear of the nav arrows (the
+   clearance collapses to 0 when arrows are hidden), and is pushed above
+   the trust bar by its measured height when the offset toggle is on. */
+.hero-slide__content-wrapper--bottom-left,
+.hero-slide__content-wrapper--bottom-center,
+.hero-slide__content-wrapper--bottom-right {
+  --nav-clearance: calc(var(--nav-height, 0px) + 20px);
+}
+.hero-slide__content-wrapper--trust-offset.hero-slide__content-wrapper--bottom-left,
+.hero-slide__content-wrapper--trust-offset.hero-slide__content-wrapper--bottom-center,
+.hero-slide__content-wrapper--trust-offset.hero-slide__content-wrapper--bottom-right {
+  --trust-offset: var(--hero-trust-bar-height, 0px);
+}
+@media screen and (max-width: 749px) {
+  .hero-slide__content-wrapper--mobile-bottom-center {
+    --nav-clearance: calc(var(--nav-height, 0px) + 30px);
+  }
+  .hero-slide__content-wrapper--trust-offset.hero-slide__content-wrapper--mobile-bottom-center {
+    --trust-offset: var(--hero-trust-bar-height, 0px);
+  }
+}
+.hero-slide__content {
+  pointer-events: auto;
+  max-width: 100%;
+  width: var(--content-width, 55%);
+}
+@media screen and (max-width: 749px) {
+  .hero-slide__content { width: 100%; max-width: 90%; }
+}
+
+/* Desktop content position (9-point grid) */
+.hero-slide__content-wrapper--top-left { align-items: flex-start; justify-content: flex-start; }
+.hero-slide__content-wrapper--top-left .hero-slide__content { text-align: left; }
+.hero-slide__content-wrapper--top-center { align-items: flex-start; justify-content: center; }
+.hero-slide__content-wrapper--top-center .hero-slide__content { text-align: center; }
+.hero-slide__content-wrapper--top-right { align-items: flex-start; justify-content: flex-end; }
+.hero-slide__content-wrapper--top-right .hero-slide__content { text-align: right; }
+.hero-slide__content-wrapper--middle-left { align-items: center; justify-content: flex-start; }
+.hero-slide__content-wrapper--middle-left .hero-slide__content { text-align: left; }
+.hero-slide__content-wrapper--middle-center { align-items: center; justify-content: center; }
+.hero-slide__content-wrapper--middle-center .hero-slide__content { text-align: center; }
+.hero-slide__content-wrapper--middle-right { align-items: center; justify-content: flex-end; }
+.hero-slide__content-wrapper--middle-right .hero-slide__content { text-align: right; }
+.hero-slide__content-wrapper--bottom-left { align-items: flex-end; justify-content: flex-start; }
+.hero-slide__content-wrapper--bottom-left .hero-slide__content { text-align: left; }
+.hero-slide__content-wrapper--bottom-center { align-items: flex-end; justify-content: center; }
+.hero-slide__content-wrapper--bottom-center .hero-slide__content { text-align: center; }
+.hero-slide__content-wrapper--bottom-right { align-items: flex-end; justify-content: flex-end; }
+.hero-slide__content-wrapper--bottom-right .hero-slide__content { text-align: right; }
+
+/* Mobile content position override */
+@media screen and (max-width: 749px) {
+  .hero-slide__content-wrapper--mobile-top-center { align-items: flex-start; justify-content: center; }
+  .hero-slide__content-wrapper--mobile-middle-center { align-items: center; justify-content: center; }
+  .hero-slide__content-wrapper--mobile-bottom-center { align-items: flex-end; justify-content: center; }
+  .hero-slide__content-wrapper--mobile-top-center .hero-slide__content,
+  .hero-slide__content-wrapper--mobile-middle-center .hero-slide__content,
+  .hero-slide__content-wrapper--mobile-bottom-center .hero-slide__content { text-align: center; }
+}
+
+.hero-slide__heading { margin-bottom: 1.25rem; line-height: 1.05; }
+.hero-slide__heading--shadow { text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35); }
+.hero-slide__description { margin-bottom: 1.875rem; font-size: 1.125rem; }
+.hero-slide .subheading { display: block; margin-bottom: 0.75rem; }
+/* 10px button gap on mobile growing to 20px on desktop, with the row
+   following the content alignment instead of always hugging the left. */
+.hero-slide__buttons { display: flex; flex-wrap: wrap; gap: 10px; }
+@media screen and (min-width: 750px) {
+  .hero-slide__buttons { gap: 20px; }
+}
+.hero-slide__content-wrapper--top-center .hero-slide__buttons,
+.hero-slide__content-wrapper--middle-center .hero-slide__buttons,
+.hero-slide__content-wrapper--bottom-center .hero-slide__buttons { justify-content: center; }
+.hero-slide__content-wrapper--top-right .hero-slide__buttons,
+.hero-slide__content-wrapper--middle-right .hero-slide__buttons,
+.hero-slide__content-wrapper--bottom-right .hero-slide__buttons { justify-content: flex-end; }
+@media screen and (max-width: 749px) {
+  .hero-slide__content-wrapper--mobile-top-center .hero-slide__buttons,
+  .hero-slide__content-wrapper--mobile-middle-center .hero-slide__buttons,
+  .hero-slide__content-wrapper--mobile-bottom-center .hero-slide__buttons { justify-content: center; }
+}
+
+/* Text entrance animation, driven by the JS-managed .is-revealed class (see
+   initSlideTextReveal in hero-slideshow.js) - NOT Swiper's own swiper-slide-active.
+   swiper-slide-active gets pre-set on the first slide server-side (below, for
+   pointer-events/no-JS fallback) and Swiper's init just confirms that same class
+   synchronously before the first paint, so a transition keyed on it would never
+   have an observable "before" frame to animate from on slide 1. .is-revealed is
+   toggled explicitly in JS, deferred past the first paint on load and force-reflowed
+   on every slide change, so it restarts reliably every time regardless of that.
+   0.8s ease-out with 0.3s stagger starting at 0.4s. */
+.hero-slide__content[data-text-animation] [data-hero-text] {
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  transition-delay: calc(0.4s + var(--i, 0) * 0.3s);
+}
+.swiper-slide:not(.is-revealed) .hero-slide__content [data-hero-text] { transition-delay: 0ms; }
+
+.hero-slide__content[data-text-animation="fade-up"] [data-hero-text] { opacity: 0; transform: translateY(28px); }
+.is-revealed .hero-slide__content[data-text-animation="fade-up"] [data-hero-text] { opacity: 1; transform: translateY(0); }
+
+.hero-slide__content[data-text-animation="fade-in"] [data-hero-text] { opacity: 0; }
+.is-revealed .hero-slide__content[data-text-animation="fade-in"] [data-hero-text] { opacity: 1; }
+
+.hero-slide__content[data-text-animation="slide-right"] [data-hero-text] { opacity: 0; transform: translateX(-32px); }
+.is-revealed .hero-slide__content[data-text-animation="slide-right"] [data-hero-text] { opacity: 1; transform: translateX(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide__content [data-hero-text] { transition: none !important; opacity: 1 !important; transform: none !important; }
+}
+
+/* Pagination arrows — sit above the trust bar (height measured in JS and written
+   to --hero-trust-bar-height) at a configurable distance. */
+.hero-slideshow__nav {
+  position: absolute;
+  right: 1.5rem;
+  bottom: calc(var(--nav-offset, 35px) + var(--hero-trust-bar-height, 0px));
+  z-index: 3;
+  display: flex;
+  gap: 0.5rem;
+}
+@media screen and (max-width: 749px) {
+  .hero-slideshow__nav { bottom: calc(var(--nav-offset-mobile, 20px) + var(--hero-trust-bar-height, 0px)); }
+}
+.hero-slideshow__nav-btn {
+  position: relative;
+  width: var(--nav-width, 48px);
+  height: var(--nav-height, 48px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--nav-radius, 100px);
+  background: var(--nav-bg, #fff);
+  color: var(--nav-text, #121212);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+.hero-slideshow__nav-btn:hover {
+  background: var(--nav-hover-bg, #121212);
+  color: var(--nav-hover-text, #fff);
+}
+.hero-slideshow__nav-icon { display: flex; transition: transform 0.3s ease; }
+.hero-slideshow__nav-icon .icon-picker { width: var(--nav-icon-size, 20px); height: var(--nav-icon-size, 20px); overflow: visible; }
+/* The arrow rests at its normal length; only the hover animation stretches the
+   tail (from the head, so it lengthens back into the button) while the arrow
+   travels to the button's edge — half in, half out. */
+.hero-slideshow__nav-icon .icon-picker .icon-picker__line {
+  transform-origin: 19px 12px;
+  transition: transform 0.3s ease;
+}
+.hero-slideshow__nav-btn:hover .icon-picker__line { transform: scaleX(var(--nav-tail-scale, 2.4)); }
+/* Hover travel is configurable: the next arrow slides right, the previous one
+   left, by the same distance. */
+.hero-slideshow__next:hover .hero-slideshow__nav-icon { transform: translateX(var(--nav-travel, 24px)); }
+.hero-slideshow__prev:hover .hero-slideshow__nav-icon { transform: translateX(calc(var(--nav-travel, 24px) * -1)); }
+
+.hero-slideshow__pagination.swiper-pagination {
+  position: absolute;
+  bottom: calc(var(--hero-trust-bar-height, 0px) + 1.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  gap: 0.5rem;
+  width: auto;
+}
+.hero-slideshow__pagination .swiper-pagination-bullet {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: rgb(var(--color-background));
+  opacity: 0.5;
+  transition: opacity 0.2s ease, width 0.2s ease;
+  border-radius: 999px;
+}
+.hero-slideshow__pagination .swiper-pagination-bullet-active { opacity: 1; width: 1.5rem; }
+
+/* Trust bar — a translucent strip pinned to the bottom of the hero, sitting on
+   top of the slide image (not a separate section) so the photo shows through.
+   Every visual property is driven by CSS vars emitted from section settings. */
+.hero-slideshow__trust-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  background: var(--trust-bar-bg, rgba(0, 0, 0, 0.35));
+  border-top: 1px solid var(--trust-border-color, rgba(255, 255, 255, 0.15));
+  backdrop-filter: blur(var(--trust-blur, 16px)) saturate(1.4);
+  -webkit-backdrop-filter: blur(var(--trust-blur, 16px)) saturate(1.4);
+  padding-inline: var(--gutter, 24px);
+}
+.hero-slideshow__trust-inner {
+  display: grid;
+  grid-template-columns: var(--trust-grid, repeat(4, 1fr));
+  gap: var(--trust-gap, 15px);
+  padding-block: var(--trust-padding-block, 20px);
+  max-width: var(--page-width);
+  margin-inline: auto;
+}
+.hero-slideshow__trust-bar--full .hero-slideshow__trust-inner { max-width: none; }
+/* Below 1200px the icon-to-text gap tightens. */
+@media screen and (max-width: 1199px) {
+  .hero-slideshow__trust-item { gap: var(--trust-icon-gap-mobile, 15px); }
+}
+/* On mobile the trust bar becomes a horizontal swipe carousel — each badge
+   takes 80% of the width and snaps as it is scrolled. */
+@media screen and (max-width: 749px) {
+  .hero-slideshow__trust-inner {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(var(--trust-item-min-mobile, 80%), 1fr);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-block: var(--trust-padding-block-mobile, 15px);
+    scrollbar-width: none;
+  }
+  .hero-slideshow__trust-inner::-webkit-scrollbar { display: none; }
+  .hero-slideshow__trust-item { scroll-snap-align: start; flex-shrink: 0; }
+}
+/* With the fade transition, inactive slides are stacked invisibly on top of the
+   active one — keep them from swallowing clicks meant for the visible slide. */
+.hero-slideshow .swiper-slide:not(.swiper-slide-active) { pointer-events: none; }
+.hero-slideshow__trust-item { display: flex; align-items: center; gap: var(--trust-icon-gap, 30px); }
+.hero-slideshow__trust-icon {
+  flex-shrink: 0;
+  width: calc(var(--trust-icon-size, 20px) + 24px);
+  height: calc(var(--trust-icon-size, 20px) + 24px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--trust-heading-color, #fff);
+  background: var(--trust-icon-circle-bg, rgba(255, 255, 255, 0.12));
+  border: 1px solid var(--trust-icon-circle-border, rgba(255, 255, 255, 0.25));
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.hero-slideshow__trust-icon .icon-trust { width: var(--trust-icon-size, 20px); height: var(--trust-icon-size, 20px); }
+.hero-slideshow__trust-icon img { width: var(--trust-icon-size, 20px); height: var(--trust-icon-size, 20px); object-fit: contain; }
+.hero-slideshow__trust-bar--no-circle .hero-slideshow__trust-icon {
+  width: var(--trust-icon-size, 20px);
+  height: var(--trust-icon-size, 20px);
+  background: none;
+  border: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.hero-slideshow__trust-heading {
+  color: var(--trust-heading-color, #fff);
+  font-weight: 700;
+  font-size: var(--trust-heading-size, 15px);
+  margin-bottom: 0.15rem;
+}
+.hero-slideshow__trust-text {
+  color: var(--trust-text-color, #ccc);
+  font-size: var(--trust-text-size, 13px);
+  line-height: 1.4;
+}
+
+/* ---- Height modes ---------------------------------------------------------
+   Custom (default): the original --slide-height vh values.
+   Fullscreen: full viewport minus the fixed announcement bar (the header
+   floats over the hero in transparent mode, so it consumes no height).
+   Adapt: the section's aspect-ratio matches the first slide's image, so the
+   hero is exactly as tall as that image at any viewport width. */
+.hero-slideshow { height: var(--slide-height-mobile, 70vh); }
+@media screen and (min-width: 750px) {
+  .hero-slideshow { height: var(--slide-height, 90vh); }
+}
+.hero-slideshow.hero--fullscreen-m,
+.hero-slideshow.hero--fullscreen-d {
+  height: calc(100svh - var(--announcement-height, 0px));
+}
+.hero-slideshow.hero--adapt {
+  height: auto;
+  aspect-ratio: var(--hero-adapt-ratio, 16 / 9);
+}
+.hero-slideshow.hero--adapt .swiper,
+.hero-slideshow.hero--adapt .swiper-wrapper,
+.hero-slideshow.hero--adapt .hero-slide {
+  min-height: 0;
+}
+
+/* ---- Corner radius (per King's none/top/bottom/all) ------------------------ */
+.hero-slideshow.hero--radius-top { border-radius: var(--hero-corner-radius) var(--hero-corner-radius) 0 0; }
+.hero-slideshow.hero--radius-bottom { border-radius: 0 0 var(--hero-corner-radius) var(--hero-corner-radius); }
+.hero-slideshow.hero--radius-all { border-radius: var(--hero-corner-radius); }
+
+/* ---- Transparent-header handshake ------------------------------------------
+   When this hero is the page's first section and the header goes
+   transparent over it, top-positioned content would otherwise sit beneath
+   the floating header — push it clear using the header's published height. */
+body:has(.header-wrapper--transparent)
+  .main-content
+  > .shopify-section:first-child
+  .hero-slide__content-wrapper[class*="--top"] {
+  padding-top: calc(var(--header-height, 0px) + 12px);
+}
+

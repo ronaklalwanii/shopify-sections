@@ -1,0 +1,22 @@
+{%- doc -%}
+  Accepts: collection
+{%- enddoc -%}
+<a href="{{ collection.url }}" class="collection-card color-{{ settings.collection_card_color_scheme }} collection-card--{{ settings.collection_card_style }}">
+  <div class="collection-card__media">
+    {%- if collection.featured_image -%}
+      <img
+        src="{{ collection.featured_image | image_url: width: 600 }}"
+        alt="{{ collection.featured_image.alt | escape }}"
+        width="600"
+        height="{{ 600 | divided_by: collection.featured_image.aspect_ratio | round }}"
+        loading="lazy"
+      >
+    {%- endif -%}
+  </div>
+  <div class="collection-card__content">
+    <p class="collection-card__title">{{ collection.title }}</p>
+    {%- if settings.collection_card_show_product_count -%}
+      <p class="collection-card__count">{{ "%1 products" | replace: "%1", collection.products_count }}</p>
+    {%- endif -%}
+  </div>
+</a>

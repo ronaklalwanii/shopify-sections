@@ -1,0 +1,135 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor": { "type": "vendor" },
+        "title": {
+          "type": "title",
+          "settings": { "show_vendor": false, "title_size": 36, "spacing_below": 12 }
+        },
+        "price": { "type": "price", "settings": { "text_size": 18, "font_weight": 500, "show_shipping_note": false } },
+        "description": {
+          "type": "description",
+          "settings": { "truncate_length": 25, "bottom_spacing": 28 }
+        },
+        "tax_note": { "type": "tax_text", "settings": { "text": "Tax included." } },
+        "divider_options": { "type": "divider", "settings": { "bottom_spacing": 20 } },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": { "picker_type": "dropdown", "swatch_shape": "circle", "swatch_size": 36 }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": { "height": 44, "radius": 6, "button_width": 44, "bottom_spacing": 20 }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "atc_label": "ADD TO CART",
+            "atc_show_price": true,
+            "atc_radius": 6,
+            "show_dynamic_checkout": true
+          }
+        },
+        "trust_1": {
+          "type": "trust_item",
+          "settings": { "icon": "shipping", "label": "MADE TO ORDER", "description": "Crafted just for you" }
+        },
+        "trust_2": {
+          "type": "trust_item",
+          "settings": { "icon": "returns", "label": "SOLID MATERIALS", "description": "Honest, natural, durable" }
+        },
+        "trust_3": {
+          "type": "trust_item",
+          "settings": { "icon": "secure", "label": "BUILT TO LAST", "description": "Timeless by design" }
+        },
+        "accordion_care": {
+          "type": "accordion",
+          "settings": {
+            "icon": "care",
+            "heading": "Materials & care",
+            "content": "<p>Solid, honest materials finished by hand. Wipe with a soft, dry cloth; avoid harsh chemicals and direct sunlight.</p>"
+          }
+        },
+        "accordion_delivery": {
+          "type": "accordion",
+          "settings": {
+            "icon": "delivery",
+            "heading": "Delivery",
+            "content": "<p>Made to order and delivered within 4–6 weeks. White-glove delivery available at checkout.</p>"
+          }
+        },
+        "accordion_returns": {
+          "type": "accordion",
+          "settings": {
+            "icon": "returns",
+            "heading": "Shipping & returns",
+            "content": "<p>Free insured shipping. Returns accepted within 30 days of delivery in original condition.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "description",
+        "tax_note",
+        "divider_options",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "trust_1",
+        "trust_2",
+        "trust_3",
+        "accordion_care",
+        "accordion_delivery",
+        "accordion_returns"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "gallery_show_counter": false,
+        "gallery_show_dots": true,
+        "trust_icon_size": 24
+      }
+    },
+    "story": {
+      "type": "product-story",
+      "settings": {
+        "color_scheme": "scheme-1"
+      }
+    },
+    "reviews": {
+      "type": "product-reviews",
+      "blocks": {
+        "review-1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "author": "Priya S.",
+            "date": "2 weeks ago",
+            "verified": true,
+            "title": "Fits beautifully",
+            "body": "The draping is exactly like the photos and the fabric feels premium. Runs true to size."
+          }
+        },
+        "review-2": {
+          "type": "review",
+          "settings": {
+            "rating": 4,
+            "author": "Ananya R.",
+            "date": "1 month ago",
+            "verified": true,
+            "title": "Great quality",
+            "body": "Lovely top, wrap detail is well made. Slightly long for my height but easy to adjust."
+          }
+        }
+      },
+      "block_order": ["review-1", "review-2"],
+      "settings": {
+        "color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": ["main", "story", "reviews"]
+}

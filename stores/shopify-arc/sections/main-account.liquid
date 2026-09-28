@@ -1,0 +1,107 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+
+<div class="page-width">
+  <div class="customer account">
+    <div class="customer__header">
+      <h1 class="customer__title">Account</h1>
+      <a href="{{ routes.account_logout_url }}" class="customer__return-link">
+        Log out
+      </a>
+    </div>
+
+    <div class="customer__grid customer__grid--halves">
+      <div class="customer__section">
+        <h2 class="customer__section-title">Order history</h2>
+
+        {% paginate customer.orders by 20 %}
+          {%- if customer.orders.size > 0 -%}
+            <div class="customer__table-wrapper">
+              <table class="customer__table" role="table">
+                <caption class="visually-hidden">Order history</caption>
+                <thead role="rowgroup">
+                  <tr role="row">
+                    <th id="ColumnOrder" scope="col" role="columnheader">Order</th>
+                    <th id="ColumnDate" scope="col" role="columnheader">Date</th>
+                    <th id="ColumnPayment" scope="col" role="columnheader">Payment status</th>
+                    <th id="ColumnFulfillment" scope="col" role="columnheader">Fulfillment status</th>
+                    <th id="ColumnTotal" scope="col" role="columnheader">Total</th>
+                  </tr>
+                </thead>
+                <tbody role="rowgroup">
+                  {%- for order in customer.orders -%}
+                    <tr role="row">
+                      <td
+                        id="RowOrder"
+                        role="cell"
+                        headers="ColumnOrder"
+                        data-label="Order"
+                      >
+                        <a
+                          href="{{ order.customer_url }}"
+                          aria-label="{{ "Order number %1" | replace: "%1", order.name }}"
+                        >
+                          {{ order.name }}
+                        </a>
+                      </td>
+                      <td headers="RowOrder ColumnDate" role="cell" data-label="Date">
+                        {{ order.created_at | time_tag: format: 'date' }}
+                      </td>
+                      <td
+                        headers="RowOrder ColumnPayment"
+                        role="cell"
+                        data-label="Payment status"
+                      >
+                        {{ order.financial_status_label }}
+                      </td>
+                      <td
+                        headers="RowOrder ColumnFulfillment"
+                        role="cell"
+                        data-label="Fulfillment status"
+                      >
+                        {{ order.fulfillment_status_label }}
+                      </td>
+                      <td
+                        headers="RowOrder ColumnTotal"
+                        role="cell"
+                        data-label="Total"
+                        class="customer__table-num"
+                      >
+                        {{ order.total_net_amount | money_with_currency }}
+                      </td>
+                    </tr>
+                  {%- endfor -%}
+                </tbody>
+              </table>
+            </div>
+          {%- else -%}
+            <p class="customer__empty">You haven't placed any orders yet.</p>
+          {%- endif -%}
+
+          {%- render 'pagination', paginate: paginate -%}
+        {% endpaginate %}
+      </div>
+
+      <div class="customer__section">
+        <h2 class="customer__section-title">Account details</h2>
+
+        <div class="customer__address-block">
+          {%- if customer.default_address -%}
+            <div class="customer__address">{{ customer.default_address | format_address }}</div>
+          {%- else -%}
+            <p class="customer__empty">No default address saved.</p>
+          {%- endif -%}
+          <a href="{{ routes.account_addresses_url }}" class="customer__return-link">
+            View addresses ({{ customer.addresses_count }})
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Account",
+  "settings": []
+}
+{% endschema %}

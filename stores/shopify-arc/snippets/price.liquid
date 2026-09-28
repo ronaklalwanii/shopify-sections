@@ -1,0 +1,26 @@
+{%- doc -%}
+  Accepts: product, variant (optional, defaults to product's selected/first available variant)
+{%- enddoc -%}
+{%- liquid
+  assign target = variant | default: product.selected_or_first_available_variant
+  assign target_price = target.price
+  assign target_compare = target.compare_at_price
+-%}
+<div class="price{% if target_compare > target_price %} price--sale{% endif %}">
+  {%- if target_compare > target_price -%}
+    <span class="visually-hidden">Regular price</span>
+    <s class="price__compare-at">
+      {%- if settings.currency_code_enabled -%}{{ target_compare | money_with_currency }}{%- else -%}{{ target_compare | money }}{%- endif -%}
+    </s>
+    <span class="visually-hidden">Sale price</span>
+  {%- endif -%}
+  <span class="price__amount">
+    {%- if target_price == 0 -%}
+      Free
+    {%- elsif settings.currency_code_enabled -%}
+      {{ target_price | money_with_currency }}
+    {%- else -%}
+      {{ target_price | money }}
+    {%- endif -%}
+  </span>
+</div>

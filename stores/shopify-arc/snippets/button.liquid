@@ -1,0 +1,112 @@
+{%- doc -%}
+  Renders a link-styled button. Accepts:
+  - label (required)
+  - url (optional, defaults to '#')
+  - style: blank (default) — inherits Theme settings > Buttons > Default button style |
+    'btn--primary' (Filled) | 'btn--hollow' (Hollow) | 'btn--secondary' (Secondary) |
+    'btn--underline' (Link) | 'btn--animated' | 'btn--animated-secondary' |
+  | 'btn--roll' | 'btn--roll-secondary' — King-style rolling-label button (icon circle expands
+    to fill the surface on hover while the duplicate label rolls in character-by-character)
+  - extra_class (optional, additional classes)
+  - new_tab (optional bool)
+  - icon (optional bool) — adds a static icon circle. Ignored for the animated styles, which
+    have their own icon driven by the sitewide animated-button settings.
+  - icon_position: 'left' (default) | 'right' — only used when icon is true
+  - override_bg / override_text / override_hover_bg / override_hover_text / override_border
+    (optional colors) — per-instance overrides for the Animated and Hollow styles; blank
+    falls back to the global colors. override_bg is ignored for Hollow (its resting
+    background is always transparent); override_border is ignored for Animated.
+{%- enddoc -%}
+{%- liquid
+  assign resolved_style = style | default: settings.button_default_style | default: 'btn--primary'
+
+  assign is_animated = false
+  if resolved_style == 'btn--animated' or resolved_style == 'btn--animated-secondary'
+    assign is_animated = true
+  endif
+
+  assign is_hollow = false
+  if resolved_style == 'btn--hollow'
+    assign is_hollow = true
+  endif
+
+  assign is_roll = false
+  if resolved_style == 'btn--roll' or resolved_style == 'btn--roll-secondary'
+    assign is_roll = true
+  endif
+
+  # Defaulted here (not just inside button-classes) because the markup below also
+  # needs it to decide which side of the label the icon span goes on.
+  assign icon_position = icon_position | default: 'left'
+
+  # Style class + icon class derivation lives in one place, shared with
+  # card-product.liquid / mega-menu.liquid / menu-drawer-details.liquid.
+  capture btn_classes
+    render 'button-classes', style: resolved_style, icon: icon, icon_position: icon_position
+  endcapture
+
+  # Per-instance color overrides, emitted as inline custom properties that beat the
+  # :root tokens for this element only. Animated and Hollow each have their own token set.
+  assign override_style = ''
+  if is_animated
+    assign token_prefix = '--btn-animated'
+    if resolved_style == 'btn--animated-secondary'
+      assign token_prefix = '--btn-animated-secondary'
+    endif
+    if override_bg != blank
+      assign override_style = override_style | append: token_prefix | append: '-bg: ' | append: override_bg | append: ';'
+    endif
+    if override_text != blank
+      assign override_style = override_style | append: token_prefix | append: '-text: ' | append: override_text | append: ';'
+    endif
+    if override_hover_bg != blank
+      assign override_style = override_style | append: token_prefix | append: '-hover-bg: ' | append: override_hover_bg | append: ';'
+    endif
+    if override_hover_text != blank
+      assign override_style = override_style | append: token_prefix | append: '-hover-text: ' | append: override_hover_text | append: ';'
+    endif
+  elsif is_hollow
+    if override_text != blank
+      assign override_style = override_style | append: '--btn-hollow-text: ' | append: override_text | append: ';'
+    endif
+    if override_border != blank
+      assign override_style = override_style | append: '--btn-hollow-border: ' | append: override_border | append: ';'
+    endif
+    if override_hover_bg != blank
+      assign override_style = override_style | append: '--btn-hollow-hover-bg: ' | append: override_hover_bg | append: ';'
+    endif
+    if override_hover_text != blank
+      assign override_style = override_style | append: '--btn-hollow-hover-text: ' | append: override_hover_text | append: ';'
+    endif
+  endif
+-%}
+<a
+  href="{{ url | default: '#' }}"
+  class="btn {{ btn_classes }}{% if extra_class %} {{ extra_class }}{% endif %}"
+  {% if new_tab %}target="_blank" rel="noopener"{% endif %}
+  {% if override_style != '' %}style="{{ override_style }}"{% endif %}
+  {% if is_roll %}data-magnet{% endif %}
+>
+  {%- if is_roll -%}
+    <span class="btn-roll__icon" aria-hidden="true">
+      <svg viewBox="0 0 100 100" fill="none"><path d="M28 72L72 28M32 24H76V68" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <span class="btn__label">{{ label }}</span>
+    <span class="btn-roll__hover" aria-hidden="true">
+      {%- assign label_chars = label | split: '' -%}
+      {%- for c in label_chars -%}
+        <span class="btn-roll__char" data-char style="--ci: {{ forloop.index0 }}"{% if c == ' ' %} data-space{% endif %}>{% if c == ' ' %}&nbsp;{% else %}{{ c }}{% endif %}</span>
+      {%- endfor -%}
+    </span>
+  {%- elsif is_animated -%}
+    {%- render 'button-animated-content', label: label -%}
+  {%- else -%}
+    {%- if icon and icon_position == 'left' -%}
+      <span class="btn__icon-circle">{%- render 'icon-picker', style: settings.button_icon_style, direction: 'right' -%}</span>
+    {%- endif -%}
+    <span class="btn__label">{{ label }}</span>
+    {%- if icon and icon_position == 'right' -%}
+      <span class="btn__icon-circle">{%- render 'icon-picker', style: settings.button_icon_style, direction: 'right' -%}</span>
+    {%- endif -%}
+  {%- endif -%}
+</a>

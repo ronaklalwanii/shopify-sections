@@ -1,0 +1,1490 @@
+{{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+{{ 'hero-slideshow.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'hero-slideshow.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign slide_blocks = section.blocks | where: 'type', 'slide'
+  assign trust_blocks = section.blocks | where: 'type', 'trust_badge'
+  assign show_nav = false
+  if section.settings.show_pagination_arrows and slide_blocks.size > 1
+    assign show_nav = true
+  endif
+
+  assign trust_item_min_mobile = 80
+  if section.settings.trust_columns_mobile == '2'
+    assign trust_item_min_mobile = 48
+  endif
+-%}
+{%- liquid
+  assign hero_radius_class = ''
+  if section.settings.corner_radius_desktop != 'none'
+    assign hero_radius_class = ' hero--radius-' | append: section.settings.corner_radius_desktop
+  endif
+  assign adapt_ratio = ''
+  if section.settings.height_mode_desktop == 'adapt' or section.settings.height_mode_mobile == 'adapt'
+    assign adapt_img = section.blocks.first.settings.desktop_image | default: section.blocks.first.settings.mobile_image
+    if adapt_img != blank
+      assign adapt_ratio = adapt_img.aspect_ratio
+    endif
+  endif
+-%}
+<section
+  class="hero-slideshow swiper{{ hero_radius_class }}{% if section.settings.height_mode_desktop == 'fullscreen' %} hero--fullscreen-d{% endif %}{% if section.settings.height_mode_mobile == 'fullscreen' %} hero--fullscreen-m{% endif %}{% if adapt_ratio != '' %} hero--adapt{% endif %}"
+  id="HeroSlideshow-{{ section.id }}"
+  data-hero-slideshow
+  data-autoplay="{{ section.settings.autoplay }}"
+  data-autoplay-speed="{{ section.settings.autoplay_speed | times: 1000 }}"
+  data-loop="{{ section.settings.loop }}"
+  data-pause-on-hover="{{ section.settings.pause_on_hover }}"
+  data-effect="{{ section.settings.transition }}"
+  data-speed="{{ section.settings.transition_speed }}"
+  style="
+    --slide-height: {{ section.settings.slide_height }}vh;
+    --slide-height-mobile: {{ section.settings.slide_height_mobile }}vh;
+    --hero-adapt-ratio: {{ adapt_ratio | default: 1.7778 }};
+    --hero-corner-radius: {{ section.settings.corner_radius_value }}px;
+    --content-gutter: {{ section.settings.content_gutter_desktop }}px;
+    --content-gutter-large: {{ section.settings.content_gutter_large }}px;
+    --content-gutter-ultra: {{ section.settings.content_gutter_ultra }}px;
+    --content-gutter-mobile: {{ section.settings.content_gutter_mobile }}px;
+    {%- if show_nav -%}
+    --nav-width: {{ section.settings.nav_button_width }}px;
+    --nav-height: {{ section.settings.nav_button_height }}px;
+    --nav-radius: {{ section.settings.nav_button_radius }}px;
+    --nav-icon-size: {{ section.settings.nav_icon_size }}px;
+    --nav-tail-scale: {{ section.settings.nav_tail_scale }};
+    --nav-travel: {{ section.settings.nav_arrow_travel }}px;
+    --nav-offset: {{ section.settings.nav_offset_desktop }}px;
+    --nav-offset-mobile: {{ section.settings.nav_offset_mobile }}px;
+    --nav-bg: {{ section.settings.nav_bg }};
+    --nav-text: {{ section.settings.nav_text }};
+    --nav-hover-bg: {{ section.settings.nav_hover_bg }};
+    --nav-hover-text: {{ section.settings.nav_hover_text }};
+    {%- endif -%}
+  "
+>
+  <div class="swiper-wrapper">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'slide' -%}
+        {%- liquid
+          assign mobile_position = block.settings.content_position_mobile
+          if mobile_position == 'inherit'
+            assign mobile_position = block.settings.content_position
+          endif
+
+          # Placeholder art shown until a merchant picks a real image.
+          assign slide_index_mod = forloop.index0 | modulo: 2
+          assign placeholder_handle = 'lifestyle-1'
+          if slide_index_mod == 1
+            assign placeholder_handle = 'lifestyle-2'
+          endif
+        -%}
+        <div
+          class="swiper-slide hero-slide color-{{ block.settings.color_scheme }}{% if forloop.first %} swiper-slide-active{% endif %}"
+          {{ block.shopify_attributes }}
+        >
+          <div class="hero-slide__media">
+            {%- if block.settings.mobile_image != blank -%}
+              <img
+                class="hero-slide__image hero-slide__image--mobile"
+                src="{{ block.settings.mobile_image | image_url: width: 1200 }}"
+                srcset="{{ block.settings.mobile_image | image_url: width: 750 }} 750w, {{ block.settings.mobile_image | image_url: width: 1200 }} 1200w"
+                sizes="100vw"
+                width="1200"
+                height="{{ 1200 | divided_by: block.settings.mobile_image.aspect_ratio | round }}"
+                alt=""
+                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                {% if forloop.first %}fetchpriority="high"{% endif %}
+                style="object-position: {{ block.settings.image_position }};"
+              >
+            {%- endif -%}
+            {%- if block.settings.desktop_image != blank -%}
+              <img
+                class="hero-slide__image hero-slide__image--desktop{% if block.settings.mobile_image == blank %} hero-slide__image--always{% endif %}"
+                src="{{ block.settings.desktop_image | image_url: width: 2000 }}"
+                srcset="
+                  {{ block.settings.desktop_image | image_url: width: 750 }} 750w,
+                  {{ block.settings.desktop_image | image_url: width: 1500 }} 1500w,
+                  {{ block.settings.desktop_image | image_url: width: 2000 }} 2000w,
+                  {{ block.settings.desktop_image | image_url: width: 3000 }} 3000w
+                "
+                sizes="100vw"
+                width="2000"
+                height="{{ 2000 | divided_by: block.settings.desktop_image.aspect_ratio | round }}"
+                alt=""
+                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                {% if forloop.first %}fetchpriority="high"{% endif %}
+                style="object-position: {{ block.settings.image_position }};"
+              >
+            {%- endif -%}
+            {%- if block.settings.mobile_image == blank and block.settings.desktop_image == blank -%}
+              {{ placeholder_handle | placeholder_svg_tag: 'hero-slide__image hero-slide__image--desktop hero-slide__image--always' }}
+            {%- endif -%}
+            {%- if block.settings.overlay_opacity > 0 -%}
+              <div class="hero-slide__overlay" style="opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+            {%- endif -%}
+          </div>
+
+          <div
+            class="hero-slide__content-wrapper hero-slide__content-wrapper--{{ block.settings.content_container_width }} hero-slide__content-wrapper--{{ block.settings.content_position }} hero-slide__content-wrapper--mobile-{{ mobile_position }}{% if block.settings.offset_content_for_trust_bar %} hero-slide__content-wrapper--trust-offset{% endif %}"
+            style="
+              --content-padding-top: {{ block.settings.content_padding_top }}px;
+              --content-padding-right: {{ block.settings.content_padding_right }}px;
+              --content-padding-bottom: {{ block.settings.content_padding_bottom }}px;
+              --content-padding-left: {{ block.settings.content_padding_left }}px;
+            "
+          >
+            <div
+              class="hero-slide__content"
+              style="--content-width: {{ block.settings.content_width }}%;"
+              data-text-animation="{{ block.settings.text_animation }}"
+            >
+              {%- if block.settings.subheading != blank -%}
+                <p class="subheading" data-hero-text style="--i: 0;">{{ block.settings.subheading }}</p>
+              {%- endif -%}
+              {%- if block.settings.heading != blank -%}
+                {%- liquid
+                  # The homepage's single h1 lives in the first hero slide; the header
+                  # logo is a plain element everywhere (one h1 per page). A merchant-
+                  # picked heading_tag overrides the automatic choice.
+                  assign heading_tag = 'h2'
+                  if block.settings.heading_tag != 'auto'
+                    assign heading_tag = block.settings.heading_tag
+                  elsif forloop.first and request.page_type == 'index'
+                    assign heading_tag = 'h1'
+                  endif
+                -%}
+                <{{ heading_tag }}
+                  class="hero-slide__heading {{ block.settings.heading_size }}{% if block.settings.heading_shadow %} hero-slide__heading--shadow{% endif %}"
+                  data-hero-text
+                  style="--i: 1;"
+                >
+                  {{ block.settings.heading | newline_to_br }}
+                </{{ heading_tag }}>
+              {%- endif -%}
+              {%- if block.settings.description != blank and block.settings.description_position == 'above' -%}
+                <p class="hero-slide__description" data-hero-text style="--i: 2;">{{ block.settings.description }}</p>
+              {%- endif -%}
+              {%- if block.settings.button_1_label != blank or block.settings.button_2_label != blank -%}
+                <div class="hero-slide__buttons" data-hero-text style="--i: 3;">
+                  {%- if block.settings.button_1_label != blank -%}
+                    {%- render 'button',
+                      label: block.settings.button_1_label,
+                      url: block.settings.button_1_link,
+                      style: block.settings.button_1_style,
+                      icon: block.settings.button_1_icon,
+                      icon_position: block.settings.button_1_icon_position,
+                      override_bg: block.settings.button_1_bg,
+                      override_text: block.settings.button_1_text,
+                      override_border: block.settings.button_1_border,
+                      override_hover_bg: block.settings.button_1_hover_bg,
+                      override_hover_text: block.settings.button_1_hover_text
+                    -%}
+                  {%- endif -%}
+                  {%- if block.settings.button_2_label != blank -%}
+                    {%- render 'button',
+                      label: block.settings.button_2_label,
+                      url: block.settings.button_2_link,
+                      style: block.settings.button_2_style,
+                      icon: block.settings.button_2_icon,
+                      icon_position: block.settings.button_2_icon_position,
+                      override_bg: block.settings.button_2_bg,
+                      override_text: block.settings.button_2_text,
+                      override_border: block.settings.button_2_border,
+                      override_hover_bg: block.settings.button_2_hover_bg,
+                      override_hover_text: block.settings.button_2_hover_text
+                    -%}
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+              {%- if block.settings.description != blank and block.settings.description_position == 'below' -%}
+                <p class="hero-slide__description" data-hero-text style="--i: 2;">{{ block.settings.description }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  {%- if show_nav -%}
+    <div class="hero-slideshow__nav">
+      <button type="button" class="hero-slideshow__nav-btn hero-slideshow__prev" aria-label="Previous slide">
+        <span class="hero-slideshow__nav-icon">
+          {%- render 'icon-picker', style: section.settings.nav_icon_style, direction: 'left' -%}
+        </span>
+      </button>
+      <button type="button" class="hero-slideshow__nav-btn hero-slideshow__next" aria-label="Next slide">
+        <span class="hero-slideshow__nav-icon">
+          {%- render 'icon-picker', style: section.settings.nav_icon_style, direction: 'right' -%}
+        </span>
+      </button>
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.show_pagination_dots and slide_blocks.size > 1 -%}
+    <div class="hero-slideshow__pagination swiper-pagination"></div>
+  {%- endif -%}
+
+  {%- if trust_blocks.size > 0 and section.settings.show_trust_bar -%}
+    <div
+      class="hero-slideshow__trust-bar hero-slideshow__trust-bar--{{ section.settings.trust_bar_width }}{% unless section.settings.trust_icon_circle %} hero-slideshow__trust-bar--no-circle{% endunless %}"
+      data-hero-trust-bar
+      style="
+        --trust-bar-bg: {{ section.settings.trust_bar_bg }};
+        --trust-icon-size: {{ section.settings.trust_icon_size }}px;
+        --trust-grid: repeat({{ section.settings.trust_columns_desktop }}, 1fr);
+        --trust-item-min-mobile: {{ trust_item_min_mobile }}%;
+        --trust-gap: {{ section.settings.trust_gap }}px;
+        --trust-padding-block: {{ section.settings.trust_padding_block_desktop }}px;
+        --trust-padding-block-mobile: {{ section.settings.trust_padding_block_mobile }}px;
+        --trust-heading-color: {{ section.settings.trust_heading_color }};
+        --trust-text-color: {{ section.settings.trust_text_color }};
+        --trust-heading-size: {{ section.settings.trust_heading_size }}px;
+        --trust-text-size: {{ section.settings.trust_text_size }}px;
+        --trust-icon-gap: {{ section.settings.trust_icon_gap_desktop }}px;
+        --trust-icon-gap-mobile: {{ section.settings.trust_icon_gap_mobile }}px;
+        --trust-icon-circle-bg: {{ section.settings.trust_icon_circle_bg }};
+        --trust-icon-circle-border: {{ section.settings.trust_icon_circle_border }};
+        --trust-border-color: {{ section.settings.trust_border_color }};
+        --trust-blur: {{ section.settings.trust_blur }}px;
+      "
+    >
+      <div class="hero-slideshow__trust-inner">
+        {%- for block in trust_blocks -%}
+          <div class="hero-slideshow__trust-item" {{ block.shopify_attributes }}>
+            <span class="hero-slideshow__trust-icon">
+              {%- if block.settings.custom_icon != blank -%}
+                <img
+                  src="{{ block.settings.custom_icon | image_url: width: 120 }}"
+                  alt=""
+                  width="120"
+                  height="{{ 120 | divided_by: block.settings.custom_icon.aspect_ratio | default: 1.0 | round }}"
+                  loading="lazy"
+                >
+              {%- else -%}
+                {%- render 'icon-trust', style: block.settings.icon -%}
+              {%- endif -%}
+            </span>
+            <div class="hero-slideshow__trust-copy">
+              {%- if block.settings.heading != blank -%}
+                <p class="hero-slideshow__trust-heading">{{ block.settings.heading }}</p>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <p class="hero-slideshow__trust-text">{{ block.settings.text | newline_to_br }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Hero slideshow",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Corner radius"
+    },
+    {
+      "type": "select",
+      "id": "corner_radius_desktop",
+      "label": "Corner radius",
+      "default": "none",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        },
+        {
+          "value": "all",
+          "label": "All sides"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "corner_radius_value",
+      "label": "Radius size",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "height_mode_desktop",
+      "label": "Slide height mode (desktop)",
+      "default": "custom",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "Adapt to first slide image"
+        },
+        {
+          "value": "fullscreen",
+          "label": "Fullscreen"
+        },
+        {
+          "value": "custom",
+          "label": "Custom height"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "slide_height",
+      "label": "Slide height (desktop)",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "default": 90,
+      "info": "Used when desktop height mode is Custom."
+    },
+    {
+      "type": "select",
+      "id": "height_mode_mobile",
+      "label": "Slide height mode (mobile)",
+      "default": "custom",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "Adapt to first slide image"
+        },
+        {
+          "value": "fullscreen",
+          "label": "Fullscreen"
+        },
+        {
+          "value": "custom",
+          "label": "Custom height"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "slide_height_mobile",
+      "label": "Slide height (mobile)",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "default": 70,
+      "info": "Used when mobile height mode is Custom."
+    },
+    {
+      "type": "header",
+      "content": "Content spacing"
+    },
+    {
+      "type": "range",
+      "id": "content_gutter_desktop",
+      "label": "Side gutter (desktop)",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 32,
+      "info": "Distance between content and the screen edge from 750px up."
+    },
+    {
+      "type": "range",
+      "id": "content_gutter_large",
+      "label": "Side gutter (1200px and up)",
+      "min": 0,
+      "max": 128,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "content_gutter_ultra",
+      "label": "Side gutter (1441px and up)",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 112
+    },
+    {
+      "type": "range",
+      "id": "content_gutter_mobile",
+      "label": "Side gutter (mobile)",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 24,
+      "info": "Distance between slide content and the screen edge on mobile."
+    },
+    {
+      "type": "header",
+      "content": "Autoplay"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto-rotate slides",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Seconds per slide",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause on hover",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "loop",
+      "label": "Loop back to first slide",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Transition"
+    },
+    {
+      "type": "select",
+      "id": "transition",
+      "label": "Transition style",
+      "default": "slide",
+      "info": "Slide moves images across (King's default). Fade crossfades but stacks slides on top of each other, needing extra handling to keep inactive slides from intercepting clicks. Cover-flow and Creative are 3D Swiper effects.",
+      "options": [
+        {
+          "value": "fade",
+          "label": "Fade"
+        },
+        {
+          "value": "slide",
+          "label": "Slide"
+        },
+        {
+          "value": "coverflow",
+          "label": "Cover-flow"
+        },
+        {
+          "value": "creative",
+          "label": "Creative"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "transition_speed",
+      "label": "Transition speed",
+      "min": 300,
+      "max": 1200,
+      "step": 50,
+      "unit": "ms",
+      "default": 600
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination_arrows",
+      "label": "Show prev/next arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination_dots",
+      "label": "Show dot pagination",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "nav_icon_style",
+      "label": "Arrow icon",
+      "default": "arrow",
+      "options": [
+        {
+          "value": "chevron",
+          "label": "Chevron"
+        },
+        {
+          "value": "arrow",
+          "label": "Arrow"
+        },
+        {
+          "value": "hooked-arrow",
+          "label": "Hooked arrow"
+        },
+        {
+          "value": "plus",
+          "label": "Plus"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "nav_button_width",
+      "label": "Button width",
+      "min": 32,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "nav_button_height",
+      "label": "Button height",
+      "min": 32,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "nav_icon_size",
+      "label": "Icon size",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "nav_button_radius",
+      "label": "Button corner radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 100,
+      "info": "Set to half the button height or higher for a full circle."
+    },
+    {
+      "type": "range",
+      "id": "nav_tail_scale",
+      "label": "Arrow tail stretch on hover",
+      "min": 1,
+      "max": 4,
+      "step": 0.1,
+      "default": 2.4,
+      "info": "How much the arrow's tail lengthens while it slides half-out of the button on hover. Only applies to the Arrow icon style."
+    },
+    {
+      "type": "range",
+      "id": "nav_arrow_travel",
+      "label": "Arrow travel on hover",
+      "min": 0,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 24,
+      "info": "How far the arrow slides out of its button on hover \u2014 the next arrow moves right, the previous arrow moves left. Set it to half the button width for the half-in, half-out look."
+    },
+    {
+      "type": "range",
+      "id": "nav_offset_desktop",
+      "label": "Distance from hero bottom (desktop)",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 35
+    },
+    {
+      "type": "range",
+      "id": "nav_offset_mobile",
+      "label": "Distance from hero bottom (mobile)",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Navigation colors"
+    },
+    {
+      "type": "color",
+      "id": "nav_bg",
+      "label": "Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "nav_text",
+      "label": "Icon color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "nav_hover_bg",
+      "label": "Background (hover)",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "nav_hover_text",
+      "label": "Icon color (hover)",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Trust bar"
+    },
+    {
+      "type": "paragraph",
+      "content": "Optional translucent strip pinned to the bottom of the hero, built from 'Trust badge' blocks below."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_bar",
+      "label": "Show trust bar",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "trust_bar_width",
+      "label": "Width",
+      "default": "full",
+      "options": [
+        {
+          "value": "full",
+          "label": "Full width"
+        },
+        {
+          "value": "page",
+          "label": "Page width"
+        }
+      ]
+    },
+    {
+      "type": "color_background",
+      "id": "trust_bar_bg",
+      "label": "Background",
+      "default": "rgba(0, 0, 0, 0.35)"
+    },
+    {
+      "type": "range",
+      "id": "trust_blur",
+      "label": "Background blur",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color_background",
+      "id": "trust_border_color",
+      "label": "Top border color",
+      "default": "rgba(255, 255, 255, 0.15)"
+    },
+    {
+      "type": "header",
+      "content": "Trust bar layout"
+    },
+    {
+      "type": "range",
+      "id": "trust_columns_desktop",
+      "label": "Columns (desktop)",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "trust_columns_mobile",
+      "label": "Columns (mobile)",
+      "default": "2",
+      "options": [
+        {
+          "value": "1",
+          "label": "1 column"
+        },
+        {
+          "value": "2",
+          "label": "2 columns"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "trust_gap",
+      "label": "Gap between badges",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "trust_padding_block_desktop",
+      "label": "Vertical padding (desktop)",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "trust_padding_block_mobile",
+      "label": "Vertical padding (mobile)",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Trust bar text"
+    },
+    {
+      "type": "color",
+      "id": "trust_heading_color",
+      "label": "Heading color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "trust_text_color",
+      "label": "Text color",
+      "default": "#CCCCCC"
+    },
+    {
+      "type": "range",
+      "id": "trust_heading_size",
+      "label": "Heading size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "trust_text_size",
+      "label": "Text size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "header",
+      "content": "Trust bar icons"
+    },
+    {
+      "type": "range",
+      "id": "trust_icon_size",
+      "label": "Icon size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "trust_icon_gap_desktop",
+      "label": "Gap between icon and text (desktop)",
+      "min": 4,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "trust_icon_gap_mobile",
+      "label": "Gap between icon and text (mobile)",
+      "min": 4,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "checkbox",
+      "id": "trust_icon_circle",
+      "label": "Show icon in a circle",
+      "default": true
+    },
+    {
+      "type": "color_background",
+      "id": "trust_icon_circle_bg",
+      "label": "Icon circle background",
+      "default": "rgba(255, 255, 255, 0.12)"
+    },
+    {
+      "type": "color_background",
+      "id": "trust_icon_circle_border",
+      "label": "Icon circle border",
+      "default": "rgba(255, 255, 255, 0.25)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "desktop_image",
+          "label": "Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile image",
+          "info": "Optional. Falls back to the image above."
+        },
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "Image focus position",
+          "default": "50% 50%",
+          "info": "Which part of the image stays visible when the slide crops it.",
+          "options": [
+            {
+              "value": "50% 50%",
+              "label": "Center"
+            },
+            {
+              "value": "50% 0%",
+              "label": "Top"
+            },
+            {
+              "value": "50% 100%",
+              "label": "Bottom"
+            },
+            {
+              "value": "0% 50%",
+              "label": "Left"
+            },
+            {
+              "value": "100% 50%",
+              "label": "Right"
+            },
+            {
+              "value": "0% 0%",
+              "label": "Top left"
+            },
+            {
+              "value": "100% 0%",
+              "label": "Top right"
+            },
+            {
+              "value": "0% 100%",
+              "label": "Bottom left"
+            },
+            {
+              "value": "100% 100%",
+              "label": "Bottom right"
+            }
+          ]
+        },
+        {
+          "type": "color_scheme",
+          "id": "color_scheme",
+          "label": "Color scheme",
+          "default": "scheme-1"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "label": "Image overlay darkness",
+          "min": 0,
+          "max": 80,
+          "step": 5,
+          "unit": "%",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subheading"
+        },
+        {
+          "type": "textarea",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "label": "Heading size",
+          "default": "display-heading",
+          "options": [
+            {
+              "value": "h1",
+              "label": "Small"
+            },
+            {
+              "value": "display-heading",
+              "label": "Large"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "Heading tag (SEO)",
+          "default": "auto",
+          "options": [
+            {
+              "value": "auto",
+              "label": "Auto (H1 on first home slide)"
+            },
+            {
+              "value": "h1",
+              "label": "H1"
+            },
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+            {
+              "value": "h4",
+              "label": "H4"
+            },
+            {
+              "value": "h5",
+              "label": "H5"
+            },
+            {
+              "value": "h6",
+              "label": "H6"
+            },
+            {
+              "value": "p",
+              "label": "Paragraph"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "heading_shadow",
+          "label": "Add text shadow",
+          "info": "Improves legibility over busy images",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "select",
+          "id": "description_position",
+          "label": "Description position",
+          "default": "below",
+          "options": [
+            {
+              "value": "below",
+              "label": "Below heading"
+            },
+            {
+              "value": "above",
+              "label": "Above heading"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "select",
+          "id": "content_container_width",
+          "label": "Content container",
+          "default": "full",
+          "options": [
+            {
+              "value": "full",
+              "label": "Full width"
+            },
+            {
+              "value": "page",
+              "label": "Page width"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "content_position",
+          "label": "Content position (desktop)",
+          "default": "bottom-left",
+          "options": [
+            {
+              "value": "top-left",
+              "label": "Top left"
+            },
+            {
+              "value": "top-center",
+              "label": "Top center"
+            },
+            {
+              "value": "top-right",
+              "label": "Top right"
+            },
+            {
+              "value": "middle-left",
+              "label": "Middle left"
+            },
+            {
+              "value": "middle-center",
+              "label": "Middle center"
+            },
+            {
+              "value": "middle-right",
+              "label": "Middle right"
+            },
+            {
+              "value": "bottom-left",
+              "label": "Bottom left"
+            },
+            {
+              "value": "bottom-center",
+              "label": "Bottom center"
+            },
+            {
+              "value": "bottom-right",
+              "label": "Bottom right"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "content_position_mobile",
+          "label": "Content position (mobile)",
+          "default": "inherit",
+          "options": [
+            {
+              "value": "inherit",
+              "label": "Same as desktop"
+            },
+            {
+              "value": "top-center",
+              "label": "Top center"
+            },
+            {
+              "value": "middle-center",
+              "label": "Middle center"
+            },
+            {
+              "value": "bottom-center",
+              "label": "Bottom center"
+            }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "content_width",
+          "label": "Content width",
+          "min": 30,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default": 55
+        },
+        {
+          "type": "range",
+          "id": "content_padding_top",
+          "label": "Content padding top",
+          "min": 0,
+          "max": 160,
+          "step": 4,
+          "unit": "px",
+          "default": 96
+        },
+        {
+          "type": "range",
+          "id": "content_padding_right",
+          "label": "Content padding right",
+          "min": 0,
+          "max": 120,
+          "step": 4,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "content_padding_bottom",
+          "label": "Content padding bottom",
+          "min": 0,
+          "max": 160,
+          "step": 4,
+          "unit": "px",
+          "default": 48
+        },
+        {
+          "type": "range",
+          "id": "content_padding_left",
+          "label": "Content padding left",
+          "min": 0,
+          "max": 120,
+          "step": 4,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "checkbox",
+          "id": "offset_content_for_trust_bar",
+          "label": "Keep bottom content clear of trust bar",
+          "default": true,
+          "info": "Automatically adds the trust bar's height below bottom-positioned content. Ignored when there is no trust bar."
+        },
+        {
+          "type": "select",
+          "id": "text_animation",
+          "label": "Text entrance animation",
+          "default": "fade-up",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "fade-in",
+              "label": "Fade in"
+            },
+            {
+              "value": "fade-up",
+              "label": "Fade up"
+            },
+            {
+              "value": "slide-right",
+              "label": "Slide in from left"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Buttons"
+        },
+        {
+          "type": "text",
+          "id": "button_1_label",
+          "label": "Button 1 label"
+        },
+        {
+          "type": "url",
+          "id": "button_1_link",
+          "label": "Button 1 link"
+        },
+        {
+          "type": "select",
+          "id": "button_1_style",
+          "label": "Button 1 style",
+          "default": "btn--animated",
+          "options": [
+            {
+              "value": "",
+              "label": "Use theme default"
+            },
+            {
+              "value": "btn--primary",
+              "label": "Filled"
+            },
+            {
+              "value": "btn--hollow",
+              "label": "Hollow"
+            },
+            {
+              "value": "btn--secondary",
+              "label": "Secondary"
+            },
+            {
+              "value": "btn--animated",
+              "label": "Animated"
+            },
+            {
+              "value": "btn--animated-secondary",
+              "label": "Animated (secondary)"
+            },
+            {
+              "value": "btn--underline",
+              "label": "Link"
+            },
+            {
+              "value": "btn--roll",
+              "label": "Rolling text"
+            },
+            {
+              "value": "btn--roll-secondary",
+              "label": "Rolling text (secondary)"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "button_1_icon",
+          "label": "Show icon",
+          "default": true,
+          "info": "Only applies to Filled/Hollow/Secondary/Link. Animated has its own icon setting in Theme settings > Buttons."
+        },
+        {
+          "type": "select",
+          "id": "button_1_icon_position",
+          "label": "Icon position",
+          "default": "left",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Button 1 colors (optional)"
+        },
+        {
+          "type": "paragraph",
+          "content": "Overrides the global Animated or Hollow button colors for this button only (only applies when Button 1 style is Animated or Hollow). Leave blank to use the global colors."
+        },
+        {
+          "type": "color",
+          "id": "button_1_bg",
+          "label": "Background",
+          "info": "Animated style only — Hollow's resting background is always transparent."
+        },
+        {
+          "type": "color",
+          "id": "button_1_text",
+          "label": "Text"
+        },
+        {
+          "type": "color",
+          "id": "button_1_border",
+          "label": "Border",
+          "info": "Hollow style only."
+        },
+        {
+          "type": "color",
+          "id": "button_1_hover_bg",
+          "label": "Background (hover)"
+        },
+        {
+          "type": "color",
+          "id": "button_1_hover_text",
+          "label": "Text (hover)"
+        },
+        {
+          "type": "text",
+          "id": "button_2_label",
+          "label": "Button 2 label"
+        },
+        {
+          "type": "url",
+          "id": "button_2_link",
+          "label": "Button 2 link"
+        },
+        {
+          "type": "select",
+          "id": "button_2_style",
+          "label": "Button 2 style",
+          "default": "btn--animated-secondary",
+          "options": [
+            {
+              "value": "",
+              "label": "Use theme default"
+            },
+            {
+              "value": "btn--primary",
+              "label": "Filled"
+            },
+            {
+              "value": "btn--hollow",
+              "label": "Hollow"
+            },
+            {
+              "value": "btn--secondary",
+              "label": "Secondary"
+            },
+            {
+              "value": "btn--animated",
+              "label": "Animated"
+            },
+            {
+              "value": "btn--animated-secondary",
+              "label": "Animated (secondary)"
+            },
+            {
+              "value": "btn--underline",
+              "label": "Link"
+            },
+            {
+              "value": "btn--roll",
+              "label": "Rolling text"
+            },
+            {
+              "value": "btn--roll-secondary",
+              "label": "Rolling text (secondary)"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "button_2_icon",
+          "label": "Show icon",
+          "default": true,
+          "info": "Only applies to Filled/Hollow/Secondary/Link. Animated has its own icon setting in Theme settings > Buttons."
+        },
+        {
+          "type": "select",
+          "id": "button_2_icon_position",
+          "label": "Icon position",
+          "default": "right",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Button 2 colors (optional)"
+        },
+        {
+          "type": "paragraph",
+          "content": "Overrides the global Animated or Hollow button colors for this button only (only applies when Button 2 style is Animated or Hollow). Leave blank to use the global colors."
+        },
+        {
+          "type": "color",
+          "id": "button_2_bg",
+          "label": "Background",
+          "info": "Animated style only — Hollow's resting background is always transparent."
+        },
+        {
+          "type": "color",
+          "id": "button_2_text",
+          "label": "Text"
+        },
+        {
+          "type": "color",
+          "id": "button_2_border",
+          "label": "Border",
+          "info": "Hollow style only."
+        },
+        {
+          "type": "color",
+          "id": "button_2_hover_bg",
+          "label": "Background (hover)"
+        },
+        {
+          "type": "color",
+          "id": "button_2_hover_text",
+          "label": "Text (hover)"
+        }
+      ]
+    },
+    {
+      "type": "trust_badge",
+      "name": "Trust badge",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom icon image",
+          "info": "Optional. Replaces the built-in icon above when set."
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Built-in icon",
+          "default": "shipping",
+          "options": [
+            {
+              "value": "shipping",
+              "label": "Shipping"
+            },
+            {
+              "value": "secure",
+              "label": "Secure payment"
+            },
+            {
+              "value": "returns",
+              "label": "Returns"
+            },
+            {
+              "value": "support",
+              "label": "Support"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Fast & Free Shipping"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "We deliver your favorite styles fast, with free shipping on eligible orders."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero slideshow",
+      "blocks": [
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

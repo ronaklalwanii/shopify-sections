@@ -1,0 +1,40 @@
+{%- doc -%}
+  Renders one of a curated set of trust-badge icons. Used by sections/trust-badges.liquid
+  and the hero slideshow's inline trust bar (sections/hero-slideshow.liquid).
+  Accepts: style ('shipping' | 'secure' | 'returns' | 'support', default 'shipping')
+           class (optional extra classes)
+{%- enddoc -%}
+{%- liquid
+  assign style = style | default: 'shipping'
+  assign icon_class = 'icon icon-trust'
+  if class
+    assign icon_class = icon_class | append: ' ' | append: class
+  endif
+-%}
+{%- case style -%}
+  {%- when 'shipping' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="{{ icon_class }}" aria-hidden="true" focusable="false">
+      <path d="m21 8-9-5-9 5 9 5 9-5Z"></path>
+      <path d="M3 8v8l9 5 9-5V8"></path>
+      <path d="M12 13v8"></path>
+    </svg>
+  {%- when 'secure' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="{{ icon_class }}" aria-hidden="true" focusable="false">
+      <path d="M12 3 5 6v6c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z"></path>
+      <path d="m9 12 2 2 4-4"></path>
+    </svg>
+  {%- when 'returns' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="{{ icon_class }}" aria-hidden="true" focusable="false">
+      <path d="M4 4v5h5"></path>
+      <path d="M20 20v-5h-5"></path>
+      <path d="M20 9a8 8 0 0 0-14.9-3.5L4 9"></path>
+      <path d="M4 15a8 8 0 0 0 14.9 3.5L20 15"></path>
+    </svg>
+  {%- when 'support' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="{{ icon_class }}" aria-hidden="true" focusable="false">
+      <path d="M4 13v-1a8 8 0 0 1 16 0v1"></path>
+      <rect x="3" y="13" width="4" height="6" rx="1.5"></rect>
+      <rect x="17" y="13" width="4" height="6" rx="1.5"></rect>
+      <path d="M19 19v1a2 2 0 0 1-2 2h-3"></path>
+    </svg>
+{%- endcase -%}

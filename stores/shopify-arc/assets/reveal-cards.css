@@ -1,0 +1,246 @@
+/* Reveal cards — image and content panel share one grid cell on desktop;
+   the hovered card grows and the panel slides in beside the image. Every
+   visual property is driven by CSS vars from section settings. */
+
+.reveal-cards {
+  padding-top: var(--section-pad-top, 40px);
+  padding-bottom: var(--section-pad-bottom, 70px);
+}
+@media screen and (max-width: 749px) {
+  .reveal-cards {
+    padding-top: var(--section-pad-top-mobile, 30px);
+    padding-bottom: var(--section-pad-bottom-mobile, 30px);
+  }
+}
+
+.reveal-cards__header {
+  max-width: calc(100% - (var(--reveal-gap, 10px) * 2));
+  margin-inline: auto;
+  margin-bottom: 1.5rem;
+}
+.reveal-cards__header--left { text-align: left; }
+.reveal-cards__header--center { text-align: center; }
+
+/* Row: 3-column grid from tablet up, one column (or swipe carousel) on mobile. */
+.reveal-cards__row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--reveal-gap, 10px);
+  align-items: flex-start;
+  max-width: calc(100% - (var(--reveal-gap, 10px) * 2));
+  margin-inline: auto;
+}
+@media screen and (min-width: 1200px) {
+  .reveal-cards__row {
+    gap: var(--reveal-gap-large, 20px);
+    max-width: calc(100% - (var(--reveal-gap-large, 20px) * 2));
+  }
+}
+@media screen and (max-width: 749px) {
+  .reveal-cards__row { gap: var(--reveal-gap-mobile, 15px); }
+  .reveal-cards__row--swipe {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(var(--swipe-item-width, 85%), 1fr);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-inline: var(--reveal-gap-mobile, 15px);
+    padding-bottom: var(--reveal-gap-mobile, 15px);
+    scrollbar-width: none;
+  }
+  .reveal-cards__row--swipe::-webkit-scrollbar { display: none; }
+  .reveal-cards__row--swipe .reveal-card { scroll-snap-align: start; }
+}
+
+.reveal-card {
+  display: grid;
+  min-width: 0;
+  z-index: 1;
+  border-radius: var(--reveal-radius, 20px);
+  overflow: hidden;
+  background: var(--reveal-panel-bg, rgb(var(--color-secondary-background)));
+  /* The whole card tweens with one short all-property transition;
+     the panel below lags slightly behind it. */
+  transition: all calc(var(--reveal-duration, 400ms) * 0.75) ease;
+}
+.reveal-cards__row--shadow .reveal-card { box-shadow: 0 0 10px rgba(0, 0, 0, 0.12); }
+
+.reveal-card__media { height: var(--reveal-height, 520px); }
+@media screen and (max-width: 749px) {
+  .reveal-card__media { height: var(--reveal-height-mobile, 420px); }
+}
+.reveal-card__image-wrap {
+  position: relative;
+  height: 100%;
+  border-radius: var(--reveal-radius, 20px);
+  overflow: hidden;
+}
+.reveal-card__image { display: block; width: 100%; height: 100%; object-fit: cover; }
+.reveal-card__overlay { position: absolute; inset: 0; background: #000; opacity: var(--reveal-overlay, 0.1); }
+
+/* Index numbers — outlined digits on the image and the content panel. */
+.reveal-card__index {
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px var(--index-stroke, rgb(var(--color-foreground)));
+  line-height: 1;
+  transition: opacity 0.3s ease;
+}
+.reveal-card__index--media {
+  position: absolute;
+  inset-inline-end: 20px;
+  bottom: 10px;
+  z-index: 2;
+  opacity: var(--index-media-opacity, 0.5);
+}
+.reveal-card__index--panel {
+  display: none;
+  margin-top: auto;
+  margin-inline-start: auto;
+  opacity: var(--index-panel-opacity, 0.2);
+}
+@media screen and (max-width: 1024px) {
+  /* The marquee becomes permanently visible below 1025px by default (see
+     .reveal-card__marquee below), so the on-image number moves to the top
+     edge instead of just nudging its bottom offset - otherwise the marquee's
+     glass strip visually overlaps and masks the lower half of the number at
+     this size. When the marquee is set to hover-only there's no overlap
+     risk, so the number stays in its normal bottom-anchored spot. */
+  .reveal-card__index--media { top: 20px; bottom: auto; }
+  .reveal-cards__row--marquee-hover-only .reveal-card__index--media { top: auto; bottom: 20px; }
+
+  .reveal-cards__row--marquee-hover-only .reveal-card__marquee {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  .reveal-cards__row--marquee-hover-only .reveal-card--active .reveal-card__marquee {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scrolling badge — glass strip that rises from the image bottom. */
+.reveal-card__marquee {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+  background: var(--marquee-bg, rgba(255, 255, 255, 0.3));
+  backdrop-filter: blur(var(--marquee-blur, 5px));
+  -webkit-backdrop-filter: blur(var(--marquee-blur, 5px));
+  padding-block: var(--marquee-pad-block, 5px);
+  opacity: 1;
+  transform: translateY(0);
+  transition: transform 0.3s ease, opacity 0.4s ease;
+  will-change: transform, opacity;
+}
+.reveal-cards__row--marquee-border .reveal-card__marquee {
+  border-top: 1px solid var(--marquee-border, rgba(255, 255, 255, 0.45));
+}
+.reveal-card__marquee-track {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  column-gap: var(--marquee-node-gap, 20px);
+  padding-inline: 10px;
+  animation: reveal-card-marquee var(--marquee-speed, 15s) linear infinite;
+}
+.reveal-cards__row--marquee-reverse .reveal-card__marquee-track { animation-name: reveal-card-marquee-reverse; }
+.reveal-card__marquee-node {
+  font-size: var(--marquee-size, 26px);
+  color: var(--marquee-color, #fff);
+}
+@media screen and (max-width: 749px) {
+  .reveal-card__marquee-node { font-size: var(--marquee-size-mobile, 25px); }
+}
+@keyframes reveal-card-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+@keyframes reveal-card-marquee-reverse {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+/* Content panel — sits below the image from tablet down, slides in beside it
+   on desktop when the card expands. */
+.reveal-card__panel { background: var(--reveal-panel-bg, rgb(var(--color-secondary-background))); }
+.reveal-card__panel-inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: start;
+  padding: var(--panel-pad-block, 30px) var(--panel-pad-inline, 20px);
+}
+.reveal-card__panel-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--panel-gap, 20px);
+  justify-content: center;
+}
+.reveal-card__button { margin-top: var(--panel-button-gap, 18px); }
+@media screen and (max-width: 749px) {
+  .reveal-card__panel-inner {
+    padding: var(--panel-pad-block-mobile, 20px) var(--panel-pad-inline-mobile, 20px);
+  }
+  .reveal-card__panel-box { gap: var(--panel-gap-mobile, 15px); }
+}
+
+@media screen and (min-width: 1025px) {
+  .reveal-cards__row { display: flex; }
+  /* Collapsed cards flex to share whatever the active card leaves — the row
+     always sums to exactly 100% regardless of gaps or card count, so nothing
+     can overflow. `transition: all` on the card tweens grow/shrink/basis
+     together, keeping the redistribution smooth. */
+  .reveal-card { flex: 1 1 0; }
+  .reveal-card__media,
+  .reveal-card__panel { grid-area: 1 / 1; }
+  .reveal-card__media { height: var(--reveal-height, 520px); }
+
+  .reveal-card--active {
+    flex: 0 0 var(--reveal-expanded, 50%);
+    padding-inline-end: calc(var(--reveal-expanded, 50%) / 2);
+    z-index: 2;
+  }
+
+  /* The panel stays at a negative z-index even when active — inside the
+     card's stacking context that paints it above the card's own background
+     but BELOW the image, so it emerges from behind the photo into the
+     expanded zone instead of sliding across it. */
+  .reveal-card__panel {
+    height: 100%;
+    opacity: 0;
+    z-index: -1;
+    pointer-events: none;
+    margin-inline-end: 1px;
+    border-radius: 0 var(--reveal-radius, 20px) var(--reveal-radius, 20px) 0;
+    transform: translateX(0);
+    transition: transform var(--reveal-duration, 400ms) ease-in-out var(--reveal-delay, 50ms);
+  }
+  .reveal-card--active .reveal-card__panel {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(100%);
+  }
+
+  /* The scrolling badge only shows on the active card; the on-image number
+     fades out to make room for it. */
+  .reveal-card__marquee { opacity: 0; transform: translateY(100%); }
+  .reveal-card--active .reveal-card__marquee { opacity: 1; transform: translateY(0); }
+  .reveal-card--active .reveal-card__index--media { opacity: 0; }
+
+  /* The card frame and the panel index number are desktop-only. */
+  .reveal-cards__row--frame .reveal-card__media { padding: var(--reveal-frame-pad, 13px); }
+  .reveal-card__index--panel { display: block; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-card,
+  .reveal-card__panel,
+  .reveal-card__marquee { transition: none; }
+  .reveal-card__marquee-track { animation: none; }
+}

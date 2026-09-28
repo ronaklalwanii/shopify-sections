@@ -1,0 +1,175 @@
+{{ 'bundle-items.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'bundle-items.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign product_blocks = section.blocks | where: 'type', 'product'
+-%}
+
+<div
+  class="bundle-items color-{{ section.settings.color_scheme }}"
+  data-bundle
+  data-money-format="{{ shop.money_format | escape }}"
+  {% if section.settings.enable_discount %}
+    data-discount-type="{{ section.settings.discount_type }}"
+    data-discount-value="{{ section.settings.discount_value }}"
+    data-discount-min-items="{{ section.settings.discount_min_items }}"
+  {% endif %}
+  {% if section.settings.bundle_min_items > 0 %}data-bundle-min-items="{{ section.settings.bundle_min_items }}"{% endif %}
+  {% if section.settings.bundle_max_items > 0 %}data-bundle-max-items="{{ section.settings.bundle_max_items }}"{% endif %}
+  style="--bundle-columns: {{ product_blocks.size }};"
+>
+  {%- if section.settings.heading != blank -%}
+    <h2 class="bundle-items__heading">{{ section.settings.heading }}</h2>
+  {%- endif -%}
+
+  {%- comment -%}
+    grid-template-columns itself lives entirely in bundle-items.css (base rule
+    plus the 1365px/989px responsive overrides) - only the configured width
+    passes through as a custom property here. Setting grid-template-columns
+    inline would win over every one of those media queries regardless of
+    viewport (inline style beats any external stylesheet selector, media
+    query or not), which is exactly what silently broke responsiveness here.
+  {%- endcomment -%}
+  <div class="bundle-items__layout" style="--selected-bundle-width: {{ section.settings.selected_bundle_width }}px;">
+    <div class="bundle-items__products">
+      {%- for block in product_blocks -%}
+        {%- liquid
+          assign product = block.settings.product
+        -%}
+        <div class="bundle-items__product" {{ block.shopify_attributes }}>
+          {%- if product != blank -%}
+            <div class="bundle-items__product-media">
+              <img
+                src="{{ product.featured_image | image_url: width: 400 }}"
+                alt="{{ product.featured_image.alt | escape }}"
+                width="400"
+                height="{{ 400 | divided_by: product.featured_image.aspect_ratio | round }}"
+                loading="lazy"
+              >
+            </div>
+            <p class="bundle-items__product-title">{{ product.title }}</p>
+            <p class="bundle-items__product-price">
+              {%- if product.variants.size > 1 -%}From {% endif -%}
+              <span data-bundle-price>{{ product.selected_or_first_available_variant.price | money }}</span>
+            </p>
+            <div class="bundle-items__row">
+              <select class="bundle-items__select" data-bundle-select data-index="{{ forloop.index0 }}" aria-label="{{ product.title | escape }} options">
+                {%- for variant in product.variants -%}
+                  <option
+                    value="{{ variant.id }}"
+                    data-price="{{ variant.price }}"
+                    data-title="{{ variant.title | escape }}"
+                    data-image="{{ variant.featured_image | default: product.featured_image | image_url: width: 200 }}"
+                    {% unless variant.available %}disabled{% endunless %}
+                  >
+                    {{ variant.title }} ({{ variant.price | money }})
+                  </option>
+                {%- endfor -%}
+              </select>
+              <button
+                type="button"
+                class="bundle-items__add"
+                data-bundle-add
+                data-index="{{ forloop.index0 }}"
+                data-product-title="{{ product.title | escape }}"
+                aria-label="Add to bundle"
+              >+</button>
+            </div>
+          {%- else -%}
+            <p class="bundle-items__empty">Select a product in section settings</p>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <div class="bundle-items__summary">
+      {%- if section.settings.summary_heading != blank -%}
+        <h3 class="bundle-items__summary-heading">{{ section.settings.summary_heading }}</h3>
+      {%- endif -%}
+      {%- if section.settings.summary_description != blank -%}
+        <p class="bundle-items__summary-description">{{ section.settings.summary_description }}</p>
+      {%- endif -%}
+
+      <div class="bundle-items__slots" data-bundle-slots>
+        {%- for block in product_blocks -%}
+          <div class="bundle-items__slot" data-bundle-slot data-index="{{ forloop.index0 }}">
+            <span class="bundle-items__slot-plus" data-bundle-slot-plus aria-hidden="true">+</span>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      <div class="bundle-items__totals">
+        <span>Total</span>
+        <span data-bundle-total>{{ 0 | money }}</span>
+      </div>
+      {%- if section.settings.enable_discount -%}
+        <p class="bundle-items__discount-note" data-bundle-discount-note hidden></p>
+      {%- endif -%}
+      {%- if section.settings.bundle_min_items > 0 -%}
+        <p class="bundle-items__min-note" data-bundle-min-note hidden></p>
+      {%- endif -%}
+
+      <button type="button" class="btn btn--secondary bundle-items__remove-all" data-bundle-remove-all disabled>
+        Remove all
+      </button>
+      <button type="button" class="btn btn--primary bundle-items__add-to-cart" data-bundle-add-to-cart disabled data-items="[]">
+        <span data-bundle-cart-label>{{ 0 | money }}: Add to cart</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Bundle items",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The Perfect Style Pairing" },
+    { "type": "header", "content": "Bundle panel" },
+    { "type": "text", "id": "summary_heading", "label": "Heading", "default": "Shop the Bundle" },
+    {
+      "type": "textarea", "id": "summary_description", "label": "Description",
+      "default": "Complete your look with handpicked clothing bundles that combine style, comfort, and exceptional value in one easy purchase."
+    },
+    { "type": "header", "content": "Selection limits" },
+    { "type": "range", "id": "bundle_min_items", "label": "Minimum items to enable Add to cart", "min": 0, "max": 10, "step": 1, "default": 0, "info": "0 = no minimum." },
+    { "type": "range", "id": "bundle_max_items", "label": "Maximum items", "min": 0, "max": 10, "step": 1, "default": 0, "info": "0 = no maximum (limited only by the number of Product blocks below)." },
+    { "type": "header", "content": "Discount" },
+    { "type": "checkbox", "id": "enable_discount", "label": "Enable bundle discount", "default": false },
+    {
+      "type": "select", "id": "discount_type", "label": "Type", "default": "percent",
+      "options": [ { "value": "percent", "label": "Percentage off" }, { "value": "fixed", "label": "Fixed amount off" } ]
+    },
+    { "type": "number", "id": "discount_value", "label": "Value (% or amount)", "default": 10 },
+    { "type": "range", "id": "discount_min_items", "label": "Minimum items to unlock discount", "min": 2, "max": 6, "step": 1, "default": 2 },
+    {
+      "type": "range",
+      "id": "selected_bundle_width",
+      "label": "Selected bundle width (px)",
+      "min": 200,
+      "max": 800,
+      "step": 10,
+      "default": 500
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bundle items",
+      "blocks": [
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" }
+      ]
+    }
+  ]
+}
+{% endschema %}

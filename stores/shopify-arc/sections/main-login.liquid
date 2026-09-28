@@ -1,0 +1,147 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign hide_shop_login_button = false
+  if section.settings.enable_shop_login_button == false
+    assign hide_shop_login_button = true
+  endif
+-%}
+
+<div class="page-width">
+  <div class="customer customer--narrow login">
+    <div class="customer__section">
+      <h1 class="customer__title" id="recover" tabindex="-1">Reset your password</h1>
+      <p class="customer__subtext">We will send you an email to reset your password</p>
+
+      {%- form 'recover_customer_password' -%}
+        {% assign recover_success = form.posted_successfully? %}
+        <div class="customer__form">
+          <div class="customer__field">
+            <label for="RecoverEmail">Email</label>
+            <input
+              type="email"
+              value=""
+              name="email"
+              id="RecoverEmail"
+              autocorrect="off"
+              autocapitalize="off"
+              autocomplete="email"
+              {% if form.errors %}
+                aria-invalid="true"
+                aria-describedby="RecoverEmail-email-error"
+                autofocus
+              {% endif %}
+            >
+            {%- if form.errors -%}
+              <small id="RecoverEmail-email-error" class="customer__field-error">{{ form.errors.messages.form }}</small>
+            {%- endif -%}
+          </div>
+
+          <div class="customer__actions">
+            <button type="submit" class="btn btn--primary">Submit</button>
+            <a href="#login" class="customer__actions-link">Cancel</a>
+          </div>
+        </div>
+      {%- endform -%}
+    </div>
+
+    <hr class="customer__divider">
+
+    <div class="customer__section">
+      <h1 class="customer__title" id="login" tabindex="-1">Login</h1>
+
+      {%- if recover_success == true -%}
+        <h3 class="customer__message customer__message--success" tabindex="-1" autofocus>
+          We've sent you an email with a link to update your password.
+        </h3>
+      {%- endif -%}
+
+      {%- form 'customer_login', novalidate: 'novalidate' -%}
+        {%- if form.errors -%}
+          <div class="customer__message customer__message--error" tabindex="-1" autofocus>
+            <span>Please adjust the following:</span>
+          </div>
+          {{ form.errors | default_errors }}
+        {%- endif -%}
+
+        {%- if shop.features.login_with_shop_classic_customer_accounts? -%}
+          <section name="sign-in-with-shop-provider">
+            {{ shop | login_button: hide_button: hide_shop_login_button }}
+
+            {%- unless hide_shop_login_button -%}
+              <p class="customer__alt-text">or</p>
+            {%- endunless -%}
+          </section>
+        {%- endif -%}
+
+        <div class="customer__form">
+          <div class="customer__field">
+            <label for="CustomerEmail">Email</label>
+            <input
+              type="email"
+              name="customer[email]"
+              id="CustomerEmail"
+              autocomplete="email"
+              autocorrect="off"
+              autocapitalize="off"
+              {% if form.errors contains 'form' %}
+                aria-invalid="true"
+              {% endif %}
+            >
+          </div>
+
+          {%- if form.password_needed -%}
+            <div class="customer__field">
+              <label for="CustomerPassword">Password</label>
+              <input
+                type="password"
+                value=""
+                name="customer[password]"
+                id="CustomerPassword"
+                autocomplete="current-password"
+                {% if form.errors contains 'form' %}
+                  aria-invalid="true"
+                {% endif %}
+              >
+            </div>
+
+            <a href="#recover" class="customer__actions-link">Forgot your password?</a>
+          {%- endif -%}
+
+          <div class="customer__actions">
+            <button type="submit" class="btn btn--primary">Sign in</button>
+            <a href="{{ routes.account_register_url }}" class="customer__actions-link">
+              Create account
+            </a>
+          </div>
+        </div>
+      {%- endform -%}
+    </div>
+
+    {%- if shop.checkout.guest_login -%}
+      <hr class="customer__divider">
+
+      <div class="customer__section">
+        <h2 class="customer__section-title">Continue as a guest</h2>
+
+        {%- form 'guest_login' -%}
+          <button type="submit" class="btn btn--secondary">Continue</button>
+        {%- endform -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Login",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_shop_login_button",
+      "label": "Show Shop login button",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

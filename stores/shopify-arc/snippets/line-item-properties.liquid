@@ -1,0 +1,33 @@
+{%- comment -%}
+  Renders a line item's custom properties (monogramming, engravings, bundle notes).
+
+  Accepts:
+  - item: {Object} Cart line item
+
+  Usage:
+  {%- render 'line-item-properties', item: item -%}
+
+  Underscore-prefixed and empty properties are app-internal and stay hidden.
+{%- endcomment -%}
+{%- if item.properties.size > 0 -%}
+  <dl class="cart-item__properties">
+    {%- for property in item.properties -%}
+      {%- assign property_name = property.first -%}
+      {%- assign property_value = property.last -%}
+      {%- assign property_first_char = property_name | slice: 0 -%}
+      {%- if property_name == blank or property_value == blank or property_first_char == '_' -%}
+        {%- continue -%}
+      {%- endif -%}
+      <div class="cart-item__property">
+        <dt>{{ property_name | escape }}:</dt>
+        <dd>
+          {%- if property_value contains '/products/' -%}
+            <a href="{{ property_value }}" class="cart-item__property-link">{{ property_value | split: '/' | last | replace: '-', ' ' | escape }}</a>
+          {%- else -%}
+            {{ property_value | escape }}
+          {%- endif -%}
+        </dd>
+      </div>
+    {%- endfor -%}
+  </dl>
+{%- endif -%}

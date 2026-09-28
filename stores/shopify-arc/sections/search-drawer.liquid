@@ -1,0 +1,61 @@
+{{ 'search.css' | asset_url | stylesheet_tag }}
+
+<search-drawer id="SearchDrawer" class="search-drawer">
+  <div class="search-drawer__overlay" data-drawer-close></div>
+  <div class="search-drawer__panel" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-drawer__header page-width">
+      <form role="search" action="{{ routes.search_url }}" method="get" class="search-drawer__form">
+        <input type="hidden" name="type" value="product">
+        {%- render 'icon-search' -%}
+        <input
+          type="search"
+          name="q"
+          value="{{ search.terms | escape }}"
+          placeholder="Search"
+          autocomplete="off"
+          data-predictive-search-input
+          aria-label="Search"
+        >
+        <button type="button" class="header__icon-btn" data-drawer-close aria-label="Close">
+          {%- render 'icon-close' -%}
+        </button>
+      </form>
+    </div>
+
+    <div class="search-drawer__body page-width">
+      <div data-search-suggested>
+        {%- if settings.most_searched_keywords != blank -%}
+          <div class="search-drawer__suggested">
+            <p class="search-drawer__suggested-label">Suggestions</p>
+            <ul class="search-drawer__suggested-list">
+              {%- assign keywords = settings.most_searched_keywords | split: ',' -%}
+              {%- for keyword in keywords -%}
+                <li><button type="button" data-suggested-keyword>{{ keyword | strip }}</button></li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+
+        {%- if settings.products_recommendations.size > 0 -%}
+          <div class="search-drawer__recommended">
+            <p class="search-drawer__suggested-label">Recommended</p>
+            <div class="predictive-search__products">
+              {%- for product in settings.products_recommendations -%}
+                {%- render 'card-product', product: product, show_swatches: false -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div data-predictive-search-results class="search-drawer__results"></div>
+    </div>
+  </div>
+</search-drawer>
+
+{% schema %}
+{
+  "name": "Search drawer",
+  "settings": []
+}
+{% endschema %}

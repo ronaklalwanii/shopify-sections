@@ -1,0 +1,254 @@
+{{ 'reveal-cards.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'reveal-cards.js' | asset_url }}" defer="defer"></script>
+
+<div
+  class="reveal-cards color-{{ section.settings.color_scheme }}"
+  style="
+    --section-pad-top: {{ section.settings.section_padding_top }}px;
+    --section-pad-bottom: {{ section.settings.section_padding_bottom }}px;
+    --section-pad-top-mobile: {{ section.settings.section_padding_top_mobile }}px;
+    --section-pad-bottom-mobile: {{ section.settings.section_padding_bottom_mobile }}px;
+    --reveal-height: {{ section.settings.height }}px;
+    --reveal-height-mobile: {{ section.settings.height_mobile }}px;
+    --reveal-radius: {{ section.settings.corner_radius }}px;
+    --reveal-gap: {{ section.settings.gap_desktop }}px;
+    --reveal-gap-large: {{ section.settings.gap_large }}px;
+    --reveal-gap-mobile: {{ section.settings.gap_mobile }}px;
+    --reveal-expanded: {{ section.settings.expanded_width }}%;
+    --reveal-duration: {{ section.settings.expand_duration }}ms;
+    --reveal-delay: {{ section.settings.expand_delay }}ms;
+    --reveal-frame-pad: {{ section.settings.card_frame_padding }}px;
+    --reveal-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --panel-pad-block: {{ section.settings.panel_padding_block }}px;
+    --panel-pad-inline: {{ section.settings.panel_padding_inline }}px;
+    --panel-pad-block-mobile: {{ section.settings.panel_padding_block_mobile }}px;
+    --panel-pad-inline-mobile: {{ section.settings.panel_padding_inline_mobile }}px;
+    --panel-gap: {{ section.settings.panel_gap }}px;
+    --panel-gap-mobile: {{ section.settings.panel_gap_mobile }}px;
+    --panel-button-gap: {{ section.settings.panel_button_gap }}px;
+    --marquee-size: {{ section.settings.marquee_text_size }}px;
+    --marquee-size-mobile: {{ section.settings.marquee_text_size_mobile }}px;
+    --marquee-speed: {{ section.settings.marquee_speed }}s;
+    --marquee-color: {{ section.settings.marquee_color }};
+    --marquee-bg: {{ section.settings.marquee_bg }};
+    --marquee-blur: {{ section.settings.marquee_blur }}px;
+    --marquee-border: {{ section.settings.marquee_border_color }};
+    --marquee-pad-block: {{ section.settings.marquee_padding_block }}px;
+    --marquee-node-gap: {{ section.settings.marquee_node_gap }}px;
+    --index-media-opacity: {{ section.settings.index_media_opacity | divided_by: 100.0 }};
+    --index-panel-opacity: {{ section.settings.index_panel_opacity | divided_by: 100.0 }};
+    {% if section.settings.panel_bg != blank %}--reveal-panel-bg: {{ section.settings.panel_bg }};{% endif %}
+    {% if section.settings.index_stroke_color != blank %}--index-stroke: {{ section.settings.index_stroke_color }};{% endif %}
+  "
+>
+  {%- if section.settings.heading != blank -%}
+    <div class="reveal-cards__header reveal-cards__header--{{ section.settings.header_alignment }}">
+      <h2 class="reveal-cards__heading {{ section.settings.heading_size }}" data-animate>{{ section.settings.heading }}</h2>
+    </div>
+  {%- endif -%}
+
+  <div
+    class="reveal-cards__row{% if section.settings.card_frame %} reveal-cards__row--frame{% endif %}{% if section.settings.show_shadow %} reveal-cards__row--shadow{% endif %}{% if section.settings.marquee_border %} reveal-cards__row--marquee-border{% endif %}{% if section.settings.mobile_swipe %} reveal-cards__row--swipe{% endif %}{% if section.settings.marquee_direction == 'right' %} reveal-cards__row--marquee-reverse{% endif %}{% unless section.settings.marquee_always_mobile %} reveal-cards__row--marquee-hover-only{% endunless %}"
+    {% if section.settings.mobile_swipe %}style="--swipe-item-width: {{ section.settings.swipe_item_width }}%;"{% endif %}
+  >
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'card' -%}
+        {%- liquid
+          assign card_number = forloop.index | prepend: '0' | slice: -2, 2
+
+          # Placeholder art shown until a merchant picks a real image.
+          assign card_index_mod = forloop.index0 | modulo: 2
+          assign placeholder_handle = 'lifestyle-1'
+          if card_index_mod == 1
+            assign placeholder_handle = 'lifestyle-2'
+          endif
+        -%}
+        <div
+          class="reveal-card{% if forloop.first %} reveal-card--active{% endif %}"
+          tabindex="0"
+          {{ block.shopify_attributes }}
+        >
+          <div class="reveal-card__media">
+            <div class="reveal-card__image-wrap">
+              {%- if block.settings.image != blank -%}
+                <img
+                  class="reveal-card__image"
+                  src="{{ block.settings.image | image_url: width: 900 }}"
+                  srcset="{{ block.settings.image | image_url: width: 500 }} 500w, {{ block.settings.image | image_url: width: 900 }} 900w, {{ block.settings.image | image_url: width: 1400 }} 1400w"
+                  sizes="(max-width: 749px) 85vw, (max-width: 1024px) 50vw, 30vw"
+                  alt=""
+                  width="900"
+                  height="{{ 900 | divided_by: block.settings.image.aspect_ratio | round }}"
+                  loading="lazy"
+                  style="object-position: {{ block.settings.image_position }};"
+                >
+              {%- else -%}
+                {{ placeholder_handle | placeholder_svg_tag: 'reveal-card__image' }}
+              {%- endif -%}
+              <div class="reveal-card__overlay"></div>
+
+              {%- if section.settings.show_index_numbers -%}
+                <span class="reveal-card__index reveal-card__index--media h1">{{ card_number }}</span>
+              {%- endif -%}
+
+              {%- if block.settings.badge_label != blank -%}
+                <div class="reveal-card__marquee" aria-hidden="true">
+                  {%- for i in (1..2) -%}
+                    <div class="reveal-card__marquee-track">
+                      {%- for j in (1..6) -%}
+                        <span class="reveal-card__marquee-node">{{ block.settings.badge_label }}</span>
+                      {%- endfor -%}
+                    </div>
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+
+          <div class="reveal-card__panel">
+            <div class="reveal-card__panel-inner">
+              <div class="reveal-card__panel-box">
+                {%- if block.settings.heading != blank -%}
+                  <{{ block.settings.heading_size }} class="reveal-card__title {{ block.settings.heading_size }}">{{ block.settings.heading }}</{{ block.settings.heading_size }}>
+                {%- endif -%}
+                {%- if block.settings.description != blank -%}
+                  <p class="reveal-card__description">{{ block.settings.description }}</p>
+                {%- endif -%}
+                {%- if block.settings.button_label != blank -%}
+                  {%- render 'button', label: block.settings.button_label, url: block.settings.button_link, style: block.settings.button_style, extra_class: 'reveal-card__button' -%}
+                {%- endif -%}
+              </div>
+              {%- if section.settings.show_index_numbers -%}
+                <span class="reveal-card__index reveal-card__index--panel h1">{{ card_number }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Reveal cards",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Minimal Fashion" },
+    {
+      "type": "select", "id": "heading_size", "label": "Heading size", "default": "h4",
+      "options": [
+        { "value": "h1", "label": "H1" }, { "value": "h2", "label": "H2" }, { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" }, { "value": "h5", "label": "H5" }, { "value": "h6", "label": "H6" },
+        { "value": "display-heading", "label": "Display" }
+      ]
+    },
+    {
+      "type": "select", "id": "header_alignment", "label": "Heading alignment", "default": "left",
+      "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" } ]
+    },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "header", "content": "Section spacing" },
+    { "type": "range", "id": "section_padding_top", "label": "Padding top (desktop)", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 40 },
+    { "type": "range", "id": "section_padding_bottom", "label": "Padding bottom (desktop)", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 70 },
+    { "type": "range", "id": "section_padding_top_mobile", "label": "Padding top (mobile)", "min": 0, "max": 80, "step": 2, "unit": "px", "default": 30 },
+    { "type": "range", "id": "section_padding_bottom_mobile", "label": "Padding bottom (mobile)", "min": 0, "max": 80, "step": 2, "unit": "px", "default": 30 },
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "height", "label": "Card height (desktop)", "min": 300, "max": 700, "step": 10, "unit": "px", "default": 520 },
+    { "type": "range", "id": "height_mobile", "label": "Card height (mobile)", "min": 240, "max": 560, "step": 10, "unit": "px", "default": 420 },
+    { "type": "range", "id": "expanded_width", "label": "Expanded card width", "min": 30, "max": 80, "step": 5, "unit": "%", "default": 50, "info": "Width the hovered card expands to on desktop. The content panel occupies half of it." },
+    { "type": "range", "id": "gap_desktop", "label": "Gap between cards (desktop)", "min": 0, "max": 32, "step": 1, "unit": "px", "default": 10 },
+    { "type": "range", "id": "gap_large", "label": "Gap between cards (1200px and up)", "min": 0, "max": 48, "step": 1, "unit": "px", "default": 20 },
+    { "type": "range", "id": "gap_mobile", "label": "Gap between cards (mobile)", "min": 0, "max": 32, "step": 1, "unit": "px", "default": 15 },
+    { "type": "range", "id": "corner_radius", "label": "Corner radius", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 20 },
+    { "type": "header", "content": "Card style" },
+    { "type": "checkbox", "id": "card_frame", "label": "Show card frame around image", "default": true, "info": "A padded frame behind each photo, matching the content panel color." },
+    { "type": "range", "id": "card_frame_padding", "label": "Card frame padding", "min": 0, "max": 32, "step": 1, "unit": "px", "default": 13 },
+    { "type": "checkbox", "id": "show_shadow", "label": "Show card shadow", "default": true },
+    { "type": "range", "id": "overlay_opacity", "label": "Image overlay darkness", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 10 },
+    { "type": "color", "id": "panel_bg", "label": "Panel and frame background", "info": "Leave blank to use the scheme's secondary background color." },
+    { "type": "header", "content": "Index numbers" },
+    { "type": "checkbox", "id": "show_index_numbers", "label": "Show index numbers", "default": true },
+    { "type": "color", "id": "index_stroke_color", "label": "Number outline color", "info": "Leave blank to use the scheme's text color." },
+    { "type": "range", "id": "index_media_opacity", "label": "Number opacity on image", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 50 },
+    { "type": "range", "id": "index_panel_opacity", "label": "Number opacity on panel", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 20 },
+    { "type": "header", "content": "Content panel" },
+    { "type": "range", "id": "panel_padding_block", "label": "Vertical padding (desktop)", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 30 },
+    { "type": "range", "id": "panel_padding_inline", "label": "Horizontal padding (desktop)", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 20 },
+    { "type": "range", "id": "panel_padding_block_mobile", "label": "Vertical padding (mobile)", "min": 0, "max": 48, "step": 1, "unit": "px", "default": 20 },
+    { "type": "range", "id": "panel_padding_inline_mobile", "label": "Horizontal padding (mobile)", "min": 0, "max": 48, "step": 1, "unit": "px", "default": 20 },
+    { "type": "range", "id": "panel_gap", "label": "Gap between elements (desktop)", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 20 },
+    { "type": "range", "id": "panel_gap_mobile", "label": "Gap between elements (mobile)", "min": 0, "max": 32, "step": 1, "unit": "px", "default": 15 },
+    { "type": "range", "id": "panel_button_gap", "label": "Space above button", "min": 0, "max": 48, "step": 1, "unit": "px", "default": 18 },
+    { "type": "header", "content": "Scrolling badge" },
+    { "type": "paragraph", "content": "The scrolling text strip that rises from the bottom of a card's image when it expands. Text comes from each card's 'Badge label'." },
+    { "type": "checkbox", "id": "marquee_always_mobile", "label": "Always show on mobile/tablet", "default": true, "info": "When off, the badge only appears on the active card, the same as desktop." },
+    { "type": "range", "id": "marquee_text_size", "label": "Text size (desktop)", "min": 12, "max": 60, "step": 1, "unit": "px", "default": 26 },
+    { "type": "range", "id": "marquee_text_size_mobile", "label": "Text size (mobile)", "min": 12, "max": 48, "step": 1, "unit": "px", "default": 25 },
+    { "type": "range", "id": "marquee_speed", "label": "Scroll speed", "min": 5, "max": 60, "step": 1, "unit": "s", "default": 15, "info": "Seconds for the text to travel across once — lower is faster." },
+    {
+      "type": "select", "id": "marquee_direction", "label": "Scroll direction", "default": "left",
+      "options": [ { "value": "left", "label": "Left" }, { "value": "right", "label": "Right" } ]
+    },
+    { "type": "color", "id": "marquee_color", "label": "Text color", "default": "#FFFFFF" },
+    { "type": "color_background", "id": "marquee_bg", "label": "Background", "default": "rgba(255, 255, 255, 0.3)" },
+    { "type": "range", "id": "marquee_blur", "label": "Background blur", "min": 0, "max": 20, "step": 1, "unit": "px", "default": 5 },
+    { "type": "checkbox", "id": "marquee_border", "label": "Show top border", "default": true },
+    { "type": "color_background", "id": "marquee_border_color", "label": "Top border color", "default": "rgba(255, 255, 255, 0.45)" },
+    { "type": "range", "id": "marquee_padding_block", "label": "Vertical padding", "min": 0, "max": 20, "step": 1, "unit": "px", "default": 5 },
+    { "type": "range", "id": "marquee_node_gap", "label": "Gap between text repeats", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 20 },
+    { "type": "header", "content": "Animation" },
+    { "type": "range", "id": "expand_duration", "label": "Expand speed", "min": 200, "max": 800, "step": 50, "unit": "ms", "default": 400 },
+    { "type": "range", "id": "expand_delay", "label": "Expand delay", "min": 0, "max": 200, "step": 10, "unit": "ms", "default": 50 },
+    { "type": "header", "content": "Mobile" },
+    { "type": "checkbox", "id": "mobile_swipe", "label": "Swipeable card carousel on mobile", "default": true },
+    { "type": "range", "id": "swipe_item_width", "label": "Mobile card width", "min": 60, "max": 100, "step": 5, "unit": "%", "default": 85 }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        {
+          "type": "select", "id": "image_position", "label": "Image focus position", "default": "50% 50%",
+          "options": [
+            { "value": "50% 50%", "label": "Center" },
+            { "value": "50% 0%", "label": "Top" },
+            { "value": "50% 100%", "label": "Bottom" },
+            { "value": "0% 50%", "label": "Left" },
+            { "value": "100% 50%", "label": "Right" }
+          ]
+        },
+        { "type": "text", "id": "badge_label", "label": "Badge label", "info": "Scrolling text shown at the bottom of the card's image, e.g. \"JACKET SALE\"", "default": "NEW ARRIVALS" },
+        { "type": "header", "content": "Revealed content" },
+        {
+          "type": "select", "id": "heading_size", "label": "Heading size", "default": "h4",
+          "options": [
+            { "value": "h3", "label": "H3" }, { "value": "h4", "label": "H4" },
+            { "value": "h5", "label": "H5" }, { "value": "h6", "label": "H6" }
+          ]
+        },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Stay Classic Stay Confident" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "Timeless styles crafted with premium quality and modern comfort." },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop now" },
+        { "type": "url", "id": "button_link", "label": "Button link" },
+        {
+          "type": "select", "id": "button_style", "label": "Button style", "default": "btn--animated",
+          "options": [
+            { "value": "", "label": "Use theme default" },
+            { "value": "btn--primary", "label": "Filled" }, { "value": "btn--hollow", "label": "Hollow" }, { "value": "btn--secondary", "label": "Secondary" },
+            { "value": "btn--animated", "label": "Animated" }, { "value": "btn--animated-secondary", "label": "Animated (secondary)" },
+            { "value": "btn--underline", "label": "Link" }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reveal cards",
+      "blocks": [{ "type": "card" }, { "type": "card" }, { "type": "card" }]
+    }
+  ]
+}
+{% endschema %}

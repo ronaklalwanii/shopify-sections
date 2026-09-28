@@ -1,0 +1,148 @@
+{{ 'product-story.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign story_image = section.settings.image
+  assign overlay_opacity = section.settings.overlay_opacity | divided_by: 100.0
+-%}
+
+<section
+  class="product-story color-{{ section.settings.color_scheme }} product-story--image-{{ section.settings.image_position }} product-story--valign-{{ section.settings.vertical_alignment }}"
+  style="
+    --ps-image-width: {{ section.settings.image_width }}%;
+    --ps-text-width: {{ section.settings.text_width }}%;
+    --ps-gap: {{ section.settings.gap }}rem;
+    --ps-padding-top: {{ section.settings.padding_top }}rem;
+    --ps-padding-bottom: {{ section.settings.padding_bottom }}rem;
+    --ps-image-radius: {{ section.settings.image_radius }}px;
+    --ps-overlay-opacity: {{ overlay_opacity }};
+    --ps-eyebrow-size: {{ section.settings.eyebrow_size }}px;
+    --ps-heading-size: {{ section.settings.heading_size }}px;
+    --ps-text-size: {{ section.settings.text_size }}px;
+    --ps-section-width: {{ section.settings.section_width }}%;
+    --ps-section-height: {{ section.settings.section_height }}px;
+    --ps-text-padding-x: {{ section.settings.text_padding_x }}px;
+  "
+>
+  <div class="product-story__inner">
+    <div class="product-story__media" style="height: var(--ps-section-height);">
+      {%- if story_image != blank -%}
+        <img
+          class="product-story__image"
+          src="{{ story_image | image_url: width: 1500 }}"
+          srcset="
+            {{ story_image | image_url: width: 750 }} 750w,
+            {{ story_image | image_url: width: 1200 }} 1200w,
+            {{ story_image | image_url: width: 1800 }} 1800w
+          "
+          sizes="(min-width: 750px) {{ section.settings.image_width }}vw, 100vw"
+          width="1500"
+          height="{{ 1500 | divided_by: story_image.aspect_ratio | round }}"
+          alt="{{ story_image.alt | escape }}"
+          loading="lazy"
+          style="aspect-ratio: {{ section.settings.image_aspect }}; object-position: {{ section.settings.image_position_x }}% {{ section.settings.image_position_y }}%;"
+        >
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'product-story__image product-story__image--placeholder' }}
+      {%- endif -%}
+      {%- if section.settings.overlay_opacity > 0 -%}
+        <span class="product-story__overlay" aria-hidden="true"></span>
+      {%- endif -%}
+    </div>
+
+    <div class="product-story__content" style="padding-inline: var(--ps-text-padding-x);">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="product-story__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="product-story__heading">{{ section.settings.heading | newline_to_br }}</h2>
+      {%- endif -%}
+      {%- if section.settings.description != blank -%}
+        <div class="product-story__description rte">{{ section.settings.description }}</div>
+      {%- endif -%}
+      {%- if section.settings.button_label != blank -%}
+        <div class="product-story__cta">
+          {%- render 'button',
+            label: section.settings.button_label,
+            url: section.settings.button_url,
+            style: section.settings.button_style,
+            icon: true,
+            icon_position: 'right'
+          -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product story",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "DESIGNED FOR THE ROOM" },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "Made for the years." },
+    { "type": "richtext", "id": "description", "label": "Description", "default": "<p>Shaped by proportion and balance. Solid materials, softened edges, and a silhouette that brings people together.</p>" },
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "button_label", "label": "Button label" },
+    { "type": "url", "id": "button_url", "label": "Button link" },
+    {
+      "type": "select", "id": "button_style", "label": "Button style", "default": "btn--underline",
+      "options": [
+        { "value": "", "label": "Use theme default" },
+        { "value": "btn--primary", "label": "Filled" },
+        { "value": "btn--secondary", "label": "Secondary" },
+        { "value": "btn--hollow", "label": "Hollow" },
+        { "value": "btn--underline", "label": "Link" },
+        { "value": "btn--animated", "label": "Animated" },
+        { "value": "btn--animated-secondary", "label": "Animated (secondary)" },
+        { "value": "btn--roll", "label": "Rolling text" },
+        { "value": "btn--roll-secondary", "label": "Rolling text (secondary)" }
+      ]
+    },
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "Supports dynamic sources - connect a product metafield image to vary it per product." },
+    {
+      "type": "select", "id": "image_position", "label": "Image position", "default": "left",
+      "options": [ { "value": "left", "label": "Left" }, { "value": "right", "label": "Right" } ]
+    },
+    { "type": "range", "id": "section_height", "label": "Section height", "min": 300, "max": 800, "step": 20, "unit": "px", "default": 400 },
+    {
+      "type": "select", "id": "image_aspect", "label": "Image aspect ratio", "default": "4/5",
+      "options": [
+        { "value": "1/1", "label": "Square (1:1)" },
+        { "value": "4/5", "label": "Portrait (4:5)" },
+        { "value": "3/4", "label": "Portrait (3:4)" },
+        { "value": "4/3", "label": "Landscape (4:3)" },
+        { "value": "16/9", "label": "Cinematic (16:9)" }
+      ]
+    },
+    { "type": "range", "id": "image_width", "label": "Image width (desktop)", "min": 35, "max": 65, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_radius", "label": "Image corner radius", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "image_position_x", "label": "Image focus X", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_position_y", "label": "Image focus Y", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 50 },
+    { "type": "header", "content": "Image darkening" },
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay opacity", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 0, "info": "Applied live via CSS - never baked into the uploaded image." },
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "text_width", "label": "Text width (desktop)", "min": 35, "max": 65, "step": 1, "unit": "%", "default": 50 },
+    {
+      "type": "select", "id": "vertical_alignment", "label": "Content vertical alignment", "default": "center",
+      "options": [ { "value": "top", "label": "Top" }, { "value": "center", "label": "Center" }, { "value": "bottom", "label": "Bottom" } ]
+    },
+    { "type": "range", "id": "gap", "label": "Gap between image and text", "min": 1, "max": 8, "step": 0.5, "unit": "rem", "default": 4 },
+    { "type": "range", "id": "text_padding_x", "label": "Text padding left/right", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "section_width", "label": "Section width", "min": 70, "max": 100, "step": 5, "unit": "%", "default": 100 },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 12, "step": 0.5, "unit": "rem", "default": 6 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 12, "step": 0.5, "unit": "rem", "default": 6 },
+    { "type": "header", "content": "Typography" },
+    { "type": "range", "id": "eyebrow_size", "label": "Eyebrow size", "min": 10, "max": 20, "step": 1, "unit": "px", "default": 12 },
+    { "type": "range", "id": "heading_size", "label": "Heading size", "min": 24, "max": 80, "step": 2, "unit": "px", "default": 44 },
+    { "type": "range", "id": "text_size", "label": "Description size", "min": 14, "max": 24, "step": 1, "unit": "px", "default": 17 }
+  ],
+  "presets": [
+    {
+      "name": "Product story"
+    }
+  ]
+}
+{% endschema %}
